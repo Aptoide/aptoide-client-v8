@@ -47,12 +47,13 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setCard(Article card) {
-    publisherName.setText(spannableFactory.createColorSpan(
-        itemView.getContext().getString(R.string.x_posted, card.getPublisherName()),
+    publisherName.setText(spannableFactory.createColorSpan(itemView.getContext()
+            .getString(R.string.x_posted, card.getPublisherName()),
         ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
         card.getPublisherName()));
     articleTitle.setText(card.getTitle());
-    relatedTo.setText(card.getRelatedApp().getName());
+    relatedTo.setText(card.getRelatedApp()
+        .getName());
     date.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPublisherAvatarURL(), publisherAvatar);

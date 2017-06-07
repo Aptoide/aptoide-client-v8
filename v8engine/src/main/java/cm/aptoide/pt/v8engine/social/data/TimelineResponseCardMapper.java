@@ -16,20 +16,27 @@ public class TimelineResponseCardMapper {
   public List<Article> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
     final List<Article> cards = new ArrayList();
 
-    for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist().getList()) {
+    for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist()
+        .getList()) {
       if (item instanceof ArticleTimelineItem) {
         String ab = null;
         final cm.aptoide.pt.model.v7.timeline.Article article =
             ((ArticleTimelineItem) item).getData();
-        if (article.getAb() != null && article.getAb().getConversion() != null) {
-          ab = article.getAb().getConversion().getUrl();
+        if (article.getAb() != null
+            && article.getAb()
+            .getConversion() != null) {
+          ab = article.getAb()
+              .getConversion()
+              .getUrl();
         }
 
         cards.add(new Article(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
-            article.getDate(), article.getApps().get(0), ab, article.getPublisher().getLogoUrl(),
-            article.getPublisher().getName(),
-            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-                article.getPublisher().getBaseUrl()),
+            article.getDate(), article.getApps()
+            .get(0), ab, article.getPublisher()
+            .getLogoUrl(), article.getPublisher()
+            .getName(), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+            article.getPublisher()
+                .getBaseUrl()),
             linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl())));
       }
     }

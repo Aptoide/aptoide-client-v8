@@ -25,8 +25,10 @@ import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.timeline.PackageRepository;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.util.Collections;
 import java.util.List;
 import rx.Observable;
@@ -44,11 +46,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   private CardAdapter adapter;
   private PublishSubject<CardTouchEvent> articleSubject;
-  private String url;
-
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
+  private RecyclerViewPositionHelper helper;
+  private int visibleThreshold;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -61,23 +63,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadExtras();
     LinksHandlerFactory linksHandlerFactory = new LinksHandlerFactory(getContext());
-    attachPresenter(new TimelinePresenter(this, new SocialManager(new SocialService(url,
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
-        LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(),
-        linksHandlerFactory)), CrashReport.getInstance()), savedInstanceState);
+    visibleThreshold = 0;
+    attachPresenter(new TimelinePresenter(this, new SocialManager(
+        new SocialService(getArguments().getString(ACTION_KEY),
+            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(),
+            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
+            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
+            Integer.MAX_VALUE)), CrashReport.getInstance()), savedInstanceState);
     articleSubject = PublishSubject.create();
     adapter = new CardAdapter(Collections.emptyList(), articleSubject, new DateCalculator(),
         new SpannableFactory());
-  }
-
-  private void loadExtras() {
-    if (getArguments() != null) {
-      url = getArguments().getString(ACTION_KEY);
-    }
   }
 
   @Nullable @Override
@@ -92,7 +90,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
-
+    helper = RecyclerViewPositionHelper.createHelper(list);
     // Pull-to-refresh
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -126,5 +124,25 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<CardTouchEvent> articleClicked() {
     return articleSubject;
+  }
+
+  @Override public Observable<Void> reachesBottom() {
+    return RxRecyclerView.scrollEvents(list)
+        .filter(event -> {
+          int visibleItemCount = event.view()
+              .getChildCount();
+          int totalItemCount = helper.getItemCount();
+          int firstVisibleItemPosition = helper.findFirstVisibleItemPosition();
+          int firstVisibleItem = (firstVisibleItemPosition == -1 ? 0 : firstVisibleItemPosition);
+          return helper != null && event.view()
+              .isAttachedToWindow() && (totalItemCount - visibleItemCount) <= (firstVisibleItem
+              + visibleThreshold);
+        })
+        .map(event -> null)
+        .cast(Void.class);
+  }
+
+  @Override public void showMoreCards(List<Article> cards) {
+    adapter.addCards(cards);
   }
 }

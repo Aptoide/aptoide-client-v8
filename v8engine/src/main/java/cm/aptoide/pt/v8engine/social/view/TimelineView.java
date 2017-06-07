@@ -23,4 +23,8 @@ public interface TimelineView extends View {
   Observable<Void> refreshes();
 
   Observable<CardTouchEvent> articleClicked();
+
+  Observable<Void> reachesBottom();
+
+  void showMoreCards(List<Article> cards);
 }

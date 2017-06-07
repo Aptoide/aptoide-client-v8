@@ -14,7 +14,11 @@ public class SocialManager {
     this.service = service;
   }
 
-  public Single<List<Article>> getCards(int limit, int offset) {
-    return service.getCards(limit, offset);
+  public Single<List<Article>> getCards() {
+    return service.getCards();
+  }
+
+  public Single<List<Article>> getNextCards() {
+    return service.getNextCards();
   }
 }

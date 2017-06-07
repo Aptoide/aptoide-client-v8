@@ -31,9 +31,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
   }
 
   @Override public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new CardViewHolder(
-        LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false), articleSubject,
-        dateCalculator, spannableFactory);
+    return new CardViewHolder(LayoutInflater.from(parent.getContext())
+        .inflate(viewType, parent, false), articleSubject, dateCalculator, spannableFactory);
   }
 
   @Override public void onBindViewHolder(CardViewHolder holder, int position) {
@@ -50,6 +49,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
   public void updateCards(List<Article> cards) {
     this.cards = cards;
+    notifyDataSetChanged();
+  }
+
+  public void addCards(List<Article> cards) {
+    this.cards.addAll(cards);
     notifyDataSetChanged();
   }
 }

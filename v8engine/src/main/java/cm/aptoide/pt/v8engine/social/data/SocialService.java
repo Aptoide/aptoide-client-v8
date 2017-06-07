@@ -1,10 +1,12 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.PackageRepository;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -25,11 +27,16 @@ public class SocialService {
   private final int randomPackagesCount;
   private final TimelineResponseCardMapper mapper;
   private final LinksHandlerFactory linksHandlerFactory;
+  private final int limit;
+  private final int initialOffset;
+  private int currentOffset;
+  private boolean loading;
+  private int total;
 
   public SocialService(String url, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
       Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
-      LinksHandlerFactory linksHandlerFactory) {
+      LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal) {
     this.url = url;
     this.bodyInterceptor = bodyInterceptor;
     this.okhttp = okhttp;
@@ -39,21 +46,46 @@ public class SocialService {
     this.randomPackagesCount = randomPackagesCount;
     this.mapper = mapper;
     this.linksHandlerFactory = linksHandlerFactory;
+    this.limit = limit;
+    this.initialOffset = initialOffset;
+    this.currentOffset = initialOffset;
+    this.total = initialTotal;
   }
 
-  public Single<List<Article>> getCards(int limit, int offset) {
-    return getPackages().flatMap(
-        packages -> GetUserTimelineRequest.of(url, limit, offset, packages, bodyInterceptor, okhttp,
-            converterFactory, null).observe().toSingle().flatMap(timelineResponse -> {
-          if (timelineResponse.isOk()) {
-            return Single.just(timelineResponse);
-          }
-          return Single.error(new IllegalStateException("Could not obtain timeline from server."));
-        })).map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
+  public Single<List<Article>> getNextCards() {
+    return getCards(limit, currentOffset);
+  }
+
+  @NonNull private Single<List<Article>> getCards(int limit, int initialOffset) {
+    if (loading || (currentOffset >= total)) {
+      return Single.just(Collections.emptyList());
+    }
+    return getPackages().doOnSuccess(packages -> loading = true)
+        .flatMap(packages -> GetUserTimelineRequest.of(url, limit, initialOffset, packages,
+            bodyInterceptor, okhttp, converterFactory, null)
+            .observe()
+            .toSingle()
+            .flatMap(timelineResponse -> {
+              if (timelineResponse.isOk()) {
+                this.currentOffset = timelineResponse.getNextSize();
+                this.total = timelineResponse.getTotal();
+                loading = false;
+                return Single.just(timelineResponse);
+              }
+              return Single.error(
+                  new IllegalStateException("Could not obtain timeline from server."));
+            }))
+        .map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
   }
 
   private Single<List<String>> getPackages() {
     return Observable.concat(packageRepository.getLatestInstalledPackages(latestPackagesCount),
-        packageRepository.getRandomInstalledPackages(randomPackagesCount)).toList().toSingle();
+        packageRepository.getRandomInstalledPackages(randomPackagesCount))
+        .toList()
+        .toSingle();
+  }
+
+  public Single<List<Article>> getCards() {
+    return getCards(limit, initialOffset);
   }
 }
