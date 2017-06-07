@@ -20,4 +20,6 @@ public interface TimelineView extends View {
   void hideRefresh();
 
   Observable<Void> refreshes();
+
+  Observable<Article> articleClicked();
 }

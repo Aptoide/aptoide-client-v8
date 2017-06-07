@@ -17,10 +17,11 @@ public class Article {
   private final String publisherURL;
   private final String publisherAvatarURL;
   private final String publisherName;
+  private final String contentUrl;
 
   public Article(String cardId, String title, String thumbnailUrl, Date date, App app,
-      String abTestURL, String publisherURL, String publisherAvatarURL, String publisherName) {
-
+      String abTestURL, String publisherURL, String publisherAvatarURL, String publisherName,
+      String contentUrl) {
     this.cardId = cardId;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
@@ -30,6 +31,11 @@ public class Article {
     this.publisherURL = publisherURL;
     this.publisherAvatarURL = publisherAvatarURL;
     this.publisherName = publisherName;
+    this.contentUrl = contentUrl;
+  }
+
+  public String getContentUrl() {
+    return contentUrl;
   }
 
   public String getCardId() {

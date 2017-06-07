@@ -24,11 +24,10 @@ public class TimelineResponseCardMapper {
           ab = article.getAb().getConversion().getUrl();
         }
 
-        cards.add(
-            new Article(item.getData().getCardId(), article.getTitle(), article.getThumbnailUrl(),
-                article.getDate(), article.getApps().get(0), ab,
-                article.getPublisher().getBaseUrl(), article.getPublisher().getLogoUrl(),
-                article.getPublisher().getName()));
+        cards.add(new Article(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
+            article.getDate(), article.getApps().get(0), ab, article.getPublisher().getBaseUrl(),
+            article.getPublisher().getLogoUrl(), article.getPublisher().getName(),
+            article.getUrl()));
       }
     }
 

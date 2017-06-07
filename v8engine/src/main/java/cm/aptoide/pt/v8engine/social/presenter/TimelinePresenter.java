@@ -3,6 +3,8 @@ package cm.aptoide.pt.v8engine.social.presenter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.spotandshare.socket.Log;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.Article;
@@ -19,10 +21,15 @@ public class TimelinePresenter implements Presenter {
 
   private final TimelineView view;
   private final SocialManager socialManager;
+  private LinksHandlerFactory linksHandlerFactory;
+  private CrashReport crashReport;
 
-  public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull SocialManager socialManager) {
+  public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull SocialManager socialManager,
+      LinksHandlerFactory linksHandlerFactory, CrashReport crashReport) {
     this.view = cardsView;
     this.socialManager = socialManager;
+    this.linksHandlerFactory = linksHandlerFactory;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -46,6 +53,16 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articles -> {
         }, throwable -> Log.d(this.getClass().getCanonicalName(), "ERROR REFRESHING CARDS"));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.articleClicked())
+        .map(article -> linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+            article.getContentUrl()))
+        .doOnNext(link -> link.launch())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(articleUrl -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @Override public void saveState(Bundle state) {

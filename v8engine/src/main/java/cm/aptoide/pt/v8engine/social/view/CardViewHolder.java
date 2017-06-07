@@ -57,5 +57,7 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
         .loadWithShadowCircleTransform(card.getPublisherAvatarURL(), publisherAvatar);
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(card.getThumbnailUrl(), articleThumbnail);
+
+    articleThumbnail.setOnClickListener(click -> articleSubject.onNext(card));
   }
 }

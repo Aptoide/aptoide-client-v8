@@ -14,6 +14,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.Article;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.SocialService;
@@ -26,6 +28,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import java.util.Collections;
 import java.util.List;
+import rx.Observable;
 import rx.subjects.PublishSubject;
 
 /**
@@ -59,11 +62,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     super.onCreate(savedInstanceState);
     loadExtras();
     attachPresenter(new TimelinePresenter(this, new SocialManager(new SocialService(url,
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
-            LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper()))),
-        savedInstanceState);
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+        WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
+        LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper())),
+        new LinksHandlerFactory(getContext()), CrashReport.getInstance()), savedInstanceState);
     articleSubject = PublishSubject.create();
     adapter = new CardAdapter(Collections.emptyList(), articleSubject, new DateCalculator(),
         new SpannableFactory());
@@ -117,5 +120,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public rx.Observable<Void> refreshes() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
+  @Override public Observable<Article> articleClicked() {
+    return articleSubject;
   }
 }
