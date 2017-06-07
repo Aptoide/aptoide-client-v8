@@ -58,6 +58,8 @@ import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import cm.aptoide.pt.root.RootAvailabilityManager;
+import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -104,7 +106,6 @@ import cm.aptoide.pt.v8engine.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.RootAvailabilityManager;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
@@ -168,6 +169,7 @@ import rx.Single;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
+import static cm.aptoide.pt.preferences.secure.SecureKeys.IS_PHONE_ROOTED;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 /**
@@ -221,6 +223,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private RootAvailabilityManager rootAvailabilityManager;
 
   /**
    * call after this instance onCreate()
@@ -510,8 +513,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
       installManager = new InstallManager(getDownloadManager(),
-          new InstallerFactory().create(this, installerType),
-          new RootAvailabilityManager(((V8Engine) getApplicationContext()).getSecurePreferences()));
+          new InstallerFactory().create(this, installerType), getRootAvailabilityManager());
       installManagers.put(installerType, installManager);
     }
 
@@ -807,8 +809,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
             return setupFirstRun(accountManager).andThen(
                 Completable.merge(accountManager.syncCurrentAccount(), createShortcut()))
-                .andThen(
-                    new RootAvailabilityManager(getSecurePreferences()).updateRootAvailability());
+                .andThen(getRootAvailabilityManager().updateRootAvailability());
           }
 
           return Completable.complete();
@@ -1005,5 +1006,22 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .penaltyLog()
         .penaltyDeath()
         .build());
+  }
+
+  public RootAvailabilityManager getRootAvailabilityManager() {
+    if (rootAvailabilityManager == null) {
+      rootAvailabilityManager = new RootAvailabilityManager(new RootValueSaver() {
+        @Override public Single<Boolean> isPhoneRoot() {
+          return getSecurePreferences().getBoolean(IS_PHONE_ROOTED, false)
+              .first()
+              .toSingle();
+        }
+
+        @Override public Completable save(boolean rootAvailable) {
+          return getSecurePreferences().save(IS_PHONE_ROOTED, rootAvailable);
+        }
+      });
+    }
+    return rootAvailabilityManager;
   }
 }

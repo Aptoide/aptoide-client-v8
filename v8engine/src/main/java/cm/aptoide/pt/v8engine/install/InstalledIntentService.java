@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -71,8 +72,7 @@ public class InstalledIntentService extends IntentService {
     analytics = Analytics.getInstance();
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
-    rootAvailabilityManager =
-        new RootAvailabilityManager(((V8Engine) getApplicationContext()).getSecurePreferences());
+    rootAvailabilityManager = ((V8Engine) getApplicationContext()).getRootAvailabilityManager();
   }
 
   @Override protected void onHandleIntent(Intent intent) {
