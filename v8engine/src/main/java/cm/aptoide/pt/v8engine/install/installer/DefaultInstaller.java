@@ -55,13 +55,14 @@ public class DefaultInstaller implements Installer {
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       FileUtils fileUtils, Analytics analytics, boolean debug,
-      InstalledRepository installedRepository) {
+      InstalledRepository installedRepository, int rootTimeout) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
     this.analytics = analytics;
     this.installedRepository = installedRepository;
     RootShell.debugMode = debug;
+    RootShell.defaultCommandTimeout = rootTimeout;
   }
 
   @Override public Observable<Boolean> isInstalled(String md5) {

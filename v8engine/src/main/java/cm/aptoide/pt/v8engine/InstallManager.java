@@ -46,14 +46,11 @@ public class InstallManager {
   /**
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
    */
-  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
-      int rootInstallDefaultTimeout, boolean rootInstallDebug) {
+  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.downloadRepository = RepositoryFactory.getDownloadRepository();
     this.installedRepository = RepositoryFactory.getInstalledRepository();
-    RootShell.defaultCommandTimeout = rootInstallDefaultTimeout;
-    RootShell.debugMode = rootInstallDebug;
   }
 
   public void stopAllInstallations(Context context) {
