@@ -33,6 +33,7 @@ import rx.schedulers.Schedulers;
  */
 class DownloadTask extends FileDownloadLargeFileListener {
 
+  public static final int RETRY_TIMES = 3;
   private static final int INTERVAL = 1000;    //interval between progress updates
   private static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
   private static final int FILE_NOTFOUND_HTTP_ERROR = 404;
@@ -62,8 +63,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
         .subscribeOn(Schedulers.io())
         .takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.PROGRESS
             && download.getOverallDownloadStatus() != Download.IN_QUEUE
-            &&
-            download.getOverallDownloadStatus() != Download.PENDING)
+            && download.getOverallDownloadStatus() != Download.PENDING)
         .filter(aLong1 -> download.getOverallDownloadStatus() == Download.PROGRESS
             || download.getOverallDownloadStatus() == Download.COMPLETED)
         .map(aLong -> updateProgress())
@@ -138,8 +138,9 @@ class DownloadTask extends FileDownloadLargeFileListener {
         if (TextUtils.isEmpty(fileToDownload.getLink())) {
           throw new IllegalArgumentException("A link to download must be provided");
         }
-        BaseDownloadTask baseDownloadTask =
-            FileDownloader.getImpl().create(fileToDownload.getLink());
+        BaseDownloadTask baseDownloadTask = FileDownloader.getImpl()
+            .create(fileToDownload.getLink())
+            .setAutoRetryTimes(RETRY_TIMES);
         /*
          * Aptoide - events 2 : download
          * Get X-Mirror and add to the event

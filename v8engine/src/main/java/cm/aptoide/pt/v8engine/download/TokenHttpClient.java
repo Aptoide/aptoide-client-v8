@@ -17,6 +17,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -59,13 +60,15 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
 
         return chain.proceed(request);
       }
-    }).addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
-            AptoideUtils.Core.getDefaultVername(), oemid);
-      }
-    })).addInterceptor(new Interceptor() {
-      @Override public Response intercept(Chain chain) throws IOException {
+    })
+        .addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
+          @Override public String generateUserAgent() {
+            return AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
+                AptoideUtils.Core.getDefaultVername(), oemid);
+          }
+        }))
+        .addInterceptor(new Interceptor() {
+          @Override public Response intercept(Chain chain) throws IOException {
 
 
         /*
@@ -73,26 +76,30 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
          * Get X-Mirror and add to the event
          */
 
-        Request request = chain.request();
-        String v = request.header(Constants.VERSION_CODE);
-        String packageName = request.header(Constants.PACKAGE);
-        int fileType = Integer.valueOf(request.header(Constants.FILE_TYPE));
+            Request request = chain.request();
+            String v = request.header(Constants.VERSION_CODE);
+            String packageName = request.header(Constants.PACKAGE);
+            int fileType = Integer.valueOf(request.header(Constants.FILE_TYPE));
 
-        Response response = chain.proceed(request.newBuilder()
-            .removeHeader(Constants.VERSION_CODE)
-            .removeHeader(Constants.PACKAGE)
-            .removeHeader(Constants.FILE_TYPE)
-            .build());
-        if (response != null) {
-          Headers allHeaders = response.headers();
-          if (allHeaders != null) {
-            String mirror = allHeaders.get("X-Mirror");
-            addMirrorToDownloadEvent(v, packageName, fileType, mirror);
+            Response response = chain.proceed(request.newBuilder()
+                .removeHeader(Constants.VERSION_CODE)
+                .removeHeader(Constants.PACKAGE)
+                .removeHeader(Constants.FILE_TYPE)
+                .build());
+            if (response != null) {
+              Headers allHeaders = response.headers();
+              if (allHeaders != null) {
+                String mirror = allHeaders.get("X-Mirror");
+                addMirrorToDownloadEvent(v, packageName, fileType, mirror);
+              }
+            }
+            return response;
           }
-        }
-        return response;
-      }
-    }).build();
+        })
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .build();
   }
 
   private void addMirrorToDownloadEvent(String v, String packageName, int fileType,
