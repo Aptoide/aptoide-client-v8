@@ -174,23 +174,23 @@ import rx.android.schedulers.AndroidSchedulers;
     });
 
     //setup the ui
-    displayable.getInstallState()
+    compositeSubscription.add(displayable.getInstallState()
         .first()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(installationProgress -> updateUi(displayable, installationProgress, true, getApp))
         .subscribe(viewUpdated -> {
         }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+            .log(throwable)));
 
     //listen ui events
-    displayable.getInstallState()
+    compositeSubscription.add(displayable.getInstallState()
         .skip(1)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(
             installationProgress -> updateUi(displayable, installationProgress, false, getApp))
         .subscribe(viewUpdated -> {
         }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+            .log(throwable)));
 
     if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes()
         .getVersions())) {
