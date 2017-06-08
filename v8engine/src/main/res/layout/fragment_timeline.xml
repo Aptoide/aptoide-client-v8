@@ -11,6 +11,8 @@
       style="?android:attr/progressBarStyleLarge"
       />
 
+  <include layout="@layout/partial_view_error"/>
+
   <android.support.v4.widget.SwipeRefreshLayout
       android:id="@+id/refresh_layout"
       android:layout_width="match_parent"

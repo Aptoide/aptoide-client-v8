@@ -20,11 +20,13 @@ public interface TimelineView extends View {
 
   void hideRefresh();
 
-  Observable<Void> refreshes();
+  void showMoreCards(List<Article> cards);
 
-  Observable<CardTouchEvent> articleClicked();
+  void showGenericError();
+
+  Observable<Void> refreshes();
 
   Observable<Void> reachesBottom();
 
-  void showMoreCards(List<Article> cards);
+  Observable<CardTouchEvent> articleClicked();
 }

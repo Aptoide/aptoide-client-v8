@@ -40,8 +40,7 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articles -> {
-        }, throwable -> Log.d(this.getClass()
-            .getCanonicalName(), "ERROR LOADING CARDS"));
+        }, throwable -> view.showGenericError());
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -51,8 +50,7 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showCardsAndHideRefresh(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articles -> {
-        }, throwable -> Log.d(this.getClass()
-            .getCanonicalName(), "ERROR REFRESHING CARDS"));
+        }, throwable -> view.showGenericError());
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
