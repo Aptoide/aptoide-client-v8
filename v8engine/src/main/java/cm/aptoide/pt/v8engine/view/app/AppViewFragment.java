@@ -461,9 +461,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     if (i == R.id.menu_share) {
       shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-          app.getStats()
-              .getRating()
-              .getAvg(), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+          (app != null && app.getStats() != null && app.getStats().getRating() != null
+              ? app.getStats().getRating().getAvg() : 0f),
+          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
       appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {
@@ -481,14 +481,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       return true;
     } else if (i == R.id.menu_remote_install) {
       appViewAnalytics.sendRemoteInstallEvent();
-      if (AptoideUtils.SystemU.getConnectionType()
-          .equals("mobile")) {
+      if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
         GenericDialogs.createGenericOkMessage(getContext(),
             getContext().getString(R.string.remote_install_menu_title),
-            getContext().getString(R.string.install_on_tv_mobile_error))
-            .subscribe(__ -> {
-            }, err -> CrashReport.getInstance()
-                .log(err));
+            getContext().getString(R.string.install_on_tv_mobile_error)).subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err));
       } else {
         DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
         newFragment.show(getActivity().getSupportFragmentManager(),
@@ -652,7 +649,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
-        new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics, installedRepository));
+        new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
+            installedRepository));
 
     // only show screen shots / video if the app has them
     if (isMediaAvailable(media)) {
