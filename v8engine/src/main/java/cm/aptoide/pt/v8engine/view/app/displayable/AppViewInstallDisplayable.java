@@ -18,7 +18,6 @@ import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
-import rx.Single;
 
 /**
  * Created on 06/05/16.
@@ -97,16 +96,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     return installManager.getInstallationProgress(md5, packageName, versionCode);
   }
 
-  public Observable<InstallManager.InstallationType> getInstallationType() {
-    return installManager.getInstallationType(packageName, versionCode);
-  }
-
   public DownloadFactory getDownloadFactory() {
     return downloadFactory;
-  }
-
-  public Single<InstallManager.Error> getError() {
-    return installManager.getError(md5);
   }
 
   public TimelineAnalytics getTimelineAnalytics() {

@@ -177,8 +177,7 @@ import rx.android.schedulers.AndroidSchedulers;
     displayable.getInstallState()
         .first()
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMapCompletable(
-            installationProgress -> updateUi(displayable, installationProgress, true, getApp))
+        .doOnNext(installationProgress -> updateUi(displayable, installationProgress, true, getApp))
         .subscribe(viewUpdated -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
@@ -187,7 +186,7 @@ import rx.android.schedulers.AndroidSchedulers;
     displayable.getInstallState()
         .skip(1)
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMapCompletable(
+        .doOnNext(
             installationProgress -> updateUi(displayable, installationProgress, false, getApp))
         .subscribe(viewUpdated -> {
         }, throwable -> CrashReport.getInstance()
@@ -209,123 +208,90 @@ import rx.android.schedulers.AndroidSchedulers;
     permissionRequest = ((PermissionService) getContext());
   }
 
-  private Completable updateUi(AppViewInstallDisplayable displayable,
+  private void updateUi(AppViewInstallDisplayable displayable,
       InstallationProgress installationProgress, boolean isSetup, GetApp getApp) {
     InstallationProgress.InstallationStatus state = installationProgress.getState();
-    Completable completable;
     switch (state) {
       case INSTALLING:
-        completable = updateInstallingUi(installationProgress, getApp.getNodes()
+        updateInstallingUi(installationProgress, getApp.getNodes()
             .getMeta()
-            .getData(), isSetup, displayable);
+            .getData(), isSetup);
         break;
       case PAUSED:
-        completable = updatePausedUi(installationProgress, displayable, getApp, isSetup);
+        updatePausedUi(installationProgress, getApp, isSetup);
         break;
       case INSTALLED:
         //current installed version
-        completable = updateInstalledUi(installationProgress);
+        updateInstalledUi(installationProgress);
         break;
       case UNINSTALLED:
         //App not installed
-        completable = updateUninstalledUi(displayable, getApp, isSetup);
+        updateUninstalledUi(displayable, getApp, isSetup, installationProgress.getType());
         break;
       case FAILED:
-        completable = updateFailedUi(isSetup, displayable, installationProgress, getApp);
+        updateFailedUi(isSetup, displayable, installationProgress, getApp);
         break;
-      default:
-        completable = Completable.complete();
     }
-    return completable;
   }
 
-  private Completable updateFailedUi(boolean isSetup, AppViewInstallDisplayable displayable,
+  private void updateFailedUi(boolean isSetup, AppViewInstallDisplayable displayable,
       InstallationProgress installationProgress, GetApp getApp) {
-    final Completable completable;
     if (isSetup) {
-      completable = updateUninstalledUi(displayable, getApp, isSetup);
+      updateUninstalledUi(displayable, getApp, isSetup, installationProgress.getType());
     } else {
-      completable = updatePausedUi(installationProgress, displayable, getApp, isSetup).andThen(
-          displayable.getError()
-              .observeOn(AndroidSchedulers.mainThread())
-              .flatMapCompletable(error -> showErrorMessage(error)));
+      updatePausedUi(installationProgress, getApp, isSetup);
+      showErrorMessage(installationProgress.getError());
     }
-    return completable;
   }
 
-  @NonNull
-  private Completable updateUninstalledUi(AppViewInstallDisplayable displayable, GetApp getApp,
+  @NonNull private void updateUninstalledUi(AppViewInstallDisplayable displayable, GetApp getApp,
+      boolean isSetup, InstallationProgress.InstallationType installationType) {
+
+    GetAppMeta.App app = getApp.getNodes()
+        .getMeta()
+        .getData();
+    setDownloadBarInvisible();
+    switch (installationType) {
+      case INSTALL:
+        setupInstallOrBuyButton(displayable, getApp);
+        break;
+      case UPDATE:
+        //update
+        isUpdate = true;
+        setupActionButton(R.string.update, installOrUpgradeListener(app, getApp.getNodes()
+            .getVersions(), displayable));
+        break;
+      case DOWNGRADE:
+        //downgrade
+        setupActionButton(R.string.downgrade, downgradeListener(app));
+        break;
+    }
+    setupDownloadControls(app, isSetup, installationType);
+  }
+
+  private void updateInstalledUi(InstallationProgress installationProgress) {
+    setDownloadBarInvisible();
+    setupActionButton(R.string.open,
+        v -> AptoideUtils.SystemU.openApp(installationProgress.getPackageName()));
+  }
+
+  private void updatePausedUi(InstallationProgress installationProgress, GetApp app,
       boolean isSetup) {
-    return displayable.getInstallationType()
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .map(installationType -> {
-          GetAppMeta.App app = getApp.getNodes()
-              .getMeta()
-              .getData();
-          setDownloadBarInvisible();
-          switch (installationType) {
-            case INSTALL:
-              setupInstallOrBuyButton(displayable, getApp);
-              break;
-            case UPDATE:
-              //update
-              isUpdate = true;
-              setupActionButton(R.string.update, installOrUpgradeListener(app, getApp.getNodes()
-                  .getVersions(), displayable));
-              break;
-            case DOWNGRADE:
-              //downgrade
-              setupActionButton(R.string.downgrade, downgradeListener(app));
-              break;
-          }
-          setupDownloadControls(app, isSetup, installationType);
-          return installationType;
-        })
-        .toCompletable();
+
+    showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
+    actionResume.setVisibility(View.VISIBLE);
+    actionPause.setVisibility(View.GONE);
+    setupDownloadControls(app.getNodes()
+        .getMeta()
+        .getData(), isSetup, installationProgress.getType());
   }
 
-  @NonNull private Completable updateInstalledUi(InstallationProgress installationProgress) {
-    final Completable completable;
-    completable = Completable.fromAction(() -> {
-      setDownloadBarInvisible();
-      setupActionButton(R.string.open,
-          v -> AptoideUtils.SystemU.openApp(installationProgress.getPackageName()));
-    });
-    return completable;
-  }
-
-  @NonNull private Completable updatePausedUi(InstallationProgress installationProgress,
-      AppViewInstallDisplayable displayable, GetApp app, boolean isSetup) {
-
-    return displayable.getInstallationType()
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .map(installationType -> {
-          showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
-          actionResume.setVisibility(View.VISIBLE);
-          actionPause.setVisibility(View.GONE);
-          setupDownloadControls(app.getNodes()
-              .getMeta()
-              .getData(), isSetup, installationType);
-          return installationType;
-        })
-        .toCompletable();
-  }
-
-  @NonNull private Completable updateInstallingUi(InstallationProgress installationProgress,
-      GetAppMeta.App app, boolean isSetup, AppViewInstallDisplayable displayable) {
-    return displayable.getInstallationType()
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .map(installationType -> {
-          showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
-          actionResume.setVisibility(View.GONE);
-          actionPause.setVisibility(View.VISIBLE);
-          setupDownloadControls(app, isSetup, installationType);
-          return installationType;
-        })
-        .toCompletable();
+  private void updateInstallingUi(InstallationProgress installationProgress, GetAppMeta.App app,
+      boolean isSetup) {
+    showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
+    actionResume.setVisibility(View.GONE);
+    actionPause.setVisibility(View.VISIBLE);
+    setupDownloadControls(app, isSetup, installationProgress.getType());
   }
 
   private void showProgress(int progress, boolean isIndeterminate) {
@@ -502,7 +468,8 @@ import rx.android.schedulers.AndroidSchedulers;
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             if (accountManager.isLoggedIn()
-                && ManagerPreferences.isShowPreviewDialog() && Application.getConfiguration()
+                && ManagerPreferences.isShowPreviewDialog()
+                && Application.getConfiguration()
                 .isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog =
                   new SharePreviewDialog(displayable, accountManager, true,
@@ -567,7 +534,7 @@ import rx.android.schedulers.AndroidSchedulers;
     };
   }
 
-  private Completable showErrorMessage(InstallManager.Error error) {
+  private Completable showErrorMessage(InstallationProgress.Error error) {
     Completable completable;
     switch (error) {
       case GENERIC_ERROR:
@@ -590,7 +557,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void setupDownloadControls(GetAppMeta.App app, boolean isSetup,
-      InstallManager.InstallationType installationType) {
+      InstallationProgress.InstallationType installationType) {
     if (isSetup) {
       int actionInstall;
       switch (installationType) {

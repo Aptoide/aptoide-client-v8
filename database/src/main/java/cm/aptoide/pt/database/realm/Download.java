@@ -39,6 +39,7 @@ import lombok.EqualsAndHashCode;
   public static final int NOT_DOWNLOADED = 12;
   public static final int IN_QUEUE = 13;
   //errors
+  public static final int NO_ERROR = 0;
   public static final int GENERIC_ERROR = 1;
   public static final int NOT_ENOUGH_SPACE_ERROR = 2;
   public static String TAG = Download.class.getSimpleName();
@@ -228,7 +229,7 @@ import lombok.EqualsAndHashCode;
 
   }
 
-  @Retention(RetentionPolicy.SOURCE) @IntDef({ GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR })
+  @Retention(RetentionPolicy.SOURCE) @IntDef({ GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR, NO_ERROR })
   public @interface DownloadError {
   }
 }
