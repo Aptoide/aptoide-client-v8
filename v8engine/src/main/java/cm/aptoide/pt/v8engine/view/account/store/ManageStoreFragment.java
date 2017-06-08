@@ -171,8 +171,9 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
     setupViewsDefaultDataUsingStore(currentModel);
 
-    final V8Engine engine = (V8Engine) getActivity().getApplicationContext();
-    attachPresenter(buildPresenter(engine, goToHome), null);
+    attachPresenter(new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
+        ((V8Engine) getActivity().getApplicationContext()).getStoreManager(),
+        getFragmentNavigator()), null);
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
@@ -206,27 +207,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
   @Override public int getContentViewId() {
     return LAYOUT;
-  }
-
-  @NonNull private ManageStorePresenter buildPresenter(@NonNull V8Engine engine, boolean goToHome) {
-    AptoideAccountManager accountManager = engine.getAccountManager();
-    BodyInterceptor<BaseBody> bodyInterceptorV3 = engine.getBaseBodyInterceptorV3();
-    BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7 =
-        engine.getBaseBodyInterceptorV7();
-    RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
-    OkHttpClient httpClient = engine.getDefaultClient();
-    Converter.Factory converterFactory = WebService.getDefaultConverter();
-    ObjectMapper objectMapper = engine.getNonNullObjectMapper();
-
-    final BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor =
-        engine.getMultipartBodyInterceptor();
-
-    StoreManagerFactory storeManagerFactory =
-        new StoreManagerFactory(accountManager, httpClient, converterFactory,
-            multipartBodyInterceptor, bodyInterceptorV3, bodyInterceptorV7, requestBodyFactory,
-            objectMapper);
-    return new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
-        storeManagerFactory.create(), getFragmentNavigator());
   }
 
   private void setupViewsDefaultDataUsingStore(ViewModel storeModel) {

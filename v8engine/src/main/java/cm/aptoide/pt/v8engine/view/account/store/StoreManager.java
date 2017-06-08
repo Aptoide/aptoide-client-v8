@@ -34,7 +34,7 @@ public class StoreManager {
   private final RequestBodyFactory requestBodyFactory;
   private final ObjectMapper objectMapper;
 
-  StoreManager(AptoideAccountManager accountManager, OkHttpClient httpClient,
+  public StoreManager(AptoideAccountManager accountManager, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
       BodyInterceptor<BaseBody> bodyInterceptorV3,

@@ -130,6 +130,7 @@ import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareApplication;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.view.account.store.StoreManager;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
@@ -218,6 +219,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private StoreManager storeManager;
 
   /**
    * call after this instance onCreate()
@@ -370,6 +372,16 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new NotificationsCleaner(notificationAccessor), getAccountManager());
     }
     return notificationCenter;
+  }
+
+  public StoreManager getStoreManager() {
+    if (storeManager == null) {
+      storeManager =
+          new StoreManager(accountManager, getDefaultClient(), WebService.getDefaultConverter(),
+              getMultipartBodyInterceptor(), getBaseBodyInterceptorV3(), getBaseBodyInterceptorV7(),
+              getRequestBodyFactory(), getNonNullObjectMapper());
+    }
+    return storeManager;
   }
 
   @NonNull public NotificationSyncScheduler getNotificationSyncScheduler() {
