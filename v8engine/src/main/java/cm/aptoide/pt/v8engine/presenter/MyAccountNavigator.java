@@ -33,6 +33,6 @@ public class MyAccountNavigator {
 
   public void navigateToEditProfileView(Account account) {
     fragmentNavigator.navigateTo(
-        ManageUserFragment.newInstanceToEdit(account.getAvatar(), account.getNickname()));
+        ManageUserFragment.newInstanceToEdit(account.getNickname(), account.getAvatar()));
   }
 }
