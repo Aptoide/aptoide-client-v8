@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.Article;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.SocialService;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
@@ -76,8 +77,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
             Integer.MAX_VALUE)), CrashReport.getInstance()), savedInstanceState);
     articleSubject = PublishSubject.create();
-    adapter = new CardAdapter(Collections.emptyList(), articleSubject, new DateCalculator(),
-        new SpannableFactory());
+    adapter = new CardAdapter(Collections.emptyList(),
+        new CardViewHolderFactory(articleSubject, new DateCalculator(), new SpannableFactory()));
   }
 
   @Nullable @Override
@@ -125,12 +126,21 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout.setRefreshing(false);
   }
 
-  @Override public rx.Observable<Void> refreshes() {
-    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  @Override public void showMoreCards(List<Article> cards) {
+    adapter.addCards(cards);
   }
 
-  @Override public Observable<CardTouchEvent> articleClicked() {
-    return articleSubject;
+  @Override public void showGenericError() {
+    this.genericError.setVisibility(View.VISIBLE);
+    this.list.setVisibility(View.GONE);
+    this.progressBar.setVisibility(View.GONE);
+    if (this.swipeRefreshLayout.isRefreshing()) {
+      this.swipeRefreshLayout.setRefreshing(false);
+    }
+  }
+
+  @Override public rx.Observable<Void> refreshes() {
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
 
   @Override public Observable<Void> reachesBottom() {
@@ -145,16 +155,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .cast(Void.class);
   }
 
-  @Override public void showMoreCards(List<Article> cards) {
-    adapter.addCards(cards);
-  }
-
-  @Override public void showGenericError() {
-    this.genericError.setVisibility(View.VISIBLE);
-    this.list.setVisibility(View.GONE);
-    this.progressBar.setVisibility(View.GONE);
-    if (this.swipeRefreshLayout.isRefreshing()) {
-      this.swipeRefreshLayout.setRefreshing(false);
-    }
+  @Override public Observable<CardTouchEvent> articleClicked() {
+    return articleSubject;
   }
 }

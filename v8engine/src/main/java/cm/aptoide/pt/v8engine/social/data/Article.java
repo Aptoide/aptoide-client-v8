@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by jdandrade on 31/05/2017.
  */
 
-public class Article {
+public class Article implements Card {
   private final String cardId;
   private final String title;
   private final String thumbnailUrl;
@@ -19,10 +19,11 @@ public class Article {
   private final String publisherName;
   private final Link publisherLink;
   private final Link articleLink;
+  private final CardType cardType;
 
   public Article(String cardId, String title, String thumbnailUrl, Date date, App app,
       String abTestURL, String publisherAvatarURL, String publisherName, Link publisherLink,
-      Link articleLink) {
+      Link articleLink, CardType cardType) {
     this.cardId = cardId;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
@@ -33,10 +34,15 @@ public class Article {
     this.publisherAvatarURL = publisherAvatarURL;
     this.publisherName = publisherName;
     this.articleLink = articleLink;
+    this.cardType = cardType;
   }
 
   public String getCardId() {
     return cardId;
+  }
+
+  @Override public CardType getType() {
+    return this.cardType;
   }
 
   public String getTitle() {

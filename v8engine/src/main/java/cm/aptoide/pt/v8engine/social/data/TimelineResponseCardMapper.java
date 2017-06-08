@@ -37,7 +37,8 @@ public class TimelineResponseCardMapper {
             .getName(), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher()
                 .getBaseUrl()),
-            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl())));
+            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
+            CardType.ARTICLE));
       }
     }
 
