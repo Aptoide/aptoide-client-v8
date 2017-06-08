@@ -64,7 +64,7 @@ Apps (über %s), inklusive der Version und des Installationsdatums.</string>
   <string name="appview_other_versions"><u>Andere Versionen</u></string>
   <string name="appview_latest_version_text">Letzte Version</string>
   <string name="appview_rate_this_app">App bewerten</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">Alle <![CDATA[>]]> lesen;</string>
   <string name="zero">0</string>
   <string name="working_well">Funktioniert gut</string>
   <string name="needs_license">Benötigt Lizenz</string>

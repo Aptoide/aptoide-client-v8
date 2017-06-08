@@ -65,7 +65,7 @@ hilang? Blokir aplikasi agar tidak memperbarui. Buka tab Pembaruan dan tekan lam
   <string name="appview_other_versions"><u>Versi Lain</u></string>
   <string name="appview_latest_version_text">Versi terbaru</string>
   <string name="appview_rate_this_app">Beri peringkat aplikasi ini</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">baca semua <![CDATA[>]]>;</string>
   <string name="zero">0</string>
   <string name="working_well">Bekerja dengan Baik</string>
   <string name="needs_license">Perlu Lisensi</string>

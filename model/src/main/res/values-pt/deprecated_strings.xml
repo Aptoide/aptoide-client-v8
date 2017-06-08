@@ -297,7 +297,7 @@
   <string name="setting_auto_update_title">Activar o auto-update</string>
   <string name="show_all_updates">Não mostrar actualizações para aplicações com assinaturas diferentes</string>
   <string name="setting_allUpdates_filtering">Filtrar actualizações</string>
-  <string name="setting_schdwninstallsum">Instalar trasnferências agendadas automaticamente quando houver uma ligação WiFi</string>
+  <string name="setting_schdwninstallsum">Instalar transferências agendadas automaticamente quando houver uma ligação WiFi</string>
   <string name="setting_schdwninstalltitle">Instalação automática</string>
   <string name="setting_clear_memory">Armazenamento</string>
   <string name="clearcontent_title">Remover dados e configurações do Aptoide</string>

@@ -144,16 +144,16 @@
   <string name="are_you_adult">Είστε τουλάχιστον 21 ετών;</string>
   <string name="facebook_logout_and_login">Αποσυνδεθείτε και Συνδεθείτε με Facebook</string>
   <string name="schDown_nodownloadselect">Δεν Επιλέχθηκαν Λήψεις</string>
-  <string name="no_sch_downloads">Browsing apps using mobile data and want to download later when you’re on a wifi connection? Use Schedule downloads and change your preferences on Settings -&gt; General Download Rules - to WiFi.</string>
+  <string name="no_sch_downloads">Περιηγείσαι σε apps χρησιμοποιώντας δεδομένα κινητής και επιθυμείς να κατεβάσεις αργότερα όταν θα έχεις wifi σύνδεση; Κάνε χρήση των Προγραμματισμένων Λήψεων και όρισε τις προτιμήσεις σου πηγαίνοντας Ρυθμίσεις -&gt; Γενικοί Κανόνες Λήψης - WiFi.</string>
   <string name="schDown_installselected">Εγκατάσταση Επιλέχθηκε</string>
   <string name="schDown_removeselected">Αφαίρεση Επιλεγμένων</string>
   <string name="schDown_invertselection">Αντιστροφή Επιλογής</string>
   <string name="schDwnBtn">Προγραμματισμένη Λήψη</string>
   <string name="schDown_install">Θέλετε να εγκαταστήσετε όλες τις προγραμματισμένες λήψεις;</string>
-  <string name="hidden_adult">Some apps are hidden because adult content filter is active. Do you want to list this apps?</string>
+  <string name="hidden_adult">Ορισμένα apps δεν εμφανίζονται, γιατί είναι ενεργοποιημένο το φίλτρο περιεχομένου για ενήλικες. Θέλεις να εμφανιστούν αυτά τα apps;</string>
   <string name="dont_show_again">Να μην εμφανιστεί ξανά αυτό το παράθυρο διαλόγου</string>
   <!-- App View -->
-  <string name="rollback_empty">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed apps (via Aptoide) including version and install date.</string>
+  <string name="rollback_empty">Θα πρέπει να υποβαθμίσεις γρήγορα το app σε προηγούμενη έκδοση και να επιλύσεις προβλήματα ασυμβατότητας. Κράτα αρχείο με όλα τα εγκατεστημένα apps (μέσω Aptoide), συμπ. της έκδοσης και της ημερομηνίας εγκατάστασης.</string>
   <string name="see_more">Δείτε περισσότερα</string>
   <string name="see_less">Δείτε λιγότερα</string>
   <string name="get_latest">Λάβετε την τελευταία έκδοση</string>
@@ -180,7 +180,7 @@
   <string name="no_payments_available">Καμία πληρωμή διαθέσιμη.</string>
   <string name="failed_auth_code">Αποτυχία πιστοποίησης λογαριασμού. Παρακαλώ προσπαθήστε πάλι.</string>
   <string name="error_occured_paying">Ένα σφάλμα παρουσιάστηκε. Η πληρωμή δεν ολοκληρώθηκε.</string>
-  <string name="error_occured_retry_later">An error occurred. Aptoide will retry later automatically.</string>
+  <string name="error_occured_retry_later">Παρουσιάστηκε σφάλμα. Το Aptoide θα ξαναπροσπαθήσει αργότερα.</string>
   <string name="account">Λογαριασμός</string>
   <string name="confirm_carrier_payment">\"Θέλετε να αγοράσετε \'{title}\' για {value}; Θα χρεωθείτε από
  το φορέα σας.
@@ -191,7 +191,7 @@
   <string name="rollback_installed">Εγκαταστάθηκε</string>
   <string name="rollback_uninstalled">Καταργήθηκε</string>
   <string name="rollback_updated">Ενημερώθηκε</string>
-  <string name="rollback_updated_at">Updated at %1$s</string>
+  <string name="rollback_updated_at">Ενημερώθηκε %1$s</string>
   <string name="rollback_downgraded">Λήφθηκε</string>
   <string name="install">Εγκατάσταση</string>
   <string name="cannot_uninstall_self">Δεν είναι δυνατή η απεγκατάσταση του εγκαταστάτη.</string>
@@ -199,7 +199,7 @@
   <string name="root_access_dialog">Φαίνεται ότι έχετε κάνει root. Θα θέλατε να επιτρέψετε την αυτόματη εγκατάσταση της εφαρμογής μετά την λήψη της;</string>
   <string name="downgrade_requires_uninstall">Η Υποβάθμιση απαιτεί απεγκατάσταση της Εφαρμογής</string>
   <string name="order_popup_title3">Περιεχόμενο για ενηλίκους</string>
-  <string name="friends_to_invite">All other Facebook friends in Aptoide</string>
+  <string name="friends_to_invite">Όλοι οι άλλοι Facebook φίλοι στο Aptoide</string>
   <string name="invite_friends">Προσκαλέστε Φίλους</string>
   <string name="timeline_is_empty_send_email">Θα στείλουμε email σε αυτούς που επιλέξατε</string>
   <string name="facebook_timeline_friends_invited">Οι φίλοι προσκλήθηκαν!</string>
@@ -263,10 +263,10 @@
   <string name="private_key">ιδιωτικό</string>
   <string name="store_username">Όνομα Χρήστη</string>
   <string name="store_password">Κωδικός</string>
-  <string name="upload_app_backup_apps_installed">You need to upload this app to your store first. You can use Aptoide Backup Apps.</string>
-  <string name="upload_app_backup_apps_not_installed">You need to upload this app to your store first. Please install and use Aptoide Backup Apps.</string>
+  <string name="upload_app_backup_apps_installed">Θα πρέπει πρώτα να ανεβάσεις το app στο store σου. Μπορείς να χρησιμοποιήσεις τα Aptoide Backup Apps.</string>
+  <string name="upload_app_backup_apps_not_installed">Θα πρέπει πρώτα να ανεβάσεις το app στο store σου. Μπορείς να κατεβάσεις και να χρησιμοποιήσεις τα Aptoide Backup Apps.</string>
   <string name="upload_app">Ανεβάστε εφαρμογή</string>
-  <string name="create_review">Create review</string>
+  <string name="create_review">Δημιουργία αξιολόγησης</string>
   <!-- Settings-->
   <string name="asksetadultpinmessage">Θέλετε να βάλετε ένα pin για να ξεκλειδώνετε το περιεχόμενο Ενηλίκων;</string>
   <string name="setpin">Εισάγετε Pin</string>
@@ -278,14 +278,14 @@
   <string name="settings_dwn_network_rules">Επιλογές Δικτύου Κινητής τηλεφωνίας</string>
   <string name="setting_sum_icon_download_rules">Λήψη εικονιδίων μέσω δεδομένων κινητής τηλεφωνίας</string>
   <string name="setting_icon_download_rules">Κανόνες Λήψης Εικόνας</string>
-  <string name="setting_wifi">WiFi</string>
+  <string name="setting_wifi">Wi-Fi</string>
   <string name="setting_mobile">Δεδομένα 3G/4G</string>
   <string name="setting_3g">3G</string>
   <string name="setting_4g">4G</string>
   <string name="setting_ethernet">Ethernet</string>
   <string name="setting_sum_general_download_rules">Λάβετε Εφαρμογές, Επιλογές Συντακτών, Κορυφαίες Εφαρμογές και Καταστήματα μέσω δεδομένων κινητής τηλεφωνίας</string>
   <string name="setting_general_download_rules">Γενικοί Κανόνες Λήψης</string>
-  <string name="setting_general">General</string>
+  <string name="setting_general">Γενικά</string>
   <string name="setting_hwspecstitle">Προδιαγραφές Υλικού</string>
   <string name="setting_hwspecssum">Πληροφορίες Υλικού σχετικά με το τηλέφωνό σας</string>
   <string name="setting_appfiltersum">Να μην εμφανίζονται εφαρμογές που δεν είναι συμβατές με αυτή τη συσκευή</string>
@@ -301,19 +301,19 @@
   <string name="setting_auto_update_title">Ενεργοποίηση της αυτόματης ενημέρωσης</string>
   <string name="show_all_updates">Μη δείχνεις ενημερώσεις εφαρμογών με διαφορετικές υπογραφές</string>
   <string name="setting_allUpdates_filtering">Φιλτραρισμένες Ενημερώσεις</string>
-  <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a WiFi connection is present</string>
+  <string name="setting_schdwninstallsum">Αυτόματη εγκατάσταση προγραμματισμένων λήψεων όταν υπάρχει διαθέσιμη WiFi σύνδεση</string>
   <string name="setting_schdwninstalltitle">Αυτόματη Εγκατάσταση</string>
   <string name="setting_clear_memory">Καθάρισμα Μνήμης</string>
   <string name="clearcontent_title">Κατάργηση δεδομένων και διαμορφώσεων</string>
   <string name="settings_maxFileCache_sum">Ορίστε ένα μέγιστο μέγεθος διατήρησης των apk αρχείων σας</string>
   <string name="settings_maxFileCache_title">Κατέβασμα Αρχείου Cache (MB)</string>
   <string name="change_theme">Αλλαγή θέματος</string>
-  <string name="change_theme_soon">Coming soon</string>
+  <string name="change_theme_soon">Σύντομα</string>
   <string name="theme">Θέματα</string>
   <string name="root">Root</string>
   <string name="allow_root">Επιτρέψτε root εγκατάσταση</string>
   <string name="disable_social_timeline">Απενεργοποίηση Κοινωνικού Χρονολογίου</string>
-  <string name="social_timeline_notifications_sum2">Enable Aptoide Social Timeline Notifications. You will receive the latest news on the notification bar.</string>
+  <string name="social_timeline_notifications_sum2">Ενεργοποίηση Aptoide Social Timeline Ειδοποιήσεων. Θα λαμβάνεις όλα τα πρόσφατα νέα στη γραμμή ειδοποιήσεων.</string>
   <string name="social_timeline_notifications">Ειδοποιήσεις Χρονολογίου</string>
   <string name="about_us">Σχετικά με εμάς</string>
   <string name="restart_aptoide">Παρακαλώ επανεκκινήστε την εφαρμογή για να αλλάξετε το θέμα</string>
@@ -344,16 +344,16 @@
   <string name="appview_additional_information_title">Επιπλέον πληροφορίες</string>
   <string name="appview_comment_reply_button_text">Απάντηση</string>
   <string name="appview_header_trusted_text">Έμπιστο</string>
-  <string name="appview_subscribe_store_button_text">Subscribe?</string>
+  <string name="appview_subscribe_store_button_text">Συνδρομή;</string>
   <string name="appview_subscribed_store_button_text">Συνδρομητής</string>
   <string name="appview_rate_this_app_text">Βαθμολογήστε την εφαρμογή</string>
   <string name="appview_other_versions_in_others_stores">Άλλες εκδόσεις σε άλλα καταστήματα</string>
   <string name="appview_rate_Success">Η εφαρμογή βαθμολογήθηκε</string>
   <string name="ignoreUpdateText">Αγνόηση Ενημέρωσης</string>
-  <string name="ignored">Ignored</string>
+  <string name="ignored">Αγνόηση</string>
   <string name="noIgnoreUpdateText">Η νέα έκδοση της εφαρμογής δεν λειτουργεί στη συσκευή σας ή κάποιο χαρακτηριστικό που λείπει; Μπλοκάρετε εφαρμογές από την ενημέρωση. Μεταβείτε στην καρτέλα Ενημερώσεις και πιέστε μόνιμα την εφαρμογή που θέλετε να διακόψετε την ενημέρωση.</string>
-  <string name="createReviewButtonText">Create \nReview</string>
-  <string name="navigation_drawer_signup_login">Sign Up or Login</string>
+  <string name="createReviewButtonText">Δημιουργία \nΠροεπισκόπησης</string>
+  <string name="navigation_drawer_signup_login">Εγγραφή ή Σύνδεση</string>
   <string name="active">Ενεργό</string>
   <string name="completed">Ολοκληρώθηκε</string>
   <string name="stand_by">Stand by</string>
@@ -387,18 +387,18 @@
   <string name="application_signature_analysis">Η υπογραφή της εφαρμογής σε σύγκριση με αυτή του προγραμματιστή:</string>
   <string name="application_signature_matched">Η υπογραφή της εφαρμογής ταυτίζεται με αυτή του προγραμματιστή.</string>
   <string name="application_signature_not_matched">Η υπογραφή της εφαρμογής δεν ταιριάζει με την υπογραφή του προγραμματιστή. Η εφαρμογή μπορεί να έχει αλλοιωθεί.</string>
-  <string name="application_signature_blacklisted">Application signature is not a Trusted signature at Aptoide Anti-Malware platform because it has been used to sign another application that does not match the signature related to the legit developer.</string>
-  <string name="scanned_manually_by_aptoide_team">Scanned manually by Aptoide Team:</string>
-  <string name="scanned_verified_by_tester">The application was reviewed manually by a tester from Aptoide Team which ensures the safety of the application.</string>
+  <string name="application_signature_blacklisted">Η υπογραφή εφαρμογής δεν αποτελεί Αξιόπιστη υπογραφή στην Aptoide Anti-Malware πλατφόρμα, γιατί έχει χρησιμοποιηθεί και σε άλλη εφαρμογή που δεν προέρχεται από νόμιμο και αξιόπιστο developer.</string>
+  <string name="scanned_manually_by_aptoide_team">Χειροκίνητη σάρωση από Aptoide Team:</string>
+  <string name="scanned_verified_by_tester">Η εφαρμογή έχει αξιολογηθεί χειροκίνητα από tester της Aptoide Team και είναι εγγυημένα ασφαλής.</string>
   <string name="warning">Προσοχή</string>
   <string name="trusted_app">Έμπιστη Εφαρμογή</string>
   <string name="unknown">Άγνωστο</string>
-  <string name="critical">Critical</string>
+  <string name="critical">Επικίνδυνο</string>
   <!-- New Badges V7 -->
   <string name="reason_third_party">Ελέγξαμε την υπογραφή της εφαρμογής και ταιριάζει με αυτή του Google Play Store, έτσι ώστε να είστε σίγουροι και να απολαύσετε την εφαρμογή.</string>
   <string name="reason_scanned">Σαρώθηκε με το AptoideGuard και με 2 διαφορετικά anti-virus (Zoner 1.8 and Sophos 3.0).</string>
   <string name="reason_signature">Η κρυπτογραγημένη υπογραφή εγγυάται ότι το αρχείο είναι ασφαλές για εγκατάσταση και δεν έχει αλλοιωθεί με οποιονδήποτε τρόπο.</string>
-  <string name="reason_manual">This app was manually reviewed by Aptoide\'s expert team, and was flagged as Good.</string>
+  <string name="reason_manual">Έχει γίνει χειροκίνητη αξιολόγηση του app από την ομάδα ειδικών της Aptoide, και έχει επισημανθεί ως Καλό.</string>
   <string name="reason_failed">Η υπογραφή της εφαρμογής δεν ταιριάζει με αυτή του προγραμματιστή. Η εφαρμογή μπορεί να έχει αλλοιωθεί.</string>
   <string name="reason_unknown">Δεν υπάρχουν αρκετές πληροφορίες στη πλατφόρμα %s Anti-Malware.</string>
   <!-- Comments -->
@@ -423,8 +423,8 @@
   <string name="notification_social_timeline">Κοινωνικό Χρονολόγιο Aptoide. Δείτε το τώρα !</string>
   <string name="notification_timeline_posts">Οι φίλοι σας εγκατέστησαν νέες εφαρμογές!</string>
   <!-- Updates -->
-  <string name="no_updates_available_retoric">Everything is up to date!</string>
-  <string name="no_new_updates_available">No new updates available!</string>
+  <string name="no_updates_available_retoric">Όλα έχουν ενημερωθει!</string>
+  <string name="no_new_updates_available">Δεν υπάρχουν νέες ενημερώσεις διαθέσιμες!</string>
   <string name="has_updates">%s έχει νέες ενημερώσεις!</string>
   <string name="new_updates">Υπάρχουν %s νέες ενημερώσεις!</string>
   <string name="one_new_update">Υπάρχει %s νέα ενημέρωση!</string>
@@ -483,7 +483,7 @@
   <string name="privacy_copied">Ο Ιδιωτικός σύνδεσμος αντιγράφηκε στο πρόχειρο</string>
   <string name="unsubscribing_store_message">Unsubscribing %s</string>
   <!-- Search Fragment -->
-  <string name="all_stores">All Stores</string>
-  <string name="followed_stores">Followed Stores</string>
-  <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
+  <string name="all_stores">Όλα τα Stores</string>
+  <string name="followed_stores">Stores που Ακολουθείς</string>
+  <string name="search_minimum_chars">Η αναζήτηση θα πρέπει να έχει min. 2 χαρακτ.</string>
 </resources>

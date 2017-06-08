@@ -67,7 +67,7 @@
   <string name="appview_other_versions"><u> অন্যান্য সংস্করণ</u></string>
   <string name="appview_latest_version_text">সর্বশেষ সংস্করণ</string>
   <string name="appview_rate_this_app">এই অ্যাপটি রেট করুন </string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">সবকিছু পড়ুন <![CDATA[>]]>;</string>
   <string name="zero">০</string>
   <string name="working_well">ঠিকমতো কাজ হচ্ছে</string>
   <string name="needs_license">লাইসেন্স প্রয়োজন</string>

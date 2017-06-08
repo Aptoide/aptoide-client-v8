@@ -66,7 +66,7 @@
   <string name="appview_other_versions"><u>دیگر نسخه‌ها</u></string>
   <string name="appview_latest_version_text">آخرین نسخه</string>
   <string name="appview_rate_this_app">به این برنامه امتیاز دهید</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">مطالعه همه <![CDATA[>]]>;</string>
   <string name="zero">۰</string>
   <string name="working_well">به درستی کار می‌کند</string>
   <string name="needs_license">الترخيصات المطلوبة</string>
@@ -253,7 +253,7 @@
   <string name="summer_apps">برنامه‌های تابستانی</string>
   <string name="play_it">بازی کنید!</string>
   <!--home Fragment-->
-  <string name="featured_stores">Featured Stores</string>
+  <string name="featured_stores">فروشگاه های ویژه</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">مربوط به %1$s</string>
   <string name="appstimeline_update_app">برنامه</string>
@@ -292,8 +292,8 @@
   <string name="word_this">این</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">چیزی که دنبال‌کننده‌ها می‌بینند:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
+  <string name="social_timeline_you_will_share_comment">دنبال کنندگان شما، دیدگاه شما را خواهند دید:</string>
+  <string name="social_timeline_you_will_share_like">دنبال کنندگان شما، لایک شما را خواهند دید:</string>
   <string name="social_timeline_share_title">اشتراک‌گذاریِ پیش‌نمایش</string>
   <string name="social_timeline_share_title_checkbox">خصوصی شدن تایم‌لاین من در اپ‌توید.</string>
   <string name="social_timeline_share_title_checkbox_fb">عمومی شدن تایم‌لاین من در اپ‌توید</string>

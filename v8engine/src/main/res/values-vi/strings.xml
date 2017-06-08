@@ -65,7 +65,7 @@ của bạn (thông qua %s) bao gồm cả phiên bản và ngày cài đặt.</
   <string name="appview_other_versions"><u>Phiên bản khác</u></string>
   <string name="appview_latest_version_text">Phiên bản mới nhất</string>
   <string name="appview_rate_this_app">Bình chọn ứng dụng này</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">đọc tất cả <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">Hoạt động tốt</string>
   <string name="needs_license">Cần giấy phép</string>

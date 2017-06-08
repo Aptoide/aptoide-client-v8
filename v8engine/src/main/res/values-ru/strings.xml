@@ -64,7 +64,7 @@
   <string name="appview_other_versions"><u> 1Другие версии</u> 2</string>
   <string name="appview_latest_version_text">Последняя версия</string>
   <string name="appview_rate_this_app">Оценить это приложение</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">читать все <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">Работает хорошо</string>
   <string name="needs_license">Нужна Лицензия</string>
