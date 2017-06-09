@@ -30,7 +30,7 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
   }
 
   @Override public void call(Subscriber<? super Void> subscriber) {
-    Logger.d(TAG, "call: start");
+    Logger.d(TAG, "call: start with installation id: " + installId);
     try {
       Shell shell = RootShell.getShell(true);
 
@@ -39,16 +39,12 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
         Logger.d(TAG, "call: root available");
         return;
       }
-      if (!RootShell.isAccessGiven()) {
-        subscriber.onError(new InstallationException("User didn't accept root permissions"));
-        Logger.d(TAG, "call: access given");
-        return;
-      }
 
       Command installCommand = new Command(installId, command) {
         @Override public void commandOutput(int id, String line) {
           Logger.d(TAG, "commandOutput: " + line);
-          if (id == installId && line.toLowerCase().equals(SUCCESS_OUTPUT_CONFIRMATION)) {
+          if (id == installId && line.toLowerCase()
+              .equals(SUCCESS_OUTPUT_CONFIRMATION)) {
             success = true;
           }
           super.commandOutput(id, line);
@@ -84,8 +80,12 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
       }));
       shell.add(installCommand);
     } catch (IOException | TimeoutException | RootDeniedException e) {
-      subscriber.onError(e);
+      Logger.d(TAG, "call: timeout reached");
+      if (e instanceof RootDeniedException) {
+        subscriber.onError(new InstallationException("User didn't accept root permissions"));
+      } else {
+        subscriber.onError(e);
+      }
     }
   }
 }
-
