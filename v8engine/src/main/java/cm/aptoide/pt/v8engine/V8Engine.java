@@ -799,21 +799,14 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .flatMapCompletable(account -> {
-          if (SecurePreferences.isFirstRun()) {
-
-            PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-
-            return setupFirstRun(accountManager).andThen(
-                Completable.merge(accountManager.syncCurrentAccount(), createShortcut()))
-                .andThen(getRootAvailabilityManager().updateRootAvailability());
-          }
-
-          return Completable.complete();
-        });
+    if (SecurePreferences.isFirstRun()) {
+      PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+      return setupFirstRun(accountManager).andThen(
+          getRootAvailabilityManager().updateRootAvailability())
+          .andThen(Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
+    } else {
+      return Completable.complete();
+    }
   }
 
   // todo re-factor all this code to proper Rx
