@@ -39,7 +39,7 @@ public class TimelinePresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(articles -> {
+        .subscribe(cards -> {
         }, throwable -> view.showGenericError());
 
     view.getLifecycle()
@@ -49,7 +49,7 @@ public class TimelinePresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideRefresh(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(articles -> {
+        .subscribe(cards -> {
         }, throwable -> view.showGenericError());
 
     view.getLifecycle()
@@ -82,6 +82,18 @@ public class TimelinePresenter implements Presenter {
         .subscribe(cards -> {
         }, throwable -> Log.d(this.getClass()
             .getCanonicalName(), "ERROR LOADING MORE CARDS"));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.retry())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(created -> view.showProgressIndicator())
+        .flatMapSingle(retryClicked -> socialManager.getCards())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(cards -> showCardsAndHideProgress(cards))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cards -> {
+        }, throwable -> view.showGenericError());
   }
 
   @Override public void saveState(Bundle state) {

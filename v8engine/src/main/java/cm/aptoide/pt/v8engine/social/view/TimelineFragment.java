@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
 import rx.Observable;
@@ -55,6 +56,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private SwipeRefreshLayout swipeRefreshLayout;
   private RecyclerViewPositionHelper helper;
   private View genericError;
+  private View retryButton;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -90,6 +92,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     genericError = view.findViewById(R.id.generic_error);
+    retryButton = genericError.findViewById(R.id.retry);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
     list.setAdapter(adapter);
@@ -119,6 +122,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void hideProgressIndicator() {
     list.setVisibility(View.VISIBLE);
+    swipeRefreshLayout.setVisibility(View.VISIBLE);
     progressBar.setVisibility(View.GONE);
   }
 
@@ -134,6 +138,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     this.genericError.setVisibility(View.VISIBLE);
     this.list.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
+    this.swipeRefreshLayout.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
     }
@@ -157,5 +162,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<CardTouchEvent> articleClicked() {
     return articleSubject;
+  }
+
+  @Override public Observable<Void> retry() {
+    return RxView.clicks(retryButton);
   }
 }
