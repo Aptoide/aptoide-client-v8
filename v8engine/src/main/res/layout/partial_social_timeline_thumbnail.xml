@@ -37,14 +37,6 @@
       android:layout_marginRight="12dp"
       android:layout_marginStart="12dp"
       >
-    <ImageView
-        android:id="@+id/play_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/btn_movie_play_normal"
-        android:visibility="visible"
-        />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="152dp"
@@ -81,6 +73,15 @@
             />
       </RelativeLayout>
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/btn_movie_play_normal"
+        android:visibility="visible"
+        />
+
   </FrameLayout>
 
   <View

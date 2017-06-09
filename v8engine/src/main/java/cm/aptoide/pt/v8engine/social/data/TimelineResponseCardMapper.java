@@ -1,9 +1,12 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.model.v7.timeline.Video;
+import cm.aptoide.pt.model.v7.timeline.VideoTimelineItem;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +22,8 @@ public class TimelineResponseCardMapper {
     for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist()
         .getList()) {
       if (item instanceof ArticleTimelineItem) {
+        final Article article = ((ArticleTimelineItem) item).getData();
         String ab = null;
-        final cm.aptoide.pt.model.v7.timeline.Article article =
-            ((ArticleTimelineItem) item).getData();
         if (article.getAb() != null
             && article.getAb()
             .getConversion() != null) {
@@ -39,6 +41,26 @@ public class TimelineResponseCardMapper {
                 .getBaseUrl()),
             linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
             CardType.ARTICLE));
+      } else if (item instanceof VideoTimelineItem) {
+        final Video video = ((VideoTimelineItem) item).getData();
+        String ab = null;
+        if (video.getAb() != null
+            && video.getAb()
+            .getConversion() != null) {
+          ab = video.getAb()
+              .getConversion()
+              .getUrl();
+        }
+        cards.add(
+            new Media(video.getCardId(), video.getTitle(), video.getThumbnailUrl(), video.getDate(),
+                video.getApps()
+                    .get(0), ab, video.getPublisher()
+                .getLogoUrl(), video.getPublisher()
+                .getName(), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                video.getPublisher()
+                    .getBaseUrl()),
+                linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
+                CardType.VIDEO));
       }
     }
 
