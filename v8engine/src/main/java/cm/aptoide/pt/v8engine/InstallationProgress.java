@@ -2,26 +2,31 @@ package cm.aptoide.pt.v8engine;
 
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
+import lombok.ToString;
 
 /**
  * Created by trinkes on 10/04/2017.
  */
 
-public class InstallationProgress {
+public @ToString(of = { "state", "isIndeterminate" }) class InstallationProgress {
   private final int progress;
   private final InstallationStatus state;
+  private final InstallationType type;
   private final boolean isIndeterminate;
   private final int speed;
   private final String md5;
   private final String packageName;
   private final int versionCode;
-  private String appName;
-  private String icon;
+  private final String appName;
+  private final String icon;
+  private final Error error;
 
-  public InstallationProgress(int progress, InstallationStatus state, boolean isIndeterminate,
-      int speed, String md5, String packageName, int versionCode, String appName, String icon) {
+  public InstallationProgress(int progress, InstallationStatus state, InstallationType type,
+      boolean isIndeterminate, int speed, String md5, String packageName, int versionCode,
+      String appName, String icon, Error error) {
     this.progress = progress;
     this.state = state;
+    this.type = type;
     this.isIndeterminate = isIndeterminate;
     this.speed = speed;
     this.md5 = md5;
@@ -29,19 +34,15 @@ public class InstallationProgress {
     this.versionCode = versionCode;
     this.appName = appName;
     this.icon = icon;
+    this.error = error;
   }
 
-  public InstallationProgress(int progress, InstallationStatus state, boolean isIndeterminate,
-      int speed, String md5, String packageName, int versionCode) {
-    this.progress = progress;
-    this.state = state;
-    this.isIndeterminate = isIndeterminate;
-    this.speed = speed;
-    this.md5 = md5;
-    this.packageName = packageName;
-    this.versionCode = versionCode;
-    this.appName = null;
-    this.icon = null;
+  public Error getError() {
+    return error;
+  }
+
+  public InstallationType getType() {
+    return type;
   }
 
   public @IntRange(from = 0, to = 100) int getProgress() {
@@ -86,8 +87,12 @@ public class InstallationProgress {
     return icon;
   }
 
-  public enum InstallationStatus {
-    INSTALLING, PAUSED, INSTALLED, UNINSTALLED, FAILED
+  @Override public int hashCode() {
+    int result = state.hashCode();
+    result = 31 * result + md5.hashCode();
+    result = 31 * result + packageName.hashCode();
+    result = 31 * result + versionCode;
+    return result;
   }
 
   @Override public boolean equals(Object o) {
@@ -102,11 +107,15 @@ public class InstallationProgress {
     return packageName.equals(that.packageName);
   }
 
-  @Override public int hashCode() {
-    int result = state.hashCode();
-    result = 31 * result + md5.hashCode();
-    result = 31 * result + packageName.hashCode();
-    result = 31 * result + versionCode;
-    return result;
+  public enum InstallationStatus {
+    INSTALLING, PAUSED, INSTALLED, UNINSTALLED, FAILED
+  }
+
+  public enum Error {
+    GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR, NO_ERROR
+  }
+
+  public enum InstallationType {
+    INSTALLED, INSTALL, UPDATE, DOWNGRADE
   }
 }

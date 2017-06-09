@@ -5,26 +5,22 @@
 
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
+import android.text.Spannable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
-import rx.Completable;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -107,79 +103,61 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         }));
 
     compositeSubscription.add(RxView.clicks(updateButton)
-        .flatMap(click -> {
+        .doOnNext(click -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
           Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
               displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
               displayable.getStoreName(), Analytics.AppsTimeline.UPDATE_APP);
           displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.UPDATE_APP, socialAction);
           displayable.sendUpdateAppEvent();
-          return displayable.requestPermission(context)
-              .flatMap(success -> displayable.update(context));
         })
+        .flatMap(click -> displayable.requestPermission(context))
+        .flatMap(success -> displayable.update(context))
         .observeOn(AndroidSchedulers.mainThread())
-        .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread())
-            .flatMap(error -> {
-              showDownloadError(displayable);
-              Logger.d(this.getClass()
-                  .getSimpleName(), " stack : " + error.getMessage());
-              return Observable.just(null);
-            }))
-        .flatMapCompletable(
-            installationProgress -> updateInstallProgress(displayable, installationProgress))
+        .doOnNext(installationProgress -> updateInstallProgress(displayable, installationProgress))
         .subscribe(installationProgress -> {
-        }, throwable -> showDownloadError(displayable)));
+        }, throwable -> showDownloadError(displayable.getUpdateAppText(getContext()),
+            displayable.getUpdateErrorText())));
   }
 
   @Override String getCardTypeName() {
     return AppUpdateDisplayable.CARD_TYPE_NAME;
   }
 
-  private Void showDownloadError(AppUpdateDisplayable displayable) {
-    showDownloadError(displayable, displayable.getUpdateErrorText());
-    return null;
-  }
-
-  @CheckResult @UiThread Completable updateInstallProgress(AppUpdateDisplayable displayable,
+  @UiThread void updateInstallProgress(AppUpdateDisplayable displayable,
       InstallationProgress downloadProgress) {
     errorText.setVisibility(View.GONE);
 
     switch (downloadProgress.getState()) {
       case INSTALLING:
-        return Completable.fromAction(() -> {
-          updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-          updateButton.setText(displayable.getUpdatingText(getContext()));
-          updateButton.setEnabled(false);
-        });
+
+        updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        updateButton.setText(displayable.getUpdatingText(getContext()));
+        updateButton.setEnabled(false);
+        break;
       case INSTALLED:
-        return Completable.fromAction(() -> {
-          updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-          updateButton.setText(displayable.getCompletedText(getContext()));
-          updateButton.setEnabled(false);
-        });
+        updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        updateButton.setText(displayable.getCompletedText(getContext()));
+        updateButton.setEnabled(false);
+        break;
       case FAILED:
-        return Completable.fromAction(() -> displayable.getErrorMessage(downloadProgress)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(message -> showDownloadError(displayable, message),
-                throwable -> CrashReport.getInstance()
-                    .log(throwable)));
+        int errorMessage = displayable.getErrorMessage(downloadProgress);
+        showDownloadError(displayable.getUpdateAppText(getContext()), errorMessage);
+        break;
       case PAUSED:
       case UNINSTALLED:
       default:
-        return Completable.fromAction(() -> {
-          updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark,
-              0, 0, 0);
-          updateButton.setText(displayable.getUpdateAppText(getContext()));
-          updateButton.setEnabled(true);
-        });
+        updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0,
+            0, 0);
+        updateButton.setText(displayable.getUpdateAppText(getContext()));
+        updateButton.setEnabled(true);
     }
   }
 
-  private Void showDownloadError(AppUpdateDisplayable displayable, @StringRes int message) {
+  private void showDownloadError(Spannable updateText, @StringRes int message) {
     errorText.setText(message);
     errorText.setVisibility(View.VISIBLE);
-    updateButton.setText(displayable.getUpdateAppText(getContext()));
+    updateButton.setText(updateText);
     updateButton.setEnabled(true);
-    return null;
   }
 }

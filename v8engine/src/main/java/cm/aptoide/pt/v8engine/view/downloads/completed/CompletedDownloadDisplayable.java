@@ -139,35 +139,27 @@ public class CompletedDownloadDisplayable extends Displayable {
     this.onResumeAction = onResumeAction;
   }
 
-  /**
-   * @return an observable with a string resource id
-   */
-  public Observable<Integer> getStatusName() {
+  public String getStatusName(Context context) {
     switch (installation.getState()) {
       case INSTALLING:
-        return Observable.just(cm.aptoide.pt.database.R.string.download_progress);
+        return context.getString(cm.aptoide.pt.database.R.string.download_progress);
       case PAUSED:
-        return Observable.just(cm.aptoide.pt.database.R.string.download_paused);
+        return context.getString(cm.aptoide.pt.database.R.string.download_paused);
       case INSTALLED:
-        return Observable.just(cm.aptoide.pt.database.R.string.download_completed);
+        return context.getString(cm.aptoide.pt.database.R.string.download_completed);
       case UNINSTALLED:
-        return Observable.empty();
+        return "";
       case FAILED:
-        return installManager.getError(installation.getMd5())
-            .toObservable()
-            .first()
-            .flatMap(error -> {
-              switch (error) {
-                case GENERIC_ERROR:
-                  return Observable.just(cm.aptoide.pt.database.R.string.simple_error_occured);
-                case NOT_ENOUGH_SPACE_ERROR:
-                  return Observable.just(cm.aptoide.pt.database.R.string.out_of_space_error);
-                default:
-                  return Observable.error(new RuntimeException("Unknown error"));
-              }
-            });
+        switch (installation.getError()) {
+          case GENERIC_ERROR:
+            return context.getString(cm.aptoide.pt.database.R.string.simple_error_occured);
+          case NOT_ENOUGH_SPACE_ERROR:
+            return context.getString(cm.aptoide.pt.database.R.string.out_of_space_error);
+          default:
+            throw new RuntimeException("Unknown error");
+        }
       default:
-        return Observable.error(new RuntimeException("Unknown status"));
+        throw new RuntimeException("Unknown status");
     }
   }
 }

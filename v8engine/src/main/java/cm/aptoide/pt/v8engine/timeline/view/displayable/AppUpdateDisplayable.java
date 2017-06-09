@@ -35,7 +35,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import lombok.Getter;
 import rx.Observable;
-import rx.Single;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
@@ -152,9 +151,9 @@ public class AppUpdateDisplayable extends CardDisplayable {
           });
     }
     return installManager.install(context, download)
-        .toObservable()
-        .flatMap(installation -> installManager.getInstallationProgress(download.getMd5(),
-            download.getPackageName(), download.getVersionCode()))
+        .andThen(
+            installManager.getInstallationProgress(download.getMd5(), download.getPackageName(),
+                download.getVersionCode()))
         .doOnSubscribe(() -> setupEvents());
   }
 
@@ -255,18 +254,15 @@ public class AppUpdateDisplayable extends CardDisplayable {
             BLANK));
   }
 
-  public Single<Integer> getErrorMessage(InstallationProgress installationProgress) {
-    return installManager.getError(installationProgress.getMd5())
-        .flatMap(error -> {
-          switch (error) {
-            case GENERIC_ERROR:
-              return Single.just(getUpdateErrorText());
-            case NOT_ENOUGH_SPACE_ERROR:
-              return Single.just(getUpdateNoSpaceErrorText());
-            default:
-              return Single.error(new RuntimeException("Unknown error"));
-          }
-        });
+  public @StringRes int getErrorMessage(InstallationProgress installationProgress) {
+    switch (installationProgress.getError()) {
+      case GENERIC_ERROR:
+        return getUpdateErrorText();
+      case NOT_ENOUGH_SPACE_ERROR:
+        return getUpdateNoSpaceErrorText();
+      default:
+        throw new RuntimeException("Unknown error");
+    }
   }
 
   public @StringRes int getUpdateErrorText() {

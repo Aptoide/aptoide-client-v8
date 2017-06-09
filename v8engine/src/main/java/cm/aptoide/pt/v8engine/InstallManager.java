@@ -148,18 +148,19 @@ public class InstallManager {
   public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
       int versioncode) {
     return Observable.combineLatest(aptoideDownloadManager.getAsListDownload(md5),
-        installer.getState(packageName, versioncode),
-        (download, installationState) -> createInstallationProgress(download, installationState,
-            md5, packageName, versioncode));
+        installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
+        (download, installationState, installationType) -> createInstallationProgress(download,
+            installationState, md5, packageName, versioncode, installationType));
   }
 
   private InstallationProgress createInstallationProgress(Download download,
-      InstallationState installationState, String md5, String packageName, int versioncode) {
+      InstallationState installationState, String md5, String packageName, int versioncode,
+      InstallationProgress.InstallationType installationType) {
     return new InstallationProgress(mapInstallationProgress(download),
-        mapInstallationStatus(download, installationState),
+        mapInstallationStatus(download, installationState), installationType,
         mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
         versioncode, getAppName(download, installationState),
-        getAppIcon(download, installationState));
+        getAppIcon(download, installationState), getError(download));
   }
 
   private String getAppIcon(Download download, InstallationState installationState) {
@@ -413,17 +414,18 @@ public class InstallManager {
         .toCompletable();
   }
 
-  public Observable<InstallationType> getInstallationType(String packageName, int versionCode) {
+  private Observable<InstallationProgress.InstallationType> getInstallationType(String packageName,
+      int versionCode) {
     return installedRepository.getInstalled(packageName)
         .map(installed -> {
           if (installed == null) {
-            return InstallationType.INSTALL;
+            return InstallationProgress.InstallationType.INSTALL;
           } else if (installed.getVersionCode() == versionCode) {
-            return InstallationType.INSTALLED;
+            return InstallationProgress.InstallationType.INSTALLED;
           } else if (installed.getVersionCode() > versionCode) {
-            return InstallationType.DOWNGRADE;
+            return InstallationProgress.InstallationType.DOWNGRADE;
           } else {
-            return InstallationType.UPDATE;
+            return InstallationProgress.InstallationType.UPDATE;
           }
         });
   }
@@ -432,22 +434,22 @@ public class InstallManager {
     return onAppInstalled(installed);
   }
 
-  public Single<Error> getError(String md5) {
-    return aptoideDownloadManager.getDownload(md5)
-        .first()
-        .map(download -> {
-          Error error = Error.GENERIC_ERROR;
-          switch (download.getDownloadError()) {
-            case Download.GENERIC_ERROR:
-              error = Error.GENERIC_ERROR;
-              break;
-            case Download.NOT_ENOUGH_SPACE_ERROR:
-              error = Error.NOT_ENOUGH_SPACE_ERROR;
-              break;
-          }
-          return error;
-        })
-        .toSingle();
+  public InstallationProgress.Error getError(Download download) {
+    InstallationProgress.Error error = InstallationProgress.Error.NO_ERROR;
+    if (download != null) {
+      switch (download.getDownloadError()) {
+        case Download.GENERIC_ERROR:
+          error = InstallationProgress.Error.GENERIC_ERROR;
+          break;
+        case Download.NOT_ENOUGH_SPACE_ERROR:
+          error = InstallationProgress.Error.NOT_ENOUGH_SPACE_ERROR;
+          break;
+        case Download.NO_ERROR:
+          error = InstallationProgress.Error.NO_ERROR;
+          break;
+      }
+    }
+    return error;
   }
 
   /**
@@ -460,13 +462,5 @@ public class InstallManager {
     return downloadRepository.get(md5)
         .first()
         .toSingle();
-  }
-
-  public enum InstallationType {
-    INSTALLED, INSTALL, UPDATE, DOWNGRADE
-  }
-
-  public enum Error {
-    GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR
   }
 }

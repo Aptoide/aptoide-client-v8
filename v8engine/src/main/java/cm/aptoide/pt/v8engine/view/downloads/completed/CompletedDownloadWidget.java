@@ -123,9 +123,6 @@ import rx.schedulers.Schedulers;
     } else {
       status.setTextColor(defaultTextViewColor);
     }
-    compositeSubscription.add(displayable.getStatusName()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(statusName -> status.setText(statusName), throwable -> CrashReport.getInstance()
-            .log(throwable)));
+    status.setText(displayable.getStatusName(getContext()));
   }
 }

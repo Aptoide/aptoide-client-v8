@@ -40,10 +40,8 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   private List<MinimalCard> minimalCards;
   private String title;
   private Link link;
-  private Link developerLink;
   private String publisherName;
   private String thumbnailUrl;
-  private String channelLogoUrl;
   private long appId;
   private String packageName;
   private String abTestingURL;
@@ -58,17 +56,15 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   }
 
   public AggregatedSocialVideoDisplayable(AggregatedSocialVideo card, String title, Link link,
-      Link developerLink, String publisherName, String thumbnailUrl, String channelLogoUrl,
-      long appId, String abTestingURL, List<App> relatedToApps, Date date,
-      DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
+      String publisherName, String thumbnailUrl, long appId, String abTestingURL,
+      List<App> relatedToApps, Date date, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
+      SocialRepository socialRepository) {
     super(card, timelineAnalytics);
     this.title = title;
     this.link = link;
-    this.developerLink = developerLink;
     this.publisherName = publisherName;
     this.thumbnailUrl = thumbnailUrl;
-    this.channelLogoUrl = channelLogoUrl;
     this.appId = appId;
     this.abTestingURL = abTestingURL;
     this.relatedToApps = relatedToApps;
@@ -100,11 +96,9 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     }
     return new AggregatedSocialVideoDisplayable(card, card.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, card.getUrl()),
-        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, card.getPublisher()
-            .getBaseUrl()), card.getPublisher()
-        .getName(), card.getThumbnailUrl(), card.getPublisher()
-        .getLogoUrl(), appId, abTestingURL, card.getApps(), card.getDate(), dateCalculator,
-        spannableFactory, timelineAnalytics, socialRepository);
+        card.getPublisher()
+            .getName(), card.getThumbnailUrl(), appId, abTestingURL, card.getApps(), card.getDate(),
+        dateCalculator, spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -115,6 +109,8 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
       for (int i = 0; i < relatedToApps.size(); i++) {
         packageNamesList.add(relatedToApps.get(i)
             .getPackageName());
+        packageName = relatedToApps.get(i)
+            .getPackageName();
       }
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
@@ -142,14 +138,17 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
-  public void sendOpenChannelEvent() {
-    timelineAnalytics.sendOpenBlogEvent(CARD_TYPE_NAME, getTitle(), getDeveloperLink().getUrl(),
-        packageName);
-  }
-
   public void sendOpenVideoEvent() {
     timelineAnalytics.sendOpenArticleEvent(CARD_TYPE_NAME, getTitle(), getLink().getUrl(),
         packageName);
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public Link getLink() {
+    return link;
   }
 
   public String getCardHeaderNames() {
@@ -164,6 +163,10 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     return headerNamesStringBuilder.toString();
   }
 
+  public List<UserSharerTimeline> getSharers() {
+    return sharers;
+  }
+
   public String getTimeSinceLastUpdate(Context context) {
     return dateCalculator.getTimeSinceDate(context, date);
   }
@@ -172,36 +175,12 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     return dateCalculator.getTimeSinceDate(context, date);
   }
 
-  public List<UserSharerTimeline> getSharers() {
-    return sharers;
-  }
-
   public List<MinimalCard> getMinimalCards() {
     return minimalCards;
   }
 
-  public String getTitle() {
-    return title;
-  }
-
-  public Link getLink() {
-    return link;
-  }
-
-  public Link getDeveloperLink() {
-    return developerLink;
-  }
-
-  public String getPublisherName() {
-    return publisherName;
-  }
-
   public String getThumbnailUrl() {
     return thumbnailUrl;
-  }
-
-  public String getChannelLogoUrl() {
-    return channelLogoUrl;
   }
 
   public long getAppId() {
@@ -216,19 +195,15 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     return relatedToApps;
   }
 
-  public Date getDate() {
-    return date;
-  }
-
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+    socialRepository.share(cardId, privacyResult, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getPublisherName(),
             BLANK));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+    socialRepository.share(cardId, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getPublisherName(),
             BLANK));
   }
@@ -243,6 +218,10 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getPublisherName(),
             BLANK));
+  }
+
+  public String getPublisherName() {
+    return publisherName;
   }
 
   public Spannable getBlackHighlightedLike(Context context, String string) {
