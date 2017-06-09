@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.social.data;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.social.view.ArticleViewHolder;
+import cm.aptoide.pt.v8engine.social.view.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.CardViewHolder;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -33,11 +33,11 @@ public class CardViewHolderFactory {
     CardType cardType = CardType.values()[cardViewType];
     switch (cardType) {
       case ARTICLE:
-        return new ArticleViewHolder(LayoutInflater.from(parent.getContext())
+        return new MediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_article_item, parent, false), articleSubject, dateCalculator,
             spannableFactory);
       default:
-        return new ArticleViewHolder(LayoutInflater.from(parent.getContext())
+        return new MediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_article_item, parent, false), articleSubject, dateCalculator,
             spannableFactory);
     }

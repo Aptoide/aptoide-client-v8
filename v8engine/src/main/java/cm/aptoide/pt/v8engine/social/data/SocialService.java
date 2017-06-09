@@ -52,11 +52,11 @@ public class SocialService {
     this.total = initialTotal;
   }
 
-  public Single<List<Article>> getNextCards() {
+  public Single<List<Media>> getNextCards() {
     return getCards(limit, currentOffset);
   }
 
-  @NonNull private Single<List<Article>> getCards(int limit, int initialOffset) {
+  @NonNull private Single<List<Media>> getCards(int limit, int initialOffset) {
     if (loading || (currentOffset >= total)) {
       return Single.just(Collections.emptyList());
     }
@@ -85,7 +85,7 @@ public class SocialService {
         .toSingle();
   }
 
-  public Single<List<Article>> getCards() {
+  public Single<List<Media>> getCards() {
     return getCards(limit, initialOffset);
   }
 }

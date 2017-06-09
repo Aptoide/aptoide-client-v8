@@ -61,6 +61,7 @@
           />
 
       <ImageView
+          android:id="@+id/timeline_header_card_type_icon"
           android:layout_width="15dp"
           android:layout_height="15dp"
           android:layout_alignEnd="@+id/card_custom_view_line_separator"

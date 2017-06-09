@@ -6,15 +6,15 @@ package cm.aptoide.pt.v8engine.social.data;
 
 public class CardTouchEvent {
 
-  private final Article card;
+  private final Media card;
   private final Type actionType;
 
-  public CardTouchEvent(Article card, Type actionType) {
+  public CardTouchEvent(Media card, Type actionType) {
     this.card = card;
     this.actionType = actionType;
   }
 
-  public Article getCard() {
+  public Media getCard() {
     return card;
   }
 

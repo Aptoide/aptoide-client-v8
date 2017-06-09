@@ -6,7 +6,7 @@ import cm.aptoide.pt.spotandshare.socket.Log;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import cm.aptoide.pt.v8engine.social.data.Article;
+import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
@@ -104,12 +104,12 @@ public class TimelinePresenter implements Presenter {
 
   }
 
-  private void showCardsAndHideProgress(List<Article> cards) {
+  private void showCardsAndHideProgress(List<Media> cards) {
     view.hideProgressIndicator();
     view.showCards(cards);
   }
 
-  private void showCardsAndHideRefresh(List<Article> cards) {
+  private void showCardsAndHideRefresh(List<Media> cards) {
     view.hideRefresh();
     view.showCards(cards);
   }

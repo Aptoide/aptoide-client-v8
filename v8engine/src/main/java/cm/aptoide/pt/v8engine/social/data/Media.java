@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by jdandrade on 31/05/2017.
  */
 
-public class Article implements Card {
+public class Media implements Card {
   private final String cardId;
   private final String title;
   private final String thumbnailUrl;
@@ -21,7 +21,7 @@ public class Article implements Card {
   private final Link articleLink;
   private final CardType cardType;
 
-  public Article(String cardId, String title, String thumbnailUrl, Date date, App app,
+  public Media(String cardId, String title, String thumbnailUrl, Date date, App app,
       String abTestURL, String publisherAvatarURL, String publisherName, Link publisherLink,
       Link articleLink, CardType cardType) {
     this.cardId = cardId;

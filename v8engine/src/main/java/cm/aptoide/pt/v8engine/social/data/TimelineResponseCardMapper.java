@@ -13,8 +13,8 @@ import java.util.List;
  */
 
 public class TimelineResponseCardMapper {
-  public List<Article> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
-    final List<Article> cards = new ArrayList();
+  public List<Media> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
+    final List<Media> cards = new ArrayList();
 
     for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist()
         .getList()) {
@@ -30,7 +30,7 @@ public class TimelineResponseCardMapper {
               .getUrl();
         }
 
-        cards.add(new Article(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
+        cards.add(new Media(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
             article.getDate(), article.getApps()
             .get(0), ab, article.getPublisher()
             .getLogoUrl(), article.getPublisher()
