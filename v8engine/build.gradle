@@ -159,11 +159,6 @@ dependencies {
     exclude group: 'io.card'
   }
 
-  // Localytics sdk
-  compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
-  //Only used by localytics
-  compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
-  compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
   compile 'com.github.jd-alexander:LikeButton:0.2.0'
 
     // Flurry Android sdk

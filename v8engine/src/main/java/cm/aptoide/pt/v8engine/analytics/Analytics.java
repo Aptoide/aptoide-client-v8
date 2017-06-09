@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.analytics;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -8,8 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
@@ -24,7 +21,6 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
-import com.localytics.android.Localytics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.zip.ZipFile;
 import lombok.Getter;
 
@@ -49,7 +44,6 @@ public class Analytics {
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
   private static final int ALL = Integer.MAX_VALUE;
-  private static final int LOCALYTICS = 1 << 0;
   private static final int FLURRY = 1 << 1;
   private static final int FABRIC = 1 << 2;
   private static final String[] unwantedValuesList = {
@@ -61,8 +55,6 @@ public class Analytics {
       "apps-group-editors-choice"
   };
   static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
-  private static boolean ACTIVATE_LOCALYTICS = true;
-  private static boolean isFirstSession;
   private AnalyticsDataSaver saver;
 
   public Analytics(AnalyticsDataSaver saver) {
@@ -81,10 +73,7 @@ public class Analytics {
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
-    if (accepted == LOCALYTICS && !ACTIVATE_LOCALYTICS) {
-      Logger.d(TAG, "Localytics Disabled ");
-      return false;
-    } else if (accepted == FLURRY && !ACTIVATE_FLURRY) {
+    if (accepted == FLURRY && !ACTIVATE_FLURRY) {
       Logger.d(TAG, "Flurry Disabled");
       return false;
     } else {
@@ -95,7 +84,7 @@ public class Analytics {
   private static void track(String event, String key, String attr, int flags) {
 
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_FLURRY) return;
 
       HashMap stringObjectHashMap = new HashMap<>();
 
@@ -111,12 +100,8 @@ public class Analytics {
 
   private static void track(String event, HashMap map, int flags) {
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) {
+      if (!ACTIVATE_FLURRY) {
         return;
-      }
-      if (checkAcceptability(flags, LOCALYTICS)) {
-        Localytics.tagEvent(event, map);
-        Logger.d(TAG, "Localytics Event: " + event + ", Map: " + map);
       }
 
       if (checkAcceptability(flags, FLURRY)) {
@@ -161,9 +146,7 @@ public class Analytics {
   private static void track(String event, int flags) {
 
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
-
-      if (checkAcceptability(flags, LOCALYTICS)) Localytics.tagEvent(event);
+      if (!ACTIVATE_FLURRY) return;
 
       if (checkAcceptability(flags, FLURRY)) FlurryAgent.logEvent(event);
 
@@ -204,27 +187,13 @@ public class Analytics {
         facebookLogger = AppEventsLogger.newLogger(application);
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
-        ACTIVATE_LOCALYTICS =
-            ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
-        isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-        if (ACTIVATE_LOCALYTICS || isFirstSession) {
-          // Integrate Localytics
-          Localytics.autoIntegrate(application);
-          setupDimensions();
-          Logger.d(TAG, "Localytics session configured");
-        }
       }
 
       private static void setupDimensions() {
         if (!checkForUTMFileInMetaINF()) {
           Dimensions.setUTMDimensionsToUnknown();
         }
-
-        if (isFirstSession && !ACTIVATE_LOCALYTICS) {
-          Dimensions.setSamplingTypeDimension("90% sampling");
-        } else {
-          Dimensions.setSamplingTypeDimension("Full-tracking");
-        }
+        Dimensions.setSamplingTypeDimension("Full-tracking");
       }
 
       private static boolean checkForUTMFileInMetaINF() {
@@ -293,57 +262,14 @@ public class Analytics {
 
       public static void onCreate(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
-        Localytics.registerPush(BuildConfig.GOOGLE_SENDER_ID);
       }
 
       public static void onDestroy(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
       }
 
       public static void onResume(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
-
-        Localytics.onActivityResume(activity);
-
-        if (isFirstSession) {
-          if (!AptoideAccountManager.isLoggedIn()) {
-            Localytics.setCustomDimension(0, "Not Logged In");
-          } else {
-            Localytics.setCustomDimension(0, "Logged In");
-          }
-        }
-
-        IdsRepositoryImpl idsRepository =
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext());
-
-        String cpuid = idsRepository.getAptoideClientUUID();
-
-        Localytics.setCustomerId(cpuid);
-
-        //                String cpuid = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
-        //                        .getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
-
-        //                Localytics.setCustomerId(cpuid);
-        //
-        //                if (screenName != null) {
-        //                    Localytics.tagScreen(screenName);
-        //                }
-        //
-        Localytics.handleTestMode(activity.getIntent());
-        //
-        //                Logger.d("Analytics", "Event: CPU_ID: " + cpuid);
-        //                Logger.d("Analytics", "Screen: " + screenName);
-
-      }
-
-      public static void onPause(android.app.Activity activity) {
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) return;
-
-        Localytics.onActivityPaused(activity);
       }
 
       public static void onStart(android.app.Activity activity) {
@@ -362,12 +288,15 @@ public class Analytics {
         FlurryAgent.onEndSession(activity);
       }
 
-      public static void onNewIntent(android.app.Activity activity, Intent intent) {
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
-          return;
-        }
-        Localytics.onNewIntent(activity, intent);
+      public static void onPause(android.app.Activity activity) {
+
       }
+
+      IdsRepositoryImpl idsRepository =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext());
+
+      String cpuid = idsRepository.getAptoideClientUUID();
     }
   }
 
@@ -375,12 +304,6 @@ public class Analytics {
 
     public static void tagScreen(String screenName) {
 
-      if (!ACTIVATE_LOCALYTICS) return;
-
-      Logger.d(TAG, "Localytics: Screens: " + screenName);
-
-      Localytics.tagScreen(screenName);
-      Localytics.upload();
     }
   }
 
@@ -589,8 +512,6 @@ public class Analytics {
 
         map.put(ACTION, "Enter");
         map.put(STORE_NAME, storeName);
-
-        track(EVENT_NAME, map, LOCALYTICS);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -602,8 +523,6 @@ public class Analytics {
 
         map.put(ACTION, "Subscribe");
         map.put(STORE_NAME, storeName);
-
-        track(EVENT_NAME, map, LOCALYTICS);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -618,15 +537,12 @@ public class Analytics {
     public static final String CLICKED_ON_UPDATE_ALL = "Update All";
 
     public static void update() {
-      track(EVENT_NAME, ACTION, CLICKED_ON_UPDATE, LOCALYTICS);
     }
 
     public static void updateAll() {
-      track(EVENT_NAME, ACTION, CLICKED_ON_UPDATE_ALL, LOCALYTICS);
     }
 
     public static void createReview() {
-      track(EVENT_NAME, ACTION, CLICKED_ON_CREATE_REVIEW, LOCALYTICS);
     }
   }
 
@@ -656,7 +572,7 @@ public class Analytics {
     public static final String QUERY = "Query";
 
     public static void searchTerm(String query) {
-      track(EVENT_NAME_SEARCH_TERM, QUERY, query, LOCALYTICS);
+
     }
 
     public static void noSearchResults(String query) {
@@ -722,7 +638,7 @@ public class Analytics {
     public static final String URI = "Uri";
 
     public static void launcher() {
-      track(EVENT_NAME, SOURCE, LAUNCHER, LOCALYTICS);
+
     }
 
     public static void website(String uri) {
@@ -854,7 +770,6 @@ public class Analytics {
       map.put(TITLE, title);
       map.put(PUBLISHER, publisher);
 
-      localyticsTrack(map, cardType);
       flurryTrack(map, cardType);
     }
 
@@ -869,11 +784,6 @@ public class Analytics {
     private static void flurryTrack(HashMap<String, String> map, String cardType) {
       String eventName = cardType + "_" + EVENT_NAME;
       track(eventName, map, FLURRY);
-    }
-
-    private static void localyticsTrack(HashMap<String, String> map, String cardType) {
-      map.put(CARD_TYPE, cardType);
-      track(EVENT_NAME, map, LOCALYTICS);
     }
 
     public static void openTimeline() {
@@ -899,7 +809,6 @@ public class Analytics {
         map.put(TRUSTED_BADGE, trustedBadge);
         //TODO MISSING POP_UP AB TESTING
 
-        track(EVENT_NAME, map, LOCALYTICS);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -915,13 +824,7 @@ public class Analytics {
     public static final String INSTALLER = "Installer";
 
     private static void setDimension(int i, String s) {
-      if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
-        return;
-      }
 
-      Logger.d(TAG, "Dimension: " + i + ", Value: " + s);
-
-      Localytics.setCustomDimension(i, s);
     }
 
     public static void setPartnerDimension(String partner) {
@@ -1057,24 +960,7 @@ public class Analytics {
     //        }
 
     private static void ltv(String eventName, String packageName) {
-      if (!ACTIVATE_LOCALYTICS) {
-        return;
-      }
 
-      try {
-        HashMap<String, String> map = new HashMap<>();
-
-        //                Double revenueDouble = Double.valueOf(revenue);
-        //                Long value = revenueDouble.longValue();
-
-        map.put("packageName", packageName);
-
-        Logger.d(TAG, "LTV: " + eventName + ": " + packageName);
-
-        Localytics.tagEvent(eventName, map);
-      } catch (NumberFormatException e) {
-        e.printStackTrace();
-      }
     }
   }
 
@@ -1092,26 +978,6 @@ public class Analytics {
       }
 
       track(HOME_PAGE_EDITORS_CHOICE, map, FLURRY);
-    }
-  }
-
-  public static class LocalyticsSessionControl {
-    public static void firstSession(SharedPreferences sPref) {
-      SharedPreferences.Editor edit = sPref.edit();
-      edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-      Logger.d(TAG, "contains" + sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY));
-      if (!sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY)) {
-        Random random = new Random();
-        int i = random.nextInt(10);
-        Logger.d(TAG, "firstSession: " + i);
-        edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, true);
-        edit.putBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, i == 0);
-      }
-      edit.apply();
-      Logger.d(TAG, "firstSession: IS_LOCALYTICS_FIRST_SESSION: " + sPref.getBoolean(
-          Constants.IS_LOCALYTICS_FIRST_SESSION, false));
-      Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: " + sPref.getBoolean(
-          Constants.IS_LOCALYTICS_ENABLE_KEY, false));
     }
   }
 
@@ -1161,17 +1027,18 @@ public class Analytics {
     public static final String USER_REGISTERED = "User Registered";
 
     public static void login(String action) {
-      track(LOGGED_IN_EVENT, ACTION, action, LOCALYTICS);
+
     }
 
     public static void signUp() {
-      track(USER_REGISTERED, LOCALYTICS);
+
     }
   }
 
   public static class SMSUserRegisterEvents {
 
     public static final String SMS_USER_REGISTERED_EVENT = "SMS User Registered";
+
     public static void smsRegister() {
       track(SMS_USER_REGISTERED_EVENT, FLURRY);
     }

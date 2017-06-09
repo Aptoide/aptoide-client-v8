@@ -42,8 +42,6 @@ public class StoreUtilsProxy {
   public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, String storeName) {
-    Logger.d(StoreUtilsProxy.class.getName(),
-        "LOCALYTICS TESTING - STORES: ACTION SUBSCRIBE " + storeName);
     Analytics.Stores.subscribe(storeName);
     StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener);
   }
