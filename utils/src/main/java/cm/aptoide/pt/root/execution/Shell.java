@@ -534,10 +534,7 @@ public class Shell {
             throw e;
           }
         } catch (RootDeniedException e) {
-          if (retries++ >= retry) {
-            RootShell.log("RootDeniedException, could not start shell");
-            throw e;
-          }
+          throw e;
         } catch (TimeoutException e) {
           if (retries++ >= retry) {
             RootShell.log("TimeoutException, could not start shell");
@@ -898,7 +895,7 @@ public class Shell {
 
       //create new root shell with new context...
 
-      return Shell.startRootShell(this.shellTimeout, shellContext, 3);
+      return Shell.startRootShell(this.shellTimeout, shellContext, 0);
     } else {
       //can only switch context on a root shell...
       RootShell.log("Can only switch context on a root shell!");

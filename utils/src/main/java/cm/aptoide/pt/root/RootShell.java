@@ -41,7 +41,7 @@ public class RootShell {
   // # Public Variables #
   // --------------------
 
-  public static final String version = "RootShell v1.4";
+  public static final String version = "RootShell v1.4.1-aptoide";
   private static final String TAG = RootShell.class.getSimpleName();
   public static boolean debugMode = false;
   /**
@@ -159,6 +159,9 @@ public class RootShell {
           .add(command);
       commandWait(RootShell.getShell(true), command);
     } catch (Exception e) {
+      if (e instanceof RootDeniedException) {
+        return true;
+      }
       RootShell.log("Exception: " + e);
       return false;
     }
