@@ -151,9 +151,9 @@ public class AppUpdateDisplayable extends CardDisplayable {
           });
     }
     return installManager.install(context, download)
-        .toObservable()
-        .flatMap(installation -> installManager.getInstallationProgress(download.getMd5(),
-            download.getPackageName(), download.getVersionCode()))
+        .andThen(
+            installManager.getInstallationProgress(download.getMd5(), download.getPackageName(),
+                download.getVersionCode()))
         .doOnSubscribe(() -> setupEvents());
   }
 

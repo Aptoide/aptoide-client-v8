@@ -15,14 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -105,36 +103,25 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         }));
 
     compositeSubscription.add(RxView.clicks(updateButton)
-        .flatMap(click -> {
+        .doOnNext(click -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
           Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
               displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
               displayable.getStoreName(), Analytics.AppsTimeline.UPDATE_APP);
           displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.UPDATE_APP, socialAction);
           displayable.sendUpdateAppEvent();
-          return displayable.requestPermission(context)
-              .flatMap(success -> displayable.update(context));
         })
+        .flatMap(click -> displayable.requestPermission(context))
+        .flatMap(success -> displayable.update(context))
         .observeOn(AndroidSchedulers.mainThread())
-        .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread())
-            .flatMap(error -> {
-              showDownloadError(displayable);
-              Logger.d(this.getClass()
-                  .getSimpleName(), " stack : " + error.getMessage());
-              return Observable.just(null);
-            }))
         .doOnNext(installationProgress -> updateInstallProgress(displayable, installationProgress))
         .subscribe(installationProgress -> {
-        }, throwable -> showDownloadError(displayable)));
+        }, throwable -> showDownloadError(displayable.getUpdateAppText(getContext()),
+            displayable.getUpdateErrorText())));
   }
 
   @Override String getCardTypeName() {
     return AppUpdateDisplayable.CARD_TYPE_NAME;
-  }
-
-  private Void showDownloadError(AppUpdateDisplayable displayable) {
-    showDownloadError(displayable.getUpdateAppText(getContext()), displayable.getUpdateErrorText());
-    return null;
   }
 
   @UiThread void updateInstallProgress(AppUpdateDisplayable displayable,
@@ -147,13 +134,16 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         updateButton.setText(displayable.getUpdatingText(getContext()));
         updateButton.setEnabled(false);
+        break;
       case INSTALLED:
         updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         updateButton.setText(displayable.getCompletedText(getContext()));
         updateButton.setEnabled(false);
+        break;
       case FAILED:
         int errorMessage = displayable.getErrorMessage(downloadProgress);
         showDownloadError(displayable.getUpdateAppText(getContext()), errorMessage);
+        break;
       case PAUSED:
       case UNINSTALLED:
       default:
