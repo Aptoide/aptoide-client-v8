@@ -7,7 +7,10 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -16,6 +19,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+
+import java.util.Locale;
+
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -26,12 +33,14 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.BuildConfig;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
+import cm.aptoide.pt.v8engine.util.LanguageUtils;
 import rx.functions.Action0;
 
 /**
@@ -58,6 +67,24 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     navManager = NavigationManagerV4.Builder.buildWith(this);
 
     super.onCreate(savedInstanceState);
+
+
+    //Languages option only available for debug mode
+    if(BuildConfig.BUILD_TYPE.equalsIgnoreCase("debug")){
+      SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+
+      //If the user had previously chosen a language, the app is displayed in that language, if not, it starts with the device's language as default
+      String lang = sharedPreferences.getString("Language", Locale.getDefault().toString());
+      Resources res = getResources();
+      DisplayMetrics dm = res.getDisplayMetrics();
+      android.content.res.Configuration conf = res.getConfiguration();
+      conf.locale = LanguageUtils.getLocaleFromString(lang);
+      res.updateConfiguration(conf, dm);
+
+    }
+
+
+
     // https://fabric.io/downloads/gradle/ndk
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
