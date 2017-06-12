@@ -134,6 +134,14 @@
         android:title="@string/about_us"/>
   </PreferenceCategory>
 
+  <PreferenceCategory
+      android:key="language"
+      android:title="@string/languages">
+    <Preference
+        android:key="languageDialog"
+        android:title="@string/languages"/>
+  </PreferenceCategory>
+
   <!--
   <PreferenceCategory android:title="@string/animations">
       <CheckBoxPreference
