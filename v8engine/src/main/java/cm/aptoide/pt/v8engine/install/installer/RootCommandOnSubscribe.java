@@ -80,9 +80,12 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
       }));
       shell.add(installCommand);
     } catch (IOException | TimeoutException | RootDeniedException e) {
-      Logger.d(TAG, "call: timeout reached");
+
       if (e instanceof RootDeniedException) {
         subscriber.onError(new InstallationException("User didn't accept root permissions"));
+      } else if (e instanceof TimeoutException) {
+        subscriber.onError(new InstallationException("timeout reached"));
+        Logger.d(TAG, "call: timeout reached");
       } else {
         subscriber.onError(e);
       }
