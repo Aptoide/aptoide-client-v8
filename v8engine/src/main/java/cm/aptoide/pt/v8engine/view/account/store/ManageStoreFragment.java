@@ -8,11 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,7 +60,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
   private static final String EXTRA_STORE_MODEL = "store_model";
   private static final String EXTRA_GO_TO_HOME = "go_to_home";
-  @LayoutRes private static final int LAYOUT = R.layout.fragment_manage_store;
 
   private TextView header;
   private TextView chooseStoreNameTitle;
@@ -73,6 +76,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
   private ViewModel currentModel;
   private boolean goToHome;
+  private Toolbar toolbar;
 
   public static ManageStoreFragment newInstance(ViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -82,6 +86,71 @@ public class ManageStoreFragment extends ImageLoaderFragment
     ManageStoreFragment fragment = new ManageStoreFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
+    goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_manage_store, container, false);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+    header = (TextView) view.findViewById(R.id.create_store_header);
+    chooseStoreNameTitle = (TextView) view.findViewById(R.id.create_store_choose_name_title);
+    selectStoreImageButton = view.findViewById(R.id.create_store_image_action);
+    storeImage = (ImageView) view.findViewById(R.id.create_store_image);
+    storeName = (EditText) view.findViewById(R.id.create_store_name);
+    storeDescription = (EditText) view.findViewById(R.id.edit_store_description);
+    cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
+    saveDataButton = (Button) view.findViewById(R.id.create_store_action);
+    themeSelectorView = (RecyclerView) view.findViewById(R.id.theme_selector);
+
+    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+        getApplicationContext().getString(R.string.please_wait_upload));
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar.setTitle(getViewTitle(currentModel));
+
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(false);
+    actionBar.setTitle(toolbar.getTitle());
+
+    storeName.setText(currentModel.getStoreName());
+    storeDescription.setText(currentModel.getStoreDescription());
+
+    themeSelectorView.setLayoutManager(
+        new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+    PublishRelay<StoreTheme> storeThemePublishRelay = PublishRelay.create();
+    themeSelectorAdapter =
+        new ThemeSelectorViewAdapter(storeThemePublishRelay, StoreTheme.getThemesFromVersion(8));
+    themeSelectorView.setAdapter(themeSelectorAdapter);
+
+    themeSelectorAdapter.storeThemeSelection()
+        .doOnNext(storeTheme -> {
+          currentModel.setStoreThemeName(storeTheme.getThemeName());
+        })
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
+
+    themeSelectorView.addItemDecoration(new DividerItemDecoration(getContext(), 8,
+        DividerItemDecoration.LEFT | DividerItemDecoration.RIGHT));
+
+    themeSelectorAdapter.selectTheme(currentModel.getStoreThemeName());
+
+    setupViewsDefaultDataUsingStore(currentModel);
+
+    attachPresenter(new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
+        ((V8Engine) getActivity().getApplicationContext()).getStoreManager(),
+        getFragmentNavigator()), null);
+
+    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override public Observable<Void> selectStoreImageClick() {
@@ -127,74 +196,9 @@ public class ManageStoreFragment extends ImageLoaderFragment
     super.hideKeyboard();
   }
 
-  @Override public void loadExtras(@Nullable Bundle args) {
-    super.loadExtras(args);
-    if (args != null) {
-      try {
-        currentModel = Parcels.unwrap(args.getParcelable(EXTRA_STORE_MODEL));
-      } catch (NullPointerException ex) {
-        currentModel = new ViewModel();
-      }
-      goToHome = args.getBoolean(EXTRA_GO_TO_HOME, true);
-    }
-  }
-
   @Override public void onDestroyView() {
     dismissWaitProgressBar();
     super.onDestroyView();
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-
-    storeName.setText(currentModel.getStoreName());
-    storeDescription.setText(currentModel.getStoreDescription());
-
-    themeSelectorView.setLayoutManager(
-        new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-    PublishRelay<StoreTheme> storeThemePublishRelay = PublishRelay.create();
-    themeSelectorAdapter =
-        new ThemeSelectorViewAdapter(storeThemePublishRelay, StoreTheme.getThemesFromVersion(8));
-    themeSelectorView.setAdapter(themeSelectorAdapter);
-
-    themeSelectorAdapter.storeThemeSelection()
-        .doOnNext(storeTheme -> {
-          currentModel.setStoreThemeName(storeTheme.getThemeName());
-        })
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe();
-
-    themeSelectorView.addItemDecoration(new DividerItemDecoration(getContext(), 8,
-        DividerItemDecoration.LEFT | DividerItemDecoration.RIGHT));
-
-    themeSelectorAdapter.selectTheme(currentModel.getStoreThemeName());
-
-    setupViewsDefaultDataUsingStore(currentModel);
-
-    attachPresenter(new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
-        ((V8Engine) getActivity().getApplicationContext()).getStoreManager(),
-        getFragmentNavigator()), null);
-  }
-
-  @Override protected void setupToolbarDetails(Toolbar toolbar) {
-    super.setupToolbarDetails(toolbar);
-    toolbar.setTitle(getViewTitle(currentModel));
-  }
-
-  @Override public void bindViews(@Nullable View view) {
-    super.bindViews(view);
-    header = (TextView) view.findViewById(R.id.create_store_header);
-    chooseStoreNameTitle = (TextView) view.findViewById(R.id.create_store_choose_name_title);
-    selectStoreImageButton = view.findViewById(R.id.create_store_image_action);
-    storeImage = (ImageView) view.findViewById(R.id.create_store_image);
-    storeName = (EditText) view.findViewById(R.id.create_store_name);
-    storeDescription = (EditText) view.findViewById(R.id.edit_store_description);
-    cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
-    saveDataButton = (Button) view.findViewById(R.id.create_store_action);
-    themeSelectorView = (RecyclerView) view.findViewById(R.id.theme_selector);
-
-    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
-        getApplicationContext().getString(R.string.please_wait_upload));
   }
 
   private ViewModel updateAndGetStoreModel() {
@@ -203,10 +207,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
         .toString());
     currentModel.setStoreThemeName(themeSelectorAdapter.getSelectedThemeName());
     return currentModel;
-  }
-
-  @Override public int getContentViewId() {
-    return LAYOUT;
   }
 
   private void setupViewsDefaultDataUsingStore(ViewModel storeModel) {
@@ -246,6 +246,18 @@ public class ManageStoreFragment extends ImageLoaderFragment
     outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
   }
 
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    if (savedInstanceState != null) {
+      try {
+        currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_STORE_MODEL));
+      } catch (NullPointerException ex) {
+        currentModel = new ViewModel();
+      }
+      goToHome = savedInstanceState.getBoolean(EXTRA_GO_TO_HOME, true);
+    }
+  }
+
   private void loadImageFromCamera() {
     requestAccessToCamera(() -> {
       dispatchTakePictureIntent();
@@ -278,11 +290,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
     }, () -> {
       Logger.e(TAG, "User denied access to camera");
     });
-  }
-
-  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-    super.onViewStateRestored(savedInstanceState);
-    loadExtras(savedInstanceState);
   }
 
   @Override public void selectedGallery() {

@@ -24,6 +24,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
+import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,7 @@ import java.util.Locale;
 /**
  * Created by pedroribeiro on 02/12/16.
  */
-public abstract class ImageLoaderFragment extends BaseToolbarFragment {
+public abstract class ImageLoaderFragment extends PermissionServiceFragment {
 
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;

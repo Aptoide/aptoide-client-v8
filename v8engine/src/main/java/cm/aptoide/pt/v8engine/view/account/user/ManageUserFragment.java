@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,7 +41,6 @@ public class ManageUserFragment extends ImageLoaderFragment
 
   public static final String EXTRA_USER_MODEL = "user_model";
   private static final String TAG = ManageUserFragment.class.getName();
-  @LayoutRes private static final int LAYOUT = R.layout.fragment_manage_user;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -46,6 +49,7 @@ public class ManageUserFragment extends ImageLoaderFragment
   private Button cancelUserProfile;
   private TextView header;
   private ViewModel viewModel;
+  private Toolbar toolbar;
 
   public static ManageUserFragment newInstanceToEdit(String userName, String userImage) {
     return newInstance(userName, userImage, true);
@@ -66,46 +70,19 @@ public class ManageUserFragment extends ImageLoaderFragment
     return manageUserFragment;
   }
 
-  @Override public void onDestroyView() {
-    if (uploadWaitDialog != null && uploadWaitDialog.isShowing()) {
-      uploadWaitDialog.dismiss();
-    }
-    super.onDestroyView();
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    viewModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_USER_MODEL));
   }
 
-  @Override public void setupViews() {
-    super.setupViews();
-
-    if (viewModel.isEditProfile()) {
-      createUserButton.setText(getString(R.string.edit_profile_save_button));
-      cancelUserProfile.setVisibility(View.VISIBLE);
-      header.setText(getString(R.string.edit_profile_header_message));
-    }
-
-    loadUserData();
-
-    final Context context = getContext();
-    final Context applicationContext = context.getApplicationContext();
-    AptoideAccountManager accountManager = ((V8Engine) applicationContext).getAccountManager();
-    CreateUserErrorMapper errorMapper =
-        new CreateUserErrorMapper(context, new AccountErrorMapper(context));
-    ManageUserPresenter presenter =
-        new ManageUserPresenter(this, CrashReport.getInstance(), accountManager, errorMapper,
-            getFragmentNavigator());
-    attachPresenter(presenter, null);
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_manage_user, container, false);
   }
 
-  @Override protected void setupToolbarDetails(Toolbar toolbar) {
-    super.setupToolbarDetails(toolbar);
-    if (viewModel.isEditProfile()) {
-      toolbar.setTitle(getString(R.string.edit_profile_title));
-    } else {
-      toolbar.setTitle(R.string.create_user_title);
-    }
-  }
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
     userPictureLayout = (RelativeLayout) view.findViewById(R.id.create_user_image_action);
     userName = (EditText) view.findViewById(R.id.create_user_username_inserted);
     createUserButton = (Button) view.findViewById(R.id.create_user_create_profile);
@@ -116,6 +93,37 @@ public class ManageUserFragment extends ImageLoaderFragment
     final Context context = getContext();
     uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
         context.getString(R.string.please_wait_upload));
+
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    if (viewModel.isEditProfile()) {
+      toolbar.setTitle(getString(R.string.edit_profile_title));
+    } else {
+      toolbar.setTitle(R.string.create_user_title);
+    }
+
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(false);
+    actionBar.setTitle(toolbar.getTitle());
+
+    if (viewModel.isEditProfile()) {
+      createUserButton.setText(getString(R.string.edit_profile_save_button));
+      cancelUserProfile.setVisibility(View.VISIBLE);
+      header.setText(getString(R.string.edit_profile_header_message));
+    }
+
+    loadUserData();
+
+    final Context applicationContext = context.getApplicationContext();
+    AptoideAccountManager accountManager = ((V8Engine) applicationContext).getAccountManager();
+    CreateUserErrorMapper errorMapper =
+        new CreateUserErrorMapper(context, new AccountErrorMapper(context));
+    ManageUserPresenter presenter =
+        new ManageUserPresenter(this, CrashReport.getInstance(), accountManager, errorMapper,
+            getFragmentNavigator());
+    attachPresenter(presenter, null);
+
+    super.onViewCreated(view, savedInstanceState);
   }
 
   private void loadUserData() {
@@ -132,11 +140,11 @@ public class ManageUserFragment extends ImageLoaderFragment
     }
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    if (args != null) {
-      viewModel = Parcels.unwrap(args.getParcelable(EXTRA_USER_MODEL));
+  @Override public void onDestroyView() {
+    if (uploadWaitDialog != null && uploadWaitDialog.isShowing()) {
+      uploadWaitDialog.dismiss();
     }
+    super.onDestroyView();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -146,12 +154,9 @@ public class ManageUserFragment extends ImageLoaderFragment
 
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
-    loadExtras(savedInstanceState);
-    loadUserData();
-  }
-
-  @Override public int getContentViewId() {
-    return LAYOUT;
+    if (savedInstanceState != null) {
+      viewModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
+    }
   }
 
   @Override public void loadImage(Uri imagePath) {
