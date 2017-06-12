@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="languagesTag">
+        <item>en</item>
+        <item>en_US</item>
+        <item>ar</item>
+        <item>ast</item>
+        <item>az</item>
+        <item>bg_BG</item>
+        <item>bn</item>
+        <item>ca</item>
+        <item>cs</item>
+        <item>de</item>
+        <item>el</item>
+        <item>es</item>
+        <item>eu</item>
+        <item>fa</item>
+        <item>fi</item>
+        <item>fil</item>
+        <item>fr</item>
+        <item>gl</item>
+        <item>gu</item>
+        <item>he</item>
+        <item>hi</item>
+        <item>hr</item>
+        <item>hu</item>
+        <item>id</item>
+        <item>in</item>
+        <item>it</item>
+        <item>ja</item>
+        <item>jv</item>
+        <item>ka</item>
+        <item>km</item>
+        <item>ko</item>
+        <item>lo</item>
+        <item>lt</item>
+        <item>mr</item>
+        <item>ms</item>
+        <item>my</item>
+        <item>nl</item>
+        <item>pa</item>
+        <item>pl</item>
+        <item>pt</item>
+        <item>pt_BR</item>
+        <item>ro</item>
+        <item>ru</item>
+        <item>sr</item>
+        <item>th</item>
+        <item>tr</item>
+        <item>uk</item>
+        <item>vi</item>
+        <item>zh_CN</item>
+        <item>zh_HK</item>
+        <item>zh_TW</item>
+    </string-array>
+</resources>
