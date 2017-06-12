@@ -1,16 +1,20 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.NavigationProvider;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.util.ScreenTrackingUtils;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.leak.LeakFragment;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
@@ -38,6 +42,12 @@ public abstract class FragmentView extends LeakFragment implements View {
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
     return new FragmentNavigator(getChildFragmentManager(), containerId, android.R.anim.fade_in,
         android.R.anim.fade_out);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    ScreenTrackingUtils.getInstance()
+        .incrementNumberOfScreens();
   }
 
   @Override public void onAttach(Activity activity) {
@@ -84,6 +94,20 @@ public abstract class FragmentView extends LeakFragment implements View {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      ScreenTrackingUtils.getInstance()
+          .addScreenToHistory(getClass().getSimpleName());
+    }
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    ScreenTrackingUtils.getInstance()
+        .decrementNumberOfScreens();
+  }
+
   @NonNull @Override
   public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {
     return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
@@ -99,6 +123,15 @@ public abstract class FragmentView extends LeakFragment implements View {
     }
     this.presenter = presenter;
     this.presenter.present();
+  }
+
+  protected void hideKeyboard() {
+    Activity activity = getActivity();
+    android.view.View view = activity.getCurrentFocus();
+    if (view != null) {
+      ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).
+          hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
   }
 
   @NonNull private Observable<LifecycleEvent> convertToEvent(FragmentEvent event) {

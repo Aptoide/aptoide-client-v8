@@ -23,29 +23,12 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
     if (getArguments() != null) {
       loadExtras(getArguments());
     }
-    ScreenTrackingUtils.getInstance()
-        .incrementNumberOfScreens();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
     setupViews();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    ScreenTrackingUtils.getInstance()
-        .decrementNumberOfScreens();
-  }
-
-  protected void hideKeyboard() {
-    Activity activity = getActivity();
-    View view = activity.getCurrentFocus();
-    if (view != null) {
-      ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).
-          hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }
   }
 
   /**
@@ -64,14 +47,6 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
 
   @Override public void setupToolbar() {
     // optional method
-  }
-
-  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
-    super.setUserVisibleHint(isVisibleToUser);
-    if (isVisibleToUser) {
-      ScreenTrackingUtils.getInstance()
-          .addScreenToHistory(getClass().getSimpleName());
-    }
   }
 
   @CallSuper @Nullable @Override
