@@ -3,8 +3,8 @@ package cm.aptoide.pt.v8engine.social.data;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.social.view.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.CardViewHolder;
+import cm.aptoide.pt.v8engine.social.view.MediaViewHolder;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -33,13 +33,12 @@ public class CardViewHolderFactory {
     CardType cardType = CardType.values()[cardViewType];
     switch (cardType) {
       case ARTICLE:
+      case VIDEO:
         return new MediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_article_item, parent, false), articleSubject, dateCalculator,
             spannableFactory);
       default:
-        return new MediaViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_article_item, parent, false), articleSubject, dateCalculator,
-            spannableFactory);
+        throw new IllegalStateException("Wrong cardType" + cardType.name());
     }
   }
 }
