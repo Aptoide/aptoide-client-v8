@@ -5,6 +5,7 @@ import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.root.exceptions.RootDeniedException;
 import cm.aptoide.pt.root.execution.Command;
 import cm.aptoide.pt.root.execution.Shell;
+import cm.aptoide.pt.v8engine.install.RootCommandTimeoutException;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -18,6 +19,7 @@ import rx.subscriptions.Subscriptions;
 
 public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
   public static final String SUCCESS_OUTPUT_CONFIRMATION = "success"; // lower case
+  public static final String TIMEOUT_EXCEPTION = "Timeout Exception";
   private static final String TAG = RootCommandOnSubscribe.class.getSimpleName();
   private final int installId;
   private boolean success;
@@ -53,8 +55,12 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
         @Override public void commandTerminated(int id, String reason) {
           Logger.d(TAG, "commandTerminated: " + reason);
           super.commandTerminated(id, reason);
-          if (!subscriber.isUnsubscribed() && installId == id) {
-            subscriber.onError(new IllegalStateException(reason));
+          if (installId == id) {
+            if (reason.equals(TIMEOUT_EXCEPTION)) {
+              subscriber.onError(new RootCommandTimeoutException());
+            } else if (!subscriber.isUnsubscribed()) {
+              subscriber.onError(new IllegalStateException(reason));
+            }
           }
         }
 
@@ -84,7 +90,7 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
       if (e instanceof RootDeniedException) {
         subscriber.onError(new InstallationException("User didn't accept root permissions"));
       } else if (e instanceof TimeoutException) {
-        subscriber.onError(new InstallationException("timeout reached"));
+        subscriber.onError(new RootCommandTimeoutException());
         Logger.d(TAG, "call: timeout reached");
       } else {
         subscriber.onError(e);

@@ -54,6 +54,7 @@ public class InstallService extends Service {
   public static final String ACTION_INSTALL_FINISHED = "INSTALL_FINISHED";
   public static final String EXTRA_INSTALLATION_MD5 = "INSTALLATION_MD5";
   public static final String EXTRA_INSTALLER_TYPE = "INSTALLER_TYPE";
+  public static final String EXTRA_FORCE_DEFAULT_INSTALL = "EXTRA_FORCE_DEFAULT_INSTALL";
   public static final int INSTALLER_TYPE_DEFAULT = 0;
   public static final int INSTALLER_TYPE_ROLLBACK = 1;
 
@@ -91,8 +92,9 @@ public class InstallService extends Service {
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
         installerTypeMap.put(md5,
             intent.getIntExtra(EXTRA_INSTALLER_TYPE, INSTALLER_TYPE_ROLLBACK));
-        subscriptions.add(downloadAndInstall(this, md5).subscribe(hasNext -> treatNext(hasNext),
-            throwable -> removeNotificationAndStop()));
+        subscriptions.add(downloadAndInstall(this, md5, intent.getExtras()
+            .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false)).subscribe(
+            hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
       } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
         subscriptions.add(stopDownload(md5).subscribe(hasNext -> treatNext(hasNext),
             throwable -> removeNotificationAndStop()));
@@ -105,7 +107,7 @@ public class InstallService extends Service {
       }
     } else {
       subscriptions.add(
-          downloadAndInstallCurrentDownload(this).subscribe(hasNext -> treatNext(hasNext),
+          downloadAndInstallCurrentDownload(this, false).subscribe(hasNext -> treatNext(hasNext),
               throwable -> removeNotificationAndStop()));
     }
     return START_STICKY;
@@ -136,13 +138,16 @@ public class InstallService extends Service {
     }
   }
 
-  private Observable<Boolean> downloadAndInstallCurrentDownload(Context context) {
+  private Observable<Boolean> downloadAndInstallCurrentDownload(Context context,
+      boolean forceDefaultInstall) {
     return downloadManager.getCurrentDownload()
         .first()
-        .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5()));
+        .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5(),
+            forceDefaultInstall));
   }
 
-  private Observable<Boolean> downloadAndInstall(Context context, String md5) {
+  private Observable<Boolean> downloadAndInstall(Context context, String md5,
+      boolean forceDefaultInstall) {
     return downloadManager.getDownload(md5)
         .first()
         .doOnNext(download -> initInstallationProgress(download))
@@ -168,8 +173,8 @@ public class InstallService extends Service {
             analytics.sendEvent(report);
           }
         })
-        .flatMap(download -> stopForegroundAndInstall(context, download, true).andThen(
-            sendBackgroundInstallFinishedBroadcast(download))
+        .flatMap(download -> stopForegroundAndInstall(context, download, true,
+            forceDefaultInstall).andThen(sendBackgroundInstallFinishedBroadcast(download))
             .andThen(hasNextDownload()));
   }
 
@@ -212,16 +217,16 @@ public class InstallService extends Service {
   }
 
   private Completable stopForegroundAndInstall(Context context, Download download,
-      boolean removeNotification) {
+      boolean removeNotification, boolean forceDefaultInstall) {
     Installer installer = getInstaller(download.getMd5());
     stopForeground(removeNotification);
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
-        return installer.install(context, download.getMd5());
+        return installer.install(context, download.getMd5(), forceDefaultInstall);
       case Download.ACTION_UPDATE:
-        return installer.update(context, download.getMd5());
+        return installer.update(context, download.getMd5(), forceDefaultInstall);
       case Download.ACTION_DOWNGRADE:
-        return installer.downgrade(context, download.getMd5());
+        return installer.downgrade(context, download.getMd5(), forceDefaultInstall);
       default:
         return Completable.error(
             new IllegalArgumentException("Invalid download action " + download.getAction()));

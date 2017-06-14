@@ -22,6 +22,7 @@ public class Installed extends RealmObject {
   public static final int STATUS_WAITING = 2;
   public static final int STATUS_INSTALLING = 3;
   public static final int STATUS_COMPLETED = 4;
+  public static final int STATUS_ROOT_TIMEOUT = 5;
   public static final int TYPE_DEFAULT = 0;
   public static final int TYPE_ROOT = 1;
   public static final int TYPE_SYSTEM = 2;

@@ -217,6 +217,15 @@ import rx.android.schedulers.AndroidSchedulers;
             .getMeta()
             .getData(), isSetup);
         break;
+      case INSTALLATION_TIMEOUT:
+        if (isSetup) {
+          updateUninstalledUi(displayable, getApp, isSetup, installationProgress.getType());
+        } else {
+          updateInstallingUi(installationProgress, getApp.getNodes()
+              .getMeta()
+              .getData(), isSetup);
+        }
+        break;
       case PAUSED:
         updatePausedUi(installationProgress, getApp, isSetup);
         break;

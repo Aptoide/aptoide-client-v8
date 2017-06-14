@@ -108,7 +108,7 @@ public @ToString(of = { "state", "isIndeterminate" }) class InstallationProgress
   }
 
   public enum InstallationStatus {
-    INSTALLING, PAUSED, INSTALLED, UNINSTALLED, FAILED
+    INSTALLING, PAUSED, INSTALLED, UNINSTALLED, FAILED, INSTALLATION_TIMEOUT
   }
 
   public enum Error {

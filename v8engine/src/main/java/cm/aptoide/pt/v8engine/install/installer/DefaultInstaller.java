@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RootCommandTimeoutException;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import java.io.File;
 import java.util.List;
@@ -69,15 +70,14 @@ public class DefaultInstaller implements Installer {
     this.rootAvailabilityManager = rootAvailabilityManager;
   }
 
-  @Override public Observable<Boolean> isInstalled(String md5) {
+  public Observable<Boolean> isInstalled(String md5) {
     return installationProvider.getInstallation(md5)
         .map(installation -> isInstalled(installation.getPackageName(),
             installation.getVersionCode()))
         .onErrorReturn(throwable -> false);
   }
 
-  @Override public Completable install(Context context, String md5) {
-
+  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
     return rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRoot -> Analytics.RootInstall.installationType(
             ManagerPreferences.allowRootInstallation(), isRoot))
@@ -90,11 +90,15 @@ public class DefaultInstaller implements Installer {
           moveInstallationFiles(installation);
         })
         .flatMap(installation -> isInstalled(md5).first()
-            .flatMap(isInstalling -> {
-              if (isInstalling) {
+            .flatMap(isInstalled -> {
+              if (isInstalled) {
                 return Observable.just(null);
               } else {
-                return startInstallation(context, installation);
+                if (forceDefaultInstall) {
+                  return startDefaultInstallation(context, installation);
+                } else {
+                  return startInstallation(context, installation);
+                }
               }
             }))
         .doOnError((throwable) -> CrashReport.getInstance()
@@ -102,17 +106,17 @@ public class DefaultInstaller implements Installer {
         .toCompletable();
   }
 
-  @Override public Completable update(Context context, String md5) {
-    return install(context, md5);
+  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall) {
+    return install(context, md5, forceDefaultInstall);
   }
 
-  @Override public Completable downgrade(Context context, String md5) {
+  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall) {
     return installationProvider.getInstallation(md5)
         .first()
         .flatMapCompletable(installation -> uninstall(context, installation.getPackageName(),
             installation.getVersionName()))
         .toCompletable()
-        .andThen(install(context, md5));
+        .andThen(install(context, md5, forceDefaultInstall));
   }
 
   @Override public Completable uninstall(Context context, String packageName, String versionName) {
@@ -141,6 +145,11 @@ public class DefaultInstaller implements Installer {
         });
   }
 
+  private Observable<Installation> startDefaultInstallation(Context context,
+      RollbackInstallation installation) {
+    return defaultInstall(context, installation).doOnNext(installation1 -> installation1.save());
+  }
+
   @NonNull
   private Observable<Installation> startInstallation(Context context, Installation installation) {
     return systemInstall(context, installation).onErrorResumeNext(
@@ -157,7 +166,14 @@ public class DefaultInstaller implements Installer {
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
           .startWith(
-              updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_INSTALLING));
+              updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_INSTALLING))
+          .doOnError(throwable -> {
+            if (throwable instanceof RootCommandTimeoutException) {
+              updateInstallation(installation, Installed.TYPE_ROOT,
+                  Installed.STATUS_ROOT_TIMEOUT).save();
+            }
+          })
+          .onErrorResumeNext(Observable.empty());
     } else {
       return Observable.error(new InstallationException("User doesn't allow root installation"));
     }

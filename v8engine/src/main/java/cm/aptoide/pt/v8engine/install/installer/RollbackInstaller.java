@@ -32,37 +32,33 @@ public class RollbackInstaller implements Installer {
     this.installationProvider = installationProvider;
   }
 
-  @Override public Observable<Boolean> isInstalled(String md5) {
-    return defaultInstaller.isInstalled(md5);
-  }
-
-  @Override public Completable install(Context context, String md5) {
+  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .first()
         .toSingle()
         .flatMapCompletable(installation -> saveRollback(installation, Rollback.Action.INSTALL))
-        .andThen(defaultInstaller.install(context, md5));
+        .andThen(defaultInstaller.install(context, md5, forceDefaultInstall));
   }
 
-  @Override public Completable update(Context context, String md5) {
+  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .first()
         .toSingle()
         .flatMapCompletable(installation -> saveRollback(context, installation.getPackageName(),
             Rollback.Action.UPDATE, installation.getIcon(), installation.getVersionName()))
-        .andThen(defaultInstaller.update(context, md5));
+        .andThen(defaultInstaller.update(context, md5, forceDefaultInstall));
   }
 
-  @Override public Completable downgrade(Context context, String md5) {
+  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .first()
         .toSingle()
         .flatMapCompletable(installation -> saveRollback(context, installation.getPackageName(),
             Rollback.Action.DOWNGRADE, installation.getIcon(), installation.getVersionName()))
-        .andThen(defaultInstaller.downgrade(context, md5));
+        .andThen(defaultInstaller.downgrade(context, md5, forceDefaultInstall));
   }
 
   @Override public Completable uninstall(Context context, String packageName, String versionName) {

@@ -44,9 +44,6 @@ public class InstallManager {
   private final InstalledRepository installedRepository;
   private RootAvailabilityManager rootAvailabilityManager;
 
-  /**
-   * Uses the default {@link Repository} for {@link Download} and {@link Installed}
-   */
   public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
       RootAvailabilityManager rootAvailabilityManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
@@ -81,6 +78,14 @@ public class InstallManager {
 
   public Completable uninstall(Context context, String packageName, String versionName) {
     return installer.uninstall(context, packageName, versionName);
+  }
+
+  public Observable<List<InstallationProgress>> getTimedOutInstallations() {
+    return getInstallations().flatMap(
+        installationProgresses -> Observable.from(installationProgresses)
+            .filter(installationProgress -> installationProgress.getState()
+                .equals(InstallationProgress.InstallationStatus.INSTALLATION_TIMEOUT))
+            .toList());
   }
 
   public Observable<List<InstallationProgress>> getInstallations() {
@@ -128,6 +133,14 @@ public class InstallManager {
   }
 
   public Completable install(Context context, Download download) {
+    return install(context, download, false);
+  }
+
+  public Completable defaultInstall(Context context, Download download) {
+    return install(context, download, true);
+  }
+
+  public Completable install(Context context, Download download, boolean forceDefaultInstall) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -140,7 +153,7 @@ public class InstallManager {
         })
         .flatMap(download1 -> getInstallationProgress(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(progress -> installInBackground(context, progress))
+        .flatMap(progress -> installInBackground(context, progress, forceDefaultInstall))
         .first()
         .toCompletable();
   }
@@ -208,6 +221,10 @@ public class InstallManager {
         && download != null
         && download.getOverallDownloadStatus() == Download.COMPLETED) {
       return InstallationProgress.InstallationStatus.INSTALLING;
+    }
+
+    if (installationState.getStatus() == Installed.STATUS_ROOT_TIMEOUT) {
+      return InstallationProgress.InstallationStatus.INSTALLATION_TIMEOUT;
     }
 
     return mapDownloadState(download);
@@ -290,6 +307,7 @@ public class InstallManager {
         isIndeterminate = false;
         break;
       case Installed.STATUS_INSTALLING:
+      case Installed.STATUS_ROOT_TIMEOUT:
         if (type == Installed.TYPE_DEFAULT) {
           isIndeterminate = false;
         } else {
@@ -324,16 +342,17 @@ public class InstallManager {
   }
 
   private Observable<InstallationProgress> installInBackground(Context context,
-      InstallationProgress progress) {
+      InstallationProgress progress, boolean forceDefaultInstall) {
     return getInstallationProgress(progress.getMd5(), progress.getPackageName(),
-        progress.getVersionCode()).mergeWith(startBackgroundInstallationAndWait(context, progress));
+        progress.getVersionCode()).mergeWith(
+        startBackgroundInstallationAndWait(context, progress, forceDefaultInstall));
   }
 
   @NonNull
   private Observable<InstallationProgress> startBackgroundInstallationAndWait(Context context,
-      InstallationProgress progress) {
+      InstallationProgress progress, boolean forceDefaultInstall) {
     return waitBackgroundInstallationResult(context, progress.getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(context, progress.getMd5()))
+        () -> startBackgroundInstallation(context, progress.getMd5(), forceDefaultInstall))
         .map(aVoid -> progress);
   }
 
@@ -346,10 +365,12 @@ public class InstallManager {
         .map(intent -> null);
   }
 
-  private void startBackgroundInstallation(Context context, String md5) {
+  private void startBackgroundInstallation(Context context, String md5,
+      boolean forceDefaultInstall) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
+    intent.putExtra(InstallService.EXTRA_FORCE_DEFAULT_INSTALL, forceDefaultInstall);
     if (installer instanceof RollbackInstaller) {
       intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_ROLLBACK);
     } else if (installer instanceof DefaultInstaller) {
