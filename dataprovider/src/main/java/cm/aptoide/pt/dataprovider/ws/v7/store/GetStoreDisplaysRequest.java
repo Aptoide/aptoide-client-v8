@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
@@ -26,17 +27,19 @@ import rx.Observable;
   private String url;
 
   GetStoreDisplaysRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.url = url;
   }
 
   public static GetStoreDisplaysRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays")
-        .get(), new Body(storeCredentials), bodyInterceptor, httpClient, converterFactory);
+        .get(), new Body(storeCredentials), bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,

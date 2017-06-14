@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -28,16 +29,17 @@ public class SetUserMultipartRequest
 
   private final MultipartBody.Part multipartBody;
 
-  private SetUserMultipartRequest(MultipartBody.Part file,
-      HashMapNotNull<String, RequestBody> body, OkHttpClient httpClient,
-      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+  private SetUserMultipartRequest(MultipartBody.Part file, HashMapNotNull<String, RequestBody> body,
+      OkHttpClient httpClient, Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     multipartBody = file;
   }
 
   public static SetUserMultipartRequest of(String username, String userAvatar,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, ObjectMapper serializer) {
+      Converter.Factory converterFactory, ObjectMapper serializer,
+      TokenInvalidator tokenInvalidator) {
 
     final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
@@ -51,7 +53,7 @@ public class SetUserMultipartRequest
 
     return new SetUserMultipartRequest(
         requestBodyFactory.createBodyPartFromFile("user_avatar", new File(userAvatar)), body,
-        httpClient, converterFactory, bodyInterceptor);
+        httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

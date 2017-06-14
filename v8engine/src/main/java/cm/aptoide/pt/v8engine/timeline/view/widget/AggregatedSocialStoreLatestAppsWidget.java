@@ -16,6 +16,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -58,6 +59,7 @@ public class AggregatedSocialStoreLatestAppsWidget
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> baseBodyInterceptor;
   private final OkHttpClient httpClient;
+  private final TokenInvalidator tokenInvalidator;
   private TextView seeMore;
   private LinearLayout subCardsContainer;
   private ImageView headerAvatar1;
@@ -89,10 +91,11 @@ public class AggregatedSocialStoreLatestAppsWidget
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(), tokenInvalidator);
   }
 
   @Override protected void assignViews(View itemView) {

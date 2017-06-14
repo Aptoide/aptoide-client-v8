@@ -47,7 +47,8 @@ public final class RepositoryFactory {
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
         getIdsRepository(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(),
+        ((V8Engine) context.getApplicationContext()).getTokenInvalidator());
   }
 
   private static IdsRepository getIdsRepository(Context context) {
@@ -86,7 +87,8 @@ public final class RepositoryFactory {
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(), getHttpClient(context),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(),
+        ((V8Engine) context.getApplicationContext()).getTokenInvalidator());
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
@@ -102,6 +104,7 @@ public final class RepositoryFactory {
       TimelineAnalytics timelineAnalytics) {
     return new SocialRepository(getAccountManager(context),
         ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7(),
-        WebService.getDefaultConverter(), getHttpClient(context), timelineAnalytics);
+        WebService.getDefaultConverter(), getHttpClient(context), timelineAnalytics,
+        ((V8Engine) context.getApplicationContext()).getTokenInvalidator());
   }
 }

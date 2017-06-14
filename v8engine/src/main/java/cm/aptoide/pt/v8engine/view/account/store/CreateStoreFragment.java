@@ -340,7 +340,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     })
         .flatMap(
             __ -> SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
-                storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
+                storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory,
+                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
                 .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
@@ -374,7 +375,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
             account -> SetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
                 multipartBodyInterceptor, longTimeoutHttpClient, converterFactory,
-                requestBodyFactory, serializer)
+                requestBodyFactory, serializer,
+                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
                 .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
@@ -522,7 +524,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
           .flatMap(account -> SetStoreRequest.of(storeModel.getStoreName(),
               storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
               storeModel.getStoreAvatarPath(), multipartBodyInterceptor, longTimeoutHttpClient,
-              converterFactory, requestBodyFactory, serializer)
+              converterFactory, requestBodyFactory, serializer,
+              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
               .observe()
               .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
@@ -584,7 +587,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
      * not multipart
      */
     SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
-        bodyInterceptorV7, httpClient, converterFactory)
+        bodyInterceptorV7, httpClient, converterFactory,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
         .observe()
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .andThen(sendCreateAnalytics())

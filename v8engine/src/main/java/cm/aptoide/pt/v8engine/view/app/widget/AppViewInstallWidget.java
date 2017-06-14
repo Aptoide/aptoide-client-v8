@@ -146,14 +146,18 @@ import rx.android.schedulers.AndroidSchedulers;
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     analytics = Analytics.getInstance();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-                httpClient, WebService.getDefaultConverter()));
+                httpClient, WebService.getDefaultConverter(),
+                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
     minimalAd = this.displayable.getMinimalAd();
     GetApp getApp = this.displayable.getPojo();

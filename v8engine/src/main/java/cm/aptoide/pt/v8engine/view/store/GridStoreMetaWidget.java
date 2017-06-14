@@ -93,7 +93,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     final GetHomeMeta getHomeMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData()
         .getStore();

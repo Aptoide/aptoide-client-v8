@@ -191,11 +191,13 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        baseBodyInterceptor, httpClient, converterFactory, installedRepository);
+        baseBodyInterceptor, httpClient, converterFactory, installedRepository,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory)
+    GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -218,13 +220,15 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
-            baseBodyInterceptor, httpClient, converterFactory);
+            baseBodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(),
-                baseBodyInterceptor, httpClient, converterFactory),
+                baseBodyInterceptor, httpClient, converterFactory,
+                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()),
             (throwable) -> throwable.printStackTrace());
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);

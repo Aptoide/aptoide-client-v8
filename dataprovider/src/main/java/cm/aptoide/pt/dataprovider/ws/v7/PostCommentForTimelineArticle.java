@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -22,22 +23,25 @@ public class PostCommentForTimelineArticle
       + "/api/7/";
 
   private PostCommentForTimelineArticle(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, String text,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     Body body = new Body(timelineArticleId, text);
-    return new PostCommentForTimelineArticle(body, bodyInterceptor, httpClient, converterFactory);
+    return new PostCommentForTimelineArticle(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, long previousCommentId,
       String text, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     Body body = new Body(timelineArticleId, text, previousCommentId);
-    return new PostCommentForTimelineArticle(body, bodyInterceptor, httpClient, converterFactory);
+    return new PostCommentForTimelineArticle(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

@@ -151,8 +151,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
     downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     installedRepository = RepositoryFactory.getInstalledRepository();
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
@@ -220,7 +222,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
               ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
               ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-              WebService.getDefaultConverter()), installedRepository));
+              WebService.getDefaultConverter(),
+              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()), installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
     Logger.v(TAG, "listed installed apps");

@@ -2,6 +2,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListComments;
@@ -21,14 +22,15 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   private static String url;
 
   private ListCommentsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ListCommentsRequest ofStoreAction(String url, boolean refresh,
       @Nullable BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     ListCommentsRequest.url = url;
 
@@ -39,13 +41,14 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       body.setStoreId(storeCredentials.getId());
     }
 
-    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static ListCommentsRequest of(String url, long resourceId, int limit,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean isReview,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     ListCommentsRequest.url = url;
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
@@ -60,27 +63,30 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       body.setStoreId(resourceId);
     }
 
-    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static ListCommentsRequest of(long resourceId, int offset, int limit, boolean isReview,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     final Body body = getBody(resourceId, limit, isReview);
     body.setOffset(offset);
-    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static ListCommentsRequest of(long resourceId, int limit, boolean isReview,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     final Body body = getBody(resourceId, limit, isReview);
-    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static ListCommentsRequest ofTimeline(String url, boolean refresh,
       String timelineArticleId, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     ListCommentsRequest.url = url;
 
@@ -91,7 +97,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     body.setCommentType(null);
     body.setTimelineCardId(timelineArticleId);
 
-    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   private static Body getBody(long resourceId, int limit, boolean isReview) {

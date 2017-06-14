@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.analytics.events;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.AnalyticsEventRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -22,10 +23,11 @@ public class AptoideEvent implements Event {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
 
   public AptoideEvent(Map<String, Object> data, String eventName, String action, String context,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     this.data = data;
     this.eventName = eventName;
     this.action = action;
@@ -33,11 +35,12 @@ public class AptoideEvent implements Event {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   @Override public void send() {
     AnalyticsEventRequest.of(eventName, context, action, data, bodyInterceptor, httpClient,
-        converterFactory)
+        converterFactory, tokenInvalidator)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {

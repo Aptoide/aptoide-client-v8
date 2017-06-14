@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -23,15 +24,16 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
       + "/api/7/";
 
   public SyncAddressBookRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static SyncAddressBookRequest of(List<String> numbers, List<String> emails,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     return new SyncAddressBookRequest((new Body(new Contacts(numbers, emails), null, null)),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   /**
@@ -39,9 +41,9 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
    */
   public static SyncAddressBookRequest of(long id, String token, String secret,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     return new SyncAddressBookRequest(new Body(null, new Twitter(id, token, secret), null),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   /**
@@ -49,9 +51,9 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
    */
   public static SyncAddressBookRequest of(long id, String token,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     return new SyncAddressBookRequest(new Body(null, null, new Facebook(id, token)),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.download;
 
 import android.support.annotation.CallSuper;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
@@ -36,12 +37,13 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public DownloadInstallBaseEvent(Action action, Origin origin, String packageName, String url,
       String obbUrl, String patchObbUrl, AppContext context, int versionCode,
       DownloadInstallEventConverter downloadInstallEventConverter, String eventName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;
@@ -57,12 +59,14 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   @Override public void send() {
     if (isReadyToSend()) {
       DownloadAnalyticsRequest.of(downloadInstallEventConverter.convert(this, resultStatus, error),
-          action.name(), name, context.name(), bodyInterceptor, httpClient, converterFactory)
+          action.name(), name, context.name(), bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator)
           .observe()
           .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
               throwable -> throwable.printStackTrace());

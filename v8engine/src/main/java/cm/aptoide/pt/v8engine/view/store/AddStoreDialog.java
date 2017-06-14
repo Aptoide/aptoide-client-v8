@@ -24,6 +24,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
@@ -78,6 +79,7 @@ public class AddStoreDialog extends BaseDialog {
   private SearchView.SearchAutoComplete searchAutoComplete;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public AddStoreDialog attachFragmentManager(FragmentNavigator navigator) {
     this.navigator = navigator;
@@ -105,6 +107,7 @@ public class AddStoreDialog extends BaseDialog {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -281,13 +284,14 @@ public class AddStoreDialog extends BaseDialog {
   private GetStoreMetaRequest buildRequest(String storeName) {
     return GetStoreMetaRequest.of(
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-        baseBodyBodyInterceptor, httpClient, converterFactory);
+        baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
     new StoreUtilsProxy(accountManager, baseBodyBodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(Store.class), httpClient,
-        WebService.getDefaultConverter()).subscribeStore(getHomeMetaRequest, getStoreMeta1 -> {
+        WebService.getDefaultConverter(),
+        tokenInvalidator).subscribeStore(getHomeMetaRequest, getStoreMeta1 -> {
       ShowMessage.asSnack(getView(),
           AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 

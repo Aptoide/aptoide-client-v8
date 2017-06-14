@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
@@ -51,16 +52,20 @@ public class DialogUtils {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final InstalledRepository installedRepository;
+  private final TokenInvalidator tokenInvalidator;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, InstalledRepository installedRepository) {
+      Converter.Factory converterFactory, InstalledRepository installedRepository,
+      TokenInvalidator tokenInvalidator) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.installedRepository = installedRepository;
+    this.tokenInvalidator = tokenInvalidator;
+
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -155,11 +160,12 @@ public class DialogUtils {
         if (storeName != null) {
 
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName))
+              bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
+              tokenInvalidator)
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-              httpClient, converterFactory, isAppInstalled(packageName))
+              httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator)
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -246,11 +252,13 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName))
+            bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
+            tokenInvalidator)
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-            httpClient, converterFactory, isAppInstalled(packageName))
+            httpClient, converterFactory, isAppInstalled(packageName),
+            tokenInvalidator)
             .execute(successRequestListener, errorRequestListener);
       }
     });

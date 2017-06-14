@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider;
 
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.preferences.Application;
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -15,7 +16,7 @@ import rx.Single;
 public abstract class DataProvider extends Application {
   private static TokenInvalidator tokenInvalidator;
 
-  public static Single<String> invalidateAccessToken() {
+  public static Completable invalidateAccessToken() {
     return tokenInvalidator.invalidateAccessToken();
   }
 

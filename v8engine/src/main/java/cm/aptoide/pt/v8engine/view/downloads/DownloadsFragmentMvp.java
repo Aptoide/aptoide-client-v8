@@ -50,9 +50,11 @@ public class DownloadsFragmentMvp extends FragmentView implements DownloadsView 
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     installConverter =
-        new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory);
+        new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     downloadConverter =
-        new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory);
+        new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();

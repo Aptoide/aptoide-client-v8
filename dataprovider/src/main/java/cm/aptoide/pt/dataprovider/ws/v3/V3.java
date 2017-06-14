@@ -117,9 +117,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
                     if (!accessTokenRetry) {
                       accessTokenRetry = true;
                       return DataProvider.invalidateAccessToken()
-                          .flatMapObservable(s -> {
-                            return V3.this.observe(bypassCache);
-                          });
+                          .andThen(V3.this.observe(bypassCache));
                     }
                   } else {
                     return Observable.error(

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -25,29 +26,31 @@ import rx.Observable;
   private final String url;
 
   private GetStoreRequest(String url, GetStoreBody body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.url = url;
   }
 
   public static GetStoreRequest of(StoreCredentials storeCredentials, StoreContext storeContext,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
 
-    return new GetStoreRequest("", body, bodyInterceptor, httpClient, converterFactory);
+    return new GetStoreRequest("", body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreRequest(new V7Url(url).remove("getStore")
-        .get(), body, bodyInterceptor, httpClient, converterFactory);
+        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   @Override

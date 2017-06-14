@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
@@ -24,14 +25,14 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   private ListSearchAppsRequest(Body body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ListSearchAppsRequest of(String query, String storeName,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     List<String> stores = null;
     if (storeName != null) {
@@ -43,39 +44,42 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
       return new ListSearchAppsRequest(
           new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false), BASE_HOST,
-          bodyInterceptor, httpClient, converterFactory);
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
     }
     return new ListSearchAppsRequest(new Body(Endless.DEFAULT_LIMIT, query, stores, false),
-        BASE_HOST, bodyInterceptor, httpClient, converterFactory);
+        BASE_HOST, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
           new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
-              false), BASE_HOST, bodyInterceptor, httpClient, converterFactory);
+              false), BASE_HOST, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
     } else {
       return new ListSearchAppsRequest(new Body(Endless.DEFAULT_LIMIT, query, false), BASE_HOST,
-          bodyInterceptor, httpClient, converterFactory);
+          bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator);
     }
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       boolean trustedOnly, List<Long> subscribedStoresIds,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
           new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly), BASE_HOST,
-          bodyInterceptor, httpClient, converterFactory);
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
     } else {
       return new ListSearchAppsRequest(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly),
-          BASE_HOST, bodyInterceptor, httpClient, converterFactory);
+          BASE_HOST, bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator);
     }
   }
 

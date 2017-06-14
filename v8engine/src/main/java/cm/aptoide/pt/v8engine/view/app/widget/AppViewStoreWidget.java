@@ -105,7 +105,8 @@ import rx.functions.Action1;
     final StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
     Action1<Void> openStore = __ -> {
       displayable.getAppViewAnalytics()

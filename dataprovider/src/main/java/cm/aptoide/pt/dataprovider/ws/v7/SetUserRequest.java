@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -23,21 +24,23 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
       + "/api/7/";
 
   protected SetUserRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static SetUserRequest of(String userAccess, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     Body body = new Body(userAccess, null);
-    return new SetUserRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new SetUserRequest(body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   public static SetUserRequest ofWithName(String userName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     Body body = new Body(null, userName);
-    return new SetUserRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new SetUserRequest(body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

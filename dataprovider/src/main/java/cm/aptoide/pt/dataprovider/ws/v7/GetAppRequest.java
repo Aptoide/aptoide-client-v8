@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import android.util.Log;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -26,47 +26,51 @@ import rx.Observable;
     extends V7<GetApp, GetAppRequest.Body> {
 
   private GetAppRequest(String baseHost, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static GetAppRequest of(String packageName, String storeName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST, new Body(packageName, storeName, forceServerRefresh),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
-      long appId, OkHttpClient httpClient, Converter.Factory converterFactory) {
+      long appId, OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST, new Body(appId, forceServerRefresh, packageName),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST, new Body(forceServerRefresh, md5), bodyInterceptor,
-        httpClient, converterFactory);
+        httpClient, converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest ofUname(String uname, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
 
     return new GetAppRequest(BASE_HOST, new Body(uname), bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest of(long appId, String storeName,
       BaseRequestWithStore.StoreCredentials storeCredentials, String packageName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -74,7 +78,8 @@ import rx.Observable;
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
-    return new GetAppRequest(BASE_HOST, body, bodyInterceptor, httpClient, converterFactory);
+    return new GetAppRequest(BASE_HOST, body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

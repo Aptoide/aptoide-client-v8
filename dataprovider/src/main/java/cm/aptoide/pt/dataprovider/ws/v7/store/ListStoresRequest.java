@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -28,36 +29,38 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
   private ListStoresRequest(String url, Body body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+    this(body, baseHost, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
     this.url = url;
   }
 
   private ListStoresRequest(Body body, String baseHost, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ListStoresRequest ofTopStores(int offset, int limit,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
     baseBody.limit = limit;
     return new ListStoresRequest(baseBody, BASE_HOST, bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator);
   }
 
   public static ListStoresRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
 
     url = url.replace("listStores", "");
     if (!url.startsWith("/")) {
       url = "/" + url;
     }
     return new ListStoresRequest(url, new Body(), BASE_HOST, bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator);
   }
 
   @Override

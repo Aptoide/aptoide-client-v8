@@ -238,7 +238,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(applicationContext), bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
@@ -249,7 +249,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics);
+            timelineAnalytics,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final InstallManager installManager =
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(
@@ -258,14 +259,16 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
     cardToDisplayable =
         new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
             permissionManager, storeCredentialsProvider,
-            new InstallEventConverter(bodyInterceptor, httpClient, converterFactory),
+            new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
+                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()),
             Analytics.getInstance(),
-            new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory));
+            new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
+                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()));
 
     refreshSubject = BehaviorRelay.create();
 

@@ -169,7 +169,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .first()
         .flatMap(account -> GetStoreRequest.of(
             new BaseRequestWithStore.StoreCredentials(account.getStoreName(), null, null),
-            StoreContext.meta, bodyInterceptor, httpClient, converterFactory)
+            StoreContext.meta, bodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
             .observe());
   }
 

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,15 +47,17 @@ public class TimelineAnalytics extends AptoideAnalytics {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -250,7 +253,7 @@ public class TimelineAnalytics extends AptoideAnalytics {
 
   private AptoideEvent createEvent(String event, Map<String, Object> data) {
     return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator);
   }
 
   private Map<String, Object> createAppData(String cardType, String source, String packageName) {

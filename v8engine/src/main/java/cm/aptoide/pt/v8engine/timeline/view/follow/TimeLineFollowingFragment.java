@@ -73,7 +73,7 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
 
   @Override protected V7 buildRequest() {
     return GetFollowingRequest.of(baseBodyInterceptor, userId, storeId, httpClient,
-        converterFactory);
+        converterFactory, ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {

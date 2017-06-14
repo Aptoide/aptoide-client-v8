@@ -208,7 +208,8 @@ import rx.Observable;
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
-    ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory)
+    ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory,
+        ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
         .execute(listComments -> {
           if (listComments.isOk()) {
             List<Comment> comments = listComments.getDatalist()
@@ -228,7 +229,8 @@ import rx.Observable;
     setHelpButtonsClickable(false);
 
     if (accountManager.isLoggedIn()) {
-      SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor, httpClient, converterFactory)
+      SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor, httpClient, converterFactory,
+          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
           .execute(response -> {
             if (response == null) {
               Logger.e(TAG, "empty response");

@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -34,28 +35,32 @@ public class StoreUtilsProxy {
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public StoreUtilsProxy(AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
-      StoreAccessor storeAccessor, OkHttpClient httpClient, Converter.Factory converterFactory) {
+      StoreAccessor storeAccessor, OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.storeAccessor = storeAccessor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   public void subscribeStore(String storeName) {
     subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor, httpClient, converterFactory), null, null, storeName, accountManager);
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator), null, null, storeName, accountManager);
   }
 
   public Observable<GetStoreMeta> subscribeStoreObservable(String storeName) {
     return StoreUtils.subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor, httpClient, converterFactory), accountManager, null, null);
+            bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator), accountManager, null, null);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -82,7 +87,8 @@ public class StoreUtilsProxy {
 
     subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor, httpClient, converterFactory), successRequestListener,
+            bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator), successRequestListener,
         errorRequestListener, storeName, accountManager);
   }
 

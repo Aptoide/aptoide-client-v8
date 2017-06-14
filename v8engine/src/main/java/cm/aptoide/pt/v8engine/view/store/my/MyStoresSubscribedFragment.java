@@ -57,7 +57,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
     GetMyStoreListRequest request =
-        GetMyStoreListRequest.of(url, true, bodyInterceptor, httpClient, converterFactory);
+        GetMyStoreListRequest.of(url, true, bodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
     return request;
   }
@@ -99,7 +100,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
                   new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
                       AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class),
-                      httpClient, WebService.getDefaultConverter()), storeCredentialsProvider));
+                      httpClient, WebService.getDefaultConverter(),
+                      ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()), storeCredentialsProvider));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }

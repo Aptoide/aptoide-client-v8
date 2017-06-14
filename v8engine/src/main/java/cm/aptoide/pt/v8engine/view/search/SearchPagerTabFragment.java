@@ -146,10 +146,12 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     ListSearchAppsRequest of;
     if (storeName != null) {
       of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-          bodyInterceptor, httpClient, converterFactory);
+          bodyInterceptor, httpClient, converterFactory,
+          ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     } else {
       of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(),
-          StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory);
+          StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory,
+          ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     }
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

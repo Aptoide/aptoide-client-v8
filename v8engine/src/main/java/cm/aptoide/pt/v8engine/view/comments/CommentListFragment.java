@@ -145,7 +145,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory);
+        httpClient, converterFactory,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     super.onCreate(savedInstanceState);
   }
 
@@ -260,7 +261,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   void caseListSocialTimelineComments(boolean refresh) {
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
-            converterFactory);
+            converterFactory,
+            ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -298,7 +300,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator, httpClient,
-            converterFactory);
+            converterFactory,
+            ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =

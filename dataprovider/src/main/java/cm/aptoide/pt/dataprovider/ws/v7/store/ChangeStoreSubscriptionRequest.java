@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
@@ -26,16 +27,18 @@ public class ChangeStoreSubscriptionRequest
       + "/api/7/";
 
   protected ChangeStoreSubscriptionRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ChangeStoreSubscriptionRequest of(String storeName,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState storeSubscription, String storeUser,
       String sha1PassWord, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     final Body body = new Body(storeName, storeSubscription, storeUser, sha1PassWord);
-    return new ChangeStoreSubscriptionRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ChangeStoreSubscriptionRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

@@ -105,6 +105,7 @@ import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
+import cm.aptoide.pt.v8engine.networking.AccountManagerTokenInvalidator;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
@@ -163,7 +164,6 @@ import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
@@ -220,6 +220,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private AccountManagerTokenInvalidator tokenInvalidator;
 
   /**
    * call after this instance onCreate()
@@ -335,17 +336,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
     getNotificationCenter().setup();
   }
 
-  @Override protected TokenInvalidator getTokenInvalidator() {
-    return new TokenInvalidator() {
-      @Override public Single<String> invalidateAccessToken() {
-        final AptoideAccountManager accountManager = getAccountManager();
-        return accountManager.refreshToken()
-            .andThen(accountManager.accountStatus()
-                .first()
-                .toSingle())
-            .map(account -> account.getAccessToken());
-      }
-    };
+  @Override public TokenInvalidator getTokenInvalidator() {
+    if (tokenInvalidator == null) {
+      tokenInvalidator = new AccountManagerTokenInvalidator(getAccountManager());
+    }
+    return tokenInvalidator;
   }
 
   public NotificationNetworkService getNotificationNetworkService() {
@@ -536,7 +531,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager()),
           getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter(), getNonNullObjectMapper());
+          WebService.getDefaultConverter(), getNonNullObjectMapper(), getTokenInvalidator());
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
@@ -820,14 +815,16 @@ public abstract class V8Engine extends SpotAndShareApplication {
       StoreUtilsProxy proxy =
           new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7(), storeCredentials,
               AccessorFactory.getAccessorFor(Store.class), getDefaultClient(),
-              WebService.getDefaultConverter());
+              WebService.getDefaultConverter(),
+              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
-              getDefaultClient(), WebService.getDefaultConverter()), getAccountManager(),
+              getDefaultClient(), WebService.getDefaultConverter(),
+              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()), getAccountManager(),
           defaultStoreCredentials)
           .andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance()

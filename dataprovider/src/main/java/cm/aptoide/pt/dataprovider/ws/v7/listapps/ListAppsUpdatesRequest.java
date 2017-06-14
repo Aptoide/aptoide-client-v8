@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
@@ -39,16 +40,16 @@ import rx.schedulers.Schedulers;
 
   private ListAppsUpdatesRequest(Body body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String clientUniqueId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     return new ListAppsUpdatesRequest(
         new Body(getInstalledApks(), subscribedStoresIds, clientUniqueId), BASE_HOST,
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   private static List<ApksData> getInstalledApks() {

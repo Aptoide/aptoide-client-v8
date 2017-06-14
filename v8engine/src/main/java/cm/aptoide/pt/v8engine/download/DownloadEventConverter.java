@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.download;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
@@ -15,12 +16,14 @@ public class DownloadEventConverter extends DownloadInstallEventConverter<Downlo
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
 
   public DownloadEventConverter(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   @Override
@@ -47,6 +50,6 @@ public class DownloadEventConverter extends DownloadInstallEventConverter<Downlo
       DownloadInstallBaseEvent.Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, DownloadInstallBaseEvent.AppContext context, int versionCode) {
     return new DownloadEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
-        versionCode, this, bodyInterceptor, httpClient, converterFactory);
+        versionCode, this, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 }

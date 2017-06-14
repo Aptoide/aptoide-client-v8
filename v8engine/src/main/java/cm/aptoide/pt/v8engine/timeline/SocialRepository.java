@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.timeline;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
@@ -27,21 +28,25 @@ public class SocialRepository {
   private final Converter.Factory converterFactory;
   private final OkHttpClient httpClient;
   private final TimelineAnalytics timelineAnalytics;
+  private final TokenInvalidator tokenInvalidator;
 
   public SocialRepository(AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptor, Converter.Factory converterFactory,
-      OkHttpClient httpClient, TimelineAnalytics timelineAnalytics) {
+      OkHttpClient httpClient, TimelineAnalytics timelineAnalytics,
+      TokenInvalidator tokenInvalidator) {
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
     this.timelineAnalytics = timelineAnalytics;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   public void share(String cardId, boolean privacy, ShareCardCallback shareCardCallback,
       TimelineSocialActionData timelineSocialActionData) {
     //todo(pribeiro): check if timelineSocialActionData is null
-    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory)
+    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -66,7 +71,8 @@ public class SocialRepository {
 
   public void share(String cardId, ShareCardCallback shareCardCallback,
       TimelineSocialActionData timelineSocialActionData) {
-    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory)
+    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -86,7 +92,8 @@ public class SocialRepository {
 
   public void share(String cardId, long storeId, boolean privacy,
       ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
-    ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor)
+    ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -106,7 +113,8 @@ public class SocialRepository {
 
   public void share(String cardId, long storeId, ShareCardCallback shareCardCallback,
       TimelineSocialActionData timelineSocialActionData) {
-    ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor)
+    ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -128,7 +136,7 @@ public class SocialRepository {
   public void like(String timelineCardId, String cardType, String ownerHash, int rating,
       TimelineSocialActionData timelineSocialActionData) {
     LikeCardRequest.of(timelineCardId, cardType, ownerHash, rating, bodyInterceptor, httpClient,
-        converterFactory)
+        converterFactory, tokenInvalidator)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {
@@ -140,7 +148,7 @@ public class SocialRepository {
 
   public void share(String packageName, Long storeId, String shareType, boolean privacy) {
     ShareInstallCardRequest.of(packageName, storeId, shareType, bodyInterceptor, httpClient,
-        converterFactory)
+        converterFactory, tokenInvalidator)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -157,7 +165,7 @@ public class SocialRepository {
   public void share(String packageName, Long storeId, String shareType) {
     //todo(pribeiro): check if timelineSocialActionData is null
     ShareInstallCardRequest.of(packageName, storeId, shareType, bodyInterceptor, httpClient,
-        converterFactory)
+        converterFactory, tokenInvalidator)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {

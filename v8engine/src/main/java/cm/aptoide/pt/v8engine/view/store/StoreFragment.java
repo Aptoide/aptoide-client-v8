@@ -131,7 +131,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null);
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
   }
 
   @Override public void onDestroy() {
@@ -294,7 +295,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
       case GetHome:
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
-            storeContext, bodyInterceptor, httpClient, converterFactory)
+            storeContext, bodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
             .observe(refresh)
             .map(getHome -> {
               Store store = getHome.getNodes()
@@ -316,7 +318,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
       default:
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
-            bodyInterceptor, httpClient, converterFactory)
+            bodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
             .observe(refresh)
             .map(getStore -> {
               setupVariables(getStore.getNodes()

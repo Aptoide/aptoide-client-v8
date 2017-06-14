@@ -132,7 +132,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(),
-            baseBodyInterceptor, httpClient, converterFactory), otherVersionsSuccessRequestListener,
+            baseBodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()), otherVersionsSuccessRequestListener,
         err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

@@ -41,7 +41,8 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
     final OkHttpClient httpClient =
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter());
+        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {

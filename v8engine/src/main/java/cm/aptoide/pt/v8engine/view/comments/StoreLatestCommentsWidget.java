@@ -86,7 +86,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     ManagerPreferences.setForceServerRefreshFlag(true);
     compositeSubscription.add(
         ListCommentsRequest.of(storeId, 0, 3, false, baseBodyInterceptor, httpClient,
-            converterFactory)
+            converterFactory,
+            ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
             .observe()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
 import lombok.Data;
@@ -16,8 +17,10 @@ public class GetMySubscribedStoresRequest
     extends V7<GetMySubscribedStoresResponse, GetMySubscribedStoresRequest.Body> {
 
   public GetMySubscribedStoresRequest(String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(new Body(accessToken), BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(new Body(accessToken), BASE_HOST, httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   @Override

@@ -11,6 +11,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -45,6 +46,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
+  private TokenInvalidator tokenInvalidator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -56,7 +58,9 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter());
+        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
@@ -69,7 +73,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
                   V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
               accountManager.isAccountMature(), bodyInterceptor, httpClient, converterFactory,
-              qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
+              qManager.getFilters(ManagerPreferences.getHWSpecsFilter()), tokenInvalidator);
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist().getList())

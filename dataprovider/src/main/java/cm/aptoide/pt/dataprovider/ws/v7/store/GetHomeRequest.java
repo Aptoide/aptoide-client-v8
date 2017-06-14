@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -17,16 +18,18 @@ public class GetHomeRequest extends V7<GetHome, GetHomeBody> {
 
   protected GetHomeRequest(GetHomeBody body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static GetHomeRequest of(@Nullable BaseRequestWithStore.StoreCredentials storeCredentials,
       @Nullable Long userId, StoreContext storeContext, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     final GetHomeBody body = new GetHomeBody(storeCredentials, WidgetsArgs.createDefault(), userId);
     body.setContext(storeContext);
-    return new GetHomeRequest(body, BASE_HOST, bodyInterceptor, httpClient, converterFactory);
+    return new GetHomeRequest(body, BASE_HOST, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

@@ -137,7 +137,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       GetAppRequest.of(appId, V8Engine.getConfiguration()
               .getPartnerId() == null ? null : storeName,
           StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-          baseBodyBodyInterceptor, httpClient, converterFactory)
+          baseBodyBodyInterceptor, httpClient, converterFactory,
+          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
           .execute(getApp -> {
             setupAppDescription(getApp);
             setupTitle(getApp);

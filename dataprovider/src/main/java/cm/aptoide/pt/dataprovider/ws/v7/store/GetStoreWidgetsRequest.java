@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
@@ -27,19 +28,20 @@ import rx.Observable;
   private final String url;
 
   private GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.url = url;
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
-        .get(), body, bodyInterceptor, httpClient, converterFactory);
+        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -21,8 +22,8 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
 
   private AnalyticsEventRequest(Body body, String action, String name, String context,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.action = action;
     this.name = name;
     this.context = context;
@@ -30,13 +31,13 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
 
   public static AnalyticsEventRequest of(String eventName, String context, String action,
       Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(
         DataProvider.getConfiguration()
             .getAppId(), data);
 
     return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

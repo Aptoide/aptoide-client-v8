@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -28,15 +29,15 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
   private SetStoreRequest(HashMapNotNull<String, RequestBody> body,
       MultipartBody.Part multipartBody,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.multipartBody = multipartBody;
   }
 
   public static SetStoreRequest of(String storeName, String storeTheme, String storeDescription,
       String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory, RequestBodyFactory requestBodyFactory,
-      ObjectMapper serializer) {
+      ObjectMapper serializer, TokenInvalidator tokenInvalidator) {
 
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
@@ -45,13 +46,14 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
 
     return new SetStoreRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   public static SetStoreRequest of(long storeId, String storeTheme, String storeDescription,
       String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      RequestBodyFactory requestBodyFactory, ObjectMapper serializer) {
+      RequestBodyFactory requestBodyFactory, ObjectMapper serializer,
+      TokenInvalidator tokenInvalidator) {
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
     body.put("store_id", requestBodyFactory.createBodyPartFromLong(storeId));
@@ -59,7 +61,7 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
 
     return new SetStoreRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   private static void addStoreProperties(String storeTheme, String storeDescription,

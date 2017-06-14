@@ -96,7 +96,8 @@ public class SocialStoreLatestAppsWidget
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser()
         .getName());

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
@@ -16,8 +17,8 @@ import retrofit2.Converter;
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
   public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static class StoreCredentials {

@@ -90,7 +90,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
-              baseBodyInterceptor, httpClient, converterFactory);
+              baseBodyInterceptor, httpClient, converterFactory,
+              ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDatalist()
             .getList();

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
@@ -30,26 +31,31 @@ public class RequestFactory {
 
   public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     listStoresRequestFactory =
-        new ListStoresRequestFactory(bodyInterceptor, httpClient, converterFactory);
+        new ListStoresRequestFactory(bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator);
     listAppsRequestFactory =
         new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider, httpClient,
-            converterFactory);
+            converterFactory, tokenInvalidator);
     listFullReviewsRequestFactory =
-        new ListFullReviewsRequestFactory(bodyInterceptor, httpClient, converterFactory);
+        new ListFullReviewsRequestFactory(bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator);
     getStoreRequestFactory =
         new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
-            converterFactory);
+            converterFactory, tokenInvalidator);
     getStoreWidgetsRequestFactory =
         new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
-            converterFactory);
+            converterFactory,
+            tokenInvalidator);
     getUserRequestFactory =
-        new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory);
+        new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator);
 
     getStoreRecommendedRequestFactory =
-        new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory);
+        new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator);
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithApp;
@@ -33,31 +34,35 @@ import rx.Observable;
   private static final Integer MAX_LIMIT = 10;
 
   private ListAppVersionsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     if (storeNames != null && !storeNames.isEmpty()) {
       Body body = new Body(packageName, storeNames, storeCredentials);
       body.setLimit(MAX_LIMIT);
-      return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory);
+      return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator);
     } else {
-      return of(packageName, storeCredentials, bodyInterceptor, httpClient, converterFactory);
+      return of(packageName, storeCredentials, bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator);
     }
   }
 
   public static ListAppVersionsRequest of(String packageName,
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     Body body = new Body(packageName);
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,

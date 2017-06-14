@@ -99,7 +99,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final StoreUtilsProxy storeUtilsProxy =
           new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
               AccessorFactory.getAccessorFor(Store.class), httpClient,
-              WebService.getDefaultConverter());
+              WebService.getDefaultConverter(),
+              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()

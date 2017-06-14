@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.addressbook.data;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
@@ -33,14 +34,18 @@ public class ContactsRepository {
   private final Converter.Factory converterFactory;
   private final IdsRepository idsRepository;
   private final ContactUtils contactUtils;
+  private final TokenInvalidator tokenInvalidator;
 
   public ContactsRepository(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, IdsRepository idsRepository, ContactUtils contactUtils) {
+      Converter.Factory converterFactory, IdsRepository idsRepository, ContactUtils contactUtils,
+      TokenInvalidator tokenInvalidator) {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.idsRepository = idsRepository;
     this.contactUtils = contactUtils;
+    this.tokenInvalidator = tokenInvalidator;
+
   }
 
   public void getContacts(@NonNull LoadContactsCallback callback1) {
@@ -53,7 +58,8 @@ public class ContactsRepository {
           List<String> numbers = contacts.getMobileNumbers();
           List<String> emails = contacts.getEmails();
 
-          SyncAddressBookRequest.of(numbers, emails, bodyInterceptor, httpClient, converterFactory)
+          SyncAddressBookRequest.of(numbers, emails, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator)
               .observe()
               .subscribe(getFollowers -> {
                 List<Contact> contactList = new ArrayList<>();
@@ -75,10 +81,11 @@ public class ContactsRepository {
         });
   }
 
-  public void getTwitterContacts(@NonNull TwitterModel twitterModel,
+public void getTwitterContacts(@NonNull TwitterModel twitterModel,
       @NonNull LoadContactsCallback callback) {
     SyncAddressBookRequest.of(twitterModel.getId(), twitterModel.getToken(),
-        twitterModel.getSecret(), bodyInterceptor, httpClient, converterFactory)
+        twitterModel.getSecret(), bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator)
         .observe()
         .subscribe(getFollowers -> {
           List<Contact> contactList = new ArrayList<>();
@@ -102,7 +109,8 @@ public class ContactsRepository {
   public void getFacebookContacts(@NonNull FacebookModel facebookModel,
       @NonNull LoadContactsCallback callback) {
     SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(),
-        bodyInterceptor, httpClient, converterFactory)
+        bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator)
         .observe()
         .subscribe(getFriends -> {
           List<Contact> contactList = new ArrayList<>();
@@ -138,7 +146,8 @@ public class ContactsRepository {
     }
 
     if (hashedPhoneNumber != null && !hashedPhoneNumber.isEmpty()) {
-      SetConnectionRequest.of(hashedPhoneNumber, bodyInterceptor, httpClient, converterFactory)
+      SetConnectionRequest.of(hashedPhoneNumber, bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator)
           .observe()
           .subscribe(response -> {
             if (response.isOk()) {

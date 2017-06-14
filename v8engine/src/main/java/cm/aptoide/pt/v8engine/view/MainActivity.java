@@ -94,7 +94,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
-        converterFactory);
+        converterFactory, ((V8Engine) getApplicationContext()).getTokenInvalidator());
 
     attachPresenter(
         new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this),

@@ -85,8 +85,10 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
-    downloadConverter = new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
+    downloadConverter = new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     analytics = Analytics.getInstance();
   }
 

@@ -43,7 +43,8 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     Observable<ListComments> listCommentsObservable =
         ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
-            displayable.isReview(), baseBodyInterceptor, httpClient, converterFactory)
+            displayable.isReview(), baseBodyInterceptor, httpClient, converterFactory,
+            ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
             .observe();
 
     compositeSubscription.add(RxView.clicks(readMoreButton)

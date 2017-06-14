@@ -28,7 +28,8 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     requestFactory =
         new RequestFactory(new StoreCredentialsProviderImpl(), baseBodyInterceptor, httpClient,
-            converterFactory);
+            converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     super.onCreate(savedInstanceState);
   }
 }

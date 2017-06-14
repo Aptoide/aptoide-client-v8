@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -27,22 +28,26 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
       + "/api/7/";
 
   protected PostReviewRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
       String textBody, Integer rating, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory, boolean appInstalled) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, boolean appInstalled,
+      TokenInvalidator tokenInvalidator) {
     final Body body = new Body(storeName, packageName, title, textBody, rating, appInstalled);
-    return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
       Integer rating, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, boolean appInstalled) {
+      Converter.Factory converterFactory, boolean appInstalled, TokenInvalidator tokenInvalidator) {
     final Body body = new Body(packageName, title, textBody, rating, appInstalled);
-    return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

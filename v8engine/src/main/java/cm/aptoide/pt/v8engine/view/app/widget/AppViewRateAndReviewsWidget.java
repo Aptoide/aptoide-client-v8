@@ -124,7 +124,8 @@ import rx.functions.Action1;
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository());
+        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository(),
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore()
@@ -200,7 +201,8 @@ import rx.functions.Action1;
       BaseRequestWithStore.StoreCredentials storeCredentials) {
     Subscription subscription =
         ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
-            bodyInterceptor, httpClient, converterFactory)
+            bodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {

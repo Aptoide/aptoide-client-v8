@@ -258,7 +258,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              bodyInterceptor, httpClient, converterFactory);
+              bodyInterceptor, httpClient, converterFactory,
+              ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
             .getList();
@@ -273,7 +274,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory)
+          bodyInterceptor, httpClient, converterFactory,
+          ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
                 .getList();
@@ -289,7 +291,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory)
+          bodyInterceptor, httpClient, converterFactory,
+          ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
                 .getList();

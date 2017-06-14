@@ -116,7 +116,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
             commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
                 (inputText) -> shareCardWithoutPreview(displayable,
                     cardId -> PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor,
-                        httpClient, converterFactory)
+                        httpClient, converterFactory,
+                        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
                         .observe()
                         .subscribe(setComment -> {
                           if (!setComment.getData()

@@ -205,8 +205,10 @@ import rx.schedulers.Schedulers;
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     installConverter =
-        new InstallEventConverter(baseBodyBodyInterceptor, httpClient, converterFactory);
+        new InstallEventConverter(baseBodyBodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     downloadConverter =
-        new DownloadEventConverter(baseBodyBodyInterceptor, httpClient, converterFactory);
+        new DownloadEventConverter(baseBodyBodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
   }
 }

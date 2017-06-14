@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
@@ -27,23 +28,24 @@ import rx.Observable;
   private String url;
 
   private ListAppsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.url = url;
   }
 
   public static ListAppsRequest ofAction(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
       return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials), bodyInterceptor,
-          httpClient, converterFactory);
+          httpClient, converterFactory, tokenInvalidator);
     } else {
       return new ListAppsRequest(listAppsV7Url.get(),
           new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST),
-          bodyInterceptor, httpClient, converterFactory);
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
     }
   }
 

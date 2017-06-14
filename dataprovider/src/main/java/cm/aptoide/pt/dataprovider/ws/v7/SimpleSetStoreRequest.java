@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -26,22 +27,25 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
       + "/api/7/";
 
   protected SimpleSetStoreRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static SimpleSetStoreRequest of(String storeName, String storeTheme,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     Body body = new Body(storeName, storeTheme);
-    return new SimpleSetStoreRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new SimpleSetStoreRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static SimpleSetStoreRequest of(long storeId, String storeTheme, String storeDescription,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     Body body = new Body(storeId, storeTheme, storeDescription);
-    return new SimpleSetStoreRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new SimpleSetStoreRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

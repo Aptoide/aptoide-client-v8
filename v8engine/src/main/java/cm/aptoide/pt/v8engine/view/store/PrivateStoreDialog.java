@@ -21,6 +21,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -56,6 +57,7 @@ public class PrivateStoreDialog extends BaseDialog {
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -77,6 +79,7 @@ public class PrivateStoreDialog extends BaseDialog {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -84,7 +87,8 @@ public class PrivateStoreDialog extends BaseDialog {
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
@@ -163,7 +167,7 @@ public class PrivateStoreDialog extends BaseDialog {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   private void dismissLoadingDialog() {

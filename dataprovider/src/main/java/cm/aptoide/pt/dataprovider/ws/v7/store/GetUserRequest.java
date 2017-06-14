@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -20,16 +21,18 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   private String url;
 
   public GetUserRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.url = url;
   }
 
   public static GetUserRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault());
     return new GetUserRequest(new V7Url(url).remove("user/get")
-        .get(), body, bodyInterceptor, httpClient, converterFactory);
+        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   @Override

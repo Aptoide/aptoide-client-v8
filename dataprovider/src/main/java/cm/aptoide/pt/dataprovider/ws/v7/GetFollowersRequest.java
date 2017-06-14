@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import lombok.EqualsAndHashCode;
@@ -15,23 +16,28 @@ import rx.Observable;
 
 public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Body> {
   protected GetFollowersRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static GetFollowersRequest of(BodyInterceptor<BaseBody> bodyInterceptor, Long userId,
-      Long storeId, OkHttpClient httpClient, Converter.Factory converterFactory) {
+      Long storeId, OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     Body body = new Body();
     body.setUserId(userId);
     body.setStoreId(storeId);
-    return new GetFollowersRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new GetFollowersRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static GetFollowersRequest ofStore(BodyInterceptor<BaseBody> bodyInterceptor, Long storeId,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     Body body = new Body();
     body.setStoreId(storeId);
-    return new GetFollowersRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new GetFollowersRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

@@ -272,10 +272,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory);
+        httpClient, converterFactory,
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics);
+            timelineAnalytics,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
     appRepository = RepositoryFactory.getAppRepository(getContext());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();

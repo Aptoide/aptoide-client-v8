@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -34,32 +35,36 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private String url;
 
   protected ListFullReviewsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public ListFullReviewsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.url = url;
   }
 
   public static ListFullReviewsRequest of(long storeId, int limit, int offset,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
         storeCredentials);
-    return new ListFullReviewsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ListFullReviewsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   public static ListFullReviewsRequest ofAction(String url, boolean refresh,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
-        new Body(refresh, storeCredentials), bodyInterceptor, httpClient, converterFactory);
+        new Body(refresh, storeCredentials), bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces,
