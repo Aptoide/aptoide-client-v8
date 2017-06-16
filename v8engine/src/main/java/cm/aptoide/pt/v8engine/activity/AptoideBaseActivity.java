@@ -68,22 +68,14 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 
     super.onCreate(savedInstanceState);
 
-
-    //Languages option only available for debug mode
-    //if(BuildConfig.BUILD_TYPE.equalsIgnoreCase("debug")){
-      SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-
-      //If the user had previously chosen a language, the app is displayed in that language, if not, it starts with the device's language as default
-      String lang = sharedPreferences.getString("Language", Locale.getDefault().toString());
-      Resources res = getResources();
-      DisplayMetrics dm = res.getDisplayMetrics();
-      android.content.res.Configuration conf = res.getConfiguration();
-      conf.locale = LanguageUtils.getLocaleFromString(lang);
-      res.updateConfiguration(conf, dm);
-
-    //}
-
-
+    //If the user had previously chosen a language, the app is displayed in that language, if not, it starts with the device's language as default
+    SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+    String lang = sharedPreferences.getString("Language", Locale.getDefault().toString());
+    Resources res = getResources();
+    DisplayMetrics dm = res.getDisplayMetrics();
+    android.content.res.Configuration conf = res.getConfiguration();
+    conf.locale = LanguageUtils.getLocaleFromString(lang);
+    res.updateConfiguration(conf, dm);
 
     // https://fabric.io/downloads/gradle/ndk
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
