@@ -177,8 +177,6 @@ public class InstalledIntentService extends IntentService {
         analytics.sendEvent(event);
         return;
       }
-
-      CrashReport.getInstance().log(new NullPointerException("Event is null."));
       return;
     }
 
