@@ -116,7 +116,7 @@ public @EqualsAndHashCode class Download extends RealmObject {
     if (downloadError == NOT_ENOUGH_SPACE_ERROR) {
       toReturn = context.getString(R.string.out_of_space_error);
     } else {
-      toReturn = context.getString(R.string.simple_error_occured);
+      toReturn = context.getString(R.string.simple_unstable_internet_connection);
     }
     return toReturn;
   }

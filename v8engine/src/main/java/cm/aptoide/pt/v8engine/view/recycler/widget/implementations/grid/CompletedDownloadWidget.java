@@ -105,9 +105,9 @@ import rx.schedulers.Schedulers;
     if (download.getOverallDownloadStatus() == Download.ERROR) {
       int statusTextColor;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        statusTextColor = context.getColor(R.color.red_700);
+        statusTextColor = context.getColor(R.color.grey_700);
       } else {
-        statusTextColor = context.getResources().getColor(R.color.red_700);
+        statusTextColor = context.getResources().getColor(R.color.grey_700);
       }
       status.setTextColor(statusTextColor);
     } else {

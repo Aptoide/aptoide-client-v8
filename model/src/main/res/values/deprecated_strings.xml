@@ -94,6 +94,7 @@
 
   <string name="please_wait">Please wait…</string>
   <string name="simple_error_occured">An error occurred. </string>
+  <string name="simple_unstable_internet_connection">Unstable internet connection.</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="feedback_subject">Subject</string>

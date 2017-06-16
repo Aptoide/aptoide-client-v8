@@ -468,7 +468,7 @@ import rx.android.schedulers.AndroidSchedulers;
     switch (downloadError) {
       case Download.GENERIC_ERROR:
         GenericDialogs.createGenericOkMessage(getContext(), "",
-            getContext().getString(R.string.error_occured))
+            getContext().getString(R.string.unstable_internet_connection))
             .subscribe(eResponse -> Logger.d(TAG, "Error dialog"),
                 throwable -> CrashReport.getInstance().log(throwable));
         break;
