@@ -119,7 +119,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
       ActionBar supportActionBar = parentActivity.getSupportActionBar();
       if (supportActionBar != null) {
         supportActionBar.setDisplayHomeAsUpEnabled(true);
-        supportActionBar.setTitle(R.string.settings);
       }
     }
     setupClickHandlers();
