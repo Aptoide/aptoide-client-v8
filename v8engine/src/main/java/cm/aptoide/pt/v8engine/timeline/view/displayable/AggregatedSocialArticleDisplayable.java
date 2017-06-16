@@ -12,12 +12,12 @@ import cm.aptoide.pt.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -50,6 +50,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   private SocialRepository socialRepository;
   private List<MinimalCard> minimalCardList;
   private List<UserSharerTimeline> sharers;
+  private TimelineNavigator timelineNavigator;
 
   public AggregatedSocialArticleDisplayable() {
   }
@@ -57,7 +58,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   public AggregatedSocialArticleDisplayable(AggregatedSocialArticle card, String title, Link link,
       String publisherName, String thumbnailUrl, String abTestingURL, List<App> relatedToAppsList,
       Date date, DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      TimelineNavigator timelineNavigator) {
     super(card, timelineAnalytics);
     this.link = link;
     this.title = title;
@@ -72,11 +74,13 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
     this.socialRepository = socialRepository;
     this.minimalCardList = card.getMinimalCardList();
     this.sharers = card.getSharers();
+    this.timelineNavigator = timelineNavigator;
   }
 
   public static Displayable from(AggregatedSocialArticle card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      TimelineNavigator timelineNavigator) {
     String abTestingURL = null;
 
     if (card.getAb() != null
@@ -93,7 +97,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, card.getUrl()),
         card.getPublisher()
             .getName(), card.getThumbnailUrl(), abTestingURL, card.getApps(), card.getDate(),
-        dateCalculator, spannableFactory, timelineAnalytics, socialRepository);
+        dateCalculator, spannableFactory, timelineAnalytics, socialRepository, timelineNavigator);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -216,9 +220,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
     return dateCalculator.getTimeSinceDate(context, date);
   }
 
-  public void likesPreviewClick(FragmentNavigator navigator, long numberOfLikes, String cardId) {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
-        .newTimeLineLikesFragment(cardId, numberOfLikes, "default"));
+  public void likesPreviewClick(long numberOfLikes, String cardId) {
+    timelineNavigator.navigateToLikesView(getTimelineCard().getCardId(), numberOfLikes);
   }
 
   public String getTimeSinceLastUpdate(Context context, Date date) {

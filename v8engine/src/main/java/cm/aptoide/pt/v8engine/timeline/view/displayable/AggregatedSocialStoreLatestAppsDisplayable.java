@@ -9,13 +9,12 @@ import cm.aptoide.pt.model.v7.timeline.AggregatedSocialStoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
@@ -41,6 +40,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private TimelineNavigator timelineNavigator;
 
   public AggregatedSocialStoreLatestAppsDisplayable() {
   }
@@ -50,7 +50,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, SpannableFactory spannableFactory,
       StoreCredentialsProvider storeCredentialsProvider, List<MinimalCard> minimalCards,
-      List<UserSharerTimeline> sharers) {
+      List<UserSharerTimeline> sharers, TimelineNavigator timelineNavigator) {
     super(card, timelineAnalytics);
     this.latestApps = apps;
     this.abTestingUrl = abTestingURL;
@@ -64,12 +64,13 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
     this.minimalCards = minimalCards;
     this.sharers = sharers;
     this.date = card.getDate();
+    this.timelineNavigator = timelineNavigator;
   }
 
   public static Displayable from(AggregatedSocialStoreLatestApps card,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      StoreCredentialsProvider storeCredentialsProvider, TimelineNavigator timelineNavigator) {
 
     String abTestingURL = null;
 
@@ -87,7 +88,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
     return new AggregatedSocialStoreLatestAppsDisplayable(card, card.getOwnerStore(),
         card.getSharedStore(), card.getApps(), abTestingURL, dateCalculator, timelineAnalytics,
         socialRepository, spannableFactory, storeCredentialsProvider, card.getMinimalCardList(),
-        card.getSharers());
+        card.getSharers(), timelineNavigator);
   }
 
   public List<MinimalCard> getMinimalCards() {
@@ -159,9 +160,8 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
     return R.layout.displayable_social_timeline_aggregated_social_store;
   }
 
-  public void likesPreviewClick(FragmentNavigator navigator, long numberOfLikes, String cardId) {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
-        .newTimeLineLikesFragment(cardId, numberOfLikes, "default"));
+  public void likesPreviewClick(long numberOfLikes, String cardId) {
+    timelineNavigator.navigateToLikesView(cardId, numberOfLikes);
   }
 
   public Spannable getBlackHighlightedLike(Context context, String string) {

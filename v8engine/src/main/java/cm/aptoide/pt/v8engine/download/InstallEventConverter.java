@@ -20,7 +20,8 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
   private final TokenInvalidator tokenInvalidator;
 
   public InstallEventConverter(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId) {
+    super(appId);
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;

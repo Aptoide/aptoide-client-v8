@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -47,12 +48,14 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       int avatarResource, Store store, int titleResource, Comment.User user, long appId,
       String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
       long numberOfComments, SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics) {
+      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
+      TimelineNavigator timelineNavigator) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
         socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
         socialRecommendation.getMy()
             .isLiked(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
-        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl, timelineAnalytics);
+        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl, timelineAnalytics,
+        timelineNavigator);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.user = user;
@@ -75,7 +78,8 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
 
   public static Displayable from(SocialRecommendation socialRecommendation,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics) {
+      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
+      TimelineNavigator timelineNavigator) {
 
     String abTestingURL = null;
 
@@ -99,7 +103,8 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         .getName(), socialRecommendation.getApp()
         .getIcon(), abTestingURL, socialRecommendation.getStats()
         .getLikes(), socialRecommendation.getStats()
-        .getComments(), spannableFactory, socialRepository, dateCalculator, timelineAnalytics);
+        .getComments(), spannableFactory, socialRepository, dateCalculator, timelineAnalytics,
+        timelineNavigator);
   }
 
   public Spannable getStyledTitle(Context context, String title) {

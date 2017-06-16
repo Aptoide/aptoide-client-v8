@@ -24,10 +24,11 @@ public class AptoideEvent implements Event {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
+  private final String appId;
 
   public AptoideEvent(Map<String, Object> data, String eventName, String action, String context,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId) {
     this.data = data;
     this.eventName = eventName;
     this.action = action;
@@ -36,11 +37,12 @@ public class AptoideEvent implements Event {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
+    this.appId = appId;
   }
 
   @Override public void send() {
     AnalyticsEventRequest.of(eventName, context, action, data, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator)
+        converterFactory, tokenInvalidator, appId)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {

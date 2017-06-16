@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.notifications;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.HashMap;
@@ -35,14 +34,13 @@ public class PullCampaignNotificationsRequest
   }
 
   public static PullCampaignNotificationsRequest of(String aptoideClientUuid, String versionName,
-      String appId, OkHttpClient httpClient, Converter.Factory converterFactory) {
+      String appId, OkHttpClient httpClient, Converter.Factory converterFactory, String extraId) {
 
     Map<String, String> options = new HashMap<>();
 
     options.put("language", AptoideUtils.SystemU.getCountryCode());
     options.put("aptoide_version", versionName);
-    String oemid = DataProvider.getConfiguration()
-        .getExtraId();
+    String oemid = extraId;
     if (!TextUtils.isEmpty(oemid)) {
       options.put("oem_id", oemid);
     }

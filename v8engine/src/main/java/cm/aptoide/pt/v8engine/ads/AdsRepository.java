@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.ads;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -40,7 +39,7 @@ public class AdsRepository {
     this.accountManager = accountManager;
     this.googlePlayServicesAvailabilityChecker =
         (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context);
-    this.partnerIdProvider = () -> DataProvider.getConfiguration()
+    this.partnerIdProvider = () -> V8Engine.getConfiguration()
         .getPartnerId();
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;

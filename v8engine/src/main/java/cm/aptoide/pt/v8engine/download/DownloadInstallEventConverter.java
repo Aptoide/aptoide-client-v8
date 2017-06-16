@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmList;
@@ -15,6 +14,13 @@ import java.util.LinkedList;
  */
 
 abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent> {
+
+  private final String appId;
+
+  public DownloadInstallEventConverter(String appId) {
+    this.appId = appId;
+  }
+
   public DownloadInstallAnalyticsBaseBody convert(T report,
       DownloadInstallAnalyticsBaseBody.ResultStatus status, @Nullable Throwable error) {
 
@@ -59,8 +65,7 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
     }
 
     data.setResult(result);
-    return new DownloadInstallAnalyticsBaseBody(DataProvider.getConfiguration()
-        .getAppId(), convertSpecificFields(report, data));
+    return new DownloadInstallAnalyticsBaseBody(appId, convertSpecificFields(report, data));
   }
 
   protected abstract DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(T report,

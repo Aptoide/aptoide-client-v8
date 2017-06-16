@@ -43,6 +43,7 @@ import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDis
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.VideoDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -61,12 +62,13 @@ public class CardToDisplayableConverter implements CardToDisplayable {
   private final InstallEventConverter installEventConverter;
   private final Analytics analytics;
   private final DownloadEventConverter downloadEventConverter;
+  private final TimelineNavigator timelineNavigator;
 
   public CardToDisplayableConverter(SocialRepository socialRepository,
       TimelineAnalytics timelineAnalytics, InstallManager installManager,
       PermissionManager permissionManager, StoreCredentialsProvider storeCredentialsProvider,
       InstallEventConverter installEventConverter, Analytics analytics,
-      DownloadEventConverter downloadEventConverter) {
+      DownloadEventConverter downloadEventConverter, TimelineNavigator timelineNavigator) {
     this.socialRepository = socialRepository;
     this.timelineAnalytics = timelineAnalytics;
     this.installManager = installManager;
@@ -76,6 +78,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     this.analytics = analytics;
     this.downloadEventConverter = downloadEventConverter;
     this.converters = new HashMap<>();
+    this.timelineNavigator = timelineNavigator;
     init();
   }
 
@@ -89,7 +92,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           SpannableFactory spannableFactory, DownloadFactory downloadFactory,
           LinksHandlerFactory linksHandlerFactory) {
         return SocialRecommendationDisplayable.from((SocialRecommendation) card, spannableFactory,
-            socialRepository, dateCalculator, timelineAnalytics);
+            socialRepository, dateCalculator, timelineAnalytics, timelineNavigator);
       }
     });
 
@@ -102,7 +105,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           LinksHandlerFactory linksHandlerFactory) {
 
         return SocialInstallDisplayable.from((SocialInstall) card, timelineAnalytics,
-            spannableFactory, socialRepository, dateCalculator);
+            spannableFactory, socialRepository, dateCalculator, timelineNavigator);
       }
     });
 
@@ -167,7 +170,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           LinksHandlerFactory linksHandlerFactory) {
 
         return SocialStoreLatestAppsDisplayable.from((SocialStoreLatestApps) card, dateCalculator,
-            timelineAnalytics, socialRepository, spannableFactory, storeCredentialsProvider);
+            timelineAnalytics, socialRepository, spannableFactory, storeCredentialsProvider,
+            timelineNavigator);
       }
     });
 
@@ -180,7 +184,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           LinksHandlerFactory linksHandlerFactory) {
 
         return SocialVideoDisplayable.from(((SocialVideo) card), dateCalculator, spannableFactory,
-            linksHandlerFactory, timelineAnalytics, socialRepository);
+            linksHandlerFactory, timelineAnalytics, socialRepository, timelineNavigator);
       }
     });
 
@@ -193,7 +197,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           LinksHandlerFactory linksHandlerFactory) {
 
         return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator,
-            spannableFactory, linksHandlerFactory, timelineAnalytics, socialRepository);
+            spannableFactory, linksHandlerFactory, timelineAnalytics, socialRepository,
+            timelineNavigator);
       }
     });
 
@@ -234,9 +239,11 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     // AggregatedSocialInstall
     //
     converters.put(AggregatedSocialInstall.class,
-        (card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> AggregatedSocialInstallDisplayable.from(
-            (AggregatedSocialInstall) card, timelineAnalytics, socialRepository, dateCalculator,
-            spannableFactory));
+        (card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> {
+          return AggregatedSocialInstallDisplayable.from((AggregatedSocialInstall) card,
+              timelineAnalytics, socialRepository, dateCalculator, spannableFactory,
+              timelineNavigator);
+        });
 
     //
     // AggregatedSocialArticle
@@ -244,7 +251,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     converters.put(AggregatedSocialArticle.class,
         (card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> AggregatedSocialArticleDisplayable.from(
             (AggregatedSocialArticle) card, dateCalculator, spannableFactory, linksHandlerFactory,
-            timelineAnalytics, socialRepository));
+            timelineAnalytics, socialRepository, timelineNavigator));
 
     //
     // AggregatedSocialStore
@@ -252,7 +259,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     converters.put(AggregatedSocialStoreLatestApps.class,
         ((card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> AggregatedSocialStoreLatestAppsDisplayable.from(
             (AggregatedSocialStoreLatestApps) card, dateCalculator, spannableFactory,
-            timelineAnalytics, socialRepository, storeCredentialsProvider)));
+            timelineAnalytics, socialRepository, storeCredentialsProvider, timelineNavigator)));
 
     //
     // AggregatedSocialVideo
@@ -260,7 +267,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     converters.put(AggregatedSocialVideo.class,
         (((card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> AggregatedSocialVideoDisplayable.from(
             (AggregatedSocialVideo) card, dateCalculator, spannableFactory, linksHandlerFactory,
-            timelineAnalytics, socialRepository))));
+            timelineAnalytics, socialRepository, timelineNavigator))));
   }
 
   @UiThread @Override public Displayable convert(TimelineCard card, DateCalculator dateCalculator,

@@ -135,7 +135,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
-        tokenInvalidator);
+        tokenInvalidator, V8Engine.getConfiguration()
+            .getAppId());
   }
 
   @Override public void onDestroy() {

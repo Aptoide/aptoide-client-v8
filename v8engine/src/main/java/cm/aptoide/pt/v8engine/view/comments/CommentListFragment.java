@@ -148,7 +148,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator);
+        httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
+            .getAppId());
     super.onCreate(savedInstanceState);
   }
 

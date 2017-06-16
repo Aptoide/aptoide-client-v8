@@ -237,7 +237,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator()),
+        .subscribe(click -> displayable.likesPreviewClick(),
             err -> CrashReport.getInstance()
                 .log(err)));
 

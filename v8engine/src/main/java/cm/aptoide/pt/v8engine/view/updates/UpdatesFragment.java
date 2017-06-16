@@ -157,9 +157,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator);
+            tokenInvalidator, V8Engine.getConfiguration()
+                .getAppId());
     installConverter = new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, V8Engine.getConfiguration()
+            .getAppId());
     installedRepository = RepositoryFactory.getInstalledRepository();
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
@@ -225,7 +227,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     for (Installed installedApp : installedApps) {
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,
           new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
-              bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator),
+              bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
+                  .getAppId()),
           installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);

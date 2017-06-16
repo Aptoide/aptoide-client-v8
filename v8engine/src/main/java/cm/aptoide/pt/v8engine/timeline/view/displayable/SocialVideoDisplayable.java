@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -59,11 +60,11 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       long appId, String abUrl, Comment.User user, long numberOfLikes, long numberOfComments,
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository) {
+      SocialRepository socialRepository, TimelineNavigator timelineNavigator) {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
         socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy()
             .isLiked(), socialVideo.getLikes(), socialVideo.getComments(), date, spannableFactory,
-        dateCalculator, abUrl, timelineAnalytics);
+        dateCalculator, abUrl, timelineAnalytics, timelineNavigator);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
@@ -84,7 +85,8 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
 
   public static SocialVideoDisplayable from(SocialVideo socialVideo, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      TimelineNavigator timelineNavigator) {
     long appId = 0;
 
     String abTestingURL = null;
@@ -109,7 +111,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
         .getLogoUrl(), appId, abTestingURL, socialVideo.getUser(), socialVideo.getStats()
         .getLikes(), socialVideo.getStats()
         .getComments(), socialVideo.getApps(), socialVideo.getDate(), dateCalculator,
-        spannableFactory, timelineAnalytics, socialRepository);
+        spannableFactory, timelineAnalytics, socialRepository, timelineNavigator);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {

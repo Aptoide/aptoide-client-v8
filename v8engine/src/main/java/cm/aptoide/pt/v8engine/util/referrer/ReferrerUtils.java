@@ -22,7 +22,6 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
@@ -52,7 +51,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
-      final Converter.Factory converterFactory, final QManager qManager) {
+      final Converter.Factory converterFactory, final QManager qManager, Context context) {
     String packageName = minimalAd.getPackageName();
     long networkId = minimalAd.getNetworkId();
     String clickUrl = minimalAd.getClickUrl();
@@ -65,8 +64,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
     if (!AptoideUtils.ThreadU.isUiThread()) {
       throw new RuntimeException("ExtractReferrer must be run on UI thread!");
     }
-
-    final Context context = DataProvider.getContext();
 
     try {
       Logger.d("ExtractReferrer", "Called for: " + clickUrl + " with packageName " + packageName);
@@ -124,7 +121,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               Logger.d("ExtractReferrer", "Referrer successfully extracted");
 
               if (broadcastReferrer) {
-                broadcastReferrer(packageName, referrer);
+                broadcastReferrer(packageName, referrer, context);
               } else {
                 //@Cleanup Realm realm = DeprecatedDatabase.get();
                 //DeprecatedDatabase.save(
@@ -198,7 +195,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .filter(minimalAd1 -> minimalAd != null)
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
-                              adsRepository, httpClient, converterFactory, qManager),
+                              adsRepository, httpClient, converterFactory, qManager, context),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
@@ -248,14 +245,14 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
     return referrer;
   }
 
-  public static void broadcastReferrer(String packageName, String referrer) {
+  public static void broadcastReferrer(String packageName, String referrer, Context context) {
     Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
     i.setPackage(packageName);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
       i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
     }
     i.putExtra("referrer", referrer);
-    DataProvider.getContext()
+    context
         .sendBroadcast(i);
     Logger.d(TAG, "Sent broadcast to " + packageName + " with referrer " + referrer);
     // TODO: 28-07-2016 Baikova referrer broadcasted.

@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -72,7 +71,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
               idsRepository.getUniqueIdentifier(),
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                  V8Engine.getContext()), DataProvider.getConfiguration()
+                  V8Engine.getContext()), V8Engine.getConfiguration()
                   .getPartnerId(), accountManager.isAccountMature(), bodyInterceptor, httpClient,
               converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
               tokenInvalidator);

@@ -89,9 +89,13 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     final TokenInvalidator tokenInvalidator =
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     downloadConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId());
     installConverter =
-        new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId());
     analytics = Analytics.getInstance();
   }
 

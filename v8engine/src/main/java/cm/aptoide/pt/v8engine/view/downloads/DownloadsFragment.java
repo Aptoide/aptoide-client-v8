@@ -54,10 +54,12 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     installConverter =
         new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator);
+            tokenInvalidator, V8Engine.getConfiguration()
+                .getAppId());
     downloadConverter =
         new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator);
+            tokenInvalidator, V8Engine.getConfiguration()
+                .getAppId());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();

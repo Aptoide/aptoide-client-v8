@@ -17,6 +17,7 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -61,11 +62,11 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       String abUrl, Store store, Comment.User user, long numberOfLikes, long numberOfComments,
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository) {
+      SocialRepository socialRepository, TimelineNavigator timelineNavigator) {
     super(socialArticle, numberOfLikes, numberOfComments, store, user,
         socialArticle.getUserSharer(), socialArticle.getMy()
             .isLiked(), socialArticle.getLikes(), socialArticle.getComments(), date,
-        spannableFactory, dateCalculator, abUrl, timelineAnalytics);
+        spannableFactory, dateCalculator, abUrl, timelineAnalytics, timelineNavigator);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;
@@ -86,7 +87,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
   public static SocialArticleDisplayable from(SocialArticle socialArticle,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       LinksHandlerFactory linksHandlerFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository) {
+      SocialRepository socialRepository, TimelineNavigator timelineNavigator) {
     long appId = 0;
 
     String abTestingURL = null;
@@ -112,7 +113,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
         socialArticle.getStats()
             .getLikes(), socialArticle.getStats()
         .getComments(), socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
-        spannableFactory, timelineAnalytics, socialRepository);
+        spannableFactory, timelineAnalytics, socialRepository, timelineNavigator);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {

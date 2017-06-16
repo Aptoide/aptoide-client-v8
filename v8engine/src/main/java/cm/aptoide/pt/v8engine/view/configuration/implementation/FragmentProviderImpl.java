@@ -290,8 +290,9 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override
-  public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme) {
-    return TimeLineLikesFragment.newInstance(storeTheme, cardUid, numberOfLikes);
+  public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
+      String title) {
+    return TimeLineLikesFragment.newInstance(storeTheme, cardUid, numberOfLikes, title);
   }
 
   @Override

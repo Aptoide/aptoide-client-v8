@@ -9,8 +9,8 @@ import cm.aptoide.pt.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -32,6 +32,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   @Getter private SocialCard.CardComment latestComment;
   @Getter private boolean liked;
   @Getter private String abUrl;
+  private TimelineNavigator timelineNavigator;
 
   SocialCardDisplayable() {
     numberOfLikes = 0;
@@ -42,7 +43,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
       Store store, Comment.User user, Comment.User userSharer, boolean liked,
       List<UserTimeline> userLikes, List<SocialCard.CardComment> comments, Date date,
       SpannableFactory spannableFactory, DateCalculator dateCalculator, String abUrl,
-      TimelineAnalytics timelineAnalytics) {
+      TimelineAnalytics timelineAnalytics, TimelineNavigator timelineNavigator) {
     super(timelineCard, timelineAnalytics);
     this.date = date;
     this.liked = liked;
@@ -55,6 +56,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
     this.spannableFactory = spannableFactory;
     this.store = store;
     this.abUrl = abUrl;
+    this.timelineNavigator = timelineNavigator;
     if (comments.size() > 0) {
       this.latestComment = comments.get(0);
     }
@@ -79,9 +81,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
         ContextCompat.getColor(context, R.color.black_87_alpha), string);
   }
 
-  public void likesPreviewClick(FragmentNavigator navigator) {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
-        .newTimeLineLikesFragment(this.getTimelineCard()
-            .getCardId(), numberOfLikes, "default"));
+  public void likesPreviewClick() {
+    timelineNavigator.navigateToLikesView(getTimelineCard().getCardId(), numberOfLikes);
   }
 }

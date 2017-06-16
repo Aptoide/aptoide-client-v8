@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
@@ -31,10 +30,8 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
 
   public static AnalyticsEventRequest of(String eventName, String context, String action,
       Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
-    final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(
-        DataProvider.getConfiguration()
-            .getAppId(), data);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId) {
+    final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(appId, data);
 
     return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator);

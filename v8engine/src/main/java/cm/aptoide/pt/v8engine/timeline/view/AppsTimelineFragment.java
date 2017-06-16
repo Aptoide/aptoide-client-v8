@@ -48,6 +48,7 @@ import cm.aptoide.pt.v8engine.timeline.TimelineRepository;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
@@ -241,7 +242,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(applicationContext), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        converterFactory, tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId());
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
@@ -252,8 +254,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics,
-            tokenInvalidator);
+            timelineAnalytics, tokenInvalidator);
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final InstallManager installManager =
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(
@@ -268,10 +269,12 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
             permissionManager, storeCredentialsProvider,
             new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
-                tokenInvalidator),
-            Analytics.getInstance(),
+                tokenInvalidator, V8Engine.getConfiguration()
+                .getAppId()), Analytics.getInstance(),
             new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
-                tokenInvalidator));
+                tokenInvalidator, V8Engine.getConfiguration()
+                .getAppId()),
+            new TimelineNavigator(getFragmentNavigator(), getContext().getString(R.string.likes)));
 
     refreshSubject = BehaviorRelay.create();
 

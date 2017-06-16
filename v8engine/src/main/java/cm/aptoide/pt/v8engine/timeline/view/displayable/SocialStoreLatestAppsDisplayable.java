@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -49,13 +50,13 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       String storeName, String avatarUrl, List<LatestApp> latestApps, String abTestingUrl,
       long likes, long comments, DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, SpannableFactory spannableFactory,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      StoreCredentialsProvider storeCredentialsProvider, TimelineNavigator timelineNavigator) {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
         socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
         socialStoreLatestApps.getMy()
             .isLiked(), socialStoreLatestApps.getLikes(), socialStoreLatestApps.getComments(),
         socialStoreLatestApps.getDate(), spannableFactory, dateCalculator, abTestingUrl,
-        timelineAnalytics);
+        timelineAnalytics, timelineNavigator);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;
     this.latestApps = latestApps;
@@ -73,7 +74,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
   public static SocialStoreLatestAppsDisplayable from(SocialStoreLatestApps socialStoreLatestApps,
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, SpannableFactory spannableFactory,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      StoreCredentialsProvider storeCredentialsProvider, TimelineNavigator timelineNavigator) {
     final List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps = new ArrayList<>();
     for (App app : socialStoreLatestApps.getApps()) {
       latestApps.add(
@@ -107,7 +108,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
         ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats()
         .getLikes(), socialStoreLatestApps.getStats()
         .getComments(), dateCalculator, timelineAnalytics, socialRepository, spannableFactory,
-        storeCredentialsProvider);
+        storeCredentialsProvider, timelineNavigator);
   }
 
   public Spannable getStyledTitle(Context context, String title) {

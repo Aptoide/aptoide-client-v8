@@ -52,6 +52,7 @@ import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -129,7 +130,6 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareApplication;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -149,6 +149,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.io.File;
@@ -173,7 +174,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class V8Engine extends SpotAndShareApplication {
+public abstract class V8Engine extends Application {
 
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
@@ -402,7 +403,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       notificationHandler =
           new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
               WebService.getDefaultConverter(), getIdsRepository(),
-              getConfiguration().getVersionName(), getAccountManager());
+              getConfiguration().getVersionName(), getAccountManager(), getConfiguration()
+                  .getExtraId(), PublishRelay.create());
     }
     return notificationHandler;
   }

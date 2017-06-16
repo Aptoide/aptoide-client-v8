@@ -6,12 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -53,13 +51,8 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
-  private static final IdsRepository idsRepository;
-  private static Analytics instance;
 
-  static {
-    idsRepository = ((V8Engine) DataProvider.getContext()
-        .getApplicationContext()).getIdsRepository();
-  }
+  private static Analytics instance;
 
   private final AnalyticsDataSaver saver;
 
@@ -220,7 +213,8 @@ public class Analytics {
         AppEventsLogger.activateApp(application);
         facebookLogger = AppEventsLogger.newLogger(application);
         Observable.fromCallable(() -> {
-          AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
+          AppEventsLogger.setUserID(((V8Engine) application).getIdsRepository()
+              .getUniqueIdentifier());
           return null;
         })
             .subscribeOn(Schedulers.io())

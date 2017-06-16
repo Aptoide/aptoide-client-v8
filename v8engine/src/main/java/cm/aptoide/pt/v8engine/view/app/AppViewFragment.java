@@ -275,7 +275,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator);
+        httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
+            .getAppId());
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator);
@@ -627,7 +628,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
     AptoideUtils.ThreadU.runOnUiThread(
         () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
-            httpClient, converterFactory, qManager));
+            httpClient, converterFactory, qManager, getContext().getApplicationContext()));
   }
 
   private void updateLocalVars(GetAppMeta.App app) {

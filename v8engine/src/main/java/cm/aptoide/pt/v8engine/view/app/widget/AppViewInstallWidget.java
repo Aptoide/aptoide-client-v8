@@ -149,18 +149,21 @@ import rx.android.schedulers.AndroidSchedulers;
     final TokenInvalidator tokenInvalidator =
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
-            tokenInvalidator);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId());
+    installConverter =
+        new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId());
     analytics = Analytics.getInstance();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-                httpClient, WebService.getDefaultConverter(),
-                tokenInvalidator),
-            tokenInvalidator);
+                httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+                V8Engine.getConfiguration()
+                    .getAppId()), tokenInvalidator);
 
     minimalAd = this.displayable.getMinimalAd();
     GetApp getApp = this.displayable.getPojo();

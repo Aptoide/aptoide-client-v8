@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.timeline.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -33,10 +32,9 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
   private TokenInvalidator tokenInvalidator;
 
   public static TimeLineLikesFragment newInstance(String storeTheme, String cardUid,
-      long numberOfLikes) {
+      long numberOfLikes, String title) {
     Bundle args = new Bundle();
-    args.putString(TITLE_KEY, DataProvider.getContext()
-        .getString(R.string.likes));
+    args.putString(TITLE_KEY, title);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putString(BundleKeys.CARD_UID, cardUid);
     args.putLong(BundleKeys.NUMBER_LIKES, numberOfLikes);

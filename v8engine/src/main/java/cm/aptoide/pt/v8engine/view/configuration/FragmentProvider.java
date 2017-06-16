@@ -145,7 +145,8 @@ public interface FragmentProvider {
   Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, long followerNumber,
       String storeTheme);
 
-  Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme);
+  Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
+      String title);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
