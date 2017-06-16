@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -22,24 +23,27 @@ import rx.Observable;
  */
 public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRequest.Body> {
 
-  private static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http"
-      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-      + "/api/7/";
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
+  }
 
   protected SetReviewRatingRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static SetReviewRatingRequest of(long reviewId, boolean helpful,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     final Body body = new Body(reviewId, helpful ? "up" : "down");
     return new SetReviewRatingRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
@@ -27,17 +28,20 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 
   GetUserTimelineRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.url = url;
   }
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
       List<String> packages, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String cardId, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, String cardId, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
 
-    return new GetUserTimelineRequest(url, new Body(limit, offset, packages, cardId),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+    return new GetUserTimelineRequest(url,
+        new Body(limit, offset, packages, cardId, sharedPreferences), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces,
@@ -53,7 +57,9 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
     @Getter private List<String> packageNames;
     @Getter private String cardUid;
 
-    public Body(Integer limit, Integer offset, List<String> packageNames, String cardId) {
+    public Body(Integer limit, Integer offset, List<String> packageNames, String cardId,
+        SharedPreferences sharedPreferences) {
+      super(sharedPreferences);
       this.limit = limit;
       this.offset = offset;
       this.packageNames = packageNames;

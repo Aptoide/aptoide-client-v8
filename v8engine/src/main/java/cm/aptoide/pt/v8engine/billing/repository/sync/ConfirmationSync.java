@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.repository.sync;
 
+import android.content.SharedPreferences;
 import android.content.SyncResult;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -39,12 +40,14 @@ public class ConfirmationSync extends ScheduledSync {
   private final OkHttpClient httpClient;
   private final PaymentAnalytics analytics;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public ConfirmationSync(Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httpClient, PaymentAnalytics analytics, TokenInvalidator tokenInvalidator) {
+      OkHttpClient httpClient, PaymentAnalytics analytics, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
@@ -55,6 +58,7 @@ public class ConfirmationSync extends ScheduledSync {
     this.httpClient = httpClient;
     this.analytics = analytics;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -81,13 +85,13 @@ public class ConfirmationSync extends ScheduledSync {
           if (isInAppBilling) {
             return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
                 ((InAppProduct) product).getApiVersion(), bodyInterceptorV3, httpClient,
-                converterFactory, tokenInvalidator)
+                converterFactory, tokenInvalidator, sharedPreferences)
                 .observe()
                 .cast(PaymentConfirmationResponse.class)
                 .toSingle();
           }
           return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
-              bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator)
+              bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe()
               .toSingle();
         })

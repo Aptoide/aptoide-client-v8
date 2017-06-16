@@ -86,14 +86,16 @@ import rx.functions.Action1;
     StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);
 
     storeNameView.setText(store.getName());
-    storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
+    storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt(
+        getContext().getApplicationContext()));
 
-    storeNumberUsersView.setText(String.format(Locale.ENGLISH, V8Engine.getContext()
-        .getString(R.string.appview_followers_count_text), AptoideUtils.StringU.withSuffix(
-        store.getStats()
-            .getSubscribers())));
+    storeNumberUsersView.setText(
+        String.format(Locale.ENGLISH, getContext().getString(R.string.appview_followers_count_text),
+            AptoideUtils.StringU.withSuffix(store.getStats()
+                .getSubscribers())));
 
-    followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
+    followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable(
+        getContext().getApplicationContext()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followButton.setElevation(0);
     }
@@ -106,7 +108,8 @@ import rx.functions.Action1;
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class), httpClient,
             WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<Void> openStore = __ -> {
       displayable.getAppViewAnalytics()
@@ -127,7 +130,7 @@ import rx.functions.Action1;
       }, accountManager);
     };
 
-    followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
+    followButton.setTextColor(storeThemeEnum.getStoreHeaderInt(getContext().getApplicationContext()));
     compositeSubscription.add(RxView.clicks(storeLayout)
         .subscribe(openStore));
 

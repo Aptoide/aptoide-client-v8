@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.updates;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
@@ -81,7 +83,8 @@ import rx.android.schedulers.AndroidSchedulers;
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
     progressBar = (ProgressBar) itemView.findViewById(R.id.row_progress_bar);
 
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override public void unbindView() {

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -26,14 +27,15 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
 
   public OAuth2AuthenticationRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,
       @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
     final BaseBody body = new BaseBody();
 
@@ -72,12 +74,13 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
     }
 
     return new OAuth2AuthenticationRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   public static OAuth2AuthenticationRequest of(String refreshToken,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
 
     final BaseBody body = new BaseBody();
 
@@ -93,7 +96,7 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
     body.put("refresh_token", refreshToken);
 
     return new OAuth2AuthenticationRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override

@@ -330,7 +330,7 @@ public class InstallService extends Service {
 
   @NonNull private Intent createDeeplinkingIntent() {
     Intent intent = new Intent();
-    intent.setClass(Application.getContext(), V8Engine.getActivityProvider()
+    intent.setClass(getApplicationContext(), V8Engine.getActivityProvider()
         .getMainActivityFragmentClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;

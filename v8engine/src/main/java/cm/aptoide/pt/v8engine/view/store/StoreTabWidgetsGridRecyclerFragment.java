@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.store;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -37,6 +38,7 @@ import rx.Observable;
  */
 public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
+  private SharedPreferences sharedPreferences;
   private IdsRepository idsRepository;
   private AptoideAccountManager accountManager;
   private StoreUtilsProxy storeUtilsProxy;
@@ -49,6 +51,8 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
@@ -59,7 +63,8 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
-        tokenInvalidator);
+        tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
@@ -71,10 +76,11 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
               idsRepository.getUniqueIdentifier(),
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                  V8Engine.getContext()), V8Engine.getConfiguration()
+                  getContext().getApplicationContext()), V8Engine.getConfiguration()
                   .getPartnerId(), accountManager.isAccountMature(), bodyInterceptor, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
-              tokenInvalidator);
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
+                  ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+              tokenInvalidator, sharedPreferences);
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist()

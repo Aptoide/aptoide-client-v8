@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -30,11 +31,13 @@ public class AuthorizationRepository {
   private final Converter.Factory converterFactory;
   private final Payer payer;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public AuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
       PaymentSyncScheduler backgroundSync, AuthorizationFactory authorizationFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
     this.authorizationFactory = authorizationFactory;
@@ -43,17 +46,22 @@ public class AuthorizationRepository {
     this.converterFactory = converterFactory;
     this.payer = payer;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Completable createWebPaymentAuthorization(int paymentId) {
     return CreatePaymentAuthorizationRequest.of(paymentId, bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator).observe(true).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(null);
-      }
-      return Observable.<Void>error(
-          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    }).toCompletable().andThen(syncAuthorization(paymentId));
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Observable.just(null);
+          }
+          return Observable.<Void>error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        })
+        .toCompletable()
+        .andThen(syncAuthorization(paymentId));
   }
 
   public Completable saveAuthorization(Authorization authorization) {

@@ -276,16 +276,21 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
-            .getAppId());
+        .getAppId(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator);
-    appRepository = RepositoryFactory.getAppRepository(getContext());
+            timelineAnalytics, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    appRepository = RepositoryFactory.getAppRepository(getContext(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory, qManager);
+            accountManager, httpClient, converterFactory, qManager,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getApplicationContext());
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
@@ -293,7 +298,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics);
+            spotAndShareAnalytics, timelineAnalytics,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
@@ -628,7 +634,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
     AptoideUtils.ThreadU.runOnUiThread(
         () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
-            httpClient, converterFactory, qManager, getContext().getApplicationContext()));
+            httpClient, converterFactory, qManager, getContext().getApplicationContext(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()));
   }
 
   private void updateLocalVars(GetAppMeta.App app) {
@@ -878,7 +885,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     // ctor
     public AppViewHeader(@NonNull View view) {
-      animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+      animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus(
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
       appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
       collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);

@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.view.comments;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +32,7 @@ import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -105,6 +108,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -141,6 +145,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -149,7 +155,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
-            .getAppId());
+        .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     super.onCreate(savedInstanceState);
   }
 
@@ -264,7 +270,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   void caseListSocialTimelineComments(boolean refresh) {
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
-            converterFactory, tokenInvalidator);
+            converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -302,7 +309,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator, httpClient,
-            converterFactory, tokenInvalidator);
+            converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
@@ -415,7 +423,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   private Observable<Void> reloadComments() {
     return Observable.fromCallable(() -> {
-      ManagerPreferences.setForceServerRefreshFlag(true);
+      ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
       super.reload();
       return null;
     });
@@ -510,7 +518,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       } else {
         addDisplayable(0, commentDisplayable, true);
       }
-      ManagerPreferences.setForceServerRefreshFlag(true);
+      ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
       ShowMessage.asSnack(this.getActivity(), R.string.comment_submitted);
     }
   }

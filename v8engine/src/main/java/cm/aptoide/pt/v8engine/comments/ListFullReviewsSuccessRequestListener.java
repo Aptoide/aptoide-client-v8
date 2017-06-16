@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.comments;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -31,17 +32,20 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
   private final OkHttpClient httpClient;
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public ListFullReviewsSuccessRequestListener(RateAndReviewsFragment fragment,
       StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> baseBodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.fragment = fragment;
     this.httpClient = httpClient;
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyBodyInterceptor = baseBodyInterceptor;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public void call(ListReviews listFullReviews) {
@@ -56,7 +60,8 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
               review.getComments()
                   .getView(), review.getId(), 3,
               StoreUtils.getStoreCredentials(fragment.getStoreName(), storeCredentialsProvider),
-              true, bodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator)
+              true, bodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+              sharedPreferences)
               .observe()
               .subscribeOn(Schedulers.io()) // parallel I/O split point
               .map(listComments -> {

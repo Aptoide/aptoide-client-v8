@@ -5,13 +5,13 @@
 
 package cm.aptoide.pt.v8engine.store;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
  * Created by neuro on 05-05-2016.
@@ -172,9 +172,8 @@ public enum StoreThemeEnum {
     return theme;
   }
 
-  @ColorInt public int getStoreHeaderInt() {
-    return V8Engine.getContext()
-        .getResources()
+  @ColorInt public int getStoreHeaderInt(Context context) {
+    return context.getResources()
         .getColor(getStoreHeader());
   }
 
@@ -196,9 +195,8 @@ public enum StoreThemeEnum {
     return color700tint;
   }
 
-  public Drawable getButtonLayoutDrawable() {
-    return V8Engine.getContext()
-        .getResources()
+  public Drawable getButtonLayoutDrawable(Context context) {
+    return context.getResources()
         .getDrawable(getButtonLayout());
   }
 

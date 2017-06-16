@@ -22,17 +22,19 @@ import rx.Observable;
 public class SetUserMultipartRequest
     extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-      + "/api/7/";
+  public static String getHost() {
+    return BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
+  }
 
   private final MultipartBody.Part multipartBody;
 
   private SetUserMultipartRequest(MultipartBody.Part file, HashMapNotNull<String, RequestBody> body,
       OkHttpClient httpClient, Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     multipartBody = file;
   }
 

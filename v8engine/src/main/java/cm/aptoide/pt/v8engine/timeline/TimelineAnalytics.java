@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -49,10 +50,12 @@ public class TimelineAnalytics extends AptoideAnalytics {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final String appId;
+  private final SharedPreferences sharedPreferences;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
@@ -60,6 +63,7 @@ public class TimelineAnalytics extends AptoideAnalytics {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.appId = appId;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -255,7 +259,7 @@ public class TimelineAnalytics extends AptoideAnalytics {
 
   private AptoideEvent createEvent(String event, Map<String, Object> data) {
     return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, appId);
+        converterFactory, tokenInvalidator, appId, sharedPreferences);
   }
 
   private Map<String, Object> createAppData(String cardType, String source, String packageName) {

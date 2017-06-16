@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -28,18 +29,19 @@ import rx.Observable;
 
   GetStoreDisplaysRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
     this.url = url;
   }
 
   public static GetStoreDisplaysRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
 
     return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays")
         .get(), new Body(storeCredentials), bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,

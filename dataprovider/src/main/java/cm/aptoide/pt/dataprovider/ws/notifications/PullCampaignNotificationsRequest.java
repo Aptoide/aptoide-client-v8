@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.notifications;
 
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -21,8 +22,6 @@ import rx.Observable;
 public class PullCampaignNotificationsRequest
     extends Notifications<List<GetPullNotificationsResponse>> {
 
-  protected static String BASE_HOST = "http://pnp.aptoide.com/pnp/v1/notifications/";
-
   private final Map<String, String> options;
   private final String id;
 
@@ -34,7 +33,8 @@ public class PullCampaignNotificationsRequest
   }
 
   public static PullCampaignNotificationsRequest of(String aptoideClientUuid, String versionName,
-      String appId, OkHttpClient httpClient, Converter.Factory converterFactory, String extraId) {
+      String appId, OkHttpClient httpClient, Converter.Factory converterFactory, String extraId,
+      SharedPreferences sharedPreferences) {
 
     Map<String, String> options = new HashMap<>();
 
@@ -45,7 +45,7 @@ public class PullCampaignNotificationsRequest
       options.put("oem_id", oemid);
     }
     options.put("aptoide_package", appId);
-    if (ToolboxManager.isDebug()) {
+    if (ToolboxManager.isDebug(sharedPreferences)) {
       options.put("debug", "true");
     }
 

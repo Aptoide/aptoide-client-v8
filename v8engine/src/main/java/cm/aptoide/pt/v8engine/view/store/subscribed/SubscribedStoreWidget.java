@@ -58,12 +58,12 @@ import com.jakewharton.rxbinding.view.RxView;
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
               StoreThemeEnum.get(store.getTheme())
-                  .getStoreHeaderInt());
+                  .getStoreHeaderInt(getContext().getApplicationContext()));
     } else {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(store.getIconPath(), storeAvatar,
               StoreThemeEnum.get(store.getTheme())
-                  .getStoreHeaderInt());
+                  .getStoreHeaderInt(getContext().getApplicationContext()));
     }
   }
 }

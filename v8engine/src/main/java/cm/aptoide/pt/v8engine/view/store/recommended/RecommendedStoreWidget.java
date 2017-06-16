@@ -51,7 +51,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(store.getAvatar(), storeIcon, StoreThemeEnum.get(store)
-            .getStoreHeaderInt());
+            .getStoreHeaderInt(getContext().getApplicationContext()));
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)

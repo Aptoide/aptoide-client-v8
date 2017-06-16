@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.dialog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -59,26 +60,31 @@ public class SharePreviewDialog {
   private final AptoideAccountManager accountManager;
   private final boolean dontShowMeAgainOption;
   private final SharePreviewOpenMode openMode;
+  private final TimelineAnalytics timelineAnalytics;
+  private final SharedPreferences sharedPreferences;
+
   @Nullable private Displayable displayable;
   private boolean privacyResult;
-  private TimelineAnalytics timelineAnalytics;
 
   public SharePreviewDialog(Displayable cardDisplayable, AptoideAccountManager accountManager,
       boolean dontShowMeAgainOption, SharePreviewOpenMode openMode,
-      TimelineAnalytics timelineAnalytics) {
+      TimelineAnalytics timelineAnalytics, SharedPreferences sharedPreferences) {
     this.displayable = cardDisplayable;
     this.accountManager = accountManager;
     this.dontShowMeAgainOption = dontShowMeAgainOption;
     this.openMode = openMode;
     this.timelineAnalytics = timelineAnalytics;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public SharePreviewDialog(AptoideAccountManager accountManager, boolean dontShowMeAgainOption,
-      SharePreviewOpenMode openMode, TimelineAnalytics timelineAnalytics) {
+      SharePreviewOpenMode openMode, TimelineAnalytics timelineAnalytics,
+      SharedPreferences sharedPreferences) {
     this.accountManager = accountManager;
     this.dontShowMeAgainOption = dontShowMeAgainOption;
     this.openMode = openMode;
     this.timelineAnalytics = timelineAnalytics;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public AlertDialog.Builder getPreviewDialogBuilder(Context context) {
@@ -755,7 +761,7 @@ public class SharePreviewDialog {
           alertDialog.setNeutralButton(R.string.dont_show_this_again, (dialogInterface, i) -> {
             subscriber.onNext(GenericDialogs.EResponse.CANCEL);
             subscriber.onCompleted();
-            ManagerPreferences.setShowPreviewDialog(false);
+            ManagerPreferences.setShowPreviewDialog(false, sharedPreferences);
           });
         }
       }

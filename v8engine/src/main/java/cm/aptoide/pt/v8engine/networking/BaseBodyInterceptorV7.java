@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.networking;
 
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -22,10 +23,11 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
   private final QManager qManager;
   private final String cdn;
   private final Boolean adultContentDefaultValue;
+  private final SharedPreferences sharedPreferences;
 
   public BaseBodyInterceptorV7(IdsRepository idsRepository, AptoideAccountManager accountManager,
       AdultContent adultContent, String aptoideMd5sum, String aptoidePackage, QManager qManager,
-      String cdn) {
+      String cdn, SharedPreferences sharedPreferences) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.adultContent = adultContent;
@@ -34,11 +36,12 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
     this.qManager = qManager;
     this.cdn = cdn;
     this.adultContentDefaultValue = null;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public BaseBodyInterceptorV7(String aptoideMd5sum, String aptoidePackage,
       IdsRepository idsRepository, AptoideAccountManager accountManager, AdultContent adultContent,
-      QManager qManager, String cdn, boolean mature) {
+      QManager qManager, String cdn, boolean mature, SharedPreferences sharedPreferences) {
     this.cdn = cdn;
     this.accountManager = accountManager;
     this.adultContent = adultContent;
@@ -47,6 +50,7 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
     this.aptoidePackage = aptoidePackage;
     this.idsRepository = idsRepository;
     this.qManager = qManager;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
@@ -68,12 +72,11 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
       } else {
         body.setMature(adultContentDefaultValue);
       }
-      body.setQ(qManager
-          .getFilters(ManagerPreferences.getHWSpecsFilter()));
-        String forceCountry = ToolboxManager.getForceCountry();
-        if (!TextUtils.isEmpty(forceCountry)) {
-          body.setCountry(forceCountry);
-        }
+      body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
+      String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
+      if (!TextUtils.isEmpty(forceCountry)) {
+        body.setCountry(forceCountry);
+      }
       body.setAptoideMd5sum(aptoideMd5sum);
       body.setAptoidePackage(aptoidePackage);
 

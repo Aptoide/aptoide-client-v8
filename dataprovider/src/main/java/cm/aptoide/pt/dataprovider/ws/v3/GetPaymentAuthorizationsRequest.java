@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
@@ -16,15 +17,17 @@ public class GetPaymentAuthorizationsRequest extends V3<PaymentAuthorizationsRes
 
   private GetPaymentAuthorizationsRequest(BaseBody baseBody,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   public static GetPaymentAuthorizationsRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     return new GetPaymentAuthorizationsRequest(new BaseBody(), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override

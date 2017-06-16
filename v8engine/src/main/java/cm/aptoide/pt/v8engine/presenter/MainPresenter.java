@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -22,19 +23,25 @@ public class MainPresenter implements Presenter {
 
   private final MainView view;
   private final ContentPuller contentPuller;
-  private NotificationSyncScheduler notificationSyncScheduler;
-  private ApkFy apkFy;
-  private AutoUpdate autoUpdate;
+  private final NotificationSyncScheduler notificationSyncScheduler;
+  private final ApkFy apkFy;
+  private final AutoUpdate autoUpdate;
+  private final SharedPreferences sharedPreferences;
+  private final SharedPreferences securePreferences;
+
   private boolean firstCreated;
 
   public MainPresenter(MainView view, ApkFy apkFy, AutoUpdate autoUpdate,
-      ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler) {
+      ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler,
+      SharedPreferences sharedPreferences, SharedPreferences securePreferences) {
     this.view = view;
     this.apkFy = apkFy;
     this.autoUpdate = autoUpdate;
     this.contentPuller = contentPuller;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.firstCreated = true;
+    this.sharedPreferences = sharedPreferences;
+    this.securePreferences = securePreferences;
   }
 
   @Override public void present() {
@@ -47,16 +54,17 @@ public class MainPresenter implements Presenter {
         .subscribe(created -> {
           view.showHome();
           contentPuller.start();
-          if (ManagerPreferences.isCheckAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
+          if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences)
+              && !V8Engine.isAutoUpdateWasCalled()) {
             // only call auto update when the app was not on the background
             autoUpdate.execute();
           }
           if (view.showDeepLink()) {
-            SecurePreferences.setWizardAvailable(false);
+            SecurePreferences.setWizardAvailable(false, securePreferences);
           } else {
-            if (SecurePreferences.isWizardAvailable()) {
+            if (SecurePreferences.isWizardAvailable(securePreferences)) {
               view.showWizard();
-              SecurePreferences.setWizardAvailable(false);
+              SecurePreferences.setWizardAvailable(false, securePreferences);
             }
           }
         }, throwable -> CrashReport.getInstance()

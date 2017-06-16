@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -23,8 +24,8 @@ public class GetMyStoreMetaRequest extends V7<GetStoreMeta, BaseBody> {
 
   public static GetMyStoreMetaRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    return new GetMyStoreMetaRequest(new BaseBody(), BASE_HOST, bodyInterceptor, httpClient,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    return new GetMyStoreMetaRequest(new BaseBody(), getHost(sharedPreferences), bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator);
   }
 

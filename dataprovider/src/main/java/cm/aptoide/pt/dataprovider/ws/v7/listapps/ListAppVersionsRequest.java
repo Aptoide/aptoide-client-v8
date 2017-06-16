@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -35,34 +36,37 @@ import rx.Observable;
 
   private ListAppVersionsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     if (storeNames != null && !storeNames.isEmpty()) {
-      Body body = new Body(packageName, storeNames, storeCredentials);
+      Body body = new Body(packageName, storeNames, storeCredentials, sharedPreferences);
       body.setLimit(MAX_LIMIT);
       return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator);
+          tokenInvalidator, sharedPreferences);
     } else {
       return of(packageName, storeCredentials, bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator);
+          tokenInvalidator, sharedPreferences);
     }
   }
 
   public static ListAppVersionsRequest of(String packageName,
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
-    Body body = new Body(packageName);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    Body body = new Body(packageName, sharedPreferences);
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
     return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,
@@ -85,16 +89,18 @@ import rx.Observable;
     private List<String> storeNames;
     @Getter private HashMapNotNull<String, List<String>> storesAuthMap;
 
-    public Body() {
+    public Body(SharedPreferences sharedPreferences) {
+      super(sharedPreferences);
     }
 
-    public Body(String packageName) {
+    public Body(String packageName, SharedPreferences sharedPreferences) {
+      this(sharedPreferences);
       this.packageName = packageName;
     }
 
     public Body(String packageName, List<String> storeNames,
-        HashMapNotNull<String, List<String>> storesAuthMap) {
-      this.packageName = packageName;
+        HashMapNotNull<String, List<String>> storesAuthMap, SharedPreferences sharedPreferences) {
+      this(packageName, sharedPreferences);
       this.storeNames = storeNames;
       setStoresAuthMap(storesAuthMap);
     }

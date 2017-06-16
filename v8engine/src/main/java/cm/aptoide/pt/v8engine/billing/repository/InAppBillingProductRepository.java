@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -39,6 +40,7 @@ public class InAppBillingProductRepository extends ProductRepository {
   private final Converter.Factory converterFactory;
   private final NetworkOperatorManager operatorManager;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public InAppBillingProductRepository(PurchaseFactory purchaseFactory,
       PaymentFactory paymentFactory, AuthorizationRepository authorizationRepository,
@@ -46,7 +48,7 @@ public class InAppBillingProductRepository extends ProductRepository {
       AuthorizationFactory authorizationFactory, ProductFactory productFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, NetworkOperatorManager operatorManager,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(paymentFactory);
     this.purchaseFactory = purchaseFactory;
     this.productFactory = productFactory;
@@ -55,6 +57,7 @@ public class InAppBillingProductRepository extends ProductRepository {
     this.converterFactory = converterFactory;
     this.operatorManager = operatorManager;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
@@ -153,7 +156,7 @@ public class InAppBillingProductRepository extends ProductRepository {
   private Observable<InAppBillingPurchasesResponse.PurchaseInformation> getServerInAppPurchase(
       int apiVersion, String packageName, String type, boolean bypassCache) {
     return InAppBillingPurchasesRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(bypassCache)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -167,7 +170,7 @@ public class InAppBillingProductRepository extends ProductRepository {
   private Single<InAppBillingSkuDetailsResponse> getServerSKUs(int apiVersion, String packageName,
       List<String> skuList, String type, boolean bypassCache) {
     return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
-        bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator)
+        bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(bypassCache)
         .first()
         .toSingle()

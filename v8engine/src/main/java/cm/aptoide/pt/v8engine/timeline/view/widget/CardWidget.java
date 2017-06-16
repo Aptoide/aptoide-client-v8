@@ -117,7 +117,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
                 (inputText) -> shareCardWithoutPreview(displayable,
                     cardId -> PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor,
                         httpClient, converterFactory,
-                        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+                        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+                        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
                         .observe()
                         .subscribe(setComment -> {
                           if (!setComment.getData()
@@ -179,7 +180,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
     SharePreviewDialog sharePreviewDialog =
         new SharePreviewDialog(displayable, accountManager, true, openMode,
-            displayable.getTimelineAnalytics());
+            displayable.getTimelineAnalytics(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {

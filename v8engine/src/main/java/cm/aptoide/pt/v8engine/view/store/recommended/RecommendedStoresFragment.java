@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.store.recommended;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -11,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -42,7 +44,8 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {

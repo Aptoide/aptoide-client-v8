@@ -16,10 +16,12 @@ import rx.Observable;
 
 public class SetUserSettings extends V7<BaseV7Response, SetUserSettings.Body> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-      + "/api/7/";
+  public static String getHost() {
+    return BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
+  }
 
   protected SetUserSettings(Body body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
@@ -32,7 +34,7 @@ public class SetUserSettings extends V7<BaseV7Response, SetUserSettings.Body> {
       TokenInvalidator tokenInvalidator) {
     final Body body = new Body(adultContentEnabled);
     body.setMature(adultContentEnabled);
-    return new SetUserSettings(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor,
+    return new SetUserSettings(body, getHost(), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
   }
 

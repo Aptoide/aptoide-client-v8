@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v7.GetFollowers;
@@ -94,20 +95,20 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     return !TextUtils.isEmpty(getPojo().getName()) || !TextUtils.isEmpty(getPojo().getAvatar());
   }
 
-  public int getStoreColor() {
+  public int getStoreColor(Context applicationContext) {
     Store store = getPojo().getStore();
     if (store != null && store.getAppearance() != null) {
       return StoreThemeEnum.get(store.getAppearance()
           .getTheme())
-          .getStoreHeaderInt();
+          .getStoreHeaderInt(applicationContext);
     } else {
       return StoreThemeEnum.get(V8Engine.getConfiguration()
           .getDefaultTheme())
-          .getStoreHeaderInt();
+          .getStoreHeaderInt(applicationContext);
     }
   }
 
-  public Drawable getButtonBackgroundStoreThemeColor() {
+  public Drawable getButtonBackgroundStoreThemeColor(Context applicationContext) {
     Store store = getPojo().getStore();
     StoreThemeEnum storeThemeEnum;
     if (store.getAppearance() != null) {
@@ -115,7 +116,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     } else {
       storeThemeEnum = StoreThemeEnum.APTOIDE_STORE_THEME_ORANGE;
     }
-    return storeThemeEnum.getButtonLayoutDrawable();
+    return storeThemeEnum.getButtonLayoutDrawable(applicationContext);
   }
 
   public void viewClicked(FragmentNavigator navigator) {

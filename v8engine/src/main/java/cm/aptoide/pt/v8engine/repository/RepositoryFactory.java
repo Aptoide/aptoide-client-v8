@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -44,11 +45,12 @@ public final class RepositoryFactory {
     return new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
   }
 
-  public static UpdateRepository getUpdateRepository(Context context) {
+  public static UpdateRepository getUpdateRepository(Context context,
+      SharedPreferences sharedPreferences) {
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
         getIdsRepository(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
-        WebService.getDefaultConverter(), getTokenInvalidator(context));
+        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences);
   }
 
   private static IdsRepository getIdsRepository(Context context) {
@@ -83,11 +85,11 @@ public final class RepositoryFactory {
         (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
   }
 
-  public static AppRepository getAppRepository(Context context) {
+  public static AppRepository getAppRepository(Context context, SharedPreferences sharedPreferences) {
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(), getHttpClient(context),
-        WebService.getDefaultConverter(), getTokenInvalidator(context));
+        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences);
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
@@ -100,11 +102,11 @@ public final class RepositoryFactory {
   }
 
   public static SocialRepository getSocialRepository(Context context,
-      TimelineAnalytics timelineAnalytics) {
+      TimelineAnalytics timelineAnalytics, SharedPreferences sharedPreferences) {
     return new SocialRepository(getAccountManager(context),
         ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7(),
         WebService.getDefaultConverter(), getHttpClient(context), timelineAnalytics,
-        getTokenInvalidator(context));
+        getTokenInvalidator(context), sharedPreferences);
   }
 
   private static TokenInvalidator getTokenInvalidator(Context context) {

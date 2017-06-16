@@ -78,10 +78,12 @@ import retrofit2.Converter;
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(),
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     shareAppHelper = new ShareAppHelper(RepositoryFactory.getInstalledRepository(), accountManager,
         accountNavigator, getContext(), new SpotAndShareAnalytics(Analytics.getInstance()),
-        displayable.getTimelineAnalytics());
+        displayable.getTimelineAnalytics(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

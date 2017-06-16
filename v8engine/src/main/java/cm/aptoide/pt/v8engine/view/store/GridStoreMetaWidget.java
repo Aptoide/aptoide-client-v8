@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.HomeUser;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -94,7 +96,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
             WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final GetHomeMeta getHomeMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData()
         .getStore();

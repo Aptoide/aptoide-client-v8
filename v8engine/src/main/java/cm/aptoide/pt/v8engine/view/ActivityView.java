@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.leak.LeakActivity;
@@ -29,7 +30,8 @@ public abstract class ActivityView extends LeakActivity implements View {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     fragmentNavigator =
         new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
-            android.R.anim.fade_in, android.R.anim.fade_out);
+            android.R.anim.fade_in, android.R.anim.fade_out,
+            ((V8Engine) getApplicationContext()).getDefaultSharedPreferences());
     activityNavigator = new ActivityNavigator(this);
     // super.onCreate handles fragment creation using FragmentManager.
     // Make sure navigator instances are already created when fragments are created,

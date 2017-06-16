@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -35,6 +36,7 @@ import rx.Observable;
   private final boolean googlePlayServicesAvailable;
   private final String oemid;
   private final String q;
+  private final SharedPreferences sharedPreferences;
   private String excludedPackage;
   private Location location;
   private String keyword;
@@ -46,54 +48,59 @@ import rx.Observable;
   private boolean mature;
 
   private GetAdsRequest(String clientUniqueId, boolean googlePlayServicesAvailable, String oemid,
-      boolean mature, Converter.Factory converterFactory, OkHttpClient httpClient, String q) {
+      boolean mature, Converter.Factory converterFactory, OkHttpClient httpClient, String q,
+      SharedPreferences sharedPreferences) {
     super(httpClient, converterFactory);
     this.clientUniqueId = clientUniqueId;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     this.oemid = oemid;
     this.mature = mature;
     this.q = q;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public static GetAdsRequest ofHomepage(String clientUniqueId, boolean googlePlayServicesAvailable,
       String oemid, boolean mature, OkHttpClient httpClient, Converter.Factory converterFactory,
-      String q) {
+      String q, SharedPreferences sharedPreferences) {
     // TODO: 09-06-2016 neuro limit based on max colums
     return of(Location.homepage, Type.ADS.getPerLineCount(), clientUniqueId,
-        googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q);
+        googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q,
+        sharedPreferences);
   }
 
   private static GetAdsRequest of(Location location, Integer limit, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String q) {
+      Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences) {
     return of(location, "__NULL__", limit, clientUniqueId, googlePlayServicesAvailable, oemid,
-        mature, httpClient, converterFactory, q);
+        mature, httpClient, converterFactory, q, sharedPreferences);
   }
 
   public static GetAdsRequest of(Location location, String keyword, Integer limit,
       String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
     return new GetAdsRequest(clientUniqueId, googlePlayServicesAvailable, oemid, mature,
-        converterFactory, httpClient, q).setLocation(location)
+        converterFactory, httpClient, q, sharedPreferences).setLocation(location)
         .setKeyword(keyword)
         .setLimit(limit);
   }
 
   public static GetAdsRequest ofHomepageMore(String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String q) {
+      Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences) {
     // TODO: 09-06-2016 neuro limit based on max colums
     return of(Location.homepage, 50, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
-        httpClient, converterFactory, q);
+        httpClient, converterFactory, q, sharedPreferences);
   }
 
   public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName,
       String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
 
     GetAdsRequest getAdsRequest =
         ofPackageName(Location.appview, packageName, clientUniqueId, googlePlayServicesAvailable,
-            oemid, mature, httpClient, converterFactory, q);
+            oemid, mature, httpClient, converterFactory, q, sharedPreferences);
 
     getAdsRequest.setRepo(storeName);
 
@@ -102,10 +109,11 @@ import rx.Observable;
 
   private static GetAdsRequest ofPackageName(Location location, String packageName,
       String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
     GetAdsRequest getAdsRequest =
         of(location, 1, clientUniqueId, googlePlayServicesAvailable, oemid, mature, httpClient,
-            converterFactory, q).setPackageName(packageName);
+            converterFactory, q, sharedPreferences).setPackageName(packageName);
 
     // Add excluded networks
     if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
@@ -118,11 +126,12 @@ import rx.Observable;
 
   public static GetAdsRequest ofAppviewSuggested(List<String> keywords, String clientUniqueId,
       boolean googlePlayServicesAvailable, String excludedPackage, String oemid, boolean mature,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
 
     GetAdsRequest getAdsRequest =
         of(Location.middleappview, 3, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
-            httpClient, converterFactory, q);
+            httpClient, converterFactory, q, sharedPreferences);
 
     getAdsRequest.setExcludedPackage(excludedPackage)
         .setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
@@ -132,30 +141,33 @@ import rx.Observable;
 
   public static GetAdsRequest ofSearch(String query, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String q) {
+      Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences) {
     return of(Location.search, query, 1, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
-        httpClient, converterFactory, q);
+        httpClient, converterFactory, q, sharedPreferences);
   }
 
   public static GetAdsRequest ofSecondInstall(String packageName, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String q) {
+      Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences) {
     return ofPackageName(Location.secondinstall, packageName, clientUniqueId,
-        googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q);
+        googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q,
+        sharedPreferences);
   }
 
   public static GetAdsRequest ofSecondTry(String packageName, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String q) {
+      Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences) {
     return ofPackageName(Location.secondtry, packageName, clientUniqueId,
-        googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q);
+        googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q,
+        sharedPreferences);
   }
 
   @Partners public static GetAdsRequest ofFirstInstall(String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
     return of(Location.firstinstall, numberOfAds, clientUniqueId, googlePlayServicesAvailable,
-        oemid, mature, httpClient, converterFactory, q);
+        oemid, mature, httpClient, converterFactory, q, sharedPreferences);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
@@ -174,7 +186,7 @@ import rx.Observable;
     parameters.put("oem_id", oemid);
     parameters.put("country", forcedCountry);
 
-      String forceCountry = ToolboxManager.getForceCountry();
+      String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
       if (!TextUtils.isEmpty(forceCountry)) {
         parameters.put("country", forceCountry);
       }

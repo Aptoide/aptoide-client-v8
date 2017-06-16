@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.permission;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,8 +50,11 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
   @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
   @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
 
+  private SharedPreferences sharedPreferences;
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
     if (!FacebookSdk.isInitialized()) {
       FacebookSdk.sdkInitialize(getApplicationContext());
     }
@@ -152,20 +156,21 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
     int message = R.string.general_downloads_dialog_no_download_rule_message;
 
     if ((AptoideUtils.SystemU.getConnectionType()
-        .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile())
-        || (AptoideUtils.SystemU.getConnectionType()
-        .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi())) {
+        .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) || (
+        AptoideUtils.SystemU.getConnectionType()
+            .equals("wifi")
+            && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences))) {
       if ((AptoideUtils.SystemU.getConnectionType()
           .equals("wifi") || AptoideUtils.SystemU.getConnectionType()
           .equals("mobile"))
-          && !ManagerPreferences.getGeneralDownloadsWifi()
-          && !ManagerPreferences.getGeneralDownloadsMobile()) {
+          && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences)
+          && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) {
         message = R.string.general_downloads_dialog_no_download_rule_message;
       } else if (AptoideUtils.SystemU.getConnectionType()
-          .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi()) {
+          .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences)) {
         message = R.string.general_downloads_dialog_only_mobile_message;
       } else if (AptoideUtils.SystemU.getConnectionType()
-          .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile()) {
+          .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) {
         message = R.string.general_downloads_dialog_only_wifi_message;
       }
 

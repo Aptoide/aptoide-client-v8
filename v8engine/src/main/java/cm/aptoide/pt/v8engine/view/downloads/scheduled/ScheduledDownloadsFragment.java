@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.downloads.scheduled;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -91,11 +93,11 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     downloadConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             V8Engine.getConfiguration()
-                .getAppId());
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             V8Engine.getConfiguration()
-                .getAppId());
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     analytics = Analytics.getInstance();
   }
 

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.download;
 
+import android.content.SharedPreferences;
 import android.support.annotation.CallSuper;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -20,6 +21,7 @@ import retrofit2.Converter;
 
 public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInstallBaseEvent
     implements Event {
+  private final SharedPreferences sharedPreferences;
   private Action action;
   private int versionCode;
   private Origin origin;
@@ -43,7 +45,8 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
       String obbUrl, String patchObbUrl, AppContext context, int versionCode,
       DownloadInstallEventConverter downloadInstallEventConverter, String eventName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;
@@ -60,13 +63,14 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public void send() {
     if (isReadyToSend()) {
       DownloadAnalyticsRequest.of(downloadInstallEventConverter.convert(this, resultStatus, error),
           action.name(), name, context.name(), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator)
+          tokenInvalidator, sharedPreferences)
           .observe()
           .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
               throwable -> throwable.printStackTrace());

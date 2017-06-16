@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,6 +51,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private SharedPreferences sharedPreferences;
 
   /**
    * @param appName
@@ -71,6 +73,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -100,7 +104,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    header = new ViewHeader(view);
+    header = new ViewHeader(view, sharedPreferences);
     collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
     setHasOptionsMenu(true);
     super.onViewCreated(view, savedInstanceState);
@@ -133,7 +137,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(),
             baseBodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()), otherVersionsSuccessRequestListener,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), otherVersionsSuccessRequestListener,
         err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
@@ -187,10 +192,10 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     private final ImageView appIcon;
 
     // ctor
-    ViewHeader(@NonNull View view) {
+    ViewHeader(@NonNull View view, SharedPreferences sharedPreferences) {
       this.view = view;
 
-      animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+      animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus(sharedPreferences);
 
       otherVersionsTitle = (TextView) view.findViewById(R.id.other_versions_title);
       appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);

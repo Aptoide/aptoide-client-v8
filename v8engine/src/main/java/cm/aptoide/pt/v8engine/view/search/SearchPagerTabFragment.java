@@ -111,7 +111,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
             accountManager, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getQManager());
+            ((V8Engine) getContext().getApplicationContext()).getQManager(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getApplicationContext());
     super.onCreate(savedInstanceState);
   }
 
@@ -149,11 +151,12 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     ListSearchAppsRequest of;
     if (storeName != null) {
       of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     } else {
       of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(),
           StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator);
+          tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     }
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

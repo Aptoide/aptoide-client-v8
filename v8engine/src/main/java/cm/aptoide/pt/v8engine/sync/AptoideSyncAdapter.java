@@ -9,6 +9,7 @@ import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.os.Bundle;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
@@ -48,6 +49,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final PaymentAnalytics paymentAnalytics;
   private final Payer payer;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
       PaymentConfirmationFactory confirmationConverter, AuthorizationFactory authorizationConverter,
@@ -56,7 +58,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       PaymentAuthorizationAccessor authorizationAcessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics, Payer payer,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(context, autoInitialize, allowParallelSyncs);
     this.confirmationConverter = confirmationConverter;
     this.authorizationConverter = authorizationConverter;
@@ -70,6 +72,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     this.paymentAnalytics = paymentAnalytics;
     this.payer = payer;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public void onPerformSync(Account account, Bundle extras, String authority,
@@ -81,13 +84,13 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       final Product product = productConverter.mapToProduct(extras);
       new ConfirmationSync(product, operatorManager, confirmationAccessor, confirmationConverter,
           payer, bodyInterceptorV3, converterFactory, httpClient, paymentAnalytics,
-          tokenInvalidator).sync(
+          tokenInvalidator, sharedPreferences).sync(
           syncResult);
     } else if (authorizations) {
       final int paymentId = extras.getInt(EXTRA_PAYMENT_ID);
       new AuthorizationSync(paymentId, authorizationAcessor, authorizationConverter, payer,
           bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics,
-          tokenInvalidator).sync(syncResult);
+          tokenInvalidator, sharedPreferences).sync(syncResult);
     }
   }
 }

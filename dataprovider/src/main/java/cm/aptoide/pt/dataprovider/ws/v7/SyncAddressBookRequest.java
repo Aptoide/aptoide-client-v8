@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -17,23 +19,26 @@ import rx.Observable;
 
 public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequest.Body> {
 
-  private static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http"
-      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-      + "/api/7/";
+  @NonNull public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
+  }
 
   public SyncAddressBookRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static SyncAddressBookRequest of(List<String> numbers, List<String> emails,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     return new SyncAddressBookRequest((new Body(new Contacts(numbers, emails), null, null)),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   /**
@@ -41,9 +46,10 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
    */
   public static SyncAddressBookRequest of(long id, String token, String secret,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     return new SyncAddressBookRequest(new Body(null, new Twitter(id, token, secret), null),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   /**
@@ -51,9 +57,10 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
    */
   public static SyncAddressBookRequest of(long id, String token,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     return new SyncAddressBookRequest(new Body(null, null, new Facebook(id, token)),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

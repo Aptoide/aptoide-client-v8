@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -18,19 +19,22 @@ class GetStoreRequestFactory {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public GetStoreRequestFactory(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public GetStoreRequest newStore(String url) {
     return GetStoreRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator);
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 }

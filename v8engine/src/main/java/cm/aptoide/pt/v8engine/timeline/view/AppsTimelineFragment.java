@@ -243,8 +243,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(applicationContext), bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, V8Engine.getConfiguration()
-        .getAppId());
-    dateCalculator = new DateCalculator();
+        .getAppId(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    dateCalculator = new DateCalculator(getContext().getApplicationContext());
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
@@ -254,7 +255,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator);
+            timelineAnalytics, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final InstallManager installManager =
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(
@@ -263,17 +265,21 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        converterFactory, tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     cardToDisplayable =
         new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
             permissionManager, storeCredentialsProvider,
             new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
                 tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId()), Analytics.getInstance(),
+                .getAppId(),
+                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            Analytics.getInstance(),
             new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
                 tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId()),
+                .getAppId(),
+                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
             new TimelineNavigator(getFragmentNavigator(), getContext().getString(R.string.likes)));
 
     refreshSubject = BehaviorRelay.create();

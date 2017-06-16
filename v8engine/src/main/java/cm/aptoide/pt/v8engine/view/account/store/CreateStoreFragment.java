@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -82,6 +83,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   private Converter.Factory converterFactory;
   private BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor;
   private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public CreateStoreFragment() {
     super(false, true);
@@ -98,6 +100,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final V8Engine engine = (V8Engine) getActivity().getApplicationContext();
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator = engine.getTokenInvalidator();
     accountManager = engine.getAccountManager();
     oAuthBodyInterceptor = engine.getOAuthBodyInterceptor();
@@ -344,7 +348,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .flatMap(
             __ -> SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory,
-                tokenInvalidator)
+                tokenInvalidator,
+                sharedPreferences)
                 .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
@@ -359,7 +364,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .onErrorResumeNext(err -> {
           CrashReport.getInstance()
               .log(err);
-          final int errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+          final int errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage(),
+              getContext().getApplicationContext()
+                  .getPackageName(), getResources());
           return dismissWaitAndShowErrorMessage(errorMessage).map(__ -> null);
         })
         .map(__ -> null);
@@ -378,7 +385,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
             account -> SetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
                 multipartBodyInterceptor, longTimeoutHttpClient, converterFactory,
-                requestBodyFactory, serializer, tokenInvalidator)
+                requestBodyFactory, serializer, tokenInvalidator,
+                sharedPreferences)
                 .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
@@ -393,7 +401,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
               .equals(ERROR_API_1)) {
             errorMessage = R.string.ws_error_API_1;
           } else {
-            errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+            errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage(),
+                getContext().getApplicationContext()
+                    .getPackageName(), getResources());
           }
 
           return dismissWaitAndShowErrorMessage(errorMessage).filter(
@@ -411,7 +421,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(),
-            oAuthBodyInterceptor, httpClient, converterFactory, tokenInvalidator)
+            oAuthBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences)
             .observe()
             .observeOn(AndroidSchedulers.mainThread())
             .map(answer -> {
@@ -454,11 +465,13 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       } else if (answer.getErrors()
           .get(0).code.equals(ERROR_CODE_3)) {
         ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors()
-            .get(0).code));
+            .get(0).code, getContext().getApplicationContext()
+            .getPackageName(), getResources()));
       } else {
         ShowMessage.asObservableSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
             answer.getErrors()
-                .get(0).code))
+                .get(0).code, getContext().getApplicationContext()
+                .getPackageName(), getResources()))
             .subscribe(visibility -> {
               if (visibility == ShowMessage.DISMISSED) {
                 navigateToHome();
@@ -526,7 +539,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
           .flatMap(account -> SetStoreRequest.of(storeModel.getStoreName(),
               storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
               storeModel.getStoreAvatarPath(), multipartBodyInterceptor, longTimeoutHttpClient,
-              converterFactory, requestBodyFactory, serializer, tokenInvalidator)
+              converterFactory, requestBodyFactory, serializer, tokenInvalidator, sharedPreferences)
               .observe()
               .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
@@ -573,7 +586,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
               }
 
               ShowMessage.asLongObservableSnack(getActivity(),
-                  ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage()))
+                  ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage(),
+                      getContext().getApplicationContext()
+                          .getPackageName(), getResources()))
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       navigateToHome();
@@ -588,7 +603,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
      * not multipart
      */
     SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
-        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator)
+        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .andThen(sendCreateAnalytics())
@@ -598,7 +613,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .onErrorResumeNext(err -> {
           CrashReport.getInstance()
               .log(err);
-          @StringRes int reason = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+          @StringRes int reason = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage(),
+              getContext().getApplicationContext()
+                  .getPackageName(), getResources());
           return dismissWaitAndShowErrorMessage(reason);
         })
         .subscribe(__ -> {

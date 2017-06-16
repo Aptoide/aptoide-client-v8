@@ -54,6 +54,7 @@ import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -155,6 +156,7 @@ import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -223,6 +225,8 @@ public abstract class V8Engine extends Application {
   private EntryPointChooser entryPointChooser;
   private NotificationSyncScheduler notificationSyncScheduler;
   private RefreshTokenInvalidator tokenInvalidator;
+  private FileManager fileManager;
+  private CacheHelper cacheHelper;
 
   /**
    * call after this instance onCreate()
@@ -279,7 +283,7 @@ public abstract class V8Engine extends Application {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
-    Logger.setDBG(ToolboxManager.isDebug() || BuildConfig.DEBUG);
+    Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
 
     Database.initialize(this);
 
@@ -305,7 +309,7 @@ public abstract class V8Engine extends Application {
     // app synchronous initialization
     //
 
-    final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
     sendAppStartToAnalytics(sharedPreferences);
 
@@ -375,8 +379,9 @@ public abstract class V8Engine extends Application {
     if (notificationSyncScheduler == null) {
 
       long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
-      if (ToolboxManager.getPushNotificationPullingInterval() > 0) {
-        pushNotificationSocialPeriodicity = ToolboxManager.getPushNotificationPullingInterval();
+      if (ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences()) > 0) {
+        pushNotificationSocialPeriodicity =
+            ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences());
       }
 
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
@@ -393,6 +398,10 @@ public abstract class V8Engine extends Application {
     return notificationSyncScheduler;
   }
 
+  public SharedPreferences getDefaultSharedPreferences() {
+    return PreferenceManager.getDefaultSharedPreferences(this);
+  }
+
   public GroupNameProvider getGroupNameProvider() {
     return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
         Build.ID);
@@ -403,8 +412,9 @@ public abstract class V8Engine extends Application {
       notificationHandler =
           new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
               WebService.getDefaultConverter(), getIdsRepository(),
-              getConfiguration().getVersionName(), getAccountManager(), getConfiguration()
-                  .getExtraId(), PublishRelay.create());
+              getConfiguration().getVersionName(), getAccountManager(),
+              getConfiguration().getExtraId(), PublishRelay.create(),
+              getDefaultSharedPreferences());
     }
     return notificationHandler;
   }
@@ -418,7 +428,7 @@ public abstract class V8Engine extends Application {
       okHttpClientBuilder.readTimeout(2, TimeUnit.MINUTES);
       okHttpClientBuilder.writeTimeout(2, TimeUnit.MINUTES);
 
-      if (ToolboxManager.isToolboxEnableRetrofitLogs()) {
+      if (ToolboxManager.isToolboxEnableRetrofitLogs(getDefaultSharedPreferences())) {
         okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
       }
 
@@ -440,7 +450,7 @@ public abstract class V8Engine extends Application {
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
 
-      if (ToolboxManager.isToolboxEnableRetrofitLogs()) {
+      if (ToolboxManager.isToolboxEnableRetrofitLogs(getDefaultSharedPreferences())) {
         okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
       }
 
@@ -491,7 +501,7 @@ public abstract class V8Engine extends Application {
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
       downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
-          CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
+          getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
           getConfiguration().getCachePath(), apkPath, obbPath);
     }
@@ -507,7 +517,9 @@ public abstract class V8Engine extends Application {
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
       installManager = new InstallManager(getDownloadManager(),
-          new InstallerFactory().create(this, installerType));
+          new InstallerFactory().create(this, installerType), getDefaultSharedPreferences(),
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences()));
       installManagers.put(installerType, installManager);
     }
 
@@ -516,7 +528,7 @@ public abstract class V8Engine extends Application {
 
   public QManager getQManager() {
     if (qManager == null) {
-      qManager = new QManager(PreferenceManager.getDefaultSharedPreferences(this));
+      qManager = new QManager(getDefaultSharedPreferences());
     }
     return qManager;
   }
@@ -533,15 +545,16 @@ public abstract class V8Engine extends Application {
 
       final AccountManagerService accountManagerService = new AccountManagerService(
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
-              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager()),
-          getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter(), getNonNullObjectMapper(),
-          new RefreshTokenInvalidatorFactory());
+              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager(),
+              getDefaultSharedPreferences()), getAccountFactory(), getDefaultClient(),
+          getLongTimeoutClient(), WebService.getDefaultConverter(), getNonNullObjectMapper(),
+          new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences());
 
       final AndroidAccountDataMigration accountDataMigration =
-          new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
-              PreferenceManager.getDefaultSharedPreferences(this), AccountManager.get(this),
-              new SecureCoderDecoder.Builder(this).create(), SQLiteDatabaseHelper.DATABASE_VERSION,
+          new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this,
+              getDefaultSharedPreferences()),
+              getDefaultSharedPreferences(), AccountManager.get(this),
+              new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(), SQLiteDatabaseHelper.DATABASE_VERSION,
               getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
               getConfiguration().getAccountType());
 
@@ -564,7 +577,7 @@ public abstract class V8Engine extends Application {
       accountFactory = new AccountFactory(new SocialAccountFactory(this, getGoogleSignInClient()),
           new AccountService(new NoTokenBodyInterceptor(getIdsRepository(), getAptoideMd5sum(),
               getAptoidePackage()), getDefaultClient(), WebService.getDefaultConverter(),
-              new NoOpTokenInvalidator()));
+              new NoOpTokenInvalidator(), getDefaultSharedPreferences()));
     }
     return accountFactory;
   }
@@ -580,23 +593,26 @@ public abstract class V8Engine extends Application {
 
   public IdsRepository getIdsRepository() {
     if (idsRepository == null) {
-      idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), this,
-          Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+      idsRepository =
+          new IdsRepository(SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences()),
+              this, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
     }
     return idsRepository;
   }
 
   public Preferences getPreferences() {
     if (preferences == null) {
-      preferences = new Preferences(PreferenceManager.getDefaultSharedPreferences(this));
+      preferences = new Preferences(getDefaultSharedPreferences());
     }
     return preferences;
   }
 
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
     if (securePreferences == null) {
-      securePreferences = new cm.aptoide.pt.v8engine.preferences.SecurePreferences(
-          PreferenceManager.getDefaultSharedPreferences(this), getSecureCoderDecoder());
+      securePreferences =
+          new cm.aptoide.pt.v8engine.preferences.SecurePreferences(getDefaultSharedPreferences(),
+              getSecureCoderDecoder());
     }
     return securePreferences;
   }
@@ -616,7 +632,7 @@ public abstract class V8Engine extends Application {
 
   public SecureCoderDecoder getSecureCoderDecoder() {
     if (secureCodeDecoder == null) {
-      secureCodeDecoder = new SecureCoderDecoder.Builder(this).create();
+      secureCodeDecoder = new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create();
     }
     return secureCodeDecoder;
   }
@@ -647,7 +663,7 @@ public abstract class V8Engine extends Application {
           new AuthorizationRepository(AccessorFactory.getAccessorFor(PaymentAuthorization.class),
               getPaymentSyncScheduler(), getAuthorizationFactory(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
-              getTokenInvalidator());
+              getTokenInvalidator(), getDefaultSharedPreferences());
 
       final ProductFactory productFactory = new ProductFactory();
 
@@ -658,12 +674,12 @@ public abstract class V8Engine extends Application {
               AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
               confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
-              getTokenInvalidator()),
+              getTokenInvalidator(), getDefaultSharedPreferences()),
           new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(),
               AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
               confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
               WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
-              getTokenInvalidator()));
+              getTokenInvalidator(), getDefaultSharedPreferences()));
 
       final PurchaseFactory purchaseFactory =
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
@@ -677,12 +693,12 @@ public abstract class V8Engine extends Application {
               paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), productFactory,
-              getTokenInvalidator()),
+              getTokenInvalidator(), getDefaultSharedPreferences()),
           new InAppBillingProductRepository(purchaseFactory, paymentFactory,
               authorizationRepository, paymentRepositoryFactory.getInAppConfirmationRepository(),
               getAccountPayer(), getAuthorizationFactory(), productFactory,
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              getNetworkOperatorManager(), getTokenInvalidator()));
+              getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository(), authorizationRepository);
@@ -730,7 +746,7 @@ public abstract class V8Engine extends Application {
       inAppBillingRepository =
           new InAppBillingRepository(AccessorFactory.getAccessorFor(PaymentConfirmation.class),
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              getTokenInvalidator());
+              getTokenInvalidator(), getDefaultSharedPreferences());
     }
     return inAppBillingRepository;
   }
@@ -741,14 +757,40 @@ public abstract class V8Engine extends Application {
   }
 
   private void clearFileCache() {
-    FileManager.build(getDownloadManager(), getHttpClientCache())
-        .purgeCache()
+    getFileManager().purgeCache()
         .first()
         .toSingle()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
             err -> CrashReport.getInstance()
                 .log(err));
+  }
+
+  public FileManager getFileManager() {
+    if (fileManager == null) {
+      fileManager = new FileManager(getCacheHelper(), new FileUtils(), new String[] {
+          getApplicationContext().getCacheDir().getPath(), getConfiguration().getCachePath()
+      }, getDownloadManager(), getHttpClientCache());
+    }
+    return fileManager;
+  }
+
+  private CacheHelper getCacheHelper() {
+    if (cacheHelper == null) {
+      List<CacheHelper.FolderToManage> folders = new LinkedList<>();
+
+      final String cachePath = getConfiguration().getCachePath();
+
+      long month = DateUtils.DAY_IN_MILLIS * 30;
+      folders.add(new CacheHelper.FolderToManage(new File(cachePath), month));
+      folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), 1024 * 1024));
+      folders.add(new CacheHelper.FolderToManage(
+          new File(getApplicationContext().getCacheDir() + "image_manager_disk_cache/"), month));
+      cacheHelper =
+          new CacheHelper(ManagerPreferences.getCacheLimit(getDefaultSharedPreferences()), folders,
+              new FileUtils());
+    }
+    return cacheHelper;
   }
 
   private void initializeFlurry(Context context, String flurryKey) {
@@ -804,7 +846,9 @@ public abstract class V8Engine extends Application {
         .first()
         .toSingle()
         .flatMapCompletable(account -> {
-          if (SecurePreferences.isFirstRun()) {
+          if (SecurePreferences.isFirstRun(
+              SecurePreferencesImplementation.getInstance(getApplicationContext(),
+                  getDefaultSharedPreferences()))) {
 
             PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
@@ -819,22 +863,25 @@ public abstract class V8Engine extends Application {
   // todo re-factor all this code to proper Rx
   private Completable setupFirstRun(final AptoideAccountManager accountManager) {
     return Completable.defer(() -> {
-      SecurePreferences.setFirstRun(false);
+      SecurePreferences.setFirstRun(false,
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences()));
 
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 
       StoreUtilsProxy proxy =
           new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7(), storeCredentials,
               AccessorFactory.getAccessorFor(Store.class), getDefaultClient(),
-              WebService.getDefaultConverter(), getTokenInvalidator());
+              WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator()),
-          getAccountManager(), defaultStoreCredentials)
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences()), getAccountManager(), defaultStoreCredentials)
           .andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance()
               .log(err));
@@ -845,7 +892,7 @@ public abstract class V8Engine extends Application {
     if (baseBodyInterceptorV7 == null) {
       baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
-          getQManager(), "pool");
+          getQManager(), "pool", getDefaultSharedPreferences());
     }
     return baseBodyInterceptorV7;
   }
@@ -854,7 +901,7 @@ public abstract class V8Engine extends Application {
     if (baseBodyInterceptorV3 == null) {
       baseBodyInterceptorV3 =
           new BaseBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager(), getQManager());
+              getAccountManager(), getQManager(), getDefaultSharedPreferences());
     }
     return baseBodyInterceptorV3;
   }
@@ -872,7 +919,7 @@ public abstract class V8Engine extends Application {
     if (oAuthBodyInterceptor == null) {
       oAuthBodyInterceptor =
           new OAuthBodyInterceptor(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager(), getQManager());
+              getAccountManager(), getQManager(), getDefaultSharedPreferences());
     }
     return oAuthBodyInterceptor;
   }
@@ -960,7 +1007,7 @@ public abstract class V8Engine extends Application {
   }
 
   private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(this)
+    return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences())
         .sync(true);
   }
 

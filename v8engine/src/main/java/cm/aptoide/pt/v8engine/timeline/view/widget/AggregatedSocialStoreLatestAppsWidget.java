@@ -95,7 +95,8 @@ public class AggregatedSocialStoreLatestAppsWidget
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter(), tokenInvalidator);
+            WebService.getDefaultConverter(), tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -199,11 +200,12 @@ public class AggregatedSocialStoreLatestAppsWidget
 
     StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(displayable.getSharedStore());
 
-    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
+    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable(
+        getContext().getApplicationContext()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followStore.setElevation(0);
     }
-    followStore.setTextColor(storeThemeEnum.getStoreHeaderInt());
+    followStore.setTextColor(storeThemeEnum.getStoreHeaderInt(getContext().getApplicationContext()));
 
     final String storeName = displayable.getSharedStoreName();
     //final String storeTheme = displayable.getSharedStore().getAppearance().getTheme();

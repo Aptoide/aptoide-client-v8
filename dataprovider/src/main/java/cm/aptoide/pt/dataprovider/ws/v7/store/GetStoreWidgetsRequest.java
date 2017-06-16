@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -29,19 +30,21 @@ import rx.Observable;
 
   private GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
     this.url = url;
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
-        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences);
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,

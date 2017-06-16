@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.updates;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -12,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -158,12 +160,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId());
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     installConverter = new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, V8Engine.getConfiguration()
-            .getAppId());
+            .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     installedRepository = RepositoryFactory.getInstalledRepository();
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   private void setUpdates(List<Update> updateList) {
@@ -228,7 +231,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,
           new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
               bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
-                  .getAppId()),
+                  .getAppId(),
+              ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
           installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);

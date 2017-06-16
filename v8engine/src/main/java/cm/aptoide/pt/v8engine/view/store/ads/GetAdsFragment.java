@@ -36,7 +36,9 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
             accountManager, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getQManager());
+            ((V8Engine) getContext().getApplicationContext()).getQManager(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getApplicationContext());
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {

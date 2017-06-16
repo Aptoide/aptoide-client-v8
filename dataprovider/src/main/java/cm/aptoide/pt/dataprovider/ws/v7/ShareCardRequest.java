@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import lombok.EqualsAndHashCode;
@@ -15,24 +16,24 @@ public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Bod
 
   protected ShareCardRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ShareCardRequest of(String cardId, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final ShareCardRequest.Body body = new ShareCardRequest.Body(cardId);
     return new ShareCardRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   public static ShareCardRequest of(String cardId, long storeId, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor<BaseBody> bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final ShareCardRequest.Body body = new ShareCardRequest.Body(cardId, storeId);
     return new ShareCardRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<ShareCardResponse> loadDataFromNetwork(V7.Interfaces interfaces,

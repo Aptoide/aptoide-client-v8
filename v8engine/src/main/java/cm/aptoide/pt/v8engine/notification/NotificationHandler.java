@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.notification;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
@@ -27,11 +28,12 @@ public class NotificationHandler implements NotificationNetworkService {
   private final String versionName;
   private final AptoideAccountManager accountManager;
   private final String extraId;
+  private final SharedPreferences sharedPreferences;
 
   public NotificationHandler(String applicationId, OkHttpClient httpClient,
       Converter.Factory converterFactory, IdsRepository idsRepository, String versionName,
-      AptoideAccountManager accountManager, String extraId,
-      PublishRelay<AptoideNotification> relay) {
+      AptoideAccountManager accountManager, String extraId, PublishRelay<AptoideNotification> relay,
+      SharedPreferences sharedPreferences) {
     this.applicationId = applicationId;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -40,6 +42,7 @@ public class NotificationHandler implements NotificationNetworkService {
     this.accountManager = accountManager;
     this.handler = relay;
     this.extraId = extraId;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public Single<List<AptoideNotification>> getSocialNotifications() {
@@ -47,7 +50,7 @@ public class NotificationHandler implements NotificationNetworkService {
         .first()
         .flatMap(account -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
             versionName, applicationId, httpClient, converterFactory, extraId,
-            account.getAccessToken())
+            account.getAccessToken(), sharedPreferences)
             .observe()
             .map(response -> convertSocialNotifications(response, account.getId())))
         .flatMap(notifications -> handle(notifications))
@@ -59,7 +62,7 @@ public class NotificationHandler implements NotificationNetworkService {
         .first()
         .flatMap(account -> {
           return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(),
-              versionName, applicationId, httpClient, converterFactory, extraId)
+              versionName, applicationId, httpClient, converterFactory, extraId, sharedPreferences)
               .observe()
               .map(response -> convertCampaignNotifications(response, account.getId()))
               .first()

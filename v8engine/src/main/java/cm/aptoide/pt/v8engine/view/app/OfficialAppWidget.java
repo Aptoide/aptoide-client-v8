@@ -80,7 +80,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     if (!TextUtils.isEmpty(appMeta.first)) {
 
       // get multi part message
-      final String[] parts = Translator.translateToMultiple(appMeta.first);
+      final String[] parts =
+          Translator.translateToMultiple(appMeta.first, getContext().getApplicationContext());
       if (parts != null && parts.length == 4) {
         SpannableString middle =
             new SpannableString(String.format(isAppInstalled ? parts[3] : parts[2], appName));

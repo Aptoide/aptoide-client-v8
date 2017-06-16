@@ -96,6 +96,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private boolean trackAnalytics;
   private NotificationCenter notificationCenter;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private SharedPreferences sharedPreferences;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -104,9 +105,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     trackAnalytics = true;
-    fileManager =
-        FileManager.build(((V8Engine) getContext().getApplicationContext()).getDownloadManager(),
-            ((V8Engine) getContext().getApplicationContext()).getHttpClientCache());
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    fileManager = ((V8Engine) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
     adultContentConfirmationDialog =
@@ -135,7 +136,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .build();
 
     notificationCenter = ((V8Engine) getContext().getApplicationContext()).getNotificationCenter();
-    notificationSyncScheduler = ((V8Engine) getContext().getApplicationContext()).getNotificationSyncScheduler();
+    notificationSyncScheduler =
+        ((V8Engine) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -146,7 +148,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     adultContent =
         new AdultContent(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
             new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-            new SecureCoderDecoder.Builder(getContext()).create()));
+            new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -188,7 +190,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context);
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context,
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
@@ -350,7 +353,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         cb.setChecked(false);
       }
 
-      ManagerPreferences.setHWSpecsFilter(filterApps);
+      ManagerPreferences.setHWSpecsFilter(filterApps, sharedPreferences);
 
       return true;
     });
@@ -432,7 +435,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
       @Override public boolean onPreferenceClick(Preference preference) {
         ((EditTextPreference) preference).setText(
-            String.valueOf(ManagerPreferences.getCacheLimit()));
+            String.valueOf(ManagerPreferences.getCacheLimit(sharedPreferences)));
         return false;
       }
     });

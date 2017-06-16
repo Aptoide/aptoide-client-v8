@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -53,11 +54,12 @@ public class DialogUtils {
   private final Converter.Factory converterFactory;
   private final InstalledRepository installedRepository;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, InstalledRepository installedRepository,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
@@ -65,7 +67,7 @@ public class DialogUtils {
     this.converterFactory = converterFactory;
     this.installedRepository = installedRepository;
     this.tokenInvalidator = tokenInvalidator;
-
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -137,7 +139,7 @@ public class DialogUtils {
           if (response.isOk()) {
             Logger.d(TAG, "review added");
             ShowMessage.asSnack(activity, R.string.review_success);
-            ManagerPreferences.setForceServerRefreshFlag(true);
+            ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
             subscriber.onNext(GenericDialogs.EResponse.YES);
             subscriber.onCompleted();
           } else {
@@ -161,11 +163,12 @@ public class DialogUtils {
 
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
               bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
-              tokenInvalidator)
+              tokenInvalidator, sharedPreferences)
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-              httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator)
+              httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator,
+              sharedPreferences)
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -235,7 +238,7 @@ public class DialogUtils {
         if (response.isOk()) {
           Logger.d(TAG, "review added");
           ShowMessage.asSnack(activity, R.string.review_success);
-          ManagerPreferences.setForceServerRefreshFlag(true);
+          ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
           if (onPositiveCallback != null) {
             onPositiveCallback.call();
           }
@@ -253,12 +256,12 @@ public class DialogUtils {
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
             bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
-            tokenInvalidator)
+            tokenInvalidator, sharedPreferences)
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-            httpClient, converterFactory, isAppInstalled(packageName),
-            tokenInvalidator)
+            httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator,
+            sharedPreferences)
             .execute(successRequestListener, errorRequestListener);
       }
     });

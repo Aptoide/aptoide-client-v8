@@ -100,7 +100,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
               AccessorFactory.getAccessorFor(Store.class), httpClient,
               WebService.getDefaultConverter(),
-              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+              ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
@@ -164,12 +165,13 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     }
 
     if (displayable.hasStore()) {
-      setupStoreNameTv(displayable.getStoreColor(), displayable.storeName());
+      setupStoreNameTv(displayable.getStoreColor(getContext().getApplicationContext()),
+          displayable.storeName());
     } else {
       storeNameTv.setVisibility(View.GONE);
     }
-    followedTv.setTextColor(displayable.getStoreColor());
-    followingTv.setTextColor(displayable.getStoreColor());
+    followedTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
+    followingTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(click -> displayable.viewClicked(getFragmentNavigator()), err -> {
@@ -180,11 +182,13 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
   private void setFollowColor(FollowUserDisplayable displayable) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      follow.setBackground(displayable.getButtonBackgroundStoreThemeColor());
+      follow.setBackground(
+          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
     } else {
-      follow.setBackgroundDrawable(displayable.getButtonBackgroundStoreThemeColor());
+      follow.setBackgroundDrawable(
+          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
     }
-    follow.setTextColor(displayable.getStoreColor());
+    follow.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
   }
 
   private void setupStoreNameTv(int storeColor, String storeName) {

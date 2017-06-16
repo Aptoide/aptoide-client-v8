@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
@@ -21,8 +22,9 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
 
   private AnalyticsEventRequest(Body body, String action, String name, String context,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.action = action;
     this.name = name;
     this.context = context;
@@ -30,11 +32,12 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
 
   public static AnalyticsEventRequest of(String eventName, String context, String action,
       Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences) {
     final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(appId, data);
 
     return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

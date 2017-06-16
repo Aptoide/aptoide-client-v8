@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.app.widget;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -32,6 +33,7 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -128,7 +130,7 @@ import rx.functions.Action1;
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
         bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository(),
-        tokenInvalidator);
+        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore()
@@ -204,7 +206,8 @@ import rx.functions.Action1;
       BaseRequestWithStore.StoreCredentials storeCredentials) {
     Subscription subscription =
         ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
-            bodyInterceptor, httpClient, converterFactory, tokenInvalidator)
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {

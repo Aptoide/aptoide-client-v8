@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
@@ -88,18 +90,24 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager);
     final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    final SharedPreferences sharedPreferences =
+        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    final SharedPreferences securePreferences =
+        SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
 
     storeRepository = RepositoryFactory.getStoreRepository();
     fragmentNavigator = getFragmentNavigator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
-        converterFactory, ((V8Engine) getApplicationContext()).getTokenInvalidator());
+        converterFactory, ((V8Engine) getApplicationContext()).getTokenInvalidator(),
+        sharedPreferences);
 
     attachPresenter(
-        new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this),
-            ((V8Engine) getApplicationContext()).getNotificationSyncScheduler()),
-        savedInstanceState);
+        new MainPresenter(this, new ApkFy(this, getIntent(), securePreferences), autoUpdate,
+            new ContentPuller(this),
+            ((V8Engine) getApplicationContext()).getNotificationSyncScheduler(), sharedPreferences,
+            securePreferences), savedInstanceState);
   }
 
   @Override public void showWizard() {
@@ -262,7 +270,9 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     if (validateDeepLinkRequiredArgs(queryType, queryLayout, queryName, queryAction)) {
       try {
         queryAction = URLDecoder.decode(queryAction, "UTF-8");
-        event.setAction(queryAction != null ? queryAction.replace(V7.BASE_HOST, "") : null);
+        event.setAction(queryAction != null ? queryAction.replace(
+            V7.getHost(((V8Engine) getApplicationContext()).getDefaultSharedPreferences()), "")
+            : null);
         event.setType(Event.Type.valueOf(queryType));
         event.setName(Event.Name.valueOf(queryName));
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();

@@ -212,9 +212,10 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void setupStoreSearch(SearchView searchView) {
-    final SearchManager searchManager = (SearchManager) V8Engine.getContext()
+    final SearchManager searchManager = (SearchManager) getContext().getApplicationContext()
         .getSystemService(Context.SEARCH_SERVICE);
-    ComponentName cn = new ComponentName(V8Engine.getContext(), StoreSearchActivity.class);
+    ComponentName cn =
+        new ComponentName(getContext().getApplicationContext(), StoreSearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
     storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
 
@@ -284,37 +285,39 @@ public class AddStoreDialog extends BaseDialog {
   private GetStoreMetaRequest buildRequest(String storeName) {
     return GetStoreMetaRequest.of(
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-        baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
     new StoreUtilsProxy(accountManager, baseBodyBodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(Store.class), httpClient,
-        WebService.getDefaultConverter(),
-        tokenInvalidator).subscribeStore(getHomeMetaRequest, getStoreMeta1 -> {
-      ShowMessage.asSnack(getView(),
-          AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
+        tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()).subscribeStore(
+        getHomeMetaRequest, getStoreMeta1 -> {
+          ShowMessage.asSnack(getView(),
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 
-      dismissLoadingDialog();
-      dismiss();
-    }, e -> {
-      dismissLoadingDialog();
-      if (e instanceof AptoideWsV7Exception) {
-        BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
-        BaseV7Response.Error error = baseResponse.getError();
-        switch (StoreUtils.getErrorType(error.getCode())) {
-          case PRIVATE_STORE_ERROR:
-            DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
-                .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
-            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
-            break;
-          default:
-            ShowMessage.asSnack(this, error.getDescription());
-        }
-      } else {
-        ShowMessage.asSnack(this, R.string.error_occured);
-      }
-    }, storeName, accountManager);
+          dismissLoadingDialog();
+          dismiss();
+        }, e -> {
+          dismissLoadingDialog();
+          if (e instanceof AptoideWsV7Exception) {
+            BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
+            BaseV7Response.Error error = baseResponse.getError();
+            switch (StoreUtils.getErrorType(error.getCode())) {
+              case PRIVATE_STORE_ERROR:
+                DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
+                    .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
+                dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
+                break;
+              default:
+                ShowMessage.asSnack(this, error.getDescription());
+            }
+          } else {
+            ShowMessage.asSnack(this, R.string.error_occured);
+          }
+        }, storeName, accountManager);
   }
 
   void dismissLoadingDialog() {

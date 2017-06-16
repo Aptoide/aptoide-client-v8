@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.comments;
 
 import android.content.res.Resources;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -26,7 +27,9 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -145,7 +148,8 @@ import rx.Observable;
             return commentDialogFragment.lifecycle()
                 .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
                 .doOnNext(b -> {
-                  ManagerPreferences.setForceServerRefreshFlag(true);
+                  ManagerPreferences.setForceServerRefreshFlag(true,
+                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
                   commentAdder.collapseComments();
                   loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
                 })
@@ -212,7 +216,7 @@ import rx.Observable;
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator)
+        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .execute(listComments -> {
           if (listComments.isOk()) {
             List<Comment> comments = listComments.getDatalist()
@@ -233,7 +237,7 @@ import rx.Observable;
 
     if (accountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator)
+          tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .execute(response -> {
             if (response == null) {
               Logger.e(TAG, "empty response");

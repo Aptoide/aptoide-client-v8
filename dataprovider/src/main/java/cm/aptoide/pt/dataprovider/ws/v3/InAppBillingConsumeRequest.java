@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
@@ -19,13 +20,15 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
 
   private InAppBillingConsumeRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   public static InAppBillingConsumeRequest of(int apiVersion, String packageName,
       String purchaseToken, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
@@ -33,7 +36,7 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
     args.put("reqtype", "iabconsume");
     args.put("purchasetoken", purchaseToken);
     return new InAppBillingConsumeRequest(args, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,

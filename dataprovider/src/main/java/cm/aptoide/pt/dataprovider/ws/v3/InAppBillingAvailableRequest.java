@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
@@ -19,13 +20,15 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
 
   public InAppBillingAvailableRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     final BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("apiversion", String.valueOf(apiVersion));
@@ -33,7 +36,7 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
     args.put("package", packageName);
     args.put("purchasetype", type);
     return new InAppBillingAvailableRequest(args, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override

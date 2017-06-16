@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt;
 
+import android.content.SharedPreferences;
 import android.os.Environment;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -26,6 +27,11 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   private static final String MARKETNAME = "Aptoide";
   private static final String DEFAULT_STORE = "apps";
   private static final String FEEDBACK_EMAIL = "support@aptoide.com";
+  private final SharedPreferences sharedPreferences;
+
+  public VanillaConfiguration(SharedPreferences sharedPreferences) {
+    this.sharedPreferences = sharedPreferences;
+  }
 
   @Override public String getAppId() {
     return APP_ID;
@@ -101,7 +107,7 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   }
 
   @Override public boolean isAlwaysUpdate() {
-    return ManagerPreferences.isAllwaysUpdate();
+    return ManagerPreferences.isAllwaysUpdate(sharedPreferences);
   }
 
   @Override public String getDefaultTheme() {

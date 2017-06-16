@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.downloads;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
@@ -55,11 +57,11 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     installConverter =
         new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId());
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     downloadConverter =
         new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId());
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();

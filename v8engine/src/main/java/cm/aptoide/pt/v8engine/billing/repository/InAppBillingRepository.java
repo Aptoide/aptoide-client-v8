@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -31,20 +32,23 @@ public class InAppBillingRepository {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public InAppBillingRepository(PaymentConfirmationAccessor confirmationAccessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.confirmationAccessor = confirmationAccessor;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
     return InAppBillingAvailableRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -65,7 +69,7 @@ public class InAppBillingRepository {
   public Completable deleteInAppPurchase(int apiVersion, String packageName, String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3,
         httpClient, converterFactory,
-        tokenInvalidator)
+        tokenInvalidator, sharedPreferences)
         .observe()
         .first()
         .toSingle()

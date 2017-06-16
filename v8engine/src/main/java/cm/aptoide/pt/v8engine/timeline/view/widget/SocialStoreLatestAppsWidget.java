@@ -97,7 +97,8 @@ public class SocialStoreLatestAppsWidget
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
             WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser()
         .getName());
@@ -218,11 +219,12 @@ public class SocialStoreLatestAppsWidget
 
     StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(displayable.getSharedStore());
 
-    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
+    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable(
+        getContext().getApplicationContext()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followStore.setElevation(0);
     }
-    followStore.setTextColor(storeThemeEnum.getStoreHeaderInt());
+    followStore.setTextColor(storeThemeEnum.getStoreHeaderInt(getContext().getApplicationContext()));
 
     final String storeName = displayable.getSharedStore()
         .getName();

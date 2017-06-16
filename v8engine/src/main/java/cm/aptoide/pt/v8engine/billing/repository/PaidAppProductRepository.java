@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -37,6 +38,7 @@ public class PaidAppProductRepository extends ProductRepository {
   private final Converter.Factory converterFactory;
   private final ProductFactory productFactory;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public PaidAppProductRepository(PurchaseFactory purchaseFactory, PaymentFactory paymentFactory,
       AuthorizationRepository authorizationRepository,
@@ -44,7 +46,7 @@ public class PaidAppProductRepository extends ProductRepository {
       AuthorizationFactory authorizationFactory, NetworkOperatorManager operatorManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, ProductFactory productFactory,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(paymentFactory);
     this.purchaseFactory = purchaseFactory;
     this.operatorManager = operatorManager;
@@ -53,6 +55,7 @@ public class PaidAppProductRepository extends ProductRepository {
     this.converterFactory = converterFactory;
     this.productFactory = productFactory;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Single<Product> getProduct(long appId, boolean sponsored, String storeName) {
@@ -84,7 +87,7 @@ public class PaidAppProductRepository extends ProductRepository {
   private Single<PaidApp> getServerPaidApp(boolean bypassCache, long appId, boolean sponsored,
       String storeName) {
     return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(bypassCache)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {

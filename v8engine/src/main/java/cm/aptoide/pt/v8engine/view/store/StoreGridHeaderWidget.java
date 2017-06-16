@@ -30,7 +30,7 @@ import com.jakewharton.rxbinding.view.RxView;
     final GetStoreWidgets.WSWidget wsWidget = displayable.getWsWidget();
     final boolean moreIsVisible = wsWidget.hasActions();
 
-    title.setText(Translator.translate(wsWidget.getTitle()));
+    title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext()));
 
     more.setVisibility(moreIsVisible && displayable.isMoreVisible() ? View.VISIBLE : View.GONE);
 

@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.view.comments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -20,6 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -59,6 +62,7 @@ public class CommentDialogFragment
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -128,6 +132,7 @@ public class CommentDialogFragment
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    sharedPreferences = ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
@@ -270,30 +275,32 @@ public class CommentDialogFragment
       case REVIEW:
         // new comment on a review
         return PostCommentForReview.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator)
+            converterFactory, tokenInvalidator, sharedPreferences)
             .observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
-              converterFactory, tokenInvalidator)
+              converterFactory, tokenInvalidator, sharedPreferences)
               .observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator)
+            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences)
             .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText, baseBodyBodyInterceptor,
-              httpClient, converterFactory, tokenInvalidator)
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe();
         }
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator)
+            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences)
             .observe();
     }
     // default case

@@ -18,10 +18,12 @@ import rx.Observable;
 
 public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-      + "/api/7/";
+  public static String getHost() {
+    return BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7/";
+  }
 
   protected GetUserInfoRequest(Body body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
@@ -37,7 +39,7 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
     nodes.add("settings");
     final Body body = new Body(nodes);
     body.setAccessToken(accessToken);
-    return new GetUserInfoRequest(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor,
+    return new GetUserInfoRequest(body, getHost(), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
   }
 

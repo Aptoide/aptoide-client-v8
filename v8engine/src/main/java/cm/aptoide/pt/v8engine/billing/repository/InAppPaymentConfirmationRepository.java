@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -34,12 +35,14 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
   private final Converter.Factory converterFactory;
   private final Payer payer;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public InAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
       PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     super(operatorManager, confirmationAccessor, backgroundSync, confirmationFactory, payer);
     this.confirmationAccessor = confirmationAccessor;
     this.accountManager = accountManager;
@@ -48,12 +51,13 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
     this.converterFactory = converterFactory;
     this.payer = payer;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator)
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -71,7 +75,8 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
       String metadataId) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppProduct) product).getDeveloperPayload(), metadataId, bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator)
+        converterFactory, tokenInvalidator,
+        sharedPreferences)
         .observe(true)
         .toSingle();
   }

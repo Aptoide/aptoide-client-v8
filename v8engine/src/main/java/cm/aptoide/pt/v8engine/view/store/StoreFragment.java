@@ -136,7 +136,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
         tokenInvalidator, V8Engine.getConfiguration()
-            .getAppId());
+        .getAppId(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override public void onDestroy() {
@@ -260,8 +261,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected PagerAdapter createPagerAdapter() {
-    return new StorePagerAdapter(getChildFragmentManager(), tabs, storeContext, storeId,
-        storeTheme);
+    return new StorePagerAdapter(getChildFragmentManager(), tabs, storeContext, storeId, storeTheme,
+        getContext().getApplicationContext());
   }
 
   @Override public int getContentViewId() {
@@ -299,7 +300,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
       case GetHome:
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
-            storeContext, bodyInterceptor, httpClient, converterFactory, tokenInvalidator)
+            storeContext, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
             .observe(refresh)
             .map(getHome -> {
               Store store = getHome.getNodes()
@@ -321,7 +323,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
       default:
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
-            bodyInterceptor, httpClient, converterFactory, tokenInvalidator)
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
             .observe(refresh)
             .map(getStore -> {
               setupVariables(getStore.getNodes()

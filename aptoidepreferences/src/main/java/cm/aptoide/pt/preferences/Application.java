@@ -8,17 +8,16 @@ package cm.aptoide.pt.preferences;
 import android.content.Context;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.utils.AptoideUtils;
-import lombok.Getter;
 
 /**
  * Created by neuro on 22-04-2016.
  */
 public abstract class Application extends android.app.Application {
 
-  @Getter private static AptoidePreferencesConfiguration configuration;
+  private static AptoidePreferencesConfiguration configuration;
 
-  @Deprecated @Partners public static Context getContext() {
-    return AptoideUtils.getContext();
+  public static AptoidePreferencesConfiguration getConfiguration() {
+    return Application.configuration;
   }
 
   //attachBaseContext is called before onCreate method

@@ -7,10 +7,12 @@ package cm.aptoide.pt.v8engine.util.referrer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -26,6 +28,7 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -51,7 +54,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
-      final Converter.Factory converterFactory, final QManager qManager, Context context) {
+      final Converter.Factory converterFactory, final QManager qManager, Context context,
+      final SharedPreferences sharedPreferences) {
     String packageName = minimalAd.getPackageName();
     long networkId = minimalAd.getNetworkId();
     String clickUrl = minimalAd.getClickUrl();
@@ -156,7 +160,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
+                  sharedPreferences)),
               qManager);
         }
 
@@ -164,7 +169,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             boolean success, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
+                  sharedPreferences)),
               qManager);
         }
 
@@ -178,7 +184,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
                 minimalAd.getClickUrl(), success, httpClient, converterFactory,
-                qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
+                    sharedPreferences)))
                 .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
@@ -195,7 +202,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .filter(minimalAd1 -> minimalAd != null)
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
-                              adsRepository, httpClient, converterFactory, qManager, context),
+                              adsRepository, httpClient, converterFactory, qManager, context,
+                              sharedPreferences),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"

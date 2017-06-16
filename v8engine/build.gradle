@@ -139,7 +139,6 @@ dependencies {
 
   // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
   androidTestCompile "junit:junit:${JUNIT_VERSION}"

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.updates;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -37,11 +38,13 @@ public class UpdateRepository {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
       AptoideAccountManager accountManager, IdsRepository idsRepository,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
     this.accountManager = accountManager;
@@ -50,6 +53,7 @@ public class UpdateRepository {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public @NonNull Completable sync(boolean bypassCache) {
@@ -73,7 +77,7 @@ public class UpdateRepository {
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(bypassCache)
         .map(result -> {
           if (result != null && result.isOk()) {

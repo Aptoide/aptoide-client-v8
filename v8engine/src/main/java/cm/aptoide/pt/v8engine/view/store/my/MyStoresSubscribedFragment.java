@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.store.my;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
@@ -61,7 +63,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
     GetMyStoreListRequest request =
         GetMyStoreListRequest.of(url, true, bodyInterceptor, httpClient, converterFactory,
-            tokenInvalidator);
+            tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     return request;
   }
@@ -103,7 +105,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
                   new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
                       AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class),
-                      httpClient, WebService.getDefaultConverter(), tokenInvalidator),
+                      httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
                   storeCredentialsProvider));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));

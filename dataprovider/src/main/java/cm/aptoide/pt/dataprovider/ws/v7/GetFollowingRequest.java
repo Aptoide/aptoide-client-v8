@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -16,18 +17,20 @@ public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Bo
 
   protected GetFollowingRequest(GetFollowersRequest.Body body,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static GetFollowingRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
       @Nullable Long userId, @Nullable Long storeId, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     GetFollowersRequest.Body body = new GetFollowersRequest.Body();
     body.setUserId(userId);
     body.setStoreId(storeId);
     return new GetFollowingRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListApps;
@@ -29,23 +30,26 @@ import rx.Observable;
 
   private ListAppsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.url = url;
   }
 
   public static ListAppsRequest ofAction(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
-      return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials), bodyInterceptor,
-          httpClient, converterFactory, tokenInvalidator);
+      return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials, sharedPreferences),
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
     } else {
       return new ListAppsRequest(listAppsV7Url.get(),
-          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST,
+              sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+          sharedPreferences);
     }
   }
 
@@ -64,32 +68,31 @@ import rx.Observable;
     @Getter @Setter private Integer groupId;
     @Getter private String notApkTags;
 
-    public Body(BaseRequestWithStore.StoreCredentials storeCredentials) {
+    public Body(BaseRequestWithStore.StoreCredentials storeCredentials,
+        SharedPreferences sharedPreferences) {
       super();
 
       this.storeUser = storeCredentials.getUsername();
       this.storePassSha1 = storeCredentials.getPasswordSha1();
-      setNotApkTags();
+      setNotApkTags(sharedPreferences);
     }
 
-    public Body(BaseRequestWithStore.StoreCredentials storeCredentials, int limit) {
+    public Body(BaseRequestWithStore.StoreCredentials storeCredentials, int limit,
+        SharedPreferences sharedPreferences) {
       super();
       this.storeUser = storeCredentials.getUsername();
       this.storePassSha1 = storeCredentials.getPasswordSha1();
       this.limit = limit;
-      setNotApkTags();
-    }
-
-    public Body(int groupId) {
-      this.groupId = groupId;
-      setNotApkTags();
+      setNotApkTags(sharedPreferences);
     }
 
     /**
      * Method to check not Apk Tags on this particular request
+     *
+     * @param sharedPreferences
      */
-    private void setNotApkTags() {
-      if (ManagerPreferences.getUpdatesFilterAlphaBetaKey()) {
+    private void setNotApkTags(SharedPreferences sharedPreferences) {
+      if (ManagerPreferences.getUpdatesFilterAlphaBetaKey(sharedPreferences)) {
         this.notApkTags = "alpha,beta";
       }
     }

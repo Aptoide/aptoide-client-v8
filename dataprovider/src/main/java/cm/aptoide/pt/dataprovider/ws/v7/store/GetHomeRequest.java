@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -25,10 +26,10 @@ public class GetHomeRequest extends V7<GetHome, GetHomeBody> {
   public static GetHomeRequest of(@Nullable BaseRequestWithStore.StoreCredentials storeCredentials,
       @Nullable Long userId, StoreContext storeContext, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final GetHomeBody body = new GetHomeBody(storeCredentials, WidgetsArgs.createDefault(), userId);
     body.setContext(storeContext);
-    return new GetHomeRequest(body, BASE_HOST, bodyInterceptor, httpClient, converterFactory,
+    return new GetHomeRequest(body, getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator);
   }
 

@@ -60,11 +60,11 @@ import rx.functions.Action1;
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
               StoreThemeEnum.get(store)
-                  .getStoreHeaderInt());
+                  .getStoreHeaderInt(getContext().getApplicationContext()));
     } else {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar, StoreThemeEnum.get(store)
-              .getStoreHeaderInt());
+              .getStoreHeaderInt(getContext().getApplicationContext()));
     }
   }
 }

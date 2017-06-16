@@ -26,6 +26,7 @@ import cm.aptoide.pt.table.ScheduledTable;
 import cm.aptoide.pt.table.Table;
 import cm.aptoide.pt.table.TableBag;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import java.util.List;
 import java.util.Set;
@@ -135,7 +136,8 @@ import static org.junit.Assert.fail;
     }
 
     // trigger migration
-    ManagerPreferences.setNeedsSqliteDbMigration(true);
+    ManagerPreferences.setNeedsSqliteDbMigration(true,
+        ((V8Engine) InstrumentationRegistry.getTargetContext()).getDefaultSharedPreferences());
     int newVersion = dbVersion.incrementAndGet();
     dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 
@@ -234,7 +236,8 @@ import static org.junit.Assert.fail;
     }
 
     // trigger migration
-    ManagerPreferences.setNeedsSqliteDbMigration(true);
+    ManagerPreferences.setNeedsSqliteDbMigration(true,
+        ((V8Engine) InstrumentationRegistry.getTargetContext()).getDefaultSharedPreferences());
     int newVersion = dbVersion.incrementAndGet();
     dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
@@ -18,8 +19,8 @@ public class GetMySubscribedStoresRequest
 
   public GetMySubscribedStoresRequest(String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
-    super(new Body(accessToken), BASE_HOST, httpClient, converterFactory, bodyInterceptor,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(new Body(accessToken), getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
   }
 

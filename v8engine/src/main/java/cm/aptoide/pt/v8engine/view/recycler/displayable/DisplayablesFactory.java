@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -27,7 +28,6 @@ import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
@@ -70,7 +70,9 @@ public class DisplayablesFactory {
       switch (widget.getType()) {
 
         case APPS_GROUP:
-          return Observable.just(getApps(widget, storeTheme, storeContext));
+          return Observable.just(getApps(widget, storeTheme, storeContext,
+              context.getApplicationContext()
+                  .getResources()));
 
         case MY_STORES_SUBSCRIBED:
           return getMyStores(widget, storeRepository, storeTheme, storeContext);
@@ -128,7 +130,7 @@ public class DisplayablesFactory {
   }
 
   private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      StoreContext storeContext) {
+      StoreContext storeContext, Resources resources) {
     ListApps listApps = (ListApps) wsWidget.getViewObject();
     if (listApps == null) {
       return new EmptyDisplayable();
@@ -147,13 +149,9 @@ public class DisplayablesFactory {
         .getLayout())) {
       if (apps.size() > 0) {
 
-        boolean useBigBrick = V8Engine.getContext()
-            .getResources()
-            .getBoolean(R.bool.use_big_app_brick);
+        boolean useBigBrick = resources.getBoolean(R.bool.use_big_app_brick);
 
-        int nrAppBricks = V8Engine.getContext()
-            .getResources()
-            .getInteger(R.integer.nr_small_app_bricks);
+        int nrAppBricks = resources.getInteger(R.integer.nr_small_app_bricks);
 
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 

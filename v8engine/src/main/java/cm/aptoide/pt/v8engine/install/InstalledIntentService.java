@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.install;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ import rx.subscriptions.CompositeSubscription;
 public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
+  private SharedPreferences sharedPreferences;
 
   private AdsRepository adsRepository;
   private RollbackRepository repository;
@@ -59,15 +61,18 @@ public class InstalledIntentService extends IntentService {
     super.onCreate();
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
+    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
     qManager = ((V8Engine) getApplicationContext()).getQManager();
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    final SharedPreferences sharedPreferences =
+        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
     adsRepository =
         new AdsRepository(((V8Engine) getApplicationContext()).getIdsRepository(), accountManager,
-            httpClient, converterFactory, qManager);
+            httpClient, converterFactory, qManager, sharedPreferences, getApplicationContext());
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
-    updatesRepository = RepositoryFactory.getUpdateRepository(this);
+    updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
@@ -264,7 +269,8 @@ public class InstalledIntentService extends IntentService {
     return adsRepository.getAdsFromSecondInstall(packageName)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
-            adsRepository, httpClient, converterFactory, qManager, getApplicationContext()))
+            adsRepository, httpClient, converterFactory, qManager, getApplicationContext(),
+            sharedPreferences))
         .toCompletable();
   }
 }

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.ActivityView;
@@ -25,6 +27,7 @@ public abstract class FragmentView extends LeakFragment implements View {
   private Presenter presenter;
   private FragmentNavigator fragmentNavigator;
   private ActivityNavigator activityNavigator;
+  private SharedPreferences sharedPreferences;
 
   public FragmentNavigator getFragmentNavigator() {
     return fragmentNavigator;
@@ -36,13 +39,15 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
     return new FragmentNavigator(getChildFragmentManager(), containerId, android.R.anim.fade_in,
-        android.R.anim.fade_out);
+        android.R.anim.fade_out, sharedPreferences);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     fragmentNavigator = ((ActivityView) getActivity()).getFragmentNavigator();
     activityNavigator = ((ActivityView) getActivity()).getActivityNavigator();
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
