@@ -87,8 +87,7 @@ public class PrivateStoreDialog extends BaseDialog {
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            WebService.getDefaultConverter(), tokenInvalidator);
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());

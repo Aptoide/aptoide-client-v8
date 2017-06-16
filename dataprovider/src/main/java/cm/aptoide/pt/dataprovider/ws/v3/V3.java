@@ -8,9 +8,9 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
@@ -55,18 +55,20 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
 
   protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator) {
     super(Interfaces.class, httpClient, converterFactory, BASE_HOST);
     this.map = baseBody;
     this.bodyInterceptor = bodyInterceptor;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   protected V3(OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    this(new BaseBody(), okHttpClient, converterFactory, bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator) {
+    this(new BaseBody(), okHttpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {
@@ -116,7 +118,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
                     if (!accessTokenRetry) {
                       accessTokenRetry = true;
-                      return DataProvider.invalidateAccessToken()
+                      return tokenInvalidator.invalidateAccessToken()
                           .andThen(V3.this.observe(bypassCache));
                     }
                   } else {

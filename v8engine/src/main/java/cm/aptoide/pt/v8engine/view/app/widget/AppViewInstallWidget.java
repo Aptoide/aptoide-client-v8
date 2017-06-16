@@ -25,6 +25,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
@@ -145,19 +146,21 @@ import rx.android.schedulers.AndroidSchedulers;
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            tokenInvalidator);
     installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        tokenInvalidator);
     analytics = Analytics.getInstance();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(),
-                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+                tokenInvalidator),
+            tokenInvalidator);
 
     minimalAd = this.displayable.getMinimalAd();
     GetApp getApp = this.displayable.getPojo();

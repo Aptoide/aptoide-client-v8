@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
@@ -64,6 +65,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private Subscription updateReloadSubscription;
 
   private int oldUpdateListHash = 0;
+  private TokenInvalidator tokenInvalidator;
+  private OkHttpClient httpClient;
+  private BodyInterceptor<BaseBody> bodyInterceptorV7;
+  private Converter.Factory converterFactory;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -142,19 +147,19 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final BodyInterceptor<BaseBody> bodyInterceptor =
+    bodyInterceptorV7 =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
+            tokenInvalidator);
+    installConverter = new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator);
     installedRepository = RepositoryFactory.getInstalledRepository();
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
@@ -220,10 +225,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     for (Installed installedApp : installedApps) {
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,
           new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
-              ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-              ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-              WebService.getDefaultConverter(),
-              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()), installedRepository));
+              bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator),
+          installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
     Logger.v(TAG, "listed installed apps");

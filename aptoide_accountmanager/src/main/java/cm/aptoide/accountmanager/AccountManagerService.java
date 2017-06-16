@@ -1,7 +1,6 @@
 package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
@@ -31,25 +30,26 @@ public class AccountManagerService {
   private final OkHttpClient longTimeoutHttpClient;
   private final Converter.Factory converterFactory;
   private final ObjectMapper serializer;
-  private final TokenInvalidator tokenInvalidator;
+  private final AccountManagerTokenInvalidatorFactory tokenInvalidatorFactory;
 
   public AccountManagerService(AccountManagerInterceptorFactory interceptorFactory,
       AccountFactory accountFactory, OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient,
       Converter.Factory converterFactory, ObjectMapper serializer,
-      TokenInvalidator tokenInvalidator) {
+      AccountManagerTokenInvalidatorFactory tokenInvalidatorFactory) {
     this.interceptorFactory = interceptorFactory;
     this.accountFactory = accountFactory;
     this.httpClient = httpClient;
     this.longTimeoutHttpClient = longTimeoutHttpClient;
     this.converterFactory = converterFactory;
     this.serializer = serializer;
-    this.tokenInvalidator = tokenInvalidator;
+    this.tokenInvalidatorFactory = tokenInvalidatorFactory;
   }
 
   public Completable createAccount(String email, String password,
       AptoideAccountManager accountManager) {
     return CreateUserRequest.of(email.toLowerCase(), password,
-        interceptorFactory.createV3(accountManager), httpClient)
+        interceptorFactory.createV3(accountManager), httpClient,
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager))
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -71,7 +71,8 @@ public class AccountManagerService {
   public Single<OAuth> login(String type, String email, String password, String name,
       AptoideAccountManager accountManager) {
     return OAuth2AuthenticationRequest.of(email, password, type, name,
-        interceptorFactory.createV3(accountManager), httpClient, converterFactory)
+        interceptorFactory.createV3(accountManager), httpClient, converterFactory,
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager))
         .observe()
         .toSingle()
         .flatMap(oAuth -> {
@@ -95,7 +96,7 @@ public class AccountManagerService {
       AptoideAccountManager accountManager) {
     return SetUserMultipartRequest.of(nickname, avatarPath,
         interceptorFactory.createMultipartBodyInterceptor(accountManager), longTimeoutHttpClient,
-        converterFactory, serializer, tokenInvalidator)
+        converterFactory, serializer, tokenInvalidatorFactory.getTokenInvalidator(accountManager))
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -109,7 +110,7 @@ public class AccountManagerService {
 
   public Completable updateAccount(String accessLevel, AptoideAccountManager accountManager) {
     return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager), httpClient,
-        converterFactory, tokenInvalidator)
+        converterFactory, tokenInvalidatorFactory.getTokenInvalidator(accountManager))
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -123,7 +124,7 @@ public class AccountManagerService {
 
   public Completable updateAccountUsername(String username, AptoideAccountManager accountManager) {
     return SetUserRequest.ofWithName(username, interceptorFactory.createV7(accountManager),
-        httpClient, converterFactory, tokenInvalidator)
+        httpClient, converterFactory, tokenInvalidatorFactory.getTokenInvalidator(accountManager))
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -151,7 +152,8 @@ public class AccountManagerService {
       String storePassword, AptoideAccountManager accountManager,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
     return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, storePassword,
-        interceptorFactory.createV7(accountManager), httpClient, converterFactory, tokenInvalidator)
+        interceptorFactory.createV7(accountManager), httpClient, converterFactory,
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager))
         .observe()
         .toSingle()
         .toCompletable();
@@ -160,7 +162,8 @@ public class AccountManagerService {
   private Single<List<Store>> getSubscribedStores(String accessToken,
       AptoideAccountManager accountManager) {
     return new GetMySubscribedStoresRequest(accessToken,
-        interceptorFactory.createV7(accountManager), httpClient, converterFactory, tokenInvalidator).observe()
+        interceptorFactory.createV7(accountManager), httpClient, converterFactory,
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager)).observe()
         .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist()
             .getList())
         .flatMapIterable(list -> list)
@@ -186,7 +189,8 @@ public class AccountManagerService {
   private Single<GetUserInfo> getServerAccount(AptoideAccountManager accountManager,
       String accessToken) {
     return GetUserInfoRequest.of(accessToken, httpClient, converterFactory,
-        interceptorFactory.createUserInfoV7(accountManager), tokenInvalidator)
+        interceptorFactory.createUserInfoV7(accountManager),
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager))
         .observe(true)
         .toSingle()
         .flatMap(response -> {
@@ -222,7 +226,7 @@ public class AccountManagerService {
       AptoideAccountManager accountManager) {
     return SetUserSettings.of(adultContentEnabled, httpClient, converterFactory,
         interceptorFactory.createAdultContentV7(accountManager, adultContentEnabled),
-        tokenInvalidator)
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager))
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {

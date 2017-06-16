@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.search;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
@@ -73,6 +74,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       };
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores,
       boolean hasMultipleFragments) {
@@ -99,6 +101,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
@@ -146,12 +149,11 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     ListSearchAppsRequest of;
     if (storeName != null) {
       of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-          bodyInterceptor, httpClient, converterFactory,
-          ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
     } else {
       of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(),
           StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory,
-          ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+          tokenInvalidator);
     }
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

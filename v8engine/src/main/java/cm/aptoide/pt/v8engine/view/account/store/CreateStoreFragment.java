@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -80,6 +81,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   private OkHttpClient longTimeoutHttpClient;
   private Converter.Factory converterFactory;
   private BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor;
+  private TokenInvalidator tokenInvalidator;
 
   public CreateStoreFragment() {
     super(false, true);
@@ -96,6 +98,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final V8Engine engine = (V8Engine) getActivity().getApplicationContext();
+    tokenInvalidator = engine.getTokenInvalidator();
     accountManager = engine.getAccountManager();
     oAuthBodyInterceptor = engine.getOAuthBodyInterceptor();
     bodyInterceptorV7 = engine.getBaseBodyInterceptorV7();
@@ -341,7 +344,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .flatMap(
             __ -> SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory,
-                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+                tokenInvalidator)
                 .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
@@ -375,8 +378,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
             account -> SetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
                 multipartBodyInterceptor, longTimeoutHttpClient, converterFactory,
-                requestBodyFactory, serializer,
-                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+                requestBodyFactory, serializer, tokenInvalidator)
                 .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
@@ -409,7 +411,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(),
-            oAuthBodyInterceptor, httpClient, converterFactory)
+            oAuthBodyInterceptor, httpClient, converterFactory, tokenInvalidator)
             .observe()
             .observeOn(AndroidSchedulers.mainThread())
             .map(answer -> {
@@ -524,8 +526,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
           .flatMap(account -> SetStoreRequest.of(storeModel.getStoreName(),
               storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
               storeModel.getStoreAvatarPath(), multipartBodyInterceptor, longTimeoutHttpClient,
-              converterFactory, requestBodyFactory, serializer,
-              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+              converterFactory, requestBodyFactory, serializer, tokenInvalidator)
               .observe()
               .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
@@ -587,8 +588,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
      * not multipart
      */
     SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
-        bodyInterceptorV7, httpClient, converterFactory,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator)
         .observe()
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .andThen(sendCreateAnalytics())

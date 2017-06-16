@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -57,6 +58,7 @@ public class CommentDialogFragment
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -126,6 +128,7 @@ public class CommentDialogFragment
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -267,35 +270,30 @@ public class CommentDialogFragment
       case REVIEW:
         // new comment on a review
         return PostCommentForReview.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
-            converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+            converterFactory, tokenInvalidator)
             .observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
-              converterFactory,
-              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+              converterFactory, tokenInvalidator)
               .observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator)
             .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText, baseBodyBodyInterceptor,
-              httpClient, converterFactory,
-              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+              httpClient, converterFactory, tokenInvalidator)
               .observe();
         }
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator)
             .observe();
     }
     // default case

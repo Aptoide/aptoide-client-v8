@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import okhttp3.OkHttpClient;
@@ -17,29 +18,30 @@ public class CreatePaymentAuthorizationRequest extends V3<BaseV3Response> {
 
   private CreatePaymentAuthorizationRequest(BaseBody baseBody,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, boolean hasAuthorizationCode) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, boolean hasAuthorizationCode,
+      TokenInvalidator tokenInvalidator) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.hasAuthorizationCode = hasAuthorizationCode;
   }
 
   public static CreatePaymentAuthorizationRequest of(int paymentId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     BaseBody args = new BaseBody();
     args.put("payType", String.valueOf(paymentId));
     return new CreatePaymentAuthorizationRequest(args, bodyInterceptor, httpClient,
-        converterFactory, false);
+        converterFactory, false, tokenInvalidator);
   }
 
   public static CreatePaymentAuthorizationRequest of(int paymentId, String authorizationCode,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     BaseBody args = new BaseBody();
     args.put("payType", String.valueOf(paymentId));
     args.put("authToken", authorizationCode);
     args.put("reqType", "rest");
     return new CreatePaymentAuthorizationRequest(args, bodyInterceptor, httpClient,
-        converterFactory, true);
+        converterFactory, true, tokenInvalidator);
   }
 
   @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,

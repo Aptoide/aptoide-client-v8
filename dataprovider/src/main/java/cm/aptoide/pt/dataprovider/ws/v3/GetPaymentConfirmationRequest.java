@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import okhttp3.OkHttpClient;
@@ -19,18 +20,20 @@ import rx.Observable;
 public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationResponse> {
 
   public GetPaymentConfirmationRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static GetPaymentConfirmationRequest of(int productId,
       NetworkOperatorManager operatorManager, int apiVersion,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     final BaseBody args = getBaseBody(productId, operatorManager);
     args.put("reqtype", "iabpurchasestatus");
     args.put("apiversion", String.valueOf(apiVersion));
-    return new GetPaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory);
+    return new GetPaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   private static BaseBody getBaseBody(int productId, NetworkOperatorManager operatorManager) {
@@ -45,10 +48,12 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
 
   public static GetPaymentConfirmationRequest of(int productId,
       NetworkOperatorManager operatorManager, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
     final BaseBody args = getBaseBody(productId, operatorManager);
     args.put("reqtype", "apkpurchasestatus");
-    return new GetPaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory);
+    return new GetPaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

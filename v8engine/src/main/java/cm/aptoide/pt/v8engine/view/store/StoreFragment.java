@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
@@ -81,6 +82,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TimelineAnalytics timelineAnalytics;
+  private TokenInvalidator tokenInvalidator;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -125,6 +127,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
@@ -132,7 +135,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        tokenInvalidator);
   }
 
   @Override public void onDestroy() {
@@ -295,8 +298,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       case GetHome:
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
-            storeContext, bodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+            storeContext, bodyInterceptor, httpClient, converterFactory, tokenInvalidator)
             .observe(refresh)
             .map(getHome -> {
               Store store = getHome.getNodes()
@@ -318,8 +320,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       default:
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
-            bodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator)
             .observe(refresh)
             .map(getStore -> {
               setupVariables(getStore.getNodes()

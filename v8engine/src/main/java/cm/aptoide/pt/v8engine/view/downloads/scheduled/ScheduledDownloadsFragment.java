@@ -15,6 +15,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
@@ -85,10 +86,12 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
-    downloadConverter = new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    downloadConverter =
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+    installConverter =
+        new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
     analytics = Analytics.getInstance();
   }
 

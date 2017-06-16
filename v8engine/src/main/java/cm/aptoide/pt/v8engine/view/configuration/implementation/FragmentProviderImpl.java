@@ -23,7 +23,7 @@ import cm.aptoide.pt.v8engine.view.app.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.view.app.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.v8engine.view.comments.CommentListFragment;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
-import cm.aptoide.pt.v8engine.view.downloads.DownloadsFragmentMvp;
+import cm.aptoide.pt.v8engine.view.downloads.DownloadsFragment;
 import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.v8engine.view.fragment.DescriptionFragment;
@@ -214,8 +214,7 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newDownloadsFragment() {
-    //return DownloadsFragment.newInstance();
-    return DownloadsFragmentMvp.newInstance();
+    return DownloadsFragment.newInstance();
   }
 
   @Override

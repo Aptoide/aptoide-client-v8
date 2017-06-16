@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
@@ -29,19 +30,21 @@ public class InAppBillingRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
 
   public InAppBillingRepository(PaymentConfirmationAccessor confirmationAccessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     this.confirmationAccessor = confirmationAccessor;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
     return InAppBillingAvailableRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
-        httpClient, converterFactory)
+        httpClient, converterFactory, tokenInvalidator)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -61,7 +64,8 @@ public class InAppBillingRepository {
 
   public Completable deleteInAppPurchase(int apiVersion, String packageName, String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3,
-        httpClient, converterFactory)
+        httpClient, converterFactory,
+        tokenInvalidator)
         .observe()
         .first()
         .toSingle()

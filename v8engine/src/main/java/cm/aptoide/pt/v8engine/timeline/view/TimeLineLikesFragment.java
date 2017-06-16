@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.timeline.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
@@ -29,6 +30,7 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public static TimeLineLikesFragment newInstance(String storeTheme, String cardUid,
       long numberOfLikes) {
@@ -49,6 +51,7 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -58,7 +61,7 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
 
   @Override protected V7 buildRequest() {
     return GetUserLikesRequest.of(cardUid, baseBodyInterceptor, httpClient, converterFactory,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        tokenInvalidator);
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {

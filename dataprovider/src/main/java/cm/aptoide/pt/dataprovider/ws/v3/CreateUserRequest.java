@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.networkclient.WebService;
@@ -28,28 +29,30 @@ public class CreateUserRequest extends V3<BaseV3Response> {
   private final HashMapNotNull<String, RequestBody> multipartRequestBody;
 
   public CreateUserRequest(MultipartBody.Part file, BaseBody baseBody, OkHttpClient httpClient,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(baseBody, httpClient, WebService.getDefaultConverter(), bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator) {
+    super(baseBody, httpClient, WebService.getDefaultConverter(), bodyInterceptor, tokenInvalidator);
     multipartBodyFile = file;
     multipartRequestBody = null;
   }
 
   public CreateUserRequest(MultipartBody.Part file, HashMapNotNull<String, RequestBody> body,
-      OkHttpClient okHttpClient, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(okHttpClient, WebService.getDefaultConverter(), bodyInterceptor);
+      OkHttpClient okHttpClient, BodyInterceptor<BaseBody> bodyInterceptor,
+      TokenInvalidator tokenInvalidator) {
+    super(okHttpClient, WebService.getDefaultConverter(), bodyInterceptor, tokenInvalidator);
     multipartBodyFile = file;
     multipartRequestBody = body;
   }
 
   public static CreateUserRequest of(String email, String password,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      TokenInvalidator tokenInvalidator) {
     final BaseBody body = new BaseBody();
     final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
     addBaseParameters(email, body, passhash);
 
     body.put("hmac", AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash, "bazaar_hmac"));
 
-    return new CreateUserRequest(null, body, httpClient, bodyInterceptor);
+    return new CreateUserRequest(null, body, httpClient, bodyInterceptor, tokenInvalidator);
   }
 
   private static void addBaseParameters(String email, BaseBody parameters, String passhash) {
@@ -66,7 +69,8 @@ public class CreateUserRequest extends V3<BaseV3Response> {
 
   public static CreateUserRequest of(String email, String name, String password,
       String userAvatarPath, String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient) {
+      OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient,
+      TokenInvalidator tokenInvalidator) {
 
     final BaseBody body = new BaseBody();
     final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
@@ -91,7 +95,7 @@ public class CreateUserRequest extends V3<BaseV3Response> {
       MultipartBody.Part multipartBodyFile =
           MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
       return new CreateUserRequest(multipartBodyFile, multipartBody, longTimeoutHttpClient,
-          bodyInterceptor);
+          bodyInterceptor, tokenInvalidator);
     } else if (userAvatarPath.isEmpty()) {
       body.put("update", "true");
       body.put("name", name);
@@ -102,7 +106,8 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     body.put("hmac",
         AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + "true", "bazaar_hmac"));
 
-    return new CreateUserRequest(null, body, httpClient, bodyInterceptor);
+    return new CreateUserRequest(null, body, httpClient, bodyInterceptor,
+        tokenInvalidator);
   }
 
   private static RequestBody createBodyPartFromString(String string) {

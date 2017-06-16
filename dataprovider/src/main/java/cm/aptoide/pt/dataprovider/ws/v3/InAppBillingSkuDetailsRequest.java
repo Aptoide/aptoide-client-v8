@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
 import java.util.List;
@@ -19,14 +20,15 @@ import rx.Observable;
 public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResponse> {
 
   public InAppBillingSkuDetailsRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
       List<String> skuList, NetworkOperatorManager operatorManager, String type,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
@@ -46,7 +48,8 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
 
     addNetworkInformation(operatorManager, args);
 
-    return new InAppBillingSkuDetailsRequest(args, bodyInterceptor, httpClient, converterFactory);
+    return new InAppBillingSkuDetailsRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

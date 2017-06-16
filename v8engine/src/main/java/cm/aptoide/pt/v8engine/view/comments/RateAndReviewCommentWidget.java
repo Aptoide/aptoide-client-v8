@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
@@ -73,6 +74,7 @@ import rx.Observable;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
@@ -102,6 +104,7 @@ import rx.Observable;
     final String appName = displayable.getPojo()
         .getAppName();
 
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 
@@ -209,7 +212,7 @@ import rx.Observable;
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory,
-        ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+        tokenInvalidator)
         .execute(listComments -> {
           if (listComments.isOk()) {
             List<Comment> comments = listComments.getDatalist()
@@ -230,7 +233,7 @@ import rx.Observable;
 
     if (accountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor, httpClient, converterFactory,
-          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+          tokenInvalidator)
           .execute(response -> {
             if (response == null) {
               Logger.e(TAG, "empty response");

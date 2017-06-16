@@ -44,6 +44,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -270,14 +271,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        httpClient, converterFactory, tokenInvalidator);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            timelineAnalytics, tokenInvalidator);
     appRepository = RepositoryFactory.getAppRepository(getContext());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -328,8 +329,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onDestroyView();
     header = null;
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(
+          V8Engine.getConfiguration()
+              .getDefaultTheme()));
       ThemeUtils.setAptoideTheme(getActivity());
     }
   }
@@ -379,9 +381,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setupAppView(getApp);
           }, throwable -> {
             finishLoading(throwable);
-            CrashReport.getInstance().log(key_appId, String.valueOf(appId));
-            CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
-            CrashReport.getInstance().log(key_uname, uname);
+            CrashReport.getInstance()
+                .log(key_appId, String.valueOf(appId));
+            CrashReport.getInstance()
+                .log(key_packageName, String.valueOf(packageName));
+            CrashReport.getInstance()
+                .log(key_uname, uname);
           });
     } else {
       Logger.d(TAG, "loading app info using app package name");
@@ -417,11 +422,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay().getPrice(),
-        app.getPay().getCurrency());
-    startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), app.getId(), app.getStore().getName(), sponsored),
-        PAY_APP_REQUEST_CODE);
+    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
+        .getPrice(), app.getPay()
+        .getCurrency());
+    startActivityForResult(PaymentActivity.getIntent(getActivity(), app.getId(), app.getStore()
+        .getName(), sponsored), PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -463,9 +468,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     if (i == R.id.menu_share) {
       shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-          (app != null && app.getStats() != null && app.getStats().getRating() != null
-              ? app.getStats().getRating().getAvg() : 0f),
-          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+          (app != null
+              && app.getStats() != null
+              && app.getStats()
+              .getRating() != null ? app.getStats()
+              .getRating()
+              .getAvg() : 0f), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
       appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {
@@ -483,11 +491,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       return true;
     } else if (i == R.id.menu_remote_install) {
       appViewAnalytics.sendRemoteInstallEvent();
-      if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
+      if (AptoideUtils.SystemU.getConnectionType()
+          .equals("mobile")) {
         GenericDialogs.createGenericOkMessage(getContext(),
             getContext().getString(R.string.remote_install_menu_title),
-            getContext().getString(R.string.install_on_tv_mobile_error)).subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+            getContext().getString(R.string.install_on_tv_mobile_error))
+            .subscribe(__ -> {
+            }, err -> CrashReport.getInstance()
+                .log(err));
       } else {
         DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
         newFragment.show(getActivity().getSupportFragmentManager(),
@@ -499,14 +510,24 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
-    String packageName = getApp.getNodes().getMeta().getData().getPackageName();
-    String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
+    String packageName = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getPackageName();
+    String storeName = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getStore()
+        .getName();
 
     if (minimalAd == null) {
-      return adsRepository.getAdsFromAppView(packageName, storeName).doOnNext(ad -> {
-        minimalAd = ad;
-        handleAdsLogic(minimalAd);
-      }).map(ad -> getApp).onErrorReturn(throwable -> getApp);
+      return adsRepository.getAdsFromAppView(packageName, storeName)
+          .doOnNext(ad -> {
+            minimalAd = ad;
+            handleAdsLogic(minimalAd);
+          })
+          .map(ad -> getApp)
+          .onErrorReturn(throwable -> getApp);
     } else {
       handleAdsLogic(minimalAd);
       return Observable.just(getApp);
@@ -518,20 +539,35 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
-    List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
-    String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
+    List<String> keywords = getApp1.getNodes()
+        .getMeta()
+        .getData()
+        .getMedia()
+        .getKeywords();
+    String packageName = getApp1.getNodes()
+        .getMeta()
+        .getData()
+        .getPackageName();
 
-    return adsRepository.getAdsFromAppviewSuggested(packageName, keywords).map(minimalAds -> {
-      suggestedAds = minimalAds;
-      return getApp1;
-    });
+    return adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
+        .map(minimalAds -> {
+          suggestedAds = minimalAds;
+          return getApp1;
+        });
   }
 
   private void setupAppView(GetApp getApp) {
-    app = getApp.getNodes().getMeta().getData();
+    app = getApp.getNodes()
+        .getMeta()
+        .getData();
     updateLocalVars(app);
     if (storeTheme == null) {
-      storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+      storeTheme = getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getStore()
+          .getAppearance()
+          .getTheme();
     }
 
     // useful data for the syncAuthorization updates menu option
@@ -547,7 +583,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
                 (PermissionService) getContext())
                 .flatMap(success -> installManager.uninstall(getContext(), packageName,
-                    app.getFile().getVername()))
+                    app.getFile()
+                        .getVername()))
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
                 .subscribe(aVoid -> {
                 }, throwable -> throwable.printStackTrace()));
@@ -555,7 +592,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setUnInstallMenuOptionVisible(null);
           }
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
     header.setup(getApp);
@@ -565,9 +603,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     setupShare(getApp);
     if (openType == OpenType.OPEN_WITH_INSTALL_POPUP) {
       openType = null;
-      GenericDialogs.createGenericOkCancelMessage(getContext(),
-          Application.getConfiguration().getMarketName(),
-          getContext().getString(R.string.installapp_alrt, appName))
+      GenericDialogs.createGenericOkCancelMessage(getContext(), Application.getConfiguration()
+          .getMarketName(), getContext().getString(R.string.installapp_alrt, appName))
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(new SimpleSubscriber<GenericDialogs.EResponse>() {
             @Override public void onNext(GenericDialogs.EResponse eResponse) {
@@ -596,32 +633,38 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private void updateLocalVars(GetAppMeta.App app) {
     appId = app.getId();
     packageName = app.getPackageName();
-    storeName = app.getStore().getName();
-    storeTheme = app.getStore().getAppearance().getTheme();
+    storeName = app.getStore()
+        .getName();
+    storeTheme = app.getStore()
+        .getAppearance()
+        .getTheme();
     md5 = app.getMd5();
     appName = app.getName();
   }
 
   public Observable<AppAction> installAction() {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    return installedAccessor.getAsList(packageName).map(installedList -> {
-      if (installedList != null && installedList.size() > 0) {
-        Installed installed = installedList.get(0);
-        if (app.getFile().getVercode() == installed.getVersionCode()) {
-          //current installed version
-          return AppAction.OPEN;
-        } else if (app.getFile().getVercode() > installed.getVersionCode()) {
-          //update
-          return AppAction.UPDATE;
-        } else {
-          //downgrade
-          return AppAction.DOWNGRADE;
-        }
-      } else {
-        //app not installed
-        return AppAction.INSTALL;
-      }
-    });
+    return installedAccessor.getAsList(packageName)
+        .map(installedList -> {
+          if (installedList != null && installedList.size() > 0) {
+            Installed installed = installedList.get(0);
+            if (app.getFile()
+                .getVercode() == installed.getVersionCode()) {
+              //current installed version
+              return AppAction.OPEN;
+            } else if (app.getFile()
+                .getVercode() > installed.getVersionCode()) {
+              //update
+              return AppAction.UPDATE;
+            } else {
+              //downgrade
+              return AppAction.DOWNGRADE;
+            }
+          } else {
+            //app not installed
+            return AppAction.INSTALL;
+          }
+        });
   }
 
   @Partners protected void showHideOptionsMenu(MenuItem item, boolean visible) {
@@ -638,7 +681,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   protected LinkedList<Displayable> setupDisplayables(GetApp getApp) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+    GetAppMeta.App app = getApp.getNodes()
+        .getMeta()
+        .getData();
     GetAppMeta.Media media = app.getMedia();
 
     final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
@@ -673,7 +718,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     // ??
 
-    final long storeId = getApp.getNodes().getMeta().getData().getStore().getId();
+    final long storeId = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getStore()
+        .getId();
 
     // For stores subscription
     //DeprecatedDatabase.StoreQ.getAll(realm)
@@ -724,8 +773,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void setupShare(GetApp app) {
-    appName = app.getNodes().getMeta().getData().getName();
-    wUrl = app.getNodes().getMeta().getData().getUrls().getW();
+    appName = app.getNodes()
+        .getMeta()
+        .getData()
+        .getName();
+    wUrl = app.getNodes()
+        .getMeta()
+        .getData()
+        .getUrls()
+        .getW();
   }
 
   private boolean isMediaAvailable(GetAppMeta.Media media) {
@@ -837,24 +893,32 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     // setup methods
     public void setup(@NonNull GetApp getApp) {
 
-      GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+      GetAppMeta.App app = getApp.getNodes()
+          .getMeta()
+          .getData();
 
       String headerImageUrl = app.getGraphic();
-      List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
+      List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia()
+          .getScreenshots();
 
       final Context context = getContext();
       if (!TextUtils.isEmpty(headerImageUrl)) {
         ImageLoader.with(context)
             .load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
       } else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(
-          screenshots.get(0).getUrl())) {
+          screenshots.get(0)
+              .getUrl())) {
         ImageLoader.with(context)
-            .load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
-                featuredGraphic);
+            .load(screenshots.get(0)
+                .getUrl(), R.drawable.app_view_header_gradient, featuredGraphic);
       }
 
       if (app.getIcon() != null) {
-        ImageLoader.with(context).load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
+        ImageLoader.with(context)
+            .load(getApp.getNodes()
+                .getMeta()
+                .getData()
+                .getIcon(), appIcon);
       }
 
       collapsingToolbar.setTitle(app.getName());
@@ -895,14 +959,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
       fileSize.setText(AptoideUtils.StringU.formatBytes(app.getSize(), false));
 
-      downloadsCountInStore.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
-      downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getPdownloads()));
+      downloadsCountInStore.setText(AptoideUtils.StringU.withSuffix(app.getStats()
+          .getDownloads()));
+      downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats()
+          .getPdownloads()));
 
       @DrawableRes int badgeResId = 0;
       @StringRes int badgeMessageId = 0;
 
-      Malware.Rank rank = app.getFile().getMalware().getRank() == null ? Malware.Rank.UNKNOWN
-          : app.getFile().getMalware().getRank();
+      Malware.Rank rank = app.getFile()
+          .getMalware()
+          .getRank() == null ? Malware.Rank.UNKNOWN : app.getFile()
+          .getMalware()
+          .getRank();
       switch (rank) {
         case TRUSTED:
           badgeResId = R.drawable.ic_badge_trusted;
@@ -926,13 +995,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           break;
       }
 
-      ImageLoader.with(context).load(badgeResId, badge);
+      ImageLoader.with(context)
+          .load(badgeResId, badge);
       badgeText.setText(badgeMessageId);
 
-      Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(),
-          app.getDeveloper().getName(), app.getFile().getMalware().getRank().name());
+      Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(), app.getDeveloper()
+          .getName(), app.getFile()
+          .getMalware()
+          .getRank()
+          .name());
 
-      final Malware malware = app.getFile().getMalware();
+      final Malware malware = app.getFile()
+          .getMalware();
       badge.setOnClickListener(v -> {
         appViewAnalytics.sendBadgeClickEvent();
         DialogBadgeV7.newInstance(malware, app.getName(), malware.getRank())

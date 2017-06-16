@@ -42,7 +42,8 @@ public class AptoideSyncService extends Service {
             ((V8Engine) getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
-            ((V8Engine) getApplicationContext()).getAccountPayer());
+            ((V8Engine) getApplicationContext()).getAccountPayer(),
+            ((V8Engine) getApplicationContext()).getTokenInvalidator());
       }
     }
   }

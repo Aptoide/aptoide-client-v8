@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.billing.repository.sync;
 import android.content.SyncResult;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentAuthorizationsRequest;
@@ -33,11 +34,13 @@ public class AuthorizationSync extends ScheduledSync {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final PaymentAnalytics paymentAnalytics;
+  private final TokenInvalidator tokenInvalidator;
 
   public AuthorizationSync(int paymentId, PaymentAuthorizationAccessor authorizationAccessor,
       AuthorizationFactory authorizationFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics) {
+      Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics,
+      TokenInvalidator tokenInvalidator) {
     this.paymentId = paymentId;
     this.authorizationAccessor = authorizationAccessor;
     this.authorizationFactory = authorizationFactory;
@@ -46,6 +49,7 @@ public class AuthorizationSync extends ScheduledSync {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.paymentAnalytics = paymentAnalytics;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -65,7 +69,8 @@ public class AuthorizationSync extends ScheduledSync {
   }
 
   private Single<List<Authorization>> getServerAuthorizations(String payerId) {
-    return GetPaymentAuthorizationsRequest.of(bodyInterceptorV3, httpClient, converterFactory)
+    return GetPaymentAuthorizationsRequest.of(bodyInterceptorV3, httpClient, converterFactory,
+        tokenInvalidator)
         .observe()
         .toSingle()
         .map(response -> authorizationFactory.convertToPaymentAuthorizations(response, payerId,

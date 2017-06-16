@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import okhttp3.OkHttpClient;
@@ -14,13 +15,14 @@ import rx.Observable;
 public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
 
   private CheckUserCredentialsRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static CheckUserCredentialsRequest of(String storeName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
 
     final BaseBody body = new BaseBody();
     body.put("mode", "json");
@@ -29,7 +31,8 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
     body.put("authMode", "aptoide");
     body.put("oauthCreateRepo", "true");
 
-    return new CheckUserCredentialsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new CheckUserCredentialsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

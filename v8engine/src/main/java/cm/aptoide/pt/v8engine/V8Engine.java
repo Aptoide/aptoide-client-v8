@@ -38,7 +38,6 @@ import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -69,7 +68,9 @@ import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.account.BaseBodyAccountManagerInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.LogAccountAnalytics;
+import cm.aptoide.pt.v8engine.account.NoOpTokenInvalidator;
 import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
+import cm.aptoide.pt.v8engine.account.RefreshTokenInvalidatorFactory;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
@@ -105,12 +106,12 @@ import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
-import cm.aptoide.pt.v8engine.networking.AccountManagerTokenInvalidator;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.OAuthBodyInterceptor;
+import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.notification.NotificationHandler;
@@ -220,7 +221,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
   private NotificationSyncScheduler notificationSyncScheduler;
-  private AccountManagerTokenInvalidator tokenInvalidator;
+  private RefreshTokenInvalidator tokenInvalidator;
 
   /**
    * call after this instance onCreate()
@@ -331,14 +332,15 @@ public abstract class V8Engine extends SpotAndShareApplication {
     getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
         .first()
         .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
-            throwable -> CrashReport.getInstance().log(throwable));
+            throwable -> CrashReport.getInstance()
+                .log(throwable));
 
     getNotificationCenter().setup();
   }
 
-  @Override public TokenInvalidator getTokenInvalidator() {
+  public TokenInvalidator getTokenInvalidator() {
     if (tokenInvalidator == null) {
-      tokenInvalidator = new AccountManagerTokenInvalidator(getAccountManager());
+      tokenInvalidator = new RefreshTokenInvalidator(getAccountManager());
     }
     return tokenInvalidator;
   }
@@ -378,8 +380,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
           new NotificationSyncScheduler.Schedule(
-              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION,
-              AlarmManager.INTERVAL_DAY), new NotificationSyncScheduler.Schedule(
+              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY),
+          new NotificationSyncScheduler.Schedule(
               NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION,
               pushNotificationSocialPeriodicity));
 
@@ -531,7 +533,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager()),
           getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter(), getNonNullObjectMapper(), getTokenInvalidator());
+          WebService.getDefaultConverter(), getNonNullObjectMapper(),
+          new RefreshTokenInvalidatorFactory());
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
@@ -558,7 +561,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (accountFactory == null) {
       accountFactory = new AccountFactory(new SocialAccountFactory(this, getGoogleSignInClient()),
           new AccountService(new NoTokenBodyInterceptor(getIdsRepository(), getAptoideMd5sum(),
-              getAptoidePackage()), getDefaultClient(), WebService.getDefaultConverter()));
+              getAptoidePackage()), getDefaultClient(), WebService.getDefaultConverter(),
+              new NoOpTokenInvalidator()));
     }
     return accountFactory;
   }
@@ -640,7 +644,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       final AuthorizationRepository authorizationRepository =
           new AuthorizationRepository(AccessorFactory.getAccessorFor(PaymentAuthorization.class),
               getPaymentSyncScheduler(), getAuthorizationFactory(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer());
+              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
+              getTokenInvalidator());
 
       final ProductFactory productFactory = new ProductFactory();
 
@@ -650,11 +655,13 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new InAppPaymentConfirmationRepository(getNetworkOperatorManager(),
               AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
               confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer()),
+              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
+              getTokenInvalidator()),
           new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(),
               AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
               confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
-              WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer()));
+              WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
+              getTokenInvalidator()));
 
       final PurchaseFactory purchaseFactory =
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
@@ -667,12 +674,13 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new PaidAppProductRepository(purchaseFactory, paymentFactory, authorizationRepository,
               paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), productFactory),
-          new InAppBillingProductRepository(purchaseFactory,
-              paymentFactory, authorizationRepository,
-              paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
-              getAuthorizationFactory(), productFactory, getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getNetworkOperatorManager()));
+              getDefaultClient(), WebService.getDefaultConverter(), productFactory,
+              getTokenInvalidator()),
+          new InAppBillingProductRepository(purchaseFactory, paymentFactory,
+              authorizationRepository, paymentRepositoryFactory.getInAppConfirmationRepository(),
+              getAccountPayer(), getAuthorizationFactory(), productFactory,
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              getNetworkOperatorManager(), getTokenInvalidator()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository(), authorizationRepository);
@@ -719,7 +727,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (inAppBillingRepository == null) {
       inAppBillingRepository =
           new InAppBillingRepository(AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter());
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              getTokenInvalidator());
     }
     return inAppBillingRepository;
   }
@@ -815,17 +824,15 @@ public abstract class V8Engine extends SpotAndShareApplication {
       StoreUtilsProxy proxy =
           new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7(), storeCredentials,
               AccessorFactory.getAccessorFor(Store.class), getDefaultClient(),
-              WebService.getDefaultConverter(),
-              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+              WebService.getDefaultConverter(), getTokenInvalidator());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
-              getDefaultClient(), WebService.getDefaultConverter(),
-              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()), getAccountManager(),
-          defaultStoreCredentials)
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator()),
+          getAccountManager(), defaultStoreCredentials)
           .andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance()
               .log(err));
@@ -951,7 +958,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(DataProvider.getContext())
+    return RepositoryFactory.getUpdateRepository(this)
         .sync(true);
   }
 

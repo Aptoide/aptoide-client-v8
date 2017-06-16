@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -103,6 +104,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private boolean showCommentInputDialogOnFirstRun;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private TimelineAnalytics timelineAnalytics;
+  private TokenInvalidator tokenInvalidator;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -139,14 +141,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory,
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        httpClient, converterFactory, tokenInvalidator);
     super.onCreate(savedInstanceState);
   }
 
@@ -261,8 +263,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   void caseListSocialTimelineComments(boolean refresh) {
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
-            converterFactory,
-            ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            converterFactory, tokenInvalidator);
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -300,8 +301,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator, httpClient,
-            converterFactory,
-            ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            converterFactory, tokenInvalidator);
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =

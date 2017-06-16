@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.timeline.view.follow;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
@@ -31,6 +32,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public static TimeLineFollowFragment newInstanceUsingUser(Long id, long followNumber,
       String storeTheme) {
@@ -72,6 +74,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -86,8 +89,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   @Override protected V7 buildRequest() {
     return GetFollowersRequest.of(baseBodyInterceptor, userId, storeId, httpClient,
-        converterFactory,
-        ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        converterFactory, tokenInvalidator);
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {

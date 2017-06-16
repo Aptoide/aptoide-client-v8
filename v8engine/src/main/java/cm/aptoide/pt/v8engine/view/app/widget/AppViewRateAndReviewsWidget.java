@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -88,6 +89,7 @@ import rx.functions.Action1;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
@@ -118,6 +120,7 @@ import rx.functions.Action1;
         .getData();
     GetAppMeta.Stats stats = app.getStats();
 
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -125,7 +128,7 @@ import rx.functions.Action1;
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
         bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository(),
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        tokenInvalidator);
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore()
@@ -201,8 +204,7 @@ import rx.functions.Action1;
       BaseRequestWithStore.StoreCredentials storeCredentials) {
     Subscription subscription =
         ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
-            bodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator)
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {

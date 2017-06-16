@@ -16,6 +16,7 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networkclient.WebService;
@@ -47,8 +48,7 @@ public final class RepositoryFactory {
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
         getIdsRepository(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
-        WebService.getDefaultConverter(),
-        ((V8Engine) context.getApplicationContext()).getTokenInvalidator());
+        WebService.getDefaultConverter(), getTokenInvalidator(context));
   }
 
   private static IdsRepository getIdsRepository(Context context) {
@@ -87,8 +87,7 @@ public final class RepositoryFactory {
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(), getHttpClient(context),
-        WebService.getDefaultConverter(),
-        ((V8Engine) context.getApplicationContext()).getTokenInvalidator());
+        WebService.getDefaultConverter(), getTokenInvalidator(context));
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
@@ -105,6 +104,10 @@ public final class RepositoryFactory {
     return new SocialRepository(getAccountManager(context),
         ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7(),
         WebService.getDefaultConverter(), getHttpClient(context), timelineAnalytics,
-        ((V8Engine) context.getApplicationContext()).getTokenInvalidator());
+        getTokenInvalidator(context));
+  }
+
+  private static TokenInvalidator getTokenInvalidator(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getTokenInvalidator();
   }
 }

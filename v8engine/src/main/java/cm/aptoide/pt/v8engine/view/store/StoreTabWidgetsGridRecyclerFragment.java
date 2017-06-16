@@ -57,26 +57,29 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+        tokenInvalidator);
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
       boolean refresh, String url) {
-    return Observable.from(getStoreWidgets.getDatalist().getList())
+    return Observable.from(getStoreWidgets.getDatalist()
+        .getList())
         .flatMap(wsWidget -> {
           return WSWidgetsUtils.loadWidgetNode(wsWidget,
               StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
               idsRepository.getUniqueIdentifier(),
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                  V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-              accountManager.isAccountMature(), bodyInterceptor, httpClient, converterFactory,
-              qManager.getFilters(ManagerPreferences.getHWSpecsFilter()), tokenInvalidator);
+                  V8Engine.getContext()), DataProvider.getConfiguration()
+                  .getPartnerId(), accountManager.isAccountMature(), bodyInterceptor, httpClient,
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
+              tokenInvalidator);
         })
         .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist().getList())
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist()
+            .getList())
         .concatMap(wsWidget -> {
           return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
               getContext(), accountManager, storeUtilsProxy);

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -19,15 +20,17 @@ import rx.Observable;
 public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesResponse> {
 
   private InAppBillingPurchasesRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     BaseBody args = getBaseArgs(apiVersion, packageName, type);
-    return new InAppBillingPurchasesRequest(args, bodyInterceptor, httpClient, converterFactory);
+    return new InAppBillingPurchasesRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName, String type) {

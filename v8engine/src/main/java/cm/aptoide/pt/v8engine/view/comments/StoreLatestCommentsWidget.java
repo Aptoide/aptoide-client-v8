@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
@@ -46,6 +47,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
@@ -57,6 +59,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
@@ -86,8 +89,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     ManagerPreferences.setForceServerRefreshFlag(true);
     compositeSubscription.add(
         ListCommentsRequest.of(storeId, 0, 3, false, baseBodyInterceptor, httpClient,
-            converterFactory,
-            ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
+            converterFactory, tokenInvalidator)
             .observe()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

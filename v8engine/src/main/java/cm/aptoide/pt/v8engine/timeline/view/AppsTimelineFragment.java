@@ -19,6 +19,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -236,9 +237,11 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         ((V8Engine) applicationContext).getBaseBodyInterceptorV7();
     final OkHttpClient httpClient = ((V8Engine) applicationContext).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(applicationContext), bodyInterceptor, httpClient,
-        converterFactory, ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        converterFactory, tokenInvalidator);
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
@@ -250,7 +253,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     final SocialRepository socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+            tokenInvalidator);
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final InstallManager installManager =
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(
@@ -259,16 +262,16 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor, httpClient,
-        converterFactory, ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator());
+        converterFactory, tokenInvalidator);
 
     cardToDisplayable =
         new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
             permissionManager, storeCredentialsProvider,
             new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
-                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()),
+                tokenInvalidator),
             Analytics.getInstance(),
             new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
-                ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator()));
+                tokenInvalidator));
 
     refreshSubject = BehaviorRelay.create();
 

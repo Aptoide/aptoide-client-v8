@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import okhttp3.OkHttpClient;
@@ -17,20 +18,22 @@ import rx.Observable;
 public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableResponse> {
 
   public InAppBillingAvailableRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     final BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabavailable");
     args.put("package", packageName);
     args.put("purchasetype", type);
-    return new InAppBillingAvailableRequest(args, bodyInterceptor, httpClient, converterFactory);
+    return new InAppBillingAvailableRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

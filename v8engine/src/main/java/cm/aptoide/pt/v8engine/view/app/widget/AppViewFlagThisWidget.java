@@ -178,7 +178,8 @@ import rx.android.schedulers.AndroidSchedulers;
       appViewFlagThisDisplayable.getAppViewAnalytics()
           .sendFlagAppEvent(type.toString());
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name()
-          .toLowerCase(), baseBodyInterceptorV3, httpClient)
+          .toLowerCase(), baseBodyInterceptorV3, httpClient,
+          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator())
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
