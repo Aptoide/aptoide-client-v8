@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -353,7 +354,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
           new NotificationIdsMapper());
       rootInstallationRetryHandler = new RootInstallationRetryHandler(systemNotificationShower,
-          getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0);
+          getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, this,
+          BitmapFactory.decodeResource(getResources(), getConfiguration().getIcon()));
     }
     return rootInstallationRetryHandler;
   }

@@ -280,12 +280,23 @@ public class ShowMessage {
     }
   }
 
-  public static void asSnackIndefiniteTime(Activity activity, int msg, int actionMsg, View.OnClickListener action) {
+  public static void asSnackIndefiniteTime(Activity activity, String msg, int actionMsg,
+      View.OnClickListener action) {
     Snackbar snackbar =
         asSnackInternal(activity, msg, actionMsg, action, Snackbar.LENGTH_INDEFINITE);
     if (snackbar != null) {
       snackbar.show();
     }
+  }
+
+  private static Snackbar asSnackInternal(Activity activity, String msg, int actionMsg,
+      View.OnClickListener action, int duration) {
+    View view = getViewFromActivity(activity);
+    if (view == null) {
+      return null;
+    }
+    return Snackbar.make(view, msg, duration)
+        .setAction(actionMsg, action);
   }
 
   private static Snackbar asSnackInternal(Activity activity, int msg, int actionMsg,

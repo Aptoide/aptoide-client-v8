@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.widget.RemoteViews;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.installer.RootInstallErrorNotification;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
 import rx.Single;
@@ -126,5 +127,25 @@ public class SystemNotificationShower {
 
     return PendingIntent.getBroadcast(context, notificationId, resultIntent,
         PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
+  public Completable showNotification(Context context,
+      RootInstallErrorNotification installErrorNotification) {
+    return Completable.defer(() -> Completable.fromAction(() -> {
+      android.app.Notification notification =
+          mapToAndroidNotification(context, installErrorNotification);
+      notificationManager.notify(installErrorNotification.getId(), notification);
+    }))
+        .subscribeOn(AndroidSchedulers.mainThread());
+  }
+
+  private Notification mapToAndroidNotification(Context context,
+      RootInstallErrorNotification installErrorNotification) {
+    return new NotificationCompat.Builder(context).setContentTitle(
+        installErrorNotification.getMessage())
+        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+        .setLargeIcon(installErrorNotification.getIcon())
+        .setAutoCancel(true)
+        .build();
   }
 }
