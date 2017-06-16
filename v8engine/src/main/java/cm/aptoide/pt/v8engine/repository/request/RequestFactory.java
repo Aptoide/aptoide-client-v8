@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -33,27 +35,27 @@ public class RequestFactory {
   public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     listStoresRequestFactory =
         new ListStoresRequestFactory(bodyInterceptor, httpClient, converterFactory,
             tokenInvalidator, sharedPreferences);
     listAppsRequestFactory =
         new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences);
+            converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager);
     listFullReviewsRequestFactory =
         new ListFullReviewsRequestFactory(bodyInterceptor, httpClient, converterFactory,
             tokenInvalidator, sharedPreferences);
     getStoreRequestFactory =
         new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences);
+            converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager);
     getStoreWidgetsRequestFactory =
         new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
             converterFactory,
-            tokenInvalidator, sharedPreferences);
+            tokenInvalidator, sharedPreferences, resources, windowManager);
     getUserRequestFactory =
         new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory,
-            tokenInvalidator, sharedPreferences);
+            tokenInvalidator, sharedPreferences, resources, windowManager);
 
     getStoreRecommendedRequestFactory =
         new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine;
 
 import android.accounts.AccountManager;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AccountDataPersist;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountManagerService;
@@ -413,8 +415,8 @@ public abstract class V8Engine extends Application {
           new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
               WebService.getDefaultConverter(), getIdsRepository(),
               getConfiguration().getVersionName(), getAccountManager(),
-              getConfiguration().getExtraId(), PublishRelay.create(),
-              getDefaultSharedPreferences());
+              getConfiguration().getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(),
+              getResources());
     }
     return notificationHandler;
   }
@@ -464,7 +466,7 @@ public abstract class V8Engine extends Application {
       userAgentInterceptor =
           new UserAgentInterceptor(getAndroidAccountProvider(), getIdsRepository(),
               getConfiguration().getPartnerId(), new DisplayMetrics(),
-              AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername());
+              AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername(this));
     }
     return userAgentInterceptor;
   }
@@ -528,7 +530,9 @@ public abstract class V8Engine extends Application {
 
   public QManager getQManager() {
     if (qManager == null) {
-      qManager = new QManager(getDefaultSharedPreferences());
+      qManager = new QManager(getDefaultSharedPreferences(), getResources(),
+          ((ActivityManager) getSystemService(ACTIVITY_SERVICE)),
+          ((WindowManager) getSystemService(WINDOW_SERVICE)));
     }
     return qManager;
   }
@@ -546,17 +550,18 @@ public abstract class V8Engine extends Application {
       final AccountManagerService accountManagerService = new AccountManagerService(
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager(),
-              getDefaultSharedPreferences()), getAccountFactory(), getDefaultClient(),
+              getDefaultSharedPreferences(), getResources(),
+              getPackageManager(), getPackageName()), getAccountFactory(), getDefaultClient(),
           getLongTimeoutClient(), WebService.getDefaultConverter(), getNonNullObjectMapper(),
           new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences());
 
-      final AndroidAccountDataMigration accountDataMigration =
-          new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this,
-              getDefaultSharedPreferences()),
-              getDefaultSharedPreferences(), AccountManager.get(this),
-              new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(), SQLiteDatabaseHelper.DATABASE_VERSION,
-              getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
-              getConfiguration().getAccountType());
+      final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
+          SecurePreferencesImplementation.getInstance(this, getDefaultSharedPreferences()),
+          getDefaultSharedPreferences(), AccountManager.get(this),
+          new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(),
+          SQLiteDatabaseHelper.DATABASE_VERSION,
+          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
+          getConfiguration().getAccountType());
 
       final AccountDataPersist accountDataPersist =
           new AndroidAccountManagerDataPersist(AccountManager.get(this),
@@ -593,10 +598,10 @@ public abstract class V8Engine extends Application {
 
   public IdsRepository getIdsRepository() {
     if (idsRepository == null) {
-      idsRepository =
-          new IdsRepository(SecurePreferencesImplementation.getInstance(getApplicationContext(),
-              getDefaultSharedPreferences()),
-              this, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+      idsRepository = new IdsRepository(
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences()), this,
+          Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
     }
     return idsRepository;
   }
@@ -632,7 +637,8 @@ public abstract class V8Engine extends Application {
 
   public SecureCoderDecoder getSecureCoderDecoder() {
     if (secureCodeDecoder == null) {
-      secureCodeDecoder = new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create();
+      secureCodeDecoder =
+          new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create();
     }
     return secureCodeDecoder;
   }
@@ -693,12 +699,13 @@ public abstract class V8Engine extends Application {
               paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), productFactory,
-              getTokenInvalidator(), getDefaultSharedPreferences()),
+              getTokenInvalidator(), getDefaultSharedPreferences(), getResources()),
           new InAppBillingProductRepository(purchaseFactory, paymentFactory,
               authorizationRepository, paymentRepositoryFactory.getInAppConfirmationRepository(),
               getAccountPayer(), getAuthorizationFactory(), productFactory,
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences()));
+              getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences(),
+              getPackageManager(), getPackageName()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository(), authorizationRepository);
@@ -892,7 +899,8 @@ public abstract class V8Engine extends Application {
     if (baseBodyInterceptorV7 == null) {
       baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
-          getQManager(), "pool", getDefaultSharedPreferences());
+          getQManager(), "pool", getDefaultSharedPreferences(), getResources(), getPackageManager(),
+          getPackageName());
     }
     return baseBodyInterceptorV7;
   }
@@ -986,7 +994,8 @@ public abstract class V8Engine extends Application {
           .removeAll();
 
       // get the installed apps
-      List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
+      List<PackageInfo> installedApps =
+          AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
       Logger.v(TAG, "Found " + installedApps.size() + " user installed apps.");
 
       // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
@@ -997,7 +1006,7 @@ public abstract class V8Engine extends Application {
       return installedApps;
     })  // transform installation package into Installed table entry and save all the data
         .flatMapIterable(list -> list)
-        .map(packageInfo -> new Installed(packageInfo))
+        .map(packageInfo -> new Installed(packageInfo, getPackageManager()))
         .toList()
         .doOnNext(list -> {
           AccessorFactory.getAccessorFor(Installed.class)

@@ -207,8 +207,7 @@ import static org.junit.Assert.fail;
     final String[] packageNames = new String[nr_values];
     final UpdateAccessor accessor = AccessorFactory.getAccessorFor(Update.class);
 
-    PackageManager pm = AptoideUtils.getContext()
-        .getPackageManager();
+    PackageManager pm = InstrumentationRegistry.getTargetContext().getPackageManager();
     List<PackageInfo> packageInfoList = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES);
 
     db.beginTransaction();

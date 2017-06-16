@@ -26,6 +26,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -87,7 +88,9 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     final InstallManager installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
     final AutoUpdate autoUpdate =
-        new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager);
+        new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager,
+            getResources(), Application.getConfiguration()
+            .getAutoUpdateUrl());
     final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     final SharedPreferences sharedPreferences =
@@ -211,7 +214,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
                   return storeUtilsProxy.subscribeStoreObservable(storeName)
                       .doOnNext(getStoreMeta -> ShowMessage.asLongSnack(this,
                           AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                              storeName)));
+                              getResources(), storeName)));
                 }
               })
               .map(isSubscribed -> storeName))

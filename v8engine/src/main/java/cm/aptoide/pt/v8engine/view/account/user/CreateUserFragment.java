@@ -87,7 +87,8 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
 
     final Context context = getActivity();
 
-    errorMapper = new CreateUserErrorMapper(context, new AccountErrorMapper(context));
+    errorMapper = new CreateUserErrorMapper(context, new AccountErrorMapper(context),
+        getContext().getResources());
 
     final Context applicationContext = context.getApplicationContext();
     accountManager = ((V8Engine) applicationContext).getAccountManager();

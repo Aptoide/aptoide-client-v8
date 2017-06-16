@@ -40,7 +40,7 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
     presenter = new ShareAptoidePresenter(this,
         new ShareAptoideManager(new HotspotManager(getApplicationContext()),
             ConnectionManager.getInstance(this.getApplicationContext()), Ssid),
-        new ShareApkSandbox(getApplicationContext()));
+        new ShareApkSandbox(getApplicationContext(), getAssets()));
     attachPresenter(presenter);
   }
 

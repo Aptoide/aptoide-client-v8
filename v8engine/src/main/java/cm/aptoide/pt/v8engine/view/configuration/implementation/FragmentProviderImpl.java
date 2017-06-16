@@ -268,25 +268,25 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override
-  public Fragment newTimeLineFollowersUsingUserIdFragment(Long userId, long followerNumber,
-      String storeTheme) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(userId, followerNumber, storeTheme);
+  public Fragment newTimeLineFollowersUsingUserIdFragment(Long userId, String storeTheme,
+      String title) {
+    return TimeLineFollowersFragment.newInstanceUsingUser(userId, storeTheme, title);
   }
 
-  @Override public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, long followNumber,
-      String storeTheme) {
-    return TimeLineFollowingFragment.newInstanceUsingUserId(id, followNumber, storeTheme);
+  @Override public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme,
+      String title) {
+    return TimeLineFollowingFragment.newInstanceUsingUserId(id, storeTheme, title);
   }
 
   @Override
-  public Fragment newTimeLineFollowersUsingStoreIdFragment(Long storeId, long followerNumber,
-      String storeTheme) {
-    return TimeLineFollowersFragment.newInstanceUsingStore(storeId, followerNumber, storeTheme);
+  public Fragment newTimeLineFollowersUsingStoreIdFragment(Long storeId, String storeTheme,
+      String title) {
+    return TimeLineFollowersFragment.newInstanceUsingStore(storeId, storeTheme, title);
   }
 
-  @Override public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, long followNumber,
-      String storeTheme) {
-    return TimeLineFollowingFragment.newInstanceUsingStoreId(id, followNumber, storeTheme);
+  @Override public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
+      String title) {
+    return TimeLineFollowingFragment.newInstanceUsingStoreId(id, storeTheme, title);
   }
 
   @Override
@@ -335,8 +335,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return ThankYouConnectingFragment.newInstance(tag);
   }
 
-  @Override public Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(followerNumber, storeTheme);
+  @Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title) {
+    return TimeLineFollowersFragment.newInstanceUsingUser(storeTheme, title);
   }
 
   @Override public Fragment newRecommendedStoresFragment() {

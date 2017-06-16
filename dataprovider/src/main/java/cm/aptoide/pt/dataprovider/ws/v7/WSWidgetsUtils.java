@@ -6,7 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.net.ConnectivityManager;
 import android.util.Pair;
+import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -40,7 +44,8 @@ public class WSWidgetsUtils {
       boolean refresh, String clientUniqueId, boolean googlePlayServicesAvailable, String oemid,
       boolean mature, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, String q, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
+      ConnectivityManager connectivityManager, PackageManager packageManager) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -53,7 +58,7 @@ public class WSWidgetsUtils {
       switch (wsWidget.getType()) {
         case APPS_GROUP:
           return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences)
+              converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -80,7 +85,8 @@ public class WSWidgetsUtils {
 
         case ADS:
           return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
-              mature, httpClient, converterFactory, q, sharedPreferences)
+              mature, httpClient, converterFactory, q, sharedPreferences, resources, windowManager,
+              connectivityManager, packageManager)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -119,7 +125,7 @@ public class WSWidgetsUtils {
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
           return GetMyStoreListRequest.of(url, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences)
+              tokenInvalidator, sharedPreferences, resources, windowManager)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))

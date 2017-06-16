@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.app;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -38,13 +39,14 @@ public class AppRepository {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private final Resources resources;
 
   public AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       StoreCredentialsProviderImpl storeCredentialsProvider, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources) {
     this.operatorManager = operatorManager;
     this.accountManager = accountManager;
     this.bodyInterceptorV7 = bodyInterceptorV7;
@@ -54,6 +56,7 @@ public class AppRepository {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
@@ -122,7 +125,7 @@ public class AppRepository {
       boolean refresh) {
     return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
         httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        tokenInvalidator, sharedPreferences, resources)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {

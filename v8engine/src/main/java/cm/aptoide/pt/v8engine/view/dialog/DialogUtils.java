@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -55,11 +56,12 @@ public class DialogUtils {
   private final InstalledRepository installedRepository;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private final Resources resources;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, InstalledRepository installedRepository,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
@@ -68,6 +70,7 @@ public class DialogUtils {
     this.installedRepository = installedRepository;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -127,7 +130,8 @@ public class DialogUtils {
         final int reviewRating = Math.round(reviewRatingBar.getRating());
 
         if (TextUtils.isEmpty(reviewTitle)) {
-          titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+          titleTextInputLayout.setError(
+              AptoideUtils.StringU.getResString(R.string.error_MARG_107, resources));
           return;
         }
 
@@ -227,7 +231,8 @@ public class DialogUtils {
       final int reviewRating = Math.round(reviewRatingBar.getRating());
 
       if (TextUtils.isEmpty(reviewTitle)) {
-        titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+        titleTextInputLayout.setError(
+            AptoideUtils.StringU.getResString(R.string.error_MARG_107, resources));
         return;
       }
 

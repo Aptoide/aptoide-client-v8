@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.updates;
 
 import android.content.Context;
+import android.content.res.Resources;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
@@ -55,6 +56,7 @@ public class UpdateDisplayable extends Displayable {
   private Analytics analytics;
   private DownloadEventConverter converter;
   private InstallEventConverter installConverter;
+  private PermissionManager permissionManager;
 
   public UpdateDisplayable() {
   }
@@ -64,8 +66,8 @@ public class UpdateDisplayable extends Displayable {
       String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
       InstallManager installManager, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter,
-      InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
+      PermissionManager permissionManager) {
     this.packageName = packageName;
     this.appId = appId;
     this.label = label;
@@ -86,29 +88,31 @@ public class UpdateDisplayable extends Displayable {
     this.analytics = analytics;
     this.converter = downloadInstallEventConverter;
     this.installConverter = installConverter;
+    this.permissionManager = permissionManager;
   }
 
   public static UpdateDisplayable newInstance(Update update, InstallManager installManager,
       DownloadFactory downloadFactory, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter,
-      InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
+      PermissionManager permissionManager) {
 
     return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
         update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
         update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
         update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
         update.getPatchObbPath(), update.getPatchObbMd5(), downloadFactory.create(update),
-        installManager, analytics, downloadInstallEventConverter, installConverter);
+        installManager, analytics, downloadInstallEventConverter, installConverter,
+        permissionManager);
   }
 
   public Observable<Progress<Download>> downloadAndInstall(Context context,
-      PermissionService permissionRequest) {
-    PermissionManager permissionManager = new PermissionManager();
+      PermissionService permissionRequest, Resources resources) {
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> {
           if (installManager.showWarning()) {
             return GenericDialogs.createGenericYesNoCancelMessage(context, "",
-                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog,
+                    resources))
                 .map(answer -> (answer.equals(YES)))
                 .doOnNext(answer -> installManager.rootInstallAllowed(answer));
           }

@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.view.WindowManager;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialInstall;
@@ -41,6 +43,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   private TimelineAnalytics timelineAnalytics;
   private SpannableFactory spannableFactory;
   private SocialRepository socialRepository;
+  private Resources resources;
+  private String marketName;
 
   public SocialInstallDisplayable() {
   }
@@ -50,11 +54,13 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       String appIcon, String abTestingURL, long likes, long comments, Date date,
       TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator,
-      TimelineNavigator timelineNavigator) {
+      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      WindowManager windowManager) {
     super(socialInstall, likes, comments, store, socialInstall.getUser(),
         socialInstall.getUserSharer(), socialInstall.getMy()
             .isLiked(), socialInstall.getLikes(), socialInstall.getComments(), date,
-        spannableFactory, dateCalculator, abTestingURL, timelineAnalytics, timelineNavigator);
+        spannableFactory, dateCalculator, abTestingURL, timelineAnalytics, timelineNavigator,
+        windowManager);
     this.avatarResource = icon;
     this.titleResource = titleResource;
     this.user = user;
@@ -72,11 +78,14 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     this.socialRepository = socialRepository;
     this.appStoreId = socialInstall.getStore()
         .getId();
+    this.resources = resources;
+    this.marketName = marketName;
   }
 
   public static Displayable from(SocialInstall socialInstall, TimelineAnalytics timelineAnalytics,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator, TimelineNavigator timelineNavigator) {
+      DateCalculator dateCalculator, TimelineNavigator timelineNavigator, Resources resources,
+      String marketName, WindowManager windowManager) {
 
     String abTestingURL = null;
 
@@ -101,7 +110,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         .getIcon(), abTestingURL, socialInstall.getStats()
         .getLikes(), socialInstall.getStats()
         .getComments(), socialInstall.getDate(), timelineAnalytics, spannableFactory,
-        socialRepository, dateCalculator, timelineNavigator);
+        socialRepository, dateCalculator, timelineNavigator, resources, marketName, windowManager);
   }
 
   public Spannable getAppText(Context context) {
@@ -131,31 +140,33 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   }
 
   public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource, Application.getConfiguration()
-        .getMarketName());
+    return AptoideUtils.StringU.getFormattedString(titleResource, resources, marketName);
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), privacyResult,
         shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
             BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
+  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
             BLANK));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getTitle(),
             BLANK));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getTitle(),
             BLANK));

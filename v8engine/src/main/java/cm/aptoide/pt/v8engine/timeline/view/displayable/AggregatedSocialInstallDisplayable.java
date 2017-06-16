@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.view.WindowManager;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialInstall;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
@@ -49,8 +51,8 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
       String packageName, String appName, String appIcon, String abTestingURL, Date date,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineNavigator timelineNavigator) {
-    super(card, timelineAnalytics);
+      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+    super(card, timelineAnalytics, windowManager);
     this.minimalCardList = card.getMinimalCardList();
     this.sharers = card.getSharers();
     this.socialRepository = socialRepository;
@@ -76,7 +78,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   public static Displayable from(AggregatedSocialInstall aggregatedSocialInstall,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineNavigator timelineNavigator) {
+      TimelineNavigator timelineNavigator, WindowManager windowManager) {
 
     String abTestingURL = null;
 
@@ -97,28 +99,31 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
         .getPackageName(), aggregatedSocialInstall.getApp()
         .getName(), aggregatedSocialInstall.getApp()
         .getIcon(), abTestingURL, aggregatedSocialInstall.getDate(), timelineAnalytics,
-        socialRepository, dateCalculator, spannableFactory, timelineNavigator);
+        socialRepository, dateCalculator, spannableFactory, timelineNavigator, windowManager);
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(cardId, getAppStoreId(), privacyResult, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), BLANK,
             BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
+  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(cardId, getAppStoreId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), BLANK,
             BLANK));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), BLANK, BLANK));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), BLANK, BLANK));
   }

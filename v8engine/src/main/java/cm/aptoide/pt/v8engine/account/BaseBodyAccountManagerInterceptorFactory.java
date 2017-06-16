@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.account;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import cm.aptoide.accountmanager.AccountManagerInterceptorFactory;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -26,10 +28,14 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   private final String aptoidePackage;
   private final QManager qManager;
   private final SharedPreferences sharedPreferences;
+  private Resources resources;
+  private PackageManager packageManager;
+  private String packageName;
 
   public BaseBodyAccountManagerInterceptorFactory(IdsRepository idsRepository,
       Preferences preferences, SecurePreferences securePreferences, String aptoideMd5sum,
-      String aptoidePackage, QManager qManager, SharedPreferences sharedPreferences) {
+      String aptoidePackage, QManager qManager, SharedPreferences sharedPreferences,
+      Resources resources, PackageManager packageManager, String packageName) {
     this.idsRepository = idsRepository;
     this.preferences = preferences;
     this.securePreferences = securePreferences;
@@ -37,19 +43,23 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
     this.aptoidePackage = aptoidePackage;
     this.qManager = qManager;
     this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
+    this.packageManager = packageManager;
+    this.packageName = packageName;
   }
 
   @Override public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV7(idsRepository, accountManager,
         new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
-        aptoidePackage, qManager, "pool", sharedPreferences);
+        aptoidePackage, qManager, "pool", sharedPreferences, resources, packageManager,
+        packageName);
   }
 
   @Override
   public BodyInterceptor<BaseBody> createUserInfoV7(AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV7(idsRepository, accountManager,
         new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
-        aptoidePackage, qManager, "web", sharedPreferences);
+        aptoidePackage, qManager, "web", sharedPreferences, resources, packageManager, packageName);
   }
 
   @Override
@@ -57,7 +67,7 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
       boolean adultContentEnabled) {
     return new BaseBodyInterceptorV7(aptoideMd5sum, aptoidePackage, idsRepository, accountManager,
         new AdultContent(accountManager, preferences, securePreferences), qManager, "pool",
-        adultContentEnabled, sharedPreferences);
+        adultContentEnabled, sharedPreferences, resources, packageManager, packageName);
   }
 
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(

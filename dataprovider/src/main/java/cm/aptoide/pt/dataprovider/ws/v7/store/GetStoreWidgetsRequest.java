@@ -6,6 +6,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -38,9 +40,9 @@ import rx.Observable;
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager) {
 
-    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
+    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
 
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,

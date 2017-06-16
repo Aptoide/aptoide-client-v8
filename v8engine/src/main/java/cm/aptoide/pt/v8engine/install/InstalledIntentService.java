@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -69,7 +70,9 @@ public class InstalledIntentService extends IntentService {
         ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
     adsRepository =
         new AdsRepository(((V8Engine) getApplicationContext()).getIdsRepository(), accountManager,
-            httpClient, converterFactory, qManager, sharedPreferences, getApplicationContext());
+            httpClient, converterFactory, qManager, sharedPreferences, getApplicationContext(),
+            (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE), getResources(),
+            getPackageManager());
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
@@ -148,12 +151,12 @@ public class InstalledIntentService extends IntentService {
   }
 
   private PackageInfo databaseOnPackageAdded(String packageName) {
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
-    installedRepository.save(new Installed(packageInfo));
+    installedRepository.save(new Installed(packageInfo, getPackageManager()));
     return packageInfo;
   }
 
@@ -211,13 +214,14 @@ public class InstalledIntentService extends IntentService {
       Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
     }
 
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
 
-    Action0 insertApp = () -> installedRepository.save(new Installed(packageInfo));
+    Action0 insertApp =
+        () -> installedRepository.save(new Installed(packageInfo, getPackageManager()));
 
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {

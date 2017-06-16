@@ -154,7 +154,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   protected void shareCardWithoutPreview(T displayable, ShareCardCallback callback) {
     if (hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) {
       displayable.share(displayable.getTimelineCard()
-          .getCardId(), callback);
+          .getCardId(), callback, getContext().getResources());
     }
   }
 
@@ -187,7 +187,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       if (!accountManager.isAccountAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          displayable.share(cardId, sharePreviewDialog.getPrivacyResult(), callback);
+          displayable.share(cardId, sharePreviewDialog.getPrivacyResult(), callback,
+              getContext().getResources());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         })
@@ -197,7 +198,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
             });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          displayable.share(cardId, callback);
+          displayable.share(cardId, callback, getContext().getResources());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         })
@@ -246,7 +247,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   protected boolean likeCard(T displayable, String cardId, int rating) {
     if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return false;
-    displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating);
+    displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating,
+        getContext().getResources());
 
     return true;
   }

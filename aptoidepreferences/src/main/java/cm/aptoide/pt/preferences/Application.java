@@ -29,13 +29,7 @@ public abstract class Application extends android.app.Application {
     // Application's onCreate can't be used because it runs after ContentProvider' onCreate.
     // https://code.google.com/p/android/issues/detail?id=8727
     configuration = createConfiguration();
-    AptoideUtils.setContext(this);
   }
 
   @Partners public abstract AptoidePreferencesConfiguration createConfiguration();
-
-  @Override public void onCreate() {
-    super.onCreate();
-    AptoideUtils.setContext(this);
-  }
 }

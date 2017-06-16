@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.timeline.view.displayable;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.view.WindowManager;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialCard;
@@ -12,7 +13,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import java.util.List;
@@ -43,8 +43,9 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
       Store store, Comment.User user, Comment.User userSharer, boolean liked,
       List<UserTimeline> userLikes, List<SocialCard.CardComment> comments, Date date,
       SpannableFactory spannableFactory, DateCalculator dateCalculator, String abUrl,
-      TimelineAnalytics timelineAnalytics, TimelineNavigator timelineNavigator) {
-    super(timelineCard, timelineAnalytics);
+      TimelineAnalytics timelineAnalytics, TimelineNavigator timelineNavigator,
+      WindowManager windowManager) {
+    super(timelineCard, timelineAnalytics, windowManager);
     this.date = date;
     this.liked = liked;
     this.dateCalculator = dateCalculator;

@@ -6,6 +6,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListApps;
@@ -40,15 +42,15 @@ import rx.Observable;
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
       return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials, sharedPreferences),
           bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
     } else {
-      return new ListAppsRequest(listAppsV7Url.get(),
-          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST,
-              sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+      return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials,
+          Type.APPS_GROUP.getPerLineCount(resources, windowManager) * LINES_PER_REQUEST,
+          sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
           sharedPreferences);
     }
   }

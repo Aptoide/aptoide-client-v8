@@ -162,16 +162,19 @@ public class PullingContentService extends Service {
     if (numberUpdates > 0
         && numberUpdates != ManagerPreferences.getLastUpdates(sharedPreferences)
         && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)) {
-      CharSequence tickerText = AptoideUtils.StringU.getFormattedString(R.string.has_updates,
-          Application.getConfiguration()
-              .getMarketName());
+      CharSequence tickerText =
+          AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(),
+              Application.getConfiguration()
+                  .getMarketName());
       CharSequence contentTitle = Application.getConfiguration()
           .getMarketName();
       CharSequence contentText =
-          AptoideUtils.StringU.getFormattedString(R.string.new_updates, numberUpdates);
+          AptoideUtils.StringU.getFormattedString(R.string.new_updates, getResources(),
+              numberUpdates);
       if (numberUpdates == 1) {
         contentText =
-            AptoideUtils.StringU.getFormattedString(R.string.one_new_update, numberUpdates);
+            AptoideUtils.StringU.getFormattedString(R.string.one_new_update, getResources(),
+                numberUpdates);
       }
 
       Notification notification =

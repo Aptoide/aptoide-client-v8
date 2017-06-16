@@ -1,9 +1,11 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.view.WindowManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -19,7 +21,6 @@ import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -59,8 +60,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
       String publisherName, String thumbnailUrl, String abTestingURL, List<App> relatedToAppsList,
       Date date, DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      TimelineNavigator timelineNavigator) {
-    super(card, timelineAnalytics);
+      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+    super(card, timelineAnalytics, windowManager);
     this.link = link;
     this.title = title;
     this.publisherName = publisherName;
@@ -80,7 +81,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   public static Displayable from(AggregatedSocialArticle card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      TimelineNavigator timelineNavigator) {
+      TimelineNavigator timelineNavigator, WindowManager windowManager) {
     String abTestingURL = null;
 
     if (card.getAb() != null
@@ -97,7 +98,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, card.getUrl()),
         card.getPublisher()
             .getName(), card.getThumbnailUrl(), abTestingURL, card.getApps(), card.getDate(),
-        dateCalculator, spannableFactory, timelineAnalytics, socialRepository, timelineNavigator);
+        dateCalculator, spannableFactory, timelineAnalytics, socialRepository, timelineNavigator,
+        windowManager);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -175,25 +177,28 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(cardId, privacyResult, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, publisherName,
             getTitle()));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
+  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(cardId, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, publisherName,
             getTitle()));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, publisherName,
             getTitle()));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, publisherName,
             getTitle()));

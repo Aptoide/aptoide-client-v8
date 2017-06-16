@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.updates;
 
+import android.content.res.Resources;
 import android.support.v4.app.FragmentActivity;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -49,10 +50,11 @@ public class UpdatesHeaderDisplayable extends Displayable {
     return R.layout.updates_header_row;
   }
 
-  public Observable<Progress<Download>> install(FragmentActivity context, Download download) {
+  public Observable<Progress<Download>> install(FragmentActivity context, Download download,
+      Resources resources) {
     if (installManager.showWarning()) {
       GenericDialogs.createGenericYesNoCancelMessage(context, null,
-          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, resources))
           .subscribe(eResponse -> {
             switch (eResponse) {
               case YES:

@@ -243,6 +243,7 @@ public class SocialStoreLatestAppsWidget
                       displayable.getStoreCredentialsProvider());
                   ShowMessage.asSnack(itemView,
                       AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                          getContext().getResources(),
                           storeName));
                 }, err -> {
                   CrashReport.getInstance()
@@ -256,7 +257,8 @@ public class SocialStoreLatestAppsWidget
                 .subscribe(__ -> {
                   storeUtilsProxy.subscribeStore(storeName);
                   ShowMessage.asSnack(itemView,
-                      AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+                      AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                          getContext().getResources(), storeName));
                 }, err -> {
                   CrashReport.getInstance()
                       .log(err);

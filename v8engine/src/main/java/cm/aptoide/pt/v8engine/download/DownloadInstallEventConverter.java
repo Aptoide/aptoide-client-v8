@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.download;
 
+import android.net.ConnectivityManager;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -16,9 +18,14 @@ import java.util.LinkedList;
 abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent> {
 
   private final String appId;
+  private final ConnectivityManager connectivityManager;
+  private final TelephonyManager telephonyManager;
 
-  public DownloadInstallEventConverter(String appId) {
+  public DownloadInstallEventConverter(String appId, ConnectivityManager connectivityManager,
+      TelephonyManager telephonyManager) {
     this.appId = appId;
+    this.connectivityManager = connectivityManager;
+    this.telephonyManager = telephonyManager;
   }
 
   public DownloadInstallAnalyticsBaseBody convert(T report,
@@ -48,9 +55,9 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
       data.setObb(obbs);
     }
 
-    data.setNetwork(AptoideUtils.SystemU.getConnectionType()
+    data.setNetwork(AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
-    data.setTeleco(AptoideUtils.SystemU.getCarrierName());
+    data.setTeleco(AptoideUtils.SystemU.getCarrierName(telephonyManager));
 
     DownloadInstallAnalyticsBaseBody.Result result = new DownloadInstallAnalyticsBaseBody.Result();
     result.setStatus(status);

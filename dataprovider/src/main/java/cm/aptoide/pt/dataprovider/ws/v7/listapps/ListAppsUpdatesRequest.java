@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -51,16 +52,16 @@ import rx.schedulers.Schedulers;
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String clientUniqueId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, PackageManager packageManager) {
     return new ListAppsUpdatesRequest(
-        new Body(getInstalledApks(), subscribedStoresIds, clientUniqueId, sharedPreferences),
+        new Body(getInstalledApks(packageManager), subscribedStoresIds, clientUniqueId, sharedPreferences),
         getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences);
   }
 
-  private static List<ApksData> getInstalledApks() {
+  private static List<ApksData> getInstalledApks(PackageManager packageManager) {
     // TODO: 01-08-2016 neuro benchmark this, looks heavy
-    List<PackageInfo> allInstalledApps = AptoideUtils.SystemU.getAllInstalledApps();
+    List<PackageInfo> allInstalledApps = AptoideUtils.SystemU.getAllInstalledApps(packageManager);
     LinkedList<ApksData> apksDatas = new LinkedList<>();
 
     for (PackageInfo packageInfo : allInstalledApps) {

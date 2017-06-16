@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -45,15 +46,16 @@ import rx.Observable;
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources) {
     if (storeNames != null && !storeNames.isEmpty()) {
-      Body body = new Body(packageName, storeNames, storeCredentials, sharedPreferences);
+      Body body = new Body(packageName, storeNames, storeCredentials, sharedPreferences,
+          AptoideUtils.SystemU.getCountryCode(resources));
       body.setLimit(MAX_LIMIT);
       return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
           tokenInvalidator, sharedPreferences);
     } else {
       return of(packageName, storeCredentials, bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator, sharedPreferences);
+          tokenInvalidator, sharedPreferences, resources);
     }
   }
 
@@ -61,8 +63,9 @@ import rx.Observable;
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    Body body = new Body(packageName, sharedPreferences);
+      SharedPreferences sharedPreferences, Resources resources) {
+    Body body =
+        new Body(packageName, sharedPreferences, AptoideUtils.SystemU.getCountryCode(resources));
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
     return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
@@ -80,7 +83,7 @@ import rx.Observable;
     private Integer apkId;
     private String apkMd5sum;
     private Integer appId;
-    private String lang = AptoideUtils.SystemU.getCountryCode();
+    private String lang;
     @Setter @Getter private Integer limit;
     @Setter @Getter private int offset;
     private Integer packageId;
@@ -89,18 +92,20 @@ import rx.Observable;
     private List<String> storeNames;
     @Getter private HashMapNotNull<String, List<String>> storesAuthMap;
 
-    public Body(SharedPreferences sharedPreferences) {
+    public Body(SharedPreferences sharedPreferences, String lang) {
       super(sharedPreferences);
+      this.lang = lang;
     }
 
-    public Body(String packageName, SharedPreferences sharedPreferences) {
-      this(sharedPreferences);
+    public Body(String packageName, SharedPreferences sharedPreferences, String lang) {
+      this(sharedPreferences, lang);
       this.packageName = packageName;
     }
 
     public Body(String packageName, List<String> storeNames,
-        HashMapNotNull<String, List<String>> storesAuthMap, SharedPreferences sharedPreferences) {
-      this(packageName, sharedPreferences);
+        HashMapNotNull<String, List<String>> storesAuthMap, SharedPreferences sharedPreferences,
+        String lang) {
+      this(packageName, sharedPreferences, lang);
       this.storeNames = storeNames;
       setStoresAuthMap(storesAuthMap);
     }

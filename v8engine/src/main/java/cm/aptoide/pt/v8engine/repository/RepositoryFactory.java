@@ -50,7 +50,8 @@ public final class RepositoryFactory {
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
         getIdsRepository(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
-        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences);
+        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
+        context.getPackageManager());
   }
 
   private static IdsRepository getIdsRepository(Context context) {
@@ -89,7 +90,8 @@ public final class RepositoryFactory {
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(), getHttpClient(context),
-        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences);
+        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
+        context.getResources());
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {

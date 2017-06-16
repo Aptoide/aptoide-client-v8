@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view.search;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -113,7 +115,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
             accountManager, httpClient, converterFactory,
             ((V8Engine) getContext().getApplicationContext()).getQManager(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getApplicationContext());
+            getContext().getApplicationContext(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            getContext().getResources(), getContext().getPackageManager());
     super.onCreate(savedInstanceState);
   }
 

@@ -7,6 +7,9 @@ package cm.aptoide.pt.v8engine.ads;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.net.ConnectivityManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -36,10 +39,14 @@ public class AdsRepository {
   private final QManager qManager;
   private final SharedPreferences sharedPreferences;
   private final Context context;
+  private final ConnectivityManager connectivityManager;
+  private final Resources resources;
+  private final PackageManager packageManager;
 
   public AdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory, QManager qManager,
-      SharedPreferences sharedPreferences, Context applicationContext) {
+      SharedPreferences sharedPreferences, Context applicationContext,
+      ConnectivityManager connectivityManager, Resources resources, PackageManager packageManager) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.googlePlayServicesAvailabilityChecker =
@@ -51,6 +58,9 @@ public class AdsRepository {
     this.qManager = qManager;
     this.sharedPreferences = sharedPreferences;
     this.context = applicationContext;
+    this.connectivityManager = connectivityManager;
+    this.resources = resources;
+    this.packageManager = packageManager;
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
@@ -75,7 +85,7 @@ public class AdsRepository {
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
             converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences)
+            sharedPreferences, connectivityManager, resources, packageManager)
             .observe());
   }
 
@@ -97,7 +107,7 @@ public class AdsRepository {
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
         converterFactory,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-        sharedPreferences)
+        sharedPreferences, connectivityManager, resources, packageManager)
         .observe(refresh));
   }
 
@@ -127,7 +137,7 @@ public class AdsRepository {
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
             converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences)
+            sharedPreferences, connectivityManager, resources, packageManager)
             .observe());
   }
 
@@ -137,7 +147,7 @@ public class AdsRepository {
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
         converterFactory,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-        sharedPreferences)
+        sharedPreferences, connectivityManager, resources, packageManager)
         .observe());
   }
 
@@ -151,7 +161,7 @@ public class AdsRepository {
                 partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
                 converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-                sharedPreferences)
+                sharedPreferences, connectivityManager, resources, packageManager)
                 .observe()));
   }
 
@@ -162,7 +172,7 @@ public class AdsRepository {
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
             converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences)
+            sharedPreferences, connectivityManager, resources, packageManager)
             .observe());
   }
 }

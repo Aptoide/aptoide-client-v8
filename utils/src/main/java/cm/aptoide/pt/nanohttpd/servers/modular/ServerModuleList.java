@@ -1,5 +1,6 @@
 package cm.aptoide.pt.nanohttpd.servers.modular;
 
+import android.content.res.AssetManager;
 import fi.iki.elonen.NanoHTTPD;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,9 @@ public class ServerModuleList extends MimeTypeServerModule {
 
   private final List<AbstractServerModule> abstractServerModules;
 
-  public ServerModuleList(List<AbstractServerModule> abstractServerModules) {
+  public ServerModuleList(List<AbstractServerModule> abstractServerModules,
+      AssetManager assetManager) {
+    super(assetManager);
     if (validateServerModules(abstractServerModules)) {
       this.abstractServerModules = new LinkedList<>(abstractServerModules);
     } else {

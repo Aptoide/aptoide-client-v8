@@ -1,10 +1,13 @@
 package cm.aptoide.pt.v8engine.view.updates;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
 import android.view.View;
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -13,7 +16,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -160,10 +162,14 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installConverter = new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, V8Engine.getConfiguration()
-            .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installedRepository = RepositoryFactory.getInstalledRepository();
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
@@ -174,13 +180,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
     if (updateList.size() > 0) {
       updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
-          AptoideUtils.StringU.getResString(R.string.updates), analytics,
+          AptoideUtils.StringU.getResString(R.string.updates, getContext().getResources()), analytics,
           downloadInstallEventConverter, installConverter));
 
       for (Update update : updateList) {
         updatesDisplayablesList.add(
             UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
-                downloadInstallEventConverter, installConverter));
+                downloadInstallEventConverter, installConverter, new PermissionManager()));
       }
     }
     addDisplayables(updatesDisplayablesList, false);
@@ -225,7 +231,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installedDisplayablesList.clear();
     installedDisplayablesList.add(new StoreGridHeaderDisplayable(
         new GetStoreWidgets.WSWidget().setTitle(
-            AptoideUtils.StringU.getResString(R.string.installed_tab))));
+            AptoideUtils.StringU.getResString(R.string.installed_tab,
+                getContext().getResources()))));
 
     for (Installed installedApp : installedApps) {
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,

@@ -92,7 +92,8 @@ import rx.functions.Action1;
     Date modified = searchAppsApp.getModified();
     if (modified != null) {
       String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
-          .getTimeDiffAll(itemView.getContext(), modified.getTime());
+          .getTimeDiffAll(itemView.getContext(), modified.getTime(),
+              getContext().getResources());
       if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
         timeTextView.setText(timeSinceUpdate);
       }

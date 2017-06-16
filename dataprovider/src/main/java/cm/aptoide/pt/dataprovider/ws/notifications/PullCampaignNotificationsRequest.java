@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.notifications;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.text.TextUtils;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -34,11 +35,11 @@ public class PullCampaignNotificationsRequest
 
   public static PullCampaignNotificationsRequest of(String aptoideClientUuid, String versionName,
       String appId, OkHttpClient httpClient, Converter.Factory converterFactory, String extraId,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources) {
 
     Map<String, String> options = new HashMap<>();
 
-    options.put("language", AptoideUtils.SystemU.getCountryCode());
+    options.put("language", AptoideUtils.SystemU.getCountryCode(resources));
     options.put("aptoide_version", versionName);
     String oemid = extraId;
     if (!TextUtils.isEmpty(oemid)) {

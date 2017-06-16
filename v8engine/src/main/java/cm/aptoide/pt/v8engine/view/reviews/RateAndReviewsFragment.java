@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.reviews;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +23,6 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.comments.ListFullReviewsSuccessRequestListener;
@@ -196,7 +194,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
         baseBodyInterceptor, httpClient, converterFactory, installedRepository,
-        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        getContext().getResources());
   }
 
   private void fetchRating(boolean refresh) {

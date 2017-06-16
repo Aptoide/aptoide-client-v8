@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.downloads;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,10 +35,11 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final List<Download> activeDownloads;
   private final List<Download> standByDownloads;
   private final List<Download> completedDownloads;
+  private final Resources resources;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
-      DownloadEventConverter downloadConverter, InstallManager installManager,
-      Analytics analytics) {
+      DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics,
+      Resources resources) {
     this.activeDownloads = new ArrayList<>();
     this.standByDownloads = new ArrayList<>();
     this.completedDownloads = new ArrayList<>();
@@ -45,6 +47,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     this.analytics = analytics;
     this.installConverter = installConverter;
     this.downloadConverter = downloadConverter;
+    this.resources = resources;
   }
 
   public void setActiveDownloads(List<Download> downloads) {
@@ -206,18 +209,17 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     if (position < standByDownloads.size()) {
       // is the header from stand by downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.stand_by))));
+          AptoideUtils.StringU.getResString(R.string.stand_by, resources))));
     } else {
       // is the header from completed downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.completed))));
+          AptoideUtils.StringU.getResString(R.string.completed, resources))));
     }
   }
 
   private void bindActiveDownloadHeader(Widget holder) {
-    holder.internalBindView(
-        new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active),
-            installManager));
+    holder.internalBindView(new ActiveDownloadsHeaderDisplayable(
+        AptoideUtils.StringU.getResString(R.string.active, resources), installManager));
   }
 
   private void bindActiveDownload(Widget holder, Download download) {

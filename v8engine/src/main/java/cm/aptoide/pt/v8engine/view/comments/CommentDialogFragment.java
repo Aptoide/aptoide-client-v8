@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.comments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,7 +21,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -138,7 +136,8 @@ public class CommentDialogFragment
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
+    onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107,
+        getContext().getResources());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

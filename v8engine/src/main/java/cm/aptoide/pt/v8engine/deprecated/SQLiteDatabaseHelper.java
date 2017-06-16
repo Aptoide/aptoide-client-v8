@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.deprecated;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
@@ -32,6 +33,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   private Throwable aggregateExceptions;
   private SharedPreferences sharedPreferences;
   private SharedPreferences securePreferences;
+  private PackageManager packageManager;
 
   public SQLiteDatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,6 +47,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     sharedPreferences = ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences();
     securePreferences = SecurePreferencesImplementation.getInstance(context.getApplicationContext(),
         sharedPreferences);
+    packageManager = context.getPackageManager();
     ManagerPreferences.setNeedsSqliteDbMigration(false, sharedPreferences);
   }
 
@@ -86,13 +89,13 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     Logger.w(TAG, "Migrating database started....");
 
     try {
-      new Repo().migrate(db, AccessorFactory.getAccessorFor(Store.class));
+      new Repo().migrate(db, AccessorFactory.getAccessorFor(Store.class), packageManager);
     } catch (Exception ex) {
       logException(ex);
     }
 
     try {
-      new Excluded().migrate(db, AccessorFactory.getAccessorFor(Update.class));
+      new Excluded().migrate(db, AccessorFactory.getAccessorFor(Update.class), packageManager);
     } catch (Exception ex) {
       logException(ex);
     }
@@ -107,14 +110,16 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     try {
       new Rollback().migrate(db,
-          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Rollback.class));
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Rollback.class),
+          packageManager);
     } catch (Exception ex) {
       logException(ex);
     }
 
     try {
       new Scheduled().migrate(db,
-          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Scheduled.class)); // X
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Scheduled.class),
+          packageManager); // X
     } catch (Exception ex) {
       logException(ex);
     }

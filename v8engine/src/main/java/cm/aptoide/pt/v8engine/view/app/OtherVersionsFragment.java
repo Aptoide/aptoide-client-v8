@@ -138,7 +138,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
         ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(),
             baseBodyInterceptor, httpClient, converterFactory,
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), otherVersionsSuccessRequestListener,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getResources()), otherVersionsSuccessRequestListener,
         err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

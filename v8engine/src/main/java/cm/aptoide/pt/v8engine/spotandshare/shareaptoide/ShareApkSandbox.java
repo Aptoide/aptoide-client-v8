@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import cm.aptoide.pt.nanohttpd.servers.modular.modules.ShareApkServer;
 import cm.aptoide.pt.v8engine.R;
 import fi.iki.elonen.NanoHTTPD;
@@ -18,11 +19,10 @@ public class ShareApkSandbox extends NanoHTTPD {
 
   private final ShareApkServer shareApkServer;
 
-  public ShareApkSandbox(Context context) {
+  public ShareApkSandbox(Context context, AssetManager assetManager) {
     super(38080);
-
     shareApkServer = new ShareApkServer(new File(getPathAndroid(context)), getFileName(context),
-        createTokens(context));
+        createTokens(context), assetManager);
   }
 
   private static HashMap<String, String> createTokens(Context context) {

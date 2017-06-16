@@ -300,7 +300,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
           });
       return false;
     }
-    displayable.like(getContext(), getCardTypeName().toUpperCase(), rating);
+    displayable.like(getContext(), getCardTypeName().toUpperCase(), rating,
+        getContext().getResources());
     return true;
   }
 

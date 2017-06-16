@@ -1,11 +1,13 @@
 package cm.aptoide.pt.v8engine.view.downloads;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
@@ -57,11 +58,15 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     installConverter =
         new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     downloadConverter =
         new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
@@ -75,12 +80,14 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     RecyclerView downloadsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     downloadsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-    final int pixelDimen = AptoideUtils.ScreenU.getPixelsForDip(5);
+    final int pixelDimen = AptoideUtils.ScreenU.getPixelsForDip(5,
+        getContext().getResources());
     final DividerItemDecoration decor =
         new DividerItemDecoration(pixelDimen, DividerItemDecoration.ALL);
     downloadsRecyclerView.addItemDecoration(decor);
 
-    adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics);
+    adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,
+        getContext().getResources());
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 

@@ -296,7 +296,8 @@ public class AddStoreDialog extends BaseDialog {
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()).subscribeStore(
         getHomeMetaRequest, getStoreMeta1 -> {
           ShowMessage.asSnack(getView(),
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                  getContext().getResources(), storeName));
 
           dismissLoadingDialog();
           dismiss();

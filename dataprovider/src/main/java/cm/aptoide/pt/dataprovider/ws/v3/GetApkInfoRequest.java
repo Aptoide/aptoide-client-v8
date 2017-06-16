@@ -6,12 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.res.Resources;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -32,7 +31,7 @@ public class GetApkInfoRequest extends V3<PaidApp> {
   public static GetApkInfoRequest of(long appId, boolean sponsored, String storeName,
       NetworkOperatorManager operatorManager, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
     BaseBody args = new BaseBody();
     args.put("identif", "id:" + appId);
     args.put("repo", storeName);
@@ -41,18 +40,17 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     if (sponsored) {
       args.put("adview", "1");
     }
-    addOptions(args, operatorManager,
-        sharedPreferences);
+    addOptions(args, operatorManager, sharedPreferences, resources);
     return new GetApkInfoRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
   private static void addOptions(BaseBody args, NetworkOperatorManager operatorManager,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources) {
     BaseBody options = new BaseBody();
     options.put("cmtlimit", "5");
     options.put("payinfo", "true");
-    options.put("lang", AptoideUtils.SystemU.getCountryCode());
+    options.put("lang", AptoideUtils.SystemU.getCountryCode(resources));
 
     addNetworkInformation(operatorManager, options, sharedPreferences);
 

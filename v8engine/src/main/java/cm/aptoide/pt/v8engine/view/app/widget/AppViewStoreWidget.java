@@ -123,7 +123,8 @@ import rx.functions.Action1;
           .sendFollowStoreEvent();
       storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
         ShowMessage.asSnack(itemView,
-            AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+            AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                getContext().getResources(), storeName));
       }, err -> {
         CrashReport.getInstance()
             .log(err);

@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.v8engine.view.settings;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -26,6 +28,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -211,16 +214,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
     //set AppStore name
     findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
+            getContext().getResources(),
             Application.getConfiguration()
                 .getMarketName()));
 
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+            getContext().getResources(),
             Application.getConfiguration()
                 .getMarketName()));
     autoUpdatepreference.setSummary(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
+            getContext().getResources(),
             Application.getConfiguration()
                 .getMarketName()));
 
@@ -373,6 +379,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .subscribe(deletedSize -> {
                   ShowMessage.asSnack(SettingsFragment.this,
                       AptoideUtils.StringU.getFormattedString(R.string.freed_space,
+                          getContext().getResources(),
                           AptoideUtils.StringU.formatBytes(deletedSize, false)));
                 }, throwable -> {
                   ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
@@ -396,17 +403,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     + "\n"
                     + getString(R.string.setting_screen_size)
                     + ": "
-                    + AptoideUtils.ScreenU.getScreenSize()
+                    + AptoideUtils.ScreenU.getScreenSize(getContext().getResources())
                     + "\n"
                     + getString(R.string.setting_esgl_version)
                     + ": "
-                    + AptoideUtils.SystemU.getGlEsVer()
+                    + AptoideUtils.SystemU.getGlEsVer(
+                ((ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE)))
                     + "\n"
                     + getString(R.string.screenCode)
                     + ": "
-                    + AptoideUtils.ScreenU.getNumericScreenSize()
+                    + AptoideUtils.ScreenU.getNumericScreenSize(getContext().getResources())
                     + "/"
-                    + AptoideUtils.ScreenU.getDensityDpi()
+                    + AptoideUtils.ScreenU.getDensityDpi(
+                ((WindowManager) getContext().getSystemService(Service.WINDOW_SERVICE)))
                     + "\n"
                     + getString(R.string.cpuAbi)
                     + ": "

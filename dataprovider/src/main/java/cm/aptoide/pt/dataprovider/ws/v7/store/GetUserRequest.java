@@ -1,6 +1,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -30,8 +32,10 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
 
   public static GetUserRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault());
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
+      WindowManager windowManager) {
+    final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault(resources,
+        windowManager));
     return new GetUserRequest(new V7Url(url).remove("user/get")
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences);

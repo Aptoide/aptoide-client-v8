@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -41,6 +42,8 @@ public class InAppBillingProductRepository extends ProductRepository {
   private final NetworkOperatorManager operatorManager;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private final PackageManager packageManager;
+  private final String applicationPackageName;
 
   public InAppBillingProductRepository(PurchaseFactory purchaseFactory,
       PaymentFactory paymentFactory, AuthorizationRepository authorizationRepository,
@@ -48,7 +51,8 @@ public class InAppBillingProductRepository extends ProductRepository {
       AuthorizationFactory authorizationFactory, ProductFactory productFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, NetworkOperatorManager operatorManager,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      PackageManager packageManager, String applicationPackageName) {
     super(paymentFactory);
     this.purchaseFactory = purchaseFactory;
     this.productFactory = productFactory;
@@ -58,6 +62,8 @@ public class InAppBillingProductRepository extends ProductRepository {
     this.operatorManager = operatorManager;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.packageManager = packageManager;
+    this.applicationPackageName = applicationPackageName;
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
@@ -156,7 +162,8 @@ public class InAppBillingProductRepository extends ProductRepository {
   private Observable<InAppBillingPurchasesResponse.PurchaseInformation> getServerInAppPurchase(
       int apiVersion, String packageName, String type, boolean bypassCache) {
     return InAppBillingPurchasesRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager,
+        this.applicationPackageName)
         .observe(bypassCache)
         .flatMap(response -> {
           if (response != null && response.isOk()) {

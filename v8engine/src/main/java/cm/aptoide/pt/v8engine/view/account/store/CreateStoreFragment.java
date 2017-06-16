@@ -212,13 +212,16 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     if (!storeModel.storeExists()) {
       String appName = getString(R.string.app_name);
       storeHeader.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_header, appName));
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_header,
+              getContext().getResources(), appName));
       chooseNameTitle.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_name, appName));
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_name,
+              getContext().getResources(), appName));
     } else {
       storeHeader.setText(R.string.edit_store_header);
       chooseNameTitle.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title));
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title,
+              getContext().getResources()));
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());

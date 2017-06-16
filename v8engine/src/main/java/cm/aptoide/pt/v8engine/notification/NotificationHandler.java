@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.notification;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
@@ -29,11 +30,12 @@ public class NotificationHandler implements NotificationNetworkService {
   private final AptoideAccountManager accountManager;
   private final String extraId;
   private final SharedPreferences sharedPreferences;
+  private final Resources resources;
 
   public NotificationHandler(String applicationId, OkHttpClient httpClient,
       Converter.Factory converterFactory, IdsRepository idsRepository, String versionName,
       AptoideAccountManager accountManager, String extraId, PublishRelay<AptoideNotification> relay,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Resources resources) {
     this.applicationId = applicationId;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -43,6 +45,7 @@ public class NotificationHandler implements NotificationNetworkService {
     this.handler = relay;
     this.extraId = extraId;
     this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   @Override public Single<List<AptoideNotification>> getSocialNotifications() {
@@ -50,7 +53,7 @@ public class NotificationHandler implements NotificationNetworkService {
         .first()
         .flatMap(account -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
             versionName, applicationId, httpClient, converterFactory, extraId,
-            account.getAccessToken(), sharedPreferences)
+            account.getAccessToken(), sharedPreferences, resources)
             .observe()
             .map(response -> convertSocialNotifications(response, account.getId())))
         .flatMap(notifications -> handle(notifications))
@@ -62,7 +65,8 @@ public class NotificationHandler implements NotificationNetworkService {
         .first()
         .flatMap(account -> {
           return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(),
-              versionName, applicationId, httpClient, converterFactory, extraId, sharedPreferences)
+              versionName, applicationId, httpClient, converterFactory, extraId, sharedPreferences,
+              resources)
               .observe()
               .map(response -> convertCampaignNotifications(response, account.getId()))
               .first()

@@ -1,10 +1,10 @@
 package cm.aptoide.pt.v8engine.view.comments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -32,7 +33,6 @@ import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -290,7 +290,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         }
 
         this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new DisplayableGroup(displayables));
+        this.displayables.add(new DisplayableGroup(displayables,
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+            getContext().getResources()));
 
         addDisplayables(this.displayables);
       }
@@ -340,7 +342,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         }
 
         this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new DisplayableGroup(displayables));
+        this.displayables.add(new DisplayableGroup(displayables,
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+            getContext().getResources()));
 
         addDisplayables(this.displayables);
       }
@@ -539,7 +543,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       }
     }
     this.displayables = new ArrayList<>(displayables.size());
-    this.displayables.add(new DisplayableGroup(displayables));
+    this.displayables.add(new DisplayableGroup(displayables,
+        (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+        getContext().getResources()));
     clearDisplayables();
     addDisplayables(this.displayables);
   }

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.app.widget;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -33,7 +32,6 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -130,7 +128,9 @@ import rx.functions.Action1;
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
         bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository(),
-        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        getContext().getResources());
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore()
@@ -310,8 +310,6 @@ import rx.functions.Action1;
 
     private static final int LAYOUT_ID = R.layout.mini_top_comment;
 
-    private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
-
     private ImageView userIconImageView;
     private RatingBar ratingBar;
     private TextView commentTitle;
@@ -348,8 +346,9 @@ import rx.functions.Action1;
           .getRating());
       commentTitle.setText(review.getTitle());
       commentText.setText(review.getBody());
-      addedDate.setText(DATE_TIME_U.getTimeDiffString(review.getAdded()
-          .getTime()));
+      addedDate.setText(AptoideUtils.DateTimeU.getInstance(context)
+          .getTimeDiffString(review.getAdded()
+              .getTime(), context, context.getResources()));
     }
 
     public void cancelImageLoad() {

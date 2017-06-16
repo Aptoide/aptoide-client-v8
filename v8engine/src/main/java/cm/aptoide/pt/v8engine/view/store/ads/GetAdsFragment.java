@@ -1,7 +1,10 @@
 package cm.aptoide.pt.v8engine.view.store.ads;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.networkclient.WebService;
@@ -38,7 +41,9 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
             accountManager, httpClient, converterFactory,
             ((V8Engine) getContext().getApplicationContext()).getQManager(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getApplicationContext());
+            getContext().getApplicationContext(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            getContext().getResources(), getContext().getPackageManager());
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
@@ -48,7 +53,9 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
         displayables.add(new GridAdDisplayable(minimalAd, tag));
       }
 
-      return Collections.singletonList(new DisplayableGroup(displayables));
+      return Collections.singletonList(new DisplayableGroup(displayables,
+          (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+          getContext().getResources()));
     });
   }
 }
