@@ -484,4 +484,12 @@ public class InstallManager {
         .first()
         .toSingle();
   }
+
+  public Completable retryTimedOutInstallations(Context context) {
+    return getTimedOutInstallations().first()
+        .flatMapIterable(installationProgresses -> installationProgresses)
+        .flatMapSingle(installationProgress -> getDownload(installationProgress.getMd5()))
+        .flatMapCompletable(download -> defaultInstall(context, download))
+        .toCompletable();
+  }
 }
