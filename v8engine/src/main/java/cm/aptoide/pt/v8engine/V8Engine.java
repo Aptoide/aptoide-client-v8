@@ -106,6 +106,7 @@ import cm.aptoide.pt.v8engine.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
@@ -149,6 +150,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.io.File;
@@ -224,6 +226,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private EntryPointChooser entryPointChooser;
   private NotificationSyncScheduler notificationSyncScheduler;
   private RootAvailabilityManager rootAvailabilityManager;
+  private RootInstallationRetryHandler rootInstallationRetryHandler;
 
   /**
    * call after this instance onCreate()
@@ -325,6 +328,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     }
 
     startNotificationCenter();
+    getRootInstallationRetryHandler().start();
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -341,6 +345,17 @@ public abstract class V8Engine extends SpotAndShareApplication {
             .map(account -> account.getAccessToken());
       }
     };
+  }
+
+  public RootInstallationRetryHandler getRootInstallationRetryHandler() {
+    if (rootInstallationRetryHandler == null) {
+      final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
+          new NotificationIdsMapper());
+      rootInstallationRetryHandler = new RootInstallationRetryHandler(systemNotificationShower,
+          getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0);
+    }
+    return rootInstallationRetryHandler;
   }
 
   private void startNotificationCenter() {
