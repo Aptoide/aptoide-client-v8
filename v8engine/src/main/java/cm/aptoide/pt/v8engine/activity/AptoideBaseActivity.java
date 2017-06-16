@@ -70,7 +70,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 
 
     //Languages option only available for debug mode
-    if(BuildConfig.BUILD_TYPE.equalsIgnoreCase("debug")){
+    //if(BuildConfig.BUILD_TYPE.equalsIgnoreCase("debug")){
       SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
 
       //If the user had previously chosen a language, the app is displayed in that language, if not, it starts with the device's language as default
@@ -81,7 +81,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
       conf.locale = LanguageUtils.getLocaleFromString(lang);
       res.updateConfiguration(conf, dm);
 
-    }
+    //}
 
 
 
