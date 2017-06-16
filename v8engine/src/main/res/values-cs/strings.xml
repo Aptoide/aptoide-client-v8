@@ -250,7 +250,7 @@
   <string name="featured_stores">Featured Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
-  <string name="appstimeline_update_app">app</string>
+  <string name="appstimeline_update_app">aplikaci</string>
   <!--custom tabs-->
   <string name="customtabs_open_native_app">Open in App</string>
   <!--Download fragment-->

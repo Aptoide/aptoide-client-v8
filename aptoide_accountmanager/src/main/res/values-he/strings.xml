@@ -83,7 +83,7 @@
   <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
   <string name="create_user_take_picture">Take a picture for your profile</string>
   <string name="create_user_random_photo">Or use random photo</string>
-  <string name="create_user_choose_username">Choose your username</string>
+  <string name="create_user_choose_username">בחר את שם המשתמש שלך</string>
   <string name="create_user_username">User name</string>
   <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
   <string name="create_user_create_button">Create Profile</string>

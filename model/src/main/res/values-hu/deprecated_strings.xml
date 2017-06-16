@@ -349,7 +349,7 @@
   <string name="navigation_drawer_signup_login">Regisztráció vagy Bejelentkezés</string>
   <string name="active">Aktív</string>
   <string name="completed">Kész</string>
-  <string name="stand_by">Stand by</string>
+  <string name="stand_by">Várakozik</string>
   <string name="_downloads"> letöltés</string>
   <string name="no_description">Nincs leírás</string>
   <string name="description">Leírás</string>

@@ -66,7 +66,7 @@
   <string name="appview_other_versions"><u>其他版本</u></string>
   <string name="appview_latest_version_text">最新版本</string>
   <string name="appview_rate_this_app">給該應用打分</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">閱讀全部 <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">工作正常</string>
   <string name="needs_license">需要授權</string>

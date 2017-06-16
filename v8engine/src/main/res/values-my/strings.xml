@@ -6,8 +6,8 @@
   -->
 <resources>
   <!-- NavDrawer List items -->
-  <string name="my_account">ကျွန်ုပ်၏ အကောင့်</string>
-  <string name="setting_schdwntitle">အစီအစဉ်ပြုလုပ်ထားသော ဒေါင်းလုပ်များ</string>
+  <string name="my_account">မိမိ၏အေကာင့္</string>
+  <string name="setting_schdwntitle">အစီအစဥ္လုပ္ထားေသာ ေဒါင္းလုပ္မ်ား</string>
   <string name="settings">ခ်ိန္ညႇိမႈမ်ား</string>
   <string name="facebook">ေဖ့စ္ဘြတ္</string>
   <string name="twitter">တြစ္တာ</string>
@@ -27,7 +27,7 @@
   <string name="not_available">မရွိပါ</string>
   <string name="developer_email">အီးေမးလ္ - %s</string>
   <string name="developer_privacy_policy">ကိုယ္ေရးလံုၿခံဳမႈ မူ၀ါဒ - %s</string>
-  <string name="open">ဖွင့်ပါ</string>
+  <string name="open">ဖြင့္ရန္</string>
   <string name="button_header_more">ေနာက္ထပ္</string>
   <string name="search">ရှာဖွေပါ</string>
   <string name="update">အဆင့်မြှင့်တင်မှု</string>
@@ -41,7 +41,7 @@
   <string name="clear">ဖ်က္မည္</string>
   <!-- Excluded Updates Fragment -->
   <string name="excluded_updates">အဆင့္မျမွင့္လိုသည့္ app မ်ား</string>
-  <string name="no_excluded_updates_msg">App တစ်ခု၏ဗားရှင်းအသစ်သည် သင့်စက်ပစ္စည်းပေါ်တွင် အလုပ်မလုပ်ပါ သို့မဟုတ် အရည်အသွေးအချို့ လိုအပ်နေပါသည်? Apps များအား အဆင့်မြှင့်တင်ခြင်းမှ ပိတ်ပင်ပါ. အဆင့်မြှင့်မှုများခလုတ်သို့သွား၍ သင်ရပ်လိုသော app အပေါ်တွင် ကြာကြာနှိပ်ထားပါ.</string>
+  <string name="no_excluded_updates_msg">version အသစ္သည္ သင္၏ device တြင္အလုပ္မလုပ္ပါ(သို႔) feature အသစ္မ်ားေပ်ာက္ေနပါသလား? App အဆင့္ျမွင့္တင္ျခင္းမ်ားကိုပိတ္ရန္ Update Tab ကိုသြား၍ update ေပၚတြင္ ဖိနွိပ္ထား ၿပီး ရပ္နိုင္ပါသည္။.</string>
   <!-- Excluded Updates Fragment (menu) -->
   <string name="restore_updates">အဆင့္ျမွင့္တင္ထားသည္မ်ားကို  ျမွင့္တင္ၿပီးသည့္အတိုင္းထားမည္</string>
   <string name="open_apps_manager">Apps မန်နေဂျာအား ဖွင့်ပါ</string>
@@ -60,8 +60,8 @@
   <string name="displayable_social_timeline_app_update">အဆင့္ျမွင့္တင္ျခင္း</string>
   <string name="displayable_social_timeline_app_update_version">ဗားရွင္း %1$s</string>
   <string name="displayable_social_timeline_app_update_button">အဆင့်မြှင့်တင်မှု %1$s</string>
-  <string name="appview_other_versions"><u>အခြား ဗားရှင်းများ</u></string>
-  <string name="appview_latest_version_text">နောက်ဆုံး ဗားရှင်း</string>
+  <string name="appview_other_versions"><u>အျခားဗားရွင္းမ်ား</u></string>
+  <string name="appview_latest_version_text">ေနာက္ဆံုးဗားရွင္း</string>
   <string name="appview_rate_this_app">ဒီ app ကုိအဆင့္သတ္မွတ္ေပးမည္</string>
   <string name="appview_read_all">အားလံုးဖတ္မည္ <![CDATA[>]]>;</string>
   <string name="zero">၀</string>
@@ -69,7 +69,7 @@
   <string name="needs_license">လိုင္စင္ လိုအပ္ပါသည္</string>
   <string name="fake_app">App အတု</string>
   <string name="virus">ဗိုင္းရပ္စ္</string>
-  <string name="additional_information">ထပ်တိုးသတင်းအချက်အလက်</string>
+  <string name="additional_information">ထက္တိုး သတင္းအခ်က္အလက္မ်ား</string>
   <string name="displayable_social_timeline_app_update_updated">အပ္ဒိတ္လုပ္ၿပီးပါၿပီ</string>
   <string name="displayable_social_timeline_app_update_updating">အဆင့်မြှင့်တင်ခြင်း</string>
   <string name="displayable_social_timeline_app_update_error">အဆင့်မြှင့်တင်မှု အမှား</string>
@@ -149,7 +149,7 @@ http://aptoi.de/tv</string>
   <string name="subscribers">ပံုမွန္မွာယူသူမ်ား</string>
   <string name="apps">App မ်ား</string>
   <!---->
-  <string name="be_the_first_to_rate_this_app">ဤ app အား ပထမဆုံး အဆင့်သတ်မှတ်သူ ဖြစ်လိုက်ပါ</string>
+  <string name="be_the_first_to_rate_this_app">ဤ App အားပထမဆံုး အဆင့္သတ္မွတ္ရန္</string>
   <string name="rate_this_app">ဤ app ကို အဆင့်သတ်မှတ္မည္</string>
   <string name="dialog_install_warning_proceed_button">ဆက်လက်လုပ်ဆောင်ပါ</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">႐ွာေဖြႏိုင္ရန္</string>
@@ -158,13 +158,13 @@ http://aptoi.de/tv</string>
   <string name="dialog_install_warning_credibility_text">ေ႐ွ႕မဆက္မီ စတိုး၏စိတ္ခ်ရမႈႏွင့္ မွတ္ခ်က္တို႔ကိုၾကည့္ပါ. Aptoide အေနျဖင့္ %1$s ယုံၾကည္ရသည့္ app မ်ားကိုသာ ထည့္ရန္ အၿမဲတိုက္တြန္းပါသည္.</string>
   <string name="dialog_install_warning_trusted_version_button">ယုံၾကည္ရသည့္ဗားရွင္း</string>
   <string name="dialog_install_warning_get_trusted_version_button">ရယူမည္</string>
-  <string name="flag_results">Flag ပြခြင်း ရလဒ်များ</string>
+  <string name="flag_results">Flag ရလာဒ္</string>
   <string name="helpful">အသံုး၀င္ေသာ</string>
   <string name="not_helpful">အသံုးမ၀င္ေသာ</string>
   <string name="description_not_available">ဤ app အတွက် ရရှိနိုင်သော ဖော်ပြချက် မရှိပါ</string>
   <string name="top_stores_fragment_title">ထိပ္တန္း စတိုးမ်ား</string>
   <!--server translations hammered-->
-  <string name="home_title">ပင်မ</string>
+  <string name="home_title">ပင္မ</string>
   <string name="community">အသိုက္အ၀န္း</string>
   <string name="stores">စတိုးမ်ား</string>
   <string name="updates">အပ္ဒိတ္မ်ား</string>

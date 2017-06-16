@@ -58,9 +58,9 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofHomepage(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature, int numberOfColumns) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID,
+    return of(Location.homepage, Type.ADS.getPerLineCount() * numberOfColumns, aptoideClientUUID,
         googlePlayServicesAvailable, oemid, mature);
   }
 
@@ -211,14 +211,10 @@ import rx.Observable;
   }
 
   public enum Location {
-    homepage("native-aptoide:homepage"),
-    appview("native-aptoide:appview"),
-    middleappview("native-aptoide:middleappview"),
-    search("native-aptoide:search"),
-    secondinstall("native-aptoide:secondinstall"),
-    secondtry("native-aptoide:secondtry"),
-    aptoidesdk("sdk-aptoide:generic"),
-    firstinstall("native-aptoide:first-install");
+    homepage("native-aptoide:homepage"), appview("native-aptoide:appview"), middleappview(
+        "native-aptoide:middleappview"), search("native-aptoide:search"), secondinstall(
+        "native-aptoide:secondinstall"), secondtry("native-aptoide:secondtry"), aptoidesdk(
+        "sdk-aptoide:generic"), firstinstall("native-aptoide:first-install");
 
     private final String value;
 

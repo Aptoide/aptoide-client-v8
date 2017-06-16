@@ -144,7 +144,7 @@
   <string name="facebook_logout_and_login">Facebook ျဖင့္အေကာင့္၀င္မည္ ၊ ထြက္မည္</string>
   <string name="schDown_nodownloadselect">ေဒါင္းလုဒ္ဆြဲမည့္အရာမ်ား မသတ္မွတ္ထားပါ</string>
   <string name="no_sch_downloads">ဖုန္းအင္တာနက္ျဖင့္ရွာေဖြၿပီး wifi ရရွိေသာအခါမွ ေဒါင္းလုဒ္ဆြဲခ်င္ပါသလား? ေဒါင္းလုဒ္ဆြဲအခ်ိန္ဇယားကုိအသုံးျပဳႏိုင္ဖို႔ ဆက္တင္ထဲဝင္ၿပီး ေဒါင္းလုဒ္ဆြဲစည္းမ်ဥ္းကုိ wifi လို႔ ေျပာင္းလုိက္ပါ.</string>
-  <string name="schDown_installselected">ရွေးချယ်ထားသည်များကို ထည့်သွင်းပါ</string>
+  <string name="schDown_installselected">ေရြးထားသည္မ်ားကို ထည့္သြင္းရန္</string>
   <string name="schDown_removeselected">ရွေးချယ်ထားသည်များကို ဖယ်ထုတ်ပါ</string>
   <string name="schDown_invertselection">ရွေးချယ်မှု ပြောင်းပြန်ပြုလုပ်ပါ</string>
   <string name="schDwnBtn">ေဒါင္းလုဒ္စာရင္း</string>
@@ -159,7 +159,7 @@
   <!-- Tab names -->
   <string name="installed_tab">ထည့်သွင်းထားပြီး</string>
   <string name="updates_tab">အဆင့်မြှင့်တင်မှုများ</string>
-  <string name="feedback_send_button">တုံ့ပြန်မှုပေးပို့ပါ</string>
+  <string name="feedback_send_button">ေပးပို႔ရန္</string>
   <string name="menu_context_reparse">ျပန္လုပ္ေဆာင္သည္</string>
   <string name="menu_context_remove">ဖယ်ထုတ်ပါ</string>
   <!-- Stores -->
@@ -284,10 +284,10 @@
   <string name="setting_sum_general_download_rules">ခြင့္ျပဳထားေသာ မိုဘိုင္းအခ်က္အလက္ ဆက္သြယ္မႈမ်ားျဖင့္ Apps မ်ား၊ အယ္ဒီတာ၏ ေရြးခ်ယ္မႈ၊ ထိပ္တန္း Apps မ်ားႏွင့္ စတိုးမ်ားအား ေဒါင္းလုပ္ဆြဲပါ</string>
   <string name="setting_general_download_rules">ေဒါင္းလုဒ္စည္းမ်ဥ္းစည္းကမ္း</string>
   <string name="setting_general">အေထြေထြ</string>
-  <string name="setting_hwspecstitle">ဟာဒ်ဝဲလ် အချက်အလက်များ</string>
-  <string name="setting_hwspecssum">သင့်တီဗွီ၏ ဟာဒ်ဝဲလ်အချက်အလက်များ</string>
-  <string name="setting_appfiltersum">ဤစက်ပစ္စည်းနှင့်မကိုက်ညီသော applications များကို မဖော်ပြပါနှင့်</string>
-  <string name="setting_appfiltertitle">applications များကို စိစစ်ပါ</string>
+  <string name="setting_hwspecstitle">Hardware အခ်က္အလက္မ်ား</string>
+  <string name="setting_hwspecssum">သင့္ဖုန္း ၏ Hardware အခ်က္အလက္မ်ား</string>
+  <string name="setting_appfiltersum">ထည့္သြင္းရန္ကိုက္ ညီမႉမရွိေသာ Application မ်ားကိုမၿပရန္</string>
+  <string name="setting_appfiltertitle">Applications မ်ားကိုစိစစ္ရန္</string>
   <string name="setting_dont_show_mature_content">အရြယ္ေရာက္ၿပီးသူမ်ား  ဖတ္သည့္အရာတို႔ကို ျပပါ</string>
   <string name="setting_mature_filtering">အရြယ္ေရာက္သူအတြက္ ပါ၀င္မႈ</string>
   <string name="setting_updates">အပ္ဒိတ္မ်ား</string>
@@ -301,10 +301,10 @@
   <string name="setting_allUpdates_filtering">အဆင့္ျမွင့္တင္ျခင္းကို ေရြးထုတ္ႏိုင္ရန္</string>
   <string name="setting_schdwninstallsum">WiFi connection ရွိေနေသာအခါ ေဒါင္းလုဒ္ဆြဲရန္အစီအစဥ္ခ်ထားသည္မ်ားကုိ အလုိအေလ်ာက္ install လုပ္ပါ</string>
   <string name="setting_schdwninstalltitle">အလုိအေလ်ာက္ထည့္သြင္းမည္</string>
-  <string name="setting_clear_memory">မှတ်ဥာဏ်ကို ရှင်းပါ</string>
+  <string name="setting_clear_memory">သိုေလွာင္မႉ</string>
   <string name="clearcontent_title">အချက်အလက်များနှင့် စီစဉ်မှုများကို ဖယ်ထုတ်ပါ</string>
-  <string name="settings_maxFileCache_sum">သင့် apk ဖိုင်များကို သိမ်းထားရန် အများဆုံး အရွယ်အစားတစ်ခု သတ်မှတ်ပါ</string>
-  <string name="settings_maxFileCache_title">ဒေါင်းလုပ်ဖိုင် cache (MB)</string>
+  <string name="settings_maxFileCache_sum">သင့္ APK ဖိုင္ အရြယ္ကို အၿမင့္ဆံုးသတ္မွတ္ရန္</string>
+  <string name="settings_maxFileCache_title">ေဒါင္းလုပ္(ခ္) ဖိုင္ ၏ cache</string>
   <string name="change_theme">အသွင်အပြင် ပြောင်းပါ</string>
   <string name="change_theme_soon">မၾကာမီလာမည္</string>
   <string name="theme">အပြင်အဆင်များ</string>
@@ -349,7 +349,7 @@
   <string name="appview_rate_Success">App ကုိအဆင့္သတ္မွတ္ထားသည္</string>
   <string name="ignoreUpdateText">အပ္ဒိတ္ မလုပ္ေသးပါ</string>
   <string name="ignored">လစ်လျူရှုထားသော</string>
-  <string name="noIgnoreUpdateText">ယခု app ၏ဗားရွင္းအသစ္မွာ သင့္ဖုန္းတြင္အလုပ္မလုပ္ပဲေနပါသလား သုိ႔မဟုတ္ တခ်ိဳ႕ feature ေတြ မပါဘူးလား? Appကုိ အဆင့္ျမွင့္တင္ေနျခင္းမွ တားျမစ္မည္. Updates tab ကုိသြားပါ . မိမိရပ္တန္႔ခ်င္သည့္ app ကိုၾကာၾကာဖိထားေပးပါ.</string>
+  <string name="noIgnoreUpdateText">version အသစ္သည္ သင္၏ device တြင္အလုပ္မလုပ္ပါ(သို႔) feature အသစ္မ်ားေပ်ာက္ေနပါသလား? App အဆင့္ျမွင့္တင္ျခင္းမ်ားကိုပိတ္ရန္ Update Tab ကိုသြား၍ update ေပၚတြင္ ဖိနွိပ္ထား ၿပီး ရပ္နိုင္ပါသည္။.</string>
   <string name="createReviewButtonText">ျပန္လည္စစ္ေဆးမႈ ျပဳလုပ္ပါ</string>
   <string name="navigation_drawer_signup_login">အေကာင့္အသစ္ဖြင့္မည္ (သုိ႔) အေကာင့္ဝင္မည္</string>
   <string name="active">နိုးကြားသော</string>

@@ -66,7 +66,7 @@
   <string name="appview_other_versions"><u>Outras Versões</u></string>
   <string name="appview_latest_version_text">Última versão</string>
   <string name="appview_rate_this_app">Dê a sua opinião</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">ler tudo <![CDATA[>]]>;</string>
   <string name="zero">0</string>
   <string name="working_well">Funciona Bem</string>
   <string name="needs_license">Requer licença</string>

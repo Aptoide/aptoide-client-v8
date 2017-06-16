@@ -64,7 +64,7 @@
   <string name="appview_other_versions"><u>इतर आवृत्त्या</u></string>
   <string name="appview_latest_version_text">नवीन आवृत्ती</string>
   <string name="appview_rate_this_app">या अॅपला रेट करा</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">सर्व वाचा <![CDATA[>]]>;</string>
   <string name="zero">०</string>
   <string name="working_well">व्यवस्थित काम करीत आहे</string>
   <string name="needs_license">लायसन्सची गरज आहे</string>

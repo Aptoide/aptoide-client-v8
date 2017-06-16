@@ -63,7 +63,7 @@
   <string name="appview_other_versions"><u>Egyéb változatok</u></string>
   <string name="appview_latest_version_text">Legújabb verzió</string>
   <string name="appview_rate_this_app">Értékelje ezt az appot</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">ÖSSZES KOMMENT <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">Jól működik</string>
   <string name="needs_license">Licensz szükséges</string>
@@ -255,7 +255,7 @@
   <string name="fragment_download_no_connection_subtitle">Itt jelennek meg az új alkalmazások amint elkezdi letölteni őket!</string>
   <string name="newer_version_available">Újabb verzió érhető el</string>
   <string name="add_store">Áruház hozzáadása</string>
-  <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
+  <string name="downgrade_warning_dialog">Régebbi verzió felrakásával elveszíthet az appal kapcsolatos adatokat, valamint kijelentkeződhet abból.</string>
   <string name="displayable_social_timeline_similar_to">hasonlít ehhez: %1$s</string>
   <string name="freed_space">%s felszabadítva</string>
   <string name="storage_dialog_title">Aptoide tárhely törlése</string>
@@ -274,8 +274,8 @@
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Az áruháza még nem tartalmaz alkalmazásokat.</string>
   <string name="install_app_outter_pt2">és töltsön fel appokat, megosztva őket a világgal!</string>
-  <string name="install_app_inner">\u0020Install %1$s\u0020</string>
-  <string name="open_app_inner">\u0020Open %1$s\u0020</string>
+  <string name="install_app_inner">\u0020Telepítse fel a(z) %1$s appot\u0020</string>
+  <string name="open_app_inner">\u0020%1$s megnyitása\u0020</string>
   <string name="downloads_count">Letöltések: %1$s</string>
   <string name="version_number">Verzió: %1$s</string>
   <string name="app_size">Méret: %1$s</string>

@@ -46,25 +46,12 @@
 
     <activity android:name=".v8engine.MainActivityFragment">
       <intent-filter>
-        <data android:scheme="amp${LOCALYTICS_APP_KEY}"/>
         <action android:name="android.intent.action.VIEW"/>
 
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
       </intent-filter>
     </activity>
-
-    <meta-data
-        android:name="LOCALYTICS_APP_KEY"
-        android:value="${LOCALYTICS_APP_KEY}"/>
-
-    <receiver
-        android:name="com.localytics.android.ReferralReceiver"
-        android:exported="true">
-      <intent-filter>
-        <action android:name="com.android.vending.INSTALL_REFERRER"/>
-      </intent-filter>
-    </receiver>
 
     <meta-data
         android:name="io.fabric.ApiKey"
@@ -114,24 +101,6 @@
         <category android:name="${currentApplicationId}"/>
       </intent-filter>
     </receiver>
-
-    <service
-        android:name="com.localytics.android.GcmListenerService"
-        android:exported="false">
-      <intent-filter>
-        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-      </intent-filter>
-    </service>
-
-    <activity android:name="com.localytics.android.PushTrackingActivity"/>
-
-    <service
-        android:name="com.localytics.android.InstanceIDListenerService"
-        android:exported="false">
-      <intent-filter>
-        <action android:name="com.google.android.gms.iid.InstanceID"/>
-      </intent-filter>
-    </service>
 
     <service
         android:name="cm.aptoide.pt.iab.InAppBillingService"
