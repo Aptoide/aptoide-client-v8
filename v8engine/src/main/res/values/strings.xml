@@ -365,4 +365,7 @@
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
 
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+
 </resources>

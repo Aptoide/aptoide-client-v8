@@ -109,7 +109,7 @@
   <!-- DownloadManager -->
   <string name="timeout">ကြန္ရက္ဆက္သြယ္မႈအတြက္ သတ္မွတ္ခ်ိန္ေက်ာ္လြန္သြားပါျပီ</string>
   <string name="ip_blacklisted">ကန္႔သတ္စာရင္းဝင္ IP</string>
-  <string name="connection_error">ကွန်ရက်ဆက်သွယ်မှု မရှိပါ</string>
+  <string name="connection_error">ကြန္ယက္ဆက္သြယ္မႉမရွိပါ</string>
   <string name="apk_not_found">Apk မေတြ႕ပါ</string>
   <string name="invalid_apk">apk မွားေနပါသည္</string>
   <string name="remote_in_nospace">သင့္ဖုန္းတြင္ ေနရာမလံုေလာက္ပါ.</string>
@@ -125,7 +125,7 @@
   <string name="data_usage_constraint">Settings &gt; General Download Rules တြင္ ေဒါင္းလုဒ္ဆြဲ၍မရႏိုင္ပါ</string>
   <string name="download_pending">ေခတၱေစာင့္ပါ</string>
   <!-- layouts -->
-  <string name="download_retry">ပြန်ကြိုးစားပါ</string>
+  <string name="download_retry">ၿပန္လည္လုပ္ေဆာင္ပါ</string>
   <string name="error503">App ေတြကို တစ္ခ်ိန္တည္းမွာ install လုပ္ေနသူေတြ႐ွိလား?</string>
   <string name="having_some_trouble">အခက္ခဲမ်ားရွိေနပါသည္. ေနာက္တစ္ၾကိမ္ လုပ္ေဆာင္ပါ?</string>
   <!-- Vote -->

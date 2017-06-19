@@ -51,7 +51,7 @@
   <!-- Timeline Fragment -->
   <string name="menu_card_timeline_clear">ဖ်က္မည္</string>
   <string name="fragment_social_timeline_aptoide_team">Aptoide အဖွဲ့</string>
-  <string name="fragment_social_timeline_no_connection">ကွန်ရက်ဆက်သွယ်မှု မရှိပါ</string>
+  <string name="fragment_social_timeline_no_connection">ကြန္ယက္ဆက္သြယ္မႉမရွိပါ</string>
   <string name="fragment_social_timeline_general_error">အခက္ခဲမ်ားရွိေနပါသည္. ေနာက္မွျပန္လုပ္ႏိုင္မလား?</string>
   <string name="displayable_social_timeline_store_latest_apps_headline">ဤစတိုးတွင် Apps အသစ်များ ရှိသည်</string>
   <string name="displayable_social_timeline_app_update_name">အပ္စ္ %1$s</string>
@@ -124,7 +124,7 @@ http://aptoi.de/tv</string>
   <string name="remote_install_nowifi_tip">ဖြင့္ထားၿပီး ဝိုင္ဖိုင္ကြန္ရက္တစ္ခုသို႕ ဆက္သြယ္ေပးပါ</string>
   <string name="remote_install_empty_list">ရွာေဖြေနပါသည္…</string>
   <string name="remote_install_tip">သင့္ AndroidTV အား ကြန္ရက္ႏွင့္ဆက္သြယ္ထားေၾကာင္း ေသခ်ာေအာင္ ျပဳလုပ္ေပးပါ</string>
-  <string name="remote_install_retry">ျပန္ႀကိဳးစားပါ</string>
+  <string name="remote_install_retry">ၿပန္လည္လုပ္ေဆာင္ပါ</string>
   <string name="remote_install_help">အကူအညီ</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>ကျော်ပါ</b></string>
