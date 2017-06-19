@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.install.installer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
@@ -18,40 +19,62 @@ import rx.Subscription;
  */
 
 public class RootInstallationRetryHandler {
-  public static final int NOTIFICATION_ID = 2342384;
+  private final int notificationId;
   private final SystemNotificationShower systemNotificationShower;
   private final InstallManager installManager;
   private final PublishRelay<RootInstallErrorNotification> handler;
+  private final NotificationCompat.Action notificationAction;
   private int count;
   private Bitmap icon;
   private Context context;
   private Subscription subscription;
 
-  public RootInstallationRetryHandler(SystemNotificationShower systemNotificationShower,
-      InstallManager installManager, PublishRelay<RootInstallErrorNotification> handler,
-      int initialCount, Context context, Bitmap icon) {
+  public RootInstallationRetryHandler(int notificationId,
+      SystemNotificationShower systemNotificationShower, InstallManager installManager,
+      PublishRelay<RootInstallErrorNotification> handler, int initialCount, Context context,
+      Bitmap icon, NotificationCompat.Action notificationAction) {
+    this.notificationId = notificationId;
     this.systemNotificationShower = systemNotificationShower;
     this.installManager = installManager;
     this.handler = handler;
     this.count = initialCount;
     this.icon = icon;
     this.context = context;
+    this.notificationAction = notificationAction;
   }
 
   public void start() {
     subscription = installManager.getTimedOutInstallations()
-        .filter(installationProgresses -> installationProgresses.size() > 0)
-        .map(installationProgresses -> new RootInstallErrorNotification(NOTIFICATION_ID, icon,
-            getNotificationTitle(installationProgresses)))
+        .flatMap(installationProgresses -> {
+          switch (installationProgresses.size()) {
+            case 0:
+              return dismissNotification();
+            default:
+              return showErrorNotification(installationProgresses);
+          }
+        })
+        .subscribe(rootInstallErrorNotification -> {
+        }, throwable -> throwable.printStackTrace());
+  }
+
+  private Observable<Void> dismissNotification() {
+    if (count == 0) {
+      systemNotificationShower.dismissNotification(notificationId);
+    }
+    return Observable.empty();
+  }
+
+  @NonNull public Observable<RootInstallErrorNotification> showErrorNotification(
+      List<InstallationProgress> installationProgresses) {
+    return Observable.just(new RootInstallErrorNotification(notificationId, icon,
+        getNotificationTitle(installationProgresses), notificationAction))
         .flatMapCompletable(installations -> {
           if (count == 0) {
             return systemNotificationShower.showNotification(context, installations);
           } else {
             return Completable.fromAction(() -> handler.call(installations));
           }
-        })
-        .subscribe(rootInstallErrorNotification -> {
-        }, throwable -> throwable.printStackTrace());
+        });
   }
 
   @NonNull private String getNotificationTitle(List<InstallationProgress> installationProgresses) {

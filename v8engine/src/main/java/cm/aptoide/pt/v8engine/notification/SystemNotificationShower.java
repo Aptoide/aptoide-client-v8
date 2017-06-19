@@ -58,8 +58,7 @@ public class SystemNotificationShower {
       Intent resultIntent = new Intent(context, NotificationReceiver.class);
       resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
 
-      resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID,
-          notificationId);
+      resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
 
       if (!TextUtils.isEmpty(trackUrl)) {
         resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);
@@ -134,18 +133,25 @@ public class SystemNotificationShower {
     return Completable.defer(() -> Completable.fromAction(() -> {
       android.app.Notification notification =
           mapToAndroidNotification(context, installErrorNotification);
-      notificationManager.notify(installErrorNotification.getId(), notification);
+      notificationManager.notify(installErrorNotification.getNotificationId(), notification);
     }))
         .subscribeOn(AndroidSchedulers.mainThread());
   }
 
-  private Notification mapToAndroidNotification(Context context,
-      RootInstallErrorNotification installErrorNotification) {
-    return new NotificationCompat.Builder(context).setContentTitle(
-        installErrorNotification.getMessage())
-        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-        .setLargeIcon(installErrorNotification.getIcon())
-        .setAutoCancel(true)
-        .build();
+  private Notification mapToAndroidNotification(Context context, RootInstallErrorNotification installErrorNotification) {
+    Notification notification =
+        new NotificationCompat.Builder(context).setContentTitle(installErrorNotification.getMessage())
+            .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+            .setLargeIcon(installErrorNotification.getIcon())
+            .setAutoCancel(true)
+            .addAction(installErrorNotification.getAction())
+            .build();
+
+    notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+    return notification;
+  }
+
+  public void dismissNotification(int notificationId) {
+    notificationManager.cancel(notificationId);
   }
 }
