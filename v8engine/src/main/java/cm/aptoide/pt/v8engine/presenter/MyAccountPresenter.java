@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -18,16 +19,18 @@ public class MyAccountPresenter implements Presenter {
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
+  private final SharedPreferences sharedPreferences;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory) {
+      LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.navigator = navigator;
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public void present() {
@@ -119,7 +122,7 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(click -> accountManager.logout()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
-              ManagerPreferences.setAddressBookSyncValues(false);
+              ManagerPreferences.setAddressBookSyncValues(false, sharedPreferences);
               view.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())

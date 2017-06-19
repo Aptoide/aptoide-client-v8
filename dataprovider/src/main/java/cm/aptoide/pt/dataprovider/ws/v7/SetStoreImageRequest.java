@@ -1,6 +1,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -17,19 +20,23 @@ import rx.Observable;
 
 public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
 
-  private static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http"
-      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-      + "/api/7/";
+  @NonNull public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
+  }
 
   private final MultipartBody.Part multipartBody;
 
   private SetStoreImageRequest(HashMapNotNull<String, RequestBody> body,
       MultipartBody.Part multipartBody,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, SharedPreferences sharedPreferences,
+      TokenInvalidator tokenInvalidator) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.multipartBody = multipartBody;
   }
 
@@ -37,7 +44,8 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
       String storeDescription, String storeAvatarPath,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, RequestBodyFactory requestBodyFactory,
-      ObjectMapper serializer) {
+      ObjectMapper serializer, SharedPreferences sharedPreferences,
+      TokenInvalidator tokenInvalidator) {
 
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
@@ -46,13 +54,14 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
 
     return new SetStoreImageRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
   }
 
   public static SetStoreImageRequest of(long storeId, String storeTheme, String storeDescription,
       String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      RequestBodyFactory requestBodyFactory, ObjectMapper serializer) {
+      RequestBodyFactory requestBodyFactory, ObjectMapper serializer,
+      SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator) {
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
     body.put("store_id", requestBodyFactory.createBodyPartFromLong(storeId));
@@ -60,7 +69,7 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
 
     return new SetStoreImageRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
   }
 
   private static void addStoreProperties(String storeTheme, String storeDescription,

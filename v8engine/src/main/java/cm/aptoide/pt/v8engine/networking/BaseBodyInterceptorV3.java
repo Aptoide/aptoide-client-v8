@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.networking;
 
+import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -20,16 +21,18 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
   private final IdsRepository idsRepository;
   private final AptoideAccountManager accountManager;
   private final QManager qManager;
+  private final SharedPreferences sharedPreferences;
   private final String responseMode;
 
   public BaseBodyInterceptorV3(IdsRepository idsRepository, String aptoideMd5sum,
       String aptoidePackage, AptoideAccountManager accountManager, QManager qManager,
-      String responseMode) {
+      SharedPreferences sharedPreferences, String responseMode) {
     this.idsRepository = idsRepository;
     this.aptoideMd5sum = aptoideMd5sum;
     this.aptoidePackage = aptoidePackage;
     this.accountManager = accountManager;
     this.qManager = qManager;
+    this.sharedPreferences = sharedPreferences;
     this.responseMode = responseMode;
   }
 
@@ -41,7 +44,7 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
           body.setAptoideMd5sum(aptoideMd5sum);
           body.setAptoidePackage(aptoidePackage);
           body.setAptoideUid(idsRepository.getUniqueIdentifier());
-          body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
+          body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
           body.setResponseMode(responseMode);
           if (account.isLoggedIn()) {
             body.setAccessToken(account.getAccessToken());

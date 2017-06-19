@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.store;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -21,9 +22,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
@@ -81,6 +84,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TimelineAnalytics timelineAnalytics;
+  private TokenInvalidator tokenInvalidator;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -125,13 +129,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null);
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
+        tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override public void onDestroy() {
@@ -255,8 +263,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected PagerAdapter createPagerAdapter() {
-    return new StorePagerAdapter(getChildFragmentManager(), tabs, storeContext, storeId,
-        storeTheme);
+    return new StorePagerAdapter(getChildFragmentManager(), tabs, storeContext, storeId, storeTheme,
+        getContext().getApplicationContext());
   }
 
   @Override public int getContentViewId() {
@@ -294,7 +302,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
       case GetHome:
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
-            storeContext, bodyInterceptor, httpClient, converterFactory)
+            storeContext, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getResources(),
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe(refresh)
             .map(getHome -> {
               Store store = getHome.getNodes()
@@ -316,7 +327,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
       default:
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
-            bodyInterceptor, httpClient, converterFactory)
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getResources(),
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe(refresh)
             .map(getStore -> {
               setupVariables(getStore.getNodes()

@@ -92,7 +92,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final GetHomeMeta getHomeMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData()
         .getStore();
@@ -268,6 +270,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .getId());
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                getContext().getResources(),
                 storeWrapper.getStore()
                     .getName()));
       } else {
@@ -276,6 +279,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .getName(), subscribedStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                  getContext().getResources(),
                   subscribedStoreMeta.getData()
                       .getName()));
         }, err -> {

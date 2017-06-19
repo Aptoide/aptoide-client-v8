@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -31,13 +32,17 @@ public class MainPresenter implements Presenter {
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final ApkFy apkFy;
   private final AutoUpdate autoUpdate;
+  private final SharedPreferences sharedPreferences;
+  private final SharedPreferences securePreferences;
   private final CrashReport crashReport;
   private final FragmentNavigator fragmentNavigator;
   private final DeepLinkManager deepLinkManager;
+
   private boolean firstCreated;
 
   public MainPresenter(MainView view, ApkFy apkFy, AutoUpdate autoUpdate,
       ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler,
+      SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       CrashReport crashReport, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager) {
     this.view = view;
@@ -49,6 +54,8 @@ public class MainPresenter implements Presenter {
     this.fragmentNavigator = fragmentNavigator;
     this.deepLinkManager = deepLinkManager;
     this.firstCreated = true;
+    this.sharedPreferences = sharedPreferences;
+    this.securePreferences = securePreferences;
   }
 
   @Override public void present() {
@@ -75,16 +82,16 @@ public class MainPresenter implements Presenter {
   // proper up/back navigation to home if needed
   private void navigate() {
     showHome();
-    if (ManagerPreferences.isCheckAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
+    if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences) && !V8Engine.isAutoUpdateWasCalled()) {
       // only call auto update when the app was not on the background
       autoUpdate.execute();
     }
     if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
-      SecurePreferences.setWizardAvailable(false);
+      SecurePreferences.setWizardAvailable(false, securePreferences);
     } else {
-      if (SecurePreferences.isWizardAvailable()) {
+      if (SecurePreferences.isWizardAvailable(securePreferences)) {
         showWizard();
-        SecurePreferences.setWizardAvailable(false);
+        SecurePreferences.setWizardAvailable(false, securePreferences);
       }
     }
   }

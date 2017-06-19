@@ -96,7 +96,9 @@ public class SocialStoreLatestAppsWidget
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser()
         .getName());
@@ -242,6 +244,7 @@ public class SocialStoreLatestAppsWidget
                       displayable.getStoreCredentialsProvider());
                   ShowMessage.asSnack(itemView,
                       AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                          getContext().getResources(),
                           storeName));
                 }, err -> {
                   CrashReport.getInstance()
@@ -255,7 +258,8 @@ public class SocialStoreLatestAppsWidget
                 .subscribe(__ -> {
                   storeUtilsProxy.subscribeStore(storeName);
                   ShowMessage.asSnack(itemView,
-                      AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+                      AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                          getContext().getResources(), storeName));
                 }, err -> {
                   CrashReport.getInstance()
                       .log(err);

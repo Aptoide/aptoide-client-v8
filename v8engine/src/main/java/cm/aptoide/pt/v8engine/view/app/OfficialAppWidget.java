@@ -80,7 +80,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     if (!TextUtils.isEmpty(appMeta.first)) {
 
       // get multi part message
-      final String[] parts = Translator.translateToMultiple(appMeta.first);
+      final String[] parts =
+          Translator.translateToMultiple(appMeta.first, getContext().getApplicationContext());
       if (parts != null && parts.length == 4) {
         SpannableString middle =
             new SpannableString(String.format(isAppInstalled ? parts[3] : parts[2], appName));
@@ -137,7 +138,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     compositeSubscription.add(RxView.clicks(installButton)
         .subscribe(a -> {
           if (isAppInstalled) {
-            AptoideUtils.SystemU.openApp(appData.getPackageName());
+            AptoideUtils.SystemU.openApp(appData.getPackageName(),
+                getContext().getPackageManager(), getContext());
           } else {
             // show app view to install app
             Fragment appView = V8Engine.getFragmentProvider()

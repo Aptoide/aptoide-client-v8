@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.account;
 
+import android.content.res.Resources;
 import android.support.annotation.StringRes;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -15,11 +15,10 @@ import cm.aptoide.pt.v8engine.R;
 
 public class ErrorsMapper {
 
-  public static @StringRes int getWebServiceErrorMessageFromCode(String errorCode) {
-    int error = Application.getContext()
-        .getResources()
-        .getIdentifier("ws_error_" + errorCode.replace("-", "_"), "string", Application.getContext()
-            .getPackageName());
+  public static @StringRes int getWebServiceErrorMessageFromCode(String errorCode,
+      String packageName, Resources resources) {
+    int error =
+        resources.getIdentifier("ws_error_" + errorCode.replace("-", "_"), "string", packageName);
 
     return error == 0 ? R.string.unknown_error : error;
   }

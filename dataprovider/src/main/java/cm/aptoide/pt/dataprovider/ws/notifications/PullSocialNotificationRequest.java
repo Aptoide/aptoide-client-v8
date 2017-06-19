@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.notifications;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.text.TextUtils;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -22,7 +24,6 @@ import rx.Observable;
 public class PullSocialNotificationRequest
     extends Notifications<List<GetPullNotificationsResponse>> {
 
-  protected static String BASE_HOST = "http://pnp.aptoide.com/pnp/v1/notifications/";
   private static List<Integer> pretendedNotificationTypes;
   private final Map<String, String> options;
   private final String id;
@@ -36,12 +37,12 @@ public class PullSocialNotificationRequest
 
   public static PullSocialNotificationRequest of(String uniqueIdentifier, String versionName,
       String appId, OkHttpClient httpClient, Converter.Factory converterFactory, String oemid,
-      String accessToken) {
+      String accessToken, SharedPreferences sharedPreferences, Resources resources) {
 
     Map<String, String> options = new HashMap<>();
     pretendedNotificationTypes = new ArrayList<>();
 
-    options.put("language", AptoideUtils.SystemU.getCountryCode());
+    options.put("language", AptoideUtils.SystemU.getCountryCode(resources));
     options.put("aptoide_version", versionName);
 
     if (!TextUtils.isEmpty(accessToken)) {
@@ -55,7 +56,7 @@ public class PullSocialNotificationRequest
       options.put("oem_id", oemid);
     }
     options.put("aptoide_package", appId);
-    if (ToolboxManager.isDebug()) {
+    if (ToolboxManager.isDebug(sharedPreferences)) {
       options.put("debug", "true");
     }
 

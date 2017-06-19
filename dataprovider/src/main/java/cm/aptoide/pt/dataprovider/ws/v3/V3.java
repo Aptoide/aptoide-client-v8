@@ -5,12 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
@@ -46,27 +47,34 @@ import rx.Observable;
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
-  protected static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http"
-      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_HOST
-      + "/webservices/3/";
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_HOST
+        + "/webservices/3/";
+  }
 
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
 
   protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(Interfaces.class, httpClient, converterFactory, BASE_HOST);
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(Interfaces.class, httpClient, converterFactory, getHost(sharedPreferences));
     this.map = baseBody;
     this.bodyInterceptor = bodyInterceptor;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   protected V3(OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    this(new BaseBody(), okHttpClient, converterFactory, bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    this(new BaseBody(), okHttpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {
@@ -85,9 +93,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     return builder.toString();
   }
 
-  protected static void addNetworkInformation(NetworkOperatorManager operatorManager,
-      BaseBody args) {
-    String forceCountry = ToolboxManager.getForceCountry();
+  protected static void addNetworkInformation(NetworkOperatorManager operatorManager, BaseBody args,
+      SharedPreferences sharedPreferences) {
+    String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
     if (!TextUtils.isEmpty(forceCountry)) {
       args.put("simcc", forceCountry);
     } else {
@@ -116,10 +124,8 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
                     if (!accessTokenRetry) {
                       accessTokenRetry = true;
-                      return DataProvider.invalidateAccessToken()
-                          .flatMapObservable(s -> {
-                            return V3.this.observe(bypassCache);
-                          });
+                      return tokenInvalidator.invalidateAccessToken()
+                          .andThen(V3.this.observe(bypassCache));
                     }
                   } else {
                     return Observable.error(

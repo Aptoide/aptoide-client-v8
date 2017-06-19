@@ -99,7 +99,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final StoreUtilsProxy storeUtilsProxy =
           new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
               AccessorFactory.getAccessorFor(Store.class), httpClient,
-              WebService.getDefaultConverter());
+              WebService.getDefaultConverter(),
+              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+              ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
@@ -109,7 +111,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       Action1<Void> subscribeStore = __ -> {
         storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                  getContext().getResources(), storeName));
         }, err -> {
           CrashReport.getInstance()
               .log(err);
@@ -163,12 +166,13 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     }
 
     if (displayable.hasStore()) {
-      setupStoreNameTv(displayable.getStoreColor(context), displayable.storeName());
+      setupStoreNameTv(displayable.getStoreColor(getContext().getApplicationContext()),
+          displayable.storeName());
     } else {
       storeNameTv.setVisibility(View.GONE);
     }
-    followedTv.setTextColor(displayable.getStoreColor(context));
-    followingTv.setTextColor(displayable.getStoreColor(context));
+    followedTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
+    followingTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(click -> displayable.viewClicked(getFragmentNavigator()), err -> {
@@ -178,13 +182,14 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   private void setFollowColor(FollowUserDisplayable displayable) {
-    final FragmentActivity context = getContext();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      follow.setBackground(displayable.getButtonBackgroundStoreThemeColor(context));
+      follow.setBackground(
+          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
     } else {
-      follow.setBackgroundDrawable(displayable.getButtonBackgroundStoreThemeColor(context));
+      follow.setBackgroundDrawable(
+          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
     }
-    follow.setTextColor(displayable.getStoreColor(context));
+    follow.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
   }
 
   private void setupStoreNameTv(int storeColor, String storeName) {

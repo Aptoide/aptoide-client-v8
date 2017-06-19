@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -14,6 +15,8 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
@@ -56,11 +59,16 @@ public class MainActivity extends TabNavigatorActivity
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
 
     final AutoUpdate autoUpdate =
-        new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager);
-
+        new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager,
+            getResources(), Application.getConfiguration()
+            .getAutoUpdateUrl());
     final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    final SharedPreferences sharedPreferences =
+        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    final SharedPreferences securePreferences =
+        SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
 
     final StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
 
@@ -69,19 +77,21 @@ public class MainActivity extends TabNavigatorActivity
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
-        converterFactory);
+        converterFactory, ((V8Engine) getApplicationContext()).getTokenInvalidator(),
+        sharedPreferences);
 
     final DeepLinkManager deepLinkManager =
-        new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this);
+        new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
+            sharedPreferences);
 
-    final ApkFy apkFy = new ApkFy(this, getIntent());
+    final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 
     final NotificationSyncScheduler notificationSyncScheduler =
         ((V8Engine) getApplicationContext()).getNotificationSyncScheduler();
 
     attachPresenter(new MainPresenter(this, apkFy, autoUpdate, new ContentPuller(this),
-            notificationSyncScheduler, CrashReport.getInstance(), fragmentNavigator, deepLinkManager),
-        savedInstanceState);
+        notificationSyncScheduler, sharedPreferences, securePreferences, CrashReport.getInstance(),
+        fragmentNavigator, deepLinkManager), savedInstanceState);
   }
 
   @Override public Intent getIntentAfterCreate() {
@@ -94,6 +104,7 @@ public class MainActivity extends TabNavigatorActivity
 
   @Override public void showStoreFollowed(String storeName) {
     ShowMessage.asLongSnack(this,
-        AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+        AptoideUtils.StringU.getFormattedString(R.string.store_followed, getResources(),
+            storeName));
   }
 }

@@ -89,10 +89,10 @@ import rx.functions.Action1;
     storeNameView.setTextColor(
         storeThemeEnum.getStoreHeaderColorResource(context.getResources(), context.getTheme()));
 
-    storeNumberUsersView.setText(String.format(Locale.ENGLISH, V8Engine.getContext()
-        .getString(R.string.appview_followers_count_text), AptoideUtils.StringU.withSuffix(
-        store.getStats()
-            .getSubscribers())));
+    storeNumberUsersView.setText(
+        String.format(Locale.ENGLISH, getContext().getString(R.string.appview_followers_count_text),
+            AptoideUtils.StringU.withSuffix(store.getStats()
+                .getSubscribers())));
 
     followButton.setBackgroundDrawable(
         storeThemeEnum.getButtonLayoutDrawable(context.getResources(), context.getTheme()));
@@ -107,7 +107,9 @@ import rx.functions.Action1;
     final StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<Void> openStore = __ -> {
       displayable.getAppViewAnalytics()
@@ -121,7 +123,8 @@ import rx.functions.Action1;
           .sendFollowStoreEvent();
       storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
         ShowMessage.asSnack(itemView,
-            AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+            AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                getContext().getResources(), storeName));
       }, err -> {
         CrashReport.getInstance()
             .log(err);

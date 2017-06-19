@@ -1,5 +1,8 @@
 package cm.aptoide.pt.v8engine.networking;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -22,10 +25,15 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
   private final QManager qManager;
   private final String cdn;
   private final Boolean adultContentDefaultValue;
+  private final SharedPreferences sharedPreferences;
+  private final Resources resources;
+  private final PackageManager packageManager;
+  private final String packageName;
 
   public BaseBodyInterceptorV7(IdsRepository idsRepository, AptoideAccountManager accountManager,
       AdultContent adultContent, String aptoideMd5sum, String aptoidePackage, QManager qManager,
-      String cdn) {
+      String cdn, SharedPreferences sharedPreferences, Resources resources,
+      PackageManager packageManager, String packageName) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.adultContent = adultContent;
@@ -34,11 +42,16 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
     this.qManager = qManager;
     this.cdn = cdn;
     this.adultContentDefaultValue = null;
+    this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
+    this.packageManager = packageManager;
+    this.packageName = packageName;
   }
 
   public BaseBodyInterceptorV7(String aptoideMd5sum, String aptoidePackage,
       IdsRepository idsRepository, AptoideAccountManager accountManager, AdultContent adultContent,
-      QManager qManager, String cdn, boolean mature) {
+      QManager qManager, String cdn, boolean mature, SharedPreferences sharedPreferences,
+      Resources resources, PackageManager packageManager, String packageName) {
     this.cdn = cdn;
     this.accountManager = accountManager;
     this.adultContent = adultContent;
@@ -47,6 +60,10 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
     this.aptoidePackage = aptoidePackage;
     this.idsRepository = idsRepository;
     this.qManager = qManager;
+    this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
+    this.packageManager = packageManager;
+    this.packageName = packageName;
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
@@ -60,20 +77,19 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
       }
 
       body.setAptoideId(idsRepository.getUniqueIdentifier());
-      body.setAptoideVercode(AptoideUtils.Core.getVerCode());
+      body.setAptoideVercode(AptoideUtils.Core.getVerCode(packageManager, packageName));
       body.setCdn(cdn);
-      body.setLang(AptoideUtils.SystemU.getCountryCode());
+      body.setLang(AptoideUtils.SystemU.getCountryCode(resources));
       if (adultContentDefaultValue == null) {
         body.setMature(adultContentEnabled);
       } else {
         body.setMature(adultContentDefaultValue);
       }
-      body.setQ(qManager
-          .getFilters(ManagerPreferences.getHWSpecsFilter()));
-        String forceCountry = ToolboxManager.getForceCountry();
-        if (!TextUtils.isEmpty(forceCountry)) {
-          body.setCountry(forceCountry);
-        }
+      body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
+      String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
+      if (!TextUtils.isEmpty(forceCountry)) {
+        body.setCountry(forceCountry);
+      }
       body.setAptoideMd5sum(aptoideMd5sum);
       body.setAptoidePackage(aptoidePackage);
 

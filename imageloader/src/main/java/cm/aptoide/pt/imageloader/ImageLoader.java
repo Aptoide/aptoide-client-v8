@@ -1,6 +1,8 @@
 package cm.aptoide.pt.imageloader;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -12,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -32,9 +35,13 @@ public class ImageLoader {
   private static final String TAG = ImageLoader.class.getName();
 
   private final WeakReference<Context> weakContext;
+  private final Resources resources;
+  private final WindowManager windowManager;
 
   private ImageLoader(Context context) {
     this.weakContext = new WeakReference<>(context);
+    this.resources = context.getResources();
+    this.windowManager = ((WindowManager) context.getSystemService(Service.WINDOW_SERVICE));
   }
 
   @Partners public static ImageLoader with(Context context) {
@@ -108,8 +115,9 @@ public class ImageLoader {
    */
   public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolderAvatarSize(String url,
       ImageView imageView, @DrawableRes int placeHolderDrawableId) {
-    return loadWithCircleTransformAndPlaceHolder(AptoideUtils.IconSizeU.generateStringAvatar(url),
-        imageView, placeHolderDrawableId);
+    return loadWithCircleTransformAndPlaceHolder(
+        AptoideUtils.IconSizeU.generateStringAvatar(url, resources, windowManager), imageView,
+        placeHolderDrawableId);
   }
 
   public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolder(String url,
@@ -221,7 +229,7 @@ public class ImageLoader {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.generateSizeStoreString(url))
+          .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
           .transform(new ShadowCircleTransformation(context, imageView, shadowColor))
           .into(imageView);
     } else {
@@ -235,7 +243,7 @@ public class ImageLoader {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.generateSizeStoreString(url))
+          .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
           .transform(new ShadowCircleTransformation(context, imageView, strokeSize))
           .into(imageView);
     } else {
@@ -290,7 +298,8 @@ public class ImageLoader {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.screenshotToThumb(url, orientation))
+          .load(
+              AptoideUtils.IconSizeU.screenshotToThumb(url, orientation, windowManager, resources))
           .placeholder(loadingPlaceHolder)
           .into(imageView);
     } else {
@@ -317,7 +326,7 @@ public class ImageLoader {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.getNewImageUrl(url))
+          .load(AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager))
           .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");

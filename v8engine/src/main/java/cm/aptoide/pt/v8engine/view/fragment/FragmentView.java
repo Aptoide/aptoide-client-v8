@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
+import android.content.SharedPreferences;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.NavigationProvider;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.util.ScreenTrackingUtils;
@@ -30,6 +32,7 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   private Presenter presenter;
   private NavigationProvider navigationProvider;
+  private SharedPreferences sharedPreferences;
 
   public FragmentNavigator getFragmentNavigator() {
     return navigationProvider.getFragmentNavigator();
@@ -41,11 +44,13 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
     return new FragmentNavigator(getChildFragmentManager(), containerId, android.R.anim.fade_in,
-        android.R.anim.fade_out);
+        android.R.anim.fade_out, sharedPreferences);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
   }

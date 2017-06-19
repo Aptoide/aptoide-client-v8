@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.view.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
@@ -56,16 +59,23 @@ import rx.subscriptions.Subscriptions;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final InstalledRepository installedRepository;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
+  private final Resources resources;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, InstalledRepository installedRepository) {
+      Converter.Factory converterFactory, InstalledRepository installedRepository,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.installedRepository = installedRepository;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -125,7 +135,8 @@ import rx.subscriptions.Subscriptions;
         final int reviewRating = Math.round(reviewRatingBar.getRating());
 
         if (TextUtils.isEmpty(reviewTitle)) {
-          titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+          titleTextInputLayout.setError(
+              AptoideUtils.StringU.getResString(R.string.error_MARG_107, resources));
           return;
         }
 
@@ -137,7 +148,7 @@ import rx.subscriptions.Subscriptions;
           if (response.isOk()) {
             Logger.d(TAG, "review added");
             ShowMessage.asSnack(activity, R.string.review_success);
-            ManagerPreferences.setForceServerRefreshFlag(true);
+            ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
             subscriber.onNext(GenericDialogs.EResponse.YES);
             subscriber.onCompleted();
           } else {
@@ -160,11 +171,13 @@ import rx.subscriptions.Subscriptions;
         if (storeName != null) {
 
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName))
+              bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
+              tokenInvalidator, sharedPreferences)
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-              httpClient, converterFactory, isAppInstalled(packageName))
+              httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator,
+              sharedPreferences)
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -223,7 +236,8 @@ import rx.subscriptions.Subscriptions;
       final int reviewRating = Math.round(reviewRatingBar.getRating());
 
       if (TextUtils.isEmpty(reviewTitle)) {
-        titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+        titleTextInputLayout.setError(
+            AptoideUtils.StringU.getResString(R.string.error_MARG_107, resources));
         return;
       }
 
@@ -234,7 +248,7 @@ import rx.subscriptions.Subscriptions;
         if (response.isOk()) {
           Logger.d(TAG, "review added");
           ShowMessage.asSnack(activity, R.string.review_success);
-          ManagerPreferences.setForceServerRefreshFlag(true);
+          ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
           if (onPositiveCallback != null) {
             onPositiveCallback.call();
           }
@@ -251,11 +265,13 @@ import rx.subscriptions.Subscriptions;
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName))
+            bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
+            tokenInvalidator, sharedPreferences)
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-            httpClient, converterFactory, isAppInstalled(packageName))
+            httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator,
+            sharedPreferences)
             .execute(successRequestListener, errorRequestListener);
       }
     });

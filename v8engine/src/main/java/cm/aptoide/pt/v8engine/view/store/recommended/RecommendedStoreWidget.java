@@ -86,6 +86,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
             message = R.string.unfollowing_store_message;
           }
           ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(message,
+              getContext().getResources(),
               displayable.getPojo()
                   .getName()));
         }, throwable -> {
@@ -107,6 +108,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
             message = R.string.follow;
           }
           followButton.setText(AptoideUtils.StringU.getFormattedString(message,
+              getContext().getResources(),
               displayable.getPojo()
                   .getName()));
           followButton.setVisibility(View.VISIBLE);

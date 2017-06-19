@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
@@ -17,14 +18,19 @@ public class ManageStorePresenter implements Presenter {
   private final boolean goBackToHome;
   private final StoreManager storeManager;
   private final FragmentNavigator fragmentNavigator;
+  private final String applicationPackageName;
+  private final Resources resources;
 
   public ManageStorePresenter(ManageStoreView view, CrashReport crashReport, boolean goBackToHome,
-      StoreManager storeManager, FragmentNavigator fragmentNavigator) {
+      StoreManager storeManager, FragmentNavigator fragmentNavigator, String applicationPackageName,
+      Resources resources) {
     this.view = view;
     this.crashReport = crashReport;
     this.goBackToHome = goBackToHome;
     this.storeManager = storeManager;
     this.fragmentNavigator = fragmentNavigator;
+    this.applicationPackageName = applicationPackageName;
+    this.resources = resources;
   }
 
   @Override public void present() {
@@ -92,11 +98,13 @@ public class ManageStorePresenter implements Presenter {
         return view.showError(R.string.ws_error_API_1);
       } else {
         return view.showError(
-            ErrorsMapper.getWebServiceErrorMessageFromCode(networkError.getError()));
+            ErrorsMapper.getWebServiceErrorMessageFromCode(networkError.getError(),
+                applicationPackageName, resources));
       }
     } else if (err instanceof StoreManager.StoreCreationErrorWithCode) {
       return view.showError(ErrorsMapper.getWebServiceErrorMessageFromCode(
-          ((StoreManager.StoreCreationErrorWithCode) err).getErrorCode()));
+          ((StoreManager.StoreCreationErrorWithCode) err).getErrorCode(), applicationPackageName,
+          resources));
     } else if (err instanceof StoreManager.StoreCreationError) {
       return view.showError(R.string.ws_error_WOP_2);
     }

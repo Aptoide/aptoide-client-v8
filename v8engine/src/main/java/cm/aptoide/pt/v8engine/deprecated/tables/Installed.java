@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import io.realm.RealmObject;
 
@@ -23,8 +22,7 @@ import io.realm.RealmObject;
 public final class Installed extends BaseTable {
 
   private static final String TAG = Installed.class.getSimpleName();
-  private final PackageManager pm = AptoideUtils.getContext()
-      .getPackageManager();
+
   /*
   public static final String NAME = "installed";
 
@@ -52,17 +50,17 @@ public final class Installed extends BaseTable {
     return updatesTable.getTableName();
   }
 
-  @Override public RealmObject convert(Cursor cursor) {
+  @Override public RealmObject convert(Cursor cursor, PackageManager packageManager) {
 
     String path = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_URL));
     String packageName = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_PACKAGE));
     if (TextUtils.isEmpty(path)) {
       try {
-        PackageInfo packageInfo = pm.getPackageInfo(packageName, 0);
+        PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
         ApplicationInfo appInfo = packageInfo.applicationInfo;
 
         if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-          return new cm.aptoide.pt.database.realm.Installed(packageInfo);
+          return new cm.aptoide.pt.database.realm.Installed(packageInfo, packageManager);
         }
       } catch (PackageManager.NameNotFoundException ex) {
         CrashReport.getInstance()

@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
@@ -31,6 +33,8 @@ public class StoreManager {
   private final BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7;
+  private final SharedPreferences sharedPreferences;
+  private final TokenInvalidator tokenInvalidator;
   private final RequestBodyFactory requestBodyFactory;
   private final ObjectMapper objectMapper;
 
@@ -39,14 +43,16 @@ public class StoreManager {
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
       BodyInterceptor<BaseBody> bodyInterceptorV3,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7,
+      SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       RequestBodyFactory requestBodyFactory, ObjectMapper objectMapper) {
-
     this.accountManager = accountManager;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.multipartBodyInterceptor = multipartBodyInterceptor;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.bodyInterceptorV7 = bodyInterceptorV7;
+    this.sharedPreferences = sharedPreferences;
+    this.tokenInvalidator = tokenInvalidator;
     this.requestBodyFactory = requestBodyFactory;
     this.objectMapper = objectMapper;
   }
@@ -96,7 +102,7 @@ public class StoreManager {
         .first()
         .toSingle()
         .flatMap(account -> CheckUserCredentialsRequest.toCreateStore(bodyInterceptorV3, httpClient,
-            converterFactory, storeName)
+            converterFactory, tokenInvalidator, sharedPreferences, storeName)
             .observe()
             .toSingle()
             .flatMap(data -> {
@@ -146,7 +152,7 @@ public class StoreManager {
   private Completable updateStoreWithoutAvatar(String storeName, String storeDescription,
       String storeThemeName) {
     return SimpleSetStoreRequest.of(storeName, storeThemeName, storeDescription, bodyInterceptorV7,
-        httpClient, converterFactory)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .toCompletable();
   }
@@ -158,7 +164,7 @@ public class StoreManager {
         .toSingle()
         .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
             storeImage, multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory,
-            objectMapper)
+            objectMapper, sharedPreferences, tokenInvalidator)
             .observe()
             .toSingle())
         .toCompletable();

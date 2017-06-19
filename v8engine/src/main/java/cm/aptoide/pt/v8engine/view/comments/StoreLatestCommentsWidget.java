@@ -1,17 +1,21 @@
 package cm.aptoide.pt.v8engine.view.comments;
 
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -46,6 +50,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
@@ -57,6 +62,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
@@ -83,10 +89,12 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   }
 
   private Void reloadComments() {
-    ManagerPreferences.setForceServerRefreshFlag(true);
+    ManagerPreferences.setForceServerRefreshFlag(true,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     compositeSubscription.add(
         ListCommentsRequest.of(storeId, 0, 3, false, baseBodyInterceptor, httpClient,
-            converterFactory)
+            converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
             .observe()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

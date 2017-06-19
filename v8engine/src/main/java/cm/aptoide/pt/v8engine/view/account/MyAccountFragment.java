@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.account;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -137,7 +139,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
         new MyAccountNavigator(getFragmentNavigator()),
         ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext())), savedInstanceState);
+        new LinksHandlerFactory(getContext()),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), savedInstanceState);
   }
 
   @Override public void onDestroy() {
@@ -210,7 +213,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .first()
         .flatMap(account -> GetStoreRequest.of(
             new BaseRequestWithStore.StoreCredentials(account.getStoreName(), null, null),
-            StoreContext.meta, bodyInterceptor, httpClient, converterFactory)
+            StoreContext.meta, bodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getResources(),
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe());
   }
 

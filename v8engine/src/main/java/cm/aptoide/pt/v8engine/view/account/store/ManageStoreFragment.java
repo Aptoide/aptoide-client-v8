@@ -3,8 +3,6 @@ package cm.aptoide.pt.v8engine.view.account.store;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
@@ -21,14 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -39,15 +31,11 @@ import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.dialog.ImageSourceSelectionDialogFragment;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
-import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 
@@ -148,7 +136,8 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
     attachPresenter(new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
         ((V8Engine) getActivity().getApplicationContext()).getStoreManager(),
-        getFragmentNavigator()), null);
+        getFragmentNavigator(), ((V8Engine) getActivity().getApplicationContext()).getPackageName(),
+        getResources()), null);
 
     super.onViewCreated(view, savedInstanceState);
   }
@@ -213,13 +202,16 @@ public class ManageStoreFragment extends ImageLoaderFragment
     if (!storeModel.storeExists()) {
       String appName = getString(R.string.app_name);
       header.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_header, appName));
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_header, getResources(),
+              appName));
       chooseStoreNameTitle.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_name, appName));
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_name, getResources(),
+              appName));
     } else {
       header.setText(R.string.edit_store_header);
       chooseStoreNameTitle.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title));
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title,
+              getResources()));
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());

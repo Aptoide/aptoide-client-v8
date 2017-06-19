@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
@@ -117,7 +116,7 @@ public class ManageUserFragment extends ImageLoaderFragment
     final Context applicationContext = context.getApplicationContext();
     AptoideAccountManager accountManager = ((V8Engine) applicationContext).getAccountManager();
     CreateUserErrorMapper errorMapper =
-        new CreateUserErrorMapper(context, new AccountErrorMapper(context));
+        new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
     ManageUserPresenter presenter =
         new ManageUserPresenter(this, CrashReport.getInstance(), accountManager, errorMapper,
             getFragmentNavigator());

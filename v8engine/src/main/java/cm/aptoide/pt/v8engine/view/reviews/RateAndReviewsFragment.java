@@ -13,6 +13,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -78,6 +79,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -191,11 +193,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        baseBodyInterceptor, httpClient, converterFactory, installedRepository);
+        baseBodyInterceptor, httpClient, converterFactory, installedRepository,
+        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        getContext().getResources());
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory)
+    GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory,
+        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -218,13 +223,15 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
-            baseBodyInterceptor, httpClient, converterFactory);
+            baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(),
-                baseBodyInterceptor, httpClient, converterFactory),
+                baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
             (throwable) -> throwable.printStackTrace());
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
@@ -248,6 +255,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();

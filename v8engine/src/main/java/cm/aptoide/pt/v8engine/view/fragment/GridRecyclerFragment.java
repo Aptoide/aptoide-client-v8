@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.v8engine.view.fragment;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.WindowManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
@@ -38,7 +40,8 @@ public abstract class GridRecyclerFragment<T extends BaseAdapter>
   }
 
   @Override protected RecyclerView.LayoutManager createLayoutManager() {
-    return new BaseGridLayoutManager(getActivity(), getAdapter());
+    return new BaseGridLayoutManager(getActivity(), getAdapter(), getContext().getResources(),
+        (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE));
   }
 
   @Override protected T createAdapter() {

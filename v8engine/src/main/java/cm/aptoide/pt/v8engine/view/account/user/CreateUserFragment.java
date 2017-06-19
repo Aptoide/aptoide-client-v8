@@ -50,7 +50,8 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
 
     final Context context = getActivity();
 
-    errorMapper = new CreateUserErrorMapper(context, new AccountErrorMapper(context));
+    errorMapper = new CreateUserErrorMapper(context, new AccountErrorMapper(context),
+        getContext().getResources());
 
     final Context applicationContext = context.getApplicationContext();
     accountManager = ((V8Engine) applicationContext).getAccountManager();

@@ -38,10 +38,12 @@ public class SearchUtils {
       CreateQueryFragmentInterface createSearchFragmentInterface) {
 
     // Get the SearchView and set the searchable configuration
-    final SearchManager searchManager = (SearchManager) V8Engine.getContext()
+    final SearchManager searchManager = (SearchManager) fragmentView.getContext()
+        .getApplicationContext()
         .getSystemService(Context.SEARCH_SERVICE);
     final SearchView searchView = (SearchView) searchItem.getActionView();
-    ComponentName cn = new ComponentName(V8Engine.getContext(), SearchActivity.class);
+    ComponentName cn = new ComponentName(fragmentView.getContext()
+        .getApplicationContext(), SearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
     SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
 
@@ -55,7 +57,8 @@ public class SearchUtils {
           fragmentView.getFragmentNavigator()
               .navigateTo(createSearchFragmentInterface.create(s));
         } else {
-          ShowMessage.asToast(V8Engine.getContext(), R.string.search_minimum_chars);
+          ShowMessage.asToast(fragmentView.getContext()
+              .getApplicationContext(), R.string.search_minimum_chars);
         }
 
         return true;

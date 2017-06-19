@@ -91,7 +91,7 @@ public class CompletedDownloadDisplayable extends Displayable {
           if (installed.getState() == Progress.DONE) {
             AptoideUtils.SystemU.openApp(download.getFilesToDownload()
                 .get(0)
-                .getPackageName());
+                .getPackageName(), context.getPackageManager(), context);
             return Observable.empty();
           }
           return resumeDownload(context, permissionRequest);

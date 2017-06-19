@@ -1,5 +1,6 @@
 package cm.aptoide.pt.nanohttpd.servers.modular.asset.html;
 
+import android.content.res.AssetManager;
 import cm.aptoide.pt.nanohttpd.servers.modular.asset.AbstractAssetServer;
 import fi.iki.elonen.NanoHTTPD;
 
@@ -12,8 +13,8 @@ public class HtmlAssetServer extends AbstractAssetServer {
 
   private final String htmlPath;
 
-  public HtmlAssetServer(String accepts, String htmlPath) {
-    super(accepts);
+  public HtmlAssetServer(String accepts, String htmlPath, AssetManager assetManager) {
+    super(accepts, assetManager);
     this.htmlPath = htmlPath;
   }
 

@@ -23,8 +23,10 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
     if (throwable instanceof AccountException) {
 
       if (((AccountException) throwable).hasCode()) {
-        message = context.getString(ErrorsMapper.getWebServiceErrorMessageFromCode(
-            ((AccountException) throwable).getCode()));
+        message = context.getString(
+            ErrorsMapper.getWebServiceErrorMessageFromCode(((AccountException) throwable).getCode(),
+                context.getApplicationContext()
+                    .getPackageName(), context.getResources()));
       } else {
         @StringRes int errorId = context.getResources()
             .getIdentifier("error_" + ((AccountException) throwable).getError(), "string",

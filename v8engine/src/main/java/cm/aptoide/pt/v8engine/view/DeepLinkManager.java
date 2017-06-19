@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -43,15 +44,17 @@ public class DeepLinkManager {
   private final FragmentNavigator fragmentNavigator;
   private final TabNavigator tabNavigator;
   private final DeepLinkMessages deepLinkMessages;
+  private final SharedPreferences sharedPreferences;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
-      DeepLinkMessages deepLinkMessages) {
+      DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
     this.tabNavigator = tabNavigator;
     this.deepLinkMessages = deepLinkMessages;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -196,7 +199,7 @@ public class DeepLinkManager {
     if (validateDeepLinkRequiredArgs(queryType, queryLayout, queryName, queryAction)) {
       try {
         queryAction = URLDecoder.decode(queryAction, "UTF-8");
-        event.setAction(queryAction != null ? queryAction.replace(V7.BASE_HOST, "") : null);
+        event.setAction(queryAction != null ? queryAction.replace(V7.getHost(sharedPreferences), "") : null);
         event.setType(Event.Type.valueOf(queryType));
         event.setName(Event.Name.valueOf(queryName));
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
