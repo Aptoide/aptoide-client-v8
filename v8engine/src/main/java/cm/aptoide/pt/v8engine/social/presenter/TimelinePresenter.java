@@ -31,27 +31,55 @@ public class TimelinePresenter implements Presenter {
   }
 
   @Override public void present() {
+    showCardsOnCreate();
 
+    refreshCardsOnPullToRefresh();
+
+    handleCardClickEvents();
+
+    showMoreCardsOnBottomReached();
+
+    showCardsOnRetry();
+  }
+
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
+  }
+
+  private void showCardsOnRetry() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.retry())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(created -> view.showProgressIndicator())
-        .flatMapSingle(created -> socialManager.getCards())
+        .flatMapSingle(retryClicked -> socialManager.getCards())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
+  }
 
+  private void showMoreCardsOnBottomReached() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.refreshes())
-        .flatMapSingle(refresh -> socialManager.getCards())
+        .flatMap(create -> view.reachesBottom())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showCardsAndHideRefresh(cards))
+        .doOnNext(create -> view.showLoadMoreProgressIndicator())
+        .flatMapSingle(bottomReached -> socialManager.getNextCards())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
-        }, throwable -> view.showGenericError());
+        }, throwable -> Log.d(this.getClass()
+            .getCanonicalName(), "ERROR LOADING MORE CARDS"));
+  }
 
+  private void handleCardClickEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.articleClicked())
@@ -71,39 +99,30 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articleUrl -> {
         }, throwable -> crashReport.log(throwable));
+  }
 
+  private void refreshCardsOnPullToRefresh() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(create -> view.reachesBottom())
+        .flatMap(created -> view.refreshes())
+        .flatMapSingle(refresh -> socialManager.getCards())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(create -> view.showLoadMoreProgressIndicator())
-        .flatMapSingle(bottomReached -> socialManager.getNextCards())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cards -> {
-        }, throwable -> Log.d(this.getClass()
-            .getCanonicalName(), "ERROR LOADING MORE CARDS"));
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.retry())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(created -> view.showProgressIndicator())
-        .flatMapSingle(retryClicked -> socialManager.getCards())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showCardsAndHideProgress(cards))
+        .doOnNext(cards -> showCardsAndHideRefresh(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
   }
 
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
+  private void showCardsOnCreate() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(created -> view.showProgressIndicator())
+        .flatMapSingle(created -> socialManager.getCards())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(cards -> showCardsAndHideProgress(cards))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cards -> {
+        }, throwable -> view.showGenericError());
   }
 
   private void showMoreCardsAndHideLoadMoreProgress(List<Card> cards) {
