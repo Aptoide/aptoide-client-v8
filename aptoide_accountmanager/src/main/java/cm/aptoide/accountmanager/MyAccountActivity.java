@@ -61,7 +61,7 @@ public class MyAccountActivity extends BaseActivity {
   }
 
   @Override protected String getActivityTitle() {
-    return "My Account";
+    return getResources().getString(R.string.my_account);
   }
 
   @Override int getLayoutId() {
