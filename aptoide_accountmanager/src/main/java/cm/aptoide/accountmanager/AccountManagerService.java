@@ -2,7 +2,9 @@ package cm.aptoide.accountmanager;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
@@ -13,16 +15,20 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserSettings;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.OAuth;
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetUserInfo;
 import cm.aptoide.pt.model.v7.GetUserMeta;
 import cm.aptoide.pt.model.v7.GetUserSettings;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 public class AccountManagerService {
@@ -210,7 +216,35 @@ public class AccountManagerService {
           } else {
             return Single.error(new Exception(V7.getErrorMessage(response)));
           }
-        });
+        })
+        .retryWhen(observableError -> retryOnTicket(observableError).doOnNext(__ -> {
+          Logger.w("AccountManagerService", "retryOnTicket() doOnNext()");
+        }));
+  }
+
+  /**
+   * This retry occurs when user user is being propagated through the server slave machines
+   * (specifically on user creation) so we use a retry with exponential back-off with three
+   * retries to get the data.
+   */
+  @NonNull private Observable<Throwable> retryOnTicket(
+      Observable<? extends Throwable> observableError) {
+    return observableError.zipWith(Observable.range(2, 4), (throwable, count) -> {
+      try {
+        AptoideWsV7Exception v7Exception = (AptoideWsV7Exception) throwable;
+        List<BaseV7Response.Error> errors = v7Exception.getBaseResponse()
+            .getErrors();
+        if (errors != null && !errors.isEmpty() && errors.get(0)
+            .getCode()
+            .equalsIgnoreCase("user-1")) {
+          return Observable.timer((long) Math.pow(5, count), TimeUnit.SECONDS).<Throwable>map(
+              __ -> null);
+        }
+      } catch (ClassCastException | NullPointerException ex) {
+        // does nothing
+      }
+      return Observable.<Throwable>error(throwable);
+    }).flatMap(observable -> observable);
   }
 
   private Account mapServerAccountToAccount(GetUserInfo userInfo, String refreshToken,

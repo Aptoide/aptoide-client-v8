@@ -177,6 +177,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
         @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
+    @POST("getUserInfo") @FormUrlEncoded Observable<CheckUserCredentialsJson> getUserInfo(
+        @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
     @POST("checkUserCredentials") @FormUrlEncoded
     Observable<CheckUserCredentialsJson> checkUserCredentials(@FieldMap BaseBody args,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

@@ -35,7 +35,7 @@ public class AccountNavigator {
     }
   }
 
-  public void navigateToLoginView() {
+  @Deprecated public void navigateToLoginView() {
     activityNavigator.navigateTo(LoginActivity.class);
   }
 }

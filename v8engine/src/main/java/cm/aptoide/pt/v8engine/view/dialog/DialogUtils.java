@@ -12,6 +12,7 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -44,7 +45,11 @@ import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
-public class DialogUtils {
+/**
+ * Use specific {@link DialogFragment}s for this use cases. Avoid adding more dialog builder methods
+ * to this class.
+ */
+@Deprecated public class DialogUtils {
 
   private static final String TAG = DialogUtils.class.getSimpleName();
   private final Locale LOCALE = Locale.getDefault();

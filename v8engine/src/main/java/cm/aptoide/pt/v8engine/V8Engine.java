@@ -114,7 +114,6 @@ import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
-import cm.aptoide.pt.v8engine.networking.OAuthBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
@@ -136,6 +135,7 @@ import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.view.account.store.StoreManager;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
@@ -209,7 +209,6 @@ public abstract class V8Engine extends Application {
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
-  private OAuthBodyInterceptor oAuthBodyInterceptor;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
   private PaymentSyncScheduler paymentSyncScheduler;
@@ -229,6 +228,7 @@ public abstract class V8Engine extends Application {
   private RefreshTokenInvalidator tokenInvalidator;
   private FileManager fileManager;
   private CacheHelper cacheHelper;
+  private StoreManager storeManager;
 
   /**
    * call after this instance onCreate()
@@ -311,9 +311,7 @@ public abstract class V8Engine extends Application {
     // app synchronous initialization
     //
 
-    final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
-
-    sendAppStartToAnalytics(sharedPreferences);
+    sendAppStartToAnalytics();
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -335,6 +333,13 @@ public abstract class V8Engine extends Application {
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
 
+  public TokenInvalidator getTokenInvalidator() {
+    if (tokenInvalidator == null) {
+      tokenInvalidator = new RefreshTokenInvalidator(getAccountManager());
+    }
+    return tokenInvalidator;
+  }
+
   private void startNotificationCenter() {
     getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
         .first()
@@ -343,13 +348,6 @@ public abstract class V8Engine extends Application {
                 .log(throwable));
 
     getNotificationCenter().setup();
-  }
-
-  public TokenInvalidator getTokenInvalidator() {
-    if (tokenInvalidator == null) {
-      tokenInvalidator = new RefreshTokenInvalidator(getAccountManager());
-    }
-    return tokenInvalidator;
   }
 
   public NotificationNetworkService getNotificationNetworkService() {
@@ -375,6 +373,17 @@ public abstract class V8Engine extends Application {
           new NotificationsCleaner(notificationAccessor), getAccountManager());
     }
     return notificationCenter;
+  }
+
+  public StoreManager getStoreManager() {
+    if (storeManager == null) {
+      storeManager =
+          new StoreManager(accountManager, getDefaultClient(), WebService.getDefaultConverter(),
+              getMultipartBodyInterceptor(), getBaseBodyInterceptorV3(), getBaseBodyInterceptorV7(),
+              getDefaultSharedPreferences(), getTokenInvalidator(), getRequestBodyFactory(),
+              getNonNullObjectMapper());
+    }
+    return storeManager;
   }
 
   @NonNull public NotificationSyncScheduler getNotificationSyncScheduler() {
@@ -550,9 +559,9 @@ public abstract class V8Engine extends Application {
       final AccountManagerService accountManagerService = new AccountManagerService(
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager(),
-              getDefaultSharedPreferences(), getResources(),
-              getPackageManager(), getPackageName()), getAccountFactory(), getDefaultClient(),
-          getLongTimeoutClient(), WebService.getDefaultConverter(), getNonNullObjectMapper(),
+              getDefaultSharedPreferences(), getResources(), getPackageManager(), getPackageName()),
+          getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
+          WebService.getDefaultConverter(), getNonNullObjectMapper(),
           new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
@@ -805,7 +814,7 @@ public abstract class V8Engine extends Application {
         .build(context, flurryKey);
   }
 
-  private void sendAppStartToAnalytics(SharedPreferences sPref) {
+  private void sendAppStartToAnalytics() {
     Analytics.Lifecycle.Application.onCreate(this);
   }
 
@@ -909,7 +918,8 @@ public abstract class V8Engine extends Application {
     if (baseBodyInterceptorV3 == null) {
       baseBodyInterceptorV3 =
           new BaseBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager(), getQManager(), getDefaultSharedPreferences());
+              getAccountManager(), getQManager(), getDefaultSharedPreferences(),
+              BaseBodyInterceptorV3.RESPONSE_MODE_JSON);
     }
     return baseBodyInterceptorV3;
   }
@@ -921,15 +931,6 @@ public abstract class V8Engine extends Application {
               getRequestBodyFactory());
     }
     return multipartBodyInterceptor;
-  }
-
-  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getOAuthBodyInterceptor() {
-    if (oAuthBodyInterceptor == null) {
-      oAuthBodyInterceptor =
-          new OAuthBodyInterceptor(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager(), getQManager(), getDefaultSharedPreferences());
-    }
-    return oAuthBodyInterceptor;
   }
 
   public RequestBodyFactory getRequestBodyFactory() {

@@ -24,7 +24,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -83,19 +83,19 @@ import rx.functions.Action1;
           .loadUsingCircleTransform(store.getAvatar(), storeAvatarView);
     }
 
-    StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);
+    StoreTheme storeThemeEnum = StoreTheme.get(store);
 
     storeNameView.setText(store.getName());
-    storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt(
-        getContext().getApplicationContext()));
+    storeNameView.setTextColor(
+        storeThemeEnum.getStoreHeaderColorResource(context.getResources(), context.getTheme()));
 
     storeNumberUsersView.setText(
         String.format(Locale.ENGLISH, getContext().getString(R.string.appview_followers_count_text),
             AptoideUtils.StringU.withSuffix(store.getStats()
                 .getSubscribers())));
 
-    followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable(
-        getContext().getApplicationContext()));
+    followButton.setBackgroundDrawable(
+        storeThemeEnum.getButtonLayoutDrawable(context.getResources(), context.getTheme()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followButton.setElevation(0);
     }
@@ -131,7 +131,8 @@ import rx.functions.Action1;
       }, accountManager);
     };
 
-    followButton.setTextColor(storeThemeEnum.getStoreHeaderInt(getContext().getApplicationContext()));
+    followButton.setTextColor(
+        storeThemeEnum.getStoreHeaderColorResource(context.getResources(), context.getTheme()));
     compositeSubscription.add(RxView.clicks(storeLayout)
         .subscribe(openStore));
 

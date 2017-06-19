@@ -7,8 +7,13 @@ import cm.aptoide.pt.v8engine.R;
 
 /**
  * Created by pedroribeiro on 02/05/16.
+ *
+ * <p>
+ * This class is deprecated since it is a bad practice and we need to stop using this. Only use this
+ * in last resort.
+ * </p>
  */
-public class Translator {
+@Deprecated public final class Translator {
 
   public static String translate(String string, Context context) {
     if (string == null) {

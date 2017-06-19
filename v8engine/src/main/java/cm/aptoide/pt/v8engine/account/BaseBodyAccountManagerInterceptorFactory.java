@@ -28,9 +28,9 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   private final String aptoidePackage;
   private final QManager qManager;
   private final SharedPreferences sharedPreferences;
-  private Resources resources;
-  private PackageManager packageManager;
-  private String packageName;
+  private final Resources resources;
+  private final PackageManager packageManager;
+  private final String packageName;
 
   public BaseBodyAccountManagerInterceptorFactory(IdsRepository idsRepository,
       Preferences preferences, SecurePreferences securePreferences, String aptoideMd5sum,
@@ -73,7 +73,7 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(
       AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, accountManager,
-        qManager, sharedPreferences);
+        qManager, sharedPreferences, BaseBodyInterceptorV3.RESPONSE_MODE_JSON);
   }
 
   @Override

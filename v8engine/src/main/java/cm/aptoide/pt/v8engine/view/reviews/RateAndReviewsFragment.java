@@ -32,7 +32,7 @@ import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
@@ -177,7 +177,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
     }
   }

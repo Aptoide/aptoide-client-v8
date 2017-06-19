@@ -25,7 +25,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -217,14 +217,15 @@ public class SocialStoreLatestAppsWidget
                   .getTheme()));
         }));
 
-    StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(displayable.getSharedStore());
+    StoreTheme storeThemeEnum = StoreTheme.get(displayable.getSharedStore());
 
-    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable(
-        getContext().getApplicationContext()));
+    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable(context.getResources(),
+        context.getTheme()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followStore.setElevation(0);
     }
-    followStore.setTextColor(storeThemeEnum.getStoreHeaderInt(getContext().getApplicationContext()));
+    followStore.setTextColor(storeThemeEnum.getStoreHeaderColorResource(context.getResources(),
+        context.getTheme()));
 
     final String storeName = displayable.getSharedStore()
         .getName();

@@ -58,13 +58,15 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     installConverter =
         new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     downloadConverter =
         new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
@@ -80,10 +82,9 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     RecyclerView downloadsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     downloadsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-    final int pixelDimen = AptoideUtils.ScreenU.getPixelsForDip(5,
-        getContext().getResources());
+    final int pixelDimen = AptoideUtils.ScreenU.getPixelsForDip(5, getContext().getResources());
     final DividerItemDecoration decor =
-        new DividerItemDecoration(pixelDimen, DividerItemDecoration.ALL);
+        new DividerItemDecoration(getContext(), pixelDimen, DividerItemDecoration.ALL);
     downloadsRecyclerView.addItemDecoration(decor);
 
     adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,

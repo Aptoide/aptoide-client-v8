@@ -31,7 +31,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.app.GridAppDisplayable;
@@ -378,7 +378,7 @@ public class DisplayablesFactory {
                   .getList()));
     } else {
       displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-          StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
+          StoreTheme.DEFAULT));
     }
 
     return displayables;

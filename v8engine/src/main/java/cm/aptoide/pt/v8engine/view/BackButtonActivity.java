@@ -9,7 +9,7 @@ import java.util.Set;
  * Created by marcelobenites on 11/04/17.
  */
 
-public class BackButtonActivity extends ActivityView implements BackButton {
+public abstract class BackButtonActivity extends ActivityView implements BackButton {
 
   private Set<BackButton.ClickHandler> clickHandlers;
 

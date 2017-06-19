@@ -82,7 +82,7 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -339,7 +339,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onDestroyView();
     header = null;
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
           V8Engine.getConfiguration()
               .getDefaultTheme()));
       ThemeUtils.setAptoideTheme(getActivity());
@@ -417,14 +417,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onResume();
 
     // restore download bar status
-    // TODO: 04/08/16 sithengineer restore download bar status
+    // TODO: 04/08/16 restore download bar status
   }
 
   @Override public void onPause() {
     super.onPause();
 
     // save download bar status
-    // TODO: 04/08/16 sithengineer save download bar status
+    // TODO: 04/08/16 save download bar status
   }
 
   private boolean hasDescription(GetAppMeta.Media media) {
@@ -935,12 +935,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       }
 
       collapsingToolbar.setTitle(app.getName());
-      StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(storeTheme);
+      StoreTheme storeTheme = StoreTheme.get(AppViewFragment.this.storeTheme);
       collapsingToolbar.setBackgroundColor(
-          ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
+          ContextCompat.getColor(getActivity(), storeTheme.getPrimaryColor()));
       collapsingToolbar.setContentScrimColor(
-          ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+          ContextCompat.getColor(getActivity(), storeTheme.getPrimaryColor()));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
+          AppViewFragment.this.storeTheme));
       // un-comment the following lines to give app icon a fading effect when user expands / collapses the action bar
       /*
       appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {

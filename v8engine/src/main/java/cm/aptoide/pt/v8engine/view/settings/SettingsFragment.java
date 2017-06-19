@@ -68,7 +68,6 @@ import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTI
  * Created by fabio on 26-10-2015.
  *
  * @author fabio
- * @author sithengineer
  */
 public class SettingsFragment extends PreferenceFragmentCompat
     implements SharedPreferences.OnSharedPreferenceChangeListener {

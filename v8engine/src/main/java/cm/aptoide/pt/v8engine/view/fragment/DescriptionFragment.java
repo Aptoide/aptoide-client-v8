@@ -26,7 +26,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import lombok.Getter;
@@ -202,10 +202,10 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
       bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
-          .getColor(StoreThemeEnum.get(storeTheme)
-              .getStoreHeader())));
+          .getColor(StoreTheme.get(storeTheme)
+              .getPrimaryColor())));
     }
   }
 

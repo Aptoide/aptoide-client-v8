@@ -48,7 +48,6 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -113,18 +112,35 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    accountManager.accountStatus()
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(account -> setupAccountLayout(account), throwable -> crashReport.log(throwable));
+
+    list = (RecyclerView) view.findViewById(R.id.fragment_my_account_notification_list);
+    list.setAdapter(adapter);
+    list.setLayoutManager(new LinearLayoutManager(getContext()));
+
+    logoutButton = (Button) view.findViewById(R.id.button_logout);
+    logoutButton.setAllCaps(true);
+
+    usernameTextView = (TextView) view.findViewById(R.id.my_account_username);
+    storeNameTextView = (TextView) view.findViewById(R.id.my_account_store_name);
+    userProfileEditButton = (Button) view.findViewById(R.id.my_account_edit_user_profile);
+    userStoreEditButton = (Button) view.findViewById(R.id.my_account_edit_user_store);
+    storeLayout = (RelativeLayout) view.findViewById(R.id.my_account_store);
+    userAvatar = (ImageView) view.findViewById(R.id.my_account_user_avatar);
+    storeAvatar = (ImageView) view.findViewById(R.id.my_account_store_avatar);
+    separator = view.findViewById(R.id.my_account_separator);
+    header = (RelativeLayout) view.findViewById(R.id.my_account_notifications_header);
+    headerText = (TextView) view.findViewById(R.id.my_account_notifications_header)
+        .findViewById(R.id.title);
+    headerText.setText(getString(R.string.myaccount_header_title));
+
+    moreNotificationsButton = (Button) view.findViewById(R.id.my_account_notifications_header)
+        .findViewById(R.id.more);
+
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
         new MyAccountNavigator(getFragmentNavigator()),
         ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
         new LinksHandlerFactory(getContext()),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), savedInstanceState);
-    list = (RecyclerView) view.findViewById(R.id.fragment_my_account_notification_list);
-    list.setAdapter(adapter);
-    list.setLayoutManager(new LinearLayoutManager(getContext()));
   }
 
   @Override public void onDestroy() {
@@ -147,7 +163,32 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return R.layout.my_account_activity;
   }
 
-  public Observable<Void> signOutClick() {
+  @Override public void showAccount(Account account) {
+
+    if (!TextUtils.isEmpty(account.getNickname())) {
+      usernameTextView.setText(account.getNickname());
+    } else {
+      usernameTextView.setText(account.getEmail());
+    }
+
+    if (!TextUtils.isEmpty(account.getAvatar())) {
+      userAvatarUrl = account.getAvatar();
+      userAvatarUrl = userAvatarUrl.replace("50", "150");
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(userAvatarUrl, userAvatar, STROKE_SIZE);
+    }
+
+    if (!TextUtils.isEmpty(account.getStoreName())) {
+      storeNameTextView.setText(account.getStoreName());
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(account.getStoreAvatar(), storeAvatar, STROKE_SIZE);
+    } else {
+      separator.setVisibility(View.GONE);
+      storeLayout.setVisibility(View.GONE);
+    }
+  }
+
+  @Override public Observable<Void> signOutClick() {
     return RxView.clicks(logoutButton);
   }
 
@@ -188,12 +229,12 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     getFragmentNavigator().navigateToHomeCleaningBackStack();
   }
 
-  @Override public void showHeader(Boolean hasNotifications) {
-    if (hasNotifications) {
-      header.setVisibility(View.VISIBLE);
-    } else {
-      header.setVisibility(View.INVISIBLE);
-    }
+  @Override public void showHeader() {
+    header.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideHeader() {
+    header.setVisibility(View.INVISIBLE);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -203,50 +244,5 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
     toolbar.setTitle(getString(R.string.my_account));
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    logoutButton = (Button) view.findViewById(R.id.button_logout);
-    usernameTextView = (TextView) view.findViewById(R.id.my_account_username);
-    storeNameTextView = (TextView) view.findViewById(R.id.my_account_store_name);
-    userProfileEditButton = (Button) view.findViewById(R.id.my_account_edit_user_profile);
-    userStoreEditButton = (Button) view.findViewById(R.id.my_account_edit_user_store);
-    storeLayout = (RelativeLayout) view.findViewById(R.id.my_account_store);
-    userAvatar = (ImageView) view.findViewById(R.id.my_account_user_avatar);
-    storeAvatar = (ImageView) view.findViewById(R.id.my_account_store_avatar);
-    separator = (View) view.findViewById(R.id.my_account_separator);
-    header = (RelativeLayout) view.findViewById(R.id.my_account_notifications_header);
-    headerText = (TextView) view.findViewById(R.id.my_account_notifications_header)
-        .findViewById(R.id.title);
-    moreNotificationsButton = (Button) view.findViewById(R.id.my_account_notifications_header)
-        .findViewById(R.id.more);
-  }
-
-  private void setupAccountLayout(Account account) {
-
-    if (!TextUtils.isEmpty(account.getNickname())) {
-      usernameTextView.setText(account.getNickname());
-    } else {
-      usernameTextView.setText(account.getEmail());
-    }
-
-    if (!TextUtils.isEmpty(account.getAvatar())) {
-      userAvatarUrl = account.getAvatar();
-      userAvatarUrl = userAvatarUrl.replace("50", "150");
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(userAvatarUrl, userAvatar, STROKE_SIZE);
-    }
-
-    if (!TextUtils.isEmpty(account.getStoreName())) {
-      storeNameTextView.setText(account.getStoreName());
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(account.getStoreAvatar(), storeAvatar, STROKE_SIZE);
-    } else {
-      separator.setVisibility(View.GONE);
-      storeLayout.setVisibility(View.GONE);
-    }
-    headerText.setText(getString(R.string.myaccount_header_title));
-    logoutButton.setAllCaps(true);
   }
 }

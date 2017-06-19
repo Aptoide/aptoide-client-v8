@@ -48,7 +48,6 @@ public class FragmentNavigator {
   }
 
   public String navigateTo(Fragment fragment) {
-    // add current fragment
     String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
     fragmentManager.beginTransaction()
         .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
@@ -57,6 +56,22 @@ public class FragmentNavigator {
         .commit();
 
     return tag;
+  }
+
+  /**
+   * Only use this method when it is navigating to the first fragment in the activity.
+   */
+  public void navigateToWithoutBackSave(Fragment fragment) {
+    fragmentManager.beginTransaction()
+        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
+        .replace(containerId, fragment)
+        .commit();
+  }
+
+  public void navigateToHomeCleaningBackStack() {
+    Fragment home = HomeFragment.newInstance();
+    cleanBackStack();
+    navigateToWithoutBackSave(home);
   }
 
   public void popBackStack() {
@@ -70,9 +85,6 @@ public class FragmentNavigator {
     fragmentManager.executePendingTransactions();
   }
 
-  /**
-   * @inheritDoc - doc in the interface ^
-   */
   public boolean cleanBackStackUntil(String fragmentTag) {
     if (fragmentManager.getBackStackEntryCount() == 0) {
       return false;
@@ -103,18 +115,5 @@ public class FragmentNavigator {
 
   public Fragment getFragment() {
     return fragmentManager.findFragmentById(containerId);
-  }
-
-  public void navigateToWithoutBackSave(Fragment fragment) {
-    fragmentManager.beginTransaction()
-        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
-        .replace(containerId, fragment)
-        .commit();
-  }
-
-  public void navigateToHomeCleaningBackStack() {
-    Fragment home = HomeFragment.newInstance();
-    cleanBackStack();
-    navigateToWithoutBackSave(home);
   }
 }

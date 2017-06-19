@@ -58,7 +58,7 @@ public abstract class BaseTable {
       }
 
       // delete migrated table
-      // TODO: 29/08/16 sithengineer uncomment the following lines when migration script is stable
+      // TODO: 29/08/16 uncomment the following lines when migration script is stable
       //			db.beginTransaction();
       //			db.execSQL(DROP_TABLE_SQL + tableName);
       //			db.endTransaction();

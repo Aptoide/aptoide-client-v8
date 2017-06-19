@@ -268,7 +268,7 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
           Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
         Logger.v(TAG, "showing rationale and requesting permission to access external storage");
 
-        // TODO: 19/07/16 sithengineer improve this rationale messages
+        // TODO: 19/07/16 improve this rationale messages
         showMessageOKCancel(rationaleMessage, new SimpleSubscriber<GenericDialogs.EResponse>() {
 
           @Override public void onNext(GenericDialogs.EResponse eResponse) {

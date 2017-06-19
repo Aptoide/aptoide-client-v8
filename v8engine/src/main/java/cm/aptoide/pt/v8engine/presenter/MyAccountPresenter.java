@@ -34,7 +34,17 @@ public class MyAccountPresenter implements Presenter {
   }
 
   @Override public void present() {
-    //todo(pribeiro): error handling
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(resumed -> accountManager.accountStatus()
+            .first())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(account -> view.showAccount(account))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
@@ -62,7 +72,13 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.haveNotifications())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(hasNotifications -> view.showHeader(hasNotifications))
+        .doOnNext(hasNotifications -> {
+          if (hasNotifications) {
+            view.showHeader();
+          } else {
+            view.hideHeader();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable));

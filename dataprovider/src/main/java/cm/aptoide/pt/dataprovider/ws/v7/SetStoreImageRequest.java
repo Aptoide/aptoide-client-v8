@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -17,9 +18,9 @@ import okhttp3.RequestBody;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
+public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
 
-  public static String getHost(SharedPreferences sharedPreferences) {
+  @NonNull public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
@@ -29,44 +30,46 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
 
   private final MultipartBody.Part multipartBody;
 
-  private SetStoreRequest(HashMapNotNull<String, RequestBody> body,
+  private SetStoreImageRequest(HashMapNotNull<String, RequestBody> body,
       MultipartBody.Part multipartBody,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+      Converter.Factory converterFactory, SharedPreferences sharedPreferences,
+      TokenInvalidator tokenInvalidator) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.multipartBody = multipartBody;
   }
 
-  public static SetStoreRequest of(String storeName, String storeTheme, String storeDescription,
-      String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory, RequestBodyFactory requestBodyFactory,
-      ObjectMapper serializer, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+  public static SetStoreImageRequest of(String storeName, String storeTheme,
+      String storeDescription, String storeAvatarPath,
+      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, RequestBodyFactory requestBodyFactory,
+      ObjectMapper serializer, SharedPreferences sharedPreferences,
+      TokenInvalidator tokenInvalidator) {
 
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
     body.put("store_name", requestBodyFactory.createBodyPartFromString(storeName));
     addStoreProperties(storeTheme, storeDescription, requestBodyFactory, serializer, body);
 
-    return new SetStoreRequest(body,
+    return new SetStoreImageRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+        bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
   }
 
-  public static SetStoreRequest of(long storeId, String storeTheme, String storeDescription,
+  public static SetStoreImageRequest of(long storeId, String storeTheme, String storeDescription,
       String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       RequestBodyFactory requestBodyFactory, ObjectMapper serializer,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator) {
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
     body.put("store_id", requestBodyFactory.createBodyPartFromLong(storeId));
     addStoreProperties(storeTheme, storeDescription, requestBodyFactory, serializer, body);
 
-    return new SetStoreRequest(body,
+    return new SetStoreImageRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+        bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
   }
 
   private static void addStoreProperties(String storeTheme, String storeDescription,
