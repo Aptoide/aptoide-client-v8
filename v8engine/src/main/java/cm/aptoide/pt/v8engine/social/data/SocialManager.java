@@ -14,11 +14,11 @@ public class SocialManager {
     this.service = service;
   }
 
-  public Single<List<Media>> getCards() {
+  public Single<List<Card>> getCards() {
     return service.getCards();
   }
 
-  public Single<List<Media>> getNextCards() {
+  public Single<List<Card>> getNextCards() {
     return service.getNextCards();
   }
 }

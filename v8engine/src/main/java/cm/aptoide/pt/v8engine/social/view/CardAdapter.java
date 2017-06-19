@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.social.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import cm.aptoide.pt.v8engine.social.data.Media;
+import cm.aptoide.pt.v8engine.social.data.Card;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import java.util.List;
 
@@ -13,9 +13,9 @@ import java.util.List;
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
   private final CardViewHolderFactory cardViewHolderFactory;
-  private List<Media> cards;
+  private List<Card> cards;
 
-  public CardAdapter(List<Media> cards, CardViewHolderFactory cardViewHolderFactory) {
+  public CardAdapter(List<Card> cards, CardViewHolderFactory cardViewHolderFactory) {
     this.cards = cards;
     this.cardViewHolderFactory = cardViewHolderFactory;
   }
@@ -38,12 +38,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     return this.cards.size();
   }
 
-  public void updateCards(List<Media> cards) {
+  public void updateCards(List<Card> cards) {
     this.cards = cards;
     notifyDataSetChanged();
   }
 
-  public void addCards(List<Media> cards) {
+  public void addCards(List<Card> cards) {
     this.cards.addAll(cards);
     notifyDataSetChanged();
   }

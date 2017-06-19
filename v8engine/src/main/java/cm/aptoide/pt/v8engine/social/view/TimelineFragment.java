@@ -16,9 +16,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.social.data.Card;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
-import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.SocialService;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
@@ -107,7 +107,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     super.onViewCreated(view, savedInstanceState);
   }
 
-  @Override public void showCards(List<Media> cards) {
+  @Override public void showCards(List<Card> cards) {
     adapter.updateCards(cards);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
@@ -130,7 +130,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout.setRefreshing(false);
   }
 
-  @Override public void showMoreCards(List<Media> cards) {
+  @Override public void showMoreCards(List<Card> cards) {
     adapter.addCards(cards);
   }
 

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.social.view;
 
 import cm.aptoide.pt.v8engine.presenter.View;
-import cm.aptoide.pt.v8engine.social.data.Media;
+import cm.aptoide.pt.v8engine.social.data.Card;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import java.util.List;
 import rx.Observable;
@@ -12,7 +12,7 @@ import rx.Observable;
 
 public interface TimelineView extends View {
 
-  void showCards(List<Media> cards);
+  void showCards(List<Card> cards);
 
   void showProgressIndicator();
 
@@ -20,7 +20,7 @@ public interface TimelineView extends View {
 
   void hideRefresh();
 
-  void showMoreCards(List<Media> cards);
+  void showMoreCards(List<Card> cards);
 
   void showGenericError();
 

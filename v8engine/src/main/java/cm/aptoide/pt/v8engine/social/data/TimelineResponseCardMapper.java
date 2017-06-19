@@ -16,8 +16,8 @@ import java.util.List;
  */
 
 public class TimelineResponseCardMapper {
-  public List<Media> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
-    final List<Media> cards = new ArrayList();
+  public List<Card> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
+    final List<Card> cards = new ArrayList();
 
     for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist()
         .getList()) {
