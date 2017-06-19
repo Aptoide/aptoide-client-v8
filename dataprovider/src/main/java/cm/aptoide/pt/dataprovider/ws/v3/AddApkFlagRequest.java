@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.networkclient.WebService;
@@ -18,12 +20,15 @@ import rx.Observable;
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
   protected AddApkFlagRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     BaseBody args = new BaseBody();
 
     args.put("repo", storeName);
@@ -32,7 +37,7 @@ public class AddApkFlagRequest extends V3<GenericResponseV2> {
     args.put("mode", "json");
 
     return new AddApkFlagRequest(args, bodyInterceptor, httpClient,
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GenericResponseV2> loadDataFromNetwork(Interfaces interfaces,

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.install.installer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -45,15 +46,17 @@ public class DefaultInstaller implements Installer {
   private static final String TAG = DefaultInstaller.class.getSimpleName();
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
-  private FileUtils fileUtils;
-  private Analytics analytics;
+  private final FileUtils fileUtils;
+  private final Analytics analytics;
+  private final SharedPreferences sharedPreferences;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, Analytics analytics) {
+      FileUtils fileUtils, Analytics analytics, SharedPreferences sharedPreferences) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
     this.analytics = analytics;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public Observable<Boolean> isInstalled(String md5) {
@@ -64,7 +67,8 @@ public class DefaultInstaller implements Installer {
   }
 
   @Override public Observable<Void> install(Context context, String md5) {
-    Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
+    Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(
+        sharedPreferences),
         RootShell.isRootAvailable());
     return installationProvider.getInstallation(md5)
         .observeOn(Schedulers.computation())

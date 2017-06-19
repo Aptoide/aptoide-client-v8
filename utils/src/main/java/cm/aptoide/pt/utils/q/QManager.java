@@ -1,7 +1,10 @@
 package cm.aptoide.pt.utils.q;
 
+import android.app.ActivityManager;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.util.Base64;
+import android.view.WindowManager;
 import lombok.Getter;
 
 import static cm.aptoide.pt.utils.AptoideUtils.ScreenU;
@@ -18,11 +21,18 @@ public class QManager {
   @Getter(lazy = true) private final int densityDpi = computeDensityDpi();
   @Getter(lazy = true) private final String cpuAbi = computeCpuAbi();
   private final GlExtensionsManager glExtensionsManager;
+  private final Resources resources;
+  private final ActivityManager activityManager;
+  private final WindowManager windowManager;
 
   private String cachedFilters;
 
-  public QManager(SharedPreferences sharedPreferences) {
+  public QManager(SharedPreferences sharedPreferences, Resources resources,
+      ActivityManager activityManager, WindowManager windowManager) {
     this.glExtensionsManager = new GlExtensionsManager(sharedPreferences);
+    this.resources = resources;
+    this.activityManager = activityManager;
+    this.windowManager = windowManager;
   }
 
   private int computeMinSdk() {
@@ -30,15 +40,15 @@ public class QManager {
   }
 
   private String computeScreenSize() {
-    return ScreenU.getScreenSize();
+    return ScreenU.getScreenSize(resources);
   }
 
   private String computeGlEs() {
-    return SystemU.getGlEsVer();
+    return SystemU.getGlEsVer(activityManager);
   }
 
   private int computeDensityDpi() {
-    return ScreenU.getDensityDpi();
+    return ScreenU.getDensityDpi(windowManager);
   }
 
   private String computeCpuAbi() {

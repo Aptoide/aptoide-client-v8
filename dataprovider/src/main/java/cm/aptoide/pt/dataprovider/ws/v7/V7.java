@@ -1,11 +1,12 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.accounts.NetworkErrorException;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
@@ -72,22 +73,27 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
-  public static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http" :
-      BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-          + "://"
-          + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-          + "/api/7/";
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7/";
+  }
+
   @Getter protected final B body;
   private final BodyInterceptor bodyInterceptor;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private final int MAX_RETRY_COUNT = 3;
+  private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
 
   protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor bodyInterceptor, TokenInvalidator tokenInvalidator) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
     this.bodyInterceptor = bodyInterceptor;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   @NonNull public static String getErrorMessage(BaseV7Response response) {
@@ -161,10 +167,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
           if (!accessTokenRetry) {
             accessTokenRetry = true;
-            return DataProvider.invalidateAccessToken()
-                .flatMapObservable(s -> {
-                  return V7.this.observe(bypassCache);
-                });
+            return tokenInvalidator.invalidateAccessToken()
+                .andThen(V7.this.observe(bypassCache));
           } else {
             return Observable.error(new NetworkErrorException());
           }

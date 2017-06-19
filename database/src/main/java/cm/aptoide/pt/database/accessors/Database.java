@@ -88,7 +88,7 @@ public final class Database {
       //realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
       //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-          //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
+          //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 activate DB encryption
           .schemaVersion(SCHEMA_VERSION)
           .migration(new RealmToRealmDatabaseMigration())
           .build();

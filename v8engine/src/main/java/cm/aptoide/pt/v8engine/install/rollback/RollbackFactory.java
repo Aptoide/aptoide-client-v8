@@ -38,7 +38,7 @@ public class RollbackFactory {
       Rollback rollback = new Rollback();
       rollback.setAction(action.name());
       rollback.setConfirmed(false);
-      rollback.setAppName(AptoideUtils.SystemU.getApkLabel(info));
+      rollback.setAppName(AptoideUtils.SystemU.getApkLabel(info, context.getPackageManager()));
       rollback.setPackageName(info.packageName);
       rollback.setVersionCode(info.versionCode);
       rollback.setVersionName(versionName);

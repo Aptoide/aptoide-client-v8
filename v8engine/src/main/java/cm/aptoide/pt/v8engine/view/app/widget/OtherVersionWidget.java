@@ -24,7 +24,6 @@ import java.util.Locale;
 
   private static final String TAG = OtherVersionWidget.class.getSimpleName();
   private static final Locale DEFAULT_LOCALE = Locale.getDefault();
-  private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 
   // left side
   //private ImageView versionBadge;
@@ -72,8 +71,9 @@ import java.util.Locale;
       version.setText(app.getFile()
           .getVername());
       setBadge(app);
-      date.setText(DATE_TIME_U.getTimeDiffString(getContext(), app.getModified()
-          .getTime()));
+      date.setText(AptoideUtils.DateTimeU.getInstance(getContext())
+          .getTimeDiffString(getContext(), app.getModified()
+              .getTime(), getContext().getResources()));
       downloads.setText(String.format(DEFAULT_LOCALE,
           getContext().getString(R.string.other_versions_downloads_count_text),
           AptoideUtils.StringU.withSuffix(app.getStats()

@@ -1,11 +1,14 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.v8engine.util.ScreenTrackingUtils;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 
@@ -20,20 +23,12 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
     if (getArguments() != null) {
       loadExtras(getArguments());
     }
-    ScreenTrackingUtils.getInstance()
-        .incrementNumberOfScreens();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
     setupViews();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    ScreenTrackingUtils.getInstance()
-        .decrementNumberOfScreens();
   }
 
   /**
@@ -52,14 +47,6 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
 
   @Override public void setupToolbar() {
     // optional method
-  }
-
-  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
-    super.setUserVisibleHint(isVisibleToUser);
-    if (isVisibleToUser) {
-      ScreenTrackingUtils.getInstance()
-          .addScreenToHistory(getClass().getSimpleName());
-    }
   }
 
   @CallSuper @Nullable @Override

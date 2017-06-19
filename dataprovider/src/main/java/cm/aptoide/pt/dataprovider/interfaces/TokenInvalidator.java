@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.interfaces;
 
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -7,5 +8,5 @@ import rx.Single;
  */
 
 public interface TokenInvalidator {
-  Single<String> invalidateAccessToken();
+  Completable invalidateAccessToken();
 }

@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -21,12 +22,14 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -56,6 +59,7 @@ public class PrivateStoreDialog extends BaseDialog {
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -77,6 +81,7 @@ public class PrivateStoreDialog extends BaseDialog {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -84,7 +89,8 @@ public class PrivateStoreDialog extends BaseDialog {
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(), tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
@@ -163,7 +169,8 @@ public class PrivateStoreDialog extends BaseDialog {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   private void dismissLoadingDialog() {

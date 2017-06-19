@@ -1,10 +1,12 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
 import cm.aptoide.pt.model.v7.TimelineStats;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
@@ -25,13 +27,14 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   @Getter private boolean shouldShowAddFriends;
   private TimelineAnalytics timelineAnalytics;
   private long storeId;
+  private Resources resources;
 
   public TimeLineStatsDisplayable() {
   }
 
   public TimeLineStatsDisplayable(TimelineStats pojo, Long userId,
       SpannableFactory spannableFactory, String storeTheme, TimelineAnalytics timelineAnalytics,
-      boolean shouldShowAddFriends, long storeId) {
+      boolean shouldShowAddFriends, long storeId, Resources resources) {
     super(pojo);
     this.userId = userId;
     this.spannableFactory = spannableFactory;
@@ -39,6 +42,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
     this.shouldShowAddFriends = shouldShowAddFriends;
     this.timelineAnalytics = timelineAnalytics;
     this.storeId = storeId;
+    this.resources = resources;
   }
 
   @Override protected Configs getConfig() {
@@ -72,16 +76,21 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   public Void followersClick(FragmentNavigator navigator) {
     if (storeId > 0) {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowersUsingStoreIdFragment(storeId, getPojo().getData()
-              .getFollowers(), storeTheme));
+          .newTimeLineFollowersUsingStoreIdFragment(storeId, storeTheme,
+              AptoideUtils.StringU.getFormattedString(
+                  R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
+                      .getFollowers())));
     } else if (userId != null && userId > 0) {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowersUsingUserIdFragment(userId, getPojo().getData()
-              .getFollowers(), storeTheme));
+          .newTimeLineFollowersUsingUserIdFragment(userId, storeTheme,
+              AptoideUtils.StringU.getFormattedString(
+                  R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
+                      .getFollowers())));
     } else {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowersFragment(getPojo().getData()
-              .getFollowers(), storeTheme));
+          .newTimeLineFollowersFragment(storeTheme, AptoideUtils.StringU.getFormattedString(
+              R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
+                  .getFollowers())));
     }
     return null;
   }
@@ -89,12 +98,16 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   public Void followingClick(FragmentNavigator navigator) {
     if (storeId > 0) {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowingFragmentUsingStoreId(storeId, getPojo().getData()
-              .getFollowing(), storeTheme));
+          .newTimeLineFollowingFragmentUsingStoreId(storeId, storeTheme,
+              AptoideUtils.StringU.getFormattedString(
+                  R.string.social_timeline_following_fragment_title, resources, getPojo().getData()
+                      .getFollowing())));
     } else {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowingFragmentUsingUserId(userId, getPojo().getData()
-              .getFollowing(), storeTheme));
+          .newTimeLineFollowingFragmentUsingUserId(userId, storeTheme,
+              AptoideUtils.StringU.getFormattedString(
+                  R.string.social_timeline_following_fragment_title, resources, getPojo().getData()
+                      .getFollowing())));
     }
     return null;
   }

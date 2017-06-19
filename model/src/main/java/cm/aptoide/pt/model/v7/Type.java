@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.model.v7;
 
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Getter;
 
@@ -31,9 +33,9 @@ public enum Type {
     this.fixedPerLineCount = fixedPerLineCount;
   }
 
-  public int getPerLineCount() {
+  public int getPerLineCount(Resources resources, WindowManager windowManager) {
     int n = isFixedPerLineCount() ? getDefaultPerLineCount()
-        : (int) (AptoideUtils.ScreenU.getScreenWidthInDip()
+        : (int) (AptoideUtils.ScreenU.getScreenWidthInDip(windowManager, resources)
             / AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
     return n > 0 ? n : 1;
   }

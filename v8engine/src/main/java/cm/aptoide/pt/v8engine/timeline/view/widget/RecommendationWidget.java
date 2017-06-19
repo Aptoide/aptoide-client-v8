@@ -84,11 +84,12 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
           knockWithSixpackCredentials(displayable.getAbUrl());
 
           Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME,
-              displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(
+                  getContext().getResources()),
               Analytics.AppsTimeline.OPEN_APP_VIEW);
           displayable.sendRecommendedOpenAppEvent();
           displayable.sendRecommendationCardClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
-              socialAction);
+              socialAction, getContext().getResources());
           getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
               .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
         }));

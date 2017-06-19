@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.timeline;
 
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
@@ -46,15 +48,22 @@ public class TimelineAnalytics extends AptoideAnalytics {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final String appId;
+  private final SharedPreferences sharedPreferences;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.appId = appId;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -250,7 +259,7 @@ public class TimelineAnalytics extends AptoideAnalytics {
 
   private AptoideEvent createEvent(String event, Map<String, Object> data) {
     return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator, appId, sharedPreferences);
   }
 
   private Map<String, Object> createAppData(String cardType, String source, String packageName) {

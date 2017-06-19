@@ -1,7 +1,7 @@
 package cm.aptoide.pt.preferences.toolbox;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 import cm.aptoide.pt.preferences.Application;
 
 /**
@@ -10,88 +10,91 @@ import cm.aptoide.pt.preferences.Application;
 
 public class ToolboxManager {
 
-  private static final Context context = Application.getContext();
-
-  public static boolean isDebug() {
-    return PreferenceManager.getDefaultSharedPreferences(context)
+  public static boolean isDebug(SharedPreferences sharedPreferences) {
+    return sharedPreferences
         .getBoolean(ToolboxKeys.DEBUG, false);
   }
 
-  public static void setDebug(boolean debug) {
-    PreferenceManager.getDefaultSharedPreferences(context)
+  public static void setDebug(boolean debug, SharedPreferences sharedPreferences) {
+    sharedPreferences
         .edit()
         .putBoolean(ToolboxKeys.DEBUG, debug)
         .apply();
   }
 
-  public static String getForceCountry() {
+  public static String getForceCountry(SharedPreferences sharedPreferences) {
     String defaultValue = "";
 
-    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+    return isDebug(sharedPreferences) ? sharedPreferences
         .getString(ToolboxKeys.FORCE_COUNTRY, defaultValue) : defaultValue;
   }
 
-  public static void setForceCountry(String forcedCountry) {
-    PreferenceManager.getDefaultSharedPreferences(context)
+  public static void setForceCountry(String forcedCountry, SharedPreferences sharedPreferences) {
+    sharedPreferences
         .edit()
         .putString(ToolboxKeys.FORCE_COUNTRY, forcedCountry)
         .apply();
   }
 
-  public static boolean isToolboxEnableHttpScheme() {
+  public static boolean isToolboxEnableHttpScheme(SharedPreferences sharedPreferences) {
     boolean defaultValue = false;
 
-    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+    return isDebug(sharedPreferences) ? sharedPreferences
         .getBoolean(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME, defaultValue) : defaultValue;
   }
 
-  public static void setToolboxEnableHttpScheme(boolean toolboxEnableHttp) {
-    PreferenceManager.getDefaultSharedPreferences(context)
+  public static void setToolboxEnableHttpScheme(boolean toolboxEnableHttp,
+      SharedPreferences sharedPreferences) {
+    sharedPreferences
         .edit()
         .putBoolean(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME, toolboxEnableHttp)
         .apply();
   }
 
-  public static boolean isToolboxEnableRetrofitLogs() {
+  public static boolean isToolboxEnableRetrofitLogs(SharedPreferences sharedPreferences) {
     boolean defaultValue = false;
 
-    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+    return isDebug(sharedPreferences) ? sharedPreferences
         .getBoolean(ToolboxKeys.TOOLBOX_RETROFIT_LOGS, defaultValue) : defaultValue;
   }
 
-  public static void setToolboxEnableRetrofitLogs(boolean toolboxEnableRetrofitLogs) {
-    PreferenceManager.getDefaultSharedPreferences(context)
+  public static void setToolboxEnableRetrofitLogs(boolean toolboxEnableRetrofitLogs,
+      SharedPreferences sharedPreferences) {
+    sharedPreferences
         .edit()
         .putBoolean(ToolboxKeys.TOOLBOX_RETROFIT_LOGS, toolboxEnableRetrofitLogs)
         .apply();
   }
 
-  public static String getNotificationType() {
+  public static String getNotificationType(SharedPreferences sharedPreferences) {
     String defaultValue = "";
 
-    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+    return isDebug(sharedPreferences) ? sharedPreferences
         .getString(ToolboxKeys.NOTIFICATION_TYPE, defaultValue) : defaultValue;
   }
 
-  public static void setNotificationType(String notificationType) {
-    PreferenceManager.getDefaultSharedPreferences(context)
+  public static void setNotificationType(String notificationType,
+      SharedPreferences sharedPreferences) {
+    sharedPreferences
         .edit()
         .putString(ToolboxKeys.NOTIFICATION_TYPE, notificationType)
         .apply();
   }
 
-  public static long getPushNotificationPullingInterval() {
+  public static long getPushNotificationPullingInterval(SharedPreferences sharedPreferences) {
     long defaultValue = -1;
 
-    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+    return isDebug(sharedPreferences) ? sharedPreferences
         .getLong(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL, defaultValue) : defaultValue;
   }
 
   /**
    * @param intervalTime time in ms
+   * @param sharedPreferences
    */
-  public static void setPushNotificationPullingInterval(long intervalTime) {
-    PreferenceManager.getDefaultSharedPreferences(context)
+  public static void setPushNotificationPullingInterval(long intervalTime,
+      SharedPreferences sharedPreferences) {
+    sharedPreferences
         .edit()
         .putLong(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL, intervalTime)
         .apply();

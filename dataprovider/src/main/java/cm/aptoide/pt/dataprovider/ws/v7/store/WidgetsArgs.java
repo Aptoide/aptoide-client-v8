@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import lombok.Data;
@@ -22,11 +24,14 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
     add(Key.STORES_GROUP, storesRowSize);
   }
 
-  public static WidgetsArgs createDefault() {
-    return new WidgetsArgs().add(Key.APPS_GROUP, Type.APPS_GROUP.getPerLineCount())
-        .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount())
-        .add(Key.MY_STORES_SUBSCRIBED, Type.MY_STORES_SUBSCRIBED.getPerLineCount())
-        .add(Key.STORES_RECOMMENDED, Type.STORES_RECOMMENDED.getPerLineCount());
+  public static WidgetsArgs createDefault(Resources resources, WindowManager windowManager) {
+    return new WidgetsArgs().add(Key.APPS_GROUP, Type.APPS_GROUP.getPerLineCount(resources,
+        windowManager))
+        .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount(resources, windowManager))
+        .add(Key.MY_STORES_SUBSCRIBED, Type.MY_STORES_SUBSCRIBED.getPerLineCount(resources,
+            windowManager))
+        .add(Key.STORES_RECOMMENDED, Type.STORES_RECOMMENDED.getPerLineCount(resources,
+            windowManager));
   }
 
   public WidgetsArgs add(Key key, int gridRowSize) {

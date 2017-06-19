@@ -15,9 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.account.LoginActivity;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
@@ -43,12 +41,17 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
   private static final String TAG = AccountAuthenticator.class.getSimpleName();
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
+  private final AccountManager androidAccountManager;
+  private final Intent loginActivityBaseIntent;
 
   AccountAuthenticator(Context context, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      CrashReport crashReport, AccountManager androidAccountManager,
+      Intent loginActivityBaseIntent) {
     super(context);
     this.accountManager = accountManager;
     this.crashReport = crashReport;
+    this.androidAccountManager = androidAccountManager;
+    this.loginActivityBaseIntent = loginActivityBaseIntent;
   }
 
   @Override
@@ -85,9 +88,8 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     // Extract the username and password from the Account Manager, and ask
     // the server for an appropriate AuthToken.
-    final AccountManager am = AccountManager.get(Application.getContext());
 
-    String authToken = am.peekAuthToken(account, authTokenType);
+    String authToken = androidAccountManager.peekAuthToken(account, authTokenType);
 
     Logger.v(TAG, "peekAuthToken returned - " + account + " " + authToken);
 
@@ -170,12 +172,11 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
 
   private Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType,
       String authTokenType, Bundle options) {
-    Intent intent = new Intent(Application.getContext(), LoginActivity.class);
-    intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
-    intent.putExtra(ARG_AUTH_TYPE, authTokenType);
-    intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, true);
-    intent.putExtra(ARG_OPTIONS_BUNDLE, options);
-    intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-    return intent;
+    loginActivityBaseIntent.putExtra(ARG_ACCOUNT_TYPE, accountType);
+    loginActivityBaseIntent.putExtra(ARG_AUTH_TYPE, authTokenType);
+    loginActivityBaseIntent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, true);
+    loginActivityBaseIntent.putExtra(ARG_OPTIONS_BUNDLE, options);
+    loginActivityBaseIntent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+    return loginActivityBaseIntent;
   }
 }

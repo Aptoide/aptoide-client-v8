@@ -23,11 +23,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.spotandshare.DataHolder;
 import cm.aptoide.pt.v8engine.spotandshare.PermissionListener;
 import cm.aptoide.pt.v8engine.spotandshare.PermissionManager;
 import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
-import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareApplication;
 import cm.aptoide.pt.v8engine.spotandshare.analytics.SpotAndShareAnalyticsInterface;
 import cm.aptoide.pt.v8engine.spotandshare.connection.ConnectionManager;
 import cm.aptoide.pt.v8engine.spotandshare.connection.DeactivateHotspotTask;
@@ -81,7 +81,7 @@ public class RadarActivity extends ActivityView implements RadarView, Permission
     ApplicationSender.reset();
     DataHolder.reset();
     GroupNameProvider groupNameProvider =
-        ((SpotAndShareApplication) getApplication()).getGroupNameProvider();
+        ((V8Engine) getApplication()).getGroupNameProvider();
     ConnectionManager connectionManager =
         ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();
