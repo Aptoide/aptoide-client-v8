@@ -559,9 +559,9 @@ public abstract class V8Engine extends Application {
       final AccountManagerService accountManagerService = new AccountManagerService(
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager(),
-              getDefaultSharedPreferences(), getResources(), getPackageManager(), getPackageName()),
-          getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter(), getNonNullObjectMapper(),
+              getDefaultSharedPreferences(), getResources(), getPackageManager(), getPackageName(),
+              Build.VERSION.SDK_INT), getAccountFactory(), getDefaultClient(),
+          getLongTimeoutClient(), WebService.getDefaultConverter(), getNonNullObjectMapper(),
           new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
@@ -919,7 +919,7 @@ public abstract class V8Engine extends Application {
       baseBodyInterceptorV3 =
           new BaseBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
               getAccountManager(), getQManager(), getDefaultSharedPreferences(),
-              BaseBodyInterceptorV3.RESPONSE_MODE_JSON);
+              BaseBodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT);
     }
     return baseBodyInterceptorV3;
   }

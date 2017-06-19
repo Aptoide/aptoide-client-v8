@@ -31,11 +31,12 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   private final Resources resources;
   private final PackageManager packageManager;
   private final String packageName;
+  private final int androidVersion;
 
   public BaseBodyAccountManagerInterceptorFactory(IdsRepository idsRepository,
       Preferences preferences, SecurePreferences securePreferences, String aptoideMd5sum,
       String aptoidePackage, QManager qManager, SharedPreferences sharedPreferences,
-      Resources resources, PackageManager packageManager, String packageName) {
+      Resources resources, PackageManager packageManager, String packageName, int androidVersion) {
     this.idsRepository = idsRepository;
     this.preferences = preferences;
     this.securePreferences = securePreferences;
@@ -46,6 +47,7 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
     this.resources = resources;
     this.packageManager = packageManager;
     this.packageName = packageName;
+    this.androidVersion = androidVersion;
   }
 
   @Override public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager) {
@@ -73,7 +75,7 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(
       AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, accountManager,
-        qManager, sharedPreferences, BaseBodyInterceptorV3.RESPONSE_MODE_JSON);
+        qManager, sharedPreferences, BaseBodyInterceptorV3.RESPONSE_MODE_JSON, androidVersion);
   }
 
   @Override
