@@ -3,6 +3,8 @@ package cm.aptoide.pt.v8engine.social.data;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
+import cm.aptoide.pt.model.v7.timeline.Recommendation;
+import cm.aptoide.pt.model.v7.timeline.RecommendationTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Video;
@@ -23,18 +25,18 @@ public class TimelineResponseCardMapper {
         .getList()) {
       if (item instanceof ArticleTimelineItem) {
         final Article article = ((ArticleTimelineItem) item).getData();
-        String ab = null;
+        String abUrl = null;
         if (article.getAb() != null
             && article.getAb()
             .getConversion() != null) {
-          ab = article.getAb()
+          abUrl = article.getAb()
               .getConversion()
               .getUrl();
         }
 
         cards.add(new Media(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
             article.getDate(), article.getApps()
-            .get(0), ab, article.getPublisher()
+            .get(0), abUrl, article.getPublisher()
             .getLogoUrl(), article.getPublisher()
             .getName(), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher()
@@ -43,24 +45,39 @@ public class TimelineResponseCardMapper {
             CardType.ARTICLE));
       } else if (item instanceof VideoTimelineItem) {
         final Video video = ((VideoTimelineItem) item).getData();
-        String ab = null;
+        String abUrl = null;
         if (video.getAb() != null
             && video.getAb()
             .getConversion() != null) {
-          ab = video.getAb()
+          abUrl = video.getAb()
               .getConversion()
               .getUrl();
         }
         cards.add(
             new Media(video.getCardId(), video.getTitle(), video.getThumbnailUrl(), video.getDate(),
                 video.getApps()
-                    .get(0), ab, video.getPublisher()
+                    .get(0), abUrl, video.getPublisher()
                 .getLogoUrl(), video.getPublisher()
                 .getName(), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
                 video.getPublisher()
                     .getBaseUrl()),
                 linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
                 CardType.VIDEO));
+      } else if (item instanceof RecommendationTimelineItem) {
+        final Recommendation recommendation = ((RecommendationTimelineItem) item).getData();
+        String abUrl = null;
+        if (recommendation.getAb() != null
+            && recommendation.getAb()
+            .getConversion() != null) {
+          abUrl = recommendation.getAb()
+              .getConversion()
+              .getUrl();
+        }
+        cards.add(new cm.aptoide.pt.v8engine.social.data.Recommendation(recommendation.getCardId(),
+            recommendation.getRecommendedApp()
+                .getPackageName(), recommendation.getRecommendedApp()
+            .getName(), recommendation.getRecommendedApp()
+            .getIcon(), recommendation.getSimilarApps().get(0).getName(), recommendation.getTimestamp(), abUrl, CardType.RECOMMENDATION));
       }
     }
 
