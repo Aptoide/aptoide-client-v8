@@ -47,8 +47,7 @@
       >
 
     <activity
-        android:name=".timeline.post.PostActivity"
-        android:theme="@style/Theme.AppCompat.Dialog">
+        android:name=".timeline.post.PostActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEND"/>
         <category android:name="android.intent.category.DEFAULT"/>

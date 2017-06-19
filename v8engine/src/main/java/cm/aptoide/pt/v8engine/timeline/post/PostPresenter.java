@@ -7,12 +7,12 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-class CreatePostPresenter implements Presenter {
+class PostPresenter implements Presenter {
   private final PostView view;
   private final CrashReport crashReport;
   private final PostManager postManager;
 
-  public CreatePostPresenter(PostView view, CrashReport crashReport, PostManager postManager) {
+  public PostPresenter(PostView view, CrashReport crashReport, PostManager postManager) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;

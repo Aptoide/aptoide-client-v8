@@ -69,8 +69,7 @@ public class PostFragment extends FragmentView implements PostView {
       userInput.setText(args.getString(DATA_TO_SHARE, ""));
     }
 
-    attachPresenter(new CreatePostPresenter(this, CrashReport.getInstance(), new PostManager()),
-        null);
+    attachPresenter(new PostPresenter(this, CrashReport.getInstance(), new PostManager()), null);
   }
 
   @Override public Observable<String> onInputTextChanged() {
