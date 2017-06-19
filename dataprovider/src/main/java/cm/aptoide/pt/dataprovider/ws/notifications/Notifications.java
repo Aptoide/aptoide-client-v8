@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified on 03/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.notifications;
@@ -21,14 +21,16 @@ import retrofit2.http.QueryMap;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 21/07/16.
+ * Created by on 21/07/16.
  */
 public abstract class Notifications<U> extends WebService<Notifications.Interfaces, U> {
 
-  protected static final String BASE_HOST = "http://pnp.aptoide.com/pnp/v1/notifications/";
+  public static String getHost() {
+    return "http://pnp.aptoide.com/pnp/v1/notifications/";
+  }
 
   protected Notifications(OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(Interfaces.class, httpClient, converterFactory, BASE_HOST);
+    super(Interfaces.class, httpClient, converterFactory, getHost());
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {

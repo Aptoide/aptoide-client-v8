@@ -1,9 +1,9 @@
 package cm.aptoide.pt.v8engine.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.text.format.DateUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.V8Engine;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,45 +25,47 @@ public class DateCalculator {
   private static String mTimestampLabelYearAgo;
   private static String mTimestampLabelYearsAgo;
   private static String[] weekdays = new DateFormatSymbols().getWeekdays(); // get day names
+  private Resources resources;
 
-  public DateCalculator() {
-    mTimestampLabelYesterday = V8Engine.getContext()
+  public DateCalculator(Context context, Resources resources) {
+    this.resources = resources;
+    mTimestampLabelYesterday = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_yesterday);
-    mTimestampLabelToday = V8Engine.getContext()
+    mTimestampLabelToday = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_today);
-    mTimestampLabelJustNow = V8Engine.getContext()
+    mTimestampLabelJustNow = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_just_now);
-    mTimestampLabelMinutesAgo = V8Engine.getContext()
+    mTimestampLabelMinutesAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_minutes_ago);
-    mTimestampLabelHoursAgo = V8Engine.getContext()
+    mTimestampLabelHoursAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_hours_ago);
-    mTimestampLabelHourAgo = V8Engine.getContext()
+    mTimestampLabelHourAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_hour_ago);
-    mTimestampLabelDaysAgo = V8Engine.getContext()
+    mTimestampLabelDaysAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_days_ago);
-    mTimestampLabelWeekAgo = V8Engine.getContext()
+    mTimestampLabelWeekAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_week_ago2);
-    mTimestampLabelWeeksAgo = V8Engine.getContext()
+    mTimestampLabelWeeksAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_weeks_ago);
-    mTimestampLabelMonthAgo = V8Engine.getContext()
+    mTimestampLabelMonthAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_month_ago);
-    mTimestampLabelMonthsAgo = V8Engine.getContext()
+    mTimestampLabelMonthsAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_months_ago);
-    mTimestampLabelYearAgo = V8Engine.getContext()
+    mTimestampLabelYearAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_year_ago);
-    mTimestampLabelYearsAgo = V8Engine.getContext()
+    mTimestampLabelYearsAgo = context
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_years_ago);
   }
@@ -98,24 +100,24 @@ public class DateCalculator {
         int diffDays = Double.valueOf(Math.ceil(diffTime / millisInADay))
             .intValue();
         return diffDays == 1 ? mTimestampLabelYesterday : AptoideUtils.StringU.getFormattedString(
-            cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_days_ago, diffDays);
+            cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_days_ago, resources, diffDays);
       } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
         int diffDays = Double.valueOf(Math.ceil(diffTime / AptoideUtils.DateTimeU.WEEK_IN_MILLIS))
             .intValue();
         return diffDays == 1 ? mTimestampLabelWeekAgo : AptoideUtils.StringU.getFormattedString(
-            cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_weeks_ago, diffDays);
+            cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_weeks_ago, resources, diffDays);
       } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {
         int diffDays =
             Double.valueOf(Math.ceil(diffTime / (AptoideUtils.DateTimeU.WEEK_IN_MILLIS * 4)))
                 .intValue();
         return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(
-            cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_months_ago, diffDays);
+            cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_months_ago, resources, diffDays);
       } else {
         int diffDays =
             Double.valueOf(Math.ceil(diffTime / (AptoideUtils.DateTimeU.WEEK_IN_MILLIS * 4 * 12)))
                 .intValue();
         return diffDays == 1 ? mTimestampLabelYearAgo : AptoideUtils.StringU.getFormattedString(
-            cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_years_ago, diffDays);
+            cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_years_ago, resources, diffDays);
       }
     }
 

@@ -32,7 +32,7 @@ import rx.functions.Action1;
     final String buttonText = Translator.translate(displayable.getPojo()
         .getActions()
         .get(0)
-        .getLabel());
+        .getLabel(), getContext().getApplicationContext());
     button.setText(buttonText);
 
     final Action1<Void> handleButtonClick = __ -> {
@@ -42,7 +42,8 @@ import rx.functions.Action1;
           .getEvent();
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, Translator.translate(displayable.getPojo()
-              .getTitle()), null, displayable.getTag(), displayable.getStoreContext()));
+                  .getTitle(), getContext().getApplicationContext()), null, displayable.getTag(),
+              displayable.getStoreContext()));
     };
     compositeSubscription.add(RxView.clicks(button)
         .subscribe(handleButtonClick));

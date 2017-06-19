@@ -12,7 +12,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -57,13 +57,13 @@ import com.jakewharton.rxbinding.view.RxView;
     if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
-              StoreThemeEnum.get(store.getTheme())
-                  .getStoreHeaderInt());
+              StoreTheme.get(store.getTheme())
+                  .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
     } else {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(store.getIconPath(), storeAvatar,
-              StoreThemeEnum.get(store.getTheme())
-                  .getStoreHeaderInt());
+              StoreTheme.get(store.getTheme())
+                  .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
     }
   }
 }

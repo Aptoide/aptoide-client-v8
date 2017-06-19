@@ -15,7 +15,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.store.MetaStoresBaseWidget;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -59,7 +59,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     exploreButton.setText(displayable.getExploreButtonText());
     String storeTheme = store.getAppearance()
         .getTheme();
-    @ColorInt int color = getColorOrDefault(StoreThemeEnum.get(storeTheme), context);
+    @ColorInt int color = getColorOrDefault(StoreTheme.get(storeTheme), context);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
@@ -83,13 +83,13 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
   }
 
-  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+  private int getColorOrDefault(StoreTheme theme, Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       return context.getResources()
-          .getColor(theme.getStoreHeader(), context.getTheme());
+          .getColor(theme.getPrimaryColor(), context.getTheme());
     } else {
       return context.getResources()
-          .getColor(theme.getStoreHeader());
+          .getColor(theme.getPrimaryColor());
     }
   }
 }

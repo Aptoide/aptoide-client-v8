@@ -7,11 +7,13 @@ package cm.aptoide.pt.v8engine.view.app.widget;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
@@ -145,15 +148,30 @@ import rx.android.schedulers.AndroidSchedulers;
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+    installConverter =
+        new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     analytics = Analytics.getInstance();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-                httpClient, WebService.getDefaultConverter()));
+                httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+                V8Engine.getConfiguration()
+                    .getAppId(),
+                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     minimalAd = this.displayable.getMinimalAd();
     GetApp getApp = this.displayable.getPojo();
@@ -226,7 +244,8 @@ import rx.android.schedulers.AndroidSchedulers;
       case AppViewInstallDisplayable.ACTION_OPEN:
         setDownloadBarInvisible();
         setupActionButton(R.string.open,
-            v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
+            v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName(),
+                getContext().getPackageManager(), getContext()));
         break;
       case AppViewInstallDisplayable.ACTION_UPDATE:
         isUpdate = true;
@@ -348,7 +367,8 @@ import rx.android.schedulers.AndroidSchedulers;
   private void showRootInstallWarningPopup(Context context) {
     if (installManager.showWarning()) {
       compositeSubscription.add(GenericDialogs.createGenericYesNoCancelMessage(context, null,
-          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog,
+              getContext().getResources()))
           .subscribe(eResponses -> {
             switch (eResponses) {
               case YES:
@@ -400,13 +420,15 @@ import rx.android.schedulers.AndroidSchedulers;
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             if (accountManager.isLoggedIn()
-                && ManagerPreferences.isShowPreviewDialog()
+                && ManagerPreferences.isShowPreviewDialog(
+                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
                 && Application.getConfiguration()
                 .isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog =
                   new SharePreviewDialog(displayable, accountManager, true,
                       SharePreviewDialog.SharePreviewOpenMode.SHARE,
-                      displayable.getTimelineAnalytics());
+                      displayable.getTimelineAnalytics(),
+                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
 

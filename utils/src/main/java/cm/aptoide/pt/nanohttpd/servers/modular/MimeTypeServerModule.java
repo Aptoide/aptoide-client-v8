@@ -1,8 +1,8 @@
 package cm.aptoide.pt.nanohttpd.servers.modular;
 
+import android.content.res.AssetManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.nanohttpd.MimeType;
-import cm.aptoide.pt.utils.AptoideUtils;
 import fi.iki.elonen.NanoHTTPD;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +13,12 @@ import java.io.InputStream;
 public class MimeTypeServerModule implements ServerModule {
 
   private static final String TAG = MimeTypeServerModule.class.getSimpleName();
+
+  private final AssetManager assetManager;
+
+  public MimeTypeServerModule(AssetManager assetManager) {
+    this.assetManager = assetManager;
+  }
 
   @Override public boolean accepts(NanoHTTPD.IHTTPSession session) {
     String uri = session.getUri();
@@ -50,8 +56,7 @@ public class MimeTypeServerModule implements ServerModule {
   private InputStream getInputStream(String assetPath) {
 
     try {
-      return AptoideUtils.getContext()
-          .getAssets()
+      return assetManager
           .open(assetPath);
     } catch (IOException e) {
       throw new IllegalArgumentException("Couldn't load asset! " + assetPath, e);

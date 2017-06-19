@@ -1,22 +1,22 @@
 package cm.aptoide.pt.v8engine.view.store;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 public class StoreAddCommentDisplayable extends Displayable {
 
   private final long storeId;
   private final String storeName;
-  private final StoreThemeEnum storeTheme;
+  private final StoreTheme storeTheme;
 
   public StoreAddCommentDisplayable() {
     storeId = -1;
     storeName = "";
-    storeTheme = StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT;
+    storeTheme = StoreTheme.DEFAULT;
   }
 
-  public StoreAddCommentDisplayable(long storeId, String storeName, StoreThemeEnum storeTheme) {
+  public StoreAddCommentDisplayable(long storeId, String storeName, StoreTheme storeTheme) {
     this.storeId = storeId;
     this.storeName = storeName;
     this.storeTheme = storeTheme;
@@ -38,7 +38,7 @@ public class StoreAddCommentDisplayable extends Displayable {
     return R.layout.displayable_grid_add_store_comment;
   }
 
-  public StoreThemeEnum getStoreTheme() {
+  public StoreTheme getStoreTheme() {
     return storeTheme;
   }
 }

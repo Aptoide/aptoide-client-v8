@@ -5,15 +5,12 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Intent;
+
 /**
  * Created by marcelobenites on 18/01/17.
  */
 
 public interface MainView extends View {
-
-  void showWizard();
-
-  void showHome();
-
-  boolean showDeepLink();
+  Intent getIntentAfterCreate();
 }

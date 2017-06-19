@@ -2,6 +2,8 @@ package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -21,13 +23,16 @@ public abstract class CardDisplayable extends Displayable {
   private TimelineCard timelineCard;
   private TimelineAnalytics timelineAnalytics;
   private TimelineSocialActionData timelineSocialActionData;
+  private WindowManager windowManager;
 
   CardDisplayable() {
   }
 
-  CardDisplayable(TimelineCard timelineCard, TimelineAnalytics timelineAnalytics) {
+  CardDisplayable(TimelineCard timelineCard, TimelineAnalytics timelineAnalytics,
+      WindowManager windowManager) {
     this.timelineCard = timelineCard;
     this.timelineAnalytics = timelineAnalytics;
+    this.windowManager = windowManager;
   }
 
   public TimelineCard getTimelineCard() {
@@ -44,7 +49,7 @@ public abstract class CardDisplayable extends Displayable {
       return 0;
     }
 
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
+    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation, windowManager);
 
     if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
       return (int) (width * 0.2);
@@ -59,15 +64,18 @@ public abstract class CardDisplayable extends Displayable {
    * @param cardId
    * @param shareCardCallback Listens to the result of the share operation. Pass null if you want
    * to
+   * @param resources
    */
   public abstract void share(String cardId, boolean privacyResult,
-      ShareCardCallback shareCardCallback);
+      ShareCardCallback shareCardCallback, Resources resources);
 
-  public abstract void share(String cardId, ShareCardCallback shareCardCallback);
+  public abstract void share(String cardId, ShareCardCallback shareCardCallback,
+      Resources resources);
 
-  public abstract void like(Context context, String cardType, int rating);
+  public abstract void like(Context context, String cardType, int rating, Resources resources);
 
-  public abstract void like(Context context, String cardId, String cardType, int rating);
+  public abstract void like(Context context, String cardId, String cardType, int rating,
+      Resources resources);
 
   public void sendSocialActionEvent(String actionValue) {
     timelineAnalytics.sendSocialCardPreviewActionEvent(actionValue);

@@ -17,8 +17,17 @@ public class BaseBody extends HashMapNotNull<String, Object> {
     put("aptoide_package", aptoidePackage);
   }
 
+  public void setResponseMode(String mode) {
+    put("mode", mode);
+  }
+
+  public void setAuthMode(String authMode) {
+    put("authMode", authMode);
+  }
+
   public void setAccessToken(String accessToken) {
     put("access_token", accessToken);
+    put("oauthToken", accessToken);
   }
 
   public void setAptoideUid(String aptoideUid) {

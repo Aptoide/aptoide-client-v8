@@ -135,7 +135,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
               }
               firstCallbackCalled = true;
             } else {
-              // FIXME: 17/08/16 sithengineer use response.getList() instead
+              // FIXME: 17/08/16 use response.getList() instead
               successRequestListener.call(response);
             }
 

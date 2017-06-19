@@ -8,8 +8,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -21,12 +20,14 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
+  private final CrashReport crashReport;
   private Button button;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
 
   public CreateStoreWidget(View itemView) {
     super(itemView);
+    crashReport = CrashReport.getInstance();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -37,26 +38,23 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
-    if (accountManager.isLoggedIn()) {
-      button.setText(R.string.create_store_displayable_button);
-    } else {
-      button.setText(R.string.login);
-    }
 
     compositeSubscription.add(RxView.clicks(button)
-        .flatMap(__ -> accountManager.accountStatus()
-            .first())
+        .flatMapSingle(__ -> accountManager.accountStatus()
+            .first()
+            .toSingle())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(account -> {
+        .doOnNext(account -> {
           if (account.isLoggedIn()) {
             button.setText(R.string.create_store_displayable_button);
             getFragmentNavigator().navigateTo(
-                CreateStoreFragment.newInstance(new ManageStoreModel(false)));
+                ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
           } else {
             button.setText(R.string.login);
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
           }
-        }, err -> CrashReport.getInstance()
-            .log(err)));
+        })
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err)));
   }
 }

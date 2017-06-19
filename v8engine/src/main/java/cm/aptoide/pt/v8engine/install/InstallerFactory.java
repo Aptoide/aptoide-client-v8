@@ -42,7 +42,8 @@ public class InstallerFactory {
   @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
     return new DefaultInstaller(context.getPackageManager(),
         getInstallationProvider(((V8Engine) context.getApplicationContext()).getDownloadManager()),
-        new FileUtils(), Analytics.getInstance());
+        new FileUtils(), Analytics.getInstance(),
+        ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @NonNull private RollbackInstaller getRollbackInstaller(Context context) {

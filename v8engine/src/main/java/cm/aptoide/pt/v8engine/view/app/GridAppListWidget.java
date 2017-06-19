@@ -48,7 +48,8 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     Date modified = app.getUpdated();
     if (modified != null) {
       tvTimeSinceModified.setText(AptoideUtils.DateTimeU.getInstance(itemView.getContext())
-          .getTimeDiffString(itemView.getContext(), modified.getTime()));
+          .getTimeDiffString(itemView.getContext(), modified.getTime(),
+              getContext().getResources()));
     }
 
     name.setText(app.getName());

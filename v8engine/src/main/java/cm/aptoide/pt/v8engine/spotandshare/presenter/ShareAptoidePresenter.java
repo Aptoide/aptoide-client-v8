@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.spotandshare.presenter;
 
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.spotandshare.shareaptoide.ShareApkSandbox;
 import cm.aptoide.pt.v8engine.spotandshare.shareaptoide.ShareAptoideManager;
 import cm.aptoide.pt.v8engine.spotandshare.view.Presenter;
@@ -17,14 +16,14 @@ public class ShareAptoidePresenter implements Presenter {
   private ShareApkSandbox shareApkSandbox;
 
   public ShareAptoidePresenter(ShareAptoideView shareAptoideView,
-      ShareAptoideManager shareAptoideManager) {
+      ShareAptoideManager shareAptoideManager, ShareApkSandbox shareApkSandbox) {
     this.view = shareAptoideView;
     this.shareAptoideManager = shareAptoideManager;
+    this.shareApkSandbox = shareApkSandbox;
   }
 
   @Override public void onCreate() {
     enableHotspot();
-    shareApkSandbox = new ShareApkSandbox(Application.getContext());
     try {
       shareApkSandbox.start();
     } catch (IOException e) {

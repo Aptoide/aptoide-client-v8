@@ -5,7 +5,10 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
@@ -37,13 +40,19 @@ public class InAppBillingProductRepository extends ProductRepository {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final NetworkOperatorManager operatorManager;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
+  private final PackageManager packageManager;
+  private final String applicationPackageName;
 
   public InAppBillingProductRepository(PurchaseFactory purchaseFactory,
       PaymentFactory paymentFactory, AuthorizationRepository authorizationRepository,
       PaymentConfirmationRepository confirmationRepository, Payer payer,
       AuthorizationFactory authorizationFactory, ProductFactory productFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, NetworkOperatorManager operatorManager) {
+      Converter.Factory converterFactory, NetworkOperatorManager operatorManager,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      PackageManager packageManager, String applicationPackageName) {
     super(paymentFactory);
     this.purchaseFactory = purchaseFactory;
     this.productFactory = productFactory;
@@ -51,11 +60,16 @@ public class InAppBillingProductRepository extends ProductRepository {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.operatorManager = operatorManager;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
+    this.packageManager = packageManager;
+    this.applicationPackageName = applicationPackageName;
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
     return getServerInAppPurchase(((InAppProduct) product).getApiVersion(),
-        ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(), true).flatMap(
+        ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(),
+        true).flatMap(
         purchaseInformation -> convertToPurchase(purchaseInformation, ((InAppProduct) product)))
         .toSingle()
         .subscribeOn(Schedulers.io());
@@ -64,7 +78,8 @@ public class InAppBillingProductRepository extends ProductRepository {
   @Override public Single<List<Payment>> getPayments(Product product) {
     return getServerInAppBillingPaymentServices(((InAppProduct) product).getApiVersion(),
         ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getSku(),
-        ((InAppProduct) product).getType(), false).flatMap(payments -> convertResponseToPayment(payments));
+        ((InAppProduct) product).getType(), false).flatMap(
+        payments -> convertResponseToPayment(payments));
   }
 
   public Single<Product> getProduct(int apiVersion, String packageName, String sku, String type,
@@ -96,16 +111,16 @@ public class InAppBillingProductRepository extends ProductRepository {
 
   private Single<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(int apiVersion,
       String packageName, String sku, String type, boolean bypassCache) {
-    return getServerSKUs(apiVersion, packageName, Collections.singletonList(sku), type, bypassCache).map(
-        response -> response.getPaymentServices());
+    return getServerSKUs(apiVersion, packageName, Collections.singletonList(sku), type,
+        bypassCache).map(response -> response.getPaymentServices());
   }
 
   private Observable<Purchase> convertToPurchase(
       InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, InAppProduct product) {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          if (purchase.getProductId().equals(product.getSku())
-              && purchase.getPurchaseState() == 0) {
+          if (purchase.getProductId()
+              .equals(product.getSku()) && purchase.getPurchaseState() == 0) {
             return purchaseFactory.create(purchase, signature, product.getApiVersion(),
                 purchase.getProductId());
           }
@@ -122,8 +137,8 @@ public class InAppBillingProductRepository extends ProductRepository {
       int apiVersion) {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          if (purchase.getPurchaseToken().equals(purchaseToken)
-              && purchase.getPurchaseState() == 0) {
+          if (purchase.getPurchaseToken()
+              .equals(purchaseToken) && purchase.getPurchaseState() == 0) {
             return purchaseFactory.create(purchase, signature, apiVersion, purchase.getProductId());
           }
           return null;
@@ -139,24 +154,30 @@ public class InAppBillingProductRepository extends ProductRepository {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
           return purchaseFactory.create(purchase, signature, apiVersion, purchase.getProductId());
-        }).toList().toSingle();
+        })
+        .toList()
+        .toSingle();
   }
 
   private Observable<InAppBillingPurchasesResponse.PurchaseInformation> getServerInAppPurchase(
       int apiVersion, String packageName, String type, boolean bypassCache) {
     return InAppBillingPurchasesRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
-        httpClient, converterFactory).observe(bypassCache).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(response.getPurchaseInformation());
-      }
-      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    });
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager,
+        this.applicationPackageName)
+        .observe(bypassCache)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Observable.just(response.getPurchaseInformation());
+          }
+          return Observable.error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        });
   }
 
   private Single<InAppBillingSkuDetailsResponse> getServerSKUs(int apiVersion, String packageName,
       List<String> skuList, String type, boolean bypassCache) {
     return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
-        bodyInterceptorV3, httpClient, converterFactory)
+        bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(bypassCache)
         .first()
         .toSingle()
@@ -165,7 +186,8 @@ public class InAppBillingProductRepository extends ProductRepository {
             return Single.just(response);
           } else {
             final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList =
-                response.getPublisherResponse().getDetailList();
+                response.getPublisherResponse()
+                    .getDetailList();
             if (detailList.isEmpty()) {
               return Single.error(
                   new RepositoryItemNotFoundException(V3.getErrorMessage(response)));

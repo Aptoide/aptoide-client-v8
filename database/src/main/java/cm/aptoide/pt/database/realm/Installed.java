@@ -2,6 +2,7 @@ package cm.aptoide.pt.database.realm;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -32,13 +33,14 @@ public class Installed extends RealmObject {
   public Installed() {
   }
 
-  public Installed(@NonNull PackageInfo packageInfo) {
-    this(packageInfo, null);
+  public Installed(@NonNull PackageInfo packageInfo, PackageManager packageManager) {
+    this(packageInfo, null, packageManager);
   }
 
-  public Installed(@NonNull PackageInfo packageInfo, @Nullable String storeName) {
+  public Installed(@NonNull PackageInfo packageInfo, @Nullable String storeName,
+      PackageManager packageManager) {
     setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
-    setName(AptoideUtils.SystemU.getApkLabel(packageInfo));
+    setName(AptoideUtils.SystemU.getApkLabel(packageInfo, packageManager));
     setPackageName(packageInfo.packageName);
     setVersionCode(packageInfo.versionCode);
     setVersionName(packageInfo.versionName);

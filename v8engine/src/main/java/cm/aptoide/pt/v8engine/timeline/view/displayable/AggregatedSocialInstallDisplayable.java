@@ -1,18 +1,19 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.view.WindowManager;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialInstall;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
@@ -41,6 +42,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   private String abTestingURL;
   private TimelineAnalytics timelineAnalytics;
   private SpannableFactory spannableFactory;
+  private TimelineNavigator timelineNavigator;
 
   public AggregatedSocialInstallDisplayable() {
   }
@@ -48,8 +50,9 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   public AggregatedSocialInstallDisplayable(AggregatedSocialInstall card, long appId,
       String packageName, String appName, String appIcon, String abTestingURL, Date date,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      DateCalculator dateCalculator, SpannableFactory spannableFactory) {
-    super(card, timelineAnalytics);
+      DateCalculator dateCalculator, SpannableFactory spannableFactory,
+      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+    super(card, timelineAnalytics, windowManager);
     this.minimalCardList = card.getMinimalCardList();
     this.sharers = card.getSharers();
     this.socialRepository = socialRepository;
@@ -69,11 +72,13 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
     this.abTestingURL = abTestingURL;
     this.packageName = packageName;
     this.appId = appId;
+    this.timelineNavigator = timelineNavigator;
   }
 
   public static Displayable from(AggregatedSocialInstall aggregatedSocialInstall,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      DateCalculator dateCalculator, SpannableFactory spannableFactory) {
+      DateCalculator dateCalculator, SpannableFactory spannableFactory,
+      TimelineNavigator timelineNavigator, WindowManager windowManager) {
 
     String abTestingURL = null;
 
@@ -94,28 +99,31 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
         .getPackageName(), aggregatedSocialInstall.getApp()
         .getName(), aggregatedSocialInstall.getApp()
         .getIcon(), abTestingURL, aggregatedSocialInstall.getDate(), timelineAnalytics,
-        socialRepository, dateCalculator, spannableFactory);
+        socialRepository, dateCalculator, spannableFactory, timelineNavigator, windowManager);
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(cardId, getAppStoreId(), privacyResult, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), BLANK,
             BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
+  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(cardId, getAppStoreId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), BLANK,
             BLANK));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), BLANK, BLANK));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), BLANK, BLANK));
   }
@@ -173,9 +181,8 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
     return appStoreId;
   }
 
-  public void likesPreviewClick(FragmentNavigator navigator, long numberOfLikes, String cardId) {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
-        .newTimeLineLikesFragment(cardId, numberOfLikes, "default"));
+  public void likesPreviewClick(long numberOfLikes, String cardId) {
+    timelineNavigator.navigateToLikesView(cardId, numberOfLikes);
   }
 
   public Spannable getBlackHighlightedLike(Context context, String string) {
