@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 08/08/2016.
+  ~ Modified on 08/08/2016.
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,6 +29,13 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.CAMERA"/>
+
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
   <uses-sdk
       android:minSdkVersion="15"
@@ -67,9 +74,7 @@
 
     <activity android:name=".billing.view.WebAuthorizationActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
-    <activity android:name=".spotandshare.SpotSharePreviewActivity"/>
-
-    <activity android:name="cm.aptoide.pt.spotandshareandroid.HighwayActivity"/>
+    <activity android:name=".spotandshare.view.SpotSharePreviewActivity"/>
 
     <activity
         android:name="com.facebook.FacebookActivity"
@@ -230,6 +235,48 @@
     <service android:name=".InstallService"/>
 
     <service android:name=".install.InstalledIntentService"/>
+
+    <!-- spotandshare -->
+    <activity
+        android:name=".spotandshare.view.RadarActivity"
+        android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+
+        <data android:mimeType="application/vnd.android.package-archive"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND_MULTIPLE"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+
+        <data android:mimeType="application/vnd.android.package-archive"/>
+      </intent-filter>
+    </activity>
+    <activity android:name=".spotandshare.view.AppSelectionActivity"/>
+
+    <service
+        android:name=".spotandshare.transference.ClientService"
+        android:enabled="true"
+        android:exported="true"/>
+    <service
+        android:name=".spotandshare.transference.ServerService"
+        android:enabled="true"
+        android:exported="true"/>
+
+    <activity
+        android:name=".spotandshare.view.TransferRecordActivity"
+        android:configChanges="orientation|keyboardHidden|screenSize">
+    </activity>
+    <activity android:name=".spotandshare.view.ShareAptoideActivity">
+    </activity>
 
   </application>
 

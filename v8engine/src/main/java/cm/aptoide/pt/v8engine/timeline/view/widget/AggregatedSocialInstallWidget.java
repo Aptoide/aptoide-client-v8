@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
+import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -28,6 +30,7 @@ import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
+import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -102,7 +105,9 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
         .load(displayable.getAppIcon(), appIcon);
     appName.setText(displayable.getAppName());
     ratingBar.setRating(displayable.getAppRatingAverage());
-    setAdditionalNumberOfSharersLabel(displayable);
+    setAdditionalNumberOfSharersLabel(additionalNumberOfSharesLabel,
+        additionalNumberOfSharesCircularMask, displayable.getSharers()
+            .size());
     setCardViewMargin(displayable, cardView);
     showSeeMoreAction(displayable);
     showSubCards(displayable, 2);
@@ -125,9 +130,8 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
     return AggregatedSocialInstallDisplayable.CARD_TYPE_NAME;
   }
 
-  private void setAdditionalNumberOfSharersLabel(AggregatedSocialInstallDisplayable displayable) {
-    int numberOfSharers = displayable.getSharers()
-        .size();
+  private void setAdditionalNumberOfSharersLabel(TextView additionalNumberOfSharesLabel,
+      ImageView additionalNumberOfSharesCircularMask, int numberOfSharers) {
 
     if (numberOfSharers <= 2) {
       additionalNumberOfSharesLabel.setVisibility(View.INVISIBLE);
@@ -154,12 +158,11 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
       }
       View subCardView =
           inflater.inflate(R.layout.timeline_sub_minimal_card, subCardsContainer, false);
-      ImageView minimalCardHeaderMainAvatar = (ImageView) subCardView.findViewById(R.id.card_image);
+      ImageView minimalCardHeaderMainAvatar =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_1);
+      ImageView minimalCardHeaderMainAvatar2 =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_2);
       TextView minimalCardHeaderMainName = (TextView) subCardView.findViewById(R.id.card_title);
-      ImageView minimalCardHeaderSecondaryAvatar =
-          (ImageView) subCardView.findViewById(R.id.card_user_avatar);
-      TextView minimalCardHeaderSecondaryName =
-          (TextView) subCardView.findViewById(R.id.card_subtitle);
       TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
       LikeButtonView likeSubCardButton =
           (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
@@ -183,27 +186,31 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
 
       int marginOfTheNextLikePreview = 0;
 
+      FrameLayout plusFrame = (FrameLayout) subCardView.findViewById(R.id.card_header_plus_frame);
+      TextView additionalNumberOfSharesLabel = (TextView) subCardView.findViewById(
+          R.id.timeline_header_aditional_number_of_shares_circular);
+      ImageView additionalNumberOfSharesCircularMask =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_plus);
+
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(minimalCard.getSharers()
               .get(0)
               .getUser()
               .getAvatar(), minimalCardHeaderMainAvatar);
 
-      minimalCardHeaderMainName.setText(minimalCard.getSharers()
-          .get(0)
-          .getUser()
-          .getName());
+      if (minimalCard.getSharers()
+          .size() > 1) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(minimalCard.getSharers()
+                .get(1)
+                .getUser()
+                .getAvatar(), minimalCardHeaderMainAvatar2);
+      } else {
+        plusFrame.setVisibility(View.GONE);
+        minimalCardHeaderMainAvatar2.setVisibility(View.GONE);
+      }
 
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(minimalCard.getSharers()
-              .get(0)
-              .getStore()
-              .getAvatar(), minimalCardHeaderSecondaryAvatar);
-
-      minimalCardHeaderSecondaryName.setText(minimalCard.getSharers()
-          .get(0)
-          .getStore()
-          .getName());
+      minimalCardHeaderMainName.setText(getCardHeaderNames(minimalCard.getSharers()));
 
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
@@ -294,6 +301,10 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
         socialCommentBar.setVisibility(View.GONE);
       }
 
+      setAdditionalNumberOfSharersLabel(additionalNumberOfSharesLabel,
+          additionalNumberOfSharesCircularMask, minimalCard.getSharers()
+              .size());
+
       compositeSubscription.add(RxView.clicks(shareSubCardButton)
           .subscribe(click -> shareCard(displayable, minimalCard.getCardId(), null,
               SharePreviewDialog.SharePreviewOpenMode.SHARE), err -> CrashReport.getInstance()
@@ -372,8 +383,7 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
                   .log(err)));
 
       compositeSubscription.add(RxView.clicks(likePreviewContainer)
-          .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator(),
-              minimalCard.getStats()
+          .subscribe(click -> displayable.likesPreviewClick(minimalCard.getStats()
                   .getLikes(), minimalCard.getCardId()), err -> CrashReport.getInstance()
               .log(err)));
 
@@ -449,5 +459,23 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
         getContext().getString(R.string.likes)
             .toLowerCase()));
     numberLikesOneLike.setVisibility(View.INVISIBLE);
+  }
+
+  public String getCardHeaderNames(List<UserSharerTimeline> sharers) {
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    if (sharers.size() == 1) {
+      return headerNamesStringBuilder.append(sharers.get(0)
+          .getStore()
+          .getName())
+          .toString();
+    }
+    List<UserSharerTimeline> firstSharers = sharers.subList(0, 2);
+    for (UserSharerTimeline user : firstSharers) {
+      headerNamesStringBuilder.append(user.getStore()
+          .getName())
+          .append(", ");
+    }
+    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    return headerNamesStringBuilder.toString();
   }
 }

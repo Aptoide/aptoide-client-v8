@@ -1,12 +1,13 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
@@ -94,28 +95,28 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     return !TextUtils.isEmpty(getPojo().getName()) || !TextUtils.isEmpty(getPojo().getAvatar());
   }
 
-  public int getStoreColor() {
+  public int getStoreColor(Context context) {
     Store store = getPojo().getStore();
     if (store != null && store.getAppearance() != null) {
-      return StoreThemeEnum.get(store.getAppearance()
+      return StoreTheme.get(store.getAppearance()
           .getTheme())
-          .getStoreHeaderInt();
+          .getStoreHeaderColorResource(context.getResources(), context.getTheme());
     } else {
-      return StoreThemeEnum.get(V8Engine.getConfiguration()
+      return StoreTheme.get(V8Engine.getConfiguration()
           .getDefaultTheme())
-          .getStoreHeaderInt();
+          .getStoreHeaderColorResource(context.getResources(), context.getTheme());
     }
   }
 
-  public Drawable getButtonBackgroundStoreThemeColor() {
+  public Drawable getButtonBackgroundStoreThemeColor(Context context) {
     Store store = getPojo().getStore();
-    StoreThemeEnum storeThemeEnum;
+    StoreTheme storeTheme;
     if (store.getAppearance() != null) {
-      storeThemeEnum = StoreThemeEnum.get(store);
+      storeTheme = StoreTheme.get(store);
     } else {
-      storeThemeEnum = StoreThemeEnum.APTOIDE_STORE_THEME_ORANGE;
+      storeTheme = StoreTheme.ORANGE;
     }
-    return storeThemeEnum.getButtonLayoutDrawable();
+    return storeTheme.getButtonLayoutDrawable(context.getResources(), context.getTheme());
   }
 
   public void viewClicked(FragmentNavigator navigator) {

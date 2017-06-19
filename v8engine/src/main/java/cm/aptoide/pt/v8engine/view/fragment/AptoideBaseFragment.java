@@ -1,7 +1,9 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networkclient.WebService;
@@ -28,7 +30,11 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     requestFactory =
         new RequestFactory(new StoreCredentialsProviderImpl(), baseBodyInterceptor, httpClient,
-            converterFactory);
+            converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getResources(),
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE));
     super.onCreate(savedInstanceState);
   }
 }

@@ -65,7 +65,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     adultContent =
         new AdultContent(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
             new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-            new SecureCoderDecoder.Builder(getContext()).create()));
+            new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
 
     compositeSubscription.add(adultContent.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())

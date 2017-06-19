@@ -6,6 +6,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -45,20 +46,6 @@ public class StoreUtils {
   BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url,
       StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.fromUrl(url);
-  }
-
-  /**
-   * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
-   * instead, else, use this
-   */
-  @Deprecated public static void subscribeStore(String storeName,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
-        bodyInterceptor, httpClient, converterFactory), successRequestListener,
-        errorRequestListener, accountManager, null, null);
   }
 
   /**

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?android:attr/actionBarSize"
+          android:theme="?attr/toolbarTheme"
+          />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/padding_medium_small"
+        android:layout_marginEnd="@dimen/padding_medium_default"
+        android:layout_marginLeft="@dimen/padding_medium_default"
+        android:layout_marginRight="@dimen/padding_medium_default"
+        android:layout_marginStart="@dimen/padding_medium_default"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+
+      <!--fake space-->
+      <View
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          >
+
+        <Button
+            android:id="@+id/create_user_cancel_button"
+            android:layout_width="0dp"
+            android:layout_marginEnd="@dimen/padding_smaller"
+            android:layout_marginRight="@dimen/padding_smaller"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:visibility="gone"
+            tools:visibility="visible"
+            style="@style/Aptoide.Button.Ghost"
+            />
+
+        <Button
+            android:id="@+id/create_user_create_profile"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginLeft="@dimen/padding_smaller"
+            android:layout_marginStart="@dimen/padding_smaller"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/create_user_create_button"
+            android:theme="@style/Aptoide.Button"
+            style="@style/Widget.AppCompat.Button"
+            />
+      </LinearLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_buttons"
+        android:layout_below="@id/appbar"
+        >
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+
+        <TextView
+            android:id="@+id/create_user_header_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/create_user_dark_orange"
+            android:gravity="center_vertical"
+            android:padding="@dimen/padding_medium_default"
+            android:text="@string/create_user_header"
+            android:textColor="@color/white"
+            style="@style/Aptoide.TextView.Medium"
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/create_user_image_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_small"
+            android:layout_marginRight="@dimen/padding_small"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_medium"
+            >
+
+          <ImageView
+              android:id="@+id/create_user_image"
+              android:layout_width="@dimen/profile_picture_large_size"
+              android:layout_height="@dimen/profile_picture_large_size"
+              app:srcCompat="@drawable/create_user_avatar"
+              />
+
+          <ImageView
+              android:layout_width="@dimen/select_picture_camera_icon_size"
+              android:layout_height="@dimen/select_picture_camera_icon_size"
+              android:layout_alignBottom="@+id/create_user_image"
+              android:layout_alignEnd="@+id/create_user_image"
+              android:layout_alignRight="@+id/create_user_image"
+              android:background="@drawable/create_user_camera_background_shape"
+              android:padding="@dimen/padding_very_small"
+              android:src="@drawable/create_user_camera"
+              />
+
+          <TextView
+              android:id="@+id/create_user_take_picture_text"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_centerVertical="true"
+              android:layout_marginLeft="@dimen/padding_medium_default"
+              android:layout_marginStart="@dimen/padding_medium_default"
+              android:layout_toEndOf="@id/create_user_image"
+              android:layout_toRightOf="@id/create_user_image"
+              android:text="@string/create_user_take_picture"
+              style="@style/Aptoide.TextView.Medium"
+              />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_small"
+            android:layout_marginRight="@dimen/padding_small"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:orientation="vertical"
+            >
+
+          <TextView
+              android:id="@+id/create_user_choose_username"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/create_user_choose_username"
+              style="@style/Aptoide.TextView.Regular.S"
+              />
+
+          <EditText
+              android:id="@+id/create_user_username_inserted"
+              android:layout_width="match_parent"
+              android:layout_height="43dp"
+              android:layout_marginTop="@dimen/padding_very_small"
+              android:background="@drawable/rounded_corners_white"
+              android:hint="@string/create_user_username"
+              android:maxLength="@integer/max_username_char_length"
+              android:paddingBottom="@dimen/padding_very_small"
+              android:paddingEnd="@dimen/padding_smaller"
+              android:paddingLeft="@dimen/padding_smaller"
+              android:paddingRight="@dimen/padding_smaller"
+              android:paddingStart="@dimen/padding_smaller"
+              android:paddingTop="@dimen/padding_very_small"
+              style="@style/Aptoide.TextView.Regular.S"
+              />
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/padding_very_small"
+              android:text="@string/create_user_hint"
+              style="@style/Aptoide.TextView.Regular.XS"
+              />
+
+        </LinearLayout>
+
+      </LinearLayout>
+
+    </ScrollView>
+
+  </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

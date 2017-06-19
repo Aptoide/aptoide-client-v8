@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.share;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.design.widget.Snackbar;
@@ -11,7 +12,6 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -19,6 +19,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
+import cm.aptoide.pt.v8engine.spotandshare.view.RadarActivity;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -37,19 +38,21 @@ public class ShareAppHelper {
   private final AccountNavigator accountNavigator;
   private final SpotAndShareAnalytics spotAndShareAnalytics;
   private final Activity activity;
-  private TimelineAnalytics timelineAnalytics;
+  private final TimelineAnalytics timelineAnalytics;
+  private final SharedPreferences sharedPreferences;
   private final PublishRelay installAppRelay;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
       SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics,
-      PublishRelay installAppRelay) {
+      PublishRelay installAppRelay, SharedPreferences sharedPreferences) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.activity = activity;
     this.spotAndShareAnalytics = spotAndShareAnalytics;
     this.timelineAnalytics = timelineAnalytics;
+    this.sharedPreferences = sharedPreferences;
     this.installAppRelay = installAppRelay;
   }
 
@@ -124,12 +127,12 @@ public class ShareAppHelper {
     if (Application.getConfiguration()
         .isCreateStoreAndSetUserPrivacyAvailable()) {
       SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-          SharePreviewDialog.SharePreviewOpenMode.SHARE, timelineAnalytics);
+          SharePreviewDialog.SharePreviewOpenMode.SHARE, timelineAnalytics, sharedPreferences);
       AlertDialog.Builder alertDialog =
           sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
               iconPath, averageRating);
       SocialRepository socialRepository =
-          RepositoryFactory.getSocialRepository(activity, timelineAnalytics);
+          RepositoryFactory.getSocialRepository(activity, timelineAnalytics, sharedPreferences);
 
       sharePreviewDialog.showShareCardPreviewDialog(packageName, null, "app", activity,
           sharePreviewDialog, alertDialog, socialRepository);
@@ -142,7 +145,7 @@ public class ShareAppHelper {
     String filepath = getFilepath(packageName);
     String appNameToShare = filterAppName(appName);
 
-    Intent intent = HighwayActivity.buildIntent(activity, filepath, appNameToShare);
+    Intent intent = RadarActivity.buildIntent(activity, filepath, appNameToShare);
 
     activity.startActivity(intent);
   }

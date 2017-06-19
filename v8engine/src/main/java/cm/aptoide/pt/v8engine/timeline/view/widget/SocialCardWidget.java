@@ -238,7 +238,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator()),
+        .subscribe(click -> displayable.likesPreviewClick(),
             err -> CrashReport.getInstance()
                 .log(err)));
 
@@ -301,7 +301,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
           }, Snackbar.LENGTH_SHORT);
       return false;
     }
-    displayable.like(getContext(), getCardTypeName().toUpperCase(), rating);
+    displayable.like(getContext(), getCardTypeName().toUpperCase(), rating,
+        getContext().getResources());
     return true;
   }
 

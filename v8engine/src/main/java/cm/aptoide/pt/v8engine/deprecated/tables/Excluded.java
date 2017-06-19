@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmObject;
@@ -35,7 +36,7 @@ public class Excluded extends BaseTable {
     return NAME;
   }
 
-  @Override public RealmObject convert(Cursor cursor) {
+  @Override public RealmObject convert(Cursor cursor, PackageManager packageManager) {
     cm.aptoide.pt.database.realm.Update realmObject = new cm.aptoide.pt.database.realm.Update();
 
     realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));

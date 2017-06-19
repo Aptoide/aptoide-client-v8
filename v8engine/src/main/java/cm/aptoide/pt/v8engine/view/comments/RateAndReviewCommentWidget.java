@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
@@ -50,7 +51,6 @@ import rx.Observable;
 
   public static final int FULL_COMMENTS_LIMIT = 3;
   private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
-  private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
   private static final Locale LOCALE = Locale.getDefault();
   private static final int DEFAULT_LIMIT = 3;
   private TextView reply;
@@ -74,6 +74,7 @@ import rx.Observable;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
@@ -103,6 +104,7 @@ import rx.Observable;
     final String appName = displayable.getPojo()
         .getAppName();
 
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 
@@ -120,8 +122,9 @@ import rx.Observable;
         .getRating());
     reviewTitle.setText(review.getTitle());
     reviewText.setText(review.getBody());
-    reviewDate.setText(DATE_TIME_U.getTimeDiffString(context, review.getAdded()
-        .getTime()));
+    reviewDate.setText(AptoideUtils.DateTimeU.getInstance(getContext())
+        .getTimeDiffString(context, review.getAdded()
+            .getTime(), getContext().getResources()));
 
     if (DisplayMetrics.DENSITY_300 > context.getResources()
         .getDisplayMetrics().densityDpi) {
@@ -143,7 +146,8 @@ import rx.Observable;
             return commentDialogFragment.lifecycle()
                 .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
                 .doOnNext(b -> {
-                  ManagerPreferences.setForceServerRefreshFlag(true);
+                  ManagerPreferences.setForceServerRefreshFlag(true,
+                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
                   commentAdder.collapseComments();
                   loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
                 })
@@ -153,7 +157,8 @@ import rx.Observable;
                 R.string.login, snackView -> {
                   accountNavigator.navigateToAccountView(
                       Analytics.Account.AccountOrigins.REPLY_REVIEW);
-                });
+                })
+                .toObservable();
           }
         })
         .subscribe(a -> { /* do nothing */ }, err -> {
@@ -202,14 +207,17 @@ import rx.Observable;
     if (numberComments > 0) {
       showHideReplies.setVisibility(View.VISIBLE);
       showHideReplies.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.reviews_expand_button, numberComments));
+          AptoideUtils.StringU.getFormattedString(R.string.reviews_expand_button,
+              getContext().getResources(), numberComments));
     } else {
       showHideReplies.setVisibility(View.GONE);
     }
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
-    ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory)
+    ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .execute(listComments -> {
           if (listComments.isOk()) {
             List<Comment> comments = listComments.getDatalist()
@@ -229,7 +237,9 @@ import rx.Observable;
     setHelpButtonsClickable(false);
 
     if (accountManager.isLoggedIn()) {
-      SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor, httpClient, converterFactory)
+      SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator,
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .execute(response -> {
             if (response == null) {
               Logger.e(TAG, "empty response");

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -15,12 +16,14 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -32,7 +35,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
@@ -40,6 +43,7 @@ import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialStoreLat
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import rx.Observable;
@@ -55,6 +59,7 @@ public class AggregatedSocialStoreLatestAppsWidget
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> baseBodyInterceptor;
   private final OkHttpClient httpClient;
+  private final TokenInvalidator tokenInvalidator;
   private TextView seeMore;
   private LinearLayout subCardsContainer;
   private ImageView headerAvatar1;
@@ -86,10 +91,12 @@ public class AggregatedSocialStoreLatestAppsWidget
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(), tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -191,13 +198,15 @@ public class AggregatedSocialStoreLatestAppsWidget
                   .getTheme()));
         }));
 
-    StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(displayable.getSharedStore());
+    StoreTheme storeThemeEnum = StoreTheme.get(displayable.getSharedStore());
 
-    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
+    followStore.setBackgroundDrawable(
+        storeThemeEnum.getButtonLayoutDrawable(getContext().getResources(),
+            getContext().getTheme()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followStore.setElevation(0);
     }
-    followStore.setTextColor(storeThemeEnum.getStoreHeaderInt());
+    followStore.setTextColor(storeThemeEnum.getPrimaryColor());
 
     final String storeName = displayable.getSharedStoreName();
     //final String storeTheme = displayable.getSharedStore().getAppearance().getTheme();
@@ -214,6 +223,7 @@ public class AggregatedSocialStoreLatestAppsWidget
                       displayable.getStoreCredentialsProvider());
                   ShowMessage.asSnack(itemView,
                       AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                          getContext().getResources(),
                           storeName));
                 }, err -> {
                   CrashReport.getInstance()
@@ -227,7 +237,8 @@ public class AggregatedSocialStoreLatestAppsWidget
                 .subscribe(__ -> {
                   storeUtilsProxy.subscribeStore(storeName);
                   ShowMessage.asSnack(itemView,
-                      AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+                      AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                          getContext().getResources(), storeName));
                 }, err -> {
                   CrashReport.getInstance()
                       .log(err);
@@ -235,7 +246,9 @@ public class AggregatedSocialStoreLatestAppsWidget
           }
         }, (throwable) -> throwable.printStackTrace()));
 
-    setAdditionalNumberOfSharersLabel(displayable);
+    setAdditionalNumberOfSharersLabel(additionalNumberOfSharesLabel,
+        additionalNumberOfSharesCircularMask, displayable.getSharers()
+            .size());
     setCardViewMargin(displayable, cardView);
     showSeeMoreAction(displayable);
     showSubCards(displayable, 2);
@@ -245,10 +258,8 @@ public class AggregatedSocialStoreLatestAppsWidget
     return AggregatedSocialInstallDisplayable.CARD_TYPE_NAME;
   }
 
-  private void setAdditionalNumberOfSharersLabel(
-      AggregatedSocialStoreLatestAppsDisplayable displayable) {
-    int numberOfSharers = displayable.getSharers()
-        .size();
+  private void setAdditionalNumberOfSharersLabel(TextView additionalNumberOfSharesLabel,
+      ImageView additionalNumberOfSharesCircularMask, int numberOfSharers) {
 
     if (numberOfSharers <= 2) {
       additionalNumberOfSharesLabel.setVisibility(View.INVISIBLE);
@@ -275,12 +286,11 @@ public class AggregatedSocialStoreLatestAppsWidget
       }
       View subCardView =
           inflater.inflate(R.layout.timeline_sub_minimal_card, subCardsContainer, false);
-      ImageView minimalCardHeaderMainAvatar = (ImageView) subCardView.findViewById(R.id.card_image);
+      ImageView minimalCardHeaderMainAvatar =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_1);
+      ImageView minimalCardHeaderMainAvatar2 =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_2);
       TextView minimalCardHeaderMainName = (TextView) subCardView.findViewById(R.id.card_title);
-      ImageView minimalCardHeaderSecondaryAvatar =
-          (ImageView) subCardView.findViewById(R.id.card_user_avatar);
-      TextView minimalCardHeaderSecondaryName =
-          (TextView) subCardView.findViewById(R.id.card_subtitle);
       TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
       LikeButtonView likeSubCardButton =
           (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
@@ -304,27 +314,31 @@ public class AggregatedSocialStoreLatestAppsWidget
 
       int marginOfTheNextLikePreview = 0;
 
+      FrameLayout plusFrame = (FrameLayout) subCardView.findViewById(R.id.card_header_plus_frame);
+      TextView additionalNumberOfSharesLabel = (TextView) subCardView.findViewById(
+          R.id.timeline_header_aditional_number_of_shares_circular);
+      ImageView additionalNumberOfSharesCircularMask =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_plus);
+
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(minimalCard.getSharers()
               .get(0)
               .getUser()
               .getAvatar(), minimalCardHeaderMainAvatar);
 
-      minimalCardHeaderMainName.setText(minimalCard.getSharers()
-          .get(0)
-          .getUser()
-          .getName());
+      if (minimalCard.getSharers()
+          .size() > 1) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(minimalCard.getSharers()
+                .get(1)
+                .getUser()
+                .getAvatar(), minimalCardHeaderMainAvatar2);
+      } else {
+        plusFrame.setVisibility(View.GONE);
+        minimalCardHeaderMainAvatar2.setVisibility(View.GONE);
+      }
 
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(minimalCard.getSharers()
-              .get(0)
-              .getStore()
-              .getAvatar(), minimalCardHeaderSecondaryAvatar);
-
-      minimalCardHeaderSecondaryName.setText(minimalCard.getSharers()
-          .get(0)
-          .getStore()
-          .getName());
+      minimalCardHeaderMainName.setText(getCardHeaderNames(minimalCard.getSharers()));
 
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
@@ -335,6 +349,10 @@ public class AggregatedSocialStoreLatestAppsWidget
       } else {
         likeSubCardButton.setHeartState(false);
       }
+
+      setAdditionalNumberOfSharersLabel(additionalNumberOfSharesLabel,
+          additionalNumberOfSharesCircularMask, minimalCard.getSharers()
+              .size());
 
       likePreviewContainer.removeAllViews();
       showLikesPreview(likePreviewContainer, minimalCard);
@@ -495,8 +513,7 @@ public class AggregatedSocialStoreLatestAppsWidget
                   .log(err)));
 
       compositeSubscription.add(RxView.clicks(likePreviewContainer)
-          .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator(),
-              minimalCard.getStats()
+          .subscribe(click -> displayable.likesPreviewClick(minimalCard.getStats()
                   .getLikes(), minimalCard.getCardId()), err -> CrashReport.getInstance()
               .log(err)));
 
@@ -572,5 +589,23 @@ public class AggregatedSocialStoreLatestAppsWidget
         getContext().getString(R.string.likes)
             .toLowerCase()));
     numberLikesOneLike.setVisibility(View.INVISIBLE);
+  }
+
+  public String getCardHeaderNames(List<UserSharerTimeline> sharers) {
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    if (sharers.size() == 1) {
+      return headerNamesStringBuilder.append(sharers.get(0)
+          .getStore()
+          .getName())
+          .toString();
+    }
+    List<UserSharerTimeline> firstSharers = sharers.subList(0, 2);
+    for (UserSharerTimeline user : firstSharers) {
+      headerNamesStringBuilder.append(user.getStore()
+          .getName())
+          .append(", ");
+    }
+    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    return headerNamesStringBuilder.toString();
   }
 }

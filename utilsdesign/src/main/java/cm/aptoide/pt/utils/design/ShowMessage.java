@@ -9,7 +9,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -18,24 +17,14 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 import cm.aptoide.pt.logger.Logger;
-import java.lang.annotation.Retention;
-import rx.Observable;
-import rx.Subscriber;
-import rx.subscriptions.Subscriptions;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import rx.Completable;
+import rx.CompletableSubscriber;
 
 /**
  * Created by trinkes on 5/9/16.
  */
 public class ShowMessage {
 
-  public static final int VISIBLE = 0;
-
-  //
-  // override 1
-  //
-  public static final int DISMISSED = 1;
   private static final String TAG = ShowMessage.class.getSimpleName();
 
   public static void asSnack(View view, String msg, String actionMsg, View.OnClickListener action,
@@ -43,60 +32,41 @@ public class ShowMessage {
     asSnackInternal(view, msg, actionMsg, action, duration).show();
   }
 
-  //
-  // override 2
-  //
-
   @NonNull private static Snackbar asSnackInternal(View view, String msg, String actionMsg,
       View.OnClickListener action, int duration) {
     return Snackbar.make(view, msg, duration)
         .setAction(actionMsg, action);
   }
 
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(View view, String msg,
-      String actionMsg, View.OnClickListener action) {
+  @NonNull public static Completable asObservableSnack(View view, String msg, String actionMsg,
+      View.OnClickListener action) {
     return asSnackObservableInternal(
         asSnackInternal(view, msg, actionMsg, action, Snackbar.LENGTH_SHORT));
   }
 
-  private static Observable<Integer> asSnackObservableInternal(Snackbar snackbar) {
+  private static Completable asSnackObservableInternal(Snackbar snackbar) {
 
-    return Observable.create(new Observable.OnSubscribe<Integer>() {
-      @Override public void call(Subscriber<? super Integer> subscriber) {
+    return Completable.create(new Completable.OnSubscribe() {
+
+      @Override public void call(CompletableSubscriber completableSubscriber) {
+
         Snackbar.Callback snackbarCallback = new Snackbar.Callback() {
           @Override public void onShown(Snackbar snackbar) {
             super.onShown(snackbar);
-            if (!subscriber.isUnsubscribed()) {
-              subscriber.onNext(VISIBLE);
-            }
+            // does nothing
           }
 
           @Override public void onDismissed(Snackbar snackbar, int event) {
             super.onDismissed(snackbar, event);
-            if (!subscriber.isUnsubscribed()) {
-              subscriber.onNext(DISMISSED);
-            }
+            snackbar.removeCallback(this);
+            completableSubscriber.onCompleted();
           }
         };
-
-        snackbar.setCallback(snackbarCallback);
-
-        subscriber.add(Subscriptions.create(() -> {
-          snackbar.setCallback(null);
-          snackbar.dismiss();
-        }));
-
+        snackbar.addCallback(snackbarCallback);
         snackbar.show();
       }
     });
   }
-
-  //
-  // override 3
-  //
 
   public static void asSnack(View view, String msg) {
     asSnackInternal(view, msg).show();
@@ -106,16 +76,9 @@ public class ShowMessage {
     return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT);
   }
 
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(View view, String msg) {
+  @NonNull public static Completable asObservableSnack(View view, String msg) {
     return asSnackObservableInternal(asSnackInternal(view, msg));
   }
-
-  //
-  // override 4
-  //
 
   public static void asSnack(View view, @StringRes int msg, @StringRes int actionMsg,
       View.OnClickListener action) {
@@ -128,17 +91,10 @@ public class ShowMessage {
         .setAction(actionMsg, action);
   }
 
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(View view, @StringRes int msg,
+  @NonNull public static Completable asObservableSnack(View view, @StringRes int msg,
       @StringRes int actionMsg, View.OnClickListener action) {
     return asSnackObservableInternal(asSnackInternal(view, msg, actionMsg, action));
   }
-
-  //
-  // override 5
-  //
 
   public static void asSnack(View view, @StringRes int msg) {
     asSnackInternal(view, msg).show();
@@ -148,16 +104,9 @@ public class ShowMessage {
     return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT);
   }
 
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(View view, @StringRes int msg) {
+  @NonNull public static Completable asObservableSnack(View view, @StringRes int msg) {
     return asSnackObservableInternal(asSnackInternal(view, msg));
   }
-
-  //
-  // override 6
-  //
 
   public static void asLongSnack(Activity activity, String msg) {
     asSnackInternal(activity, msg, Snackbar.LENGTH_LONG).show();
@@ -188,10 +137,7 @@ public class ShowMessage {
     return asSnackInternal(activity, msg, Snackbar.LENGTH_SHORT);
   }
 
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(Activity activity, String msg) {
+  @NonNull public static Completable asObservableSnack(Activity activity, String msg) {
     return asSnackObservableInternal(asSnackInternal(activity, msg));
   }
 
@@ -199,38 +145,45 @@ public class ShowMessage {
     asSnackInternal(activity, msg).show();
   }
 
-  //
-  // override 7
-  //
-
   private static Snackbar asSnackInternal(Activity activity, @StringRes int msg) {
     View view = getViewFromActivity(activity);
     return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT);
   }
 
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(Activity activity,
-      @StringRes int msg) {
+  @NonNull public static Completable asObservableSnack(Activity activity, @StringRes int msg) {
     return asSnackObservableInternal(asSnackInternal(activity, msg));
   }
 
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asLongObservableSnack(Activity activity,
-      @StringRes int msg) {
+  @NonNull public static Completable asLongObservableSnack(Activity activity, @StringRes int msg) {
     return asSnackObservableInternal(asLongSnackInternal(activity, msg));
   }
 
-  //
-  // override 8
-  //
+  @NonNull public static Completable asLongObservableSnack(View view, @StringRes int msg) {
+    return asSnackObservableInternal(asLongSnackInternal(view, msg));
+  }
+
+  @NonNull public static Completable asLongObservableSnack(View view, String msg) {
+    return asSnackObservableInternal(asLongSnackInternal(view, msg));
+  }
+
+  @NonNull public static Completable asLongObservableSnack(Fragment fragment, @StringRes int msg) {
+    return asSnackObservableInternal(asLongSnackInternal(fragment, msg));
+  }
+
+  private static Snackbar asLongSnackInternal(View view, String msg) {
+    return Snackbar.make(view, msg, Snackbar.LENGTH_LONG);
+  }
+
+  private static Snackbar asLongSnackInternal(View view, @StringRes int msg) {
+    return Snackbar.make(view, msg, Snackbar.LENGTH_LONG);
+  }
+
+  private static Snackbar asLongSnackInternal(Fragment fragment, @StringRes int msg) {
+    return asLongSnackInternal(fragment.getView(), msg);
+  }
 
   private static Snackbar asLongSnackInternal(Activity activity, @StringRes int msg) {
-    View view = getViewFromActivity(activity);
-    return Snackbar.make(view, msg, Snackbar.LENGTH_LONG);
+    return asLongSnackInternal(getViewFromActivity(activity), msg);
   }
 
   public static void asSnack(Fragment fragment, String msg) {
@@ -241,14 +194,7 @@ public class ShowMessage {
     return Snackbar.make(fragment.getView(), msg, Snackbar.LENGTH_SHORT);
   }
 
-  //
-  // override 9
-  //
-
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(Fragment fragment, String msg) {
+  @NonNull public static Completable asObservableSnack(Fragment fragment, String msg) {
     return asSnackObservableInternal(asSnackInternal(fragment, msg));
   }
 
@@ -260,15 +206,7 @@ public class ShowMessage {
     return Snackbar.make(fragment.getView(), msg, Snackbar.LENGTH_SHORT);
   }
 
-  //
-  // override 10
-  //
-
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(Fragment fragment,
-      @StringRes int msg) {
+  @NonNull public static Completable asObservableSnack(Fragment fragment, @StringRes int msg) {
     return asSnackObservableInternal(asSnackInternal(fragment, msg));
   }
 
@@ -290,20 +228,13 @@ public class ShowMessage {
         .setAction(actionMsg, action);
   }
 
-  //
-  // base observable Snackbar
-  //
-
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(Activity activity, int msg,
-      int actionMsg, View.OnClickListener action) {
+  @NonNull public static Completable asObservableSnack(Activity activity, int msg, int actionMsg,
+      View.OnClickListener action) {
     Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action, Snackbar.LENGTH_SHORT);
     if (snackbar != null) {
       return asSnackObservableInternal(snackbar);
     }
-    return Observable.error(new IllegalStateException("Extracted view from activity is null"));
+    return Completable.error(new IllegalStateException("Extracted view from activity is null"));
   }
 
   public static void asSnack(android.app.Fragment fragment, @StringRes int msg) {
@@ -315,11 +246,8 @@ public class ShowMessage {
     return Snackbar.make(fragment.getView(), msg, Snackbar.LENGTH_SHORT);
   }
 
-  /**
-   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
-   */
-  @NonNull public static Observable<Integer> asObservableSnack(android.app.Fragment fragment,
-      @StringRes int msg) {
+  @NonNull
+  public static Completable asObservableSnack(android.app.Fragment fragment, @StringRes int msg) {
     return asSnackObservableInternal(asSnackInternal(fragment, msg));
   }
 
@@ -335,8 +263,5 @@ public class ShowMessage {
   @Deprecated public static void asToast(Context context, @StringRes int msg) {
     Toast.makeText(context, msg, Toast.LENGTH_SHORT)
         .show();
-  }
-
-  @Retention(SOURCE) @IntDef({ VISIBLE, DISMISSED }) public @interface SnackbarVisibility {
   }
 }

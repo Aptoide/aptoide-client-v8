@@ -16,5 +16,4 @@ include 'vanilla',
     ':database',
     ':imageloader',
     ':downloadmanager',
-    ':spotandshare',
-    ':spotandshareandroid'
+    ':spotandshare'

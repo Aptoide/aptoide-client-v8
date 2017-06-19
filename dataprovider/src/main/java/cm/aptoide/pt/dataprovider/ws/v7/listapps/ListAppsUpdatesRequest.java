@@ -5,7 +5,10 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
@@ -36,24 +39,29 @@ import rx.schedulers.Schedulers;
   private static final String TAG = ListAppsUpdatesRequest.class.getName();
 
   private static final int SPLIT_SIZE = 100;
+  private final SharedPreferences sharedPreferences;
 
   private ListAppsUpdatesRequest(Body body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    this.sharedPreferences = sharedPreferences;
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String clientUniqueId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, PackageManager packageManager) {
     return new ListAppsUpdatesRequest(
-        new Body(getInstalledApks(), subscribedStoresIds, clientUniqueId), BASE_HOST,
-        bodyInterceptor, httpClient, converterFactory);
+        new Body(getInstalledApks(packageManager), subscribedStoresIds, clientUniqueId, sharedPreferences),
+        getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences);
   }
 
-  private static List<ApksData> getInstalledApks() {
+  private static List<ApksData> getInstalledApks(PackageManager packageManager) {
     // TODO: 01-08-2016 neuro benchmark this, looks heavy
-    List<PackageInfo> allInstalledApps = AptoideUtils.SystemU.getAllInstalledApps();
+    List<PackageInfo> allInstalledApps = AptoideUtils.SystemU.getAllInstalledApps(packageManager);
     LinkedList<ApksData> apksDatas = new LinkedList<>();
 
     for (PackageInfo packageInfo : allInstalledApps) {
@@ -86,7 +94,7 @@ import rx.schedulers.Schedulers;
             ArrayList<Body> bodies = new ArrayList<>();
 
             for (int n = 0; n < apksData.size(); n += SPLIT_SIZE) {
-              bodies.add(getBody(apksData, n));
+              bodies.add(getBody(apksData, n, sharedPreferences));
             }
 
             return Observable.from(bodies)
@@ -120,8 +128,8 @@ import rx.schedulers.Schedulers;
         });
   }
 
-  private Body getBody(List<ApksData> apksData, int n) {
-    return new Body(body).setApksData(apksData.subList(n,
+  private Body getBody(List<ApksData> apksData, int n, SharedPreferences sharedPreferences) {
+    return new Body(body, sharedPreferences).setApksData(apksData.subList(n,
         n + SPLIT_SIZE > apksData.size() ? n + apksData.size() % SPLIT_SIZE : n + SPLIT_SIZE));
   }
 
@@ -132,14 +140,17 @@ import rx.schedulers.Schedulers;
     @Setter @Getter private String aaid;
     @Getter private String notPackageTags;
 
-    public Body(List<ApksData> apksData, List<Long> storeIds, String aaid) {
+    public Body(List<ApksData> apksData, List<Long> storeIds, String aaid,
+        SharedPreferences sharedPreferences) {
+      super(sharedPreferences);
       this.apksData = apksData;
       this.storeIds = storeIds;
       this.aaid = aaid;
-      setSystemAppsUpdates();
+      setSystemAppsUpdates(sharedPreferences);
     }
 
-    public Body(Body body) {
+    public Body(Body body, SharedPreferences sharedPreferences) {
+      super(sharedPreferences);
       this.apksData = body.getApksData();
       this.storeIds = body.getStoreIds();
       this.setQ(body.getQ());
@@ -150,10 +161,13 @@ import rx.schedulers.Schedulers;
       this.notPackageTags = body.getNotPackageTags();
       this.setAptoideMd5sum(body.getAptoideMd5sum());
       this.setAptoidePackage(body.getAptoidePackage());
+      this.setLang(body.getLang());
+      this.setCdn(body.getCdn());
+      this.setMature(body.isMature());
     }
 
-    private void setSystemAppsUpdates() {
-      if (!ManagerPreferences.getUpdatesSystemAppsKey()) {
+    private void setSystemAppsUpdates(SharedPreferences sharedPreferences) {
+      if (!ManagerPreferences.getUpdatesSystemAppsKey(sharedPreferences)) {
         this.notPackageTags = "system";
       }
     }

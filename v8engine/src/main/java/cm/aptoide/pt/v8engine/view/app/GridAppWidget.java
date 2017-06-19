@@ -25,8 +25,6 @@ import com.jakewharton.rxbinding.view.RxView;
 @Displayables({ GridAppDisplayable.class }) public class GridAppWidget
     extends Widget<GridAppDisplayable> {
 
-  private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
-
   private TextView name;
   private ImageView icon;
   private TextView downloads;
@@ -67,8 +65,9 @@ import com.jakewharton.rxbinding.view.RxView;
         .getAvg());
     tvStoreName.setText(pojo.getStore()
         .getName());
-    tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(context, pojo.getAdded()
-        .getTime()));
+    tvAddedTime.setText(AptoideUtils.DateTimeU.getInstance(getContext())
+        .getTimeDiffString(context, pojo.getAdded()
+            .getTime(), getContext().getResources()));
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
           // FIXME

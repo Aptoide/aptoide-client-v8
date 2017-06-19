@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
@@ -26,16 +28,18 @@ import rx.Observable;
   private final String url;
 
   private GetHomeMetaRequest(Body body, String url, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
     this.url = url;
   }
 
   public static GetHomeMetaRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     return new GetHomeMetaRequest(new Body(storeCredentials), new V7Url(url).remove("home/getMeta")
-        .get(), bodyInterceptor, httpClient, converterFactory);
+        .get(), bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetHomeMeta> loadDataFromNetwork(Interfaces interfaces,
