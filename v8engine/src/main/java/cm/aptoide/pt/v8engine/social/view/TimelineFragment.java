@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.social.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
@@ -70,17 +72,24 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     LinksHandlerFactory linksHandlerFactory = new LinksHandlerFactory(getContext());
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    SharedPreferences sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     attachPresenter(new TimelinePresenter(this, new SocialManager(
-        new SocialService(getArguments().getString(ACTION_KEY),
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
-            Integer.MAX_VALUE)), CrashReport.getInstance()), savedInstanceState);
+            new SocialService(getArguments().getString(ACTION_KEY),
+                ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+                ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+                WebService.getDefaultConverter(),
+                new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
+                RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
+                Integer.MAX_VALUE, tokenInvalidator, sharedPreferences)), CrashReport.getInstance()),
+        savedInstanceState);
     articleSubject = PublishSubject.create();
-    adapter = new CardAdapter(Collections.emptyList(),
-        new CardViewHolderFactory(articleSubject, new DateCalculator(), new SpannableFactory()));
+    adapter = new CardAdapter(Collections.emptyList(), new CardViewHolderFactory(articleSubject,
+        new DateCalculator(getContext().getApplicationContext(),
+            getContext().getApplicationContext()
+                .getResources()), new SpannableFactory()));
   }
 
   @Nullable @Override

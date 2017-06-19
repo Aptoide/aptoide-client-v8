@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
@@ -32,11 +34,14 @@ public class SocialService {
   private int currentOffset;
   private boolean loading;
   private int total;
+  private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public SocialService(String url, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
       Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
-      LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal) {
+      LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.url = url;
     this.bodyInterceptor = bodyInterceptor;
     this.okhttp = okhttp;
@@ -50,6 +55,8 @@ public class SocialService {
     this.initialOffset = initialOffset;
     this.currentOffset = initialOffset;
     this.total = initialTotal;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Single<List<Card>> getNextCards() {
@@ -62,7 +69,7 @@ public class SocialService {
     }
     return getPackages().doOnSuccess(packages -> loading = true)
         .flatMap(packages -> GetUserTimelineRequest.of(url, limit, initialOffset, packages,
-            bodyInterceptor, okhttp, converterFactory, null)
+            bodyInterceptor, okhttp, converterFactory, null, tokenInvalidator, sharedPreferences)
             .observe()
             .toSingle()
             .flatMap(timelineResponse -> {
