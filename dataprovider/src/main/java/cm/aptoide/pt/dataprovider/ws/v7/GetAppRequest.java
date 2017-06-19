@@ -37,25 +37,23 @@ import rx.Observable;
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh(
-        sharedPreferences);
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
     return new GetAppRequest(getHost(sharedPreferences),
-        new Body(packageName, storeName, forceServerRefresh,
-            sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        new Body(packageName, storeName, forceServerRefresh, sharedPreferences), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
       long appId, OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh(
-        sharedPreferences);
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
     return new GetAppRequest(getHost(sharedPreferences),
-        new Body(appId, forceServerRefresh, packageName,
-            sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        new Body(appId, forceServerRefresh, packageName, sharedPreferences), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor,
@@ -64,18 +62,17 @@ import rx.Observable;
     boolean forceServerRefresh =
         ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
-    return new GetAppRequest(getHost(sharedPreferences), new Body(forceServerRefresh, md5,
-        sharedPreferences),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+    return new GetAppRequest(getHost(sharedPreferences),
+        new Body(forceServerRefresh, md5, sharedPreferences), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest ofUname(String uname, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
-    return new GetAppRequest(getHost(sharedPreferences), new Body(uname,
-        sharedPreferences), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator);
+    return new GetAppRequest(getHost(sharedPreferences), new Body(uname, sharedPreferences),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest of(long appId, String storeName,
@@ -84,11 +81,10 @@ import rx.Observable;
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh(
-        sharedPreferences);
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
-    Body body = new Body(appId, storeName, forceServerRefresh, packageName,
-        sharedPreferences);
+    Body body = new Body(appId, storeName, forceServerRefresh, packageName, sharedPreferences);
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 

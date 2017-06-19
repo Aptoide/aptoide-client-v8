@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.timeline.view.widget;
 
 import android.support.annotation.CallSuper;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -174,7 +173,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
                 ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
-          },Snackbar.LENGTH_SHORT);
+          }, Snackbar.LENGTH_SHORT);
       return;
     }
 
@@ -240,7 +239,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
                 ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
-          },Snackbar.LENGTH_SHORT);
+          }, Snackbar.LENGTH_SHORT);
       return false;
     }
     return true;

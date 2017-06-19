@@ -152,8 +152,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
             BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
-      Resources resources) {
+  @Override
+  public void share(String cardId, ShareCardCallback shareCardCallback, Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
             BLANK));

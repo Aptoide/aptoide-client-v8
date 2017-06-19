@@ -124,8 +124,7 @@ public class AppRepository {
   private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
-        httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, resources)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {

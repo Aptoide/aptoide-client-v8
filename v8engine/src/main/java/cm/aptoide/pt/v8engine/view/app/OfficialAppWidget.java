@@ -138,8 +138,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     compositeSubscription.add(RxView.clicks(installButton)
         .subscribe(a -> {
           if (isAppInstalled) {
-            AptoideUtils.SystemU.openApp(appData.getPackageName(),
-                getContext().getPackageManager(), getContext());
+            AptoideUtils.SystemU.openApp(appData.getPackageName(), getContext().getPackageManager(),
+                getContext());
           } else {
             // show app view to install app
             Fragment appView = V8Engine.getFragmentProvider()

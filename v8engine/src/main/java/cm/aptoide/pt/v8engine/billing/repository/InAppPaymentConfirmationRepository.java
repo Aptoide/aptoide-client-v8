@@ -75,8 +75,7 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
       String metadataId) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppProduct) product).getDeveloperPayload(), metadataId, bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator,
-        sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle();
   }

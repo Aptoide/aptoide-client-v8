@@ -82,11 +82,11 @@ public class ContactsRepository {
         });
   }
 
-public void getTwitterContacts(@NonNull TwitterModel twitterModel,
+  public void getTwitterContacts(@NonNull TwitterModel twitterModel,
       @NonNull LoadContactsCallback callback) {
     SyncAddressBookRequest.of(twitterModel.getId(), twitterModel.getToken(),
-        twitterModel.getSecret(), bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        twitterModel.getSecret(), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences)
         .observe()
         .subscribe(getFollowers -> {
           List<Contact> contactList = new ArrayList<>();
@@ -110,8 +110,7 @@ public void getTwitterContacts(@NonNull TwitterModel twitterModel,
   public void getFacebookContacts(@NonNull FacebookModel facebookModel,
       @NonNull LoadContactsCallback callback) {
     SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(),
-        bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .subscribe(getFriends -> {
           List<Contact> contactList = new ArrayList<>();

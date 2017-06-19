@@ -17,9 +17,10 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
 
   private final boolean createStore;
 
-  private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+  private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
         sharedPreferences);
     this.createStore = createStore;
@@ -35,8 +36,8 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
     body.put("oauthCreateRepo", "true");
     body.put("repo", storeName);
 
-    return new CheckUserCredentialsRequest(body, true, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
+    return new CheckUserCredentialsRequest(body, true, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override

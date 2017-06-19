@@ -18,14 +18,15 @@ public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Bo
   protected GetUserLikesRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static GetUserLikesRequest of(String cardUid, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    return new GetUserLikesRequest(new Body(cardUid), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences);
+    return new GetUserLikesRequest(new Body(cardUid), bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

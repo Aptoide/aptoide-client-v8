@@ -67,8 +67,8 @@ public class DefaultInstaller implements Installer {
   }
 
   @Override public Observable<Void> install(Context context, String md5) {
-    Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(
-        sharedPreferences),
+    Analytics.RootInstall.installationType(
+        ManagerPreferences.allowRootInstallation(sharedPreferences),
         RootShell.isRootAvailable());
     return installationProvider.getInstallation(md5)
         .observeOn(Schedulers.computation())

@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -28,7 +27,6 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -160,8 +158,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
-                  sharedPreferences)),
+              converterFactory,
+              qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
               qManager);
         }
 
@@ -169,8 +167,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             boolean success, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
-                  sharedPreferences)),
+              converterFactory,
+              qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
               qManager);
         }
 
@@ -184,8 +182,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
                 minimalAd.getClickUrl(), success, httpClient, converterFactory,
-                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
-                    sharedPreferences)))
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)))
                 .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);

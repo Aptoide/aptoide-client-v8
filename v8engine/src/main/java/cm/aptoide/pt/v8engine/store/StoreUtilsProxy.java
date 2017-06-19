@@ -56,15 +56,15 @@ public class StoreUtilsProxy {
   public void subscribeStore(String storeName) {
     subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            sharedPreferences), null, null, storeName, accountManager);
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences),
+        null, null, storeName, accountManager);
   }
 
   public Observable<GetStoreMeta> subscribeStoreObservable(String storeName) {
     return StoreUtils.subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor, httpClient, converterFactory,
-            tokenInvalidator, sharedPreferences), accountManager, null, null);
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences),
+        accountManager, null, null);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -91,8 +91,8 @@ public class StoreUtilsProxy {
 
     subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor, httpClient, converterFactory,
-            tokenInvalidator, sharedPreferences), successRequestListener,
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences),
+        successRequestListener,
         errorRequestListener, storeName, accountManager);
   }
 

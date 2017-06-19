@@ -1,8 +1,6 @@
 package cm.aptoide.pt.preferences.toolbox;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import cm.aptoide.pt.preferences.Application;
 
 /**
  * Created by neuro on 06-06-2017.

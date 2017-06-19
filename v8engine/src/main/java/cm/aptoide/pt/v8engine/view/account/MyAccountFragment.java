@@ -137,10 +137,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .findViewById(R.id.more);
 
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-        new MyAccountNavigator(getFragmentNavigator()),
-        ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), savedInstanceState);
+            new MyAccountNavigator(getFragmentNavigator()),
+            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
+            new LinksHandlerFactory(getContext()),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+        savedInstanceState);
   }
 
   @Override public void onDestroy() {

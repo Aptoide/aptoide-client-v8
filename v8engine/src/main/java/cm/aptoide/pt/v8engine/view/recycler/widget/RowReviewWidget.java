@@ -54,8 +54,9 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
     }
 
     reviewBody.setText(review.getBody());
-    reviewer.setText(AptoideUtils.StringU.getFormattedString(R.string.reviewed_by,
-        getContext().getResources(), review.getUser()
+    reviewer.setText(
+        AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, getContext().getResources(),
+            review.getUser()
         .getName()));
 
     rating.setText(String.format(Locale.getDefault(), "%d", (long) review.getStats()

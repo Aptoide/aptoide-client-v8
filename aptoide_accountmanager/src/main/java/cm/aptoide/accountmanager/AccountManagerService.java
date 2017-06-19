@@ -1,7 +1,6 @@
 package cm.aptoide.accountmanager;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -21,7 +20,6 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetUserInfo;
 import cm.aptoide.pt.model.v7.GetUserMeta;
 import cm.aptoide.pt.model.v7.GetUserSettings;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -84,8 +82,7 @@ public class AccountManagerService {
       AptoideAccountManager accountManager) {
     return OAuth2AuthenticationRequest.of(email, password, type, name,
         interceptorFactory.createV3(accountManager), httpClient, converterFactory,
-        tokenInvalidatorFactory.getTokenInvalidator(accountManager),
-        sharedPreferences)
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager), sharedPreferences)
         .observe()
         .toSingle()
         .flatMap(oAuth -> {
@@ -168,8 +165,7 @@ public class AccountManagerService {
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
     return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, storePassword,
         interceptorFactory.createV7(accountManager), httpClient, converterFactory,
-        tokenInvalidatorFactory.getTokenInvalidator(accountManager),
-        sharedPreferences)
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager), sharedPreferences)
         .observe()
         .toSingle()
         .toCompletable();
@@ -179,8 +175,7 @@ public class AccountManagerService {
       AptoideAccountManager accountManager) {
     return new GetMySubscribedStoresRequest(accessToken,
         interceptorFactory.createV7(accountManager), httpClient, converterFactory,
-        tokenInvalidatorFactory.getTokenInvalidator(accountManager),
-        sharedPreferences).observe()
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager), sharedPreferences).observe()
         .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist()
             .getList())
         .flatMapIterable(list -> list)
@@ -244,7 +239,8 @@ public class AccountManagerService {
         // does nothing
       }
       return Observable.<Throwable>error(throwable);
-    }).flatMap(observable -> observable);
+    })
+        .flatMap(observable -> observable);
   }
 
   private Account mapServerAccountToAccount(GetUserInfo userInfo, String refreshToken,

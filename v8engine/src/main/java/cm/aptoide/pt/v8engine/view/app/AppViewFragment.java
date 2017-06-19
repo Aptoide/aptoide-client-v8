@@ -301,17 +301,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
-    shareAppHelper =
-        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay , ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -346,9 +343,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onDestroyView();
     header = null;
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
-          V8Engine.getConfiguration()
-              .getDefaultTheme()));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
+          .getDefaultTheme()));
       ThemeUtils.setAptoideTheme(getActivity());
     }
   }
@@ -947,8 +943,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           ContextCompat.getColor(getActivity(), storeTheme.getPrimaryColor()));
       collapsingToolbar.setContentScrimColor(
           ContextCompat.getColor(getActivity(), storeTheme.getPrimaryColor()));
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
-          AppViewFragment.this.storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreTheme.get(AppViewFragment.this.storeTheme));
       // un-comment the following lines to give app icon a fading effect when user expands / collapses the action bar
       /*
       appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {

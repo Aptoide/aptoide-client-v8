@@ -51,11 +51,10 @@ public class RequestFactory {
             converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager);
     getStoreWidgetsRequestFactory =
         new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
-            converterFactory,
-            tokenInvalidator, sharedPreferences, resources, windowManager);
+            converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager);
     getUserRequestFactory =
-        new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory,
-            tokenInvalidator, sharedPreferences, resources, windowManager);
+        new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences, resources, windowManager);
 
     getStoreRecommendedRequestFactory =
         new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,

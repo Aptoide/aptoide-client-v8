@@ -17,7 +17,8 @@ public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Bod
   protected ShareCardRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static ShareCardRequest of(String cardId, BodyInterceptor<BaseBody> bodyInterceptor,

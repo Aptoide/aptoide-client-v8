@@ -89,8 +89,8 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     } else if (authorizations) {
       final int paymentId = extras.getInt(EXTRA_PAYMENT_ID);
       new AuthorizationSync(paymentId, authorizationAcessor, authorizationConverter, payer,
-          bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics,
-          tokenInvalidator, sharedPreferences).sync(syncResult);
+          bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics, tokenInvalidator,
+          sharedPreferences).sync(syncResult);
     }
   }
 }

@@ -30,7 +30,8 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
   public SyncAddressBookRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static SyncAddressBookRequest of(List<String> numbers, List<String> emails,

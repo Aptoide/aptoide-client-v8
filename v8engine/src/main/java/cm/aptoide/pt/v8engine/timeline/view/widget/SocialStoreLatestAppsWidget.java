@@ -219,13 +219,13 @@ public class SocialStoreLatestAppsWidget
 
     StoreTheme storeThemeEnum = StoreTheme.get(displayable.getSharedStore());
 
-    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable(context.getResources(),
-        context.getTheme()));
+    followStore.setBackgroundDrawable(
+        storeThemeEnum.getButtonLayoutDrawable(context.getResources(), context.getTheme()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followStore.setElevation(0);
     }
-    followStore.setTextColor(storeThemeEnum.getStoreHeaderColorResource(context.getResources(),
-        context.getTheme()));
+    followStore.setTextColor(
+        storeThemeEnum.getStoreHeaderColorResource(context.getResources(), context.getTheme()));
 
     final String storeName = displayable.getSharedStore()
         .getName();

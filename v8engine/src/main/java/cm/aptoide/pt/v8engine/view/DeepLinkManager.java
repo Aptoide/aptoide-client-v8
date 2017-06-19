@@ -199,7 +199,8 @@ public class DeepLinkManager {
     if (validateDeepLinkRequiredArgs(queryType, queryLayout, queryName, queryAction)) {
       try {
         queryAction = URLDecoder.decode(queryAction, "UTF-8");
-        event.setAction(queryAction != null ? queryAction.replace(V7.getHost(sharedPreferences), "") : null);
+        event.setAction(
+            queryAction != null ? queryAction.replace(V7.getHost(sharedPreferences), "") : null);
         event.setType(Event.Type.valueOf(queryType));
         event.setName(Event.Name.valueOf(queryName));
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();

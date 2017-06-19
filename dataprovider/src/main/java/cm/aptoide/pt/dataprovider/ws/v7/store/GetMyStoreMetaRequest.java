@@ -25,8 +25,8 @@ public class GetMyStoreMetaRequest extends V7<GetStoreMeta, BaseBody> {
   public static GetMyStoreMetaRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    return new GetMyStoreMetaRequest(new BaseBody(), getHost(sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+    return new GetMyStoreMetaRequest(new BaseBody(), getHost(sharedPreferences), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator);
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,

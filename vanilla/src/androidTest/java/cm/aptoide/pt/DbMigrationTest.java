@@ -25,7 +25,6 @@ import cm.aptoide.pt.table.ExcludedTable;
 import cm.aptoide.pt.table.ScheduledTable;
 import cm.aptoide.pt.table.Table;
 import cm.aptoide.pt.table.TableBag;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import java.util.List;
@@ -207,7 +206,8 @@ import static org.junit.Assert.fail;
     final String[] packageNames = new String[nr_values];
     final UpdateAccessor accessor = AccessorFactory.getAccessorFor(Update.class);
 
-    PackageManager pm = InstrumentationRegistry.getTargetContext().getPackageManager();
+    PackageManager pm = InstrumentationRegistry.getTargetContext()
+        .getPackageManager();
     List<PackageInfo> packageInfoList = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES);
 
     db.beginTransaction();

@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
-import android.content.SharedPreferences;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;

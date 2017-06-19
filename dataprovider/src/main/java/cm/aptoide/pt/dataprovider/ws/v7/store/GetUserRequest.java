@@ -26,7 +26,8 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   public GetUserRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.url = url;
   }
 
@@ -34,8 +35,8 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
       WindowManager windowManager) {
-    final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault(resources,
-        windowManager));
+    final GetUserRequest.Body body =
+        new GetUserRequest.Body(WidgetsArgs.createDefault(resources, windowManager));
     return new GetUserRequest(new V7Url(url).remove("user/get")
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences);

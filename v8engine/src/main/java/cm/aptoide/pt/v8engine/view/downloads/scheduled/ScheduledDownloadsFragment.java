@@ -93,13 +93,15 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     downloadConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+                .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+                .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     analytics = Analytics.getInstance();
