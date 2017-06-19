@@ -92,8 +92,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public Completable showSuccessMessage() {
-    return ShowMessage.asLongObservableSnack(getActivity(), R.string.title_successful)
-        .toCompletable();
+    return ShowMessage.asLongObservableSnack(getActivity(), R.string.title_successful);
   }
 
   @Override public Completable showLoading() {
