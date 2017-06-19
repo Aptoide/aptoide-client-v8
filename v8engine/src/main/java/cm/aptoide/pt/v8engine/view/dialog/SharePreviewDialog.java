@@ -212,8 +212,7 @@ public class SharePreviewDialog {
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
       TextView appName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView appSubTitle =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
       ImageLoader.with(context)
@@ -227,7 +226,14 @@ public class SharePreviewDialog {
           .getMeta()
           .getData()
           .getName());
-      appSubTitle.setText(R.string.social_timeline_share_dialog_installed_and_recommended);
+
+      ratingBar.setRating(((AppViewInstallDisplayable) displayable).getPojo()
+          .getNodes()
+          .getMeta()
+          .getData()
+          .getStats()
+          .getRating()
+          .getAvg());
 
       SpannableFactory spannableFactory = new SpannableFactory();
 
