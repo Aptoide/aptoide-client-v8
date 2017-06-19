@@ -57,7 +57,8 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences,
+        ((InAppProduct) product).getPackageVersionCode())
         .observe(true)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -75,8 +76,8 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
       String metadataId) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppProduct) product).getDeveloperPayload(), metadataId, bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator,
-        sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences,
+        ((InAppProduct) product).getPackageVersionCode())
         .observe(true)
         .toSingle();
   }

@@ -39,11 +39,12 @@ public class ProductFactory {
         .getSymbol(), app.getPayment()
         .getPaymentServices()
         .get(0)
-        .getTaxRate()), sponsored);
+        .getTaxRate()), sponsored, app.getPath()
+        .getVersionCode());
   }
 
   public List<Product> create(int apiVersion, String developerPayload, String packageName,
-      InAppBillingSkuDetailsResponse response) {
+      InAppBillingSkuDetailsResponse response, int packageVersionCode) {
 
     final PaymentServiceResponse paymentServiceResponse =
         (response.getPaymentServices() != null && !response.getPaymentServices()
@@ -77,7 +78,7 @@ public class ProductFactory {
           purchaseDataObject.getDescription(), apiVersion, purchaseDataObject.getProductId(),
           packageName, developerPayload, purchaseDataObject.getType(),
           new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(), sign,
-              taxRate)));
+              taxRate), packageVersionCode));
     }
 
     return products;

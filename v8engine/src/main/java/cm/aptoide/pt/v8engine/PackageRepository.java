@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 27/07/2016.
  */
 
-package cm.aptoide.pt.v8engine.timeline;
+package cm.aptoide.pt.v8engine;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -89,6 +90,17 @@ public class PackageRepository {
         }
       }
       return result;
+    });
+  }
+
+  public Single<Integer> getPackageVersionCode(String packageName) {
+    return Single.defer(() -> {
+      try {
+        final PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+        return Single.just(packageInfo.versionCode);
+      } catch (Exception e) {
+        return Single.error(e);
+      }
     });
   }
 

@@ -54,6 +54,7 @@ import lombok.EqualsAndHashCode;
     @JsonProperty("id") private int appId;
     @JsonProperty("repo") private String storeName;
     @JsonProperty("icon_hd") private String icon;
+    @JsonProperty("vercode") private int versionCode;
     @JsonProperty("icon") private String alternativeIcon;
   }
 
