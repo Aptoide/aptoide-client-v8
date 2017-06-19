@@ -14,10 +14,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
   private final CardViewHolderFactory cardViewHolderFactory;
   private List<Card> cards;
+  private ProgressCard progressCard;
 
-  public CardAdapter(List<Card> cards, CardViewHolderFactory cardViewHolderFactory) {
+  public CardAdapter(List<Card> cards, CardViewHolderFactory cardViewHolderFactory,
+      ProgressCard progressCard) {
     this.cards = cards;
     this.cardViewHolderFactory = cardViewHolderFactory;
+    this.progressCard = progressCard;
   }
 
   @Override public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,5 +49,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
   public void addCards(List<Card> cards) {
     this.cards.addAll(cards);
     notifyDataSetChanged();
+  }
+
+  public void addLoadMoreProgress() {
+    this.cards.add(progressCard);
+    notifyDataSetChanged();
+  }
+
+  public void removeLoadMoreProgress() {
+    this.cards.remove(progressCard);
   }
 }

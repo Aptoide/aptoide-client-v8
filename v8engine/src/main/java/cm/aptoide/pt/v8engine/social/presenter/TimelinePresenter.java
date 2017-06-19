@@ -75,9 +75,11 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(create -> view.reachesBottom())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(create -> view.showLoadMoreProgressIndicator())
         .flatMapSingle(bottomReached -> socialManager.getNextCards())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> view.showMoreCards(cards))
+        .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> Log.d(this.getClass()
@@ -102,6 +104,11 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void showMoreCardsAndHideLoadMoreProgress(List<Card> cards) {
+    view.hideLoadMoreProgressIndicator();
+    view.showMoreCards(cards);
   }
 
   private void showCardsAndHideProgress(List<Card> cards) {

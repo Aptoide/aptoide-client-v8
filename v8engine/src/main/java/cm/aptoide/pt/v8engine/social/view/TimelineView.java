@@ -31,4 +31,8 @@ public interface TimelineView extends View {
   Observable<CardTouchEvent> articleClicked();
 
   Observable<Void> retry();
+
+  void showLoadMoreProgressIndicator();
+
+  void hideLoadMoreProgressIndicator();
 }

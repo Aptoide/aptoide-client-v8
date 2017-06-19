@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.social.view.CardViewHolder;
 import cm.aptoide.pt.v8engine.social.view.MediaViewHolder;
+import cm.aptoide.pt.v8engine.social.view.ProgressViewHolder;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -37,6 +38,9 @@ public class CardViewHolderFactory {
         return new MediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_article_item, parent, false), articleSubject, dateCalculator,
             spannableFactory);
+      case PROGRESS:
+        return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_progress_item, parent, false));
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }

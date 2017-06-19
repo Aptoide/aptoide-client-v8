@@ -89,7 +89,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter = new CardAdapter(Collections.emptyList(), new CardViewHolderFactory(articleSubject,
         new DateCalculator(getContext().getApplicationContext(),
             getContext().getApplicationContext()
-                .getResources()), new SpannableFactory()));
+                .getResources()), new SpannableFactory()), new ProgressCard());
   }
 
   @Nullable @Override
@@ -175,5 +175,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> retry() {
     return RxView.clicks(retryButton);
+  }
+
+  @Override public void showLoadMoreProgressIndicator() {
+    adapter.addLoadMoreProgress();
+  }
+
+  @Override public void hideLoadMoreProgressIndicator() {
+    adapter.removeLoadMoreProgress();
   }
 }
