@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -68,11 +67,7 @@ public class InstalledIntentService extends IntentService {
     converterFactory = WebService.getDefaultConverter();
     final SharedPreferences sharedPreferences =
         ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
-    adsRepository =
-        new AdsRepository(((V8Engine) getApplicationContext()).getIdsRepository(), accountManager,
-            httpClient, converterFactory, qManager, sharedPreferences, getApplicationContext(),
-            (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE), getResources(),
-            getPackageManager());
+    adsRepository = ((V8Engine) getApplicationContext()).getAdsRepository();
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);

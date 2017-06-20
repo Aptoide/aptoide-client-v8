@@ -45,7 +45,7 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.timeline.PackageRepository;
+import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.TimelineCardFilter;
@@ -257,7 +257,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
-    packageRepository = new PackageRepository(getContext().getPackageManager());
+    packageRepository = ((V8Engine) getContext().getApplicationContext()).getPackageRepository();
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
 
     final PermissionManager permissionManager = new PermissionManager();

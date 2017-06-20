@@ -86,7 +86,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               tokenInvalidator, sharedPreferences, getContext().getResources(),
               ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)),
               (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-              getContext().getPackageManager());
+              ((V8Engine) getContext().getApplicationContext()).getVersionCodeProvider());
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist()

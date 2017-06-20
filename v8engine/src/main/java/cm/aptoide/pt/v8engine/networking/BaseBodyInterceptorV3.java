@@ -23,10 +23,11 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
   private final QManager qManager;
   private final SharedPreferences sharedPreferences;
   private final String responseMode;
+  private final int androidVersion;
 
   public BaseBodyInterceptorV3(IdsRepository idsRepository, String aptoideMd5sum,
       String aptoidePackage, AptoideAccountManager accountManager, QManager qManager,
-      SharedPreferences sharedPreferences, String responseMode) {
+      SharedPreferences sharedPreferences, String responseMode, int androidVersion) {
     this.idsRepository = idsRepository;
     this.aptoideMd5sum = aptoideMd5sum;
     this.aptoidePackage = aptoidePackage;
@@ -34,6 +35,7 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
     this.qManager = qManager;
     this.sharedPreferences = sharedPreferences;
     this.responseMode = responseMode;
+    this.androidVersion = androidVersion;
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
@@ -41,6 +43,7 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
         .first()
         .toSingle()
         .map(account -> {
+          body.setAndroidVersion(androidVersion);
           body.setAptoideMd5sum(aptoideMd5sum);
           body.setAptoidePackage(aptoidePackage);
           body.setAptoideUid(idsRepository.getUniqueIdentifier());
