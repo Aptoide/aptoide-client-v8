@@ -96,17 +96,6 @@ public class AptoideUtils {
   public static class Core {
     private static final String TAG = "Core";
 
-    public static int getVerCode(PackageManager packageManager, String packageName) {
-      PackageManager manager = packageManager;
-      try {
-        PackageInfo info = manager.getPackageInfo(packageName, 0);
-        return info.versionCode;
-      } catch (PackageManager.NameNotFoundException e) {
-        Logger.e(TAG, e);
-        return -1;
-      }
-    }
-
     public static String getDefaultVername(Context context) {
       String verString = "";
       try {

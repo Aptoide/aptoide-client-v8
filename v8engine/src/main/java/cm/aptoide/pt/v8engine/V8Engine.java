@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -42,7 +43,9 @@ import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
@@ -76,6 +79,8 @@ import cm.aptoide.pt.v8engine.account.NoOpTokenInvalidator;
 import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
 import cm.aptoide.pt.v8engine.account.RefreshTokenInvalidatorFactory;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
+import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
@@ -229,6 +234,9 @@ public abstract class V8Engine extends Application {
   private FileManager fileManager;
   private CacheHelper cacheHelper;
   private StoreManager storeManager;
+  private PackageRepository packageRepository;
+  private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
+  private AdsRepository adsRepository;
 
   /**
    * call after this instance onCreate()
@@ -559,10 +567,11 @@ public abstract class V8Engine extends Application {
       final AccountManagerService accountManagerService = new AccountManagerService(
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager(),
-              getDefaultSharedPreferences(), getResources(), getPackageManager(), getPackageName()),
-          getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter(), getNonNullObjectMapper(),
-          new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences());
+              getDefaultSharedPreferences(), getResources(), getPackageName(),
+              Build.VERSION.SDK_INT, getPackageRepository()), getAccountFactory(),
+          getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter(),
+          getNonNullObjectMapper(), new RefreshTokenInvalidatorFactory(),
+          getDefaultSharedPreferences());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
           SecurePreferencesImplementation.getInstance(this, getDefaultSharedPreferences()),
@@ -714,12 +723,19 @@ public abstract class V8Engine extends Application {
               getAccountPayer(), getAuthorizationFactory(), productFactory,
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
               getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences(),
-              getPackageManager(), getPackageName()));
+              getPackageName(), getPackageRepository()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository(), authorizationRepository);
     }
     return aptoideBilling;
+  }
+
+  public PackageRepository getPackageRepository() {
+    if (packageRepository == null) {
+      packageRepository = new PackageRepository(getPackageManager());
+    }
+    return packageRepository;
   }
 
   public PaymentThrowableCodeMapper getPaymentThrowableCodeMapper() {
@@ -908,8 +924,8 @@ public abstract class V8Engine extends Application {
     if (baseBodyInterceptorV7 == null) {
       baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
-          getQManager(), "pool", getDefaultSharedPreferences(), getResources(), getPackageManager(),
-          getPackageName());
+          getQManager(), "pool", getDefaultSharedPreferences(), getResources(), getPackageName(),
+          getPackageRepository());
     }
     return baseBodyInterceptorV7;
   }
@@ -919,7 +935,7 @@ public abstract class V8Engine extends Application {
       baseBodyInterceptorV3 =
           new BaseBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
               getAccountManager(), getQManager(), getDefaultSharedPreferences(),
-              BaseBodyInterceptorV3.RESPONSE_MODE_JSON);
+              BaseBodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT);
     }
     return baseBodyInterceptorV3;
   }
@@ -1064,5 +1080,27 @@ public abstract class V8Engine extends Application {
         .penaltyLog()
         .penaltyDeath()
         .build());
+  }
+
+  public AdsApplicationVersionCodeProvider getVersionCodeProvider() {
+    if (applicationVersionCodeProvider == null) {
+      applicationVersionCodeProvider =
+          new PackageRepositoryVersionCodeProvider(getPackageRepository(), getPackageName());
+    }
+    return applicationVersionCodeProvider;
+  }
+
+  public AdsRepository getAdsRepository() {
+    if (adsRepository == null) {
+      adsRepository = new AdsRepository(getIdsRepository(), accountManager, getDefaultClient(),
+          WebService.getDefaultConverter(), qManager, getDefaultSharedPreferences(),
+          getApplicationContext(),
+          (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
+          getVersionCodeProvider(),
+          (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context),
+          () -> V8Engine.getConfiguration()
+              .getPartnerId());
+    }
+    return adsRepository;
   }
 }
