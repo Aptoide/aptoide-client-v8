@@ -6,7 +6,7 @@ import android.telephony.TelephonyManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Data;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -34,9 +34,7 @@ public class DownloadEventConverter extends DownloadInstallEventConverter<Downlo
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override
-  protected DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(DownloadEvent report,
-      DownloadInstallAnalyticsBaseBody.Data data) {
+  @Override protected Data convertSpecificFields(DownloadEvent report, Data data) {
     data.getApp()
         .setMirror(report.getMirrorApk());
     for (int i = 0; data.getObb() != null && i < data.getObb()

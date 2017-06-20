@@ -13,8 +13,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -22,8 +20,7 @@ import rx.Observable;
 /**
  * Created by neuro on 19-04-2016.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class GetHomeMetaRequest
-    extends BaseRequestWithStore<GetHomeMeta, GetHomeMetaRequest.Body> {
+public class GetHomeMetaRequest extends BaseRequestWithStore<GetHomeMeta, GetHomeMetaRequest.Body> {
 
   private final String url;
 
@@ -42,12 +39,16 @@ import rx.Observable;
         .get(), bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
+  public String getUrl() {
+    return url;
+  }
+
   @Override protected Observable<GetHomeMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getHomeMeta(url != null ? url : "", body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {
+  public static class Body extends BaseBodyWithStore {
 
     public Body(StoreCredentials storeCredentials) {
       super(storeCredentials);

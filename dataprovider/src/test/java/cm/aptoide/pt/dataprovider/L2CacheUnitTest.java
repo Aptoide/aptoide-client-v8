@@ -1,7 +1,7 @@
-package cm.aptoide.pt.networkclient;
+package cm.aptoide.pt.dataprovider;
 
-import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
-import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
+import cm.aptoide.pt.dataprovider.cache.L2Cache;
+import cm.aptoide.pt.dataprovider.cache.Sha1KeyAlgorithm;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;
 import java.nio.charset.Charset;

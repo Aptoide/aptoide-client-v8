@@ -6,12 +6,9 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.analytics.Event;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -19,8 +16,7 @@ import retrofit2.Converter;
  * Created by trinkes on 02/01/2017.
  */
 
-public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInstallBaseEvent
-    implements Event {
+public class DownloadInstallBaseEvent implements Event {
   private final SharedPreferences sharedPreferences;
   private Action action;
   private int versionCode;
@@ -34,7 +30,7 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
   private String name;
   private AppContext context;
   private DownloadInstallEventConverter downloadInstallEventConverter;
-  private DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
+  private Result.ResultStatus resultStatus;
   private Throwable error;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
@@ -66,6 +62,203 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
     this.sharedPreferences = sharedPreferences;
   }
 
+  @Override public String toString() {
+    return "DownloadInstallBaseEvent{"
+        + "sharedPreferences="
+        + sharedPreferences
+        + ", action="
+        + action
+        + ", versionCode="
+        + versionCode
+        + ", origin="
+        + origin
+        + ", packageName='"
+        + packageName
+        + '\''
+        + ", url='"
+        + url
+        + '\''
+        + ", obbType="
+        + obbType
+        + ", obbUrl='"
+        + obbUrl
+        + '\''
+        + ", patchObbType="
+        + patchObbType
+        + ", patchObbUrl='"
+        + patchObbUrl
+        + '\''
+        + ", name='"
+        + name
+        + '\''
+        + ", context="
+        + context
+        + ", downloadInstallEventConverter="
+        + downloadInstallEventConverter
+        + ", resultStatus="
+        + resultStatus
+        + ", error="
+        + error
+        + ", bodyInterceptor="
+        + bodyInterceptor
+        + ", httpClient="
+        + httpClient
+        + ", converterFactory="
+        + converterFactory
+        + ", tokenInvalidator="
+        + tokenInvalidator
+        + '}';
+  }
+
+  public SharedPreferences getSharedPreferences() {
+    return sharedPreferences;
+  }
+
+  public Action getAction() {
+    return action;
+  }
+
+  public void setAction(Action action) {
+    this.action = action;
+  }
+
+  public int getVersionCode() {
+    return versionCode;
+  }
+
+  public void setVersionCode(int versionCode) {
+    this.versionCode = versionCode;
+  }
+
+  public Origin getOrigin() {
+    return origin;
+  }
+
+  public void setOrigin(Origin origin) {
+    this.origin = origin;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public ObbType getObbType() {
+    return obbType;
+  }
+
+  public void setObbType(ObbType obbType) {
+    this.obbType = obbType;
+  }
+
+  public String getObbUrl() {
+    return obbUrl;
+  }
+
+  public void setObbUrl(String obbUrl) {
+    this.obbUrl = obbUrl;
+  }
+
+  public ObbType getPatchObbType() {
+    return patchObbType;
+  }
+
+  public void setPatchObbType(ObbType patchObbType) {
+    this.patchObbType = patchObbType;
+  }
+
+  public String getPatchObbUrl() {
+    return patchObbUrl;
+  }
+
+  public void setPatchObbUrl(String patchObbUrl) {
+    this.patchObbUrl = patchObbUrl;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public AppContext getContext() {
+    return context;
+  }
+
+  public void setContext(AppContext context) {
+    this.context = context;
+  }
+
+  public DownloadInstallEventConverter getDownloadInstallEventConverter() {
+    return downloadInstallEventConverter;
+  }
+
+  public void setDownloadInstallEventConverter(
+      DownloadInstallEventConverter downloadInstallEventConverter) {
+    this.downloadInstallEventConverter = downloadInstallEventConverter;
+  }
+
+  public Result.ResultStatus getResultStatus() {
+    return resultStatus;
+  }
+
+  public void setResultStatus(Result.ResultStatus resultStatus) {
+    this.resultStatus = resultStatus;
+  }
+
+  public Throwable getError() {
+    return error;
+  }
+
+  public void setError(Throwable error) {
+    this.error = error;
+  }
+
+  public BodyInterceptor<BaseBody> getBodyInterceptor() {
+    return bodyInterceptor;
+  }
+
+  public void setBodyInterceptor(BodyInterceptor<BaseBody> bodyInterceptor) {
+    this.bodyInterceptor = bodyInterceptor;
+  }
+
+  public OkHttpClient getHttpClient() {
+    return httpClient;
+  }
+
+  public void setHttpClient(OkHttpClient httpClient) {
+    this.httpClient = httpClient;
+  }
+
+  public Converter.Factory getConverterFactory() {
+    return converterFactory;
+  }
+
+  public void setConverterFactory(Converter.Factory converterFactory) {
+    this.converterFactory = converterFactory;
+  }
+
+  public TokenInvalidator getTokenInvalidator() {
+    return tokenInvalidator;
+  }
+
+  public void setTokenInvalidator(TokenInvalidator tokenInvalidator) {
+    this.tokenInvalidator = tokenInvalidator;
+  }
+
   @Override public void send() {
     if (isReadyToSend()) {
       DownloadAnalyticsRequest.of(downloadInstallEventConverter.convert(this, resultStatus, error),
@@ -81,10 +274,6 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
 
   @CallSuper public boolean isReadyToSend() {
     return resultStatus != null;
-  }
-
-  public void setError(Throwable error) {
-    this.error = error;
   }
 
   public enum Action {

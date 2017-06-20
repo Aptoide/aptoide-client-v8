@@ -13,8 +13,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -22,7 +20,7 @@ import rx.Observable;
 /**
  * Created by neuro on 22-04-2016.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class GetStoreDisplaysRequest
+public class GetStoreDisplaysRequest
     extends BaseRequestWithStore<GetStoreDisplays, GetStoreDisplaysRequest.Body> {
 
   private String url;
@@ -44,12 +42,20 @@ import rx.Observable;
         tokenInvalidator, sharedPreferences);
   }
 
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getStoreDisplays(url, body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {
+  public static class Body extends BaseBodyWithStore {
 
     public Body(StoreCredentials storeCredentials) {
       super(storeCredentials);

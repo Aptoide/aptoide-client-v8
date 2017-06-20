@@ -4,9 +4,11 @@ import android.accounts.NetworkErrorException;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
@@ -46,12 +48,9 @@ import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -73,27 +72,26 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
-  public static String getHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-        + "/api/7/";
-  }
-
-  @Getter protected final B body;
+  protected final B body;
   private final BodyInterceptor bodyInterceptor;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private final int MAX_RETRY_COUNT = 3;
   private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
-
   protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor bodyInterceptor, TokenInvalidator tokenInvalidator) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
     this.bodyInterceptor = bodyInterceptor;
     this.tokenInvalidator = tokenInvalidator;
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7/";
   }
 
   @NonNull public static String getErrorMessage(BaseV7Response response) {
@@ -110,6 +108,10 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
       builder.append("Server returned null response.");
     }
     return builder.toString();
+  }
+
+  public B getBody() {
+    return body;
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {
@@ -142,11 +144,13 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
                 } else {
                   if (throwable instanceof HttpException) {
                     try {
-                      throw new AptoideWsV7Exception(throwable).setBaseResponse(
+                      AptoideWsV7Exception exception = new AptoideWsV7Exception(throwable);
+                      exception.setBaseResponse(
                           (BaseV7Response) converterFactory.responseBodyConverter(
                               BaseV7Response.class, null, null)
                               .convert(((HttpException) throwable).response()
                                   .errorBody()));
+                      throw exception;
                     } catch (IOException exception) {
                       throw new RuntimeException(exception);
                     }

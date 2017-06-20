@@ -8,7 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.notifications;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.ErrorResponse;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.WebService;
 import java.util.List;
 import java.util.Map;
 import okhttp3.OkHttpClient;

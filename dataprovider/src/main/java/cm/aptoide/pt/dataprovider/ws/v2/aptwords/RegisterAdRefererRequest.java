@@ -6,8 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import android.os.Build;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import lombok.Data;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -71,8 +70,15 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     return interfaces.load(map);
   }
 
-  @Data public static class DefaultResponse {
+  public static class DefaultResponse {
+    private String status;
 
-    String status;
+    public String getStatus() {
+      return status;
+    }
+
+    public void setStatus(String status) {
+      this.status = status;
+    }
   }
 }
