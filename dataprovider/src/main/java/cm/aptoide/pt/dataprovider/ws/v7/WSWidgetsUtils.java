@@ -5,9 +5,15 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.net.ConnectivityManager;
 import android.util.Pair;
+import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
@@ -37,7 +43,10 @@ public class WSWidgetsUtils {
       GetStoreWidgets.WSWidget wsWidget, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh, String clientUniqueId, boolean googlePlayServicesAvailable, String oemid,
       boolean mature, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String q) {
+      Converter.Factory converterFactory, String q, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
+      ConnectivityManager connectivityManager,
+      AdsApplicationVersionCodeProvider versionCodeProvider) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -45,12 +54,12 @@ public class WSWidgetsUtils {
       // Can be null in legacy ws :/
       if (wsWidget.getView() != null) {
         url = wsWidget.getView()
-            .replace(V7.BASE_HOST, "");
+            .replace(V7.getHost(sharedPreferences), "");
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
           return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
-              converterFactory)
+              converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -58,7 +67,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case STORES_GROUP:
-          return ListStoresRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory)
+          return ListStoresRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -67,7 +77,7 @@ public class WSWidgetsUtils {
 
         case DISPLAYS:
           return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyInterceptor,
-              httpClient, converterFactory)
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -76,7 +86,8 @@ public class WSWidgetsUtils {
 
         case ADS:
           return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
-              mature, httpClient, converterFactory, q)
+              mature, httpClient, converterFactory, q, sharedPreferences, resources, windowManager,
+              connectivityManager, versionCodeProvider)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -85,7 +96,7 @@ public class WSWidgetsUtils {
 
         case HOME_META:
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
-              converterFactory)
+              converterFactory, tokenInvalidator, sharedPreferences)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -94,7 +105,7 @@ public class WSWidgetsUtils {
 
         case COMMENTS_GROUP:
           return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyInterceptor,
-              httpClient, converterFactory)
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(listComments -> wsWidget.setViewObject(
@@ -105,7 +116,7 @@ public class WSWidgetsUtils {
 
         case REVIEWS_GROUP:
           return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials, bodyInterceptor,
-              httpClient, converterFactory)
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -114,7 +125,8 @@ public class WSWidgetsUtils {
 
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
-          return GetMyStoreListRequest.of(url, bodyInterceptor, httpClient, converterFactory)
+          return GetMyStoreListRequest.of(url, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences, resources, windowManager)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -130,7 +142,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case MY_STORE_META:
-          return GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory)
+          return GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .map(getStoreMeta -> {
@@ -153,7 +166,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case APP_META:
-          return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory)
+          return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))

@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.v8engine.timeline;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
@@ -31,21 +33,26 @@ public class TimelineRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public TimelineRepository(String action, TimelineCardFilter filter,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.action = action;
     this.filter = filter;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh, String cardId) {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames, bodyInterceptor,
-        httpClient, converterFactory, cardId)
+        httpClient, converterFactory, cardId, tokenInvalidator, sharedPreferences)
         .observe(refresh)
         .flatMap(response -> {
           if (response.isOk()) {
@@ -88,7 +95,8 @@ public class TimelineRepository {
   }
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache, Long userId) {
-    return GetTimelineStatsRequest.of(bodyInterceptor, userId, httpClient, converterFactory)
+    return GetTimelineStatsRequest.of(bodyInterceptor, userId, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe(byPassCache);
   }
 }

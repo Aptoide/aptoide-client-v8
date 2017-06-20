@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -35,17 +36,22 @@ public class InstallManager {
 
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
-  private DownloadRepository downloadRepository;
-  private InstalledRepository installedRepository;
+  private final DownloadRepository downloadRepository;
+  private final InstalledRepository installedRepository;
+  private final SharedPreferences sharedPreferences;
+  private final SharedPreferences securePreferences;
 
   /**
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
    */
-  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer) {
+  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
+      SharedPreferences sharedPreferences, SharedPreferences securePreferences) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.downloadRepository = RepositoryFactory.getDownloadRepository();
     this.installedRepository = RepositoryFactory.getInstalledRepository();
+    this.sharedPreferences = sharedPreferences;
+    this.securePreferences = securePreferences;
   }
 
   public void stopAllInstallations(Context context) {
@@ -258,8 +264,8 @@ public class InstallManager {
   }
 
   public void rootInstallAllowed(boolean allowRoot) {
-    SecurePreferences.setRootDialogShowed(true);
-    ManagerPreferences.setAllowRootInstallation(allowRoot);
+    SecurePreferences.setRootDialogShowed(true, securePreferences);
+    ManagerPreferences.setAllowRootInstallation(allowRoot, sharedPreferences);
     if (allowRoot) {
       RootShell.isAccessGiven();
     }

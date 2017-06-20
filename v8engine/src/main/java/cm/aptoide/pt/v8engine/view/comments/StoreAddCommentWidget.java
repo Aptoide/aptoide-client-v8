@@ -10,18 +10,18 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.store.StoreAddCommentDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import rx.Completable;
 import rx.Observable;
 
 public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
@@ -70,13 +70,13 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
         }));
   }
 
-  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+  private int getColorOrDefault(StoreTheme theme, Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       return context.getResources()
-          .getColor(theme.getStoreHeader(), context.getTheme());
+          .getColor(theme.getPrimaryColor(), context.getTheme());
     } else {
       return context.getResources()
-          .getColor(theme.getStoreHeader());
+          .getColor(theme.getPrimaryColor());
     }
   }
 
@@ -96,24 +96,17 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
                 .doOnSubscribe(
                     () -> commentDialogFragment.show(fragmentManager, "fragment_comment_dialog"))
                 .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-                .doOnNext(a -> reloadComments())
                 .flatMap(event -> Observable.empty());
           }
 
-          return showSignInMessage(view);
+          return showSignInMessage(view).toObservable();
         });
   }
 
-  private void reloadComments() {
-    // TODO: 5/12/2016 sithengineer
-    Logger.d(TAG, "TODO: reload the comments");
-  }
-
-  private Observable<Void> showSignInMessage(@NonNull final View view) {
+  private Completable showSignInMessage(@NonNull final View view) {
     return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
         snackView -> {
           accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE_COMMENT);
-        })
-        .flatMap(a -> Observable.empty());
+        });
   }
 }

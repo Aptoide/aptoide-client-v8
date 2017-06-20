@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.view.WindowManager;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialRecommendation;
@@ -12,6 +14,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -39,6 +42,8 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   private SocialRepository socialRepository;
   private float appRating;
   private TimelineAnalytics timelineAnalytics;
+  private Resources resources;
+  private String marketName;
 
   public SocialRecommendationDisplayable() {
   }
@@ -47,12 +52,15 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       int avatarResource, Store store, int titleResource, Comment.User user, long appId,
       String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
       long numberOfComments, SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics) {
+      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
+      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      WindowManager windowManager) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
         socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
         socialRecommendation.getMy()
             .isLiked(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
-        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl, timelineAnalytics);
+        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl, timelineAnalytics,
+        timelineNavigator, windowManager);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.user = user;
@@ -71,11 +79,15 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         .getStore()
         .getId();
     this.timelineAnalytics = timelineAnalytics;
+    this.resources = resources;
+    this.marketName = marketName;
   }
 
   public static Displayable from(SocialRecommendation socialRecommendation,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics) {
+      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
+      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      WindowManager windowManager) {
 
     String abTestingURL = null;
 
@@ -99,7 +111,8 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         .getName(), socialRecommendation.getApp()
         .getIcon(), abTestingURL, socialRecommendation.getStats()
         .getLikes(), socialRecommendation.getStats()
-        .getComments(), spannableFactory, socialRepository, dateCalculator, timelineAnalytics);
+        .getComments(), spannableFactory, socialRepository, dateCalculator, timelineAnalytics,
+        timelineNavigator, resources, marketName, windowManager);
   }
 
   public Spannable getStyledTitle(Context context, String title) {
@@ -120,8 +133,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   }
 
   public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource, Application.getConfiguration()
-        .getMarketName());
+    return AptoideUtils.StringU.getFormattedString(titleResource, resources, marketName);
   }
 
   @Override public int getViewLayout() {
@@ -129,26 +141,29 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), appStoreId, privacyResult,
         shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
             BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
+  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), appStoreId, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
             BLANK));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getTitle(),
             BLANK));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getTitle(),
             BLANK));

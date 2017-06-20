@@ -11,7 +11,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -50,8 +50,8 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
         .getApps()));
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
-        .loadWithShadowCircleTransform(store.getAvatar(), storeIcon, StoreThemeEnum.get(store)
-            .getStoreHeaderInt());
+        .loadWithShadowCircleTransform(store.getAvatar(), storeIcon, StoreTheme.get(store)
+            .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)
@@ -86,6 +86,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
             message = R.string.unfollowing_store_message;
           }
           ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(message,
+              getContext().getResources(),
               displayable.getPojo()
                   .getName()));
         }, throwable -> {
@@ -107,6 +108,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
             message = R.string.follow;
           }
           followButton.setText(AptoideUtils.StringU.getFormattedString(message,
+              getContext().getResources(),
               displayable.getPojo()
                   .getName()));
           followButton.setVisibility(View.VISIBLE);

@@ -5,9 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -19,14 +23,17 @@ import rx.Observable;
 public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResponse> {
 
   public InAppBillingSkuDetailsRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
       List<String> skuList, NetworkOperatorManager operatorManager, String type,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
@@ -44,9 +51,10 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
       args.put("skulist", stringBuilder.toString());
     }
 
-    addNetworkInformation(operatorManager, args);
+    addNetworkInformation(operatorManager, args, sharedPreferences);
 
-    return new InAppBillingSkuDetailsRequest(args, bodyInterceptor, httpClient, converterFactory);
+    return new InAppBillingSkuDetailsRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override

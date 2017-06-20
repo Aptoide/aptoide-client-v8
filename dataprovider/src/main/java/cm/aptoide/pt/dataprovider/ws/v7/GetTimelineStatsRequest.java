@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import lombok.Data;
@@ -15,14 +17,16 @@ import rx.Observable;
 public class GetTimelineStatsRequest extends V7<TimelineStats, GetTimelineStatsRequest.Body> {
 
   protected GetTimelineStatsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static GetTimelineStatsRequest of(BodyInterceptor<BaseBody> bodyInterceptor, Long userId,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     return new GetTimelineStatsRequest(new Body(userId), bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<TimelineStats> loadDataFromNetwork(Interfaces interfaces,

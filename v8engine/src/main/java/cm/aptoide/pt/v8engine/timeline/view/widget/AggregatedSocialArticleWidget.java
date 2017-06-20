@@ -407,8 +407,7 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
                   .log(err)));
 
       compositeSubscription.add(RxView.clicks(likePreviewContainer)
-          .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator(),
-              minimalCard.getStats()
+          .subscribe(click -> displayable.likesPreviewClick(minimalCard.getStats()
                   .getLikes(), minimalCard.getCardId()), err -> CrashReport.getInstance()
               .log(err)));
 

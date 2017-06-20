@@ -94,11 +94,15 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     mActionsListener = new AddressBookPresenter(this,
         new ContactsRepository(baseBodyBodyInterceptor, httpClient, converterFactory,
             ((V8Engine) getContext().getApplicationContext()).getIdsRepository(), new ContactUtils(
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE))),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            getContext().getContentResolver()),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
         analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
         getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
         Application.getConfiguration()
-            .getMarketName())));
+            .getMarketName())),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

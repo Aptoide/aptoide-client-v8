@@ -53,6 +53,7 @@ public class ToolboxContentProvider extends ContentProvider {
   private UriMatcher uriMatcher;
   private ToolboxSecurityManager securityManager;
   private AptoideAccountManager aptoideAccountManager;
+  private SharedPreferences sharedPreferences;
 
   @Override public boolean onCreate() {
     securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
@@ -67,6 +68,8 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
     uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
     aptoideAccountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     return true;
   }
 
@@ -172,12 +175,12 @@ public class ToolboxContentProvider extends ContentProvider {
       if (result == PackageManager.SIGNATURE_MATCH) {
         switch (uriMatcher.match(uri)) {
           case CHANGE_PREFERENCE:
-            SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context)
+            SharedPreferences.Editor edit = sharedPreferences
                 .edit();
             for (final Map.Entry<String, Object> entry : values.valueSet()) {
               Object value = entry.getValue();
               if (value instanceof String) {
-                if (!ToolboxManager.isDebug()) {
+                if (!ToolboxManager.isDebug(sharedPreferences)) {
                   AptoideUtils.ThreadU.runOnUiThread(
                       () -> Toast.makeText(context, "Please enable debug mode for toolbox to work.",
                           Toast.LENGTH_LONG)
@@ -185,11 +188,11 @@ public class ToolboxContentProvider extends ContentProvider {
                 }
                 if (entry.getKey()
                     .equals(ToolboxKeys.FORCE_COUNTRY)) {
-                  ToolboxManager.setForceCountry((String) value);
+                  ToolboxManager.setForceCountry((String) value, sharedPreferences);
                   changed++;
                 } else if (entry.getKey()
                     .equals(ToolboxKeys.NOTIFICATION_TYPE)) {
-                  ToolboxManager.setNotificationType((String) value);
+                  ToolboxManager.setNotificationType((String) value, sharedPreferences);
                   changed++;
                 } else if (entry.getKey()
                     .equals("pullNotificationAction")) {
@@ -207,24 +210,27 @@ public class ToolboxContentProvider extends ContentProvider {
               } else if (value instanceof Boolean) {
                 if (entry.getKey()
                     .equals(ToolboxKeys.DEBUG)) {
-                  ToolboxManager.setDebug((Boolean) entry.getValue());
+                  ToolboxManager.setDebug((Boolean) entry.getValue(), sharedPreferences);
                   Logger.setDBG((Boolean) entry.getValue());
                   changed++;
                 }
                 if (entry.getKey()
                     .equals(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME)) {
-                  ToolboxManager.setToolboxEnableHttpScheme((Boolean) entry.getValue());
+                  ToolboxManager.setToolboxEnableHttpScheme((Boolean) entry.getValue(),
+                      sharedPreferences);
                   changed++;
                 }
                 if (entry.getKey()
                     .equals(ToolboxKeys.TOOLBOX_RETROFIT_LOGS)) {
-                  ToolboxManager.setToolboxEnableRetrofitLogs((Boolean) entry.getValue());
+                  ToolboxManager.setToolboxEnableRetrofitLogs((Boolean) entry.getValue(),
+                      sharedPreferences);
                   changed++;
                 }
               } else if (value instanceof Long) {
                 if (entry.getKey()
                     .equals(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL)) {
-                  ToolboxManager.setPushNotificationPullingInterval(((Long) value));
+                  ToolboxManager.setPushNotificationPullingInterval(((Long) value),
+                      sharedPreferences);
                   changed++;
                 }
               }

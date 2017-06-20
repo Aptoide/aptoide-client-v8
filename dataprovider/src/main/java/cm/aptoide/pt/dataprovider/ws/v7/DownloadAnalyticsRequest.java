@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -19,8 +21,9 @@ public class DownloadAnalyticsRequest extends V7<BaseV7Response, DownloadInstall
 
   protected DownloadAnalyticsRequest(DownloadInstallAnalyticsBaseBody body, String action,
       String name, String context, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.action = action;
     this.name = name;
     this.context = context;
@@ -28,9 +31,10 @@ public class DownloadAnalyticsRequest extends V7<BaseV7Response, DownloadInstall
 
   public static DownloadAnalyticsRequest of(DownloadInstallAnalyticsBaseBody body, String action,
       String name, String context, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     return new DownloadAnalyticsRequest(body, action, name, context, bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

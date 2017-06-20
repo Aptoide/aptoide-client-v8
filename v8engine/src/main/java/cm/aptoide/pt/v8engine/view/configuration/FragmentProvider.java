@@ -134,18 +134,16 @@ public interface FragmentProvider {
 
   Fragment newSettingsFragment();
 
-  Fragment newTimeLineFollowersUsingUserIdFragment(Long id, long followerNumber, String storeTheme);
+  Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme, String title);
 
-  Fragment newTimeLineFollowingFragmentUsingUserId(Long id, long followingNumber,
-      String storeTheme);
+  Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme, String title);
 
-  Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, long followerNumber,
-      String storeTheme);
+  Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme, String title);
 
-  Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, long followerNumber,
-      String storeTheme);
+  Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title);
 
-  Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme);
+  Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
+      String title);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
@@ -166,7 +164,7 @@ public interface FragmentProvider {
 
   Fragment newThankYouConnectingFragment(String tag);
 
-  Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme);
+  Fragment newTimeLineFollowersFragment(String storeTheme, String title);
 
   Fragment newRecommendedStoresFragment();
 }

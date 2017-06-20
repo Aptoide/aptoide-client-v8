@@ -1,7 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -25,23 +29,30 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
 
   public GetMyStoreListRequest(String url, EndlessBody body,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.url = url;
   }
 
   public static GetMyStoreListRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    return of(url, false, bodyInterceptor, httpClient, converterFactory);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
+      WindowManager windowManager) {
+    return of(url, false, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences, resources, windowManager);
   }
 
   public static GetMyStoreListRequest of(String url, boolean useEndless,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager) {
     GetMyStoreListRequest.useEndless = useEndless;
 
-    return new GetMyStoreListRequest(url, new EndlessBody(WidgetsArgs.createDefault()),
-        bodyInterceptor, httpClient, converterFactory);
+    return new GetMyStoreListRequest(url,
+        new EndlessBody(WidgetsArgs.createDefault(resources, windowManager)), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override

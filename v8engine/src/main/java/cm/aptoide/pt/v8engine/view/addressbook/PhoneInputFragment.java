@@ -69,7 +69,10 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     this.mActionsListener = new PhoneInputPresenter(this,
         new ContactsRepository(baseBodyInterceptor, httpClient, converterFactory,
             ((V8Engine) getContext().getApplicationContext()).getIdsRepository(), new ContactUtils(
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE))),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            getContext().getContentResolver()),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
@@ -78,7 +81,8 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
                 .getMarketName())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils(
-        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+        getContext().getContentResolver());
   }
 
   @Override public void loadExtras(Bundle args) {

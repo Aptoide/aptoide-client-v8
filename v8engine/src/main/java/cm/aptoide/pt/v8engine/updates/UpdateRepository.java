@@ -1,10 +1,13 @@
 package cm.aptoide.pt.v8engine.updates;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
@@ -35,11 +38,15 @@ public class UpdateRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
+  private final PackageManager packageManager;
 
   public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
       AptoideAccountManager accountManager, IdsRepository idsRepository,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, PackageManager packageManager) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
     this.accountManager = accountManager;
@@ -47,6 +54,9 @@ public class UpdateRepository {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
+    this.packageManager = packageManager;
   }
 
   public @NonNull Completable sync(boolean bypassCache) {
@@ -70,7 +80,7 @@ public class UpdateRepository {
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(), bodyInterceptor,
-        httpClient, converterFactory)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager)
         .observe(bypassCache)
         .map(result -> {
           if (result != null && result.isOk()) {

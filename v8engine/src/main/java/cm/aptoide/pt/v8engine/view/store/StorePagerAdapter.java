@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.store;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -27,9 +28,10 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private final EnumMap<Event.Name, Integer> availableEventsMap = new EnumMap<>(Event.Name.class);
   private String storeTheme;
   private Long storeId;
+  private Context context;
 
   public StorePagerAdapter(FragmentManager fm, List<GetStoreTabs.Tab> tabs,
-      StoreContext storeContext, Long storeId, String storeTheme) {
+      StoreContext storeContext, Long storeId, String storeTheme, Context context) {
     super(fm);
     this.storeId = storeId;
     if (storeId != null && storeId != 15) {
@@ -37,6 +39,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     }
     this.tabs = tabs;
     this.storeContext = storeContext;
+    this.context = context;
     translateTabs(this.tabs);
     validateGetStore();
 
@@ -44,8 +47,9 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   }
 
   private void translateTabs(List<GetStoreTabs.Tab> tabs) {
-    for (GetStoreTabs.Tab t : tabs)
-      t.setLabel(Translator.translate(t.getLabel()));
+    for (GetStoreTabs.Tab t : tabs) {
+      t.setLabel(Translator.translate(t.getLabel(), context));
+    }
   }
 
   private void validateGetStore() {

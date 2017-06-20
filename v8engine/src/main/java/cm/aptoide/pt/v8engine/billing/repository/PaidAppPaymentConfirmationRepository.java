@@ -5,9 +5,11 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
@@ -30,22 +32,28 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final Converter.Factory converterFactory;
   private final OkHttpClient httpClient;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public PaidAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
       PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httpClient, Payer payer) {
+      OkHttpClient httpClient, Payer payer, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     super(operatorManager, confirmationAccessor, backgroundSync, confirmationFactory, payer);
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-        ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient, converterFactory)
+        ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences, ((PaidAppProduct) product).getPackageVersionCode())
         .observe(true)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -62,8 +70,9 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
   protected Single<BaseV3Response> createServerConfirmation(Product product, int paymentId,
       String metadataId) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-        ((PaidAppProduct) product).getStoreName(), metadataId, bodyInterceptorV3,
-        httpClient, converterFactory)
+        ((PaidAppProduct) product).getStoreName(), metadataId, bodyInterceptorV3, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences,
+        ((PaidAppProduct) product).getPackageVersionCode())
         .observe(true)
         .toSingle();
   }

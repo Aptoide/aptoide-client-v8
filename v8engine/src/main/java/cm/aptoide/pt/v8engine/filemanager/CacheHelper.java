@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.filemanager;
 
+import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 import cm.aptoide.pt.downloadmanager.CacheManager;
 import cm.aptoide.pt.logger.Logger;
@@ -33,24 +34,11 @@ public class CacheHelper implements CacheManager {
   /**
    * @param maxCacheSize max cache size in MB
    */
-  protected CacheHelper(long maxCacheSize, List<FolderToManage> foldersToCleanPath,
+  public CacheHelper(long maxCacheSize, List<FolderToManage> foldersToCleanPath,
       FileUtils fileUtils) {
     this.foldersToCleanPath = foldersToCleanPath;
     this.maxCacheSize = maxCacheSize * VALUE_TO_CONVERT_MB_TO_BYTES;
     this.fileUtils = fileUtils;
-  }
-
-  public static CacheHelper build() {
-    List<CacheHelper.FolderToManage> folders = new LinkedList<>();
-
-    String cachePath = Application.getConfiguration()
-        .getCachePath();
-
-    folders.add(new CacheHelper.FolderToManage(new File(cachePath), DateUtils.HOUR_IN_MILLIS));
-    folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), MONTH_CACHE_TIME));
-    folders.add(new CacheHelper.FolderToManage(new File(Application.getContext()
-        .getCacheDir() + "image_manager_disk_cache/"), MONTH_CACHE_TIME));
-    return new CacheHelper(ManagerPreferences.getCacheLimit(), folders, new FileUtils());
   }
 
   public Observable<Long> cleanCache() {

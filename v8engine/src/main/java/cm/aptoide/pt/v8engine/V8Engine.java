@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine;
 
 import android.accounts.AccountManager;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -23,6 +25,7 @@ import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AccountDataPersist;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountManagerService;
@@ -38,10 +41,11 @@ import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
@@ -53,7 +57,9 @@ import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -69,8 +75,12 @@ import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.account.BaseBodyAccountManagerInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.LogAccountAnalytics;
+import cm.aptoide.pt.v8engine.account.NoOpTokenInvalidator;
 import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
+import cm.aptoide.pt.v8engine.account.RefreshTokenInvalidatorFactory;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
+import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
@@ -109,7 +119,7 @@ import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
-import cm.aptoide.pt.v8engine.networking.OAuthBodyInterceptor;
+import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.notification.NotificationHandler;
@@ -127,10 +137,10 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareApplication;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.view.account.store.StoreManager;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
@@ -147,11 +157,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -163,7 +175,6 @@ import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
@@ -172,7 +183,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class V8Engine extends SpotAndShareApplication {
+public abstract class V8Engine extends Application {
 
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
@@ -203,7 +214,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
-  private OAuthBodyInterceptor oAuthBodyInterceptor;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
   private PaymentSyncScheduler paymentSyncScheduler;
@@ -220,6 +230,13 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private RefreshTokenInvalidator tokenInvalidator;
+  private FileManager fileManager;
+  private CacheHelper cacheHelper;
+  private StoreManager storeManager;
+  private PackageRepository packageRepository;
+  private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
+  private AdsRepository adsRepository;
 
   /**
    * call after this instance onCreate()
@@ -276,7 +293,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
-    Logger.setDBG(ToolboxManager.isDebug() || BuildConfig.DEBUG);
+    Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
 
     Database.initialize(this);
 
@@ -302,9 +319,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     // app synchronous initialization
     //
 
-    final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-    sendAppStartToAnalytics(sharedPreferences);
+    sendAppStartToAnalytics();
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -326,26 +341,21 @@ public abstract class V8Engine extends SpotAndShareApplication {
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
 
+  public TokenInvalidator getTokenInvalidator() {
+    if (tokenInvalidator == null) {
+      tokenInvalidator = new RefreshTokenInvalidator(getAccountManager());
+    }
+    return tokenInvalidator;
+  }
+
   private void startNotificationCenter() {
     getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
         .first()
         .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
-            throwable -> CrashReport.getInstance().log(throwable));
+            throwable -> CrashReport.getInstance()
+                .log(throwable));
 
     getNotificationCenter().setup();
-  }
-
-  @Override protected TokenInvalidator getTokenInvalidator() {
-    return new TokenInvalidator() {
-      @Override public Single<String> invalidateAccessToken() {
-        final AptoideAccountManager accountManager = getAccountManager();
-        return accountManager.refreshToken()
-            .andThen(accountManager.accountStatus()
-                .first()
-                .toSingle())
-            .map(account -> account.getAccessToken());
-      }
-    };
   }
 
   public NotificationNetworkService getNotificationNetworkService() {
@@ -373,18 +383,30 @@ public abstract class V8Engine extends SpotAndShareApplication {
     return notificationCenter;
   }
 
+  public StoreManager getStoreManager() {
+    if (storeManager == null) {
+      storeManager =
+          new StoreManager(accountManager, getDefaultClient(), WebService.getDefaultConverter(),
+              getMultipartBodyInterceptor(), getBaseBodyInterceptorV3(), getBaseBodyInterceptorV7(),
+              getDefaultSharedPreferences(), getTokenInvalidator(), getRequestBodyFactory(),
+              getNonNullObjectMapper());
+    }
+    return storeManager;
+  }
+
   @NonNull public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
 
       long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
-      if (ToolboxManager.getPushNotificationPullingInterval() > 0) {
-        pushNotificationSocialPeriodicity = ToolboxManager.getPushNotificationPullingInterval();
+      if (ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences()) > 0) {
+        pushNotificationSocialPeriodicity =
+            ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences());
       }
 
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
           new NotificationSyncScheduler.Schedule(
-              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION,
-              AlarmManager.INTERVAL_DAY), new NotificationSyncScheduler.Schedule(
+              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY),
+          new NotificationSyncScheduler.Schedule(
               NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION,
               pushNotificationSocialPeriodicity));
 
@@ -393,6 +415,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
               NotificationSyncService.class, scheduleList, true);
     }
     return notificationSyncScheduler;
+  }
+
+  public SharedPreferences getDefaultSharedPreferences() {
+    return PreferenceManager.getDefaultSharedPreferences(this);
   }
 
   public GroupNameProvider getGroupNameProvider() {
@@ -405,7 +431,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
       notificationHandler =
           new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
               WebService.getDefaultConverter(), getIdsRepository(),
-              getConfiguration().getVersionName(), getAccountManager());
+              getConfiguration().getVersionName(), getAccountManager(),
+              getConfiguration().getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(),
+              getResources());
     }
     return notificationHandler;
   }
@@ -419,7 +447,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       okHttpClientBuilder.readTimeout(2, TimeUnit.MINUTES);
       okHttpClientBuilder.writeTimeout(2, TimeUnit.MINUTES);
 
-      if (ToolboxManager.isToolboxEnableRetrofitLogs()) {
+      if (ToolboxManager.isToolboxEnableRetrofitLogs(getDefaultSharedPreferences())) {
         okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
       }
 
@@ -441,7 +469,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
 
-      if (ToolboxManager.isToolboxEnableRetrofitLogs()) {
+      if (ToolboxManager.isToolboxEnableRetrofitLogs(getDefaultSharedPreferences())) {
         okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
       }
 
@@ -455,7 +483,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       userAgentInterceptor =
           new UserAgentInterceptor(getAndroidAccountProvider(), getIdsRepository(),
               getConfiguration().getPartnerId(), new DisplayMetrics(),
-              AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername());
+              AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername(this));
     }
     return userAgentInterceptor;
   }
@@ -492,7 +520,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
       downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
-          CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
+          getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
           getConfiguration().getCachePath(), apkPath, obbPath);
     }
@@ -508,7 +536,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
       installManager = new InstallManager(getDownloadManager(),
-          new InstallerFactory().create(this, installerType));
+          new InstallerFactory().create(this, installerType), getDefaultSharedPreferences(),
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences()));
       installManagers.put(installerType, installManager);
     }
 
@@ -517,7 +547,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public QManager getQManager() {
     if (qManager == null) {
-      qManager = new QManager(PreferenceManager.getDefaultSharedPreferences(this));
+      qManager = new QManager(getDefaultSharedPreferences(), getResources(),
+          ((ActivityManager) getSystemService(ACTIVITY_SERVICE)),
+          ((WindowManager) getSystemService(WINDOW_SERVICE)));
     }
     return qManager;
   }
@@ -534,16 +566,20 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
       final AccountManagerService accountManagerService = new AccountManagerService(
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
-              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager()),
-          getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter(), getNonNullObjectMapper());
+              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager(),
+              getDefaultSharedPreferences(), getResources(), getPackageName(),
+              Build.VERSION.SDK_INT, getPackageRepository()), getAccountFactory(),
+          getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter(),
+          getNonNullObjectMapper(), new RefreshTokenInvalidatorFactory(),
+          getDefaultSharedPreferences());
 
-      final AndroidAccountDataMigration accountDataMigration =
-          new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
-              PreferenceManager.getDefaultSharedPreferences(this), AccountManager.get(this),
-              new SecureCoderDecoder.Builder(this).create(), SQLiteDatabaseHelper.DATABASE_VERSION,
-              getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
-              getConfiguration().getAccountType());
+      final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
+          SecurePreferencesImplementation.getInstance(this, getDefaultSharedPreferences()),
+          getDefaultSharedPreferences(), AccountManager.get(this),
+          new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(),
+          SQLiteDatabaseHelper.DATABASE_VERSION,
+          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
+          getConfiguration().getAccountType());
 
       final AccountDataPersist accountDataPersist =
           new AndroidAccountManagerDataPersist(AccountManager.get(this),
@@ -563,7 +599,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (accountFactory == null) {
       accountFactory = new AccountFactory(new SocialAccountFactory(this, getGoogleSignInClient()),
           new AccountService(new NoTokenBodyInterceptor(getIdsRepository(), getAptoideMd5sum(),
-              getAptoidePackage()), getDefaultClient(), WebService.getDefaultConverter()));
+              getAptoidePackage()), getDefaultClient(), WebService.getDefaultConverter(),
+              new NoOpTokenInvalidator(), getDefaultSharedPreferences()));
     }
     return accountFactory;
   }
@@ -579,7 +616,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public IdsRepository getIdsRepository() {
     if (idsRepository == null) {
-      idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), this,
+      idsRepository = new IdsRepository(
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences()), this,
           Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
     }
     return idsRepository;
@@ -587,15 +626,16 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public Preferences getPreferences() {
     if (preferences == null) {
-      preferences = new Preferences(PreferenceManager.getDefaultSharedPreferences(this));
+      preferences = new Preferences(getDefaultSharedPreferences());
     }
     return preferences;
   }
 
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
     if (securePreferences == null) {
-      securePreferences = new cm.aptoide.pt.v8engine.preferences.SecurePreferences(
-          PreferenceManager.getDefaultSharedPreferences(this), getSecureCoderDecoder());
+      securePreferences =
+          new cm.aptoide.pt.v8engine.preferences.SecurePreferences(getDefaultSharedPreferences(),
+              getSecureCoderDecoder());
     }
     return securePreferences;
   }
@@ -615,7 +655,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public SecureCoderDecoder getSecureCoderDecoder() {
     if (secureCodeDecoder == null) {
-      secureCodeDecoder = new SecureCoderDecoder.Builder(this).create();
+      secureCodeDecoder =
+          new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create();
     }
     return secureCodeDecoder;
   }
@@ -645,7 +686,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       final AuthorizationRepository authorizationRepository =
           new AuthorizationRepository(AccessorFactory.getAccessorFor(PaymentAuthorization.class),
               getPaymentSyncScheduler(), getAuthorizationFactory(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer());
+              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
+              getTokenInvalidator(), getDefaultSharedPreferences());
 
       final ProductFactory productFactory = new ProductFactory();
 
@@ -655,11 +697,13 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new InAppPaymentConfirmationRepository(getNetworkOperatorManager(),
               AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
               confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer()),
+              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
+              getTokenInvalidator(), getDefaultSharedPreferences()),
           new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(),
               AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
               confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
-              WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer()));
+              WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
+              getTokenInvalidator(), getDefaultSharedPreferences()));
 
       final PurchaseFactory purchaseFactory =
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
@@ -672,17 +716,26 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new PaidAppProductRepository(purchaseFactory, paymentFactory, authorizationRepository,
               paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), productFactory),
-          new InAppBillingProductRepository(purchaseFactory,
-              paymentFactory, authorizationRepository,
-              paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
-              getAuthorizationFactory(), productFactory, getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getNetworkOperatorManager()));
+              getDefaultClient(), WebService.getDefaultConverter(), productFactory,
+              getTokenInvalidator(), getDefaultSharedPreferences(), getResources()),
+          new InAppBillingProductRepository(purchaseFactory, paymentFactory,
+              authorizationRepository, paymentRepositoryFactory.getInAppConfirmationRepository(),
+              getAccountPayer(), getAuthorizationFactory(), productFactory,
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences(),
+              getPackageName(), getPackageRepository()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository(), authorizationRepository);
     }
     return aptoideBilling;
+  }
+
+  public PackageRepository getPackageRepository() {
+    if (packageRepository == null) {
+      packageRepository = new PackageRepository(getPackageManager());
+    }
+    return packageRepository;
   }
 
   public PaymentThrowableCodeMapper getPaymentThrowableCodeMapper() {
@@ -724,7 +777,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (inAppBillingRepository == null) {
       inAppBillingRepository =
           new InAppBillingRepository(AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter());
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              getTokenInvalidator(), getDefaultSharedPreferences());
     }
     return inAppBillingRepository;
   }
@@ -735,8 +789,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void clearFileCache() {
-    FileManager.build(getDownloadManager(), getHttpClientCache())
-        .purgeCache()
+    getFileManager().purgeCache()
         .first()
         .toSingle()
         .subscribe(cleanedSize -> Logger.d(TAG,
@@ -745,12 +798,39 @@ public abstract class V8Engine extends SpotAndShareApplication {
                 .log(err));
   }
 
+  public FileManager getFileManager() {
+    if (fileManager == null) {
+      fileManager = new FileManager(getCacheHelper(), new FileUtils(), new String[] {
+          getApplicationContext().getCacheDir().getPath(), getConfiguration().getCachePath()
+      }, getDownloadManager(), getHttpClientCache());
+    }
+    return fileManager;
+  }
+
+  private CacheHelper getCacheHelper() {
+    if (cacheHelper == null) {
+      List<CacheHelper.FolderToManage> folders = new LinkedList<>();
+
+      final String cachePath = getConfiguration().getCachePath();
+
+      long month = DateUtils.DAY_IN_MILLIS * 30;
+      folders.add(new CacheHelper.FolderToManage(new File(cachePath), month));
+      folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), 1024 * 1024));
+      folders.add(new CacheHelper.FolderToManage(
+          new File(getApplicationContext().getCacheDir() + "image_manager_disk_cache/"), month));
+      cacheHelper =
+          new CacheHelper(ManagerPreferences.getCacheLimit(getDefaultSharedPreferences()), folders,
+              new FileUtils());
+    }
+    return cacheHelper;
+  }
+
   private void initializeFlurry(Context context, String flurryKey) {
     new FlurryAgent.Builder().withLogEnabled(false)
         .build(context, flurryKey);
   }
 
-  private void sendAppStartToAnalytics(SharedPreferences sPref) {
+  private void sendAppStartToAnalytics() {
     Analytics.Lifecycle.Application.onCreate(this);
   }
 
@@ -798,7 +878,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .first()
         .toSingle()
         .flatMapCompletable(account -> {
-          if (SecurePreferences.isFirstRun()) {
+          if (SecurePreferences.isFirstRun(
+              SecurePreferencesImplementation.getInstance(getApplicationContext(),
+                  getDefaultSharedPreferences()))) {
 
             PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
@@ -813,22 +895,25 @@ public abstract class V8Engine extends SpotAndShareApplication {
   // todo re-factor all this code to proper Rx
   private Completable setupFirstRun(final AptoideAccountManager accountManager) {
     return Completable.defer(() -> {
-      SecurePreferences.setFirstRun(false);
+      SecurePreferences.setFirstRun(false,
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences()));
 
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 
       StoreUtilsProxy proxy =
           new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7(), storeCredentials,
               AccessorFactory.getAccessorFor(Store.class), getDefaultClient(),
-              WebService.getDefaultConverter());
+              WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
-              getDefaultClient(), WebService.getDefaultConverter()), getAccountManager(),
-          defaultStoreCredentials)
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences()), getAccountManager(), defaultStoreCredentials)
           .andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance()
               .log(err));
@@ -839,7 +924,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (baseBodyInterceptorV7 == null) {
       baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
-          getQManager(), "pool");
+          getQManager(), "pool", getDefaultSharedPreferences(), getResources(), getPackageName(),
+          getPackageRepository());
     }
     return baseBodyInterceptorV7;
   }
@@ -848,7 +934,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (baseBodyInterceptorV3 == null) {
       baseBodyInterceptorV3 =
           new BaseBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager(), getQManager());
+              getAccountManager(), getQManager(), getDefaultSharedPreferences(),
+              BaseBodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT);
     }
     return baseBodyInterceptorV3;
   }
@@ -860,15 +947,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
               getRequestBodyFactory());
     }
     return multipartBodyInterceptor;
-  }
-
-  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getOAuthBodyInterceptor() {
-    if (oAuthBodyInterceptor == null) {
-      oAuthBodyInterceptor =
-          new OAuthBodyInterceptor(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager(), getQManager());
-    }
-    return oAuthBodyInterceptor;
   }
 
   public RequestBodyFactory getRequestBodyFactory() {
@@ -933,7 +1011,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
           .removeAll();
 
       // get the installed apps
-      List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
+      List<PackageInfo> installedApps =
+          AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
       Logger.v(TAG, "Found " + installedApps.size() + " user installed apps.");
 
       // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
@@ -944,7 +1023,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       return installedApps;
     })  // transform installation package into Installed table entry and save all the data
         .flatMapIterable(list -> list)
-        .map(packageInfo -> new Installed(packageInfo))
+        .map(packageInfo -> new Installed(packageInfo, getPackageManager()))
         .toList()
         .doOnNext(list -> {
           AccessorFactory.getAccessorFor(Installed.class)
@@ -954,7 +1033,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(DataProvider.getContext())
+    return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences())
         .sync(true);
   }
 
@@ -1001,5 +1080,27 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .penaltyLog()
         .penaltyDeath()
         .build());
+  }
+
+  public AdsApplicationVersionCodeProvider getVersionCodeProvider() {
+    if (applicationVersionCodeProvider == null) {
+      applicationVersionCodeProvider =
+          new PackageRepositoryVersionCodeProvider(getPackageRepository(), getPackageName());
+    }
+    return applicationVersionCodeProvider;
+  }
+
+  public AdsRepository getAdsRepository() {
+    if (adsRepository == null) {
+      adsRepository = new AdsRepository(getIdsRepository(), accountManager, getDefaultClient(),
+          WebService.getDefaultConverter(), qManager, getDefaultSharedPreferences(),
+          getApplicationContext(),
+          (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
+          getVersionCodeProvider(),
+          (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context),
+          () -> V8Engine.getConfiguration()
+              .getPartnerId());
+    }
+    return adsRepository;
   }
 }

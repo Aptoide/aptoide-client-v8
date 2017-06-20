@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.timeline.PopularApp;
 import cm.aptoide.pt.v8engine.R;
@@ -40,8 +42,9 @@ public class PopularAppDisplayable extends CardDisplayable {
   }
 
   public PopularAppDisplayable(PopularApp card, DateCalculator dateCalculator,
-      SocialRepository socialRepository, TimelineAnalytics timelineAnalytics) {
-    super(card, timelineAnalytics);
+      SocialRepository socialRepository, TimelineAnalytics timelineAnalytics,
+      WindowManager windowManager) {
+    super(card, timelineAnalytics, windowManager);
     this.date = card.getDate();
     this.friends = card.getUsers();
     this.numberOfFriends = card.getUsers()
@@ -80,8 +83,10 @@ public class PopularAppDisplayable extends CardDisplayable {
   }
 
   public static Displayable from(PopularApp card, DateCalculator dateCalculator,
-      SocialRepository socialRepository, TimelineAnalytics timelineAnalytics) {
-    return new PopularAppDisplayable(card, dateCalculator, socialRepository, timelineAnalytics);
+      SocialRepository socialRepository, TimelineAnalytics timelineAnalytics,
+      WindowManager windowManager) {
+    return new PopularAppDisplayable(card, dateCalculator, socialRepository, timelineAnalytics,
+        windowManager);
   }
 
   @Override public int getViewLayout() {
@@ -89,25 +94,28 @@ public class PopularAppDisplayable extends CardDisplayable {
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), privacyResult,
         shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), BLANK,
             BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
+  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), BLANK,
             BLANK));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), BLANK, BLANK));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), BLANK, BLANK));
   }

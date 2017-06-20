@@ -1,10 +1,13 @@
 package cm.aptoide.pt.v8engine.view.store.my;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -45,9 +48,11 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
@@ -57,7 +62,10 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
     GetMyStoreListRequest request =
-        GetMyStoreListRequest.of(url, true, bodyInterceptor, httpClient, converterFactory);
+        GetMyStoreListRequest.of(url, true, bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getResources(),
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE));
 
     return request;
   }
@@ -99,7 +107,9 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
                   new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
                       AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class),
-                      httpClient, WebService.getDefaultConverter()), storeCredentialsProvider));
+                      httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+                  storeCredentialsProvider));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }

@@ -178,18 +178,11 @@ public class SecureCoderDecoder {
       this.defaultSharedPreferences = defaultSharedPreferences;
     }
 
-    public Builder(Context context) {
-      this.context = context;
-    }
-
     public SecureCoderDecoder create() {
       SecureCoderDecoder secureCoderDecoder;
       // Initialize encryption/decryption key
       try {
         final String key = generateAesKeyName(context);
-        if (defaultSharedPreferences == null) {
-          defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        }
         String value = defaultSharedPreferences.getString(key, null);
         if (value == null) {
           value = generateAesKeyValue();

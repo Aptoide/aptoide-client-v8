@@ -5,6 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithApp;
@@ -33,31 +36,40 @@ import rx.Observable;
   private static final Integer MAX_LIMIT = 10;
 
   private ListAppVersionsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, Resources resources) {
     if (storeNames != null && !storeNames.isEmpty()) {
-      Body body = new Body(packageName, storeNames, storeCredentials);
+      Body body = new Body(packageName, storeNames, storeCredentials, sharedPreferences,
+          AptoideUtils.SystemU.getCountryCode(resources));
       body.setLimit(MAX_LIMIT);
-      return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory);
+      return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator, sharedPreferences);
     } else {
-      return of(packageName, storeCredentials, bodyInterceptor, httpClient, converterFactory);
+      return of(packageName, storeCredentials, bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator, sharedPreferences, resources);
     }
   }
 
   public static ListAppVersionsRequest of(String packageName,
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    Body body = new Body(packageName);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, Resources resources) {
+    Body body =
+        new Body(packageName, sharedPreferences, AptoideUtils.SystemU.getCountryCode(resources));
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,
@@ -71,7 +83,7 @@ import rx.Observable;
     private Integer apkId;
     private String apkMd5sum;
     private Integer appId;
-    private String lang = AptoideUtils.SystemU.getCountryCode();
+    private String lang;
     @Setter @Getter private Integer limit;
     @Setter @Getter private int offset;
     private Integer packageId;
@@ -80,16 +92,20 @@ import rx.Observable;
     private List<String> storeNames;
     @Getter private HashMapNotNull<String, List<String>> storesAuthMap;
 
-    public Body() {
+    public Body(SharedPreferences sharedPreferences, String lang) {
+      super(sharedPreferences);
+      this.lang = lang;
     }
 
-    public Body(String packageName) {
+    public Body(String packageName, SharedPreferences sharedPreferences, String lang) {
+      this(sharedPreferences, lang);
       this.packageName = packageName;
     }
 
     public Body(String packageName, List<String> storeNames,
-        HashMapNotNull<String, List<String>> storesAuthMap) {
-      this.packageName = packageName;
+        HashMapNotNull<String, List<String>> storesAuthMap, SharedPreferences sharedPreferences,
+        String lang) {
+      this(packageName, sharedPreferences, lang);
       this.storeNames = storeNames;
       setStoresAuthMap(storesAuthMap);
     }

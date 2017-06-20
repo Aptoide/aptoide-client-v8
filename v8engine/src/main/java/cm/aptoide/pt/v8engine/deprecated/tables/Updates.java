@@ -12,9 +12,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
@@ -48,21 +46,18 @@ public class Updates extends BaseTable {
   public static final String COLUMN_SIGNATURE = "signature";
   private static final String TAG = Updates.class.getSimpleName();
   private static final String NAME = "updates";
-  private static final Realm realm = Realm.getDefaultInstance();
-  private final PackageManager pm = AptoideUtils.getContext()
-      .getPackageManager();
 
   @Override public String getTableName() {
     return NAME;
   }
 
-  @Override public RealmObject convert(Cursor cursor) {
+  @Override public RealmObject convert(Cursor cursor, PackageManager packageManager) {
 
     String path = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_URL));
     String packageName = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_PACKAGE));
     if (!TextUtils.isEmpty(path) && !isExcluded(packageName)) {
       try {
-        PackageInfo packageInfo = pm.getPackageInfo(packageName, 0);
+        PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
         cm.aptoide.pt.database.realm.Update realmObject = new cm.aptoide.pt.database.realm.Update();
 
         realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
