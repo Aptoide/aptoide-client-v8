@@ -24,7 +24,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   private RecyclerView.LayoutManager layoutManager;
   private RecyclerView recyclerView;
 
-  // FIXME: 24/1/2017 sithengineer this is an hack to keep state in the fragment. not safe.
+  // FIXME: 24/1/2017 this is an hack to keep state in the fragment. not safe.
   private ArrayList<Displayable> displayables = new ArrayList<>();
 
   @Override public void loadExtras(Bundle args) {
@@ -175,7 +175,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     if (create || refresh) {
       clearDisplayables();
     } else {
-      // FIXME: 24/1/2017 sithengineer used to clear and restore displayables. not a good solution
+      // FIXME: 24/1/2017 used to clear and restore displayables. not a good solution
       // create copy
       List<Displayable> displayablesCopy = new LinkedList<>(displayables);
       // clear displayables and adapter displayables

@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -43,6 +44,8 @@ public class PullingContentService extends Service {
   public static final int UPDATE_NOTIFICATION_ID = 123;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
+  private UpdateRepository updateRepository;
+  private SharedPreferences sharedPreferences;
 
   public void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -55,6 +58,8 @@ public class PullingContentService extends Service {
   @Override public void onCreate() {
     super.onCreate();
 
+    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
 
@@ -101,9 +106,8 @@ public class PullingContentService extends Service {
    * @param startId service startid
    */
   private void setUpdatesAction(int startId) {
-    UpdateRepository repository = RepositoryFactory.getUpdateRepository(this);
-    subscriptions.add(repository.sync(true)
-        .andThen(repository.getAll(false))
+    subscriptions.add(updateRepository.sync(true)
+        .andThen(updateRepository.getAll(false))
         .first()
         .observeOn(Schedulers.computation())
         .flatMap(updates -> autoUpdate(updates).flatMap(autoUpdateRunned -> {
@@ -126,8 +130,8 @@ public class PullingContentService extends Service {
    * @return true if updateList were installed with success, false otherwise
    */
   private Observable<Boolean> autoUpdate(List<Update> updateList) {
-    return Observable.just(
-        ManagerPreferences.isAutoUpdateEnable() && ManagerPreferences.allowRootInstallation())
+    return Observable.just(ManagerPreferences.isAutoUpdateEnable(sharedPreferences)
+        && ManagerPreferences.allowRootInstallation(sharedPreferences))
         .flatMap(shouldAutoUpdateRun -> {
           if (shouldAutoUpdateRun) {
             return Observable.just(updateList)
@@ -147,47 +151,51 @@ public class PullingContentService extends Service {
   }
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
-    Intent resultIntent = new Intent(Application.getContext(), V8Engine.getActivityProvider()
+    Intent resultIntent = new Intent(getApplicationContext(), V8Engine.getActivityProvider()
         .getMainActivityFragmentClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
     PendingIntent resultPendingIntent =
-        PendingIntent.getActivity(Application.getContext(), 0, resultIntent,
+        PendingIntent.getActivity(getApplicationContext(), 0, resultIntent,
             PendingIntent.FLAG_UPDATE_CURRENT);
 
     int numberUpdates = updates.size();
     if (numberUpdates > 0
-        && numberUpdates != ManagerPreferences.getLastUpdates()
-        && ManagerPreferences.isUpdateNotificationEnable()) {
-      CharSequence tickerText = AptoideUtils.StringU.getFormattedString(R.string.has_updates,
-          Application.getConfiguration()
-              .getMarketName());
+        && numberUpdates != ManagerPreferences.getLastUpdates(sharedPreferences)
+        && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)) {
+      CharSequence tickerText =
+          AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(),
+              Application.getConfiguration()
+                  .getMarketName());
       CharSequence contentTitle = Application.getConfiguration()
           .getMarketName();
       CharSequence contentText =
-          AptoideUtils.StringU.getFormattedString(R.string.new_updates, numberUpdates);
+          AptoideUtils.StringU.getFormattedString(R.string.new_updates, getResources(),
+              numberUpdates);
       if (numberUpdates == 1) {
         contentText =
-            AptoideUtils.StringU.getFormattedString(R.string.one_new_update, numberUpdates);
+            AptoideUtils.StringU.getFormattedString(R.string.one_new_update, getResources(),
+                numberUpdates);
       }
 
       Notification notification =
-          new NotificationCompat.Builder(Application.getContext()).setContentIntent(
+          new NotificationCompat.Builder(getApplicationContext()).setContentIntent(
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext()
-                  .getResources(), Application.getConfiguration()
-                  .getIcon()))
+              .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                  Application.getConfiguration()
+                      .getIcon()))
               .setContentTitle(contentTitle)
               .setContentText(contentText)
               .setTicker(tickerText)
               .build();
 
       notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-      final NotificationManager managerNotification = (NotificationManager) Application.getContext()
-          .getSystemService(Context.NOTIFICATION_SERVICE);
+      final NotificationManager managerNotification =
+          (NotificationManager) getApplicationContext().getSystemService(
+              Context.NOTIFICATION_SERVICE);
       managerNotification.notify(UPDATE_NOTIFICATION_ID, notification);
-      ManagerPreferences.setLastUpdates(numberUpdates);
+      ManagerPreferences.setLastUpdates(numberUpdates, sharedPreferences);
     }
     stopSelf(startId);
   }

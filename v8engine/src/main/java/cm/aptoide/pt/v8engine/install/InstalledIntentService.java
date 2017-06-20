@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.install;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ import rx.subscriptions.CompositeSubscription;
 public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
+  private SharedPreferences sharedPreferences;
 
   private AdsRepository adsRepository;
   private RollbackRepository repository;
@@ -59,15 +61,16 @@ public class InstalledIntentService extends IntentService {
     super.onCreate();
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
+    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
     qManager = ((V8Engine) getApplicationContext()).getQManager();
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    adsRepository =
-        new AdsRepository(((V8Engine) getApplicationContext()).getIdsRepository(), accountManager,
-            httpClient, converterFactory, qManager);
+    final SharedPreferences sharedPreferences =
+        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    adsRepository = ((V8Engine) getApplicationContext()).getAdsRepository();
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
-    updatesRepository = RepositoryFactory.getUpdateRepository(this);
+    updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
@@ -76,7 +79,8 @@ public class InstalledIntentService extends IntentService {
   @Override protected void onHandleIntent(Intent intent) {
     if (intent != null) {
       final String action = intent.getAction();
-      final String packageName = intent.getData().getEncodedSchemeSpecificPart();
+      final String packageName = intent.getData()
+          .getEncodedSchemeSpecificPart();
 
       confirmAction(packageName, action);
 
@@ -130,38 +134,41 @@ public class InstalledIntentService extends IntentService {
   }
 
   private boolean shouldConfirmRollback(Rollback rollback, String action) {
-    return rollback != null && ((rollback.getAction().equals(Rollback.Action.INSTALL.name())
-        && action.equals(Intent.ACTION_PACKAGE_ADDED))
+    return rollback != null && ((rollback.getAction()
+        .equals(Rollback.Action.INSTALL.name()) && action.equals(Intent.ACTION_PACKAGE_ADDED))
         || (rollback.getAction()
-        .equals(Rollback.Action.UNINSTALL.name()) && action.equals(Intent.ACTION_PACKAGE_REMOVED))
-        || (rollback.getAction().equals(Rollback.Action.UPDATE.name()) && action.equals(
-        Intent.ACTION_PACKAGE_REPLACED))
-        || (rollback.getAction().equals(Rollback.Action.DOWNGRADE.name()) && action.equals(
-        Intent.ACTION_PACKAGE_ADDED)));
+        .equals(Rollback.Action.UNINSTALL.name())
+        && action.equals(Intent.ACTION_PACKAGE_REMOVED))
+        || (rollback.getAction()
+        .equals(Rollback.Action.UPDATE.name()) && action.equals(Intent.ACTION_PACKAGE_REPLACED))
+        || (rollback.getAction()
+        .equals(Rollback.Action.DOWNGRADE.name()) && action.equals(Intent.ACTION_PACKAGE_ADDED)));
   }
 
   private PackageInfo databaseOnPackageAdded(String packageName) {
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
-    installedRepository.save(new Installed(packageInfo));
+    installedRepository.save(new Installed(packageInfo, getPackageManager()));
     return packageInfo;
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
     StoredMinimalAdAccessor storedMinimalAdAccessor =
         AccessorFactory.getAccessorFor(StoredMinimalAd.class);
-    Subscription unManagedSubscription =
-        storedMinimalAdAccessor.get(packageName).flatMapCompletable(storeMinimalAd -> {
+    Subscription unManagedSubscription = storedMinimalAdAccessor.get(packageName)
+        .flatMapCompletable(storeMinimalAd -> {
           if (storeMinimalAd != null) {
             return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
           } else {
             return extractReferrer(packageName);
           }
-        }).subscribe(__ -> { /* do nothing */ }, err -> {
-          CrashReport.getInstance().log(err);
+        })
+        .subscribe(__ -> { /* do nothing */ }, err -> {
+          CrashReport.getInstance()
+              .log(err);
         });
 
     subscriptions.add(unManagedSubscription);
@@ -181,31 +188,39 @@ public class InstalledIntentService extends IntentService {
     }
 
     // information about the package is null so we don't broadcast an event
-    CrashReport.getInstance().log(new NullPointerException("PackageInfo is null."));
+    CrashReport.getInstance()
+        .log(new NullPointerException("PackageInfo is null."));
   }
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
-    final Update update = updatesRepository.get(packageName).doOnError(throwable -> {
-      CrashReport.getInstance().log(throwable);
-    }).onErrorReturn(throwable -> null).toBlocking().first();
+    final Update update = updatesRepository.get(packageName)
+        .doOnError(throwable -> {
+          CrashReport.getInstance()
+              .log(throwable);
+        })
+        .onErrorReturn(throwable -> null)
+        .toBlocking()
+        .first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
       Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
     }
 
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
 
-    Action0 insertApp = () -> installedRepository.save(new Installed(packageInfo));
+    Action0 insertApp =
+        () -> installedRepository.save(new Installed(packageInfo, getPackageManager()));
 
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
         // remove old update and on complete insert new app.
         updatesRepository.remove(update)
-            .subscribe(insertApp, throwable -> CrashReport.getInstance().log(throwable));
+            .subscribe(insertApp, throwable -> CrashReport.getInstance()
+                .log(throwable));
       }
     } else {
       // sync call to insert
@@ -222,6 +237,7 @@ public class InstalledIntentService extends IntentService {
 
   /**
    * @param packageInfo packageInfo.
+   *
    * @return true if packageInfo is null, false otherwise.
    */
   private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {
@@ -237,7 +253,8 @@ public class InstalledIntentService extends IntentService {
   private Completable knockCpi(String packageName, StoredMinimalAdAccessor storedMinimalAdAccessor,
       StoredMinimalAd storeMinimalAd) {
     return Completable.fromCallable(() -> {
-      ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
+      ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer(),
+          getApplicationContext());
       DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
       storedMinimalAdAccessor.remove(storeMinimalAd);
       return null;
@@ -248,7 +265,8 @@ public class InstalledIntentService extends IntentService {
     return adsRepository.getAdsFromSecondInstall(packageName)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
-            adsRepository, httpClient, converterFactory, qManager))
+            adsRepository, httpClient, converterFactory, qManager, getApplicationContext(),
+            sharedPreferences))
         .toCompletable();
   }
 }

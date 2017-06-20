@@ -81,7 +81,8 @@ import rx.android.schedulers.AndroidSchedulers;
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
     progressBar = (ProgressBar) itemView.findViewById(R.id.row_progress_bar);
 
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override public void unbindView() {
@@ -124,7 +125,8 @@ import rx.android.schedulers.AndroidSchedulers;
   private Observable<Void> handleUpdateButtonClick(UpdateDisplayable displayable, Context context) {
     return RxView.clicks(updateButtonLayout)
         .doOnNext(__ -> updatesAnalytics.updates("Update"))
-        .flatMap(click -> displayable.downloadAndInstall(context, (PermissionService) context))
+        .flatMap(click -> displayable.downloadAndInstall(context, (PermissionService) context,
+            getContext().getResources()))
         .retry()
         .map(__ -> null);
   }

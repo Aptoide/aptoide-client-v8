@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -88,6 +89,7 @@ import rx.functions.Action1;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
@@ -118,13 +120,17 @@ import rx.functions.Action1;
         .getData();
     GetAppMeta.Stats stats = app.getStats();
 
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository());
+        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository(),
+        tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        getContext().getResources());
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore()
@@ -200,7 +206,8 @@ import rx.functions.Action1;
       BaseRequestWithStore.StoreCredentials storeCredentials) {
     Subscription subscription =
         ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
-            bodyInterceptor, httpClient, converterFactory)
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {
@@ -303,8 +310,6 @@ import rx.functions.Action1;
 
     private static final int LAYOUT_ID = R.layout.mini_top_comment;
 
-    private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
-
     private ImageView userIconImageView;
     private RatingBar ratingBar;
     private TextView commentTitle;
@@ -341,8 +346,9 @@ import rx.functions.Action1;
           .getRating());
       commentTitle.setText(review.getTitle());
       commentText.setText(review.getBody());
-      addedDate.setText(DATE_TIME_U.getTimeDiffString(review.getAdded()
-          .getTime()));
+      addedDate.setText(AptoideUtils.DateTimeU.getInstance(context)
+          .getTimeDiffString(review.getAdded()
+              .getTime(), context, context.getResources()));
     }
 
     public void cancelImageLoad() {

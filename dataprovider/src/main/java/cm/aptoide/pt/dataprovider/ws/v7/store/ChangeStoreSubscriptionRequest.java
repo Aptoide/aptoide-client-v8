@@ -1,6 +1,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
@@ -19,23 +22,28 @@ import rx.Observable;
 public class ChangeStoreSubscriptionRequest
     extends V7<ChangeStoreSubscriptionResponse, ChangeStoreSubscriptionRequest.Body> {
 
-  private static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http"
-      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-      + "/api/7/";
+  @NonNull public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
+  }
 
   protected ChangeStoreSubscriptionRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ChangeStoreSubscriptionRequest of(String storeName,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState storeSubscription, String storeUser,
       String sha1PassWord, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     final Body body = new Body(storeName, storeSubscription, storeUser, sha1PassWord);
-    return new ChangeStoreSubscriptionRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ChangeStoreSubscriptionRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override

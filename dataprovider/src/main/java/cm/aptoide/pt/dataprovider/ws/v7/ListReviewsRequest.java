@@ -5,8 +5,12 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListReviews;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,16 +36,18 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_COMMENTS = 10;
 
   private ListReviewsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static ListReviewsRequest of(String storeName, String packageName,
       BaseRequestWithStore.StoreCredentials storecredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials, bodyInterceptor,
-        httpClient, converterFactory);
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   /**
@@ -50,10 +56,13 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
       int maxComments, BaseRequestWithStore.StoreCredentials storecredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     final Body body = new Body(storeName, packageName, maxReviews, maxComments,
-        ManagerPreferences.getAndResetForceServerRefresh(), storecredentials);
-    return new ListReviewsRequest(body, bodyInterceptor, httpClient, converterFactory);
+        ManagerPreferences.getAndResetForceServerRefresh(
+            sharedPreferences), storecredentials);
+    return new ListReviewsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   /**
@@ -62,9 +71,10 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
       int maxReviews, BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,

@@ -19,6 +19,8 @@ public class ProductBundleMapper {
   private static final String DESCRIPTION =
       "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_DESCRIPTION";
   private static final String AMOUNT = "cm.aptoide.pt.v8engine.repository.sync.PRICE_AMOUNT";
+  private static final String PACKAGE_VERSION_CODE =
+      "cm.aptoide.pt.v8engine.repository.sync.PACKAGE_VERSION_CODE";
 
   private static final String SKU = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_SKU";
   private static final String PACKAGE_NAME =
@@ -48,6 +50,7 @@ public class ProductBundleMapper {
     final double taxRate = bundle.getDouble(TAX_RATE, -1);
     final String currency = bundle.getString(CURRENCY);
     final String currencySymbol = bundle.getString(CURRENCY_SYMBOL);
+    final int packageVersionCode = bundle.getInt(PACKAGE_VERSION_CODE, -1);
 
     final String developerPayload = bundle.getString(DEVELOPER_PAYLOAD);
     final String sku = bundle.getString(SKU);
@@ -64,6 +67,7 @@ public class ProductBundleMapper {
         && title != null
         && description != null
         && amount != -1
+        && packageVersionCode != -1
         && taxRate != -1
         && currency != null
         && currencySymbol != null) {
@@ -77,10 +81,11 @@ public class ProductBundleMapper {
           && type != null
           && apiVersion != -1) {
         return new InAppProduct(id, icon, title, description, apiVersion, sku, packageName,
-            developerPayload, type, price);
+            developerPayload, type, price, packageVersionCode);
       }
       if (id != -1 && storeName != null) {
-        return new PaidAppProduct(id, icon, title, description, appId, storeName, price, sponsored);
+        return new PaidAppProduct(id, icon, title, description, appId, storeName, price, sponsored,
+            packageVersionCode);
       }
     }
     return null;
@@ -107,12 +112,14 @@ public class ProductBundleMapper {
       bundle.putString(PACKAGE_NAME, ((InAppProduct) product).getPackageName());
       bundle.putString(TYPE, ((InAppProduct) product).getType());
       bundle.putInt(API_VERSION, ((InAppProduct) product).getApiVersion());
+      bundle.putInt(PACKAGE_VERSION_CODE, ((InAppProduct) product).getPackageVersionCode());
     }
 
     if (product instanceof PaidAppProduct) {
       bundle.putLong(APP_ID, ((PaidAppProduct) product).getAppId());
       bundle.putString(STORE_NAME, ((PaidAppProduct) product).getStoreName());
       bundle.putBoolean(SPONSORED, ((PaidAppProduct) product).isSponsored());
+      bundle.putInt(PACKAGE_VERSION_CODE, ((PaidAppProduct) product).getPackageVersionCode());
     }
 
     return bundle;
