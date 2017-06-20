@@ -1,12 +1,9 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
-import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
-import cm.aptoide.pt.v8engine.billing.services.WebPayment;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 
 public class PaymentNavigator {
@@ -17,25 +14,16 @@ public class PaymentNavigator {
     this.activityNavigator = activityNavigator;
   }
 
-  public void navigateToAuthorizationView(Payment payment, Product product) {
-
-    if (payment instanceof WebPayment) {
-      activityNavigator.navigateTo(WebAuthorizationActivity.class,
-          getProductBundle(payment, product));
-    } else {
-      throw new IllegalArgumentException("Invalid authorized payment.");
-    }
+  public void navigateToAuthorizationView(PaymentView.PaymentViewModel payment, Product product) {
+    activityNavigator.navigateTo(WebAuthorizationActivity.class,
+        getProductBundle(payment, product));
   }
 
-  public void navigateToLocalPaymentView(Payment payment, Product product) {
-    if (payment instanceof PayPalPayment) {
-      activityNavigator.navigateTo(PayPalPaymentActivity.class, getProductBundle(payment, product));
-    } else {
-      throw new IllegalArgumentException("Invalid local payment.");
-    }
+  public void navigateToLocalPaymentView(PaymentView.PaymentViewModel payment, Product product) {
+    activityNavigator.navigateTo(PayPalPaymentActivity.class, getProductBundle(payment, product));
   }
 
-  private Bundle getProductBundle(Payment payment, Product product) {
+  private Bundle getProductBundle(PaymentView.PaymentViewModel payment, Product product) {
     final Bundle bundle;
     if (product instanceof InAppProduct) {
       bundle = ProductActivity.getBundle(payment.getId(), ((InAppProduct) product).getApiVersion(),

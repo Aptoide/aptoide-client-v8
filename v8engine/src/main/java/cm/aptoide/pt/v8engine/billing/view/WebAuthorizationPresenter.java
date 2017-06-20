@@ -81,7 +81,7 @@ public class WebAuthorizationPresenter implements Presenter {
                         return Completable.complete();
                       }
 
-                      return aptoideBilling.processWebPayment(paymentId, product)
+                      return aptoideBilling.processPayment(paymentId, product)
                           .observeOn(AndroidSchedulers.mainThread())
                           .doOnCompleted(() -> view.dismiss());
                     })))

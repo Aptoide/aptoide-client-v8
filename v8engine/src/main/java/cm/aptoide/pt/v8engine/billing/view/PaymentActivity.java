@@ -145,6 +145,10 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
+  @Override public void selectPayment(PaymentViewModel payment) {
+    paymentRadioGroup.check(payment.getId());
+  }
+
   @Override public void showLoading() {
     progressView.setVisibility(View.VISIBLE);
   }
@@ -171,7 +175,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
                 payment.getName() + "\n" + payment.getDescription(), payment.getDescription());
       }
       radioButton.setText(radioText);
-      radioButton.setChecked(payment.isSelected());
 
       paymentMap.append(payment.getId(), payment);
       paymentRadioGroup.addView(radioButton);

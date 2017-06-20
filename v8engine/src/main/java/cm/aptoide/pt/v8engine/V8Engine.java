@@ -728,7 +728,7 @@ public abstract class V8Engine extends Application {
               getPackageName(), getPackageRepository()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
-          getInAppBillingRepository(), authorizationRepository);
+          getInAppBillingRepository());
     }
     return aptoideBilling;
   }

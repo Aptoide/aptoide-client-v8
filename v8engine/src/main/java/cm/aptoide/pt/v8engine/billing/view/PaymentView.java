@@ -11,9 +11,6 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 8/19/16.
- */
 public interface PaymentView extends View {
 
   Observable<PaymentViewModel> paymentSelection();
@@ -23,6 +20,8 @@ public interface PaymentView extends View {
   Observable<Void> tapOutsideSelection();
 
   Observable<Void> buySelection();
+
+  void selectPayment(PaymentViewModel payment);
 
   void showLoading();
 
@@ -51,13 +50,11 @@ public interface PaymentView extends View {
     private final int id;
     private final String name;
     private final String description;
-    private final boolean selected;
 
-    public PaymentViewModel(int id, String name, String description, boolean selected) {
+    public PaymentViewModel(int id, String name, String description) {
       this.id = id;
       this.name = name;
       this.description = description;
-      this.selected = selected;
     }
 
     public int getId() {
@@ -72,8 +69,5 @@ public interface PaymentView extends View {
       return description;
     }
 
-    public boolean isSelected() {
-      return selected;
-    }
   }
 }

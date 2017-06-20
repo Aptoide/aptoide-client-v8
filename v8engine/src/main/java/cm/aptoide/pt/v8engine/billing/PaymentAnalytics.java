@@ -25,16 +25,16 @@ public class PaymentAnalytics {
         getProductBundle(price, currency, aptoidePackageName)));
   }
 
-  public void sendPaymentCancelButtonPressedEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Cancel", payment, product));
+  public void sendPaymentCancelButtonPressedEvent(Product product, String paymentName) {
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Cancel", product, paymentName));
   }
 
-  public void sendPaymentBuyButtonPressedEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Buy", payment, product));
+  public void sendPaymentBuyButtonPressedEvent(Product product, String paymentName) {
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Buy", product, paymentName));
   }
 
-  public void sendPaymentTapOutsideEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Tap Outside", payment, product));
+  public void sendPaymentTapOutsideEvent(Product product, String paymentName) {
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Tap Outside", product, paymentName));
   }
 
   public void sendBackToStoreButtonPressedEvent(Product product) {
@@ -104,10 +104,11 @@ public class PaymentAnalytics {
     throw new IllegalArgumentException("Can NOT determine payment confirmation analytics status.");
   }
 
-  private Event getPaymentEvent(String eventName, String action, Payment payment, Product product) {
+  private Event getPaymentEvent(String eventName, String action, Product product,
+      String paymentName) {
     final Bundle bundle = getProductBundle(product);
     bundle.putString("action", action);
-    bundle.putString("payment_method", payment.getName());
+    bundle.putString("payment_method", paymentName);
     return new FacebookEvent(facebook, eventName, bundle);
   }
 
