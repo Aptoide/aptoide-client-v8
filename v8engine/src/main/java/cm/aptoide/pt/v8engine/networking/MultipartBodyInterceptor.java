@@ -2,12 +2,8 @@ package cm.aptoide.pt.v8engine.networking;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import okhttp3.RequestBody;
 import rx.Single;
 import rx.schedulers.Schedulers;

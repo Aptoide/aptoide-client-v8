@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -138,8 +138,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     compositeSubscription.add(RxView.clicks(installButton)
         .subscribe(a -> {
           if (isAppInstalled) {
-            AptoideUtils.SystemU.openApp(appData.getPackageName(),
-                getContext().getPackageManager(), getContext());
+            AptoideUtils.SystemU.openApp(appData.getPackageName(), getContext().getPackageManager(),
+                getContext());
           } else {
             // show app view to install app
             Fragment appView = V8Engine.getFragmentProvider()

@@ -13,10 +13,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -24,8 +20,7 @@ import rx.Observable;
 /**
  * Created by neuro on 27-04-2016.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class ListAppsRequest
-    extends V7<ListApps, ListAppsRequest.Body> {
+public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 
   private static final int LINES_PER_REQUEST = 6;
   private String url;
@@ -60,15 +55,14 @@ import rx.Observable;
     return interfaces.listApps(url != null ? url : "", body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody
-      implements Endless {
+  public static class Body extends BaseBody implements Endless {
 
-    @Getter private String storeUser;
-    @Getter private String storePassSha1;
-    @Getter private Integer limit;
-    @Getter @Setter private int offset;
-    @Getter @Setter private Integer groupId;
-    @Getter private String notApkTags;
+    private String storeUser;
+    private String storePassSha1;
+    private Integer limit;
+    private String notApkTags;
+    private int offset;
+    private Integer groupId;
 
     public Body(BaseRequestWithStore.StoreCredentials storeCredentials,
         SharedPreferences sharedPreferences) {
@@ -88,15 +82,45 @@ import rx.Observable;
       setNotApkTags(sharedPreferences);
     }
 
+    public String getStoreUser() {
+      return storeUser;
+    }
+
+    public String getStorePassSha1() {
+      return storePassSha1;
+    }
+
+    public String getNotApkTags() {
+      return notApkTags;
+    }
+
     /**
      * Method to check not Apk Tags on this particular request
-     *
-     * @param sharedPreferences
      */
     private void setNotApkTags(SharedPreferences sharedPreferences) {
       if (ManagerPreferences.getUpdatesFilterAlphaBetaKey(sharedPreferences)) {
         this.notApkTags = "alpha,beta";
       }
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
+    }
+
+    public Integer getGroupId() {
+      return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+      this.groupId = groupId;
     }
   }
 }

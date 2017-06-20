@@ -12,9 +12,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.OAuth;
 import cm.aptoide.pt.preferences.Application;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -22,7 +19,6 @@ import rx.Observable;
 /**
  * Created by neuro on 25-04-2016.
  */
-@Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true)
 public class OAuth2AuthenticationRequest extends V3<OAuth> {
 
   public OAuth2AuthenticationRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,

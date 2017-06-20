@@ -7,9 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.content.res.Resources;
 import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import lombok.Data;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -25,13 +24,13 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
   }
 
   public static WidgetsArgs createDefault(Resources resources, WindowManager windowManager) {
-    return new WidgetsArgs().add(Key.APPS_GROUP, Type.APPS_GROUP.getPerLineCount(resources,
-        windowManager))
+    return new WidgetsArgs().add(Key.APPS_GROUP,
+        Type.APPS_GROUP.getPerLineCount(resources, windowManager))
         .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount(resources, windowManager))
-        .add(Key.MY_STORES_SUBSCRIBED, Type.MY_STORES_SUBSCRIBED.getPerLineCount(resources,
-            windowManager))
-        .add(Key.STORES_RECOMMENDED, Type.STORES_RECOMMENDED.getPerLineCount(resources,
-            windowManager));
+        .add(Key.MY_STORES_SUBSCRIBED,
+            Type.MY_STORES_SUBSCRIBED.getPerLineCount(resources, windowManager))
+        .add(Key.STORES_RECOMMENDED,
+            Type.STORES_RECOMMENDED.getPerLineCount(resources, windowManager));
   }
 
   public WidgetsArgs add(Key key, int gridRowSize) {
@@ -46,11 +45,19 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
     APPS_GROUP, MY_STORES_SUBSCRIBED, STORES_RECOMMENDED, STORES_GROUP
   }
 
-  @Data protected static class GridSizeObject {
+  protected static class GridSizeObject {
 
     private int grid_row_size;
 
     public GridSizeObject(int grid_row_size) {
+      this.grid_row_size = grid_row_size;
+    }
+
+    public int getGrid_row_size() {
+      return grid_row_size;
+    }
+
+    public void setGrid_row_size(int grid_row_size) {
       this.grid_row_size = grid_row_size;
     }
   }

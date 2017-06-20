@@ -10,14 +10,18 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
 public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body> {
+
+  private PostCommentForStore(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+  }
 
   @NonNull public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
@@ -25,12 +29,6 @@ public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
         + "/api/7/";
-  }
-
-  private PostCommentForStore(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static PostCommentForStore of(long storeId, String text,
@@ -56,13 +54,11 @@ public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body
     return interfaces.postStoreComment(body, true);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  public static class Body extends BaseBody {
 
     private long storeId;
     @JsonProperty("comment_id") private Long previousCommentId;
     private String body;
-    //private String commentType = CommentType.STORE.name();
 
     public Body(long storeId, String text, long previousCommentId) {
       this(storeId, text);
@@ -72,6 +68,30 @@ public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body
     public Body(long storeId, String text) {
       this.storeId = storeId;
       this.body = text;
+    }
+
+    public long getStoreId() {
+      return storeId;
+    }
+
+    public void setStoreId(long storeId) {
+      this.storeId = storeId;
+    }
+
+    public Long getPreviousCommentId() {
+      return previousCommentId;
+    }
+
+    public void setPreviousCommentId(Long previousCommentId) {
+      this.previousCommentId = previousCommentId;
+    }
+
+    public String getBody() {
+      return body;
+    }
+
+    public void setBody(String body) {
+      this.body = body;
     }
   }
 }

@@ -12,10 +12,10 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -219,13 +219,13 @@ public class SocialStoreLatestAppsWidget
 
     StoreTheme storeThemeEnum = StoreTheme.get(displayable.getSharedStore());
 
-    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable(context.getResources(),
-        context.getTheme()));
+    followStore.setBackgroundDrawable(
+        storeThemeEnum.getButtonLayoutDrawable(context.getResources(), context.getTheme()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followStore.setElevation(0);
     }
-    followStore.setTextColor(storeThemeEnum.getStoreHeaderColorResource(context.getResources(),
-        context.getTheme()));
+    followStore.setTextColor(
+        storeThemeEnum.getStoreHeaderColorResource(context.getResources(), context.getTheme()));
 
     final String storeName = displayable.getSharedStore()
         .getName();
@@ -244,8 +244,7 @@ public class SocialStoreLatestAppsWidget
                       displayable.getStoreCredentialsProvider());
                   ShowMessage.asSnack(itemView,
                       AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                          getContext().getResources(),
-                          storeName));
+                          getContext().getResources(), storeName));
                 }, err -> {
                   CrashReport.getInstance()
                       .log(err);

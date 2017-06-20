@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -74,10 +74,22 @@ public class ManageUserFragment extends ImageLoaderFragment
     viewModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_USER_MODEL));
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(viewModel));
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_manage_user, container, false);
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    if (savedInstanceState != null) {
+      viewModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
+    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -125,6 +137,13 @@ public class ManageUserFragment extends ImageLoaderFragment
     super.onViewCreated(view, savedInstanceState);
   }
 
+  @Override public void onDestroyView() {
+    if (uploadWaitDialog != null && uploadWaitDialog.isShowing()) {
+      uploadWaitDialog.dismiss();
+    }
+    super.onDestroyView();
+  }
+
   private void loadUserData() {
     if (viewModel != null) {
       final String image = viewModel.getImage();
@@ -136,25 +155,6 @@ public class ManageUserFragment extends ImageLoaderFragment
       if (!TextUtils.isEmpty(name)) {
         userName.setText(name);
       }
-    }
-  }
-
-  @Override public void onDestroyView() {
-    if (uploadWaitDialog != null && uploadWaitDialog.isShowing()) {
-      uploadWaitDialog.dismiss();
-    }
-    super.onDestroyView();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(viewModel));
-  }
-
-  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-    super.onViewStateRestored(savedInstanceState);
-    if (savedInstanceState != null) {
-      viewModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
     }
   }
 

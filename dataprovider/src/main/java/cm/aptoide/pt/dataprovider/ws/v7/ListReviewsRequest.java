@@ -6,17 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListReviews;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -38,7 +31,8 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private ListReviewsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static ListReviewsRequest of(String storeName, String packageName,
@@ -59,8 +53,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     final Body body = new Body(storeName, packageName, maxReviews, maxComments,
-        ManagerPreferences.getAndResetForceServerRefresh(
-            sharedPreferences), storecredentials);
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences), storecredentials);
     return new ListReviewsRequest(body, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
@@ -82,18 +75,15 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     return interfaces.listReviews(body, true);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBodyWithStore implements Endless {
+  public static class Body extends BaseBodyWithStore implements Endless {
 
-    @Getter private Integer limit;
-    @Getter @Setter private int offset;
+    private int offset;
+    private Integer limit;
+    private boolean refresh;
     private String lang;
     private boolean mature;
-    @Getter private boolean refresh;
-
     private Order order;
     private Sort sort;
-
     private Long storeId;
     private Long reviewId;
     private String packageName;
@@ -117,6 +107,102 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       this.limit = limit;
       this.subLimit = subLimit;
       this.refresh = refresh;
+    }
+
+    @Override public String getLang() {
+      return lang;
+    }
+
+    @Override public void setLang(String lang) {
+      this.lang = lang;
+    }
+
+    @Override public boolean isMature() {
+      return mature;
+    }
+
+    @Override public void setMature(boolean mature) {
+      this.mature = mature;
+    }
+
+    public Order getOrder() {
+      return order;
+    }
+
+    public void setOrder(Order order) {
+      this.order = order;
+    }
+
+    public Sort getSort() {
+      return sort;
+    }
+
+    public void setSort(Sort sort) {
+      this.sort = sort;
+    }
+
+    @Override public Long getStoreId() {
+      return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+      this.storeId = storeId;
+    }
+
+    @Override public String getStoreName() {
+      return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+      this.storeName = storeName;
+    }
+
+    public Long getReviewId() {
+      return reviewId;
+    }
+
+    public void setReviewId(Long reviewId) {
+      this.reviewId = reviewId;
+    }
+
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+      this.packageName = packageName;
+    }
+
+    public Integer getSubLimit() {
+      return subLimit;
+    }
+
+    public void setSubLimit(Integer subLimit) {
+      this.subLimit = subLimit;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    public void setRefresh(boolean refresh) {
+      this.refresh = refresh;
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
+    }
+
+    public void setLimit(Integer limit) {
+      this.limit = limit;
     }
 
     public enum Sort {

@@ -4,8 +4,6 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.TimelineStats;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -19,7 +17,8 @@ public class GetTimelineStatsRequest extends V7<TimelineStats, GetTimelineStatsR
   protected GetTimelineStatsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static GetTimelineStatsRequest of(BodyInterceptor<BaseBody> bodyInterceptor, Long userId,
@@ -34,10 +33,18 @@ public class GetTimelineStatsRequest extends V7<TimelineStats, GetTimelineStatsR
     return interfaces.getTimelineStats(body, bypassCache);
   }
 
-  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  public static class Body extends BaseBody {
     private Long userId;
 
     public Body(Long userId) {
+      this.userId = userId;
+    }
+
+    public Long getUserId() {
+      return userId;
+    }
+
+    public void setUserId(Long userId) {
       this.userId = userId;
     }
   }
