@@ -2,6 +2,7 @@
 <resources>
 
     <string-array name="languagesTag">
+        <item>Default</item>
         <item>en</item>
         <item>en_US</item>
         <item>ar</item>

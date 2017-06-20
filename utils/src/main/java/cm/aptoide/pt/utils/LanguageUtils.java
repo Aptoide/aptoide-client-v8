@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.util;
+package cm.aptoide.pt.utils;
 
 import android.text.TextUtils;
 

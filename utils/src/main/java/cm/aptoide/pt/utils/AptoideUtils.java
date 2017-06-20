@@ -11,6 +11,7 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -783,6 +784,11 @@ public class AptoideUtils {
     }
 
     public static String getCountryCode() {
+      //TODO here
+      //SharedPreferences sharedPreferences = getContext().getSharedPreferences("Language",0);
+      //if(sharedPreferences != null){
+      //  String l = sharedPreferences.getString("Language", "");
+      //}
       return context.getResources().getConfiguration().locale.getLanguage()
           + "_"
           + context.getResources().getConfiguration().locale.getCountry();

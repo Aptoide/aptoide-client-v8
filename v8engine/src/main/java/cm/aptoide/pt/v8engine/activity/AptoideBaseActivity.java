@@ -32,15 +32,14 @@ import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.LanguageUtils;
 import cm.aptoide.pt.utils.SimpleSubscriber;
-import cm.aptoide.pt.utils.design.BuildConfig;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
-import cm.aptoide.pt.v8engine.util.LanguageUtils;
 import rx.functions.Action0;
 
 /**
@@ -69,7 +68,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
 
     //If the user had previously chosen a language, the app is displayed in that language, if not, it starts with the device's language as default
-    SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+    SharedPreferences sharedPreferences = getSharedPreferences("LANGUAGES_PREFERENCES", Context.MODE_PRIVATE);
     String lang = sharedPreferences.getString("Language", Locale.getDefault().toString());
     Resources res = getResources();
     DisplayMetrics dm = res.getDisplayMetrics();
