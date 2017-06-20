@@ -34,6 +34,7 @@ android {
         "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
     buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
+    resValue "string", "APPSEE_API_KEY", "\"" + project.APPSEE_API_KEY + "\""
 
     multiDexEnabled true
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -234,6 +235,7 @@ dependencies {
 
   compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
 
+  compile 'com.appsee:appsee-android:+'
 
   leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 }

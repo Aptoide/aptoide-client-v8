@@ -80,6 +80,11 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
 
+    //AppSee initialization
+    com.appsee.Appsee.start(getString(R.string.APPSEE_API_KEY));
+    com.appsee.Appsee.setUserId(((V8Engine) getApplicationContext()).getIdsRepository()
+        .getUniqueIdentifier());
+
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
     final InstallManager installManager =
