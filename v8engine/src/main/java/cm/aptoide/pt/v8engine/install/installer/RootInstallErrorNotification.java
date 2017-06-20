@@ -1,11 +1,8 @@
 package cm.aptoide.pt.v8engine.install.installer;
 
+import android.app.PendingIntent;
 import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
-
-/**
- * Created by trinkes on 16/06/2017.
- */
 
 public class RootInstallErrorNotification {
 
@@ -13,13 +10,15 @@ public class RootInstallErrorNotification {
   private final Bitmap icon;
   private final String message;
   private final NotificationCompat.Action action;
+  private final PendingIntent deleteAction;
 
   public RootInstallErrorNotification(int notificationId, Bitmap icon, String message,
-      NotificationCompat.Action action) {
+      NotificationCompat.Action action, PendingIntent deleteAction) {
     this.notificationId = notificationId;
     this.icon = icon;
     this.message = message;
     this.action = action;
+    this.deleteAction = deleteAction;
   }
 
   public Bitmap getIcon() {
@@ -36,5 +35,9 @@ public class RootInstallErrorNotification {
 
   public NotificationCompat.Action getAction() {
     return action;
+  }
+
+  public PendingIntent getDeleteAction() {
+    return deleteAction;
   }
 }

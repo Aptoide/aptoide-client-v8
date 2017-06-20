@@ -492,4 +492,18 @@ public class InstallManager {
         .flatMapCompletable(download -> defaultInstall(context, download))
         .toCompletable();
   }
+
+  public Completable cleanTimedOutInstalls() {
+    return getTimedOutInstallations().first()
+        .flatMap(installationProgress -> Observable.from(installationProgress)
+            .flatMap(installation -> installedRepository.get(installation.getPackageName(),
+                installation.getVersionCode())
+                .first()
+                .doOnNext(installed -> {
+                  installed.setStatus(Installed.STATUS_UNINSTALLED);
+                  installedRepository.save(installed);
+                })))
+        .toList()
+        .toCompletable();
+  }
 }

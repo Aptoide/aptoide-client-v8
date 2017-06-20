@@ -138,14 +138,16 @@ public class SystemNotificationShower {
         .subscribeOn(AndroidSchedulers.mainThread());
   }
 
-  private Notification mapToAndroidNotification(Context context, RootInstallErrorNotification installErrorNotification) {
-    Notification notification =
-        new NotificationCompat.Builder(context).setContentTitle(installErrorNotification.getMessage())
-            .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-            .setLargeIcon(installErrorNotification.getIcon())
-            .setAutoCancel(true)
-            .addAction(installErrorNotification.getAction())
-            .build();
+  private Notification mapToAndroidNotification(Context context,
+      RootInstallErrorNotification installErrorNotification) {
+    Notification notification = new NotificationCompat.Builder(context).setContentTitle(
+        installErrorNotification.getMessage())
+        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+        .setLargeIcon(installErrorNotification.getIcon())
+        .setAutoCancel(true)
+        .addAction(installErrorNotification.getAction())
+        .setDeleteIntent(installErrorNotification.getDeleteAction())
+        .build();
 
     notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
     return notification;

@@ -110,6 +110,7 @@ import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.install.RootInstallNotificationEventReceiver;
+import cm.aptoide.pt.v8engine.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
@@ -354,24 +355,30 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public RootInstallationRetryHandler getRootInstallationRetryHandler() {
     if (rootInstallationRetryHandler == null) {
 
-      Intent intent = new Intent(this, RootInstallNotificationEventReceiver.class);
-
-      PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 231,
-          intent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION),
+      Intent retryActionIntent = new Intent(this, RootInstallNotificationEventReceiver.class);
+      retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
+      PendingIntent retryPendingIntent = PendingIntent.getBroadcast(this, 2, retryActionIntent,
           PendingIntent.FLAG_UPDATE_CURRENT);
 
       NotificationCompat.Action action =
           new NotificationCompat.Action(R.drawable.ic_refresh_black_24dp,
               getString(R.string.generalscreen_short_root_install_timeout_error_action),
-              pendingIntent);
+              retryPendingIntent);
+
+      PendingIntent deleteAction = PendingIntent.getBroadcast(this, 3, retryActionIntent.setAction(
+          RootInstallNotificationEventReceiver.ROOT_INSTALL_DISMISS_ACTION),
+          PendingIntent.FLAG_UPDATE_CURRENT);
 
       final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
           new NotificationIdsMapper());
+      int notificationId = 2;
       rootInstallationRetryHandler =
-          new RootInstallationRetryHandler(2342384, systemNotificationShower,
+          new RootInstallationRetryHandler(notificationId, systemNotificationShower,
               getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, this,
-              BitmapFactory.decodeResource(getResources(), getConfiguration().getIcon()), action);
+              new RootInstallErrorNotificationFactory(notificationId,
+                  BitmapFactory.decodeResource(getResources(), getConfiguration().getIcon()),
+                  action, deleteAction));
     }
     return rootInstallationRetryHandler;
   }
