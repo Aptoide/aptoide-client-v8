@@ -75,9 +75,12 @@ public class TimelineResponseCardMapper {
         }
         cards.add(new cm.aptoide.pt.v8engine.social.data.Recommendation(recommendation.getCardId(),
             recommendation.getRecommendedApp()
-                .getPackageName(), recommendation.getRecommendedApp()
+                .getId(), recommendation.getRecommendedApp()
+            .getPackageName(), recommendation.getRecommendedApp()
             .getName(), recommendation.getRecommendedApp()
-            .getIcon(), recommendation.getSimilarApps().get(0).getName(), recommendation.getTimestamp(), abUrl, CardType.RECOMMENDATION));
+            .getIcon(), recommendation.getSimilarApps()
+            .get(0)
+            .getName(), recommendation.getTimestamp(), abUrl, CardType.RECOMMENDATION));
       }
     }
 

@@ -78,9 +78,9 @@ public class MediaViewHolder extends CardViewHolder<Media> {
         .loadWithCenterCrop(media.getThumbnailUrl(), articleThumbnail);
 
     articleThumbnail.setOnClickListener(click -> articleSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.ARTICLE_BODY)));
+        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
     articleHeader.setOnClickListener(click -> articleSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.ARTICLE_HEADER)));
+        new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
   }
 
   private void setIcon(int drawableId) {

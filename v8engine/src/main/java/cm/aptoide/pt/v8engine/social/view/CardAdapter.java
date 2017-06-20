@@ -58,5 +58,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
   public void removeLoadMoreProgress() {
     this.cards.remove(progressCard);
+    notifyDataSetChanged();
   }
 }

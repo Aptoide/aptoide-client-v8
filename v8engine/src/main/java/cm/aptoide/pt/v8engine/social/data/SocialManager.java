@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import java.util.List;
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -20,5 +21,10 @@ public class SocialManager {
 
   public Single<List<Card>> getNextCards() {
     return service.getNextCards();
+  }
+
+  public Completable clickOnBodyEvent(Card card) {
+
+    return null;
   }
 }

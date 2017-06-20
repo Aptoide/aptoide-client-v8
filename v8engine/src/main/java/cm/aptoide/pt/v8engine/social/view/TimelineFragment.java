@@ -46,6 +46,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   public static final int LATEST_PACKAGES_COUNT = 20;
   public static final int RANDOM_PACKAGES_COUNT = 10;
+  public static final String NEW = "NEW";
   private static final String ACTION_KEY = "action";
   /**
    * The minimum number of items to have below your current scroll position before loading more.
@@ -59,6 +60,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private RecyclerViewPositionHelper helper;
   private View genericError;
   private View retryButton;
+  private TokenInvalidator tokenInvalidator;
+  private LinksHandlerFactory linksHandlerFactory;
+  private SharedPreferences sharedPreferences;
+  private boolean newRefresh;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -71,20 +76,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    LinksHandlerFactory linksHandlerFactory = new LinksHandlerFactory(getContext());
-    final TokenInvalidator tokenInvalidator =
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    SharedPreferences sharedPreferences =
+    newRefresh = true;
+    linksHandlerFactory = new LinksHandlerFactory(getContext());
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    attachPresenter(new TimelinePresenter(this, new SocialManager(
-            new SocialService(getArguments().getString(ACTION_KEY),
-                ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-                ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-                WebService.getDefaultConverter(),
-                new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-                RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
-                Integer.MAX_VALUE, tokenInvalidator, sharedPreferences)), CrashReport.getInstance()),
-        savedInstanceState);
     articleSubject = PublishSubject.create();
     adapter = new CardAdapter(Collections.emptyList(), new CardViewHolderFactory(articleSubject,
         new DateCalculator(getContext().getApplicationContext(),
@@ -95,11 +91,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_timeline, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     genericError = view.findViewById(R.id.generic_error);
     retryButton = genericError.findViewById(R.id.retry);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
@@ -111,9 +107,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
-
-    //super needs to be call last because the presenter will try to access this local variables.
-    super.onViewCreated(view, savedInstanceState);
+    attachPresenter(new TimelinePresenter(this, new SocialManager(
+        new SocialService(getArguments().getString(ACTION_KEY),
+            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(),
+            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
+            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
+            Integer.MAX_VALUE, tokenInvalidator, sharedPreferences)), CrashReport.getInstance(),
+        getFragmentNavigator()), savedInstanceState);
   }
 
   @Override public void showCards(List<Card> cards) {
@@ -183,5 +185,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void hideLoadMoreProgressIndicator() {
     adapter.removeLoadMoreProgress();
+  }
+
+  @Override public boolean isNewRefresh() {
+    boolean b = newRefresh;
+    newRefresh = false;
+    return b;
   }
 }

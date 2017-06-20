@@ -76,6 +76,9 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
         .getString(R.string.related_to)
         .toLowerCase());
     this.relatedToApp.setText(card.getRelatedToAppName());
+
+    this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
   }
 
   public String getTimeSinceRecommendation(Context context, Date timestamp) {

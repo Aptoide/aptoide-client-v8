@@ -35,4 +35,6 @@ public interface TimelineView extends View {
   void showLoadMoreProgressIndicator();
 
   void hideLoadMoreProgressIndicator();
+
+  boolean isNewRefresh();
 }

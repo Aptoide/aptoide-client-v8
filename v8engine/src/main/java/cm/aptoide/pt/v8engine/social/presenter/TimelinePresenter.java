@@ -2,15 +2,22 @@ package cm.aptoide.pt.v8engine.social.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshare.socket.Log;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.Card;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.CardType;
+import cm.aptoide.pt.v8engine.social.data.Media;
+import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
+import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -22,12 +29,14 @@ public class TimelinePresenter implements Presenter {
   private final TimelineView view;
   private final SocialManager socialManager;
   private final CrashReport crashReport;
+  private final FragmentNavigator fragmentNavigator;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull SocialManager socialManager,
-      CrashReport crashReport) {
+      CrashReport crashReport, FragmentNavigator fragmentNavigator) {
     this.view = cardsView;
     this.socialManager = socialManager;
     this.crashReport = crashReport;
+    this.fragmentNavigator = fragmentNavigator;
   }
 
   @Override public void present() {
@@ -35,7 +44,9 @@ public class TimelinePresenter implements Presenter {
 
     refreshCardsOnPullToRefresh();
 
-    handleCardClickEvents();
+    handleCardClickOnHeaderEvents();
+
+    handleCardClickOnBodyEvents();
 
     showMoreCardsOnBottomReached();
 
@@ -67,7 +78,8 @@ public class TimelinePresenter implements Presenter {
   private void showMoreCardsOnBottomReached() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(create -> view.reachesBottom())
+        .flatMap(create -> view.reachesBottom()
+            .debounce(300, TimeUnit.MILLISECONDS))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(create -> view.showLoadMoreProgressIndicator())
         .flatMapSingle(bottomReached -> socialManager.getNextCards())
@@ -79,23 +91,44 @@ public class TimelinePresenter implements Presenter {
             .getCanonicalName(), "ERROR LOADING MORE CARDS"));
   }
 
-  private void handleCardClickEvents() {
+  private void handleCardClickOnHeaderEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.articleClicked())
-        .map(cardTouchEvent -> {
-          if (cardTouchEvent.getActionType()
-              .equals(CardTouchEvent.Type.ARTICLE_BODY)) {
-            return cardTouchEvent.getCard()
-                .getArticleLink();
-          } else if (cardTouchEvent.getActionType()
-              .equals(CardTouchEvent.Type.ARTICLE_HEADER)) {
-            return cardTouchEvent.getCard()
-                .getPublisherLink();
-          }
-          throw new IllegalStateException("Unknown Card Touch Event type.");
-        })
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.HEADER))
+        .map(cardTouchEvent -> ((Media) cardTouchEvent.getCard()).getPublisherLink())
         .doOnNext(link -> link.launch())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(articleUrl -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleCardClickOnBodyEvents() {
+    view.getLifecycle()
+        .doOnNext(lifecycleEvent -> Logger.d(this.getClass()
+            .getName(), "event -> " + lifecycleEvent.name()))
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.articleClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.BODY))
+        .doOnNext(cardTouchEvent -> {
+          if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.VIDEO) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.ARTICLE)) {
+            ((Media) cardTouchEvent.getCard()).getArticleLink()
+                .launch();
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.RECOMMENDATION)) {
+            Recommendation card = (Recommendation) cardTouchEvent.getCard();
+            fragmentNavigator.navigateTo(
+                AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
+                    AppViewFragment.OpenType.OPEN_ONLY));
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articleUrl -> {
         }, throwable -> crashReport.log(throwable));
@@ -116,6 +149,7 @@ public class TimelinePresenter implements Presenter {
   private void showCardsOnCreate() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .filter(__ -> view.isNewRefresh())
         .doOnNext(created -> view.showProgressIndicator())
         .flatMapSingle(created -> socialManager.getCards())
         .observeOn(AndroidSchedulers.mainThread())

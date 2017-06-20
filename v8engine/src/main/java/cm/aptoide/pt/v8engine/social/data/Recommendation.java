@@ -15,10 +15,12 @@ public class Recommendation implements Card {
   private final CardType cardType;
   private final String packageName;
   private final String abUrl;
+  private final long appId;
 
-  public Recommendation(String cardId, String packageName, String appName, String appIcon,
-      String relatedToAppName, Date timestamp, String abUrl, CardType cardType) {
+  public Recommendation(String cardId, long appId, String packageName, String appName,
+      String appIcon, String relatedToAppName, Date timestamp, String abUrl, CardType cardType) {
     this.cardId = cardId;
+    this.appId = appId;
     this.packageName = packageName;
     this.appName = appName;
     this.appIcon = appIcon;
@@ -26,6 +28,10 @@ public class Recommendation implements Card {
     this.timestamp = timestamp;
     this.abUrl = abUrl;
     this.cardType = cardType;
+  }
+
+  public long getAppId() {
+    return appId;
   }
 
   public String getAbUrl() {
