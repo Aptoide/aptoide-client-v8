@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dataprovider.image;
+package cm.aptoide.pt.v8engine.networking.image;
 
 import android.app.Service;
 import android.content.Context;
