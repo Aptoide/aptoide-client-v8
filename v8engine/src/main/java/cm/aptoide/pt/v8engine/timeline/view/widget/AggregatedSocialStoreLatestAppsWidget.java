@@ -16,11 +16,11 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
@@ -223,8 +223,7 @@ public class AggregatedSocialStoreLatestAppsWidget
                       displayable.getStoreCredentialsProvider());
                   ShowMessage.asSnack(itemView,
                       AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                          getContext().getResources(),
-                          storeName));
+                          getContext().getResources(), storeName));
                 }, err -> {
                   CrashReport.getInstance()
                       .log(err);
@@ -514,7 +513,7 @@ public class AggregatedSocialStoreLatestAppsWidget
 
       compositeSubscription.add(RxView.clicks(likePreviewContainer)
           .subscribe(click -> displayable.likesPreviewClick(minimalCard.getStats()
-                  .getLikes(), minimalCard.getCardId()), err -> CrashReport.getInstance()
+              .getLikes(), minimalCard.getCardId()), err -> CrashReport.getInstance()
               .log(err)));
 
       subCardsContainer.addView(subCardView);

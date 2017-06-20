@@ -24,12 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
@@ -98,6 +98,22 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    logoutButton = null;
+    usernameTextView = null;
+    storeNameTextView = null;
+    userProfileEditButton = null;
+    userStoreEditButton = null;
+    storeLayout = null;
+    userAvatar = null;
+    storeAvatar = null;
+    separator = null;
+    header = null;
+    headerText = null;
+    moreNotificationsButton = null;
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
@@ -137,26 +153,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .findViewById(R.id.more);
 
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-        new MyAccountNavigator(getFragmentNavigator()),
-        ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), savedInstanceState);
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    logoutButton = null;
-    usernameTextView = null;
-    storeNameTextView = null;
-    userProfileEditButton = null;
-    userStoreEditButton = null;
-    storeLayout = null;
-    userAvatar = null;
-    storeAvatar = null;
-    separator = null;
-    header = null;
-    headerText = null;
-    moreNotificationsButton = null;
+            new MyAccountNavigator(getFragmentNavigator()),
+            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
+            new LinksHandlerFactory(getContext()),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+        savedInstanceState);
   }
 
   @Override public int getContentViewId() {

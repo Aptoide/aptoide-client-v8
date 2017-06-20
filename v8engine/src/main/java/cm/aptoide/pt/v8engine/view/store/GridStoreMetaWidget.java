@@ -16,9 +16,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.HomeUser;
 import cm.aptoide.pt.networkclient.WebService;
@@ -270,8 +270,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .getId());
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                getContext().getResources(),
-                storeWrapper.getStore()
+                getContext().getResources(), storeWrapper.getStore()
                     .getName()));
       } else {
         storeWrapper.setStoreSubscribed(true);
@@ -279,8 +278,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .getName(), subscribedStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  getContext().getResources(),
-                  subscribedStoreMeta.getData()
+                  getContext().getResources(), subscribedStoreMeta.getData()
                       .getName()));
         }, err -> {
           CrashReport.getInstance()
