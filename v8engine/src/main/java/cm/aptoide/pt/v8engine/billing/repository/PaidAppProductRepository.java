@@ -43,11 +43,8 @@ public class PaidAppProductRepository extends ProductRepository {
   private final Resources resources;
 
   public PaidAppProductRepository(PurchaseFactory purchaseFactory, PaymentFactory paymentFactory,
-      AuthorizationRepository authorizationRepository,
-      PaymentConfirmationRepository confirmationRepository, Payer payer,
-      AuthorizationFactory authorizationFactory, NetworkOperatorManager operatorManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, ProductFactory productFactory,
+      NetworkOperatorManager operatorManager, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      OkHttpClient httpClient, Converter.Factory converterFactory, ProductFactory productFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
     super(paymentFactory);
     this.purchaseFactory = purchaseFactory;

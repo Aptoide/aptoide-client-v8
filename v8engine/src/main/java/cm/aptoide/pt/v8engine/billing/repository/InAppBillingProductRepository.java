@@ -17,7 +17,6 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.PackageRepository;
-import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
@@ -42,17 +41,14 @@ public class InAppBillingProductRepository extends ProductRepository {
   private final NetworkOperatorManager operatorManager;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final String applicationPackageName;
   private final PackageRepository packageRepository;
 
   public InAppBillingProductRepository(PurchaseFactory purchaseFactory,
-      PaymentFactory paymentFactory, AuthorizationRepository authorizationRepository,
-      PaymentConfirmationRepository confirmationRepository, Payer payer,
-      AuthorizationFactory authorizationFactory, ProductFactory productFactory,
+      PaymentFactory paymentFactory, ProductFactory productFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, NetworkOperatorManager operatorManager,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      String applicationPackageName, PackageRepository packageRepository) {
+      PackageRepository packageRepository) {
     super(paymentFactory);
     this.purchaseFactory = purchaseFactory;
     this.productFactory = productFactory;
@@ -62,7 +58,6 @@ public class InAppBillingProductRepository extends ProductRepository {
     this.operatorManager = operatorManager;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.applicationPackageName = applicationPackageName;
     this.packageRepository = packageRepository;
   }
 

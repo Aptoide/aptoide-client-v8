@@ -48,7 +48,7 @@ public class PaymentAnalytics {
         new FacebookEvent(facebook, "Payment_Purchase_Retry", getProductBundle(product)));
   }
 
-  public void sendPurchaseCompleteEvent(PaymentConfirmation paymentConfirmation, Product product) {
+  public void sendPurchaseStatusEvent(PaymentConfirmation paymentConfirmation, Product product) {
 
     // We only send analytics about failed or completed payment confirmations
     if (paymentConfirmation.isPending() || paymentConfirmation.isNew()) {

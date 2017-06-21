@@ -65,14 +65,18 @@ public class ConfirmationSync extends ScheduledSync {
     try {
       payer.getId()
           .flatMap(payerId -> getServerPaymentConfirmation(product, payerId).doOnSuccess(
-              paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
-                  syncResult, payerId))
-              .onErrorReturn(throwable -> {
-                saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
-                return null;
+              paymentConfirmation -> {
+                analytics.sendPurchaseStatusEvent(paymentConfirmation, product);
+                savePaymentConfirmation(paymentConfirmation);
+                reschedulePendingConfirmation(paymentConfirmation, syncResult);
+              })
+              .doOnError(throwable -> {
+                saveAsNewConfirmationOnServerError(payerId, throwable);
+                rescheduleOnNetworkError(syncResult, throwable);
               }))
-          .toBlocking()
-          .value();
+          .toCompletable()
+          .onErrorComplete()
+          .await();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }
@@ -105,27 +109,29 @@ public class ConfirmationSync extends ScheduledSync {
         });
   }
 
-  private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
-      SyncResult syncResult, String payerId) {
-    confirmationAccessor.insert(
-        confirmationFactory.convertToDatabasePaymentConfirmation(paymentConfirmation));
-
+  private void reschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
+      SyncResult syncResult) {
     if (paymentConfirmation.isPending()) {
       rescheduleSync(syncResult);
     }
-
-    analytics.sendPurchaseCompleteEvent(paymentConfirmation, product);
   }
 
-  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
-      String payerId) {
+  private void rescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
     if (throwable instanceof IOException) {
       analytics.sendPurchaseNetworkRetryEvent(product);
       rescheduleSync(syncResult);
-    } else {
-      confirmationAccessor.insert(confirmationFactory.convertToDatabasePaymentConfirmation(
-          confirmationFactory.create(product.getId(), "", PaymentConfirmation.Status.NEW,
-              payerId)));
     }
+  }
+
+  private void saveAsNewConfirmationOnServerError(String payerId, Throwable throwable) {
+    if (!(throwable instanceof IOException)) {
+      savePaymentConfirmation(
+          confirmationFactory.create(product.getId(), "", PaymentConfirmation.Status.NEW, payerId));
+    }
+  }
+
+  private void savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
+    confirmationAccessor.insert(
+        confirmationFactory.convertToDatabasePaymentConfirmation(paymentConfirmation));
   }
 }
