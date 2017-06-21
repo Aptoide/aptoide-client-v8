@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 26/07/2016.
  */
 
-package cm.aptoide.pt.imageloader;
+package cm.aptoide.pt.dataprovider.image;
 
 import android.content.Context;
 import android.graphics.Bitmap;

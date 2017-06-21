@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.search;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -58,7 +56,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         LinkedList<Displayable> displayables = new LinkedList<>();
 
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            .getList();
         Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
 
         if (addSubscribedStores) {
@@ -106,18 +105,12 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
+    searchAbTest = ABTestManager.getInstance()
+        .get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    adsRepository =
-        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getQManager(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getApplicationContext(),
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            getContext().getResources(), getContext().getPackageManager());
+    adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
     super.onCreate(savedInstanceState);
   }
 
@@ -160,7 +153,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     } else {
       of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(),
           StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+          tokenInvalidator,
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     }
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

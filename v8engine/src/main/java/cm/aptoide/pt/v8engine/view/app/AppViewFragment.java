@@ -45,11 +45,11 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -287,13 +287,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    adsRepository =
-        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory, qManager,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getApplicationContext(),
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            getContext().getResources(), getContext().getPackageManager());
+    adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
@@ -339,9 +333,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onDestroyView();
     header = null;
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
-          V8Engine.getConfiguration()
-              .getDefaultTheme()));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
+          .getDefaultTheme()));
       ThemeUtils.setAptoideTheme(getActivity());
     }
   }
@@ -940,8 +933,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           ContextCompat.getColor(getActivity(), storeTheme.getPrimaryColor()));
       collapsingToolbar.setContentScrimColor(
           ContextCompat.getColor(getActivity(), storeTheme.getPrimaryColor()));
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
-          AppViewFragment.this.storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreTheme.get(AppViewFragment.this.storeTheme));
       // un-comment the following lines to give app icon a fading effect when user expands / collapses the action bar
       /*
       appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {

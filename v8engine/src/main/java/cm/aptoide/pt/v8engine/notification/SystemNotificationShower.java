@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
@@ -57,8 +57,7 @@ public class SystemNotificationShower {
       Intent resultIntent = new Intent(context, NotificationReceiver.class);
       resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
 
-      resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID,
-          notificationId);
+      resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
 
       if (!TextUtils.isEmpty(trackUrl)) {
         resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);

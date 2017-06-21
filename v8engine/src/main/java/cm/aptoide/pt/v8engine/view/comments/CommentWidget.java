@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -114,8 +114,8 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
   private void setLayoutLeftPadding(ComplexComment complexComment) {
     final int level = complexComment.getLevel();
-    int baseMargin = AptoideUtils.ScreenU.getPixelsForDip(MARGIN_IN_DIP,
-        getContext().getResources());
+    int baseMargin =
+        AptoideUtils.ScreenU.getPixelsForDip(MARGIN_IN_DIP, getContext().getResources());
     @Dimension int leftMargin = level < 2 ? baseMargin : baseMargin * level;
     outerLayout.setPadding(leftMargin, outerLayout.getPaddingTop(), baseMargin,
         outerLayout.getPaddingBottom());

@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -92,8 +92,7 @@ import rx.functions.Action1;
     Date modified = searchAppsApp.getModified();
     if (modified != null) {
       String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
-          .getTimeDiffAll(itemView.getContext(), modified.getTime(),
-              getContext().getResources());
+          .getTimeDiffAll(itemView.getContext(), modified.getTime(), getContext().getResources());
       if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
         timeTextView.setText(timeSinceUpdate);
       }

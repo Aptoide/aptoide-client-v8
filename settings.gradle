@@ -14,6 +14,5 @@ include 'vanilla',
     ':utils',
     ':aptoide_accountmanager',
     ':database',
-    ':imageloader',
     ':downloadmanager',
     ':spotandshare'

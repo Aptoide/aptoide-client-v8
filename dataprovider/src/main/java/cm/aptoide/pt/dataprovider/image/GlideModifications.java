@@ -1,4 +1,4 @@
-package cm.aptoide.pt.imageloader;
+package cm.aptoide.pt.dataprovider.image;
 
 import android.content.Context;
 import com.bumptech.glide.Glide;

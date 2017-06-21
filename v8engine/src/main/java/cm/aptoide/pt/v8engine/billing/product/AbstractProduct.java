@@ -10,18 +10,21 @@ import cm.aptoide.pt.v8engine.billing.Product;
 
 public abstract class AbstractProduct implements Product {
 
+  protected final int packageVersionCode;
   private final int id;
   private final String icon;
   private final String title;
   private final String description;
   private final Price price;
 
-  public AbstractProduct(int id, String icon, String title, String description, Price price) {
+  public AbstractProduct(int id, String icon, String title, String description, Price price,
+      int packageVersionCode) {
     this.id = id;
     this.icon = icon;
     this.title = title;
     this.description = description;
     this.price = price;
+    this.packageVersionCode = packageVersionCode;
   }
 
   @Override public int getId() {
@@ -42,5 +45,9 @@ public abstract class AbstractProduct implements Product {
 
   @Override public String getDescription() {
     return description;
+  }
+
+  public int getPackageVersionCode() {
+    return packageVersionCode;
   }
 }
