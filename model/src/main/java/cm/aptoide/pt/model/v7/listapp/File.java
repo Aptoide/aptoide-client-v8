@@ -27,7 +27,11 @@ public class File {
   }
 
   public void setPath(String path) {
-    this.path = path.replaceFirst("pool", "zerorating");
+    if (path != null) {
+      this.path = path.replaceFirst("pool", "zerorating");
+    } else {
+      this.path = null;
+    }
   }
 
   public String getPathAlt() {
@@ -35,6 +39,10 @@ public class File {
   }
 
   public void setPathAlt(String pathAlt) {
-    this.pathAlt = pathAlt.replaceFirst("pool", "zerorating");
+    if (pathAlt != null) {
+      this.pathAlt = pathAlt.replaceFirst("pool", "zerorating");
+    } else {
+      this.pathAlt = null;
+    }
   }
 }

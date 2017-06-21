@@ -28,7 +28,11 @@ import lombok.Setter;
     }
 
     public void setPath(String path) {
-      this.path = path.replaceFirst("pool", "zerorating");
+      if (path != null) {
+        this.path = path.replaceFirst("pool", "zerorating");
+      } else {
+        this.path = null;
+      }
     }
   }
 }
