@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -49,13 +50,24 @@ public class FragmentNavigator {
 
   public String navigateTo(Fragment fragment) {
     String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
-    fragmentManager.beginTransaction()
-        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
-        .addToBackStack(tag)
-        .replace(containerId, fragment, tag)
-        .commit();
+    prepareFragmentReplace(fragment, tag).commit();
 
     return tag;
+  }
+
+  public String navigateToAllowingStateLoss(Fragment fragment) {
+    // add current fragment
+    String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
+    prepareFragmentReplace(fragment, tag).commitAllowingStateLoss();
+
+    return tag;
+  }
+
+  private FragmentTransaction prepareFragmentReplace(Fragment fragment, String tag) {
+    return fragmentManager.beginTransaction()
+        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
+        .addToBackStack(tag)
+        .replace(containerId, fragment, tag);
   }
 
   /**
