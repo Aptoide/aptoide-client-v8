@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
@@ -55,10 +56,11 @@ public class Analytics {
   };
   private static final IdsRepository idsRepository;
   private static Analytics instance;
+  private static boolean isFirstSession;
 
   static {
-    idsRepository = ((V8Engine) DataProvider.getContext()
-        .getApplicationContext()).getIdsRepository();
+    idsRepository =
+        ((V8Engine) DataProvider.getContext().getApplicationContext()).getIdsRepository();
   }
 
   private final AnalyticsDataSaver saver;
@@ -89,8 +91,7 @@ public class Analytics {
 
       Logger.d(TAG, "Event: " + event + ", Key: " + key + ", attr: " + attr);
     } catch (Exception e) {
-      Logger.d(TAG, e.getStackTrace()
-          .toString());
+      Logger.d(TAG, e.getStackTrace().toString());
     }
   }
 
@@ -101,8 +102,7 @@ public class Analytics {
         Logger.d(TAG, "Flurry Event: " + event + ", Map: " + map);
       }
     } catch (Exception e) {
-      Logger.d(TAG, e.getStackTrace()
-          .toString());
+      Logger.d(TAG, e.getStackTrace().toString());
     }
   }
 
@@ -111,7 +111,6 @@ public class Analytics {
    *
    * @param flag flags fornecidas
    * @param accepted flags aceitáveis
-   *
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
@@ -136,31 +135,6 @@ public class Analytics {
     facebookLogger.logEvent(eventName, bundle);
   }
 
-  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
-    if (checkAcceptability(flags, FABRIC)) {
-      CustomEvent customEvent = new CustomEvent(event);
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
-      }
-      Answers.getInstance()
-          .logCustom(customEvent);
-      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    if (map != null) {
-      for (String s : map.keySet()) {
-        parameters.putString(s, map.get(s));
-      }
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
   private static void track(String event, int flags) {
 
     try {
@@ -171,14 +145,6 @@ public class Analytics {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
-    facebookLogger.logEvent(eventName, parameters);
   }
 
   public void save(@NonNull String key, @NonNull Event event) {
@@ -207,6 +173,38 @@ public class Analytics {
     }
   }
 
+  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
+    if (checkAcceptability(flags, FABRIC)) {
+      CustomEvent customEvent = new CustomEvent(event);
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
+      }
+      Answers.getInstance().logCustom(customEvent);
+      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    logFacebookEvents(eventName, parameters);
+  }
+
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
+    facebookLogger.logEvent(eventName, parameters);
+  }
+
   public static class Lifecycle {
 
     public static class Application {
@@ -222,11 +220,11 @@ public class Analytics {
         Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
           return null;
-        })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(o -> {
-            }, Throwable::printStackTrace);
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
+        }, Throwable::printStackTrace);
+        if (SecurePreferences.isFirstRun()) {
+          setupDimensions();
+        }
       }
 
       private static void setupDimensions() {
@@ -240,8 +238,7 @@ public class Analytics {
         try {
           final String sourceDir = V8Engine.getContext()
               .getPackageManager()
-              .getPackageInfo(V8Engine.getContext()
-                  .getPackageName(), 0).applicationInfo.sourceDir;
+              .getPackageInfo(V8Engine.getContext().getPackageName(), 0).applicationInfo.sourceDir;
           myZipFile = new ZipFile(sourceDir);
           final InputStream utmInputStream =
               myZipFile.getInputStream(myZipFile.getEntry("META-INF/utm"));
@@ -671,15 +668,13 @@ public class Analytics {
         HashMap<String, String> map = new HashMap<>();
 
         map.put(APPLICATION_NAME, app.getPackageName());
-        map.put(APPLICATION_PUBLISHER, app.getDeveloper()
-            .getName());
+        map.put(APPLICATION_PUBLISHER, app.getDeveloper().getName());
 
         track(EVENT_NAME, map, ALL);
 
         Bundle parameters = new Bundle();
         parameters.putString(APPLICATION_NAME, app.getPackageName());
-        parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper()
-            .getName());
+        parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
         logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
@@ -717,10 +712,7 @@ public class Analytics {
         HashMap<String, String> map = new HashMap<>();
         map.put(SOURCE, lastStep);
         map.put(PACKAGE_NAME, app.getPackageName());
-        map.put(TRUSTED_BADGE, app.getFile()
-            .getMalware()
-            .getRank()
-            .name());
+        map.put(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
 
         track(EVENT_NAME, map, ALL);
         logFacebookEvents(EVENT_NAME, map);
@@ -781,10 +773,8 @@ public class Analytics {
 
   public static class Dimensions {
 
-    public static final String VERTICAL = V8Engine.getConfiguration()
-        .getVerticalDimension();
-    public static final String PARTNER = V8Engine.getConfiguration()
-        .getPartnerDimension();
+    public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
+    public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
     public static final String UNKNOWN = "unknown";
     public static final String APKFY = "Apkfy";
     public static final String WEBSITE = "Website";
@@ -897,8 +887,7 @@ public class Analytics {
     protected static boolean containsUnwantedValues(String source) {
       String[] sourceArray = source.split("_");
       for (String step : sourceArray) {
-        if (Arrays.asList(unwantedValuesList)
-            .contains(step)) {
+        if (Arrays.asList(unwantedValuesList).contains(step)) {
           return true;
         }
       }
@@ -907,8 +896,7 @@ public class Analytics {
 
     public static void addStepToList(String step) {
       if (!TextUtils.isEmpty(step)) {
-        STEPS.add(step.replace(" ", "-")
-            .toLowerCase());
+        STEPS.add(step.replace(" ", "-").toLowerCase());
         Logger.d(TAG, "addStepToList() called with: step = [" + step + "]");
         if (STEPS.size() > NUMBER_OF_STEPS_TO_RECORD) {
           STEPS.remove(0);
@@ -930,11 +918,9 @@ public class Analytics {
       HashMap<String, String> map = new HashMap<>();
       map.put("Application Name", packageName);
       if (isHome) {
-        map.put("Search Position", "Home_" + Integer.valueOf(position)
-            .toString());
+        map.put("Search Position", "Home_" + Integer.valueOf(position).toString());
       } else {
-        map.put("Search Position", "More_" + Integer.valueOf(position)
-            .toString());
+        map.put("Search Position", "More_" + Integer.valueOf(position).toString());
       }
 
       track(HOME_PAGE_EDITORS_CHOICE, map, FLURRY);
