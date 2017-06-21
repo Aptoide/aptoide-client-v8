@@ -106,8 +106,6 @@ public class TimelinePresenter implements Presenter {
 
   private void handleCardClickOnBodyEvents() {
     view.getLifecycle()
-        .doOnNext(lifecycleEvent -> Logger.d(this.getClass()
-            .getName(), "event -> " + lifecycleEvent.name()))
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.articleClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
