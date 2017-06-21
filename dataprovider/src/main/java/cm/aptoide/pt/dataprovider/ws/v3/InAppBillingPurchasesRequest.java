@@ -30,8 +30,7 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, int packageVersionCode) {
-    BaseBody args =
-        getBaseArgs(apiVersion, packageName, type, packageVersionCode);
+    BaseBody args = getBaseArgs(apiVersion, packageName, type, packageVersionCode);
     return new InAppBillingPurchasesRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
@@ -48,9 +47,8 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
     return args;
   }
 
-  @Override
-  protected Observable<InAppBillingPurchasesResponse> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<InAppBillingPurchasesResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
-    return interfaces.getInAppBillingPurchases(map);
+    return service.getInAppBillingPurchases(map);
   }
 }

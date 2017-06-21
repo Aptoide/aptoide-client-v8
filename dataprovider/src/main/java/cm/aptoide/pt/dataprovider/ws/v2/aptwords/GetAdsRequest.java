@@ -11,7 +11,7 @@ import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -367,7 +367,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
                 // Impression click for those networks who need it
                 for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
-                  DataproviderUtils.AdNetworksUtils.knockImpression(ad);
+                  AdNetworkUtils.knockImpression(ad);
                 }
               });
         });
@@ -379,22 +379,5 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
   private String getExcludedPackages() {
     return excludedPackage;
-  }
-
-  public enum Location {
-    homepage("native-aptoide:homepage"), appview("native-aptoide:appview"), middleappview(
-        "native-aptoide:middleappview"), search("native-aptoide:search"), secondinstall(
-        "native-aptoide:secondinstall"), secondtry("native-aptoide:secondtry"), aptoidesdk(
-        "sdk-aptoide:generic"), firstinstall("native-aptoide:first-install");
-
-    private final String value;
-
-    Location(String value) {
-      this.value = value;
-    }
-
-    @Override public String toString() {
-      return value;
-    }
   }
 }

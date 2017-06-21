@@ -30,9 +30,8 @@ public class GetPaymentAuthorizationsRequest extends V3<PaymentAuthorizationsRes
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Override
-  protected Observable<PaymentAuthorizationsResponse> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<PaymentAuthorizationsResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
-    return interfaces.getPaymentAuthorization(map);
+    return service.getPaymentAuthorization(map);
   }
 }

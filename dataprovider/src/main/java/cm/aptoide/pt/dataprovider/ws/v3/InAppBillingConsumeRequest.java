@@ -39,8 +39,8 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
-    return interfaces.deleteInAppBillingPurchase(map);
+  @Override
+  protected Observable<BaseV3Response> loadDataFromNetwork(Service service, boolean bypassCache) {
+    return service.deleteInAppBillingPurchase(map);
   }
 }

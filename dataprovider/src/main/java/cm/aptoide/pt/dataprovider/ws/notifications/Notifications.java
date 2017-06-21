@@ -6,31 +6,24 @@
 package cm.aptoide.pt.dataprovider.ws.notifications;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.ErrorResponse;
-import cm.aptoide.pt.dataprovider.WebService;
-import java.util.List;
-import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 import rx.Observable;
 
 /**
  * Created by on 21/07/16.
  */
-public abstract class Notifications<U> extends WebService<Notifications.Interfaces, U> {
+public abstract class Notifications<U> extends WebService<Service, U> {
+
+  protected Notifications(OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(Service.class, httpClient, converterFactory, getHost());
+  }
 
   public static String getHost() {
     return "http://pnp.aptoide.com/pnp/v1/notifications/";
-  }
-
-  protected Notifications(OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(Interfaces.class, httpClient, converterFactory, getHost());
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {
@@ -52,17 +45,5 @@ public abstract class Notifications<U> extends WebService<Notifications.Interfac
   @Override public Observable<U> observe(boolean bypassCache) {
 
     return super.observe(bypassCache);
-  }
-
-  interface Interfaces {
-
-    @GET("{id}/campaigns")
-    Observable<List<GetPullNotificationsResponse>> getPullCompaignNotifications(
-        @Path("id") String id, @QueryMap Map<String, String> options,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @GET("{id}/direct") Observable<List<GetPullNotificationsResponse>> getPullSocialNotifications(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path("id") String id,
-        @Query("select") List<Integer> types, @QueryMap Map<String, String> options);
   }
 }

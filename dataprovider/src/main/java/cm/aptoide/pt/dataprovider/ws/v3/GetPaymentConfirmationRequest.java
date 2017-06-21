@@ -61,8 +61,8 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
   }
 
   @Override
-  protected Observable<PaymentConfirmationResponse> loadDataFromNetwork(Interfaces interfaces,
+  protected Observable<PaymentConfirmationResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
-    return interfaces.getPaymentConfirmation(map);
+    return service.getPaymentConfirmation(map);
   }
 }

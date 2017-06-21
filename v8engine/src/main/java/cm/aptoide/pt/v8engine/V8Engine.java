@@ -42,8 +42,13 @@ import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
+import cm.aptoide.pt.dataprovider.cache.L2Cache;
+import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
+import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -52,11 +57,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.cache.L2Cache;
-import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
-import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
-import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -1097,7 +1097,7 @@ public abstract class V8Engine extends Application {
           getApplicationContext(),
           (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
           getVersionCodeProvider(),
-          (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context),
+          (context) -> AdNetworkUtils.isGooglePlayServicesAvailable(context),
           () -> V8Engine.getConfiguration()
               .getPartnerId());
     }

@@ -96,7 +96,7 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
   }
 
   @Override
-  protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.oauth2Authentication(map, bypassCache);
+  protected Observable<OAuth> loadDataFromNetwork(Service service, boolean bypassCache) {
+    return service.oauth2Authentication(map, bypassCache);
   }
 }

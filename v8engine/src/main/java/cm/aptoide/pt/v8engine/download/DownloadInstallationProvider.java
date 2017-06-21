@@ -11,7 +11,7 @@ import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.installer.InstallationProvider;
@@ -58,7 +58,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
   @NonNull private Action1<StoredMinimalAd> handleCpd() {
     return storedMinimalAd -> {
       if (storedMinimalAd != null && storedMinimalAd.getCpdUrl() != null) {
-        DataproviderUtils.AdNetworksUtils.knockCpd(storedMinimalAd);
+        AdNetworkUtils.knockCpd(storedMinimalAd);
         storedMinimalAd.setCpdUrl(null);
         storedMinimalAdAccessor.insert(storedMinimalAd);
       }

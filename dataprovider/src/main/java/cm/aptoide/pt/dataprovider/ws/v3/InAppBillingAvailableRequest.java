@@ -39,9 +39,8 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override
-  protected Observable<InAppBillingAvailableResponse> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<InAppBillingAvailableResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
-    return interfaces.getInAppBillingAvailable(map);
+    return service.getInAppBillingAvailable(map);
   }
 }

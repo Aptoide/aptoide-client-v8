@@ -48,11 +48,11 @@ public class CreatePaymentAuthorizationRequest extends V3<BaseV3Response> {
         converterFactory, true, tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
+  @Override
+  protected Observable<BaseV3Response> loadDataFromNetwork(Service service, boolean bypassCache) {
     if (hasAuthorizationCode) {
-      return interfaces.createPaymentAuthorizationWithCode(map);
+      return service.createPaymentAuthorizationWithCode(map);
     }
-    return interfaces.createPaymentAuthorization(map);
+    return service.createPaymentAuthorization(map);
   }
 }

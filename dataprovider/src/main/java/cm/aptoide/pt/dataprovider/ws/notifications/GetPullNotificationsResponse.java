@@ -95,25 +95,4 @@ public class GetPullNotificationsResponse {
   public void setAttr(Attr attr) {
     this.attr = attr;
   }
-
-  public static class Attr {
-    private String appName;
-    private String appGraphic;
-
-    public String getAppName() {
-      return appName;
-    }
-
-    public void setAppName(String appName) {
-      this.appName = appName;
-    }
-
-    public String getAppGraphic() {
-      return appGraphic;
-    }
-
-    public void setAppGraphic(String appGraphic) {
-      this.appGraphic = appGraphic;
-    }
-  }
 }

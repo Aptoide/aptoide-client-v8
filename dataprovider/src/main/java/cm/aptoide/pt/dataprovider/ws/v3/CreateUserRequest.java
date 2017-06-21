@@ -7,11 +7,11 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
-import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
@@ -111,19 +111,19 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     body.put("hmac",
         AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + "true", "bazaar_hmac"));
 
-    return new CreateUserRequest(null, body, httpClient, bodyInterceptor,
-        tokenInvalidator, sharedPreferences);
+    return new CreateUserRequest(null, body, httpClient, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   private static RequestBody createBodyPartFromString(String string) {
     return RequestBody.create(MediaType.parse("multipart/form-data"), string);
   }
 
-  @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
+  @Override
+  protected Observable<BaseV3Response> loadDataFromNetwork(Service service, boolean bypassCache) {
     if (multipartBodyFile != null) {
-      return interfaces.createUserWithFile(multipartBodyFile, multipartRequestBody, bypassCache);
+      return service.createUserWithFile(multipartBodyFile, multipartRequestBody, bypassCache);
     }
-    return interfaces.createUser(map, bypassCache);
+    return service.createUser(map, bypassCache);
   }
 }

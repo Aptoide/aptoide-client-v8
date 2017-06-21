@@ -14,7 +14,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -258,7 +258,7 @@ public class InstalledIntentService extends IntentService {
     return Completable.fromCallable(() -> {
       ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer(),
           getApplicationContext());
-      DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+      AdNetworkUtils.knockCpi(storeMinimalAd);
       storedMinimalAdAccessor.remove(storeMinimalAd);
       return null;
     });

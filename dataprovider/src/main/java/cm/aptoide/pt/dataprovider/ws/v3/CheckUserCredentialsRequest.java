@@ -17,35 +17,34 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
 
   private final boolean createStore;
 
-  private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+  private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
         sharedPreferences);
     this.createStore = createStore;
   }
 
-  public static CheckUserCredentialsRequest toCreateStore(
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, String storeName) {
+  public static CheckUserCredentialsRequest toCreateStore(BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String storeName) {
 
     final BaseBody body = new BaseBody();
     body.put("createRepo", "1");
     body.put("oauthCreateRepo", "true");
     body.put("repo", storeName);
 
-    return new CheckUserCredentialsRequest(body, true, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
+    return new CheckUserCredentialsRequest(body, true, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Override
-  protected Observable<CheckUserCredentialsJson> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<CheckUserCredentialsJson> loadDataFromNetwork(Service service,
       boolean bypassCache) {
     if (createStore) {
-      return interfaces.checkUserCredentials(map, bypassCache);
+      return service.checkUserCredentials(map, bypassCache);
     }
 
-    return interfaces.getUserInfo(map, bypassCache);
+    return service.getUserInfo(map, bypassCache);
   }
 }
