@@ -155,6 +155,10 @@ import rx.schedulers.Schedulers;
       this.aaid = body.getAaid();
       this.setAptoideId(body.getAptoideId());
       this.notPackageTags = body.getNotPackageTags();
+      this.setAptoideMd5sum(body.getAptoideMd5sum());
+      this.setAptoidePackage(body.getAptoidePackage());
+      this.setOem_id(body.getOem_id());
+      this.setConfig_type(body.getConfig_type());
     }
   }
 
