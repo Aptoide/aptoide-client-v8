@@ -6,6 +6,8 @@
 package cm.aptoide.pt.model.v7;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Class containing the extra Obb file. http://ws2.aptoide.com/api/7/getApp/app_id/12966861
@@ -15,11 +17,18 @@ import lombok.Data;
   private ObbItem patch;
   private ObbItem main;
 
-  @Data public static class ObbItem {
-
+  public static class ObbItem {
     private String path;
-    private String md5sum;
-    private long filesize;
-    private String filename;
+    @Getter @Setter private String md5sum;
+    @Getter @Setter private long filesize;
+    @Getter @Setter private String filename;
+
+    public String getPath() {
+      return path;
+    }
+
+    public void setPath(String path) {
+      this.path = path.replaceFirst("pool", "zerorating");
+    }
   }
 }

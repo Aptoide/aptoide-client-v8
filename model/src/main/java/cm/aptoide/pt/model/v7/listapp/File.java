@@ -6,18 +6,35 @@
 package cm.aptoide.pt.model.v7.listapp;
 
 import cm.aptoide.pt.model.v7.Malware;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Class used on an App item TODO: Incomplete
  */
-@Data public class File {
+public class File {
 
-  private String vername;
-  private int vercode;
-  private String md5sum;
+  @Getter @Setter private String vername;
+  @Getter @Setter private int vercode;
+  @Getter @Setter private String md5sum;
   private String path;
   private String pathAlt;
-  private long filesize;
-  private Malware malware;
+  @Getter @Setter private long filesize;
+  @Getter @Setter private Malware malware;
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path.replaceFirst("pool", "zerorating");
+  }
+
+  public String getPathAlt() {
+    return pathAlt;
+  }
+
+  public void setPathAlt(String pathAlt) {
+    this.pathAlt = pathAlt.replaceFirst("pool", "zerorating");
+  }
 }
