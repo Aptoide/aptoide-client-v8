@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
@@ -30,7 +30,7 @@ public class PaymentPresenter implements Presenter {
   private static final int LOGIN_REQUEST_CODE = 2001;
 
   private final PaymentView view;
-  private final AptoideBilling aptoideBilling;
+  private final Billing billing;
   private final AptoideAccountManager accountManager;
   private final PaymentSelector paymentSelector;
   private final AccountNavigator accountNavigator;
@@ -38,12 +38,12 @@ public class PaymentPresenter implements Presenter {
   private final ProductProvider productProvider;
   private final PaymentAnalytics paymentAnalytics;
 
-  public PaymentPresenter(PaymentView view, AptoideBilling aptoideBilling,
+  public PaymentPresenter(PaymentView view, Billing billing,
       AptoideAccountManager accountManager, PaymentSelector paymentSelector,
       AccountNavigator accountNavigator, PaymentNavigator paymentNavigator,
       PaymentAnalytics paymentAnalytics, ProductProvider productProvider) {
     this.view = view;
-    this.aptoideBilling = aptoideBilling;
+    this.billing = billing;
     this.accountManager = accountManager;
     this.paymentSelector = paymentSelector;
     this.accountNavigator = accountNavigator;
@@ -95,7 +95,7 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
-        .flatMapCompletable(product -> aptoideBilling.getPayments(product)
+        .flatMapCompletable(product -> billing.getPayments(product)
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(payments -> showPaymentInformation(product, payments))
             .doOnCompleted(() -> view.hideLoading()))
@@ -115,7 +115,7 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
-        .flatMap(product -> aptoideBilling.getConfirmation(product)
+        .flatMap(product -> billing.getConfirmation(product)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(confirmation -> {
               if (confirmation.isFailed()) {
@@ -130,7 +130,7 @@ public class PaymentPresenter implements Presenter {
               }
             })
             .first(confirmation -> confirmation.isCompleted())
-            .flatMapSingle(confirmation -> aptoideBilling.getPurchase(product)))
+            .flatMapSingle(confirmation -> billing.getPurchase(product)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(purchase -> view.dismiss(purchase), throwable -> {
@@ -172,7 +172,7 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(created -> view.paymentSelection())
         .flatMapSingle(paymentViewModel -> productProvider.getProduct()
-            .flatMap(product -> aptoideBilling.getPayment(paymentViewModel.getId(), product)))
+            .flatMap(product -> billing.getPayment(paymentViewModel.getId(), product)))
         .flatMapCompletable(payment -> paymentSelector.selectPayment(payment))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -188,7 +188,7 @@ public class PaymentPresenter implements Presenter {
                 payment -> paymentAnalytics.sendPaymentBuyButtonPressedEvent(product,
                     payment.getName()))
                 .flatMapCompletable(
-                    payment -> aptoideBilling.processPayment(payment.getId(), product)
+                    payment -> billing.processPayment(payment.getId(), product)
                         .observeOn(AndroidSchedulers.mainThread())
                         .onErrorResumeNext(throwable -> {
 
@@ -279,7 +279,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Single<Payment> getSelectedPayment(Product product) {
-    return aptoideBilling.getPayments(product)
+    return billing.getPayments(product)
         .flatMap(payments -> paymentSelector.selectedPayment(payments));
   }
 

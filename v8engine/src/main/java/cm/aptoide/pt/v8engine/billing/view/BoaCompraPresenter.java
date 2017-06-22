@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -17,17 +17,17 @@ import rx.android.schedulers.AndroidSchedulers;
 public class BoaCompraPresenter implements Presenter {
 
   private final BoaCompraView view;
-  private final AptoideBilling aptoideBilling;
+  private final Billing billing;
   private final int paymentId;
   private final PaymentAnalytics analytics;
   private final PaymentSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
 
-  public BoaCompraPresenter(BoaCompraView view, AptoideBilling aptoideBilling,
+  public BoaCompraPresenter(BoaCompraView view, Billing billing,
       int paymentId, PaymentAnalytics analytics, PaymentSyncScheduler syncScheduler,
       ProductProvider productProvider) {
     this.view = view;
-    this.aptoideBilling = aptoideBilling;
+    this.billing = billing;
     this.paymentId = paymentId;
     this.analytics = analytics;
     this.syncScheduler = syncScheduler;
@@ -71,7 +71,7 @@ public class BoaCompraPresenter implements Presenter {
         .doOnNext(created -> view.showLoading())
         .flatMap(__ -> productProvider.getProduct()
             .flatMapObservable(
-                product -> aptoideBilling.getWebPaymentAuthorization(paymentId, product)
+                product -> billing.getWebPaymentAuthorization(paymentId, product)
                     .takeUntil(webAuthorization -> !webAuthorization.isPendingUserConsent())
                     .observeOn(AndroidSchedulers.mainThread())
                     .flatMapCompletable(authorization -> {
@@ -81,7 +81,7 @@ public class BoaCompraPresenter implements Presenter {
                         return Completable.complete();
                       }
 
-                      return aptoideBilling.processPayment(paymentId, product)
+                      return billing.processPayment(paymentId, product)
                           .observeOn(AndroidSchedulers.mainThread())
                           .doOnCompleted(() -> view.dismiss());
                     })))

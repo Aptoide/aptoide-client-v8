@@ -112,12 +112,12 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
         ((V8Engine) getApplicationContext()).getPaymentAnalytics();
 
     attachPresenter(
-        new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
+        new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
             accountManager, new PaymentSelector(BuildConfig.DEFAULT_PAYMENT_ID,
             ((V8Engine) getApplicationContext()).getDefaultSharedPreferences()),
             new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
             new PaymentNavigator(getActivityNavigator()), paymentAnalytics,
-            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
+            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getBilling(),
                 getIntent())), savedInstanceState);
   }
 

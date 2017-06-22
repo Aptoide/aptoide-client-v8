@@ -84,7 +84,7 @@ import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
@@ -222,7 +222,7 @@ public abstract class V8Engine extends Application {
   private Payer accountPayer;
   private InAppBillingSerializer inAppBillingSerialzer;
   private AuthorizationFactory authorizationFactory;
-  private AptoideBilling aptoideBilling;
+  private Billing billing;
   private PurchaseIntentMapper purchaseIntentMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
@@ -681,9 +681,9 @@ public abstract class V8Engine extends Application {
     return paymentSyncScheduler;
   }
 
-  public AptoideBilling getAptoideBilling() {
+  public Billing getBilling() {
 
-    if (aptoideBilling == null) {
+    if (billing == null) {
 
       final PaymentConfirmationFactory confirmationFactory = new PaymentConfirmationFactory();
 
@@ -720,10 +720,10 @@ public abstract class V8Engine extends Application {
               getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences(),
               getPackageRepository()));
 
-      aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
+      billing = new Billing(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository());
     }
-    return aptoideBilling;
+    return billing;
   }
 
   public PackageRepository getPackageRepository() {

@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Product;
 import rx.Single;
 
@@ -23,7 +23,7 @@ public class ProductProvider {
   private static final String EXTRA_DEVELOPER_PAYLOAD =
       "cm.aptoide.pt.v8engine.view.payment.intent.extra.DEVELOPER_PAYLOAD";
 
-  private final AptoideBilling billing;
+  private final Billing billing;
 
   private final long appId;
   private final String storeName;
@@ -35,20 +35,7 @@ public class ProductProvider {
   private final String packageName;
   private final String developerPayload;
 
-  private ProductProvider(AptoideBilling billing, long appId, String storeName, boolean sponsored,
-      int apiVersion, String type, String sku, String packageName, String developerPayload) {
-    this.billing = billing;
-    this.appId = appId;
-    this.storeName = storeName;
-    this.sponsored = sponsored;
-    this.apiVersion = apiVersion;
-    this.type = type;
-    this.sku = sku;
-    this.packageName = packageName;
-    this.developerPayload = developerPayload;
-  }
-
-  public static ProductProvider fromIntent(AptoideBilling billing, Intent intent) {
+  public static ProductProvider fromIntent(Billing billing, Intent intent) {
     return new ProductProvider(billing, intent.getLongExtra(EXTRA_APP_ID, -1),
         intent.getStringExtra(EXTRA_STORE_NAME), intent.getBooleanExtra(EXTRA_SPONSORED, false),
         intent.getIntExtra(EXTRA_API_VERSION, -1), intent.getStringExtra(EXTRA_TYPE),
@@ -73,6 +60,19 @@ public class ProductProvider {
     bundle.putString(ProductProvider.EXTRA_SKU, sku);
     bundle.putString(ProductProvider.EXTRA_DEVELOPER_PAYLOAD, developerPayload);
     return bundle;
+  }
+
+  private ProductProvider(Billing billing, long appId, String storeName, boolean sponsored,
+      int apiVersion, String type, String sku, String packageName, String developerPayload) {
+    this.billing = billing;
+    this.appId = appId;
+    this.storeName = storeName;
+    this.sponsored = sponsored;
+    this.apiVersion = apiVersion;
+    this.type = type;
+    this.sku = sku;
+    this.packageName = packageName;
+    this.developerPayload = developerPayload;
   }
 
   public Single<Product> getProduct() {

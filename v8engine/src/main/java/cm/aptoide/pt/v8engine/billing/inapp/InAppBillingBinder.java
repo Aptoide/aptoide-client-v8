@@ -10,7 +10,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.purchase.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
@@ -58,11 +58,11 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
   private final Context context;
   private final InAppBillingSerializer serializer;
   private final PaymentThrowableCodeMapper errorCodeFactory;
-  private final AptoideBilling billing;
+  private final Billing billing;
   private final CrashReport crashReport;
 
   public InAppBillingBinder(Context context, InAppBillingSerializer serializer,
-      PaymentThrowableCodeMapper errorCodeFactory, AptoideBilling billing,
+      PaymentThrowableCodeMapper errorCodeFactory, Billing billing,
       CrashReport crashReport) {
     this.context = context;
     this.serializer = serializer;

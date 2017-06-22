@@ -55,8 +55,8 @@ public class PayPalActivity extends ProductActivity implements PayPalView {
     authorizationSubject = PublishSubject.create();
 
     attachPresenter(
-        new PayPalPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
-            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
+        new PayPalPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
+            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getBilling(),
                 getIntent())), savedInstanceState);
   }
 

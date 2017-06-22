@@ -20,13 +20,13 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class AptoideBilling {
+public class Billing {
 
   private final ProductRepositoryFactory productRepositoryFactory;
   private final PaymentRepositoryFactory paymentRepositoryFactory;
   private final InAppBillingRepository inAppBillingRepository;
 
-  public AptoideBilling(ProductRepositoryFactory productRepositoryFactory,
+  public Billing(ProductRepositoryFactory productRepositoryFactory,
       PaymentRepositoryFactory paymentRepositoryFactory,
       InAppBillingRepository inAppBillingRepository) {
     this.productRepositoryFactory = productRepositoryFactory;

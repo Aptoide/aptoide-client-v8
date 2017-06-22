@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
@@ -10,10 +10,10 @@ import rx.android.schedulers.AndroidSchedulers;
 public class PayPalPresenter implements Presenter {
 
   private final PayPalView view;
-  private final AptoideBilling billing;
+  private final Billing billing;
   private final ProductProvider productProvider;
 
-  public PayPalPresenter(PayPalView view, AptoideBilling billing,
+  public PayPalPresenter(PayPalView view, Billing billing,
       ProductProvider productProvider) {
     this.view = view;
     this.billing = billing;
