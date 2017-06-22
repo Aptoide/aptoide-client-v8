@@ -7,6 +7,7 @@ import cm.aptoide.pt.v8engine.social.view.CardViewHolder;
 import cm.aptoide.pt.v8engine.social.view.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.ProgressViewHolder;
 import cm.aptoide.pt.v8engine.social.view.RecommendationViewHolder;
+import cm.aptoide.pt.v8engine.social.view.StoreLatestAppsViewHolder;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -43,6 +44,9 @@ public class CardViewHolderFactory {
         return new RecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_recommendation_item, parent, false), articleSubject,
             dateCalculator, spannableFactory);
+      case STORE:
+        return new StoreLatestAppsViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_store_item, parent, false), articleSubject, dateCalculator, spannableFactory);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));

@@ -5,6 +5,8 @@ import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.RecommendationTimelineItem;
+import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
+import cm.aptoide.pt.model.v7.timeline.StoreLatestAppsTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Video;
@@ -81,6 +83,24 @@ public class TimelineResponseCardMapper {
             .getIcon(), recommendation.getSimilarApps()
             .get(0)
             .getName(), recommendation.getTimestamp(), abUrl, CardType.RECOMMENDATION));
+      } else if (item instanceof StoreLatestAppsTimelineItem) {
+        final StoreLatestApps store = ((StoreLatestAppsTimelineItem) item).getData();
+        String abUrl = null;
+        if (store.getAb() != null
+            && store.getAb()
+            .getConversion() != null) {
+          abUrl = store.getAb()
+              .getConversion()
+              .getUrl();
+        }
+        cards.add(new cm.aptoide.pt.v8engine.social.data.StoreLatestApps(store.getCardId(),
+            store.getStore()
+                .getName(), store.getStore()
+            .getAvatar(), store.getStore()
+            .getStats()
+            .getSubscribers(), store.getStore()
+            .getStats()
+            .getApps(), store.getLatestUpdate(), store.getApps(), abUrl, CardType.STORE));
       }
     }
 

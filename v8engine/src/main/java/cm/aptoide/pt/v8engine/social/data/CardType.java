@@ -5,5 +5,5 @@ package cm.aptoide.pt.v8engine.social.data;
  */
 
 public enum CardType {
-  ARTICLE, VIDEO, RECOMMENDATION, PROGRESS
+  ARTICLE, VIDEO, RECOMMENDATION, STORE, PROGRESS
 }
