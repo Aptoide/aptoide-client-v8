@@ -5,6 +5,9 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import cm.aptoide.pt.v8engine.InstallationProgress;
+import java.util.List;
+
 /**
  * Created by marcelobenites on 18/01/17.
  */
@@ -16,4 +19,8 @@ public interface MainView extends View {
   void showHome();
 
   boolean showDeepLink();
+
+  void showInstallationError(List<InstallationProgress> installationProgresses);
+
+  void dismissInstallationError();
 }

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.install.installer;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
@@ -21,7 +20,7 @@ public class RootInstallationRetryHandler {
   private final int notificationId;
   private final SystemNotificationShower systemNotificationShower;
   private final InstallManager installManager;
-  private final PublishRelay<RootInstallErrorNotification> handler;
+  private final PublishRelay<List<InstallationProgress>> handler;
   private int count;
   private Context context;
   private Subscription subscription;
@@ -29,7 +28,7 @@ public class RootInstallationRetryHandler {
 
   public RootInstallationRetryHandler(int notificationId,
       SystemNotificationShower systemNotificationShower, InstallManager installManager,
-      PublishRelay<RootInstallErrorNotification> handler, int initialCount, Context context,
+      PublishRelay<List<InstallationProgress>> handler, int initialCount, Context context,
       RootInstallErrorNotificationFactory rootInstallErrorNotificationFactory) {
     this.notificationId = notificationId;
     this.systemNotificationShower = systemNotificationShower;
@@ -42,16 +41,24 @@ public class RootInstallationRetryHandler {
 
   public void start() {
     subscription = installManager.getTimedOutInstallations()
-        .flatMap(installationProgresses -> {
-          switch (installationProgresses.size()) {
-            case 0:
-              return dismissNotification();
-            default:
-              return showErrorNotification(installationProgresses);
+        .flatMapCompletable(installationProgresses -> {
+          if (count == 0) {
+            return handleNotifications(installationProgresses);
+          } else {
+            return Completable.fromAction(() -> handler.call(installationProgresses));
           }
         })
         .subscribe(rootInstallErrorNotification -> {
         }, throwable -> Logger.e(TAG, "start: " + throwable));
+  }
+
+  private Completable handleNotifications(List<InstallationProgress> installationProgresses) {
+    if (installationProgresses.isEmpty()) {
+      return Completable.fromAction(() -> dismissNotification());
+    } else {
+      return systemNotificationShower.showNotification(context,
+          rootInstallErrorNotificationFactory.create(context, installationProgresses));
+    }
   }
 
   private Observable<Void> dismissNotification() {
@@ -61,26 +68,13 @@ public class RootInstallationRetryHandler {
     });
   }
 
-  @NonNull public Observable<RootInstallErrorNotification> showErrorNotification(
-      List<InstallationProgress> installationProgresses) {
-    return Observable.just(
-        rootInstallErrorNotificationFactory.create(context, installationProgresses))
-        .flatMapCompletable(installations -> {
-          if (count == 0) {
-            return systemNotificationShower.showNotification(context, installations);
-          } else {
-            return Completable.fromAction(() -> handler.call(installations));
-          }
-        });
-  }
-
   public void stop() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
   }
 
-  public Observable<RootInstallErrorNotification> retries() {
+  public Observable<List<InstallationProgress>> retries() {
     return handler.doOnSubscribe(() -> count++)
         .doOnUnsubscribe(() -> count--);
   }

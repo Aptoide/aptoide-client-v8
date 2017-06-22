@@ -11,8 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
@@ -30,6 +32,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -58,6 +61,7 @@ import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -75,15 +79,16 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   private StoreUtilsProxy storeUtilsProxy;
   private StoreRepository storeRepository;
   private FragmentNavigator fragmentNavigator;
+  private InstallManager installManager;
+  private Snackbar snackbar;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
-
+    installManager =
+        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
-    final InstallManager installManager =
-        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager);
     final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
@@ -96,10 +101,11 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
         converterFactory);
 
-    attachPresenter(
-        new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this),
-            ((V8Engine) getApplicationContext()).getNotificationSyncScheduler()),
-        savedInstanceState);
+    attachPresenter(new MainPresenter(this, installManager,
+        ((V8Engine) getApplicationContext()).getRootInstallationRetryHandler(),
+        CrashReport.getInstance(), new ApkFy(this, getIntent()), autoUpdate,
+        new ContentPuller(this),
+        ((V8Engine) getApplicationContext()).getNotificationSyncScheduler()), savedInstanceState);
   }
 
   @Override public void showWizard() {
@@ -115,6 +121,29 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
   @Override public boolean showDeepLink() {
     return handleDeepLinks();
+  }
+
+  @Override public void showInstallationError(List<InstallationProgress> installationProgresses) {
+    String title;
+    if (installationProgresses.size() == 1) {
+      title = getString(R.string.generalscreen_short_root_install_single_app_timeout_error_message);
+    } else {
+      title = getString(R.string.generalscreen_short_root_install_timeout_error_message,
+          installationProgresses.size());
+    }
+
+    View contentView = findViewById(android.R.id.content);
+    snackbar = Snackbar.make(contentView, title, Snackbar.LENGTH_INDEFINITE)
+        .setAction(R.string.generalscreen_short_root_install_timeout_error_action,
+            view -> installManager.retryTimedOutInstallations(this)
+                .subscribe());
+    snackbar.show();
+  }
+
+  @Override public void dismissInstallationError() {
+    if (snackbar != null) {
+      snackbar.dismiss();
+    }
   }
 
   private boolean handleDeepLinks() {

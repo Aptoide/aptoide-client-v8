@@ -9,11 +9,14 @@ import android.os.Bundle;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.notification.ContentPuller;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.util.ApkFy;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 18/01/17.
@@ -22,14 +25,22 @@ public class MainPresenter implements Presenter {
 
   private final MainView view;
   private final ContentPuller contentPuller;
+  private final InstallManager installManager;
+  private final RootInstallationRetryHandler rootInstallationRetryHandler;
+  private final CrashReport crashReport;
   private NotificationSyncScheduler notificationSyncScheduler;
   private ApkFy apkFy;
   private AutoUpdate autoUpdate;
   private boolean firstCreated;
 
-  public MainPresenter(MainView view, ApkFy apkFy, AutoUpdate autoUpdate,
-      ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler) {
+  public MainPresenter(MainView view, InstallManager installManager,
+      RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
+      ApkFy apkFy, AutoUpdate autoUpdate, ContentPuller contentPuller,
+      NotificationSyncScheduler notificationSyncScheduler) {
     this.view = view;
+    this.installManager = installManager;
+    this.rootInstallationRetryHandler = rootInstallationRetryHandler;
+    this.crashReport = crashReport;
     this.apkFy = apkFy;
     this.autoUpdate = autoUpdate;
     this.contentPuller = contentPuller;
@@ -59,8 +70,9 @@ public class MainPresenter implements Presenter {
               SecurePreferences.setWizardAvailable(false);
             }
           }
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+        }, throwable -> crashReport.log(throwable));
+
+    setupInstallErrorsDisplay();
   }
 
   @Override public void saveState(Bundle state) {
@@ -69,5 +81,26 @@ public class MainPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     firstCreated = false;
+  }
+
+  private void setupInstallErrorsDisplay() {
+    view.getLifecycle()
+        .filter(event -> View.LifecycleEvent.RESUME.equals(event))
+        .flatMap(lifecycleEvent -> rootInstallationRetryHandler.retries()
+            .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
+        .distinctUntilChanged(installationProgresses -> installationProgresses.size())
+        .filter(installationProgresses -> installationProgresses.size() > 0)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(installationProgresses -> view.showInstallationError(installationProgresses),
+            throwable -> crashReport.log(throwable));
+    view.getLifecycle()
+        .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .flatMap(lifecycleEvent -> installManager.getTimedOutInstallations())
+        .filter(installationProgresses -> installationProgresses.size() == 0)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(noInstallErrors -> view.dismissInstallationError(),
+            throwable -> crashReport.log(throwable));
   }
 }

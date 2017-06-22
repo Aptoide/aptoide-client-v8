@@ -12,12 +12,13 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
+import cm.aptoide.pt.v8engine.view.permission.PermissionServiceActivity;
 import lombok.Getter;
 
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class BaseActivity extends RootInstallErrorHandlerActivity {
+public abstract class BaseActivity extends PermissionServiceActivity {
 
   @Getter private boolean _resumed = false;
 
@@ -52,6 +53,12 @@ public abstract class BaseActivity extends RootInstallErrorHandlerActivity {
     Analytics.Lifecycle.Activity.onStart(this);
   }
 
+  @Override protected void onResume() {
+    super.onResume();
+    _resumed = true;
+    Analytics.Lifecycle.Activity.onResume(this);
+  }
+
   @Override protected void onPause() {
     super.onPause();
     _resumed = false;
@@ -60,12 +67,6 @@ public abstract class BaseActivity extends RootInstallErrorHandlerActivity {
   @Override protected void onStop() {
     super.onStop();
     Analytics.Lifecycle.Activity.onStop(this);
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
-    _resumed = true;
-    Analytics.Lifecycle.Activity.onResume(this);
   }
 
   @Override protected void onNewIntent(Intent intent) {
