@@ -10,7 +10,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import cm.aptoide.pt.annotation.Partners;
 import java.util.HashMap;
 import java.util.HashSet;

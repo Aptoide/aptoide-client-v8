@@ -20,7 +20,8 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
   public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static class StoreCredentials {

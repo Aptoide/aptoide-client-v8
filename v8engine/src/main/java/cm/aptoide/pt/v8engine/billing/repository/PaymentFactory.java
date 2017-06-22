@@ -10,8 +10,8 @@ import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.services.AptoidePayment;
-import cm.aptoide.pt.v8engine.billing.services.WebPayment;
 import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
+import cm.aptoide.pt.v8engine.billing.services.WebPayment;
 
 public class PaymentFactory {
 

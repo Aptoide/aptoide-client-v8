@@ -120,7 +120,8 @@ public class PaymentPresenter implements Presenter {
   private Observable<Void> paymentSelection() {
     return view.paymentSelection()
         .flatMap(paymentViewModel -> getPayment(paymentViewModel).flatMapCompletable(
-            payment -> paymentSelector.selectPayment(payment)).toObservable());
+            payment -> paymentSelector.selectPayment(payment))
+            .toObservable());
   }
 
   private Observable<Void> cancellationSelection(Product product) {
@@ -129,7 +130,8 @@ public class PaymentPresenter implements Presenter {
                 cancelled -> sendCancellationAnalytics(product).andThen(Observable.just(cancelled))),
         view.tapOutsideSelection()
             .flatMap(tappedOutside -> sendTapOutsideAnalytics(product).andThen(
-                Observable.just(tappedOutside)))).doOnNext(cancelled -> view.dismiss());
+                Observable.just(tappedOutside))))
+        .doOnNext(cancelled -> view.dismiss());
   }
 
   private Completable sendTapOutsideAnalytics(Product product) {
@@ -277,7 +279,8 @@ public class PaymentPresenter implements Presenter {
 
   private Completable showPayments(List<Payment> payments, Payment selectedPayment) {
     return convertToViewModel(payments, selectedPayment).doOnSuccess(
-        paymentViewModels -> view.showPayments(paymentViewModels)).toCompletable();
+        paymentViewModels -> view.showPayments(paymentViewModels))
+        .toCompletable();
   }
 
   private Single<List<PaymentView.PaymentViewModel>> convertToViewModel(List<Payment> payments,

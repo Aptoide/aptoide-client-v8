@@ -19,18 +19,19 @@ import rx.Observable;
 
 public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequest.Body> {
 
+  public SyncAddressBookRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+  }
+
   @NonNull public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
         + "/api/7/";
-  }
-
-  public SyncAddressBookRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static SyncAddressBookRequest of(List<String> numbers, List<String> emails,

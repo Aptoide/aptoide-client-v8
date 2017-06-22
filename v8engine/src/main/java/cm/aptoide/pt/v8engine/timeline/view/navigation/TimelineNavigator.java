@@ -21,4 +21,4 @@ public class TimelineNavigator {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineLikesFragment(cardId, numberOfLikes, "default", title));
   }
- }
+}

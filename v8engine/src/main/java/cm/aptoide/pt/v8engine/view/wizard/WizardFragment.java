@@ -61,14 +61,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     }
   }
 
-  @Override public void onDestroy() {
-    if (viewPager != null) {
-      viewPager.removeOnPageChangeListener(null);
-      viewPager = null;
-    }
-    super.onDestroy();
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
 
@@ -102,6 +94,14 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
+  }
+
+  @Override public void onDestroy() {
+    if (viewPager != null) {
+      viewPager.removeOnPageChangeListener(null);
+      viewPager = null;
+    }
+    super.onDestroy();
   }
 
   @Override public void onDestroyView() {

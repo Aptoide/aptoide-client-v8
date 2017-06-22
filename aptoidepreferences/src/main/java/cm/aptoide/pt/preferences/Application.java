@@ -7,7 +7,6 @@ package cm.aptoide.pt.preferences;
 
 import android.content.Context;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.utils.AptoideUtils;
 
 /**
  * Created by neuro on 22-04-2016.

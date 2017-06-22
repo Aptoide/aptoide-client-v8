@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -28,7 +27,6 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -138,7 +136,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               }
 
               future.cancel(false);
-              postponeReferrerExtraction(minimalAd, 0, true, httpClient, converterFactory, qManager);
+              postponeReferrerExtraction(minimalAd, 0, true, httpClient, converterFactory,
+                  qManager);
             }
           }
 
@@ -160,8 +159,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
-                  sharedPreferences)),
+              converterFactory,
+              qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
               qManager);
         }
 
@@ -169,8 +168,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             boolean success, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
-                  sharedPreferences)),
+              converterFactory,
+              qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
               qManager);
         }
 
@@ -184,8 +183,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
                 minimalAd.getClickUrl(), success, httpClient, converterFactory,
-                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
-                    sharedPreferences)))
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)))
                 .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
@@ -203,8 +201,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
                               adsRepository, httpClient, converterFactory, qManager, context,
-                              sharedPreferences),
-                          throwable -> clearExcludedNetworks(packageName));
+                              sharedPreferences), throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
                   clearExcludedNetworks(packageName);
@@ -260,8 +257,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
     }
     i.putExtra("referrer", referrer);
-    context
-        .sendBroadcast(i);
+    context.sendBroadcast(i);
     Logger.d(TAG, "Sent broadcast to " + packageName + " with referrer " + referrer);
     // TODO: 28-07-2016 Baikova referrer broadcasted.
   }

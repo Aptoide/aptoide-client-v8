@@ -5,16 +5,12 @@
 
 package cm.aptoide.pt.v8engine.filemanager;
 
-import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 import cm.aptoide.pt.downloadmanager.CacheManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import rx.Observable;

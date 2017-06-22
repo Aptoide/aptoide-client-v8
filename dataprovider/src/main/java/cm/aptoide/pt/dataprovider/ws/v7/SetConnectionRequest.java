@@ -18,18 +18,19 @@ import rx.Observable;
 
 public class SetConnectionRequest extends V7<BaseV7Response, SetConnectionRequest.Body> {
 
+  protected SetConnectionRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+  }
+
   public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
         + "/api/7/";
-  }
-
-  protected SetConnectionRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static SetConnectionRequest of(String userPhone, BodyInterceptor<BaseBody> bodyInterceptor,

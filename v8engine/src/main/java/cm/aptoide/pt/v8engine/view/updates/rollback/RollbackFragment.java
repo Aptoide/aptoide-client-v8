@@ -102,8 +102,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
         .subscribe(rollbacks -> {
           if (rollbacks == null || rollbacks.isEmpty()) {
             emptyData.setText(AptoideUtils.StringU.getFormattedString(R.string.no_rollbacks_msg,
-                getContext().getResources(),
-                Application.getConfiguration()
+                getContext().getResources(), Application.getConfiguration()
                     .getMarketName()));
             emptyData.setVisibility(View.VISIBLE);
           } else {

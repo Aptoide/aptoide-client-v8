@@ -15,8 +15,8 @@ public class EntryActivity extends AppCompatActivity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    startActivity(new Intent(this,
-        ((V8Engine) getApplicationContext()).getEntryPointChooser().getEntryPoint()));
+    startActivity(new Intent(this, ((V8Engine) getApplicationContext()).getEntryPointChooser()
+        .getEntryPoint()));
     finish();
   }
 }

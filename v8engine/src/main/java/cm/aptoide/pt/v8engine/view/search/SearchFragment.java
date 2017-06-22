@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.search;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +26,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
@@ -282,8 +280,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-          sharedPreferences)
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
                 .getList();
@@ -299,8 +296,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-          sharedPreferences)
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
                 .getList();

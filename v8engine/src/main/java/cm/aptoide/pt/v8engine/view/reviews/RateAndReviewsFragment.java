@@ -193,14 +193,15 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        baseBodyInterceptor, httpClient, converterFactory, installedRepository,
-        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        baseBodyInterceptor, httpClient, converterFactory, installedRepository, tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
   }
 
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory,
-        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+        tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

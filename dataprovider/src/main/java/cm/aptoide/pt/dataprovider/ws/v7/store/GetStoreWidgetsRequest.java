@@ -42,7 +42,8 @@ import rx.Observable;
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager) {
 
-    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
+    final Body body =
+        new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
 
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,

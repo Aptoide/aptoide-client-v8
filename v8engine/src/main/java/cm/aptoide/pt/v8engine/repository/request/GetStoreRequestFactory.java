@@ -41,6 +41,7 @@ class GetStoreRequestFactory {
 
   public GetStoreRequest newStore(String url) {
     return GetStoreRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager);
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources,
+        windowManager);
   }
 }
