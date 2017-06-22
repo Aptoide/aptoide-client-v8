@@ -7,8 +7,6 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
@@ -20,9 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-
-import java.util.Locale;
-
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -68,8 +63,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
 
     //If the user had previously chosen a language, the app is displayed in that language, if not, it starts with the device's language as default
-    SharedPreferences sharedPreferences = getSharedPreferences("LANGUAGES_PREFERENCES", Context.MODE_PRIVATE);
-    String lang = sharedPreferences.getString("Language", Locale.getDefault().toString());
+    String lang = ManagerPreferences.getLanguage();
     Resources res = getResources();
     DisplayMetrics dm = res.getDisplayMetrics();
     android.content.res.Configuration conf = res.getConfiguration();

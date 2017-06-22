@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -26,7 +28,7 @@ public class BaseBodyDecorator {
     baseBody.setAptoideId(aptoideClientUUID);
     baseBody.setAptoideVercode(AptoideUtils.Core.getVerCode());
     baseBody.setCdn("pool");
-    baseBody.setLang(Api.LANG);
+    baseBody.setLang(ManagerPreferences.getLanguage());
     baseBody.setMature(Api.isMature());
     if (ManagerPreferences.getHWSpecsFilter()) {
       baseBody.setQ(Api.Q);

@@ -152,7 +152,7 @@ import rx.Observable;
     HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
 
     parameters.put("q", Api.Q);
-    parameters.put("lang", Api.LANG);
+    parameters.put("lang", ManagerPreferences.getLanguage());
     parameters.put("cpuid", aptoideClientUUID);
     parameters.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
     parameters.put("location", location.toString());
