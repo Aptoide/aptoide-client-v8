@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import cm.aptoide.pt.model.v7.timeline.AppUpdate;
+import cm.aptoide.pt.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
@@ -101,6 +103,21 @@ public class TimelineResponseCardMapper {
             .getSubscribers(), store.getStore()
             .getStats()
             .getApps(), store.getLatestUpdate(), store.getApps(), abUrl, CardType.STORE));
+      } else if (item instanceof AppUpdateTimelineItem) {
+        final AppUpdate appUpdate = ((AppUpdateTimelineItem) item).getData();
+        String abUrl = null;
+        if (appUpdate.getAb() != null
+            && appUpdate.getAb()
+            .getConversion() != null) {
+          abUrl = appUpdate.getAb()
+              .getConversion()
+              .getUrl();
+        }
+        cards.add(new cm.aptoide.pt.v8engine.social.data.AppUpdate(appUpdate.getCardId(),
+            appUpdate.getStore()
+                .getName(), appUpdate.getStore()
+            .getAvatar(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getPackageName(),
+            appUpdate.getAdded(), abUrl, CardType.UPDATE));
       }
     }
 

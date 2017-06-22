@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.social.data;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.social.view.AppUpdateViewHolder;
 import cm.aptoide.pt.v8engine.social.view.CardViewHolder;
 import cm.aptoide.pt.v8engine.social.view.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.ProgressViewHolder;
@@ -46,7 +47,12 @@ public class CardViewHolderFactory {
             dateCalculator, spannableFactory);
       case STORE:
         return new StoreLatestAppsViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_store_item, parent, false), articleSubject, dateCalculator, spannableFactory);
+            .inflate(R.layout.timeline_store_item, parent, false), articleSubject, dateCalculator,
+            spannableFactory);
+      case UPDATE:
+        return new AppUpdateViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_update_item, parent, false), articleSubject, dateCalculator,
+            spannableFactory);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));
