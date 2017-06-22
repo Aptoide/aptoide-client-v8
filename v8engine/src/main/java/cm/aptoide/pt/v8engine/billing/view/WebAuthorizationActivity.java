@@ -52,7 +52,7 @@ public class WebAuthorizationActivity extends ProductActivity implements WebAuth
       backButtonSelectionSubject.call(null);
       return false;
     };
-    registerBackClickHandler(clickHandler);
+    registerClickHandler(clickHandler);
 
     attachPresenter(new WebAuthorizationPresenter(this,
         ((V8Engine) getApplicationContext()).getAptoideBilling(),
@@ -69,7 +69,7 @@ public class WebAuthorizationActivity extends ProductActivity implements WebAuth
     webView.setWebViewClient(null);
     webView.destroy();
     unknownErrorDialog.dismiss();
-    unregisterBackClickHandler(clickHandler);
+    unregisterClickHandler(clickHandler);
   }
 
   @Override public void showLoading() {

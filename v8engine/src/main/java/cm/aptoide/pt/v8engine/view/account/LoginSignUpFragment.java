@@ -79,7 +79,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
       bottomSheetBehavior = null;
     }
     if (presenter != null) {
-      unregisterBackClickHandler(presenter);
+      unregisterClickHandler(presenter);
     }
     super.onDestroyView();
   }
@@ -89,7 +89,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
     presenter = new LoginSignUpPresenter(this, getFragmentChildNavigator(R.id.login_signup_layout),
         dismissToNavigateToMainView, navigateToHome);
     attachPresenter(presenter, null);
-    registerBackClickHandler(presenter);
+    registerClickHandler(presenter);
     bottomSheetBehavior.setBottomSheetCallback(presenter);
   }
 
