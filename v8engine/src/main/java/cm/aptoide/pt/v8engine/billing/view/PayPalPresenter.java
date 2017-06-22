@@ -7,13 +7,13 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class PayPalPaymentPresenter implements Presenter {
+public class PayPalPresenter implements Presenter {
 
-  private final PayPalPaymentView view;
+  private final PayPalView view;
   private final AptoideBilling billing;
   private final ProductProvider productProvider;
 
-  public PayPalPaymentPresenter(PayPalPaymentView view, AptoideBilling billing,
+  public PayPalPresenter(PayPalView view, AptoideBilling billing,
       ProductProvider productProvider) {
     this.view = view;
     this.billing = billing;

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
@@ -24,9 +25,6 @@ import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
-/**
- * Created by marcelobenites on 8/19/16.
- */
 public class PaymentPresenter implements Presenter {
 
   private static final int LOGIN_REQUEST_CODE = 2001;
@@ -97,11 +95,10 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
-        .flatMapCompletable(
-            product -> getPayments(product).observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(payments -> showPaymentInformation(product, payments))
-                .flatMapCompletable(payments -> showSelectedPayment(payments))
-                .doOnCompleted(() -> view.hideLoading()))
+        .flatMapCompletable(product -> aptoideBilling.getPayments(product)
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMapCompletable(payments -> showPaymentInformation(product, payments))
+            .doOnCompleted(() -> view.hideLoading()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(__ -> {
@@ -174,6 +171,8 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(created -> view.paymentSelection())
+        .flatMapSingle(paymentViewModel -> productProvider.getProduct()
+            .flatMap(product -> aptoideBilling.getPayment(paymentViewModel.getId(), product)))
         .flatMapCompletable(payment -> paymentSelector.selectPayment(payment))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -192,6 +191,7 @@ public class PaymentPresenter implements Presenter {
                     payment -> aptoideBilling.processPayment(payment.getId(), product)
                         .observeOn(AndroidSchedulers.mainThread())
                         .onErrorResumeNext(throwable -> {
+
                           if (throwable instanceof PaymentNotAuthorizedException) {
                             paymentNavigator.navigateToAuthorizationView(payment, product);
                             view.hideLoading();
@@ -234,14 +234,21 @@ public class PaymentPresenter implements Presenter {
     }
   }
 
-  private void showPaymentInformation(Product product,
-      List<PaymentView.PaymentViewModel> payments) {
-    view.showProduct(product);
-    if (payments.isEmpty()) {
-      view.showPaymentsNotFoundMessage();
-    } else {
-      view.showPayments(payments);
-    }
+  private Completable showPaymentInformation(Product product, List<Payment> payments) {
+    return getPaymentViewModels(payments).doOnSuccess(paymentViewModels -> {
+      view.showProduct(product);
+      if (paymentViewModels.isEmpty()) {
+        view.showPaymentsNotFoundMessage();
+      } else {
+        view.showPayments(paymentViewModels);
+      }
+    })
+        .flatMapCompletable(paymentViewModels -> {
+          if (paymentViewModels.isEmpty()) {
+            return Completable.complete();
+          }
+          return showSelectedPayment(payments);
+        });
   }
 
   private Completable sendCancellationAnalytics() {
@@ -259,22 +266,27 @@ public class PaymentPresenter implements Presenter {
             .toCompletable());
   }
 
-  private Single<List<PaymentView.PaymentViewModel>> getPayments(Product product) {
-    return aptoideBilling.getPayments(product)
-        .flatMapObservable(payments -> Observable.from(payments))
-        .map(payment -> new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
-            payment.getDescription()))
+  private Single<List<PaymentView.PaymentViewModel>> getPaymentViewModels(List<Payment> payments) {
+    return Observable.from(payments)
+        .map(payment -> mapToPaymentViewModel(payment))
         .toList()
         .toSingle();
   }
 
-  private Single<PaymentView.PaymentViewModel> getSelectedPayment(Product product) {
-    return getPayments(product).flatMap(payments -> paymentSelector.selectedPayment(payments));
+  private PaymentView.PaymentViewModel mapToPaymentViewModel(Payment payment) {
+    return new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
+        payment.getDescription());
   }
 
-  private Completable showSelectedPayment(List<PaymentView.PaymentViewModel> payments) {
+  private Single<Payment> getSelectedPayment(Product product) {
+    return aptoideBilling.getPayments(product)
+        .flatMap(payments -> paymentSelector.selectedPayment(payments));
+  }
+
+  private Completable showSelectedPayment(List<Payment> payments) {
     return paymentSelector.selectedPayment(payments)
         .observeOn(AndroidSchedulers.mainThread())
+        .map(payment -> mapToPaymentViewModel(payment))
         .doOnSuccess(payment -> view.selectPayment(payment))
         .toCompletable();
   }

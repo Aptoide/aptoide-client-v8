@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public class WebAuthorizationActivity extends ProductActivity implements WebAuthorizationView {
+public class BoaCompraActivity extends ProductActivity implements BoaCompraView {
 
   private WebView webView;
   private View progressBarContainer;
@@ -54,13 +54,13 @@ public class WebAuthorizationActivity extends ProductActivity implements WebAuth
     };
     registerClickHandler(clickHandler);
 
-    attachPresenter(new WebAuthorizationPresenter(this,
-        ((V8Engine) getApplicationContext()).getAptoideBilling(),
-        getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
-        ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
-        ((V8Engine) getApplicationContext()).getPaymentSyncScheduler(),
-        ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
-            getIntent())), savedInstanceState);
+    attachPresenter(
+        new BoaCompraPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
+            getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
+            ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
+            ((V8Engine) getApplicationContext()).getPaymentSyncScheduler(),
+            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
+                getIntent())), savedInstanceState);
   }
 
   @Override protected void onDestroy() {

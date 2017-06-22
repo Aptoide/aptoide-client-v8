@@ -10,8 +10,8 @@ import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.services.AptoidePayment;
+import cm.aptoide.pt.v8engine.billing.services.BoaCompraPayment;
 import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
-import cm.aptoide.pt.v8engine.billing.services.WebPayment;
 
 public class PaymentFactory {
 
@@ -43,7 +43,7 @@ public class PaymentFactory {
             paymentService.getDescription(), paymentRepositoryFactory);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
-        return new WebPayment(paymentService.getId(), paymentService.getName(),
+        return new BoaCompraPayment(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), paymentRepositoryFactory, payer,
             authorizationRepository, authorizationFactory);
       case DUMMY:

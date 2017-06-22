@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class PayPalPaymentActivity extends ProductActivity implements PayPalPaymentView {
+public class PayPalActivity extends ProductActivity implements PayPalView {
 
   private static final int PAY_APP_REQUEST_CODE = 12;
 
@@ -55,7 +55,7 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
     authorizationSubject = PublishSubject.create();
 
     attachPresenter(
-        new PayPalPaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
+        new PayPalPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
             ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
                 getIntent())), savedInstanceState);
   }

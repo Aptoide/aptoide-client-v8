@@ -14,16 +14,16 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class WebAuthorizationPresenter implements Presenter {
+public class BoaCompraPresenter implements Presenter {
 
-  private final WebAuthorizationView view;
+  private final BoaCompraView view;
   private final AptoideBilling aptoideBilling;
   private final int paymentId;
   private final PaymentAnalytics analytics;
   private final PaymentSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
 
-  public WebAuthorizationPresenter(WebAuthorizationView view, AptoideBilling aptoideBilling,
+  public BoaCompraPresenter(BoaCompraView view, AptoideBilling aptoideBilling,
       int paymentId, PaymentAnalytics analytics, PaymentSyncScheduler syncScheduler,
       ProductProvider productProvider) {
     this.view = view;

@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.v8engine.billing.view.PaymentView;
+import cm.aptoide.pt.v8engine.billing.Payment;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -24,8 +24,7 @@ public class PaymentSelector {
     this.preferences = preferences;
   }
 
-  public Single<PaymentView.PaymentViewModel> selectedPayment(
-      List<PaymentView.PaymentViewModel> payments) {
+  public Single<Payment> selectedPayment(List<Payment> payments) {
     return getSelectedPaymentId().flatMap(
         selectedPaymentId -> payment(payments, selectedPaymentId).switchIfEmpty(
             payment(payments, defaultPaymentId))
@@ -33,7 +32,7 @@ public class PaymentSelector {
             .toSingle());
   }
 
-  public Completable selectPayment(PaymentView.PaymentViewModel selectedPayment) {
+  public Completable selectPayment(Payment selectedPayment) {
     return Completable.fromAction(() -> preferences.edit()
         .putInt(SELECTED_PAYMENT_ID, selectedPayment.getId())
         .commit())
@@ -45,8 +44,7 @@ public class PaymentSelector {
         .subscribeOn(Schedulers.io());
   }
 
-  private Observable<PaymentView.PaymentViewModel> payment(
-      List<PaymentView.PaymentViewModel> payments, int paymentId) {
+  private Observable<Payment> payment(List<Payment> payments, int paymentId) {
     return Observable.from(payments)
         .filter(payment -> paymentId != 0 && paymentId == payment.getId());
   }

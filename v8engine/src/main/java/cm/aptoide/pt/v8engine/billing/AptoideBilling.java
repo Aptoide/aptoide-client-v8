@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
 import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
-import cm.aptoide.pt.v8engine.billing.services.WebPayment;
+import cm.aptoide.pt.v8engine.billing.services.BoaCompraPayment;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -83,7 +83,7 @@ public class AptoideBilling {
 
   public Observable<WebAuthorization> getWebPaymentAuthorization(int paymentId, Product product) {
     return getPayment(paymentId, product).flatMapObservable(
-        payment -> ((WebPayment) payment).getAuthorization());
+        payment -> ((BoaCompraPayment) payment).getAuthorization());
   }
 
   public Completable processPayment(int paymentId, Product product) {
@@ -118,11 +118,11 @@ public class AptoideBilling {
         });
   }
 
-  private Single<Payment> getPayment(int paymentId, Product product) {
+  public Single<Payment> getPayment(int paymentId, Product product) {
     return getPayments(product).flatMapObservable(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == paymentId)
         .switchIfEmpty(Observable.error(
-            new PaymentFailureException("Payment " + paymentId + "not available"))))
+            new PaymentFailureException("Payment " + paymentId + " not available"))))
         .first()
         .toSingle();
   }
