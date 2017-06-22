@@ -10,9 +10,9 @@ import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
-import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
+import cm.aptoide.pt.v8engine.billing.services.BoaCompraPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.services.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
-import cm.aptoide.pt.v8engine.billing.services.BoaCompraPayment;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -34,7 +34,7 @@ public class Billing {
     this.inAppBillingRepository = inAppBillingRepository;
   }
 
-  public Single<Boolean> isBillingSupported(String packageName, int apiVersion, String type) {
+  public Single<Boolean> isSupported(String packageName, int apiVersion, String type) {
     return inAppBillingRepository.getInAppBilling(apiVersion, packageName, type)
         .map(billing -> true)
         .onErrorResumeNext(throwable -> {
@@ -76,25 +76,27 @@ public class Billing {
         .flatMapCompletable(purchase -> purchase.consume());
   }
 
-  public Single<List<Payment>> getPayments(Product product) {
+  public Single<List<PaymentMethod>> getAvailablePaymentMethods(Product product) {
     return productRepositoryFactory.getProductRepository(product)
-        .getPayments(product);
+        .getPaymentMethods(product);
   }
 
   public Observable<WebAuthorization> getWebPaymentAuthorization(int paymentId, Product product) {
-    return getPayment(paymentId, product).flatMapObservable(
-        payment -> ((BoaCompraPayment) payment).getAuthorization());
+    return getPaymentMethods(paymentId, product).flatMapObservable(
+        payment -> ((BoaCompraPaymentMethod) payment).getAuthorization());
   }
 
   public Completable processPayment(int paymentId, Product product) {
-    return getPayment(paymentId, product).flatMapCompletable(payment -> payment.process(product));
+    return getPaymentMethods(paymentId, product).flatMapCompletable(
+        payment -> payment.process(product));
   }
 
   public Completable processPayPalPayment(Product product, String paymentConfirmationId) {
-    return getPayments(product).flatMapObservable(payments -> Observable.from(payments))
-        .filter(payment -> payment instanceof PayPalPayment)
+    return getAvailablePaymentMethods(product).flatMapObservable(
+        payments -> Observable.from(payments))
+        .filter(payment -> payment instanceof PayPalPaymentMethod)
         .first()
-        .cast(PayPalPayment.class)
+        .cast(PayPalPaymentMethod.class)
         .toSingle()
         .flatMapCompletable(payment -> payment.process(product, paymentConfirmationId));
   }
@@ -118,11 +120,12 @@ public class Billing {
         });
   }
 
-  public Single<Payment> getPayment(int paymentId, Product product) {
-    return getPayments(product).flatMapObservable(payments -> Observable.from(payments)
-        .filter(payment -> payment.getId() == paymentId)
-        .switchIfEmpty(Observable.error(
-            new PaymentFailureException("Payment " + paymentId + " not available"))))
+  public Single<PaymentMethod> getPaymentMethods(int paymentId, Product product) {
+    return getAvailablePaymentMethods(product).flatMapObservable(
+        payments -> Observable.from(payments)
+            .filter(payment -> payment.getId() == paymentId)
+            .switchIfEmpty(Observable.error(
+                new PaymentFailureException("Payment " + paymentId + " not available"))))
         .first()
         .toSingle();
   }

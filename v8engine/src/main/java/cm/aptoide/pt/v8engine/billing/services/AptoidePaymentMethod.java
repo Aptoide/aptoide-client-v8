@@ -5,19 +5,19 @@
 
 package cm.aptoide.pt.v8engine.billing.services;
 
-import cm.aptoide.pt.v8engine.billing.Payment;
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import rx.Completable;
 
-public class AptoidePayment implements Payment {
+public class AptoidePaymentMethod implements PaymentMethod {
 
   private final PaymentRepositoryFactory paymentRepositoryFactory;
   private final int id;
   private final String name;
   private final String description;
 
-  public AptoidePayment(int id, String name, String description,
+  public AptoidePaymentMethod(int id, String name, String description,
       PaymentRepositoryFactory paymentRepositoryFactory) {
     this.id = id;
     this.name = name;

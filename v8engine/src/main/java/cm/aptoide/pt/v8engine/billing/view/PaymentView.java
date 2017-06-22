@@ -13,7 +13,7 @@ import rx.Observable;
 
 public interface PaymentView extends View {
 
-  Observable<PaymentViewModel> paymentSelection();
+  Observable<PaymentMethodViewModel> paymentSelection();
 
   Observable<Void> cancellationSelection();
 
@@ -21,11 +21,11 @@ public interface PaymentView extends View {
 
   Observable<Void> buySelection();
 
-  void selectPayment(PaymentViewModel payment);
+  void selectPayment(PaymentMethodViewModel payment);
 
   void showLoading();
 
-  void showPayments(List<PaymentViewModel> paymentList);
+  void showPayments(List<PaymentMethodViewModel> paymentList);
 
   void showProduct(Product product);
 
@@ -45,13 +45,13 @@ public interface PaymentView extends View {
 
   void hideAllErrors();
 
-  class PaymentViewModel {
+  class PaymentMethodViewModel {
 
     private final int id;
     private final String name;
     private final String description;
 
-    public PaymentViewModel(int id, String name, String description) {
+    public PaymentMethodViewModel(int id, String name, String description) {
       this.id = id;
       this.name = name;
       this.description = description;
@@ -68,6 +68,5 @@ public interface PaymentView extends View {
     public String getDescription() {
       return description;
     }
-
   }
 }

@@ -8,12 +8,12 @@ package cm.aptoide.pt.v8engine.billing.repository;
 import android.content.Context;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.billing.Payment;
-import cm.aptoide.pt.v8engine.billing.services.AptoidePayment;
-import cm.aptoide.pt.v8engine.billing.services.BoaCompraPayment;
-import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
+import cm.aptoide.pt.v8engine.billing.services.AptoidePaymentMethod;
+import cm.aptoide.pt.v8engine.billing.services.BoaCompraPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.services.PayPalPaymentMethod;
 
-public class PaymentFactory {
+public class PaymentMethodMapper {
 
   public static final String PAYPAL = "paypal";
   public static final String BOACOMPRA = "boacompra";
@@ -26,7 +26,7 @@ public class PaymentFactory {
   private final AuthorizationFactory authorizationFactory;
   private final Payer payer;
 
-  public PaymentFactory(Context context, PaymentRepositoryFactory paymentRepositoryFactory,
+  public PaymentMethodMapper(Context context, PaymentRepositoryFactory paymentRepositoryFactory,
       AuthorizationRepository authorizationRepository, AuthorizationFactory authorizationFactory,
       Payer payer) {
     this.context = context;
@@ -36,18 +36,18 @@ public class PaymentFactory {
     this.payer = payer;
   }
 
-  public Payment create(PaymentServiceResponse paymentService) {
+  public PaymentMethod map(PaymentServiceResponse paymentService) {
     switch (paymentService.getShortName()) {
       case PAYPAL:
-        return new PayPalPayment(paymentService.getId(), paymentService.getName(),
+        return new PayPalPaymentMethod(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), paymentRepositoryFactory);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
-        return new BoaCompraPayment(paymentService.getId(), paymentService.getName(),
+        return new BoaCompraPaymentMethod(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), paymentRepositoryFactory, payer,
             authorizationRepository, authorizationFactory);
       case DUMMY:
-        return new AptoidePayment(paymentService.getId(), paymentService.getName(),
+        return new AptoidePaymentMethod(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), paymentRepositoryFactory);
       default:
         throw new IllegalArgumentException(

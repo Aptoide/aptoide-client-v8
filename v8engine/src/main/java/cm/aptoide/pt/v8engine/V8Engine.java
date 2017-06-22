@@ -96,7 +96,7 @@ import cm.aptoide.pt.v8engine.billing.repository.InAppPaymentConfirmationReposit
 import cm.aptoide.pt.v8engine.billing.repository.PaidAppPaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaidAppProductRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentFactory;
+import cm.aptoide.pt.v8engine.billing.repository.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
@@ -704,7 +704,8 @@ public abstract class V8Engine extends Application {
       final PurchaseFactory purchaseFactory =
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
 
-      final PaymentFactory paymentFactory = new PaymentFactory(this, paymentRepositoryFactory,
+      final PaymentMethodMapper
+          paymentMethodMapper = new PaymentMethodMapper(this, paymentRepositoryFactory,
           new AuthorizationRepository(AccessorFactory.getAccessorFor(PaymentAuthorization.class),
               getPaymentSyncScheduler(), getAuthorizationFactory(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
@@ -712,10 +713,10 @@ public abstract class V8Engine extends Application {
           getAccountPayer());
 
       final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
-          new PaidAppProductRepository(purchaseFactory, paymentFactory, getNetworkOperatorManager(),
+          new PaidAppProductRepository(purchaseFactory, paymentMethodMapper, getNetworkOperatorManager(),
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
               productFactory, getTokenInvalidator(), getDefaultSharedPreferences(), getResources()),
-          new InAppBillingProductRepository(purchaseFactory, paymentFactory, productFactory,
+          new InAppBillingProductRepository(purchaseFactory, paymentMethodMapper, productFactory,
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
               getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences(),
               getPackageRepository()));

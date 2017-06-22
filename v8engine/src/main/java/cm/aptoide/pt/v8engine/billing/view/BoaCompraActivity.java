@@ -54,13 +54,12 @@ public class BoaCompraActivity extends ProductActivity implements BoaCompraView 
     };
     registerClickHandler(clickHandler);
 
-    attachPresenter(
-        new BoaCompraPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
+    attachPresenter(new BoaCompraPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
             getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
             ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
             ((V8Engine) getApplicationContext()).getPaymentSyncScheduler(),
-            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getBilling(),
-                getIntent())), savedInstanceState);
+            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getBilling(), getIntent())),
+        savedInstanceState);
   }
 
   @Override protected void onDestroy() {

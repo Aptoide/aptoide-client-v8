@@ -17,7 +17,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.PackageRepository;
-import cm.aptoide.pt.v8engine.billing.Payment;
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
@@ -44,12 +44,12 @@ public class InAppBillingProductRepository extends ProductRepository {
   private final PackageRepository packageRepository;
 
   public InAppBillingProductRepository(PurchaseFactory purchaseFactory,
-      PaymentFactory paymentFactory, ProductFactory productFactory,
+      PaymentMethodMapper paymentMethodMapper, ProductFactory productFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, NetworkOperatorManager operatorManager,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       PackageRepository packageRepository) {
-    super(paymentFactory);
+    super(paymentMethodMapper);
     this.purchaseFactory = purchaseFactory;
     this.productFactory = productFactory;
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -70,11 +70,11 @@ public class InAppBillingProductRepository extends ProductRepository {
         .subscribeOn(Schedulers.io());
   }
 
-  @Override public Single<List<Payment>> getPayments(Product product) {
+  @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
     return getServerInAppBillingPaymentServices(((InAppProduct) product).getApiVersion(),
         ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getSku(),
         ((InAppProduct) product).getType(), false).flatMap(
-        payments -> convertResponseToPayment(payments));
+        payments -> convertResponsesToPaymentMethods(payments));
   }
 
   public Single<Product> getProduct(int apiVersion, String packageName, String sku, String type,

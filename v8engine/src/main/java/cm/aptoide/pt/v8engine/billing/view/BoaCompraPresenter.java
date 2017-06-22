@@ -23,8 +23,8 @@ public class BoaCompraPresenter implements Presenter {
   private final PaymentSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
 
-  public BoaCompraPresenter(BoaCompraView view, Billing billing,
-      int paymentId, PaymentAnalytics analytics, PaymentSyncScheduler syncScheduler,
+  public BoaCompraPresenter(BoaCompraView view, Billing billing, int paymentId,
+      PaymentAnalytics analytics, PaymentSyncScheduler syncScheduler,
       ProductProvider productProvider) {
     this.view = view;
     this.billing = billing;
@@ -70,21 +70,20 @@ public class BoaCompraPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
         .flatMap(__ -> productProvider.getProduct()
-            .flatMapObservable(
-                product -> billing.getWebPaymentAuthorization(paymentId, product)
-                    .takeUntil(webAuthorization -> !webAuthorization.isPendingUserConsent())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .flatMapCompletable(authorization -> {
+            .flatMapObservable(product -> billing.getWebPaymentAuthorization(paymentId, product)
+                .takeUntil(webAuthorization -> !webAuthorization.isPendingUserConsent())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapCompletable(authorization -> {
 
-                      if (authorization.isPendingUserConsent()) {
-                        view.showUrl(authorization.getUrl(), authorization.getRedirectUrl());
-                        return Completable.complete();
-                      }
+                  if (authorization.isPendingUserConsent()) {
+                    view.showUrl(authorization.getUrl(), authorization.getRedirectUrl());
+                    return Completable.complete();
+                  }
 
-                      return billing.processPayment(paymentId, product)
-                          .observeOn(AndroidSchedulers.mainThread())
-                          .doOnCompleted(() -> view.dismiss());
-                    })))
+                  return billing.processPayment(paymentId, product)
+                      .observeOn(AndroidSchedulers.mainThread())
+                      .doOnCompleted(() -> view.dismiss());
+                })))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.showErrorAndDismiss())
         .onErrorReturn(null)

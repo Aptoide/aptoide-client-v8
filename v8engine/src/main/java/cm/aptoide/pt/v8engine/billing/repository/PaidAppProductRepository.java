@@ -14,8 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.billing.Payment;
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
@@ -42,11 +41,12 @@ public class PaidAppProductRepository extends ProductRepository {
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
 
-  public PaidAppProductRepository(PurchaseFactory purchaseFactory, PaymentFactory paymentFactory,
-      NetworkOperatorManager operatorManager, BodyInterceptor<BaseBody> bodyInterceptorV3,
-      OkHttpClient httpClient, Converter.Factory converterFactory, ProductFactory productFactory,
+  public PaidAppProductRepository(PurchaseFactory purchaseFactory,
+      PaymentMethodMapper paymentMethodMapper, NetworkOperatorManager operatorManager,
+      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
+      Converter.Factory converterFactory, ProductFactory productFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
-    super(paymentFactory);
+    super(paymentMethodMapper);
     this.purchaseFactory = purchaseFactory;
     this.operatorManager = operatorManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -76,12 +76,12 @@ public class PaidAppProductRepository extends ProductRepository {
     });
   }
 
-  @Override public Single<List<Payment>> getPayments(Product product) {
+  @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
     return getServerPaidApp(false, ((PaidAppProduct) product).getAppId(),
         ((PaidAppProduct) product).isSponsored(), ((PaidAppProduct) product).getStoreName()).map(
         paidApp -> paidApp.getPayment()
             .getPaymentServices())
-        .flatMap(payments -> convertResponseToPayment(payments));
+        .flatMap(payments -> convertResponsesToPaymentMethods(payments));
   }
 
   private Single<PaidApp> getServerPaidApp(boolean bypassCache, long appId, boolean sponsored,

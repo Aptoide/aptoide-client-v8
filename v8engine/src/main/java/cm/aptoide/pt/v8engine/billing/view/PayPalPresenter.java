@@ -13,8 +13,7 @@ public class PayPalPresenter implements Presenter {
   private final Billing billing;
   private final ProductProvider productProvider;
 
-  public PayPalPresenter(PayPalView view, Billing billing,
-      ProductProvider productProvider) {
+  public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider) {
     this.view = view;
     this.billing = billing;
     this.productProvider = productProvider;

@@ -28,7 +28,7 @@ import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
+import cm.aptoide.pt.v8engine.presenter.PaymentMethodSelector;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -55,7 +55,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private PurchaseIntentMapper intentFactory;
   private AlertDialog networkErrorDialog;
   private AlertDialog unknownErrorDialog;
-  private SparseArray<PaymentViewModel> paymentMap;
+  private SparseArray<PaymentMethodViewModel> paymentMap;
   private SpannableFactory spannableFactory;
 
   public static Intent getIntent(Context context, long appId, String storeName, boolean sponsored) {
@@ -111,20 +111,19 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     final PaymentAnalytics paymentAnalytics =
         ((V8Engine) getApplicationContext()).getPaymentAnalytics();
 
-    attachPresenter(
-        new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
-            accountManager, new PaymentSelector(BuildConfig.DEFAULT_PAYMENT_ID,
+    attachPresenter(new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
+            accountManager, new PaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
             ((V8Engine) getApplicationContext()).getDefaultSharedPreferences()),
             new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
             new PaymentNavigator(getActivityNavigator()), paymentAnalytics,
-            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getBilling(),
-                getIntent())), savedInstanceState);
+            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getBilling(), getIntent())),
+        savedInstanceState);
   }
 
-  @Override public Observable<PaymentViewModel> paymentSelection() {
+  @Override public Observable<PaymentMethodViewModel> paymentSelection() {
     return RxRadioGroup.checkedChanges(paymentRadioGroup)
         .map(paymentId -> paymentMap.get(paymentId))
-        .filter(paymentViewModel -> paymentViewModel != null);
+        .filter(paymentMethodViewModel -> paymentMethodViewModel != null);
   }
 
   @Override public Observable<Void> cancellationSelection() {
@@ -145,7 +144,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
-  @Override public void selectPayment(PaymentViewModel payment) {
+  @Override public void selectPayment(PaymentMethodViewModel payment) {
     paymentRadioGroup.check(payment.getId());
   }
 
@@ -153,7 +152,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showPayments(List<PaymentViewModel> payments) {
+  @Override public void showPayments(List<PaymentMethodViewModel> payments) {
     paymentRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
     body.setVisibility(View.VISIBLE);
@@ -162,7 +161,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
     RadioButton radioButton;
     CharSequence radioText;
-    for (PaymentViewModel payment : payments) {
+    for (PaymentMethodViewModel payment : payments) {
       radioButton =
           (RadioButton) getLayoutInflater().inflate(R.layout.payment_item, paymentRadioGroup,
               false);

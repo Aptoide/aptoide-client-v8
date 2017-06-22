@@ -5,20 +5,20 @@
 
 package cm.aptoide.pt.v8engine.billing.services;
 
-import cm.aptoide.pt.v8engine.billing.Payment;
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import rx.Completable;
 
-public class PayPalPayment implements Payment {
+public class PayPalPaymentMethod implements PaymentMethod {
 
   private final int id;
   private final String name;
   private final String description;
   private final PaymentRepositoryFactory paymentRepositoryFactory;
 
-  public PayPalPayment(int id, String name, String description,
+  public PayPalPaymentMethod(int id, String name, String description,
       PaymentRepositoryFactory paymentRepositoryFactory) {
     this.id = id;
     this.name = name;

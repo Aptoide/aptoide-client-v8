@@ -12,13 +12,13 @@ import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class BoaCompraPayment extends AptoidePayment {
+public class BoaCompraPaymentMethod extends AptoidePaymentMethod {
 
   private final Payer payer;
   private final AuthorizationRepository authorizationRepository;
   private final AuthorizationFactory authorizationFactory;
 
-  public BoaCompraPayment(int id, String name, String description,
+  public BoaCompraPaymentMethod(int id, String name, String description,
       PaymentRepositoryFactory paymentRepositoryFactory, Payer payer,
       AuthorizationRepository authorizationRepository, AuthorizationFactory authorizationFactory) {
     super(id, name, description, paymentRepositoryFactory);

@@ -62,8 +62,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
   private final CrashReport crashReport;
 
   public InAppBillingBinder(Context context, InAppBillingSerializer serializer,
-      PaymentThrowableCodeMapper errorCodeFactory, Billing billing,
-      CrashReport crashReport) {
+      PaymentThrowableCodeMapper errorCodeFactory, Billing billing, CrashReport crashReport) {
     this.context = context;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
@@ -74,7 +73,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
       throws RemoteException {
     try {
-      return billing.isBillingSupported(packageName, apiVersion, type)
+      return billing.isSupported(packageName, apiVersion, type)
           .map(available -> available ? RESULT_OK : RESULT_BILLING_UNAVAILABLE)
           .toBlocking()
           .value();

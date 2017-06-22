@@ -9,12 +9,12 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.billing.Billing;
-import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
-import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
+import cm.aptoide.pt.v8engine.presenter.PaymentMethodSelector;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -32,20 +32,20 @@ public class PaymentPresenter implements Presenter {
   private final PaymentView view;
   private final Billing billing;
   private final AptoideAccountManager accountManager;
-  private final PaymentSelector paymentSelector;
+  private final PaymentMethodSelector paymentMethodSelector;
   private final AccountNavigator accountNavigator;
   private final PaymentNavigator paymentNavigator;
   private final ProductProvider productProvider;
   private final PaymentAnalytics paymentAnalytics;
 
-  public PaymentPresenter(PaymentView view, Billing billing,
-      AptoideAccountManager accountManager, PaymentSelector paymentSelector,
-      AccountNavigator accountNavigator, PaymentNavigator paymentNavigator,
-      PaymentAnalytics paymentAnalytics, ProductProvider productProvider) {
+  public PaymentPresenter(PaymentView view, Billing billing, AptoideAccountManager accountManager,
+      PaymentMethodSelector paymentMethodSelector, AccountNavigator accountNavigator,
+      PaymentNavigator paymentNavigator, PaymentAnalytics paymentAnalytics,
+      ProductProvider productProvider) {
     this.view = view;
     this.billing = billing;
     this.accountManager = accountManager;
-    this.paymentSelector = paymentSelector;
+    this.paymentMethodSelector = paymentMethodSelector;
     this.accountNavigator = accountNavigator;
     this.paymentNavigator = paymentNavigator;
     this.paymentAnalytics = paymentAnalytics;
@@ -69,6 +69,14 @@ public class PaymentPresenter implements Presenter {
     handleBuySelection();
 
     onViewDestroyedHideAllErrors();
+  }
+
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
   }
 
   private void onViewCreatedShowLogin() {
@@ -95,7 +103,7 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
-        .flatMapCompletable(product -> billing.getPayments(product)
+        .flatMapCompletable(product -> billing.getAvailablePaymentMethods(product)
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(payments -> showPaymentInformation(product, payments))
             .doOnCompleted(() -> view.hideLoading()))
@@ -171,9 +179,9 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(created -> view.paymentSelection())
-        .flatMapSingle(paymentViewModel -> productProvider.getProduct()
-            .flatMap(product -> billing.getPayment(paymentViewModel.getId(), product)))
-        .flatMapCompletable(payment -> paymentSelector.selectPayment(payment))
+        .flatMapSingle(paymentMethodViewModel -> productProvider.getProduct()
+            .flatMap(product -> billing.getPaymentMethods(paymentMethodViewModel.getId(), product)))
+        .flatMapCompletable(payment -> paymentMethodSelector.selectPaymentMethod(payment))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> view.dismiss(throwable));
@@ -184,28 +192,27 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(__ -> view.buySelection()
             .flatMapSingle(selection -> productProvider.getProduct())
-            .flatMapCompletable(product -> getSelectedPayment(product).doOnSuccess(
+            .flatMapCompletable(product -> getSelectedPaymentMethod(product).doOnSuccess(
                 payment -> paymentAnalytics.sendPaymentBuyButtonPressedEvent(product,
                     payment.getName()))
-                .flatMapCompletable(
-                    payment -> billing.processPayment(payment.getId(), product)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .onErrorResumeNext(throwable -> {
+                .flatMapCompletable(payment -> billing.processPayment(payment.getId(), product)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .onErrorResumeNext(throwable -> {
 
-                          if (throwable instanceof PaymentNotAuthorizedException) {
-                            paymentNavigator.navigateToAuthorizationView(payment, product);
-                            view.hideLoading();
-                            return Completable.complete();
-                          }
+                      if (throwable instanceof PaymentNotAuthorizedException) {
+                        paymentNavigator.navigateToAuthorizationView(payment, product);
+                        view.hideLoading();
+                        return Completable.complete();
+                      }
 
-                          if (throwable instanceof PaymentLocalProcessingRequiredException) {
-                            paymentNavigator.navigateToLocalPaymentView(payment, product);
-                            view.hideLoading();
-                            return Completable.complete();
-                          }
+                      if (throwable instanceof PaymentLocalProcessingRequiredException) {
+                        paymentNavigator.navigateToLocalPaymentView(payment, product);
+                        view.hideLoading();
+                        return Completable.complete();
+                      }
 
-                          return Completable.error(throwable);
-                        })))
+                      return Completable.error(throwable);
+                    })))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> {
               view.hideLoading();
@@ -234,8 +241,8 @@ public class PaymentPresenter implements Presenter {
     }
   }
 
-  private Completable showPaymentInformation(Product product, List<Payment> payments) {
-    return getPaymentViewModels(payments).doOnSuccess(paymentViewModels -> {
+  private Completable showPaymentInformation(Product product, List<PaymentMethod> paymentMethods) {
+    return getPaymentMethodsViewModels(paymentMethods).doOnSuccess(paymentViewModels -> {
       view.showProduct(product);
       if (paymentViewModels.isEmpty()) {
         view.showPaymentsNotFoundMessage();
@@ -247,13 +254,13 @@ public class PaymentPresenter implements Presenter {
           if (paymentViewModels.isEmpty()) {
             return Completable.complete();
           }
-          return showSelectedPayment(payments);
+          return showSelectedPaymentMethod(paymentMethods);
         });
   }
 
   private Completable sendCancellationAnalytics() {
     return productProvider.getProduct()
-        .flatMapCompletable(product -> getSelectedPayment(product).doOnSuccess(
+        .flatMapCompletable(product -> getSelectedPaymentMethod(product).doOnSuccess(
             payment -> paymentAnalytics.sendPaymentCancelButtonPressedEvent(product,
                 payment.getName()))
             .toCompletable());
@@ -261,32 +268,34 @@ public class PaymentPresenter implements Presenter {
 
   private Completable sendTapOutsideAnalytics() {
     return productProvider.getProduct()
-        .flatMapCompletable(product -> getSelectedPayment(product).doOnSuccess(
+        .flatMapCompletable(product -> getSelectedPaymentMethod(product).doOnSuccess(
             payment -> paymentAnalytics.sendPaymentTapOutsideEvent(product, payment.getName()))
             .toCompletable());
   }
 
-  private Single<List<PaymentView.PaymentViewModel>> getPaymentViewModels(List<Payment> payments) {
-    return Observable.from(payments)
-        .map(payment -> mapToPaymentViewModel(payment))
+  private Single<List<PaymentView.PaymentMethodViewModel>> getPaymentMethodsViewModels(
+      List<PaymentMethod> paymentMethods) {
+    return Observable.from(paymentMethods)
+        .map(payment -> mapToPaymentMethodViewModel(payment))
         .toList()
         .toSingle();
   }
 
-  private PaymentView.PaymentViewModel mapToPaymentViewModel(Payment payment) {
-    return new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
-        payment.getDescription());
+  private PaymentView.PaymentMethodViewModel mapToPaymentMethodViewModel(
+      PaymentMethod paymentMethod) {
+    return new PaymentView.PaymentMethodViewModel(paymentMethod.getId(), paymentMethod.getName(),
+        paymentMethod.getDescription());
   }
 
-  private Single<Payment> getSelectedPayment(Product product) {
-    return billing.getPayments(product)
-        .flatMap(payments -> paymentSelector.selectedPayment(payments));
+  private Single<PaymentMethod> getSelectedPaymentMethod(Product product) {
+    return billing.getAvailablePaymentMethods(product)
+        .flatMap(paymentMethods -> paymentMethodSelector.selectedPaymentMethod(paymentMethods));
   }
 
-  private Completable showSelectedPayment(List<Payment> payments) {
-    return paymentSelector.selectedPayment(payments)
+  private Completable showSelectedPaymentMethod(List<PaymentMethod> paymentMethods) {
+    return paymentMethodSelector.selectedPaymentMethod(paymentMethods)
         .observeOn(AndroidSchedulers.mainThread())
-        .map(payment -> mapToPaymentViewModel(payment))
+        .map(payment -> mapToPaymentMethodViewModel(payment))
         .doOnSuccess(payment -> view.selectPayment(payment))
         .toCompletable();
   }
@@ -295,13 +304,5 @@ public class PaymentPresenter implements Presenter {
     return accountManager.accountStatus()
         .first(account -> account.isLoggedIn())
         .toSingle();
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }
