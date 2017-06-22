@@ -60,18 +60,10 @@ import rx.Observable;
 
     @Getter private final WidgetsArgs widgetsArgs;
     @Getter @Setter private StoreContext context;
-    @Getter @Setter private String aptoideMd5sum;
-    @Getter @Setter private String aptoidePackage;
-    @Getter @Setter private String oem_id;
-    @Getter @Setter private String config_type;
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
       super(storeCredentials);
       this.widgetsArgs = widgetsArgs;
-      this.aptoideMd5sum = AptoideUtils.SystemU.getAptoideMd5sum();
-      this.aptoidePackage = Application.getConfiguration().getAppId();
-      this.oem_id = Application.getConfiguration().getPartnerId();
-      this.config_type = Application.getConfiguration().getVerticalDimension();
     }
   }
 }

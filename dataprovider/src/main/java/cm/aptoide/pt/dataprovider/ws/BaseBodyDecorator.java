@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 
@@ -39,6 +40,10 @@ public class BaseBodyDecorator {
         baseBody.setCountry(forceCountry);
       }
     }
+    baseBody.setAptoideMd5sum(AptoideUtils.SystemU.getAptoideMd5sum());
+    baseBody.setAptoidePackage(Application.getConfiguration().getAppId());
+    baseBody.setOem_id(Application.getConfiguration().getPartnerId());
+    baseBody.setConfig_type(Application.getConfiguration().getVerticalDimension());
 
     return baseBody;
   }
