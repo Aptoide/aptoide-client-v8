@@ -54,18 +54,16 @@ public class RootInstallationRetryHandler {
 
   private Completable handleNotifications(List<InstallationProgress> installationProgresses) {
     if (installationProgresses.isEmpty()) {
-      return Completable.fromAction(() -> dismissNotification());
+      return dismissNotification();
     } else {
       return systemNotificationShower.showNotification(context,
           rootInstallErrorNotificationFactory.create(context, installationProgresses));
     }
   }
 
-  private Observable<Void> dismissNotification() {
-    return Observable.fromCallable(() -> {
-      systemNotificationShower.dismissNotification(notificationId);
-      return null;
-    });
+  private Completable dismissNotification() {
+    return Completable.fromAction(
+        () -> systemNotificationShower.dismissNotification(notificationId));
   }
 
   public void stop() {
