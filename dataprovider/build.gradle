@@ -115,4 +115,6 @@ dependencies {
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
   // Just for lombok not to complain
   provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+
+  compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
 }

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.imageloader;
+package cm.aptoide.pt.dataprovider.image;
 
 import android.app.Service;
 import android.content.Context;
@@ -158,8 +158,6 @@ public class ImageLoader {
    * @param url image to load
    * @param imageView view where image is inflated
    * @param placeHolderDrawableId placeholder
-   *
-   * @return
    */
   public Target<GlideDrawable> loadWithShadowCircleTransformAndPlaceHolder(String url,
       ImageView imageView, @DrawableRes int placeHolderDrawableId) {
