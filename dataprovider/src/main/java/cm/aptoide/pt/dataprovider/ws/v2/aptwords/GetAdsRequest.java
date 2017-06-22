@@ -94,6 +94,18 @@ import rx.Observable;
     return getAdsRequest;
   }
 
+  public static GetAdsRequest ofFirstInstallOrganic(String packageName, String storeName,
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+
+    GetAdsRequest getAdsRequest =
+        ofPackageName(Location.firstinstall, packageName, aptoideClientUUID,
+            googlePlayServicesAvailable, oemid, mature);
+
+    getAdsRequest.setRepo(storeName);
+
+    return getAdsRequest;
+  }
+
   private static GetAdsRequest ofPackageName(Location location, String packageName,
       String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     GetAdsRequest getAdsRequest =
