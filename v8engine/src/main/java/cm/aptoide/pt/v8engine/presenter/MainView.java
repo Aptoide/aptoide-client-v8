@@ -23,4 +23,6 @@ public interface MainView extends View {
   void showInstallationError(List<InstallationProgress> installationProgresses);
 
   void dismissInstallationError();
+
+  void showInstallationSuccessMessage();
 }

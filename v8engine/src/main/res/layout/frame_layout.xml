@@ -17,15 +17,8 @@
 
   <!--this layout was added in order to use the snackbar with the activity layout-->
   <android.support.design.widget.CoordinatorLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      />
-
-  <include
-      layout="@layout/custom_snackbar"
+      android:id="@+id/snackbar_layout"
       android:layout_width="match_parent"
-      android:layout_height="@dimen/custom_snackbar_height"
-      android:layout_below="@id/fragment_placeholder"
-      android:visibility="visible"
+      android:layout_height="match_parent"
       />
 </RelativeLayout>

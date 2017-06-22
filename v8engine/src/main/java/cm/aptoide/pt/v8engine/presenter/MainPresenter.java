@@ -32,6 +32,7 @@ public class MainPresenter implements Presenter {
   private ApkFy apkFy;
   private AutoUpdate autoUpdate;
   private boolean firstCreated;
+  private boolean notificationShowed;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -46,6 +47,7 @@ public class MainPresenter implements Presenter {
     this.contentPuller = contentPuller;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.firstCreated = true;
+    this.notificationShowed = false;
   }
 
   @Override public void present() {
@@ -92,15 +94,24 @@ public class MainPresenter implements Presenter {
         .filter(installationProgresses -> installationProgresses.size() > 0)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(installationProgresses -> view.showInstallationError(installationProgresses),
-            throwable -> crashReport.log(throwable));
+        .subscribe(installationProgresses -> {
+          view.showInstallationError(installationProgresses);
+          notificationShowed = true;
+        }, throwable -> crashReport.log(throwable));
+
     view.getLifecycle()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(lifecycleEvent -> installManager.getTimedOutInstallations())
         .filter(installationProgresses -> installationProgresses.size() == 0)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(noInstallErrors -> view.dismissInstallationError(),
+        .subscribe(noInstallErrors -> {
+              if (notificationShowed) {
+                view.dismissInstallationError();
+                view.showInstallationSuccessMessage();
+                notificationShowed = false;
+              }
+            },
             throwable -> crashReport.log(throwable));
   }
 }

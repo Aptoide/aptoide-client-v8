@@ -81,6 +81,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   private FragmentNavigator fragmentNavigator;
   private InstallManager installManager;
   private Snackbar snackbar;
+  private View snackBarLayout;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -101,6 +102,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
         converterFactory);
 
+    snackBarLayout = findViewById(R.id.snackbar_layout);
     attachPresenter(new MainPresenter(this, installManager,
         ((V8Engine) getApplicationContext()).getRootInstallationRetryHandler(),
         CrashReport.getInstance(), new ApkFy(this, getIntent()), autoUpdate,
@@ -132,8 +134,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
           installationProgresses.size());
     }
 
-    View contentView = findViewById(android.R.id.content);
-    snackbar = Snackbar.make(contentView, title, Snackbar.LENGTH_INDEFINITE)
+    snackbar = Snackbar.make(snackBarLayout, title, Snackbar.LENGTH_INDEFINITE)
         .setAction(R.string.generalscreen_short_root_install_timeout_error_action,
             view -> installManager.retryTimedOutInstallations(this)
                 .subscribe());
@@ -144,6 +145,10 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     if (snackbar != null) {
       snackbar.dismiss();
     }
+  }
+
+  @Override public void showInstallationSuccessMessage() {
+    ShowMessage.asSnack(snackBarLayout, R.string.generalscreen_short_root_install_success_install);
   }
 
   private boolean handleDeepLinks() {
