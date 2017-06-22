@@ -10,13 +10,21 @@ interface PostView extends View {
 
   Observable<String> shareButtonPressed();
 
-  Completable close();
+  Observable<Void> cancelButtonPressed();
 
-  Completable hideLoading();
+  Completable close();
 
   Completable showSuccessMessage();
 
-  Completable showLoading();
+  Completable showCardPreview(PostManager.PostPreview suggestion);
 
-  Completable showSuggestion(String suggestion);
+  Completable showContainsUrlMessage();
+
+  void showCardPreviewLoading();
+
+  void hideCardPreviewLoading();
+
+  void showRelatedAppsLoading();
+
+  void hideRelatedAppsLoading();
 }

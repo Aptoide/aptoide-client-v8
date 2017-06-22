@@ -14,7 +14,7 @@ public class PostActivity extends ActivityView {
     if (savedInstanceState == null) {
       Intent intent = getIntent();
       String toShare = "";
-      if (intent.getType()
+      if (intent != null && intent.getType() != null && intent.getType()
           .equals("text/plain")) {
         toShare = intent.getStringExtra(Intent.EXTRA_TEXT);
       }

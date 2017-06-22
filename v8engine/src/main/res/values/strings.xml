@@ -639,5 +639,6 @@
   <string name="edit_profile_save_button">Save</string>
   <string name="edit_profile_title">Edit Your Profile</string>
   <string name="user_edited">User Edited</string>
+  <string name="post">post</string>
 
 </resources>

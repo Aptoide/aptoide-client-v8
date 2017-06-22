@@ -1,58 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
   <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_margin="12dp"
+      android:layout_height="wrap_content"
       android:orientation="vertical"
       >
-    <TextView
-        android:id="@+id/input_layout_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/share_on_timeline"
-        android:textSize="22sp"
-        />
-    <EditText
-        android:id="@+id/input_text"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_very_small"
+        >
+      <TextView
+          android:id="@+id/input_layout_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_horizontal"
+          android:text="@string/share_on_timeline"
+          android:textAppearance="@style/Aptoide.TextView.Medium.L"
+          android:textColor="@color/grey_700"
+          />
+      <EditText
+          android:id="@+id/input_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:background="@null"
+          android:gravity="top|start"
+          android:inputType="textUri|textMultiLine"
+          android:lines="3"
+          android:textAppearance="@style/Aptoide.TextView.Regular.L"
+          android:textColor="@color/grey_700"
+          tools:text="this is a test URL that the user will insert for sharing"
+          />
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/padding_medium"
+          android:text="Post preview"
+          android:textAppearance="@style/Aptoide.TextView.Medium.S"
+          android:textColor="@color/grey_700"
+          />
+      <ProgressBar
+          android:id="@+id/preview_progress_bar"
+          android:layout_width="match_parent"
+          android:layout_height="10dp"
+          android:indeterminate="true"
+          android:visibility="gone"
+          tools:visibility="visible"
+          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+          />
+
+      <ImageView
+          android:id="@+id/preview_image"
+          android:layout_width="match_parent"
+          android:layout_height="140dp"
+          android:background="@color/orange_700"
+          android:scaleType="fitCenter"
+          android:src="@drawable/wizard_community"
+          />
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/padding_medium"
+          android:text="Related apps"
+          android:textAppearance="@style/Aptoide.TextView.Medium.S"
+          android:textColor="@color/grey_700"
+          />
+      <ProgressBar
+          android:id="@+id/related_apps_progress_bar"
+          android:layout_width="match_parent"
+          android:layout_height="10dp"
+          android:indeterminate="true"
+          android:visibility="gone"
+          tools:visibility="visible"
+          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+          />
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/related_apps_list"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:scrollbars="horizontal"
+          />
+
+    </LinearLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textUri|textMultiLine"
-        android:maxLines="4"
-        tools:text="this is a test URL that the user will insert for sharring"
-        />
+        android:orientation="horizontal"
+        >
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/wizard_community"
-        />
+      <Button
+          android:id="@+id/cancel_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:gravity="center"
+          android:text="@string/cancel"
+          android:textAllCaps="true"
+          style="@style/Aptoide.Button.Ghost"
+          />
 
-    <Button
-        android:id="@+id/share_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/share"
-        />
+      <Button
+          android:id="@+id/post_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:gravity="center"
+          android:text="@string/post"
+          style="@style/Aptoide.Button"
+          />
 
+    </RelativeLayout>
   </LinearLayout>
-
-
-  <ProgressBar
-      android:id="@+id/progress_bar"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
-      android:layout_centerInParent="true"
-      android:visibility="gone"
-      tools:visibility="visible"
-      />
-</RelativeLayout>
+</ScrollView>

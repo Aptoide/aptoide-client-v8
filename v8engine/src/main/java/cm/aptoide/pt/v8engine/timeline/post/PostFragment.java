@@ -3,16 +3,20 @@ package cm.aptoide.pt.v8engine.timeline.post;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -21,10 +25,14 @@ import rx.Observable;
 
 public class PostFragment extends FragmentView implements PostView {
 
+  private static final int MAX_CHARACTERS = 200;
   private static final String DATA_TO_SHARE = "data_to_share";
-  private ProgressBar progressBar;
+  private ProgressBar previewLoading;
+  private ProgressBar relatedAppsLoading;
+  private RecyclerView relatedApps;
   private EditText userInput;
   private Button share;
+  private Button cancel;
 
   public static PostFragment newInstance(String toShare) {
     Bundle args = new Bundle();
@@ -50,26 +58,51 @@ public class PostFragment extends FragmentView implements PostView {
 
   private void bindViews(@Nullable View view) {
     userInput = (EditText) view.findViewById(R.id.input_text);
-    share = (Button) view.findViewById(R.id.share_button);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    share = (Button) view.findViewById(R.id.post_button);
+    cancel = (Button) view.findViewById(R.id.cancel_button);
+    previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
+    relatedAppsLoading = (ProgressBar) view.findViewById(R.id.related_apps_progress_bar);
+    relatedApps = (RecyclerView) view.findViewById(R.id.related_apps_list);
   }
 
   @Override public void onDestroyView() {
-    if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
-      progressBar.setVisibility(View.GONE);
-      progressBar = null;
-    }
+    destroyLoading(relatedAppsLoading);
+    relatedAppsLoading = null;
+
+    destroyLoading(previewLoading);
+    previewLoading = null;
 
     super.onDestroyView();
   }
 
+  private void destroyLoading(ProgressBar progressBar) {
+    if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
+      progressBar.setVisibility(View.GONE);
+    }
+  }
+
   private void setupViews() {
     Bundle args = getArguments();
-    if (args != null) {
-      userInput.setText(args.getString(DATA_TO_SHARE, ""));
+    userInput.setFilters(new InputFilter[] { new InputFilter.LengthFilter(MAX_CHARACTERS) });
+
+    if (args != null && args.containsKey(DATA_TO_SHARE)) {
+      String toShare = args.getString(DATA_TO_SHARE);
+      if (toShare.length() > MAX_CHARACTERS) {
+        toShare = toShare.substring(0, MAX_CHARACTERS);
+      }
+      userInput.setText(toShare);
     }
 
-    attachPresenter(new PostPresenter(this, CrashReport.getInstance(), new PostManager()), null);
+    relatedApps.setLayoutManager(
+        new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+    final RelatedAppsAdapter adapter = new RelatedAppsAdapter();
+    relatedApps.setAdapter(adapter);
+
+    V8Engine app = (V8Engine) getActivity().getApplication();
+    final PostPresenter presenter =
+        new PostPresenter(this, CrashReport.getInstance(), new PostManager(),
+            app.getInstallManager(InstallerFactory.ROLLBACK), adapter);
+    attachPresenter(presenter, null);
   }
 
   @Override public Observable<String> onInputTextChanged() {
@@ -82,25 +115,41 @@ public class PostFragment extends FragmentView implements PostView {
         .map(__ -> getInputText());
   }
 
+  @Override public Observable<Void> cancelButtonPressed() {
+    return RxView.clicks(cancel);
+  }
+
   @Override public Completable close() {
     return Completable.fromAction(() -> PostFragment.this.getActivity()
         .onBackPressed());
-  }
-
-  @Override public Completable hideLoading() {
-    return Completable.fromAction(() -> progressBar.setVisibility(View.GONE));
   }
 
   @Override public Completable showSuccessMessage() {
     return ShowMessage.asLongObservableSnack(getActivity(), R.string.title_successful);
   }
 
-  @Override public Completable showLoading() {
-    return Completable.fromAction(() -> progressBar.setVisibility(View.VISIBLE));
+  @Override public Completable showCardPreview(PostManager.PostPreview suggestion) {
+    return ShowMessage.asObservableSnack(this, "suggestion title: " + suggestion.getTitle());
   }
 
-  @Override public Completable showSuggestion(String suggestion) {
-    return Completable.fromAction(() -> Logger.i("PostFragment", "suggestion: " + suggestion));
+  @Override public Completable showContainsUrlMessage() {
+    return ShowMessage.asObservableSnack(this, "input contains a valid URL");
+  }
+
+  @Override public void showCardPreviewLoading() {
+    previewLoading.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideCardPreviewLoading() {
+    previewLoading.setVisibility(View.GONE);
+  }
+
+  @Override public void showRelatedAppsLoading() {
+    relatedAppsLoading.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideRelatedAppsLoading() {
+    relatedAppsLoading.setVisibility(View.GONE);
   }
 
   private String getInputText() {

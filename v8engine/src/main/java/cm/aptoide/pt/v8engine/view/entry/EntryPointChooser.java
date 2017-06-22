@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.entry;
 
 import android.app.Activity;
-import cm.aptoide.pt.v8engine.view.MainActivity;
+import cm.aptoide.pt.v8engine.timeline.post.PostActivity;
 import cm.aptoide.pt.v8engine.view.OpenGLES20Activity;
 
 /**
@@ -20,7 +20,8 @@ public class EntryPointChooser {
     if (!supportedExtensions.isDefined()) {
       return OpenGLES20Activity.class;
     } else {
-      return MainActivity.class;
+      //return MainActivity.class;
+      return PostActivity.class;
     }
   }
 }
