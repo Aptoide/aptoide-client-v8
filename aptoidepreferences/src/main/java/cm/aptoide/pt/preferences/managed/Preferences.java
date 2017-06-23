@@ -12,7 +12,7 @@ import cm.aptoide.pt.preferences.Application;
 /**
  * Created by neuro on 21-04-2016.
  */
-class Preferences {
+public class Preferences {
 
   private static final SharedPreferences preferences =
       PreferenceManager.getDefaultSharedPreferences(Application.getContext());
