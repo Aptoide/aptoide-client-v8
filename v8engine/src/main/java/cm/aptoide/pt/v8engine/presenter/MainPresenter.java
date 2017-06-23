@@ -106,12 +106,22 @@ public class MainPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(noInstallErrors -> {
-              if (notificationShowed) {
-                view.dismissInstallationError();
-                view.showInstallationSuccessMessage();
-                notificationShowed = false;
-              }
-            },
-            throwable -> crashReport.log(throwable));
+          if (notificationShowed) {
+            view.dismissInstallationError();
+            view.showInstallationSuccessMessage();
+            notificationShowed = false;
+          }
+        }, throwable -> crashReport.log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .flatMap(lifecycleEvent -> view.getInstallErrorsDismiss())
+        .flatMapCompletable(click -> {
+          notificationShowed = false;
+          return installManager.cleanTimedOutInstalls();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(timeoutErrorsCleaned -> {
+        }, throwable -> crashReport.log(throwable));
   }
 }

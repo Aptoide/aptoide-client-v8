@@ -58,6 +58,7 @@ import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -80,8 +81,9 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   private StoreRepository storeRepository;
   private FragmentNavigator fragmentNavigator;
   private InstallManager installManager;
-  private Snackbar snackbar;
   private View snackBarLayout;
+  private PublishRelay<Void> installErrorsDismissEvent;
+  private Snackbar snackbar;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -103,6 +105,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         converterFactory);
 
     snackBarLayout = findViewById(R.id.snackbar_layout);
+    installErrorsDismissEvent = PublishRelay.create();
     attachPresenter(new MainPresenter(this, installManager,
         ((V8Engine) getApplicationContext()).getRootInstallationRetryHandler(),
         CrashReport.getInstance(), new ApkFy(this, getIntent()), autoUpdate,
@@ -134,10 +137,17 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
           installationProgresses.size());
     }
 
+    Snackbar.Callback snackbarCallback = new Snackbar.Callback() {
+      @Override public void onDismissed(Snackbar snackbar, int event) {
+        super.onDismissed(snackbar, event);
+        installErrorsDismissEvent.call(null);
+      }
+    };
     snackbar = Snackbar.make(snackBarLayout, title, Snackbar.LENGTH_INDEFINITE)
         .setAction(R.string.generalscreen_short_root_install_timeout_error_action,
             view -> installManager.retryTimedOutInstallations(this)
-                .subscribe());
+                .subscribe())
+        .addCallback(snackbarCallback);
     snackbar.show();
   }
 
@@ -149,6 +159,10 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
   @Override public void showInstallationSuccessMessage() {
     ShowMessage.asSnack(snackBarLayout, R.string.generalscreen_short_root_install_success_install);
+  }
+
+  @Override public Observable<Void> getInstallErrorsDismiss() {
+    return installErrorsDismissEvent;
   }
 
   private boolean handleDeepLinks() {
