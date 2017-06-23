@@ -74,7 +74,7 @@ public class CompletedDownloadDisplayable extends Displayable {
   }
 
   public void removeDownload(Context context) {
-    installManager.removeInstallationFile(download.getMd5(), context);
+    installManager.removeInstallationFile(download.getMd5());
   }
 
   public Observable<Integer> downloadStatus() {
@@ -103,7 +103,7 @@ public class CompletedDownloadDisplayable extends Displayable {
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download)
+        .flatMap(success -> installManager.install(download)
             .doOnSubscribe(() -> setupEvents(download)));
   }
 

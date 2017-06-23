@@ -335,7 +335,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   showRootInstallWarningPopup(context);
                   compositeSubscription.add(
                       new PermissionManager().requestDownloadAccess(permissionRequest)
-                          .flatMap(success -> installManager.install(getContext(), appDownload)
+                          .flatMap(success -> installManager.install(appDownload)
                               .doOnSubscribe(() -> setupEvents(appDownload)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
@@ -416,7 +416,7 @@ import rx.android.schedulers.AndroidSchedulers;
                 .getNodes()
                 .getMeta()
                 .getData(), downloadAction);
-            return installManager.install(getContext(), download)
+            return installManager.install(download)
                 .doOnSubscribe(() -> setupEvents(download));
           })
           .first()
@@ -548,11 +548,11 @@ import rx.android.schedulers.AndroidSchedulers;
     String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      installManager.removeInstallationFile(md5, getContext());
+      installManager.removeInstallationFile(md5);
     });
 
     actionPause.setOnClickListener(view -> {
-      installManager.stopInstallation(getContext(), md5);
+      installManager.stopInstallation(md5);
     });
 
     actionResume.setOnClickListener(view -> {
@@ -566,7 +566,7 @@ import rx.android.schedulers.AndroidSchedulers;
                 .getMeta()
                 .getData(), progress.getRequest()
                 .getAction());
-            return installManager.install(getContext(), download)
+            return installManager.install(download)
                 .doOnSubscribe(() -> {
                   setupEvents(download);
                 });

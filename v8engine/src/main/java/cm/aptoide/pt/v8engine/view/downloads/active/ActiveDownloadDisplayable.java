@@ -51,7 +51,7 @@ public class ActiveDownloadDisplayable extends Displayable {
   }
 
   public void pauseInstall(Context context) {
-    installManager.stopInstallation(context, download.getMd5());
+    installManager.stopInstallation(download.getMd5());
   }
 
   public Observable<Download> getDownloadObservable() {

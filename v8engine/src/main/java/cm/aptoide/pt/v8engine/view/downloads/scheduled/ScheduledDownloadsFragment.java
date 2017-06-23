@@ -173,7 +173,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
         .flatMapIterable(scheduleds -> scheduleds)
         .map(scheduled -> downloadFactory.create(scheduled))
-        .flatMap(downloadItem -> installManager.install(context, downloadItem)
+        .flatMap(downloadItem -> installManager.install(downloadItem)
             .doOnSubscribe(() -> setupEvents(downloadItem,
                 isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)

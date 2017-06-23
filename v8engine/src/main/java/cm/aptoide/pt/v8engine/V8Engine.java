@@ -535,7 +535,7 @@ public abstract class V8Engine extends Application {
 
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
-      installManager = new InstallManager(getDownloadManager(),
+      installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory().create(this, installerType), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()));
