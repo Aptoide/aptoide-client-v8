@@ -79,6 +79,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
   private final int MAX_RETRY_COUNT = 3;
   private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
+
   protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor bodyInterceptor, TokenInvalidator tokenInvalidator) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);

@@ -52,6 +52,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
+
   protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {

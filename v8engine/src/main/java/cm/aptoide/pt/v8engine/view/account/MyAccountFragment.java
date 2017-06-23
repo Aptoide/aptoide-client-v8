@@ -83,21 +83,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return new MyAccountFragment();
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.menu_empty, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
     logoutButton = null;
@@ -112,6 +97,21 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     header = null;
     headerText = null;
     moreNotificationsButton = null;
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.menu_empty, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

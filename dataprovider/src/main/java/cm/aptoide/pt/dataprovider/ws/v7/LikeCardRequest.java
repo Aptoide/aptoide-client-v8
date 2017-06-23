@@ -17,6 +17,7 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
 
   private final String cardId;
   private final int rating;
+
   public LikeCardRequest(BaseBody body, String cardId, int rating,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
