@@ -109,16 +109,16 @@ dependencies {
   // inter-projects dependencies
   //
 
-  compile project(path: ':database', configuration: 'release')
+  compile project(path: ':aptoide-database', configuration: 'release')
 
-  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
-  internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalRelease')
+  internalCompile project(path: ':aptoide-request-builder', configuration: 'internalRelease')
+  internalCompile project(path: ':aptoide-account-manager', configuration: 'internalRelease')
 
-  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+  prodCompile project(path: ':aptoide-request-builder', configuration: 'prodRelease')
+  prodCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
-  leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  leakCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+  leakCompile project(path: ':aptoide-request-builder', configuration: 'prodRelease')
+  leakCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
 
   compile project(path: ':utils', configuration: 'release')

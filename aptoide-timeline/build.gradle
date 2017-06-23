@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified on 08/07/2016.
- */
-
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
@@ -54,10 +49,8 @@ dependencies {
   // inter-projects dependencies
   //
 
-  compile project(path: ':utils', configuration: 'release')
-  compile project(path: ':crashreports', configuration: 'release')
-  compile project(path: ':aptoide-database', configuration: 'release')
-  compile project(path: ':model', configuration: 'release')
+  //compile project(path: ':aptoide-request-builder', configuration: 'release')
+  compile project(path: ':aptoide-request-builder')
 
   //
   // custom libs in folders
@@ -69,21 +62,18 @@ dependencies {
   // from remote repos
   //
 
+  testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testCompile "junit:junit:${JUNIT_VERSION}"
-
-  //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-
-  compile "com.liulishuo.filedownloader:library:${FILE_DOWNLOADER_VERSION}"
-  compile "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
+  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testCompile "com.android.support.test:testing-support-lib:0.1"
 
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
   compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+  compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
+  compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
+  compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

@@ -1,3 +1,4 @@
+include ':aptoide-timeline'
 /*
  * Copyright (c) 2016.
  * Modified by Neurophobic Animal on 24/05/2016.
@@ -5,13 +6,13 @@
 
 include 'vanilla',
     ':v8engine',
-    ':dataprovider',
+    ':aptoide-request-builder',
     ':model',
     ':aptoidepreferences',
     ':utilsdesign',
     ':crashreports',
     ':utils',
-    ':aptoide_accountmanager',
-    ':database',
+    ':aptoide-account-manager',
+    ':aptoide-database',
     ':downloadmanager',
     ':spotandshare'
