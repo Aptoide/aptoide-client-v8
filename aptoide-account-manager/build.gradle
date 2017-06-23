@@ -67,8 +67,8 @@ dependencies {
   testCompile "junit:junit:${JUNIT_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
-  internalCompile project(path: ':aptoide-request-builder', configuration: 'internalRelease')
-  prodCompile project(path: ':aptoide-request-builder', configuration: 'prodRelease')
+  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
+  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
 
   compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"

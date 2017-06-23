@@ -111,13 +111,13 @@ dependencies {
 
   compile project(path: ':aptoide-database', configuration: 'release')
 
-  internalCompile project(path: ':aptoide-request-builder', configuration: 'internalRelease')
+  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
   internalCompile project(path: ':aptoide-account-manager', configuration: 'internalRelease')
 
-  prodCompile project(path: ':aptoide-request-builder', configuration: 'prodRelease')
+  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
-  leakCompile project(path: ':aptoide-request-builder', configuration: 'prodRelease')
+  leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
   leakCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
 
@@ -232,4 +232,8 @@ dependencies {
 
   leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
   compile project(path: ':spotandshare')
+
+
+  compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
+  //annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
 }
