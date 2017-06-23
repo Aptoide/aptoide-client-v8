@@ -27,8 +27,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
   private void setTransparent(Context context) {
     setEGLContextClientVersion(2);
 
-    myGLRenderer = new MyGLRenderer(context,
-        ((V8Engine) context.getApplicationContext()).getQManager());
+    myGLRenderer =
+        new MyGLRenderer(context, ((V8Engine) context.getApplicationContext()).getQManager());
     setRenderer(myGLRenderer);
 
     setZOrderOnTop(true);

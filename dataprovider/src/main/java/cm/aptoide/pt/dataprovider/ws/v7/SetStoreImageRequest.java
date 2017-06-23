@@ -20,14 +20,6 @@ import rx.Observable;
 
 public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
 
-  @NonNull public static String getHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-        + "/api/7/";
-  }
-
   private final MultipartBody.Part multipartBody;
 
   private SetStoreImageRequest(HashMapNotNull<String, RequestBody> body,
@@ -38,6 +30,14 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.multipartBody = multipartBody;
+  }
+
+  @NonNull public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
   }
 
   public static SetStoreImageRequest of(String storeName, String storeTheme,

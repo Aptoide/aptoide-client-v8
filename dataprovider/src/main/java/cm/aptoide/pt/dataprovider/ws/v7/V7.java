@@ -73,27 +73,26 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
-  public static String getHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-        + "/api/7/";
-  }
-
   @Getter protected final B body;
   private final BodyInterceptor bodyInterceptor;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private final int MAX_RETRY_COUNT = 3;
   private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
-
   protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor bodyInterceptor, TokenInvalidator tokenInvalidator) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
     this.bodyInterceptor = bodyInterceptor;
     this.tokenInvalidator = tokenInvalidator;
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7/";
   }
 
   @NonNull public static String getErrorMessage(BaseV7Response response) {

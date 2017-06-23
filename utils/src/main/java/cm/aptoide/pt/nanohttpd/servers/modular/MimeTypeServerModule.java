@@ -56,8 +56,7 @@ public class MimeTypeServerModule implements ServerModule {
   private InputStream getInputStream(String assetPath) {
 
     try {
-      return assetManager
-          .open(assetPath);
+      return assetManager.open(assetPath);
     } catch (IOException e) {
       throw new IllegalArgumentException("Couldn't load asset! " + assetPath, e);
     }

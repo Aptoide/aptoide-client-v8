@@ -24,8 +24,9 @@ public class PayPalPaymentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> productProvider.getProduct()
-            .doOnSuccess(product -> view.showPayPal(product.getPrice().getCurrency(),
-                product.getDescription(), product.getPrice().getAmount()))
+            .doOnSuccess(product -> view.showPayPal(product.getPrice()
+                .getCurrency(), product.getDescription(), product.getPrice()
+                .getAmount()))
             .flatMapObservable(__ -> view.paymentConfirmationId())
             .doOnNext(__ -> view.showLoading())
             .flatMapCompletable(paymentConformationId -> productProvider.getProduct()

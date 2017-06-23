@@ -20,6 +20,13 @@ import rx.Observable;
 
 public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequest.Body> {
 
+  private SimpleSetStoreRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+  }
+
   @NonNull public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
@@ -28,15 +35,8 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
         + "/api/7/";
   }
 
-  private SimpleSetStoreRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
-  }
-
   public static SimpleSetStoreRequest of(String storeName, String storeTheme,
-      String storeDescription,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      String storeDescription, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     Body body = new Body(storeName, storeTheme, storeDescription);

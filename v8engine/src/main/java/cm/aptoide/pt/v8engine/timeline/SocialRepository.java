@@ -48,8 +48,8 @@ public class SocialRepository {
   public void share(String cardId, boolean privacy, ShareCardCallback shareCardCallback,
       TimelineSocialActionData timelineSocialActionData) {
     //todo(pribeiro): check if timelineSocialActionData is null
-    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -74,8 +74,8 @@ public class SocialRepository {
 
   public void share(String cardId, ShareCardCallback shareCardCallback,
       TimelineSocialActionData timelineSocialActionData) {
-    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -139,8 +139,7 @@ public class SocialRepository {
   public void like(String timelineCardId, String cardType, String ownerHash, int rating,
       TimelineSocialActionData timelineSocialActionData) {
     LikeCardRequest.of(timelineCardId, cardType, ownerHash, rating, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator,
-        sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {
@@ -152,8 +151,7 @@ public class SocialRepository {
 
   public void share(String packageName, Long storeId, String shareType, boolean privacy) {
     ShareInstallCardRequest.of(packageName, storeId, shareType, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator,
-        sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -170,8 +168,7 @@ public class SocialRepository {
   public void share(String packageName, Long storeId, String shareType) {
     //todo(pribeiro): check if timelineSocialActionData is null
     ShareInstallCardRequest.of(packageName, storeId, shareType, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator,
-        sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {

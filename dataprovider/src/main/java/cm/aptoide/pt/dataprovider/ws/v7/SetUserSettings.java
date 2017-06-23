@@ -16,17 +16,17 @@ import rx.Observable;
 
 public class SetUserSettings extends V7<BaseV7Response, SetUserSettings.Body> {
 
+  protected SetUserSettings(Body body, String baseHost, OkHttpClient httpClient,
+      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
+      TokenInvalidator tokenInvalidator) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+  }
+
   public static String getHost() {
     return BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
         + "/api/7/";
-  }
-
-  protected SetUserSettings(Body body, String baseHost, OkHttpClient httpClient,
-      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static SetUserSettings of(boolean adultContentEnabled, OkHttpClient httpClient,

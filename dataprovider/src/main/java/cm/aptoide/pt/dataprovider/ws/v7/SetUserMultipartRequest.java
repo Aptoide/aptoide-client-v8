@@ -22,13 +22,6 @@ import rx.Observable;
 public class SetUserMultipartRequest
     extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
 
-  public static String getHost() {
-    return BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-        + "/api/7/";
-  }
-
   private final MultipartBody.Part multipartBody;
 
   private SetUserMultipartRequest(MultipartBody.Part file, HashMapNotNull<String, RequestBody> body,
@@ -36,6 +29,13 @@ public class SetUserMultipartRequest
       TokenInvalidator tokenInvalidator) {
     super(body, getHost(), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     multipartBody = file;
+  }
+
+  public static String getHost() {
+    return BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
   }
 
   public static SetUserMultipartRequest of(String username, String userAvatar,

@@ -111,8 +111,7 @@ public class UpdateDisplayable extends Displayable {
         .flatMap(sucess -> {
           if (installManager.showWarning()) {
             return GenericDialogs.createGenericYesNoCancelMessage(context, "",
-                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog,
-                    resources))
+                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, resources))
                 .map(answer -> (answer.equals(YES)))
                 .doOnNext(answer -> installManager.rootInstallAllowed(answer));
           }

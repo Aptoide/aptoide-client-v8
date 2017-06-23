@@ -63,7 +63,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
     GetMyStoreListRequest request =
         GetMyStoreListRequest.of(url, true, bodyInterceptor, httpClient, converterFactory,
-            tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE));
 

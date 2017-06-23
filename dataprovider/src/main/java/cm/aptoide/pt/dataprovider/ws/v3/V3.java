@@ -47,20 +47,11 @@ import rx.Observable;
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
-  public static String getHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_HOST
-        + "/webservices/3/";
-  }
-
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
-
   protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
@@ -75,6 +66,14 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
       SharedPreferences sharedPreferences) {
     this(new BaseBody(), okHttpClient, converterFactory, bodyInterceptor, tokenInvalidator,
         sharedPreferences);
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_HOST
+        + "/webservices/3/";
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {

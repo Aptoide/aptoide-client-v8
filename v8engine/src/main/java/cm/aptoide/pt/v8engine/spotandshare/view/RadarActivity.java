@@ -80,8 +80,7 @@ public class RadarActivity extends ActivityView implements RadarView, Permission
 
     ApplicationSender.reset();
     DataHolder.reset();
-    GroupNameProvider groupNameProvider =
-        ((V8Engine) getApplication()).getGroupNameProvider();
+    GroupNameProvider groupNameProvider = ((V8Engine) getApplication()).getGroupNameProvider();
     ConnectionManager connectionManager =
         ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();
