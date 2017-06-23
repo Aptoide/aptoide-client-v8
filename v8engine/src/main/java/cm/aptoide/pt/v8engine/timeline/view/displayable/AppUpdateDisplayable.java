@@ -155,7 +155,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
             }
           });
     }
-    return installManager.install(context, download)
+    return installManager.install(download)
         .doOnSubscribe(() -> setupEvents());
   }
 
