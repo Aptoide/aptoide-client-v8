@@ -372,7 +372,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
           new NotificationIdsMapper());
-      int notificationId = 2;
+      int notificationId = 230498;
       rootInstallationRetryHandler =
           new RootInstallationRetryHandler(notificationId, systemNotificationShower,
               getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, this,
