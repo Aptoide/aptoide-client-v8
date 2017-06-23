@@ -15,14 +15,6 @@ import rx.Observable;
  */
 public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
 
-  public static String getHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-        + "/api/7/";
-  }
-
   private final String cardId;
   private final int rating;
 
@@ -30,9 +22,18 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.cardId = cardId;
     this.rating = rating;
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
   }
 
   public static LikeCardRequest of(String timelineCardId, String cardType, String ownerHash,

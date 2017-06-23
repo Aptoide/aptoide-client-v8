@@ -3,7 +3,6 @@ package cm.aptoide.pt.preferences.secure;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;

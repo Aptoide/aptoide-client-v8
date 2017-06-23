@@ -82,7 +82,8 @@ public class MainPresenter implements Presenter {
   // proper up/back navigation to home if needed
   private void navigate() {
     showHome();
-    if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences) && !V8Engine.isAutoUpdateWasCalled()) {
+    if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences)
+        && !V8Engine.isAutoUpdateWasCalled()) {
       // only call auto update when the app was not on the background
       autoUpdate.execute();
     }

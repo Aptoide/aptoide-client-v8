@@ -29,44 +29,31 @@ public class DateCalculator {
 
   public DateCalculator(Context context, Resources resources) {
     this.resources = resources;
-    mTimestampLabelYesterday = context
-        .getResources()
+    mTimestampLabelYesterday = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_yesterday);
-    mTimestampLabelToday = context
-        .getResources()
+    mTimestampLabelToday = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_today);
-    mTimestampLabelJustNow = context
-        .getResources()
+    mTimestampLabelJustNow = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_just_now);
-    mTimestampLabelMinutesAgo = context
-        .getResources()
+    mTimestampLabelMinutesAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_minutes_ago);
-    mTimestampLabelHoursAgo = context
-        .getResources()
+    mTimestampLabelHoursAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_hours_ago);
-    mTimestampLabelHourAgo = context
-        .getResources()
+    mTimestampLabelHourAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_hour_ago);
-    mTimestampLabelDaysAgo = context
-        .getResources()
+    mTimestampLabelDaysAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_days_ago);
-    mTimestampLabelWeekAgo = context
-        .getResources()
+    mTimestampLabelWeekAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_week_ago2);
-    mTimestampLabelWeeksAgo = context
-        .getResources()
+    mTimestampLabelWeeksAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_weeks_ago);
-    mTimestampLabelMonthAgo = context
-        .getResources()
+    mTimestampLabelMonthAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_month_ago);
-    mTimestampLabelMonthsAgo = context
-        .getResources()
+    mTimestampLabelMonthsAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_months_ago);
-    mTimestampLabelYearAgo = context
-        .getResources()
+    mTimestampLabelYearAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_year_ago);
-    mTimestampLabelYearsAgo = context
-        .getResources()
+    mTimestampLabelYearsAgo = context.getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_years_ago);
   }
 

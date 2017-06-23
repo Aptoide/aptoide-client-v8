@@ -18,17 +18,17 @@ import rx.Observable;
 
 public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body> {
 
+  protected GetUserInfoRequest(Body body, String baseHost, OkHttpClient httpClient,
+      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
+      TokenInvalidator tokenInvalidator) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+  }
+
   public static String getHost() {
     return BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
         + "/api/7/";
-  }
-
-  protected GetUserInfoRequest(Body body, String baseHost, OkHttpClient httpClient,
-      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static GetUserInfoRequest of(String accessToken, OkHttpClient httpClient,

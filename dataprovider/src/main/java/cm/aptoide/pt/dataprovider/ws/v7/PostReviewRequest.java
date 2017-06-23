@@ -22,18 +22,19 @@ import rx.Observable;
  */
 public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body> {
 
+  protected PostReviewRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+  }
+
   public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
         + "/api/7/";
-  }
-
-  protected PostReviewRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
@@ -61,12 +62,12 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
+    private final boolean appInstalled;
     private String storeName;
     private String packageName;
     private String title;
     private String body;
     private Integer rating;
-    private final boolean appInstalled;
 
     public Body(String packageName, String title, String body, Integer rating,
         boolean appInstalled) {

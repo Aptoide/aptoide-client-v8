@@ -21,8 +21,8 @@ public class AuthorizationFactory {
       Authorization authorization) {
     return new cm.aptoide.pt.database.realm.PaymentAuthorization(authorization.getPaymentId(),
         ((WebAuthorization) authorization).getUrl(),
-        ((WebAuthorization) authorization).getRedirectUrl(), authorization.getStatus().name(),
-        authorization.getPayerId());
+        ((WebAuthorization) authorization).getRedirectUrl(), authorization.getStatus()
+        .name(), authorization.getPayerId());
   }
 
   public Authorization convertToPaymentAuthorization(
@@ -40,10 +40,10 @@ public class AuthorizationFactory {
     if (response != null
         && response.isOk()
         && response.getAuthorizations() != null
-        && !response.getAuthorizations().isEmpty()) {
+        && !response.getAuthorizations()
+        .isEmpty()) {
 
-      for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse authorizationResponse : response
-          .getAuthorizations()) {
+      for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse authorizationResponse : response.getAuthorizations()) {
         authorizations.add(convertToPaymentAuthorization(authorizationResponse, payerId));
       }
     } else {
@@ -55,7 +55,8 @@ public class AuthorizationFactory {
 
   private Authorization.Status getStatus(PaymentAuthorizationsResponse response) {
 
-    if (response.getAuthorizations() != null && response.getAuthorizations().isEmpty()) {
+    if (response.getAuthorizations() != null && response.getAuthorizations()
+        .isEmpty()) {
       return Authorization.Status.INACTIVE;
     }
 

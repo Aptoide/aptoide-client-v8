@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
-import android.content.SharedPreferences;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -47,6 +47,16 @@ public abstract class FragmentView extends LeakFragment implements View {
         android.R.anim.fade_out, sharedPreferences);
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    try {
+      navigationProvider = (NavigationProvider) activity;
+    } catch (ClassCastException ex) {
+      Logger.e(TAG, String.format("Parent activity must implement %s interface",
+          NavigationProvider.class.getName()));
+    }
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sharedPreferences =
@@ -55,13 +65,17 @@ public abstract class FragmentView extends LeakFragment implements View {
         .incrementNumberOfScreens();
   }
 
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    try {
-      navigationProvider = (NavigationProvider) activity;
-    } catch (ClassCastException ex) {
-      Logger.e(TAG, String.format("Parent activity must implement %s interface",
-          NavigationProvider.class.getName()));
+  @Override public void onDestroy() {
+    super.onDestroy();
+    ScreenTrackingUtils.getInstance()
+        .decrementNumberOfScreens();
+  }
+
+  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      ScreenTrackingUtils.getInstance()
+          .addScreenToHistory(getClass().getSimpleName());
     }
   }
 
@@ -97,20 +111,6 @@ public abstract class FragmentView extends LeakFragment implements View {
       return true;
     }
     return super.onOptionsItemSelected(item);
-  }
-
-  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
-    super.setUserVisibleHint(isVisibleToUser);
-    if (isVisibleToUser) {
-      ScreenTrackingUtils.getInstance()
-          .addScreenToHistory(getClass().getSimpleName());
-    }
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    ScreenTrackingUtils.getInstance()
-        .decrementNumberOfScreens();
   }
 
   @NonNull @Override

@@ -54,9 +54,9 @@ import rx.schedulers.Schedulers;
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, PackageManager packageManager) {
     return new ListAppsUpdatesRequest(
-        new Body(getInstalledApks(packageManager), subscribedStoresIds, clientUniqueId, sharedPreferences),
-        getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences);
+        new Body(getInstalledApks(packageManager), subscribedStoresIds, clientUniqueId,
+            sharedPreferences), getHost(sharedPreferences), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   private static List<ApksData> getInstalledApks(PackageManager packageManager) {

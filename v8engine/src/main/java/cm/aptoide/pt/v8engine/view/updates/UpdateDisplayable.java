@@ -111,15 +111,14 @@ public class UpdateDisplayable extends Displayable {
         .flatMap(sucess -> {
           if (installManager.showWarning()) {
             return GenericDialogs.createGenericYesNoCancelMessage(context, "",
-                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog,
-                    resources))
+                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, resources))
                 .map(answer -> (answer.equals(YES)))
                 .doOnNext(answer -> installManager.rootInstallAllowed(answer));
           }
           return Observable.just(true);
         })
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download)
+        .flatMap(success -> installManager.install(download)
             .doOnSubscribe(() -> setupEvents(download)));
   }
 

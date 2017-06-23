@@ -1,15 +1,11 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.v8engine.util.ScreenTrackingUtils;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 
 /**

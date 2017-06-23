@@ -190,8 +190,8 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(), BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
-      Resources resources) {
+  @Override
+  public void share(String cardId, ShareCardCallback shareCardCallback, Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(), BLANK));
   }

@@ -26,8 +26,9 @@ public class GetAppMetaRequest extends V7<GetAppMeta, BaseBody> {
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
-    return new GetAppMetaRequest(getHost(sharedPreferences), new BaseBody(), url.replace("getAppMeta", ""),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+    return new GetAppMetaRequest(getHost(sharedPreferences), new BaseBody(),
+        url.replace("getAppMeta", ""), bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator);
   }
 
   @Override

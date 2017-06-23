@@ -153,13 +153,15 @@ import rx.android.schedulers.AndroidSchedulers;
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+                .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             V8Engine.getConfiguration()
-                .getAppId(), ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+                .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     analytics = Analytics.getInstance();
@@ -170,7 +172,8 @@ import rx.android.schedulers.AndroidSchedulers;
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
                 V8Engine.getConfiguration()
                     .getAppId(),
-                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), tokenInvalidator,
+                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            tokenInvalidator,
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     minimalAd = this.displayable.getMinimalAd();
@@ -332,7 +335,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   showRootInstallWarningPopup(context);
                   compositeSubscription.add(
                       new PermissionManager().requestDownloadAccess(permissionRequest)
-                          .flatMap(success -> installManager.install(getContext(), appDownload)
+                          .flatMap(success -> installManager.install(appDownload)
                               .doOnSubscribe(() -> setupEvents(appDownload)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
@@ -413,7 +416,7 @@ import rx.android.schedulers.AndroidSchedulers;
                 .getNodes()
                 .getMeta()
                 .getData(), downloadAction);
-            return installManager.install(getContext(), download)
+            return installManager.install(download)
                 .doOnSubscribe(() -> setupEvents(download));
           })
           .first()
@@ -545,11 +548,11 @@ import rx.android.schedulers.AndroidSchedulers;
     String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      installManager.removeInstallationFile(md5, getContext());
+      installManager.removeInstallationFile(md5);
     });
 
     actionPause.setOnClickListener(view -> {
-      installManager.stopInstallation(getContext(), md5);
+      installManager.stopInstallation(md5);
     });
 
     actionResume.setOnClickListener(view -> {
@@ -563,7 +566,7 @@ import rx.android.schedulers.AndroidSchedulers;
                 .getMeta()
                 .getData(), progress.getRequest()
                 .getAction());
-            return installManager.install(getContext(), download)
+            return installManager.install(download)
                 .doOnSubscribe(() -> {
                   setupEvents(download);
                 });

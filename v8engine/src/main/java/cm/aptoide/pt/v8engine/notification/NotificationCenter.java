@@ -85,14 +85,16 @@ public class NotificationCenter {
   }
 
   public Observable<Boolean> haveNotifications() {
-    return notificationProvider.getNotifications(1).map(list -> !list.isEmpty());
+    return notificationProvider.getNotifications(1)
+        .map(list -> !list.isEmpty());
   }
 
   public Completable notificationDismissed(
       @AptoideNotification.NotificationType Integer[] notificationType) {
-    return notificationProvider.getLastShowed(notificationType).flatMapCompletable(notification -> {
-      notification.setDismissed(System.currentTimeMillis());
-      return notificationProvider.save(notification);
-    });
+    return notificationProvider.getLastShowed(notificationType)
+        .flatMapCompletable(notification -> {
+          notification.setDismissed(System.currentTimeMillis());
+          return notificationProvider.save(notification);
+        });
   }
 }

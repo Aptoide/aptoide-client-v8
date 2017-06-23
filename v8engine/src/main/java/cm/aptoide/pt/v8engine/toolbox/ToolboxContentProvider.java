@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Binder;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -175,8 +174,7 @@ public class ToolboxContentProvider extends ContentProvider {
       if (result == PackageManager.SIGNATURE_MATCH) {
         switch (uriMatcher.match(uri)) {
           case CHANGE_PREFERENCE:
-            SharedPreferences.Editor edit = sharedPreferences
-                .edit();
+            SharedPreferences.Editor edit = sharedPreferences.edit();
             for (final Map.Entry<String, Object> entry : values.valueSet()) {
               Object value = entry.getValue();
               if (value instanceof String) {

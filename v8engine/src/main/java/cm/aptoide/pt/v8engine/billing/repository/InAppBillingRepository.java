@@ -68,8 +68,7 @@ public class InAppBillingRepository {
 
   public Completable deleteInAppPurchase(int apiVersion, String packageName, String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3,
-        httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .first()
         .toSingle()

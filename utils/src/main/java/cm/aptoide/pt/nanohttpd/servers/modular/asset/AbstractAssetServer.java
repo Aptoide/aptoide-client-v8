@@ -25,8 +25,7 @@ public abstract class AbstractAssetServer extends AbstractServerModule {
     String out;
 
     try {
-      inputStream = assetManager
-          .open(assetPath);
+      inputStream = assetManager.open(assetPath);
 
       byte[] buffer;
       buffer = new byte[inputStream.available()];

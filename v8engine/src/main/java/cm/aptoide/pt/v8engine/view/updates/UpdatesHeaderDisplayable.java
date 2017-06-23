@@ -66,7 +66,7 @@ public class UpdatesHeaderDisplayable extends Displayable {
             }
           });
     }
-    return installManager.install(context, download)
+    return installManager.install(download)
         .doOnSubscribe(() -> setupDownloadEvent(download));
   }
 

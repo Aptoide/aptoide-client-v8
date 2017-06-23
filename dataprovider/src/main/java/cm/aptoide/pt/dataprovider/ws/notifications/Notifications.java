@@ -25,12 +25,12 @@ import rx.Observable;
  */
 public abstract class Notifications<U> extends WebService<Notifications.Interfaces, U> {
 
-  public static String getHost() {
-    return "http://pnp.aptoide.com/pnp/v1/notifications/";
-  }
-
   protected Notifications(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(Interfaces.class, httpClient, converterFactory, getHost());
+  }
+
+  public static String getHost() {
+    return "http://pnp.aptoide.com/pnp/v1/notifications/";
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {

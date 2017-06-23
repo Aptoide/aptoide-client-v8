@@ -23,7 +23,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
@@ -193,7 +192,7 @@ public abstract class ImageLoaderFragment extends PermissionServiceFragment {
   protected String imageHasErrors(String imagePath) {
     if (!TextUtils.isEmpty(imagePath)) {
       List<ImageErrors> imageErrors = checkIconSizeProperties(imagePath, getResources());
-      if (imageErrors!=null && !imageErrors.isEmpty()) {
+      if (imageErrors != null && !imageErrors.isEmpty()) {
         return buildImageErrorMessage(imageErrors);
       }
       return null;
@@ -252,7 +251,7 @@ public abstract class ImageLoaderFragment extends PermissionServiceFragment {
       return;
     }
 
-    if(imageUri!=null) {
+    if (imageUri != null) {
       try {
         String filePath = getMediaStoragePath(imageUri, applicationContext);
         String imageError = imageHasErrors(filePath);
@@ -266,7 +265,7 @@ public abstract class ImageLoaderFragment extends PermissionServiceFragment {
         CrashReport.getInstance()
             .log(ex);
       }
-    }else {
+    } else {
       Logger.w(TAG, "onActivityResult called with null image URI");
     }
   }

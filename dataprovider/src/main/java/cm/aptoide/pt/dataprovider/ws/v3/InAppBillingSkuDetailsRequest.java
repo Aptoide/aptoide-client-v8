@@ -6,12 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

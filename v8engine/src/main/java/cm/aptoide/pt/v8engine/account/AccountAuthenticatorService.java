@@ -16,10 +16,10 @@ import cm.aptoide.pt.v8engine.view.account.LoginActivity;
 public class AccountAuthenticatorService extends Service {
 
   @Override public IBinder onBind(Intent intent) {
-    final AccountAuthenticator authenticator = new AccountAuthenticator(this,
-        ((V8Engine) getApplicationContext()).getAccountManager(),
-        CrashReport.getInstance(), AccountManager.get(getApplicationContext()),
-        new Intent(getApplicationContext(), LoginActivity.class));
+    final AccountAuthenticator authenticator =
+        new AccountAuthenticator(this, ((V8Engine) getApplicationContext()).getAccountManager(),
+            CrashReport.getInstance(), AccountManager.get(getApplicationContext()),
+            new Intent(getApplicationContext(), LoginActivity.class));
     return authenticator.getIBinder();
   }
 }

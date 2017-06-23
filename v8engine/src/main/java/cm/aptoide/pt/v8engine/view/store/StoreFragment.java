@@ -142,15 +142,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
-          V8Engine.getConfiguration()
-              .getDefaultTheme()));
-    }
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     storeName = args.getString(BundleCons.STORE_NAME);
@@ -280,6 +271,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
           load(true, true, null);
           break;
       }
+    }
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
+          .getDefaultTheme()));
     }
   }
 

@@ -213,20 +213,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
     //set AppStore name
     findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
-            getContext().getResources(),
-            Application.getConfiguration()
+            getContext().getResources(), Application.getConfiguration()
                 .getMarketName()));
 
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-            getContext().getResources(),
-            Application.getConfiguration()
+            getContext().getResources(), Application.getConfiguration()
                 .getMarketName()));
     autoUpdatepreference.setSummary(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
-            getContext().getResources(),
-            Application.getConfiguration()
+            getContext().getResources(), Application.getConfiguration()
                 .getMarketName()));
 
     subscriptions.add(RxPreference.checks(socialCampaignNotifications)

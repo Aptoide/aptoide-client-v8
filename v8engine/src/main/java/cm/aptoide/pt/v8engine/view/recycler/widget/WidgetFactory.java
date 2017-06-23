@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;

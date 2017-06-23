@@ -40,12 +40,15 @@ public class InstallManager {
   private final InstalledRepository installedRepository;
   private final SharedPreferences sharedPreferences;
   private final SharedPreferences securePreferences;
+  private final Context context;
 
   /**
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
    */
-  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
-      SharedPreferences sharedPreferences, SharedPreferences securePreferences) {
+  public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
+      Installer installer, SharedPreferences sharedPreferences,
+      SharedPreferences securePreferences) {
+    this.context = context;
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.downloadRepository = RepositoryFactory.getDownloadRepository();
@@ -54,25 +57,25 @@ public class InstallManager {
     this.securePreferences = securePreferences;
   }
 
-  public void stopAllInstallations(Context context) {
+  public void stopAllInstallations() {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_STOP_ALL_INSTALLS);
     context.startService(intent);
   }
 
-  public void removeInstallationFile(String md5, Context context) {
-    stopInstallation(context, md5);
+  public void removeInstallationFile(String md5) {
+    stopInstallation(md5);
     aptoideDownloadManager.removeDownload(md5);
   }
 
-  public void stopInstallation(Context context, String md5) {
+  public void stopInstallation(String md5) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_STOP_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
     context.startService(intent);
   }
 
-  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
+  public Observable<Void> uninstall(String packageName, String versionName) {
     return installer.uninstall(context, packageName, versionName);
   }
 
@@ -177,7 +180,7 @@ public class InstallManager {
         .getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
-  public Observable<Progress<Download>> install(Context context, Download download) {
+  public Observable<Progress<Download>> install(Download download) {
     return getInstallation(download.getMd5()).first()
         .map(progress -> updateDownloadAction(download, progress))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
@@ -189,7 +192,7 @@ public class InstallManager {
             downloadRepository.save(downloadProgress.getRequest());
           }
         })
-        .flatMap(progress -> installInBackground(context, progress));
+        .flatMap(progress -> installInBackground(progress));
   }
 
   @NonNull
@@ -219,17 +222,15 @@ public class InstallManager {
     });
   }
 
-  private Observable<Progress<Download>> installInBackground(Context context,
-      Progress<Download> progress) {
+  private Observable<Progress<Download>> installInBackground(Progress<Download> progress) {
     return getInstallation(progress.getRequest()
-        .getMd5()).mergeWith(startBackgroundInstallationAndWait(context, progress));
+        .getMd5()).mergeWith(startBackgroundInstallationAndWait(progress));
   }
 
-  @NonNull
-  private Observable<Progress<Download>> startBackgroundInstallationAndWait(Context context,
+  @NonNull private Observable<Progress<Download>> startBackgroundInstallationAndWait(
       Progress<Download> progress) {
-    return waitBackgroundInstallationResult(context, progress.getRequest()
-        .getMd5()).doOnSubscribe(() -> startBackgroundInstallation(context, progress.getRequest()
+    return waitBackgroundInstallationResult(progress.getRequest()
+        .getMd5()).doOnSubscribe(() -> startBackgroundInstallation(progress.getRequest()
         .getMd5()))
         .map(success -> {
           progress.setState(Progress.DONE);
@@ -237,7 +238,7 @@ public class InstallManager {
         });
   }
 
-  private Observable<Void> waitBackgroundInstallationResult(Context context, String md5) {
+  private Observable<Void> waitBackgroundInstallationResult(String md5) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context,
         new IntentFilter(InstallService.ACTION_INSTALL_FINISHED), null, null))
         .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(
@@ -246,7 +247,7 @@ public class InstallManager {
         .map(intent -> null);
   }
 
-  private void startBackgroundInstallation(Context context, String md5) {
+  private void startBackgroundInstallation(String md5) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
@@ -274,9 +275,9 @@ public class InstallManager {
   /**
    * @return true if all downloads started with success, false otherwise
    */
-  public Observable<Boolean> startInstalls(List<Download> downloads, Context context) {
+  public Observable<Boolean> startInstalls(List<Download> downloads) {
     return Observable.from(downloads)
-        .map(download -> install(context, download))
+        .map(download -> install(download))
         .toList()
         .flatMap(observables -> Observable.merge(observables))
         .filter(downloading -> downloading.getState() == Progress.DONE)

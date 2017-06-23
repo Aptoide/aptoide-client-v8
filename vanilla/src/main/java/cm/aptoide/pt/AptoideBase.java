@@ -6,7 +6,6 @@
 package cm.aptoide.pt;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.support.multidex.MultiDex;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.V8Engine;

@@ -76,6 +76,7 @@ public class NotificationProvider {
   public Completable save(Notification notification) {
     return Completable.fromAction(() -> {
       notificationAccessor.insert(notification);
-    }).subscribeOn(scheduler);
+    })
+        .subscribeOn(scheduler);
   }
 }

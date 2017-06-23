@@ -40,6 +40,7 @@ import rx.Observable;
   private final String oemid;
   private final String q;
   private final SharedPreferences sharedPreferences;
+  private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private String excludedPackage;
   private Location location;
   private String keyword;
@@ -51,7 +52,6 @@ import rx.Observable;
   private boolean mature;
   private ConnectivityManager connectivityManager;
   private Resources resources;
-  private final AdsApplicationVersionCodeProvider versionCodeProvider;
 
   private GetAdsRequest(String clientUniqueId, boolean googlePlayServicesAvailable, String oemid,
       boolean mature, Converter.Factory converterFactory, OkHttpClient httpClient, String q,
@@ -83,7 +83,8 @@ import rx.Observable;
   private static GetAdsRequest of(Location location, Integer limit, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences,
-      ConnectivityManager connectivityManager, Resources resources, AdsApplicationVersionCodeProvider versionCodeProvider) {
+      ConnectivityManager connectivityManager, Resources resources,
+      AdsApplicationVersionCodeProvider versionCodeProvider) {
     return of(location, "__NULL__", limit, clientUniqueId, googlePlayServicesAvailable, oemid,
         mature, httpClient, converterFactory, q, sharedPreferences, connectivityManager, resources,
         versionCodeProvider);
@@ -104,7 +105,8 @@ import rx.Observable;
   public static GetAdsRequest ofHomepageMore(String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences,
-      ConnectivityManager connectivityManager, Resources resources, AdsApplicationVersionCodeProvider versionCodeProvider) {
+      ConnectivityManager connectivityManager, Resources resources,
+      AdsApplicationVersionCodeProvider versionCodeProvider) {
     // TODO: 09-06-2016 neuro limit based on max colums
     return of(Location.homepage, 50, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
         httpClient, converterFactory, q, sharedPreferences, connectivityManager, resources,
@@ -166,7 +168,8 @@ import rx.Observable;
   public static GetAdsRequest ofSearch(String query, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences,
-      ConnectivityManager connectivityManager, Resources resources, AdsApplicationVersionCodeProvider versionCodeProvider) {
+      ConnectivityManager connectivityManager, Resources resources,
+      AdsApplicationVersionCodeProvider versionCodeProvider) {
     return of(Location.search, query, 1, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
         httpClient, converterFactory, q, sharedPreferences, connectivityManager, resources,
         versionCodeProvider);
@@ -175,7 +178,8 @@ import rx.Observable;
   public static GetAdsRequest ofSecondInstall(String packageName, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences,
-      ConnectivityManager connectivityManager, Resources resources, AdsApplicationVersionCodeProvider versionCodeProvider) {
+      ConnectivityManager connectivityManager, Resources resources,
+      AdsApplicationVersionCodeProvider versionCodeProvider) {
     return ofPackageName(Location.secondinstall, packageName, clientUniqueId,
         googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q,
         sharedPreferences, connectivityManager, resources, versionCodeProvider);
@@ -184,7 +188,8 @@ import rx.Observable;
   public static GetAdsRequest ofSecondTry(String packageName, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory, String q, SharedPreferences sharedPreferences,
-      ConnectivityManager connectivityManager, Resources resources, AdsApplicationVersionCodeProvider versionCodeProvider) {
+      ConnectivityManager connectivityManager, Resources resources,
+      AdsApplicationVersionCodeProvider versionCodeProvider) {
     return ofPackageName(Location.secondtry, packageName, clientUniqueId,
         googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q,
         sharedPreferences, connectivityManager, resources, versionCodeProvider);

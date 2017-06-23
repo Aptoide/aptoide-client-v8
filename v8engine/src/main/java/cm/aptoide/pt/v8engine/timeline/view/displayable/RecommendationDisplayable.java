@@ -188,8 +188,8 @@ public class RecommendationDisplayable extends CardDisplayable {
             getTitle(resources), BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
-      Resources resources) {
+  @Override
+  public void share(String cardId, ShareCardCallback shareCardCallback, Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(),
             getTitle(resources), BLANK));
