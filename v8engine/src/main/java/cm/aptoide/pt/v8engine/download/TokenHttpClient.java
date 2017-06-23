@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.downloadmanager.Constants;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -17,7 +18,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Headers;
-import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -59,34 +59,37 @@ public class TokenHttpClient {
             () -> AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
                 AptoideUtils.Core.getDefaultVername(), oemid)))
 
-        .addInterceptor(new Interceptor() {
-          @Override public Response intercept(Chain chain) throws IOException {
+        .addInterceptor(chain -> {
 
 
-        /*
-         * Aptoide - events 2 : download
-         * Get X-Mirror and add to the event
-         */
+      /*
+       * Aptoide - events 2 : download
+       * Get X-Mirror and add to the event
+       */
 
-            Request request = chain.request();
-            String v = request.header(Constants.VERSION_CODE);
-            String packageName = request.header(Constants.PACKAGE);
-            int fileType = Integer.valueOf(request.header(Constants.FILE_TYPE));
+          Request request = chain.request();
+          String v = request.header(Constants.VERSION_CODE);
+          String packageName = request.header(Constants.PACKAGE);
+          int fileType = Integer.valueOf(request.header(Constants.FILE_TYPE));
 
-            Response response = chain.proceed(request.newBuilder()
+          Response response = null;
+          try {
+            response = chain.proceed(request.newBuilder()
                 .removeHeader(Constants.VERSION_CODE)
                 .removeHeader(Constants.PACKAGE)
                 .removeHeader(Constants.FILE_TYPE)
                 .build());
-            if (response != null) {
-              Headers allHeaders = response.headers();
-              if (allHeaders != null) {
-                String mirror = allHeaders.get("X-Mirror");
-                addMirrorToDownloadEvent(v, packageName, fileType, mirror);
-              }
-            }
-            return response;
+          } catch (IOException e) {
+            CrashReport.getInstance().log(e);
           }
+          if (response != null) {
+            Headers allHeaders = response.headers();
+            if (allHeaders != null) {
+              String mirror = allHeaders.get("X-Mirror");
+              addMirrorToDownloadEvent(v, packageName, fileType, mirror);
+            }
+          }
+          return response;
         })
         .connectTimeout(45, TimeUnit.SECONDS)
         .writeTimeout(45, TimeUnit.SECONDS)
