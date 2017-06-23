@@ -86,7 +86,8 @@ public final class RepositoryFactory {
         (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
   }
 
-  public static AppRepository getAppRepository(Context context, SharedPreferences sharedPreferences) {
+  public static AppRepository getAppRepository(Context context,
+      SharedPreferences sharedPreferences) {
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(), getHttpClient(context),

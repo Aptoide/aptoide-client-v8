@@ -59,7 +59,8 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
 
   @Override protected V7 buildRequest() {
     return GetUserLikesRequest.of(cardUid, baseBodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {

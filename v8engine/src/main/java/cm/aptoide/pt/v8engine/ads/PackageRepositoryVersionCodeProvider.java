@@ -16,6 +16,7 @@ public class PackageRepositoryVersionCodeProvider implements AdsApplicationVersi
   }
 
   @Override public Single<Integer> getApplicationVersionCode() {
-    return packageRepository.getPackageVersionCode(packageName).onErrorReturn(throwable -> -1);
+    return packageRepository.getPackageVersionCode(packageName)
+        .onErrorReturn(throwable -> -1);
   }
 }

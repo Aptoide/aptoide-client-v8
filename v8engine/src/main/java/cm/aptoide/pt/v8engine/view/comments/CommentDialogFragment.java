@@ -130,14 +130,15 @@ public class CommentDialogFragment
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    sharedPreferences = ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107,
-        getContext().getResources());
+    onEmptyTextError =
+        AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

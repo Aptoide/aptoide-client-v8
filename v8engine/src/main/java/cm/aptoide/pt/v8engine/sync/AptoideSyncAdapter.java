@@ -84,13 +84,12 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       final Product product = productConverter.mapToProduct(extras);
       new ConfirmationSync(product, operatorManager, confirmationAccessor, confirmationConverter,
           payer, bodyInterceptorV3, converterFactory, httpClient, paymentAnalytics,
-          tokenInvalidator, sharedPreferences).sync(
-          syncResult);
+          tokenInvalidator, sharedPreferences).sync(syncResult);
     } else if (authorizations) {
       final int paymentId = extras.getInt(EXTRA_PAYMENT_ID);
       new AuthorizationSync(paymentId, authorizationAcessor, authorizationConverter, payer,
-          bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics,
-          tokenInvalidator, sharedPreferences).sync(syncResult);
+          bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics, tokenInvalidator,
+          sharedPreferences).sync(syncResult);
     }
   }
 }

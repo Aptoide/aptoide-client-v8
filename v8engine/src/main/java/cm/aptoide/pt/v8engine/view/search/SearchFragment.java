@@ -280,8 +280,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-          sharedPreferences)
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
                 .getList();
@@ -297,8 +296,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-          sharedPreferences)
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
                 .getList();

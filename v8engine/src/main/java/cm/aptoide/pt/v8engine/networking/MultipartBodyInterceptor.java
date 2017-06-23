@@ -15,8 +15,8 @@ public class MultipartBodyInterceptor
   private final AptoideAccountManager accountManager;
   private final RequestBodyFactory requestBodyFactory;
 
-  public MultipartBodyInterceptor(IdsRepository idsRepository,
-      AptoideAccountManager accountManager, RequestBodyFactory requestBodyFactory) {
+  public MultipartBodyInterceptor(IdsRepository idsRepository, AptoideAccountManager accountManager,
+      RequestBodyFactory requestBodyFactory) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.requestBodyFactory = requestBodyFactory;

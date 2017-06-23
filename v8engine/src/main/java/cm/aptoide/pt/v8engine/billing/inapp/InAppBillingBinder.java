@@ -104,13 +104,16 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       final List<String> serializedProducts =
-          billing.getInAppProducts(apiVersion, packageName, itemIdList, type).flatMap(products -> {
-            try {
-              return Single.just(serializer.serializeProducts(products));
-            } catch (IOException e) {
-              return Single.error(e);
-            }
-          }).toBlocking().value();
+          billing.getInAppProducts(apiVersion, packageName, itemIdList, type)
+              .flatMap(products -> {
+                try {
+                  return Single.just(serializer.serializeProducts(products));
+                } catch (IOException e) {
+                  return Single.error(e);
+                }
+              })
+              .toBlocking()
+              .value();
 
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
@@ -145,8 +148,9 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
     final Bundle result = new Bundle();
     try {
 
-      final List<Purchase> purchases =
-          billing.getInAppPurchases(apiVersion, packageName, type).toBlocking().value();
+      final List<Purchase> purchases = billing.getInAppPurchases(apiVersion, packageName, type)
+          .toBlocking()
+          .value();
 
       final List<String> dataList = new ArrayList<>();
       final List<String> signatureList = new ArrayList<>();

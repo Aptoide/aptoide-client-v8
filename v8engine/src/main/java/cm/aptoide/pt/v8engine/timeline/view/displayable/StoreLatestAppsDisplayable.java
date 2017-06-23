@@ -119,8 +119,8 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getStoreName(), BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback,
-      Resources resources) {
+  @Override
+  public void share(String cardId, ShareCardCallback shareCardCallback, Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getStoreName(), BLANK));
   }

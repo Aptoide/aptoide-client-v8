@@ -41,6 +41,7 @@ class ListAppsRequestFactory {
 
   public ListAppsRequest newListAppsRequest(String url) {
     return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager);
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources,
+        windowManager);
   }
 }

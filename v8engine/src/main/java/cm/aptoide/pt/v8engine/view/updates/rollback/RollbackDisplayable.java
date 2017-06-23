@@ -52,7 +52,7 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
   }
 
   public void openAppview(FragmentNavigator navigator) {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
+    navigator.navigateToAllowingStateLoss(V8Engine.getFragmentProvider()
         .newAppViewFragment(getPojo().getMd5()));
   }
 
