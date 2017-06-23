@@ -6,10 +6,11 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.Collections;
 import java.util.List;
-import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by trinkes on 14/06/2017.
@@ -41,29 +42,34 @@ public class RootInstallationRetryHandler {
 
   public void start() {
     subscription = installManager.getTimedOutInstallations()
-        .flatMapCompletable(installationProgresses -> {
-          if (count == 0) {
-            return handleNotifications(installationProgresses);
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(installationProgresses -> {
+          if (installationProgresses.isEmpty()) {
+            dismissNotifications();
           } else {
-            return Completable.fromAction(() -> handler.call(installationProgresses));
+            showNotification(installationProgresses);
           }
         })
         .subscribe(rootInstallErrorNotification -> {
         }, throwable -> Logger.e(TAG, "start: " + throwable));
   }
 
-  private Completable handleNotifications(List<InstallationProgress> installationProgresses) {
-    if (installationProgresses.isEmpty()) {
-      return dismissNotification();
+  private void showNotification(List<InstallationProgress> installationProgresses) {
+    if (count == 0) {
+      showSystemNotification(installationProgresses);
     } else {
-      return systemNotificationShower.showNotification(context,
-          rootInstallErrorNotificationFactory.create(context, installationProgresses));
+      handler.call(installationProgresses);
     }
   }
 
-  private Completable dismissNotification() {
-    return Completable.fromAction(
-        () -> systemNotificationShower.dismissNotification(notificationId));
+  private void showSystemNotification(List<InstallationProgress> installationProgresses) {
+    systemNotificationShower.showNotification(context,
+        rootInstallErrorNotificationFactory.create(context, installationProgresses));
+  }
+
+  private void dismissNotifications() {
+    systemNotificationShower.dismissNotification(notificationId);
+    handler.call(Collections.emptyList());
   }
 
   public void stop() {

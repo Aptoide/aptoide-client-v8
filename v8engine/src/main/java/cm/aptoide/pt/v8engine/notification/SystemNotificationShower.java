@@ -128,14 +128,11 @@ public class SystemNotificationShower {
         PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
-  public Completable showNotification(Context context,
+  public void showNotification(Context context,
       RootInstallErrorNotification installErrorNotification) {
-    return Completable.defer(() -> Completable.fromAction(() -> {
-      android.app.Notification notification =
-          mapToAndroidNotification(context, installErrorNotification);
-      notificationManager.notify(installErrorNotification.getNotificationId(), notification);
-    }))
-        .subscribeOn(AndroidSchedulers.mainThread());
+    android.app.Notification notification =
+        mapToAndroidNotification(context, installErrorNotification);
+    notificationManager.notify(installErrorNotification.getNotificationId(), notification);
   }
 
   private Notification mapToAndroidNotification(Context context,
