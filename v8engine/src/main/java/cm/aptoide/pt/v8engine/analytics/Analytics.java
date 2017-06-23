@@ -1,13 +1,16 @@
 package cm.aptoide.pt.v8engine.analytics;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import com.crashlytics.android.answers.Answers;
@@ -15,11 +18,14 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipFile;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -214,26 +220,28 @@ public class Analytics {
               .getUniqueIdentifier());
           return null;
         })
-            .filter(__ -> SecurePreferences.isFirstRun())
-            .doOnNext(__ -> setupDimensions())
+            .filter(__ -> SecurePreferences.isFirstRun(
+                SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
+                    PreferenceManager.getDefaultSharedPreferences(application))))
+            .doOnNext(__ -> setupDimensions(application))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
             }, Throwable::printStackTrace);
       }
 
-      private static void setupDimensions() {
-        if (!checkForUTMFileInMetaINF()) {
+      private static void setupDimensions(android.app.Application application) {
+        if (!checkForUTMFileInMetaINF(application)) {
           Dimensions.setUTMDimensionsToUnknown();
         }
       }
 
-      private static boolean checkForUTMFileInMetaINF() {
+      private static boolean checkForUTMFileInMetaINF(android.app.Application application) {
         ZipFile myZipFile = null;
         try {
-          final String sourceDir = V8Engine.getContext()
+          final String sourceDir = application.getApplicationContext()
               .getPackageManager()
-              .getPackageInfo(V8Engine.getContext()
+              .getPackageInfo(application.getApplicationContext()
                   .getPackageName(), 0).applicationInfo.sourceDir;
           myZipFile = new ZipFile(sourceDir);
           final InputStream utmInputStream =
