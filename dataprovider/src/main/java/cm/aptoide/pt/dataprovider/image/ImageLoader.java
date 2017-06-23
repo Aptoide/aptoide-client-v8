@@ -332,6 +332,19 @@ public class ImageLoader {
     return null;
   }
 
+  public Target<GlideDrawable> loadWithCenterCrop(String url, ImageView imageView) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager))
+          .centerCrop()
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::load() Context is null");
+    }
+    return null;
+  }
+
   /**
    * Loads a Drawable resource from the app bundle.
    *
