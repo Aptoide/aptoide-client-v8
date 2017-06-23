@@ -220,11 +220,13 @@ public class Analytics {
         Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
           return null;
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
-        }, Throwable::printStackTrace);
-        if (SecurePreferences.isFirstRun()) {
-          setupDimensions();
-        }
+        })
+            .filter(__ -> SecurePreferences.isFirstRun())
+            .doOnNext(__ -> setupDimensions())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(o -> {
+            }, Throwable::printStackTrace);
       }
 
       private static void setupDimensions() {
