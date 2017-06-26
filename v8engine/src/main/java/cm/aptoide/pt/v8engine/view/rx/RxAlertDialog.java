@@ -33,6 +33,10 @@ public class RxAlertDialog implements DialogInterface {
     dialog.show();
   }
 
+  public boolean isShowing() {
+    return dialog.isShowing();
+  }
+
   @Override public void cancel() {
     dialog.cancel();
   }

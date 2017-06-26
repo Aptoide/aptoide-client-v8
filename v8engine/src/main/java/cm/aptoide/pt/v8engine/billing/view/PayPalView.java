@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
-interface PayPalView extends View {
+public interface PayPalView extends View {
 
   void showPayPal(String currency, String description, double amount);
 
@@ -11,11 +11,36 @@ interface PayPalView extends View {
 
   void hideLoading();
 
-  Observable<String> paymentConfirmationId();
+  Observable<PayPalResult> results();
 
   void showNetworkError();
 
   void showUnknownError();
 
+  Observable<Void> errorDismisses();
+
   void dismiss();
+
+  public static class PayPalResult {
+
+    public static final int SUCCESS = 0;
+    public static final int ERROR = 1;
+    public static final int CANCELLED = 2;
+
+    private final int status;
+    private final String paymentConfirmationId;
+
+    public PayPalResult(int status, String paymentConfirmationId) {
+      this.status = status;
+      this.paymentConfirmationId = paymentConfirmationId;
+    }
+
+    public int getStatus() {
+      return status;
+    }
+
+    public String getPaymentConfirmationId() {
+      return paymentConfirmationId;
+    }
+  }
 }

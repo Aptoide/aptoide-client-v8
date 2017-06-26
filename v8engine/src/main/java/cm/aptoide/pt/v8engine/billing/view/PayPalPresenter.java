@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
+import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
@@ -12,31 +13,23 @@ public class PayPalPresenter implements Presenter {
   private final PayPalView view;
   private final Billing billing;
   private final ProductProvider productProvider;
+  private final PaymentAnalytics analytics;
 
-  public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider) {
+  public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
+      PaymentAnalytics analytics) {
     this.view = view;
     this.billing = billing;
     this.productProvider = productProvider;
+    this.analytics = analytics;
   }
 
   @Override public void present() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> productProvider.getProduct()
-            .doOnSuccess(product -> view.showPayPal(product.getPrice()
-                .getCurrency(), product.getDescription(), product.getPrice()
-                .getAmount()))
-            .flatMapObservable(__ -> view.paymentConfirmationId())
-            .doOnNext(__ -> view.showLoading())
-            .flatMapCompletable(paymentConformationId -> productProvider.getProduct()
-                .flatMapCompletable(
-                    product -> billing.processPayPalPayment(product, paymentConformationId))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> view.dismiss())))
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> hideLoadingAndShowError(throwable));
+
+    onViewCreatedShowPayPalPayment();
+
+    handlePayPalPaymentConfirmationEvent();
+
+    handleErrorDismissEvent();
   }
 
   @Override public void saveState(Bundle state) {
@@ -45,6 +38,60 @@ public class PayPalPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handleErrorDismissEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.errorDismisses())
+        .doOnNext(product -> view.dismiss())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> hideLoadingAndShowError(throwable));
+  }
+
+  private void handlePayPalPaymentConfirmationEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.results())
+        .doOnNext(__ -> view.showLoading())
+        .doOnNext(result -> analytics.sendPayPalResultEvent(result))
+        .doOnNext(result -> dismissOnPayPalError(result))
+        .filter(result -> result.getStatus() == PayPalView.PayPalResult.SUCCESS)
+        .flatMapCompletable(result -> productProvider.getProduct()
+            .flatMapCompletable(
+                product -> billing.processPayPalPayment(product, result.getPaymentConfirmationId()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> view.dismiss()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> hideLoadingAndShowError(throwable));
+  }
+
+  private void onViewCreatedShowPayPalPayment() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(created -> productProvider.getProduct())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(product -> view.showPayPal(product.getPrice()
+            .getCurrency(), product.getDescription(), product.getPrice()
+            .getAmount()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> hideLoadingAndShowError(throwable));
+  }
+
+  private void dismissOnPayPalError(PayPalView.PayPalResult result) {
+    switch (result.getStatus()) {
+      case PayPalView.PayPalResult.CANCELLED:
+      case PayPalView.PayPalResult.ERROR:
+        view.hideLoading();
+        view.dismiss();
+        break;
+      case PayPalView.PayPalResult.SUCCESS:
+      default:
+    }
   }
 
   private void hideLoadingAndShowError(Throwable throwable) {
