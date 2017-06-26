@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.comments;
 
-import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.dataprovider.model.v7.Review;
 import lombok.Data;
 
 @Data public final class ReviewWithAppName {

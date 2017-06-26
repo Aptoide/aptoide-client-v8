@@ -10,10 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.store.ListStores;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -71,24 +68,47 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
     }
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class EndlessBody extends Body
-      implements Endless {
+  public static class EndlessBody extends Body implements Endless {
 
-    @Getter private Integer limit = 25;
-    @Getter @Setter private int offset;
+    private int offset;
+    private Integer limit = 25;
 
     public EndlessBody(WidgetsArgs widgetsArgs) {
       super(widgetsArgs);
     }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
+    }
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
-    @Getter private WidgetsArgs widgetsArgs;
-    @Getter @Setter private boolean refresh;
+  public static class Body extends BaseBody {
+    private boolean refresh;
+    private WidgetsArgs widgetsArgs;
 
     public Body(WidgetsArgs widgetsArgs) {
       super();
       this.widgetsArgs = widgetsArgs;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    public void setRefresh(boolean refresh) {
+      this.refresh = refresh;
+    }
+
+    public WidgetsArgs getWidgetsArgs() {
+      return widgetsArgs;
     }
   }
 }

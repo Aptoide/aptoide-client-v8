@@ -54,8 +54,9 @@ public class PullCampaignNotificationsRequest
         converterFactory);
   }
 
-  @Override protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(
-      Interfaces interfaces, boolean bypassCache) {
+  @Override
+  protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(Service interfaces,
+      boolean bypassCache) {
     return interfaces.getPullCompaignNotifications(id, options, true);
   }
 }

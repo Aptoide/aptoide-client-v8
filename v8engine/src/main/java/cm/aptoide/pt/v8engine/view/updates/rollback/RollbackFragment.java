@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
@@ -84,7 +85,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
 
-    installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallerFactory(new MinimalAdMapper()).create(getContext(), InstallerFactory.ROLLBACK);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

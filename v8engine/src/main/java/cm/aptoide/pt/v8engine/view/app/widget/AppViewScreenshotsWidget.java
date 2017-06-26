@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.app.widget;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.app.screenshots.ScreenshotsAdapter;

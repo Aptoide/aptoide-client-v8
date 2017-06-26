@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.view.store;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.Translator;

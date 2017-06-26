@@ -12,10 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.store.ListStores;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -74,13 +71,24 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     }
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody
-      implements Endless {
+  public static class Body extends BaseBody implements Endless {
 
-    @Getter private Integer limit;
-    @Getter @Setter private int offset;
+    private int offset;
+    private Integer limit;
 
     public Body() {
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
     }
   }
 }

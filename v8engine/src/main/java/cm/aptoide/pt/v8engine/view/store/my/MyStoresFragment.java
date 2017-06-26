@@ -7,7 +7,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowStoreDisplayable;

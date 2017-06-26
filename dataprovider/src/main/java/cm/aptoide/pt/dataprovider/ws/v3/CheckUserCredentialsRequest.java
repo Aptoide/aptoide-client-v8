@@ -8,7 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
+import cm.aptoide.pt.dataprovider.model.v3.CheckUserCredentialsJson;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -39,13 +39,12 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Override
-  protected Observable<CheckUserCredentialsJson> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<CheckUserCredentialsJson> loadDataFromNetwork(Service service,
       boolean bypassCache) {
     if (createStore) {
-      return interfaces.checkUserCredentials(map, bypassCache);
+      return service.checkUserCredentials(map, bypassCache);
     }
 
-    return interfaces.getUserInfo(map, bypassCache);
+    return service.getUserInfo(map, bypassCache);
   }
 }

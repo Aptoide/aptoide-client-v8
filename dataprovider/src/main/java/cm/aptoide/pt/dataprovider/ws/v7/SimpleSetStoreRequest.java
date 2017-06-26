@@ -5,11 +5,9 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -51,12 +49,20 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
 
   public static class Body extends BaseBody {
 
+    private StoreProperties storeProperties;
     private String storeName;
-    @Getter @Setter private StoreProperties storeProperties;
 
     public Body(String storeName, String storeTheme, String storeDescription) {
       this.storeName = storeName;
       storeProperties = new StoreProperties(storeTheme, storeDescription);
+    }
+
+    public StoreProperties getStoreProperties() {
+      return storeProperties;
+    }
+
+    public void setStoreProperties(StoreProperties storeProperties) {
+      this.storeProperties = storeProperties;
     }
 
     public String getStoreName() {

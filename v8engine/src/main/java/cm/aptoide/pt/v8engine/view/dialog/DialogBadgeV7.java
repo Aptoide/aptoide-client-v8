@@ -16,10 +16,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.v8engine.R;
 
-import static cm.aptoide.pt.model.v7.Malware.Reason.Status;
+import static cm.aptoide.pt.dataprovider.model.v7.Malware.Reason.Status;
 
 /**
  * Created by hsousa on 18/11/15.

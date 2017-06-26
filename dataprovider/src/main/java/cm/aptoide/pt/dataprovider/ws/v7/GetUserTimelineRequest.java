@@ -8,11 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import java.util.List;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -49,13 +46,12 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
     return interfaces.getUserTimeline(url, body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey
-      implements Endless {
+  public static class Body extends BaseBodyWithAlphaBetaKey implements Endless {
 
-    @Getter private Integer limit;
-    @Getter @Setter private int offset;
-    @Getter private List<String> packageNames;
-    @Getter private String cardUid;
+    private int offset;
+    private Integer limit;
+    private List<String> packageNames;
+    private String cardUid;
 
     public Body(Integer limit, Integer offset, List<String> packageNames, String cardId,
         SharedPreferences sharedPreferences) {
@@ -64,6 +60,26 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
       this.offset = offset;
       this.packageNames = packageNames;
       this.cardUid = cardId;
+    }
+
+    public List<String> getPackageNames() {
+      return packageNames;
+    }
+
+    public String getCardUid() {
+      return cardUid;
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
     }
   }
 }

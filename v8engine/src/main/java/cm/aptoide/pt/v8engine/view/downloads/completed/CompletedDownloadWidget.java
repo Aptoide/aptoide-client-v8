@@ -14,9 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
+import cm.aptoide.pt.v8engine.view.downloads.DownloadStatusMessageMapper;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -36,6 +37,7 @@ import rx.schedulers.Schedulers;
   private ImageView resumeDownloadButton;
   private ImageView cancelDownloadButton;
   private ColorStateList defaultTextViewColor;
+  private DownloadStatusMessageMapper statusMapper;
 
   public CompletedDownloadWidget(View itemView) {
     super(itemView);
@@ -51,6 +53,7 @@ import rx.schedulers.Schedulers;
 
   @Override public void bindView(CompletedDownloadDisplayable displayable) {
     final FragmentActivity context = getContext();
+    statusMapper = new DownloadStatusMessageMapper(context);
     Download download = displayable.getDownload();
     appName.setText(download.getAppName());
     if (!TextUtils.isEmpty(download.getIcon())) {
@@ -116,6 +119,7 @@ import rx.schedulers.Schedulers;
     } else {
       status.setTextColor(defaultTextViewColor);
     }
-    status.setText(download.getStatusName(context));
+    status.setText(
+        statusMapper.map(download.getOverallDownloadStatus(), download.getDownloadError()));
   }
 }

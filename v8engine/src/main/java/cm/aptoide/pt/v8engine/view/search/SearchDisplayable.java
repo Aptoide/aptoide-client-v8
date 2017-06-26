@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.search;
 
-import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;

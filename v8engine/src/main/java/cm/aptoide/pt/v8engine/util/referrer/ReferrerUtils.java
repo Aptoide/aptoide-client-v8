@@ -23,7 +23,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -32,6 +32,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.List;
@@ -53,7 +54,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
       final Converter.Factory converterFactory, final QManager qManager, Context context,
-      final SharedPreferences sharedPreferences) {
+      final SharedPreferences sharedPreferences, MinimalAdMapper adMapper) {
     String packageName = minimalAd.getPackageName();
     long networkId = minimalAd.getNetworkId();
     String clickUrl = minimalAd.getClickUrl();
@@ -93,9 +94,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       AptoideUtils.ThreadU.runOnIoThread(() -> {
         final IdsRepository idsRepository =
             ((V8Engine) context.getApplicationContext()).getIdsRepository();
-        internalClickUrl[0] =
-            DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl, idsRepository.getAndroidId(),
-                idsRepository.getUniqueIdentifier(), idsRepository.getAdvertisingId());
+        internalClickUrl[0] = AdNetworkUtils.parseMacros(clickUrl, idsRepository.getAndroidId(),
+            idsRepository.getUniqueIdentifier(), idsRepository.getAdvertisingId());
         clickUrlFuture.set(internalClickUrl[0]);
         Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
       });
@@ -132,7 +132,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
                 StoredMinimalAdAccessor storedMinimalAdAccessor =
                     AccessorFactory.getAccessorFor(StoredMinimalAd.class);
-                storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, referrer));
+                storedMinimalAdAccessor.insert(adMapper.map(minimalAd, referrer));
               }
 
               future.cancel(false);
@@ -201,7 +201,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
                               adsRepository, httpClient, converterFactory, qManager, context,
-                              sharedPreferences), throwable -> clearExcludedNetworks(packageName));
+                              sharedPreferences, new MinimalAdMapper()),
+                          throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
                   clearExcludedNetworks(packageName);

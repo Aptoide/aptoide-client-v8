@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.inapp;
 
-import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import com.fasterxml.jackson.annotation.JsonProperty;
