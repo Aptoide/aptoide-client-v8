@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics;
+package cm.aptoide.pt.v8engine.install;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -11,7 +11,7 @@ import java.util.HashMap;
  * Created by pedroribeiro on 19/06/17.
  */
 
-public class InstallAnalytics extends AptoideAnalytics {
+public class InstallAnalytics {
 
   private static final String APPLICATION_INSTALL = "Application Install";
   private static final String TYPE = "Type";
