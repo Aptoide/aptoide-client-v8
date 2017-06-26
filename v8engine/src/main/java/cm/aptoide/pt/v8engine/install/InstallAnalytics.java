@@ -27,10 +27,16 @@ public class InstallAnalytics {
     this.facebook = facebook;
   }
 
-  public void installed(String packageName) {
+  public void sendInstalledEvent(String packageName) {
     analytics.sendEvent(
         new FacebookEvent(facebook, APPLICATION_INSTALL, createInstalledBundleData(packageName)));
     analytics.sendEvent(new FlurryEvent(APPLICATION_INSTALL, createInstalledMapData(packageName)));
+  }
+
+  public void sendRepalcedEvent(String packageName) {
+    analytics.sendEvent(
+        new FacebookEvent(facebook, APPLICATION_INSTALL, createReplacedBundleData(packageName)));
+    analytics.sendEvent(new FlurryEvent(APPLICATION_INSTALL, createReplacedMapData(packageName)));
   }
 
   private Bundle createInstalledBundleData(String packageName) {
@@ -45,12 +51,6 @@ public class InstallAnalytics {
     map.put(TYPE, INSTALLED);
     map.put(PACKAGE_NAME, packageName);
     return map;
-  }
-
-  public void replaced(String packageName) {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APPLICATION_INSTALL, createReplacedBundleData(packageName)));
-    analytics.sendEvent(new FlurryEvent(APPLICATION_INSTALL, createReplacedMapData(packageName)));
   }
 
   private Bundle createReplacedBundleData(String packageName) {

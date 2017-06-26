@@ -154,7 +154,7 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
     installedRepository.save(new Installed(packageInfo, getPackageManager()));
-    installAnalytics.installed(packageName);
+    installAnalytics.sendInstalledEvent(packageName);
     return packageInfo;
   }
 
@@ -200,7 +200,7 @@ public class InstalledIntentService extends IntentService {
     }).onErrorReturn(throwable -> null).toBlocking().first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      installAnalytics.replaced(packageName);
+      installAnalytics.sendRepalcedEvent(packageName);
     }
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());

@@ -3,17 +3,14 @@ package cm.aptoide.pt.v8engine.analytics.events;
 import cm.aptoide.pt.v8engine.analytics.Event;
 import com.flurry.android.FlurryAgent;
 import java.util.HashMap;
-
-/**
- * Created by pedroribeiro on 19/06/17.
- */
+import java.util.Map;
 
 public class FlurryEvent implements Event {
 
   private final String eventName;
-  private HashMap<String, String> map;
+  private final Map<String, String> map;
 
-  public FlurryEvent(String eventName, HashMap<String, String> map) {
+  public FlurryEvent(String eventName, Map<String, String> map) {
     this.eventName = eventName;
     this.map = map;
   }
