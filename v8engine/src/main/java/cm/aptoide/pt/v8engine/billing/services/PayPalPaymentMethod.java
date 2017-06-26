@@ -40,7 +40,7 @@ public class PayPalPaymentMethod implements PaymentMethod {
 
   @Override public Completable process(Product product) {
     return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
-        .getPaymentConfirmation(product)
+        .getTransaction(product)
         .first()
         .toSingle()
         .flatMapCompletable(confirmation -> {
@@ -52,8 +52,8 @@ public class PayPalPaymentMethod implements PaymentMethod {
         });
   }
 
-  public Completable process(Product product, String paymentConfirmationId) {
+  public Completable process(Product product, String payPalConfirmationId) {
     return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
-        .createPaymentConfirmation(product, getId(), paymentConfirmationId);
+        .createTransaction(product, getId(), payPalConfirmationId);
   }
 }

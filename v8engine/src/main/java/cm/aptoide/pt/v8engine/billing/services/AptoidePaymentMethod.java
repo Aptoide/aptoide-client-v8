@@ -39,6 +39,6 @@ public class AptoidePaymentMethod implements PaymentMethod {
 
   @Override public Completable process(Product product) {
     return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
-        .createPaymentConfirmation(id, product);
+        .createTransaction(id, product);
   }
 }

@@ -6,11 +6,9 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
+import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
@@ -24,25 +22,21 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 
-public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRepository {
+public class PaidAppTransactionRepository extends TransactionRepository {
 
-  private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final Converter.Factory converterFactory;
   private final OkHttpClient httpClient;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
-  public PaidAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
-      PaymentConfirmationAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
-      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httpClient, Payer payer, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+  public PaidAppTransactionRepository(NetworkOperatorManager operatorManager,
+      TransactionAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
+      TransactionFactory confirmationFactory, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      Converter.Factory converterFactory, OkHttpClient httpClient, Payer payer,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(operatorManager, confirmationAccessor, backgroundSync, confirmationFactory, payer);
-    this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
@@ -50,7 +44,7 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
+  @Override public Completable createTransaction(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
         ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences, ((PaidAppProduct) product).getPackageVersionCode())
@@ -63,17 +57,6 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         })
         .toCompletable()
-        .andThen(syncPaymentConfirmation(product));
-  }
-
-  @Override
-  protected Single<BaseV3Response> createServerConfirmation(Product product, int paymentId,
-      String metadataId) {
-    return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-        ((PaidAppProduct) product).getStoreName(), metadataId, bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences,
-        ((PaidAppProduct) product).getPackageVersionCode())
-        .observe(true)
-        .toSingle();
+        .andThen(syncTransaction(product));
   }
 }

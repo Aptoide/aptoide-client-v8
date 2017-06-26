@@ -91,19 +91,19 @@ public class Billing {
         payment -> payment.process(product));
   }
 
-  public Completable processPayPalPayment(Product product, String paymentConfirmationId) {
+  public Completable processPayPalPayment(Product product, String payPalConfirmationId) {
     return getAvailablePaymentMethods(product).flatMapObservable(
         payments -> Observable.from(payments))
         .filter(payment -> payment instanceof PayPalPaymentMethod)
         .first()
         .cast(PayPalPaymentMethod.class)
         .toSingle()
-        .flatMapCompletable(payment -> payment.process(product, paymentConfirmationId));
+        .flatMapCompletable(payment -> payment.process(product, payPalConfirmationId));
   }
 
-  public Observable<PaymentConfirmation> getConfirmation(Product product) {
+  public Observable<Transaction> getConfirmation(Product product) {
     return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
-        .getPaymentConfirmation(product)
+        .getTransaction(product)
         .distinctUntilChanged(confirmation -> confirmation.getStatus());
   }
 

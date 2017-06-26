@@ -17,4 +17,5 @@ import lombok.EqualsAndHashCode;
 
   @JsonProperty("payStatus") private String paymentStatus;
   @JsonProperty("paykey") private String paymentConfirmationId;
+  @JsonProperty("paymentId") private int paymentMethodId;
 }

@@ -268,6 +268,16 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       schema.get(Notification.class.getSimpleName())
           .addField(Notification.OWNER_ID_KEY, String.class)
           .transform(notification -> notification.set(Notification.OWNER_ID_KEY, ""));
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 8084) {
+      realm.delete(PaymentConfirmation.class.getSimpleName());
+      schema.get("PaymentConfirmation")
+          .addField("paymentMethodId", int.class);
+
+      oldVersion++;
     }
   }
 }

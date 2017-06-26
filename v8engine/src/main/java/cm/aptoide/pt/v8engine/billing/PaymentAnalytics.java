@@ -49,15 +49,15 @@ public class PaymentAnalytics {
         new FacebookEvent(facebook, "Payment_Purchase_Retry", getProductBundle(product)));
   }
 
-  public void sendPurchaseStatusEvent(PaymentConfirmation paymentConfirmation, Product product) {
+  public void sendPurchaseStatusEvent(Transaction transaction, Product product) {
 
     // We only send analytics about failed or completed payment confirmations
-    if (paymentConfirmation.isPending() || paymentConfirmation.isNew()) {
+    if (transaction.isPending() || transaction.isNew()) {
       return;
     }
 
     final Bundle bundle = getProductBundle(product);
-    bundle.putString("status", getPurchaseStatus(paymentConfirmation));
+    bundle.putString("status", getPurchaseStatus(transaction));
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Purchase_Complete", bundle));
   }
 
@@ -111,13 +111,13 @@ public class PaymentAnalytics {
     throw new IllegalArgumentException("Can NOT determine payment authorization analytics status.");
   }
 
-  private String getPurchaseStatus(PaymentConfirmation paymentConfirmation) {
+  private String getPurchaseStatus(Transaction transaction) {
 
-    if (paymentConfirmation.isFailed()) {
+    if (transaction.isFailed()) {
       return "failed";
     }
 
-    if (paymentConfirmation.isCompleted()) {
+    if (transaction.isCompleted()) {
       return "success";
     }
 

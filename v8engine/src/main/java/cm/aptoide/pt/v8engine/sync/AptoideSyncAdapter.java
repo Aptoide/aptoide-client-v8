@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.os.Bundle;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
-import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
+import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -22,9 +22,9 @@ import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.repository.sync.AuthorizationSync;
-import cm.aptoide.pt.v8engine.billing.repository.sync.ConfirmationSync;
+import cm.aptoide.pt.v8engine.billing.repository.sync.TransactionSync;
 import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -34,14 +34,14 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   public static final String EXTRA_PAYMENT_ID = "cm.aptoide.pt.v8engine.repository.sync.PAYMENT_ID";
   public static final String EXTRA_PAYMENT_AUTHORIZATIONS =
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_AUTHORIZATIONS";
-  public static final String EXTRA_PAYMENT_CONFIRMATIONS =
+  public static final String EXTRA_PAYMENT_TRANSACTIONS =
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
 
   private final ProductBundleMapper productConverter;
   private final NetworkOperatorManager operatorManager;
-  private final PaymentConfirmationFactory confirmationConverter;
+  private final TransactionFactory confirmationConverter;
   private final AuthorizationFactory authorizationConverter;
-  private final PaymentConfirmationAccessor confirmationAccessor;
+  private final TransactionAccessor confirmationAccessor;
   private final PaymentAuthorizationAccessor authorizationAcessor;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
@@ -52,9 +52,9 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final SharedPreferences sharedPreferences;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
-      PaymentConfirmationFactory confirmationConverter, AuthorizationFactory authorizationConverter,
+      TransactionFactory confirmationConverter, AuthorizationFactory authorizationConverter,
       ProductBundleMapper productConverter, NetworkOperatorManager operatorManager,
-      PaymentConfirmationAccessor confirmationAccessor,
+      TransactionAccessor confirmationAccessor,
       PaymentAuthorizationAccessor authorizationAcessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics, Payer payer,
@@ -78,11 +78,11 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   @Override public void onPerformSync(Account account, Bundle extras, String authority,
       ContentProviderClient provider, SyncResult syncResult) {
     final boolean authorizations = extras.getBoolean(EXTRA_PAYMENT_AUTHORIZATIONS);
-    final boolean confirmations = extras.getBoolean(EXTRA_PAYMENT_CONFIRMATIONS);
+    final boolean transactions = extras.getBoolean(EXTRA_PAYMENT_TRANSACTIONS);
 
-    if (confirmations) {
+    if (transactions) {
       final Product product = productConverter.mapToProduct(extras);
-      new ConfirmationSync(product, operatorManager, confirmationAccessor, confirmationConverter,
+      new TransactionSync(product, operatorManager, confirmationAccessor, confirmationConverter,
           payer, bodyInterceptorV3, converterFactory, httpClient, paymentAnalytics,
           tokenInvalidator, sharedPreferences).sync(syncResult);
     } else if (authorizations) {
