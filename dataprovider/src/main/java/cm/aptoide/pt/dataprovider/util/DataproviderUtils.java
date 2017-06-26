@@ -83,6 +83,16 @@ public class DataproviderUtils {
       knock(minimalAd.getCpdUrl());
     }
 
+    /**
+     * Use with caution
+     *
+     * @param urlcpd be sure to use only urlcpd
+     */
+    public static void knockCpd(String urlcpd) {
+      // TODO: 28-07-2016 Baikova clicked on download button.
+      knock(urlcpd);
+    }
+
     public static void knockCpi(StoredMinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova ad installed.
       knock(minimalAd.getCpiUrl());

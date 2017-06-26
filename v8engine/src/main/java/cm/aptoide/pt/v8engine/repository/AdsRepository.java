@@ -51,6 +51,13 @@ public class AdsRepository {
         partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
 
+  public Observable<MinimalAd> getAdsFromFirstInstall(String packageName, String storeName) {
+    return mapToMinimalAd(GetAdsRequest.ofFirstInstallOrganic(packageName, storeName,
+        aptoideClientUUID.getUniqueIdentifier(),
+        googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
+        partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
+  }
+
   private Observable<MinimalAd> mapToMinimalAd(
       Observable<GetAdsResponse> getAdsResponseObservable) {
     return getAdsResponseObservable.map(GetAdsResponse::getAds).flatMap(ads -> {

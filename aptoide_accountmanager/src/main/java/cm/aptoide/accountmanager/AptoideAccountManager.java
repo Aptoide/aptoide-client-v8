@@ -74,8 +74,7 @@ import static cm.aptoide.pt.preferences.Application.getContext;
 
 /**
  * Created by trinkes on 4/18/16. <li>{@link #openAccountManager(Context)}</li> <li>{@link
- * #openAccountManager(Context, boolean)}</li> <li>{@link #openAccountManager(Context,
- * Bundle)}</li>
+ * #openAccountManager(Context, boolean)}</li> <li>{@link #openAccountManager(Context, * Bundle)}</li>
  * <li>{@link #openAccountManager(Context, Bundle, boolean)}</li> <li>{@link
  * #getAccessToken()}</li>
  * <li>{@link #getUserEmail()}</li> <li>{@link #onActivityResult(Activity, int, int, Intent)}</li>
@@ -95,8 +94,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   /**
    * This constant is used to send the broadcast when an account is removed
    */
-  public static final String ACCOUNT_REMOVED_BROADCAST_KEY = "cm.aptoide.accountmanager" + "" +
-      ".removedaccount.broadcast";
+  public static final String ACCOUNT_REMOVED_BROADCAST_KEY =
+      "cm.aptoide.accountmanager" + "" + ".removedaccount.broadcast";
 
   private final static AptoideAccountManager instance = new AptoideAccountManager();
   private static final AptoideClientUUID aptoideClientUuid =
@@ -411,8 +410,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * with the user info
    */
   private static void saveUserInfo(CheckUserCredentialsJson checkUserCredentialsJson) {
-    Logger.d(TAG, "saveUserInfo() called with: " + "checkUserCredentialsJson = [" +
-        checkUserCredentialsJson + "]");
+    Logger.d(TAG, "saveUserInfo() called with: "
+        + "checkUserCredentialsJson = ["
+        + checkUserCredentialsJson
+        + "]");
 
     if (checkUserCredentialsJson.getStatus().equals("OK")) {
 
@@ -694,7 +695,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
               AptoideAccountManager.loginUserCredentials(LoginMode.APTOIDE, email, password, null);
             }
             genericPleaseWaitDialog.dismiss();
-            e.printStackTrace();
+            CrashReport.getInstance().log(e);
           }, true);
     } else {
       genericPleaseWaitDialog.dismiss();

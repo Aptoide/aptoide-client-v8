@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.networkclient;
 
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -131,7 +132,7 @@ public abstract class WebService<T, U> {
   public void execute(SuccessRequestListener<U> successRequestListener,
       ErrorRequestListener errorRequestListener, boolean bypassCache) {
     observe(bypassCache).observeOn(AndroidSchedulers.mainThread())
-        .subscribe(successRequestListener, err -> errorRequestListener.onError(err));
+        .subscribe(successRequestListener, errorRequestListener::onError);
   }
 
   private ErrorRequestListener defaultErrorRequestListener() {
@@ -139,7 +140,7 @@ public abstract class WebService<T, U> {
     return (Throwable e) -> {
       // TODO: Implementar
       Logger.e(ErrorRequestListener.class.getName(), "Erro por implementar");
-      e.printStackTrace();
+      CrashReport.getInstance().log(e);
     };
   }
 
