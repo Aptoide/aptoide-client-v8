@@ -8,47 +8,16 @@ import java.util.List;
  * Created by jdandrade on 26/06/2017.
  */
 
-public class PopularApp implements Post {
-  private final String cardId;
-  private final String appIcon;
-  private final String appName;
-  private final String packageName;
-  private final Date timestamp;
+public class PopularApp extends AppPost {
   private final List<Comment.User> users;
   private final float ratingAverage;
-  private final long appId;
-  private final String abUrl;
-  private final CardType cardType;
 
   public PopularApp(String cardId, String appIcon, String appName, String packageName,
       Date timestamp, List<Comment.User> users, float ratingAverage, long appId, String abUrl,
       CardType cardType) {
-    this.cardId = cardId;
-    this.appIcon = appIcon;
-    this.appName = appName;
-    this.packageName = packageName;
-    this.timestamp = timestamp;
+    super(cardId, null, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
     this.users = users;
     this.ratingAverage = ratingAverage;
-    this.appId = appId;
-    this.abUrl = abUrl;
-    this.cardType = cardType;
-  }
-
-  public String getAppIcon() {
-    return appIcon;
-  }
-
-  public String getAppName() {
-    return appName;
-  }
-
-  public String getPackageName() {
-    return packageName;
-  }
-
-  public Date getTimestamp() {
-    return timestamp;
   }
 
   public List<Comment.User> getUsers() {
@@ -65,6 +34,22 @@ public class PopularApp implements Post {
 
   public String getAbUrl() {
     return abUrl;
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public String getAppIcon() {
+    return appIcon;
+  }
+
+  public Date getTimestamp() {
+    return timestamp;
+  }
+
+  public String getPackageName() {
+    return packageName;
   }
 
   @Override public String getCardId() {

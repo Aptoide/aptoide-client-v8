@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.spotandshare.socket.Log;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -15,8 +14,8 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.Media;
-import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.Post;
+import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
@@ -101,8 +100,7 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
-        }, throwable -> Log.d(this.getClass()
-            .getCanonicalName(), "ERROR LOADING MORE CARDS"));
+        }, throwable -> throwable.printStackTrace());
   }
 
   private void handleCardClickOnHeaderEvents() {
@@ -163,8 +161,10 @@ public class TimelinePresenter implements Presenter {
                     .getName(), "error"));
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.POPULAR_APP)) {
-            PopularApp card = (PopularApp) cardTouchEvent.getCard();
+              .equals(CardType.POPULAR_APP) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_RECOMMENDATION)) {
+            RatedRecommendation card = (RatedRecommendation) cardTouchEvent.getCard();
             fragmentNavigator.navigateTo(
                 AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
                     AppViewFragment.OpenType.OPEN_ONLY));

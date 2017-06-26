@@ -6,6 +6,8 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.PopularAppTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.RecommendationTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendation;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendationTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestAppsTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
@@ -93,15 +95,27 @@ public class TimelineResponseCardMapper {
       } else if (item instanceof PopularAppTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.PopularApp popularApp =
             ((PopularAppTimelineItem) item).getData();
-        cards.add(new PopularApp(popularApp.getCardId(), popularApp.getPopularApplication()
-            .getIcon(), popularApp.getPopularApplication()
+        cards.add(new RatedRecommendation(popularApp.getCardId(), popularApp.getPopularApplication()
+            .getId(), popularApp.getPopularApplication()
+            .getPackageName(), popularApp.getPopularApplication()
             .getName(), popularApp.getPopularApplication()
-            .getPackageName(), popularApp.getDate(), popularApp.getUsers(),
-            popularApp.getPopularApplication()
-                .getStats()
-                .getRating()
-                .getAvg(), popularApp.getPopularApplication()
-            .getId(), abUrl, CardType.POPULAR_APP));
+            .getIcon(), popularApp.getPopularApplication()
+            .getStats()
+            .getRating()
+            .getAvg(), new UserPublisher(), popularApp.getDate(), abUrl, CardType.POPULAR_APP));
+      } else if (item instanceof SocialRecommendationTimelineItem) {
+        final SocialRecommendation socialRecommendation =
+            ((SocialRecommendationTimelineItem) item).getData();
+        cards.add(new RatedRecommendation(socialRecommendation.getCardId(),
+            socialRecommendation.getApp()
+                .getId(), socialRecommendation.getApp()
+            .getPackageName(), socialRecommendation.getApp()
+            .getName(), socialRecommendation.getApp()
+            .getIcon(), socialRecommendation.getApp()
+            .getStats()
+            .getRating()
+            .getAvg(), new UserPublisher(), socialRecommendation.getDate(), abUrl,
+            CardType.SOCIAL_RECOMMENDATION));
       }
     }
 

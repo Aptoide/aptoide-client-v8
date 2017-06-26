@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -17,40 +16,47 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 26/06/2017.
  */
 
-public class PopularAppViewHolder extends CardViewHolder<RatedRecommendation> {
+public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommendation> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
-  private final TextView headerSubTitle;
-  private final ViewGroup headerUsersContainer;
+  private final ImageView headerPrimaryAvatar;
+  private final ImageView headerSecondaryAvatar;
+  private final TextView headerPrimaryName;
+  private final TextView headerSecondaryName;
+  private final TextView timestamp;
   private final ImageView appIcon;
   private final TextView appName;
   private final RatingBar appRating;
   private final Button getAppButton;
 
-  public PopularAppViewHolder(View view,
+  public SocialRecommendationViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator) {
     super(view);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
-    this.headerSubTitle =
-        (TextView) view.findViewById(R.id.displayable_social_timeline_popular_app_card_timestamp);
-    this.appIcon = (ImageView) view.findViewById(R.id.displayable_social_timeline_popular_app_icon);
+
+    this.headerPrimaryAvatar = (ImageView) view.findViewById(R.id.card_image);
+    this.headerSecondaryAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
+    this.headerPrimaryName = (TextView) view.findViewById(R.id.card_title);
+    this.headerSecondaryName = (TextView) view.findViewById(R.id.card_subtitle);
+    this.timestamp = (TextView) view.findViewById(R.id.card_date);
+    this.appIcon =
+        (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
     this.appName =
-        (TextView) view.findViewById(R.id.displayable_social_timeline_popular_app_body_title);
+        (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
     this.appRating = (RatingBar) view.findViewById(R.id.rating_bar);
     this.getAppButton =
-        (Button) view.findViewById(R.id.displayable_social_timeline_popular_app_get_app_button);
-    this.headerUsersContainer =
-        (ViewGroup) view.findViewById(R.id.displayable_social_timeline_popular_app_users_container);
+        (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
   }
 
   @Override public void setCard(RatedRecommendation card, int position) {
-    this.headerSubTitle.setText(
+    this.timestamp.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
     ImageLoader.with(itemView.getContext())
         .load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
     this.appRating.setRating(card.getRatingAverage());
+
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
   }
