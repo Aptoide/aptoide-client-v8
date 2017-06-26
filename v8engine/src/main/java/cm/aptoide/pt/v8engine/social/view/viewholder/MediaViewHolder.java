@@ -66,7 +66,7 @@ public class MediaViewHolder extends CardViewHolder<Media> {
             .getString(R.string.x_posted, media.getPublisherName()),
         ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
         media.getPublisherName()));
-    articleTitle.setText(media.getTitle());
+    articleTitle.setText(media.getMediaTitle());
     relatedTo.setText(spannableFactory.createStyleSpan(itemView.getContext()
         .getString(R.string.displayable_social_timeline_article_related_to, media.getRelatedApp()
             .getName()), Typeface.BOLD, media.getRelatedApp()
@@ -75,7 +75,7 @@ public class MediaViewHolder extends CardViewHolder<Media> {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(media.getPublisherAvatarURL(), publisherAvatar);
     ImageLoader.with(itemView.getContext())
-        .loadWithCenterCrop(media.getThumbnailUrl(), articleThumbnail);
+        .loadWithCenterCrop(media.getMediaThumbnailUrl(), articleThumbnail);
 
     articleThumbnail.setOnClickListener(
         click -> articleSubject.onNext(new CardTouchEvent(media, CardTouchEvent.Type.BODY)));

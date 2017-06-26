@@ -10,30 +10,30 @@ import java.util.Date;
 
 public class Media implements Card {
   private final String cardId;
-  private final String title;
-  private final String thumbnailUrl;
+  private final String mediaTitle;
+  private final String mediaThumbnailUrl;
   private final Date date;
   private final App relatedApp;
   private final String abTestURL;
   private final String publisherAvatarURL;
   private final String publisherName;
   private final Link publisherLink;
-  private final Link articleLink;
+  private final Link mediaLink;
   private final CardType cardType;
 
-  public Media(String cardId, String title, String thumbnailUrl, Date date, App app,
+  public Media(String cardId, String mediaTitle, String mediaThumbnailUrl, Date date, App app,
       String abTestURL, String publisherAvatarURL, String publisherName, Link publisherLink,
-      Link articleLink, CardType cardType) {
+      Link mediaLink, CardType cardType) {
     this.cardId = cardId;
-    this.title = title;
-    this.thumbnailUrl = thumbnailUrl;
+    this.mediaTitle = mediaTitle;
+    this.mediaThumbnailUrl = mediaThumbnailUrl;
     this.date = date;
     this.relatedApp = app;
     this.abTestURL = abTestURL;
     this.publisherLink = publisherLink;
     this.publisherAvatarURL = publisherAvatarURL;
     this.publisherName = publisherName;
-    this.articleLink = articleLink;
+    this.mediaLink = mediaLink;
     this.cardType = cardType;
   }
 
@@ -45,12 +45,12 @@ public class Media implements Card {
     return this.cardType;
   }
 
-  public String getTitle() {
-    return title;
+  public String getMediaTitle() {
+    return mediaTitle;
   }
 
-  public String getThumbnailUrl() {
-    return thumbnailUrl;
+  public String getMediaThumbnailUrl() {
+    return mediaThumbnailUrl;
   }
 
   public Date getDate() {
@@ -77,7 +77,7 @@ public class Media implements Card {
     return publisherLink;
   }
 
-  public Link getArticleLink() {
-    return articleLink;
+  public Link getMediaLink() {
+    return mediaLink;
   }
 }

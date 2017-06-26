@@ -129,7 +129,7 @@ public class TimelinePresenter implements Presenter {
               .equals(CardType.VIDEO) || cardTouchEvent.getCard()
               .getType()
               .equals(CardType.ARTICLE)) {
-            ((Media) cardTouchEvent.getCard()).getArticleLink()
+            ((Media) cardTouchEvent.getCard()).getMediaLink()
                 .launch();
           } else if (cardTouchEvent.getCard()
               .getType()
