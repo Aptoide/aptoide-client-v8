@@ -12,6 +12,7 @@
     android:gravity="center"
     android:orientation="vertical"
     style="?attr/backgroundCard"
+    android:background="@drawable/follow_store"
     >
   <ImageView
       android:id="@+id/follow_store_image"
@@ -20,7 +21,6 @@
       android:layout_marginTop="3dp"
       android:contentDescription="@null"
       android:scaleType="fitCenter"
-      android:src="@drawable/follow_store"
       />
 
   <TextView
@@ -32,7 +32,7 @@
       android:gravity="center_horizontal"
       android:maxLines="1"
       android:text="@string/follow_store"
-      android:textColor="@color/default_color"
+      android:textColor="@color/white"
       android:textSize="12sp"
       />
 </LinearLayout>
