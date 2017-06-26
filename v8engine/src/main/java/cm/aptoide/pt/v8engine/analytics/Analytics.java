@@ -132,31 +132,6 @@ public class Analytics {
     facebookLogger.logEvent(eventName, bundle);
   }
 
-  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
-    if (checkAcceptability(flags, FABRIC)) {
-      CustomEvent customEvent = new CustomEvent(event);
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
-      }
-      Answers.getInstance()
-          .logCustom(customEvent);
-      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    if (map != null) {
-      for (String s : map.keySet()) {
-        parameters.putString(s, map.get(s));
-      }
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
   private static void track(String event, int flags) {
 
     try {
@@ -167,14 +142,6 @@ public class Analytics {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
-    facebookLogger.logEvent(eventName, parameters);
   }
 
   public void save(@NonNull String key, @NonNull Event event) {
@@ -201,6 +168,38 @@ public class Analytics {
     } else {
       logFacebookEvents(eventName, attributes);
     }
+  }
+
+  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
+    if (checkAcceptability(flags, FABRIC)) {
+      CustomEvent customEvent = new CustomEvent(event);
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
+      }
+      Answers.getInstance().logCustom(customEvent);
+      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    logFacebookEvents(eventName, parameters);
+  }
+
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
+    facebookLogger.logEvent(eventName, parameters);
   }
 
   public static class Lifecycle {
@@ -560,50 +559,6 @@ public class Analytics {
 
     public static void unlock() {
       track(EVENT_NAME, ACTION, UNLOCK, FLURRY);
-    }
-  }
-
-  public static class ApplicationInstall {
-
-    public static final String EVENT_NAME = "Application Install";
-    //this will be the one remaining after localytics is killed
-
-    private static final String TYPE = "Type";
-    private static final String PACKAGE_NAME = "Package Name";
-    private static final String REFERRED = "Referred";
-    private static final String TRUSTED_BADGE = "Trusted Badge";
-
-    private static final String REPLACED = "Replaced";
-    private static final String INSTALLED = "Installed";
-    private static final String DOWNGRADED_ROLLBACK = "Downgraded Rollback";
-
-    public static void installed(String packageName, String trustedBadge) {
-      innerTrack(packageName, INSTALLED, trustedBadge, ALL);
-    }
-
-    private static void innerTrack(String packageName, String type, String trustedBadge,
-        int flags) {
-      try {
-        HashMap<String, String> stringObjectHashMap = new HashMap<>();
-
-        stringObjectHashMap.put(TRUSTED_BADGE, trustedBadge);
-        stringObjectHashMap.put(TYPE, type);
-        stringObjectHashMap.put(PACKAGE_NAME, packageName);
-
-        track(EVENT_NAME, stringObjectHashMap, flags);
-
-        Bundle parameters = new Bundle();
-        parameters.putString(PACKAGE_NAME, packageName);
-        parameters.putString(TRUSTED_BADGE, trustedBadge);
-        parameters.putString(TYPE, type);
-        logFacebookEvents(EVENT_NAME, parameters);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-    public static void replaced(String packageName, String trustedBadge) {
-      innerTrack(packageName, REPLACED, trustedBadge, ALL);
     }
   }
 
