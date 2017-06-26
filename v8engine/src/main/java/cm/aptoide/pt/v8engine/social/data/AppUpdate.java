@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data;
 
-import cm.aptoide.pt.model.v7.Obb;
-import cm.aptoide.pt.model.v7.listapp.File;
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import java.util.Date;
 
 /**

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
 import java.util.Date;
@@ -32,7 +32,8 @@ public class Media implements Post {
     this.relatedApp = app;
     this.abTestURL = abTestURL;
     this.publisherLink = publisherLink;
-    this.publisherAvatarURL = publisher.getPublisherAvatar().getAvatarUrl();
+    this.publisherAvatarURL = publisher.getPublisherAvatar()
+        .getAvatarUrl();
     this.publisherName = publisher.getPublisherName();
     this.mediaLink = mediaLink;
     this.cardType = cardType;

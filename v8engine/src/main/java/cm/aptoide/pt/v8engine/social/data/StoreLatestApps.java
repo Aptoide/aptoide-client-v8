@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import java.util.Date;
 import java.util.List;
 
