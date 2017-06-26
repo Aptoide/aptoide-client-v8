@@ -15,6 +15,8 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.LinkedList;
 import java.util.List;
+
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -92,7 +94,7 @@ import rx.Observable;
     private Integer apkId;
     private String apkMd5sum;
     private Integer appId;
-    private String lang = Api.LANG;
+    private String lang = ManagerPreferences.getLanguage();
     @Setter @Getter private Integer limit;
     @Setter @Getter private int offset;
     private Integer packageId;

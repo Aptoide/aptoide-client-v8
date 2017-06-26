@@ -784,8 +784,8 @@ public class AptoideUtils {
 
     public static String getCountryCode() {
       return context.getResources().getConfiguration().locale.getLanguage()
-          + "_"
-          + context.getResources().getConfiguration().locale.getCountry();
+                + "_"
+                + context.getResources().getConfiguration().locale.getCountry();
     }
 
     public static PackageInfo getPackageInfo(String packageName) {
