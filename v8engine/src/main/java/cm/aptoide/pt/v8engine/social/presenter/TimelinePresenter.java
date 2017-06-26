@@ -12,10 +12,11 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.Media;
+import cm.aptoide.pt.v8engine.social.data.PopularApp;
+import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
@@ -158,7 +159,15 @@ public class TimelinePresenter implements Presenter {
                   view.updateInstallProgress(cardTouchEvent.getCard(),
                       ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
                 }, throwable -> Logger.d(this.getClass()
+                    // TODO: 26/06/2017 error handling
                     .getName(), "error"));
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.POPULAR_APP)) {
+            PopularApp card = (PopularApp) cardTouchEvent.getCard();
+            fragmentNavigator.navigateTo(
+                AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
+                    AppViewFragment.OpenType.OPEN_ONLY));
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
