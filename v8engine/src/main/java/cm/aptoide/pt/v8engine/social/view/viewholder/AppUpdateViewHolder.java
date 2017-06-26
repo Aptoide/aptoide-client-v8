@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social.view;
+package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -55,7 +55,7 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
         (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_error);
   }
 
-  @Override void setCard(AppUpdate card, int position) {
+  @Override public void setCard(AppUpdate card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));

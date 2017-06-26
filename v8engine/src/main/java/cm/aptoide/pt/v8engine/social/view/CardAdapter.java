@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.social.data.Card;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
+import cm.aptoide.pt.v8engine.social.view.viewholder.CardViewHolder;
 import java.util.List;
 
 /**

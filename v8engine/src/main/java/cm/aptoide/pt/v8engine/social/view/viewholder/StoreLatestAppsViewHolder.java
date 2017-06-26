@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social.view;
+package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -55,7 +55,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
         R.id.displayable_social_timeline_store_latest_apps_container);
   }
 
-  @Override void setCard(StoreLatestApps card, int position) {
+  @Override public void setCard(StoreLatestApps card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
 

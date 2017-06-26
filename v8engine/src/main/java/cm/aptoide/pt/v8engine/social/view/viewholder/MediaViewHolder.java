@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social.view;
+package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.graphics.Typeface;
 import android.os.Build;

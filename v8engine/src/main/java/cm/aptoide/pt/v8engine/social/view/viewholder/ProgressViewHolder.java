@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social.view;
+package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.view.View;
 import cm.aptoide.pt.v8engine.social.data.Card;
@@ -12,7 +12,7 @@ public class ProgressViewHolder extends CardViewHolder {
     super(view);
   }
 
-  @Override void setCard(Card card, int position) {
+  @Override public void setCard(Card card, int position) {
     //ignore
   }
 }

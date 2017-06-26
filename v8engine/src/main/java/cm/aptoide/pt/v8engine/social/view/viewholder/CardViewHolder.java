@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social.view;
+package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,5 +13,5 @@ public abstract class CardViewHolder<T extends Card> extends RecyclerView.ViewHo
     super(itemView);
   }
 
-  abstract void setCard(T card, int position);
+  public abstract void setCard(T card, int position);
 }

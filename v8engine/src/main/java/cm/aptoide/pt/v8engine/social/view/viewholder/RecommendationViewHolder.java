@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social.view;
+package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -62,7 +62,7 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
   }
 
-  @Override void setCard(Recommendation card, int position) {
+  @Override public void setCard(Recommendation card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(Application.getConfiguration()
             .getIcon(), headerIcon);
