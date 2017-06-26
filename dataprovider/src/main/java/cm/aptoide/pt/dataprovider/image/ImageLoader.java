@@ -189,9 +189,21 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<GlideDrawable> loadWithCircleTransform(Uri url, ImageView imageView,
-      boolean useCache) {
-    return loadWithCircleTransform(url.toString(), imageView, useCache);
+  public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolder(Uri url, ImageView imageView,
+      boolean useCache, @DrawableRes int placeHolder) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .placeholder(placeHolder)
+          .transform(new CircleTransform(context))
+          .skipMemoryCache(!useCache)
+          .diskCacheStrategy(useCache ? DiskCacheStrategy.RESULT : DiskCacheStrategy.NONE)
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::loadWithCircleTransform() Context is null");
+    }
+    return null;
   }
 
   public Target<GlideDrawable> loadWithShadowCircleTransform(String url, ImageView imageView) {
