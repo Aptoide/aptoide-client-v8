@@ -86,6 +86,7 @@ public class TimelineResponseCardMapper {
                 .getName(), appUpdate.getStore()
             .getAvatar(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getPackageName(),
             appUpdate.getAdded(), abUrl, CardType.UPDATE, appUpdate.getFile(), appUpdate.getObb(),
+            // TODO: 26/06/2017 probably should get progress state someway because the download might be happening already.
             Progress.INACTIVE));
       }
     }

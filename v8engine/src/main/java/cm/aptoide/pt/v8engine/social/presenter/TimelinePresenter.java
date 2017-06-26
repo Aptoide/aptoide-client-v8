@@ -153,6 +153,7 @@ public class TimelinePresenter implements Presenter {
                   return socialManager.updateApp(cardTouchEvent);
                 })
                 .subscribe(downloadProgress -> {
+                  // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
                   ((AppUpdate) cardTouchEvent.getCard()).setProgress(downloadProgress.getState());
                   view.updateInstallProgress(cardTouchEvent.getCard(),
                       ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
