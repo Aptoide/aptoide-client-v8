@@ -2,11 +2,16 @@ package cm.aptoide.pt.v8engine.social.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshare.socket.Log;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.social.data.AppUpdate;
+import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Card;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
@@ -30,13 +35,21 @@ public class TimelinePresenter implements Presenter {
   private final SocialManager socialManager;
   private final CrashReport crashReport;
   private final FragmentNavigator fragmentNavigator;
+  private final PermissionManager permissionManager;
+  private final PermissionService permissionRequest;
+  private final InstallManager installManager;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull SocialManager socialManager,
-      CrashReport crashReport, FragmentNavigator fragmentNavigator) {
+      CrashReport crashReport, FragmentNavigator fragmentNavigator,
+      PermissionManager permissionManager, PermissionService permissionRequest,
+      InstallManager installManager) {
     this.view = cardsView;
     this.socialManager = socialManager;
     this.crashReport = crashReport;
     this.fragmentNavigator = fragmentNavigator;
+    this.permissionManager = permissionManager;
+    this.permissionRequest = permissionRequest;
+    this.installManager = installManager;
   }
 
   @Override public void present() {
@@ -125,6 +138,26 @@ public class TimelinePresenter implements Presenter {
             fragmentNavigator.navigateTo(
                 AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
                     AppViewFragment.OpenType.OPEN_ONLY));
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.STORE)) {
+
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.UPDATE)) {
+            permissionManager.requestExternalStoragePermission(permissionRequest)
+                .flatMap(success -> {
+                  if (installManager.showWarning()) {
+                    view.showRootAccessDialog();
+                  }
+                  return socialManager.updateApp(cardTouchEvent);
+                })
+                .subscribe(downloadProgress -> {
+                  ((AppUpdate) cardTouchEvent.getCard()).setProgress(downloadProgress.getState());
+                  view.updateInstallProgress(cardTouchEvent.getCard(),
+                      ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
+                }, throwable -> Logger.d(this.getClass()
+                    .getName(), "error"));
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

@@ -52,7 +52,7 @@ public class MediaViewHolder extends CardViewHolder<Media> {
     playIcon = (ImageView) itemView.findViewById(R.id.play_button);
   }
 
-  @Override public void setCard(Media media) {
+  @Override public void setCard(Media media, int position) {
     if (media.getType()
         .equals(CardType.ARTICLE)) {
       setIcon(R.drawable.appstimeline_article_icon);
@@ -77,10 +77,10 @@ public class MediaViewHolder extends CardViewHolder<Media> {
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(media.getThumbnailUrl(), articleThumbnail);
 
-    articleThumbnail.setOnClickListener(click -> articleSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
-    articleHeader.setOnClickListener(click -> articleSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
+    articleThumbnail.setOnClickListener(
+        click -> articleSubject.onNext(new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
+    articleHeader.setOnClickListener(
+        click -> articleSubject.onNext(new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
   }
 
   private void setIcon(int drawableId) {

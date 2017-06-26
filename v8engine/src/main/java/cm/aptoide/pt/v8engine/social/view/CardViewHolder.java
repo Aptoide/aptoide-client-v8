@@ -13,5 +13,5 @@ public abstract class CardViewHolder<T extends Card> extends RecyclerView.ViewHo
     super(itemView);
   }
 
-  abstract void setCard(T card);
+  abstract void setCard(T card, int position);
 }

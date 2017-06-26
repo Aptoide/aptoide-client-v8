@@ -13,6 +13,7 @@ import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.model.v7.timeline.VideoTimelineItem;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +118,8 @@ public class TimelineResponseCardMapper {
             appUpdate.getStore()
                 .getName(), appUpdate.getStore()
             .getAvatar(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getPackageName(),
-            appUpdate.getAdded(), abUrl, CardType.UPDATE));
+            appUpdate.getAdded(), abUrl, CardType.UPDATE, appUpdate.getFile(), appUpdate.getObb(),
+            Progress.INACTIVE));
       }
     }
 

@@ -9,8 +9,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.image.ImageLoader;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
+import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -49,10 +51,11 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
     this.appName = (TextView) view.findViewById(R.id.displayable_social_timeline_app_update_name);
     this.appUpdate =
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
-    this.errorText = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_error);
+    this.errorText =
+        (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_error);
   }
 
-  @Override void setCard(AppUpdate card) {
+  @Override void setCard(AppUpdate card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
@@ -61,21 +64,31 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
     ImageLoader.with(itemView.getContext())
         .load(card.getAppUpdateIcon(), appIcon);
     this.appName.setText(getAppTitle(itemView.getContext(), card.getAppUpdateName()));
-    this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
-        .toUpperCase());
+    setAppUpdateButtonText(card);
     this.errorText.setVisibility(View.GONE);
     this.appUpdate.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new AppUpdateCardTouchEvent(card, CardTouchEvent.Type.BODY, position)));
   }
 
-  public Spannable getUpdateAppText(Context context) {
+  private void setAppUpdateButtonText(AppUpdate card) {
+    if (card.getProgress() == Progress.INACTIVE) {
+      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
+          .toUpperCase());
+    } else if (card.getProgress() == Progress.ACTIVE) {
+      this.appUpdate.setText("UPDATING...");
+    } else if (card.getProgress() == Progress.DONE) {
+      this.appUpdate.setText("UPDATED");
+    }
+  }
+
+  private Spannable getUpdateAppText(Context context) {
     String application = context.getString(R.string.appstimeline_update_app);
     return spannableFactory.createStyleSpan(
         context.getString(R.string.displayable_social_timeline_app_update_button, application),
         Typeface.NORMAL, application);
   }
 
-  public Spannable getAppTitle(Context context, String appUpdateName) {
+  private Spannable getAppTitle(Context context, String appUpdateName) {
     return spannableFactory.createColorSpan(appUpdateName,
         ContextCompat.getColor(context, R.color.black), appUpdateName);
   }

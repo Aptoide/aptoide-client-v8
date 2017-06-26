@@ -55,7 +55,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
         R.id.displayable_social_timeline_store_latest_apps_container);
   }
 
-  @Override void setCard(StoreLatestApps card) {
+  @Override void setCard(StoreLatestApps card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
 

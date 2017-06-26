@@ -37,4 +37,8 @@ public interface TimelineView extends View {
   void hideLoadMoreProgressIndicator();
 
   boolean isNewRefresh();
+
+  void showRootAccessDialog();
+
+  void updateInstallProgress(Card card, int cardPosition);
 }

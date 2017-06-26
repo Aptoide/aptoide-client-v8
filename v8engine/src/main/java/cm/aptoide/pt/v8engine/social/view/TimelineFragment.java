@@ -11,13 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.Card;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
@@ -63,6 +70,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TokenInvalidator tokenInvalidator;
   private LinksHandlerFactory linksHandlerFactory;
   private SharedPreferences sharedPreferences;
+  private InstallManager installManager;
   private boolean newRefresh;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
@@ -86,6 +94,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new DateCalculator(getContext().getApplicationContext(),
             getContext().getApplicationContext()
                 .getResources()), new SpannableFactory()), new ProgressCard());
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
   }
 
   @Nullable @Override
@@ -108,14 +118,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     attachPresenter(new TimelinePresenter(this, new SocialManager(
-        new SocialService(getArguments().getString(ACTION_KEY),
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
-            Integer.MAX_VALUE, tokenInvalidator, sharedPreferences)), CrashReport.getInstance(),
-        getFragmentNavigator()), savedInstanceState);
+            new SocialService(getArguments().getString(ACTION_KEY),
+                ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+                ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+                WebService.getDefaultConverter(),
+                new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
+                RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
+                Integer.MAX_VALUE, tokenInvalidator, sharedPreferences), installManager,
+            new DownloadFactory()), CrashReport.getInstance(), getFragmentNavigator(),
+            new PermissionManager(), (PermissionService) getContext(), installManager),
+        savedInstanceState);
   }
 
   @Override public void showCards(List<Card> cards) {
@@ -191,5 +203,25 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     boolean b = newRefresh;
     newRefresh = false;
     return b;
+  }
+
+  @Override public void showRootAccessDialog() {
+    GenericDialogs.createGenericYesNoCancelMessage(getContext(), null,
+        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog,
+            getContext().getResources()))
+        .subscribe(eResponse -> {
+          switch (eResponse) {
+            case YES:
+              installManager.rootInstallAllowed(true);
+              break;
+            case NO:
+              installManager.rootInstallAllowed(false);
+              break;
+          }
+        });
+  }
+
+  @Override public void updateInstallProgress(Card card, int cardPosition) {
+    adapter.updateCard(card, cardPosition);
   }
 }

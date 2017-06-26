@@ -12,7 +12,7 @@ public class ProgressViewHolder extends CardViewHolder {
     super(view);
   }
 
-  @Override void setCard(Card card) {
+  @Override void setCard(Card card, int position) {
     //ignore
   }
 }

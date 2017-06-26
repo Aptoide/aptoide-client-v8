@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import cm.aptoide.pt.model.v7.Obb;
+import cm.aptoide.pt.model.v7.listapp.File;
 import java.util.Date;
 
 /**
@@ -17,9 +19,13 @@ public class AppUpdate implements Card {
   private final Date updateAddedDate;
   private final String abUrl;
   private final CardType cardType;
+  private final File file;
+  private final Obb obb;
+  private int progress;
 
   public AppUpdate(String cardId, String storeName, String storeAvatar, String appUpdateIcon,
-      String appUpdateName, String packageName, Date updateAddedDate, String abUrl, CardType cardType) {
+      String appUpdateName, String packageName, Date updateAddedDate, String abUrl,
+      CardType cardType, File file, Obb obb, int progress) {
     this.cardId = cardId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;
@@ -29,6 +35,25 @@ public class AppUpdate implements Card {
     this.updateAddedDate = updateAddedDate;
     this.abUrl = abUrl;
     this.cardType = cardType;
+    this.file = file;
+    this.obb = obb;
+    this.progress = progress;
+  }
+
+  public int getProgress() {
+    return progress;
+  }
+
+  public void setProgress(int progress) {
+    this.progress = progress;
+  }
+
+  public Obb getObb() {
+    return obb;
+  }
+
+  public File getFile() {
+    return file;
   }
 
   public String getStoreName() {

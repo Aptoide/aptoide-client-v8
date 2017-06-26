@@ -28,7 +28,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
   }
 
   @Override public void onBindViewHolder(CardViewHolder holder, int position) {
-    holder.setCard(cards.get(position));
+    holder.setCard(cards.get(position), position);
   }
 
   @Override public int getItemViewType(int position) {
@@ -59,5 +59,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
   public void removeLoadMoreProgress() {
     this.cards.remove(progressCard);
     notifyDataSetChanged();
+  }
+
+  public void updateCard(Card card, int cardPosition) {
+    cards.set(cardPosition, card);
+    notifyItemChanged(cardPosition);
   }
 }
