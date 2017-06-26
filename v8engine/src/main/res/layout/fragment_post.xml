@@ -35,18 +35,21 @@
           android:gravity="top|start"
           android:inputType="textUri|textMultiLine"
           android:lines="3"
+          android:hint="What is on your mind?"
           android:textAppearance="@style/Aptoide.TextView.Regular.L"
           android:textColor="@color/grey_700"
-          tools:text="this is a test URL that the user will insert for sharing"
           />
 
       <TextView
+          android:id="@+id/preview_header"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_medium"
           android:text="Post preview"
           android:textAppearance="@style/Aptoide.TextView.Medium.S"
           android:textColor="@color/grey_700"
+          android:visibility="gone"
+          tools:visibility="visible"
           />
       <ProgressBar
           android:id="@+id/preview_progress_bar"
@@ -58,6 +61,18 @@
           style="@style/Widget.AppCompat.ProgressBar.Horizontal"
           />
 
+      <TextView
+          android:id="@+id/preview_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/padding_tiny"
+          android:visibility="gone"
+          tools:visibility="visible"
+          android:textAppearance="@style/Aptoide.TextView.Regular"
+          android:gravity="center_horizontal"
+          tools:text="Preview Title"
+          />
+
       <ImageView
           android:id="@+id/preview_image"
           android:layout_width="match_parent"
@@ -65,15 +80,20 @@
           android:background="@color/orange_700"
           android:scaleType="fitCenter"
           android:src="@drawable/wizard_community"
+          android:visibility="gone"
+          tools:visibility="visible"
           />
 
       <TextView
+          android:id="@+id/related_apps_header"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_medium"
           android:text="Related apps"
           android:textAppearance="@style/Aptoide.TextView.Medium.S"
           android:textColor="@color/grey_700"
+          android:visibility="gone"
+          tools:visibility="visible"
           />
       <ProgressBar
           android:id="@+id/related_apps_progress_bar"

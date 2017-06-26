@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -33,6 +36,10 @@ public class PostFragment extends FragmentView implements PostView {
   private EditText userInput;
   private Button share;
   private Button cancel;
+  private ImageView previewImage;
+  private TextView previewTitle;
+  private TextView previewHeader;
+  private TextView relatedAppsHeader;
 
   public static PostFragment newInstance(String toShare) {
     Bundle args = new Bundle();
@@ -58,6 +65,10 @@ public class PostFragment extends FragmentView implements PostView {
 
   private void bindViews(@Nullable View view) {
     userInput = (EditText) view.findViewById(R.id.input_text);
+    previewImage = (ImageView) view.findViewById(R.id.preview_image);
+    previewTitle = (TextView) view.findViewById(R.id.preview_title);
+    previewHeader = (TextView) view.findViewById(R.id.preview_header);
+    relatedAppsHeader = (TextView) view.findViewById(R.id.related_apps_header);
     share = (Button) view.findViewById(R.id.post_button);
     cancel = (Button) view.findViewById(R.id.cancel_button);
     previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
@@ -98,10 +109,10 @@ public class PostFragment extends FragmentView implements PostView {
     final RelatedAppsAdapter adapter = new RelatedAppsAdapter();
     relatedApps.setAdapter(adapter);
 
-    V8Engine app = (V8Engine) getActivity().getApplication();
+    InstalledRepository installedRepository = RepositoryFactory.getInstalledRepository();
     final PostPresenter presenter =
-        new PostPresenter(this, CrashReport.getInstance(), new PostManager(),
-            app.getInstallManager(InstallerFactory.ROLLBACK), adapter);
+        new PostPresenter(this, CrashReport.getInstance(), new PostManager(), installedRepository,
+            adapter, getFragmentNavigator());
     attachPresenter(presenter, null);
   }
 
@@ -119,37 +130,43 @@ public class PostFragment extends FragmentView implements PostView {
     return RxView.clicks(cancel);
   }
 
-  @Override public Completable close() {
-    return Completable.fromAction(() -> PostFragment.this.getActivity()
-        .onBackPressed());
-  }
-
   @Override public Completable showSuccessMessage() {
     return ShowMessage.asLongObservableSnack(getActivity(), R.string.title_successful);
   }
 
-  @Override public Completable showCardPreview(PostManager.PostPreview suggestion) {
-    return ShowMessage.asObservableSnack(this, "suggestion title: " + suggestion.getTitle());
-  }
+  @Override public void showCardPreview(PostManager.PostPreview suggestion) {
 
-  @Override public Completable showContainsUrlMessage() {
-    return ShowMessage.asObservableSnack(this, "input contains a valid URL");
+    previewImage.setVisibility(View.VISIBLE);
+    previewTitle.setVisibility(View.VISIBLE);
+
+    ImageLoader.with(getContext())
+        .load(suggestion.getImage(), previewImage);
+    previewTitle.setText(suggestion.getTitle());
   }
 
   @Override public void showCardPreviewLoading() {
     previewLoading.setVisibility(View.VISIBLE);
+    previewHeader.setVisibility(View.GONE);
   }
 
   @Override public void hideCardPreviewLoading() {
     previewLoading.setVisibility(View.GONE);
+    previewHeader.setVisibility(View.VISIBLE);
   }
 
   @Override public void showRelatedAppsLoading() {
     relatedAppsLoading.setVisibility(View.VISIBLE);
+    relatedAppsHeader.setVisibility(View.GONE);
   }
 
   @Override public void hideRelatedAppsLoading() {
     relatedAppsLoading.setVisibility(View.GONE);
+    relatedAppsHeader.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideCardPreview() {
+    previewImage.setVisibility(View.GONE);
+    previewTitle.setVisibility(View.GONE);
   }
 
   private String getInputText() {

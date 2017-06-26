@@ -38,6 +38,9 @@ public class InstalledRepository {
         .first();
   }
 
+  /**
+   * @return continuous {@link Observable} of all the installed apps
+   */
   public Observable<List<Installed>> getAllSorted() {
     return accessor.getAllSorted();
   }
