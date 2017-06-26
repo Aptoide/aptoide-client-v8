@@ -16,6 +16,10 @@ class AggregatedSocialStoreLatestAppsTimelineItem implements TimelineItem<Timeli
     this.aggregatedSocialStoreLatestApps = aggregatedSocialStoreLatestApps;
   }
 
+  @Override public Ab getAb() {
+    return this.aggregatedSocialStoreLatestApps.getAb();
+  }
+
   @Override public AggregatedSocialStoreLatestApps getData() {
     return this.aggregatedSocialStoreLatestApps;
   }

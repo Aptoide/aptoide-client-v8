@@ -17,6 +17,10 @@ import lombok.EqualsAndHashCode;
     this.socialRecommendation = socialRecommendation;
   }
 
+  @Override public Ab getAb() {
+    return this.socialRecommendation.getAb();
+  }
+
   @Override public SocialRecommendation getData() {
     return socialRecommendation;
   }

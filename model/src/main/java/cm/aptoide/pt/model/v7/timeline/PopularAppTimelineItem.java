@@ -14,6 +14,10 @@ class PopularAppTimelineItem implements TimelineItem<TimelineCard> {
     this.popularApp = popularApp;
   }
 
+  @Override public Ab getAb() {
+    return this.popularApp.getAb();
+  }
+
   @Override public TimelineCard getData() {
     return popularApp;
   }

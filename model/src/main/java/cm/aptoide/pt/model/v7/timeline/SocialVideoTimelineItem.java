@@ -9,10 +9,14 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode public class SocialVideoTimelineItem implements TimelineItem<TimelineCard> {
 
-  private TimelineCard socialVideo;
+  private SocialVideo socialVideo;
 
   @JsonCreator public SocialVideoTimelineItem(@JsonProperty("data") SocialVideo socialVideo) {
     this.socialVideo = socialVideo;
+  }
+
+  @Override public Ab getAb() {
+    return this.socialVideo.getAb();
   }
 
   @Override public TimelineCard getData() {

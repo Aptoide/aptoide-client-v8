@@ -16,6 +16,10 @@ import lombok.EqualsAndHashCode;
     this.aggregatedSocialInstall = aggregatedSocialInstall;
   }
 
+  @Override public Ab getAb() {
+    return this.aggregatedSocialInstall.getAb();
+  }
+
   @Override public AggregatedSocialInstall getData() {
     return this.aggregatedSocialInstall;
   }

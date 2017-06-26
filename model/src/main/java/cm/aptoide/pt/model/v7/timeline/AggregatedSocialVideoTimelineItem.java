@@ -15,6 +15,10 @@ class AggregatedSocialVideoTimelineItem implements TimelineItem<TimelineCard> {
     this.aggregatedSocialVideo = aggregatedSocialVideo;
   }
 
+  @Override public Ab getAb() {
+    return this.aggregatedSocialVideo.getAb();
+  }
+
   @Override public AggregatedSocialVideo getData() {
     return this.aggregatedSocialVideo;
   }

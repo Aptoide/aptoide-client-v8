@@ -28,17 +28,16 @@ public class TimelineResponseCardMapper {
 
     for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist()
         .getList()) {
+      String abUrl = null;
+      if (item.getAb() != null
+          && item.getAb()
+          .getConversion() != null) {
+        abUrl = item.getAb()
+            .getConversion()
+            .getUrl();
+      }
       if (item instanceof ArticleTimelineItem) {
         final Article article = ((ArticleTimelineItem) item).getData();
-        String abUrl = null;
-        if (article.getAb() != null
-            && article.getAb()
-            .getConversion() != null) {
-          abUrl = article.getAb()
-              .getConversion()
-              .getUrl();
-        }
-
         cards.add(new Media(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
             article.getDate(), article.getApps()
             .get(0), abUrl, article.getPublisher()
@@ -50,14 +49,6 @@ public class TimelineResponseCardMapper {
             CardType.ARTICLE));
       } else if (item instanceof VideoTimelineItem) {
         final Video video = ((VideoTimelineItem) item).getData();
-        String abUrl = null;
-        if (video.getAb() != null
-            && video.getAb()
-            .getConversion() != null) {
-          abUrl = video.getAb()
-              .getConversion()
-              .getUrl();
-        }
         cards.add(
             new Media(video.getCardId(), video.getTitle(), video.getThumbnailUrl(), video.getDate(),
                 video.getApps()
@@ -70,14 +61,6 @@ public class TimelineResponseCardMapper {
                 CardType.VIDEO));
       } else if (item instanceof RecommendationTimelineItem) {
         final Recommendation recommendation = ((RecommendationTimelineItem) item).getData();
-        String abUrl = null;
-        if (recommendation.getAb() != null
-            && recommendation.getAb()
-            .getConversion() != null) {
-          abUrl = recommendation.getAb()
-              .getConversion()
-              .getUrl();
-        }
         cards.add(new cm.aptoide.pt.v8engine.social.data.Recommendation(recommendation.getCardId(),
             recommendation.getRecommendedApp()
                 .getId(), recommendation.getRecommendedApp()
@@ -88,14 +71,6 @@ public class TimelineResponseCardMapper {
             .getName(), recommendation.getTimestamp(), abUrl, CardType.RECOMMENDATION));
       } else if (item instanceof StoreLatestAppsTimelineItem) {
         final StoreLatestApps store = ((StoreLatestAppsTimelineItem) item).getData();
-        String abUrl = null;
-        if (store.getAb() != null
-            && store.getAb()
-            .getConversion() != null) {
-          abUrl = store.getAb()
-              .getConversion()
-              .getUrl();
-        }
         cards.add(new cm.aptoide.pt.v8engine.social.data.StoreLatestApps(store.getCardId(),
             store.getStore()
                 .getName(), store.getStore()
@@ -106,14 +81,6 @@ public class TimelineResponseCardMapper {
             .getApps(), store.getLatestUpdate(), store.getApps(), abUrl, CardType.STORE));
       } else if (item instanceof AppUpdateTimelineItem) {
         final AppUpdate appUpdate = ((AppUpdateTimelineItem) item).getData();
-        String abUrl = null;
-        if (appUpdate.getAb() != null
-            && appUpdate.getAb()
-            .getConversion() != null) {
-          abUrl = appUpdate.getAb()
-              .getConversion()
-              .getUrl();
-        }
         cards.add(new cm.aptoide.pt.v8engine.social.data.AppUpdate(appUpdate.getCardId(),
             appUpdate.getStore()
                 .getName(), appUpdate.getStore()

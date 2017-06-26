@@ -15,6 +15,10 @@ import lombok.EqualsAndHashCode;
     this.socialArticle = socialArticle;
   }
 
+  @Override public Ab getAb() {
+    return this.socialArticle.getAb();
+  }
+
   @Override public TimelineCard getData() {
     return socialArticle;
   }

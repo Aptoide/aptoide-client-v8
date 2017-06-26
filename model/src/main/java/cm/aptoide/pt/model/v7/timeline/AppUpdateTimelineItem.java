@@ -20,6 +20,10 @@ import lombok.EqualsAndHashCode;
     this.appUpdate = appUpdate;
   }
 
+  @Override public Ab getAb() {
+    return this.appUpdate.getAb();
+  }
+
   @Override public AppUpdate getData() {
     return appUpdate;
   }
