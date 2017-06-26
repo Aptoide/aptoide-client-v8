@@ -19,13 +19,13 @@ import rx.subjects.PublishSubject;
 
 public class CardViewHolderFactory {
 
-  private final PublishSubject<CardTouchEvent> articleSubject;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
 
-  public CardViewHolderFactory(PublishSubject<CardTouchEvent> articleSubject,
+  public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
-    this.articleSubject = articleSubject;
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
   }
@@ -39,20 +39,20 @@ public class CardViewHolderFactory {
       case ARTICLE:
       case VIDEO:
         return new MediaViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_article_item, parent, false), articleSubject, dateCalculator,
-            spannableFactory);
+            .inflate(R.layout.timeline_article_item, parent, false), cardTouchEventPublishSubject,
+            dateCalculator, spannableFactory);
       case RECOMMENDATION:
         return new RecommendationViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_recommendation_item, parent, false), articleSubject,
-            dateCalculator, spannableFactory);
+            .inflate(R.layout.timeline_recommendation_item, parent, false),
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case STORE:
         return new StoreLatestAppsViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_store_item, parent, false), articleSubject, dateCalculator,
-            spannableFactory);
+            .inflate(R.layout.timeline_store_item, parent, false), cardTouchEventPublishSubject,
+            dateCalculator, spannableFactory);
       case UPDATE:
         return new AppUpdateViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_update_item, parent, false), articleSubject, dateCalculator,
-            spannableFactory);
+            .inflate(R.layout.timeline_update_item, parent, false), cardTouchEventPublishSubject,
+            dateCalculator, spannableFactory);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));

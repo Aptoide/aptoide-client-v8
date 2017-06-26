@@ -60,7 +60,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
    */
   private final int visibleThreshold = 5;
   private CardAdapter adapter;
-  private PublishSubject<CardTouchEvent> articleSubject;
+  private PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -89,11 +89,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    articleSubject = PublishSubject.create();
-    adapter = new CardAdapter(Collections.emptyList(), new CardViewHolderFactory(articleSubject,
-        new DateCalculator(getContext().getApplicationContext(),
-            getContext().getApplicationContext()
-                .getResources()), new SpannableFactory()), new ProgressCard());
+    cardTouchEventPublishSubject = PublishSubject.create();
+    adapter = new CardAdapter(Collections.emptyList(),
+        new CardViewHolderFactory(cardTouchEventPublishSubject,
+            new DateCalculator(getContext().getApplicationContext(),
+                getContext().getApplicationContext()
+                    .getResources()), new SpannableFactory()), new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
   }
@@ -184,7 +185,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public Observable<CardTouchEvent> articleClicked() {
-    return articleSubject;
+    return cardTouchEventPublishSubject;
   }
 
   @Override public Observable<Void> retry() {
