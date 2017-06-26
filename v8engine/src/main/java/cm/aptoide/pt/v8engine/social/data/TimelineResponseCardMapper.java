@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Article;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.ArticleTimelineItem;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.MediaPublisher;
+import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.PublisherAvatar;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,14 +97,18 @@ public class TimelineResponseCardMapper {
       } else if (item instanceof PopularAppTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.PopularApp popularApp =
             ((PopularAppTimelineItem) item).getData();
-        cards.add(new RatedRecommendation(popularApp.getCardId(), popularApp.getPopularApplication()
+        List<Publisher> publishers = new ArrayList<>();
+        for (Comment.User user : popularApp.getUsers()) {
+          publishers.add(new MediaPublisher(user.getName(), new PublisherAvatar(user.getAvatar())));
+        }
+        cards.add(new PopularApp(popularApp.getCardId(), popularApp.getPopularApplication()
             .getId(), popularApp.getPopularApplication()
             .getPackageName(), popularApp.getPopularApplication()
             .getName(), popularApp.getPopularApplication()
             .getIcon(), popularApp.getPopularApplication()
             .getStats()
             .getRating()
-            .getAvg(), new UserPublisher(), popularApp.getDate(), abUrl, CardType.POPULAR_APP));
+            .getAvg(), publishers, popularApp.getDate(), abUrl, CardType.POPULAR_APP));
       } else if (item instanceof SocialRecommendationTimelineItem) {
         final SocialRecommendation socialRecommendation =
             ((SocialRecommendationTimelineItem) item).getData();
@@ -114,8 +120,7 @@ public class TimelineResponseCardMapper {
             .getIcon(), socialRecommendation.getApp()
             .getStats()
             .getRating()
-            .getAvg(), new UserPublisher(), socialRecommendation.getDate(), abUrl,
-            CardType.SOCIAL_RECOMMENDATION));
+            .getAvg(), socialRecommendation.getDate(), abUrl, CardType.SOCIAL_RECOMMENDATION));
       }
     }
 

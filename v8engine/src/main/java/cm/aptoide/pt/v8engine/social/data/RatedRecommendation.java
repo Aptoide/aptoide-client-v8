@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.social.data;
 
-import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
 import java.util.Date;
 
 /**
@@ -11,9 +10,8 @@ public class RatedRecommendation extends AppPost {
   private final float ratingAverage;
 
   public RatedRecommendation(String cardId, long appId, String packageName, String appName,
-      String appIcon, float ratingAverage, Publisher publisher, Date timestamp, String abUrl,
-      CardType cardType) {
-    super(cardId, publisher, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
+      String appIcon, float ratingAverage, Date timestamp, String abUrl, CardType cardType) {
+    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
     this.ratingAverage = ratingAverage;
   }
 

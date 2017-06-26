@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
-import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
 import java.util.Date;
 import java.util.List;
 
@@ -9,54 +9,22 @@ import java.util.List;
  */
 
 public class PopularApp extends AppPost {
-  private final List<Comment.User> users;
   private final float ratingAverage;
+  private final List<Publisher> publishers;
 
-  public PopularApp(String cardId, String appIcon, String appName, String packageName,
-      Date timestamp, List<Comment.User> users, float ratingAverage, long appId, String abUrl,
+  public PopularApp(String cardId, long appId, String packageName, String appName,
+      String appIcon, float ratingAverage, List<Publisher> publishers, Date timestamp, String abUrl,
       CardType cardType) {
-    super(cardId, null, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
-    this.users = users;
+    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
     this.ratingAverage = ratingAverage;
+    this.publishers = publishers;
   }
 
-  public List<Comment.User> getUsers() {
-    return users;
+  public List<Publisher> getPublishers() {
+    return publishers;
   }
 
   public float getRatingAverage() {
     return ratingAverage;
-  }
-
-  public long getAppId() {
-    return appId;
-  }
-
-  public String getAbUrl() {
-    return abUrl;
-  }
-
-  public String getAppName() {
-    return appName;
-  }
-
-  public String getAppIcon() {
-    return appIcon;
-  }
-
-  public Date getTimestamp() {
-    return timestamp;
-  }
-
-  public String getPackageName() {
-    return packageName;
-  }
-
-  @Override public String getCardId() {
-    return cardId;
-  }
-
-  @Override public CardType getType() {
-    return cardType;
   }
 }

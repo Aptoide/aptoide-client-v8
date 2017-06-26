@@ -1,7 +1,5 @@
 package cm.aptoide.pt.v8engine.social.data;
 
-import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
-import cm.aptoide.pt.v8engine.social.data.publisher.PublisherAvatar;
 import java.util.Date;
 
 /**
@@ -17,11 +15,9 @@ abstract class AppPost implements Post {
   protected final String packageName;
   protected final String abUrl;
   protected final long appId;
-  private final String publisherName;
-  private final PublisherAvatar publisherAvatar;
 
-  AppPost(String cardId, Publisher publisher, String appIcon, String appName, long appId,
-      String packageName, Date timestamp, String abUrl, CardType cardType) {
+  AppPost(String cardId, String appIcon, String appName, long appId, String packageName,
+      Date timestamp, String abUrl, CardType cardType) {
     this.abUrl = abUrl;
     this.cardId = cardId;
     this.timestamp = timestamp;
@@ -30,8 +26,6 @@ abstract class AppPost implements Post {
     this.packageName = packageName;
     this.cardType = cardType;
     this.appIcon = appIcon;
-    this.publisherName = publisher.getPublisherName();
-    this.publisherAvatar = publisher.getPublisherAvatar();
   }
 
   public long getAppId() {
@@ -64,13 +58,5 @@ abstract class AppPost implements Post {
 
   @Override public CardType getType() {
     return this.cardType;
-  }
-
-  public String getPublisherName() {
-    return publisherName;
-  }
-
-  public PublisherAvatar getPublisherAvatar() {
-    return publisherAvatar;
   }
 }

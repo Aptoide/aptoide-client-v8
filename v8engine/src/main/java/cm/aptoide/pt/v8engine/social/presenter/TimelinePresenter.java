@@ -14,6 +14,7 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.Media;
+import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
@@ -161,7 +162,12 @@ public class TimelinePresenter implements Presenter {
                     .getName(), "error"));
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.POPULAR_APP) || cardTouchEvent.getCard()
+              .equals(CardType.POPULAR_APP)) {
+            PopularApp card = (PopularApp) cardTouchEvent.getCard();
+            fragmentNavigator.navigateTo(
+                AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
+                    AppViewFragment.OpenType.OPEN_ONLY));
+          } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.SOCIAL_RECOMMENDATION)) {
             RatedRecommendation card = (RatedRecommendation) cardTouchEvent.getCard();
