@@ -5,6 +5,7 @@ import cm.aptoide.pt.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
+import cm.aptoide.pt.model.v7.timeline.PopularAppTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.RecommendationTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
@@ -92,6 +93,18 @@ public class TimelineResponseCardMapper {
             appUpdate.getAdded(), abUrl, CardType.UPDATE, appUpdate.getFile(), appUpdate.getObb(),
             // TODO: 26/06/2017 probably should get progress state someway because the download might be happening already.
             Progress.INACTIVE));
+      } else if (item instanceof PopularAppTimelineItem) {
+        final cm.aptoide.pt.model.v7.timeline.PopularApp popularApp =
+            ((PopularAppTimelineItem) item).getData();
+        cards.add(new PopularApp(popularApp.getCardId(), popularApp.getPopularApplication()
+            .getIcon(), popularApp.getPopularApplication()
+            .getName(), popularApp.getPopularApplication()
+            .getPackageName(), popularApp.getDate(), popularApp.getUsers(),
+            popularApp.getPopularApplication()
+                .getStats()
+                .getRating()
+                .getAvg(), popularApp.getPopularApplication()
+            .getId(), abUrl, CardType.POPULAR_APP));
       }
     }
 
