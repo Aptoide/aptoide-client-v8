@@ -26,7 +26,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
-import cm.aptoide.pt.v8engine.social.data.Card;
+import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
@@ -130,7 +130,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         savedInstanceState);
   }
 
-  @Override public void showCards(List<Card> cards) {
+  @Override public void showCards(List<Post> cards) {
     adapter.updateCards(cards);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
@@ -153,7 +153,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout.setRefreshing(false);
   }
 
-  @Override public void showMoreCards(List<Card> cards) {
+  @Override public void showMoreCards(List<Post> cards) {
     adapter.addCards(cards);
   }
 
@@ -221,7 +221,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         });
   }
 
-  @Override public void updateInstallProgress(Card card, int cardPosition) {
+  @Override public void updateInstallProgress(Post card, int cardPosition) {
     adapter.updateCard(card, cardPosition);
   }
 }

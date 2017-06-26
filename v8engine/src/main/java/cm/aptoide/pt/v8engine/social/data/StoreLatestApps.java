@@ -8,7 +8,7 @@ import java.util.List;
  * Created by jdandrade on 21/06/2017.
  */
 
-public class StoreLatestApps implements Card {
+public class StoreLatestApps implements Post {
   private final String cardId;
   private final String storeName;
   private final String storeAvatar;

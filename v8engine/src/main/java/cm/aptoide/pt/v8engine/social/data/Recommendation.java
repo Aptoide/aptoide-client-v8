@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by jdandrade on 31/05/2017.
  */
 
-public class Recommendation implements Card {
+public class Recommendation implements Post {
   private final String cardId;
   private final String appName;
   private final String appIcon;

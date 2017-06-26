@@ -5,7 +5,6 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import java.util.List;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -25,11 +24,11 @@ public class SocialManager {
     this.downloadFactory = downloadFactory;
   }
 
-  public Single<List<Card>> getCards() {
+  public Single<List<Post>> getCards() {
     return service.getCards();
   }
 
-  public Single<List<Card>> getNextCards() {
+  public Single<List<Post>> getNextCards() {
     return service.getNextCards();
   }
 

@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by jdandrade on 21/06/2017.
  */
 
-public class AppUpdate implements Card {
+public class AppUpdate implements Post {
 
   private final String cardId;
   private final String storeName;

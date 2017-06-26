@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.Card;
+import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.Media;
@@ -191,17 +191,17 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> view.showGenericError());
   }
 
-  private void showMoreCardsAndHideLoadMoreProgress(List<Card> cards) {
+  private void showMoreCardsAndHideLoadMoreProgress(List<Post> cards) {
     view.hideLoadMoreProgressIndicator();
     view.showMoreCards(cards);
   }
 
-  private void showCardsAndHideProgress(List<Card> cards) {
+  private void showCardsAndHideProgress(List<Post> cards) {
     view.hideProgressIndicator();
     view.showCards(cards);
   }
 
-  private void showCardsAndHideRefresh(List<Card> cards) {
+  private void showCardsAndHideRefresh(List<Post> cards) {
     view.hideRefresh();
     view.showCards(cards);
   }

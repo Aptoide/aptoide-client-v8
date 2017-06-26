@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.social.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import cm.aptoide.pt.v8engine.social.data.Card;
+import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.view.viewholder.CardViewHolder;
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.List;
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
   private final CardViewHolderFactory cardViewHolderFactory;
-  private List<Card> cards;
+  private List<Post> cards;
   private ProgressCard progressCard;
 
-  public CardAdapter(List<Card> cards, CardViewHolderFactory cardViewHolderFactory,
+  public CardAdapter(List<Post> cards, CardViewHolderFactory cardViewHolderFactory,
       ProgressCard progressCard) {
     this.cards = cards;
     this.cardViewHolderFactory = cardViewHolderFactory;
@@ -42,12 +42,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     return this.cards.size();
   }
 
-  public void updateCards(List<Card> cards) {
+  public void updateCards(List<Post> cards) {
     this.cards = cards;
     notifyDataSetChanged();
   }
 
-  public void addCards(List<Card> cards) {
+  public void addCards(List<Post> cards) {
     this.cards.addAll(cards);
     notifyDataSetChanged();
   }
@@ -62,7 +62,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     notifyDataSetChanged();
   }
 
-  public void updateCard(Card card, int cardPosition) {
+  public void updateCard(Post card, int cardPosition) {
     cards.set(cardPosition, card);
     notifyItemChanged(cardPosition);
   }

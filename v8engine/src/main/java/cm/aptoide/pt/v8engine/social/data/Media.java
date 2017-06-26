@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by jdandrade on 31/05/2017.
  */
 
-public class Media implements Card {
+public class Media implements Post {
   private final String cardId;
   private final String mediaTitle;
   private final String mediaThumbnailUrl;
