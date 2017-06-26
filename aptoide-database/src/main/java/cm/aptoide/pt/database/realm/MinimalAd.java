@@ -7,17 +7,11 @@ package cm.aptoide.pt.database.realm;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import cm.aptoide.pt.model.MinimalAdInterface;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import io.realm.RealmObject;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Created by neuro on 20-06-2016.
- */
-public class MinimalAd extends RealmObject implements Parcelable, MinimalAdInterface {
+public class MinimalAd extends RealmObject implements Parcelable {
 
   public static final Creator<MinimalAd> CREATOR = new Creator<MinimalAd>() {
     @Override public MinimalAd createFromParcel(Parcel source) {
@@ -72,28 +66,6 @@ public class MinimalAd extends RealmObject implements Parcelable, MinimalAdInter
     this.cpiUrl = in.readString();
     this.name = in.readString();
     this.iconPath = in.readString();
-  }
-
-  public static MinimalAd from(@NonNull GetAdsResponse.Ad ad) {
-    GetAdsResponse.Partner partner = ad.getPartner();
-    int id = 0;
-    String clickUrl = null;
-    if (partner != null) {
-      id = partner.getInfo()
-          .getId();
-      clickUrl = partner.getData()
-          .getClickUrl();
-    }
-    return new MinimalAd(ad.getData()
-        .getPackageName(), id, clickUrl, ad.getInfo()
-        .getCpcUrl(), ad.getInfo()
-        .getCpdUrl(), ad.getData()
-        .getId(), ad.getInfo()
-        .getAdId(), ad.getInfo()
-        .getCpiUrl(), ad.getData()
-        .getName(), ad.getData()
-        .getIcon(), ad.getData()
-        .getDescription());
   }
 
   @Override public int describeContents() {

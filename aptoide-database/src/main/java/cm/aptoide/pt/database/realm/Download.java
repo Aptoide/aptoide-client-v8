@@ -76,51 +76,6 @@ import lombok.EqualsAndHashCode;
     this.timeStamp = timeStamp;
   }
 
-  public String getStatusName(Context context) {
-    String toReturn;
-    switch (overallDownloadStatus) {
-      case COMPLETED:
-        toReturn = context.getString(R.string.download_completed);
-        break;
-      case PAUSED:
-        toReturn = context.getString(R.string.download_paused);
-        break;
-      case PROGRESS:
-        toReturn = context.getString(R.string.download_progress);
-        break;
-      case PENDING:
-      case IN_QUEUE:
-        toReturn = context.getString(R.string.download_queue);
-        break;
-      case INVALID_STATUS:
-        toReturn =
-            ""; //this state only appears while download manager doesn't get the download(before the AptoideDownloadManager#startDownload
-        // method runs)
-        break;
-      case WARN:
-      case BLOCK_COMPLETE:
-      case CONNECTED:
-      case RETRY:
-      case STARTED:
-      case NOT_DOWNLOADED:
-      case ERROR:
-      case FILE_MISSING:
-      default:
-        toReturn = getErrorMessage(context);
-    }
-    return toReturn;
-  }
-
-  @NonNull private String getErrorMessage(Context context) {
-    String toReturn;
-    if (downloadError == NOT_ENOUGH_SPACE_ERROR) {
-      toReturn = context.getString(R.string.out_of_space_error);
-    } else {
-      toReturn = context.getString(R.string.simple_error_occured);
-    }
-    return toReturn;
-  }
-
   public String getAppName() {
     return appName;
   }

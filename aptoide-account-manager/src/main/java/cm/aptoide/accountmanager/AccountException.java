@@ -5,7 +5,7 @@
 
 package cm.aptoide.accountmanager;
 
-import cm.aptoide.pt.model.v3.ErrorResponse;
+import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import java.util.List;
 
 /**

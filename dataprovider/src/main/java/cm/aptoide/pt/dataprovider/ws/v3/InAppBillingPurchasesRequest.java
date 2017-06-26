@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;

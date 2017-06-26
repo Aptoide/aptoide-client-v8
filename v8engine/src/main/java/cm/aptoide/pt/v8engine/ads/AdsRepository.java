@@ -13,7 +13,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
@@ -40,6 +40,7 @@ public class AdsRepository {
   private final ConnectivityManager connectivityManager;
   private final Resources resources;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final MinimalAdMapper adMapper;
 
   public AdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory, QManager qManager,
@@ -47,7 +48,7 @@ public class AdsRepository {
       ConnectivityManager connectivityManager, Resources resources,
       AdsApplicationVersionCodeProvider versionCodeProvider,
       GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker,
-      PartnerIdProvider partnerIdProvider) {
+      PartnerIdProvider partnerIdProvider, MinimalAdMapper adMapper) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.versionCodeProvider = versionCodeProvider;
@@ -60,6 +61,7 @@ public class AdsRepository {
     this.context = applicationContext;
     this.connectivityManager = connectivityManager;
     this.resources = resources;
+    this.adMapper = adMapper;
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
@@ -97,7 +99,7 @@ public class AdsRepository {
           }
           return Observable.just(ads.get(0));
         })
-        .map((ad) -> MinimalAd.from(ad));
+        .map((ad) -> adMapper.map(ad));
   }
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
@@ -122,7 +124,7 @@ public class AdsRepository {
         .map(ads -> {
           List<MinimalAd> minimalAds = new LinkedList<>();
           for (GetAdsResponse.Ad ad : ads) {
-            minimalAds.add(MinimalAd.from(ad));
+            minimalAds.add(adMapper.map(ad));
           }
           return minimalAds;
         });

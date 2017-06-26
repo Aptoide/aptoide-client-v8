@@ -6,8 +6,6 @@
 package cm.aptoide.pt.database.realm;
 
 import cm.aptoide.pt.database.AppAction;
-import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Obb;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -75,44 +73,6 @@ public class Scheduled extends RealmObject {
     this.patchObbMd5 = patchObbMd5;
     this.isDownloading = isDownloading;
     this.appAction = appAction;
-  }
-
-  public static Scheduled from(GetAppMeta.App app, AppAction appAction) {
-
-    String mainObbName = null;
-    String mainObbPath = null;
-    String mainObbMd5 = null;
-
-    String patchObbName = null;
-    String patchObbPath = null;
-    String patchObbMd5 = null;
-
-    Obb obb = app.getObb();
-    if (obb != null) {
-      Obb.ObbItem obbMain = obb.getMain();
-      Obb.ObbItem obbPatch = obb.getPatch();
-
-      if (obbMain != null) {
-        mainObbName = obbMain.getFilename();
-        mainObbPath = obbMain.getPath();
-        mainObbMd5 = obbMain.getMd5sum();
-      }
-
-      if (obbPatch != null) {
-        patchObbName = obbPatch.getFilename();
-        patchObbPath = obbPatch.getPath();
-        patchObbMd5 = obbPatch.getMd5sum();
-      }
-    }
-
-    return new Scheduled(app.getName(), app.getFile()
-        .getVername(), app.getIcon(), app.getFile()
-        .getPath(), app.getFile()
-        .getMd5sum(), app.getFile()
-        .getVercode(), app.getPackageName(), app.getStore()
-        .getName(), app.getFile()
-        .getPathAlt(), mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath,
-        patchObbMd5, false, appAction.name());
   }
 
   public String getName() {
@@ -199,20 +159,28 @@ public class Scheduled extends RealmObject {
     this.alternativeApkPath = alternativeApkPath;
   }
 
-  public Obb getObb() {
-    Obb obb = new Obb();
-    Obb.ObbItem mainItem = new Obb.ObbItem();
-    mainItem.setFilename(this.mainObbName);
-    mainItem.setPath(this.mainObbPath);
-    mainItem.setMd5sum(this.mainObbMd5);
-    obb.setMain(mainItem);
+  public String getMainObbName() {
+    return mainObbName;
+  }
 
-    Obb.ObbItem patchItem = new Obb.ObbItem();
-    patchItem.setFilename(this.patchObbName);
-    patchItem.setPath(this.patchObbPath);
-    patchItem.setMd5sum(this.patchObbMd5);
-    obb.setPatch(patchItem);
-    return null;
+  public String getMainObbPath() {
+    return mainObbPath;
+  }
+
+  public String getMainObbMd5() {
+    return mainObbMd5;
+  }
+
+  public String getPatchObbName() {
+    return patchObbName;
+  }
+
+  public String getPatchObbPath() {
+    return patchObbPath;
+  }
+
+  public String getPatchObbMd5() {
+    return patchObbMd5;
   }
 
   public boolean isDownloading() {

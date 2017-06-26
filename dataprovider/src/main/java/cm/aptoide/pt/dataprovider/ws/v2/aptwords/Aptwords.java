@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import okhttp3.OkHttpClient;

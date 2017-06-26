@@ -88,7 +88,6 @@ dependencies {
   // inter-projects dependencies
   //
 
-  compile project(path: ':model', configuration: 'release')
   compile project(path: ':aptoidepreferences', configuration: 'release')
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':crashreports', configuration: 'release')
@@ -102,6 +101,10 @@ dependencies {
   //
   // from remote repos
   //
+
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 
   testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testCompile "junit:junit:${JUNIT_VERSION}"

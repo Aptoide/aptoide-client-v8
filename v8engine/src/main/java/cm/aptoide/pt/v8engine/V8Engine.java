@@ -80,6 +80,7 @@ import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
 import cm.aptoide.pt.v8engine.account.RefreshTokenInvalidatorFactory;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
@@ -536,7 +537,8 @@ public abstract class V8Engine extends Application {
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
       installManager = new InstallManager(getDownloadManager(),
-          new InstallerFactory().create(this, installerType), getDefaultSharedPreferences(),
+          new InstallerFactory(new MinimalAdMapper()).create(this, installerType),
+          getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()));
       installManagers.put(installerType, installManager);
@@ -1099,7 +1101,7 @@ public abstract class V8Engine extends Application {
           getVersionCodeProvider(),
           (context) -> AdNetworkUtils.isGooglePlayServicesAvailable(context),
           () -> V8Engine.getConfiguration()
-              .getPartnerId());
+              .getPartnerId(), new MinimalAdMapper());
     }
     return adsRepository;
   }

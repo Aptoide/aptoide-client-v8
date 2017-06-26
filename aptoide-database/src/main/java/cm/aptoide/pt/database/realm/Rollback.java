@@ -5,11 +5,8 @@
 
 package cm.aptoide.pt.database.realm;
 
-import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Obb;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import java.util.Calendar;
 
 /**
  * Created on 12/05/16.
@@ -53,43 +50,6 @@ public class Rollback extends RealmObject {
   private String mainObbPath;
 
   public Rollback() {
-  }
-
-  public Rollback(GetAppMeta.App app, Action action) {
-    this.action = action.name();
-    appId = app.getId();
-    appName = app.getName();
-    icon = app.getIcon();
-    packageName = app.getPackageName();
-    timestamp = Calendar.getInstance()
-        .getTimeInMillis();
-    md5 = app.getFile()
-        .getMd5sum();
-    apkPath = app.getFile()
-        .getPath();
-    alternativeApkPath = app.getFile()
-        .getPathAlt();
-    versionName = app.getFile()
-        .getVername();
-    versionCode = app.getFile()
-        .getVercode();
-
-    Obb obb = app.getObb();
-    if (obb != null) {
-      Obb.ObbItem obbMain = obb.getMain();
-      if (obbMain != null) {
-        mainObbName = obbMain.getFilename();
-        mainObbPath = obbMain.getPath();
-        mainObbMd5 = obbMain.getMd5sum();
-      }
-
-      Obb.ObbItem patch = obb.getPatch();
-      if (patch != null) {
-        patchObbName = patch.getFilename();
-        patchObbPath = patch.getPath();
-        patchObbMd5 = patch.getMd5sum();
-      }
-    }
   }
 
   public String getPackageName() {

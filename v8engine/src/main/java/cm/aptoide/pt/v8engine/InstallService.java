@@ -24,10 +24,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.view.downloads.DownloadStatusMessageMapper;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -64,13 +66,16 @@ public class InstallService extends Service {
   private InstallManager installManager;
   private Map<String, Integer> installerTypeMap;
   private Analytics analytics;
+  private DownloadStatusMessageMapper downloadStatusMapper;
 
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
+    downloadStatusMapper = new DownloadStatusMessageMapper(getApplicationContext());
     downloadManager = ((V8Engine) getApplicationContext()).getDownloadManager();
-    defaultInstaller = new InstallerFactory().create(this, InstallerFactory.DEFAULT);
-    rollbackInstaller = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
+    final MinimalAdMapper adMapper = new MinimalAdMapper();
+    defaultInstaller = new InstallerFactory(adMapper).create(this, InstallerFactory.DEFAULT);
+    rollbackInstaller = new InstallerFactory(adMapper).create(this, InstallerFactory.ROLLBACK);
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
@@ -289,8 +294,9 @@ public class InstallService extends Service {
         .setContentText(new StringBuilder().append(progress.getRequest()
             .getAppName())
             .append(" - ")
-            .append(progress.getRequest()
-                .getStatusName(this)))
+            .append(downloadStatusMapper.map(progress.getRequest()
+                .getOverallDownloadStatus(), progress.getRequest()
+                .getDownloadError())))
         .setContentIntent(contentIntent)
         .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, progress.getRequest()
             .getOverallProgress(), progress.isIndeterminate())

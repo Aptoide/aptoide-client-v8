@@ -6,7 +6,6 @@
 include 'vanilla',
     ':v8engine',
     ':dataprovider',
-    ':model',
     ':aptoidepreferences',
     ':utilsdesign',
     ':crashreports',

@@ -1,6 +1,6 @@
 package cm.aptoide.accountmanager;
 
-import cm.aptoide.pt.model.v3.OAuth;
+import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
 import org.junit.Before;

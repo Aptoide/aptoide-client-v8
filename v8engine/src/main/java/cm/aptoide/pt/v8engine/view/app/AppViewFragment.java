@@ -54,6 +54,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -65,6 +66,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
@@ -188,6 +190,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private QManager qManager;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private MinimalAdMapper adMapper;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -261,6 +264,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    adMapper = new MinimalAdMapper();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
     purchaseIntentMapper =
         ((V8Engine) getContext().getApplicationContext()).getPurchaseIntentMapper();
@@ -481,7 +485,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       return true;
     } else if (i == R.id.menu_schedule) {
       appViewAnalytics.sendScheduleDownloadEvent();
-      scheduled = Scheduled.from(app, appAction);
+      scheduled = createScheduled(app, appAction);
 
       ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
       scheduledAccessor.insert(scheduled);
@@ -513,6 +517,44 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return super.onOptionsItemSelected(item);
   }
 
+  private Scheduled createScheduled(GetAppMeta.App app, AppAction appAction) {
+
+    String mainObbName = null;
+    String mainObbPath = null;
+    String mainObbMd5 = null;
+
+    String patchObbName = null;
+    String patchObbPath = null;
+    String patchObbMd5 = null;
+
+    Obb obb = app.getObb();
+    if (obb != null) {
+      Obb.ObbItem obbMain = obb.getMain();
+      Obb.ObbItem obbPatch = obb.getPatch();
+
+      if (obbMain != null) {
+        mainObbName = obbMain.getFilename();
+        mainObbPath = obbMain.getPath();
+        mainObbMd5 = obbMain.getMd5sum();
+      }
+
+      if (obbPatch != null) {
+        patchObbName = obbPatch.getFilename();
+        patchObbPath = obbPatch.getPath();
+        patchObbMd5 = obbPatch.getMd5sum();
+      }
+    }
+
+    return new Scheduled(app.getName(), app.getFile()
+        .getVername(), app.getIcon(), app.getFile()
+        .getPath(), app.getFile()
+        .getMd5sum(), app.getFile()
+        .getVercode(), app.getPackageName(), app.getStore()
+        .getName(), app.getFile()
+        .getPathAlt(), mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath,
+        patchObbMd5, false, appAction.name());
+  }
+
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
     String packageName = getApp.getNodes()
         .getMeta()
@@ -539,7 +581,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   private void storeMinimalAdd(MinimalAd minimalAd) {
-    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
+    storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
   }
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
@@ -628,11 +670,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private void handleAdsLogic(MinimalAd minimalAd) {
     storeMinimalAdd(minimalAd);
-    AdNetworkUtils.knockCpc(minimalAd);
+    AdNetworkUtils.knockCpc(adMapper.map(minimalAd));
     AptoideUtils.ThreadU.runOnUiThread(
         () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
             httpClient, converterFactory, qManager, getContext().getApplicationContext(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()));
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            new MinimalAdMapper()));
   }
 
   private void updateLocalVars(GetAppMeta.App app) {

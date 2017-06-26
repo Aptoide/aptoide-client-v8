@@ -10,7 +10,7 @@ import android.content.res.Resources;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v3.PaidApp;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

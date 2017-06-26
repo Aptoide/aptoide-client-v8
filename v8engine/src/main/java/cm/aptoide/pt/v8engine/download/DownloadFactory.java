@@ -318,9 +318,25 @@ public class DownloadFactory {
     download.setScheduled(true);
     download.setFilesToDownload(
         createFileList(scheduled.getMd5(), scheduled.getPackageName(), path, scheduled.getMd5(),
-            scheduled.getObb(), alternativePath, scheduled.getVerCode(),
+            extractObb(scheduled), alternativePath, scheduled.getVerCode(),
             scheduled.getVersionName()));
     return download;
+  }
+
+  private Obb extractObb(Scheduled scheduled) {
+    Obb obb = new Obb();
+    Obb.ObbItem mainItem = new Obb.ObbItem();
+    mainItem.setFilename(scheduled.getMainObbName());
+    mainItem.setPath(scheduled.getMainObbPath());
+    mainItem.setMd5sum(scheduled.getMainObbMd5());
+    obb.setMain(mainItem);
+
+    Obb.ObbItem patchItem = new Obb.ObbItem();
+    patchItem.setFilename(scheduled.getPatchObbName());
+    patchItem.setPath(scheduled.getPatchObbPath());
+    patchItem.setMd5sum(scheduled.getPatchObbMd5());
+    obb.setPatch(patchItem);
+    return null;
   }
 
   private class ApkPaths {

@@ -11,10 +11,9 @@ import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -29,6 +28,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
@@ -89,7 +89,7 @@ public class DisplayablesFactory {
               getDisplays(widget, storeTheme, storeContext, windowManager, resources));
 
         case ADS:
-          List<Displayable> adsList = getAds(widget);
+          List<Displayable> adsList = getAds(widget, new MinimalAdMapper());
           if (adsList.size() > 0) {
             DisplayableGroup ads = new DisplayableGroup(adsList, windowManager, resources);
             // Header hammered
@@ -287,7 +287,8 @@ public class DisplayablesFactory {
     return new DisplayableGroup(tmp, windowManager, resources);
   }
 
-  private static @NonNull List<Displayable> getAds(GetStoreWidgets.WSWidget wsWidget) {
+  private static @NonNull List<Displayable> getAds(GetStoreWidgets.WSWidget wsWidget,
+      MinimalAdMapper adMapper) {
     GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
     if (getAdsResponse != null
         && getAdsResponse.getAds() != null
@@ -297,7 +298,7 @@ public class DisplayablesFactory {
       List<Displayable> tmp = new ArrayList<>(ads.size());
       for (GetAdsResponse.Ad ad : ads) {
 
-        GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
+        GridAdDisplayable diplayable = new GridAdDisplayable(adMapper.map(ad), wsWidget.getTag());
         tmp.add(diplayable);
       }
       return tmp;

@@ -57,8 +57,6 @@ dependencies {
   //
   // inter-projects dependencies
   //
-
-  compile project(path: ':model', configuration: 'release')
   compile project(path: ':crashreports', configuration: 'release')
 
   //

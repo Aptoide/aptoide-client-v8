@@ -7,8 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.notifications;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.model.v3.BaseV3Response;
-import cm.aptoide.pt.model.v3.ErrorResponse;
+import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
+import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
