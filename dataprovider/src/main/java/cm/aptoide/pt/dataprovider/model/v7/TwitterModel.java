@@ -1,4 +1,4 @@
-package cm.aptoide.pt.model.v7;
+package cm.aptoide.pt.dataprovider.model.v7;
 
 import lombok.Data;
 

@@ -8,7 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 import android.content.res.Resources;
 import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
-import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 
 /**
  * Created by neuro on 21-04-2016.

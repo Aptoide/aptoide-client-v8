@@ -3,13 +3,13 @@
  * Modified by Neurophobic Animal on 27/04/2016.
  */
 
-package cm.aptoide.pt.model.v7.listapp;
+package cm.aptoide.pt.dataprovider.model.v7.listapp;
 
 /**
  * Created by neuro on 22-04-2016.
  */
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

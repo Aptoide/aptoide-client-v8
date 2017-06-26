@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

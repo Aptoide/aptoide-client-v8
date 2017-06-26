@@ -3,10 +3,10 @@
  * Modified by Neurophobic Animal on 24/05/2016.
  */
 
-package cm.aptoide.pt.model.v7.store;
+package cm.aptoide.pt.dataprovider.model.v7.store;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

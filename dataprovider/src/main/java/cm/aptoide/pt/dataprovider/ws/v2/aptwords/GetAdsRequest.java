@@ -15,7 +15,7 @@ import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;

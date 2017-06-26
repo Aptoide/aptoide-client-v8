@@ -16,10 +16,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.GetUserInfo;
-import cm.aptoide.pt.model.v7.GetUserMeta;
-import cm.aptoide.pt.model.v7.GetUserSettings;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.GetUserInfo;
+import cm.aptoide.pt.dataprovider.model.v7.GetUserMeta;
+import cm.aptoide.pt.dataprovider.model.v7.GetUserSettings;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -184,7 +184,7 @@ public class AccountManagerService {
         .toSingle();
   }
 
-  private Store mapToStore(cm.aptoide.pt.model.v7.store.Store store) {
+  private Store mapToStore(cm.aptoide.pt.dataprovider.model.v7.store.Store store) {
     return new Store(store.getStats()
         .getDownloads(), store.getAvatar(), store.getId(), store.getName(), store.getAppearance()
         .getTheme(), null, null);

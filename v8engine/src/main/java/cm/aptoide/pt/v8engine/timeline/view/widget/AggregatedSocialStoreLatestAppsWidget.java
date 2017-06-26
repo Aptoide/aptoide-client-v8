@@ -21,10 +21,10 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.MinimalCard;
-import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
-import cm.aptoide.pt.model.v7.timeline.UserTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -460,8 +460,8 @@ public class AggregatedSocialStoreLatestAppsWidget
                 if (!minimalCard.getMy()
                     .isLiked()) {
                   UserTimeline user = new UserTimeline();
-                  cm.aptoide.pt.model.v7.store.Store store =
-                      new cm.aptoide.pt.model.v7.store.Store();
+                  cm.aptoide.pt.dataprovider.model.v7.store.Store store =
+                      new cm.aptoide.pt.dataprovider.model.v7.store.Store();
                   store.setAvatar(account.getStoreAvatar());
                   user.setAvatar(account.getAvatar());
                   user.setStore(store);

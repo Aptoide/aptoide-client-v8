@@ -1,7 +1,7 @@
-package cm.aptoide.pt.model.v7.store;
+package cm.aptoide.pt.dataprovider.model.v7.store;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

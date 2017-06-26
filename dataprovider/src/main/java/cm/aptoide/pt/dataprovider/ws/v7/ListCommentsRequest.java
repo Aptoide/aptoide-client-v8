@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import okhttp3.OkHttpClient;

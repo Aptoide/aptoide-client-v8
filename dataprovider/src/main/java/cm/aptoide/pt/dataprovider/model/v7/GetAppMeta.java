@@ -3,10 +3,10 @@
  * Modified on 12/08/2016.
  */
 
-package cm.aptoide.pt.model.v7;
+package cm.aptoide.pt.dataprovider.model.v7;
 
-import cm.aptoide.pt.model.v7.listapp.File;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;

@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.exception;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.utils.BaseException;
 
 /**

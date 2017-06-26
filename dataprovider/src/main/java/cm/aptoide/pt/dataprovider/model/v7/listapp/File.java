@@ -3,9 +3,9 @@
  * Modified by Neurophobic Animal on 07/06/2016.
  */
 
-package cm.aptoide.pt.model.v7.listapp;
+package cm.aptoide.pt.dataprovider.model.v7.listapp;
 
-import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import lombok.Data;
 
 /**

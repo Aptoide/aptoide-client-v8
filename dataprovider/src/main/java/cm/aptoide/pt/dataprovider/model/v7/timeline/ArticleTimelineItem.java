@@ -3,7 +3,7 @@
  * Modified on 06/07/2016.
  */
 
-package cm.aptoide.pt.model.v7.timeline;
+package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

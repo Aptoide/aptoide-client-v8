@@ -3,7 +3,7 @@
  * Modified by Neurophobic Animal on 12/05/2016.
  */
 
-package cm.aptoide.pt.model.v7.store;
+package cm.aptoide.pt.dataprovider.model.v7.store;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

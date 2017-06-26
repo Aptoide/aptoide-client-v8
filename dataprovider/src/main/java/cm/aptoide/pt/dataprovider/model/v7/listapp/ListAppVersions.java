@@ -3,9 +3,9 @@
  * Modified on 18/08/2016.
  */
 
-package cm.aptoide.pt.model.v7.listapp;
+package cm.aptoide.pt.dataprovider.model.v7.listapp;
 
-import cm.aptoide.pt.model.v7.BaseV7EndlessListResponse;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessListResponse;
 import lombok.EqualsAndHashCode;
 
 /**

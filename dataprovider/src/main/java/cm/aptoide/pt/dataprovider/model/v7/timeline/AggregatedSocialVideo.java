@@ -1,7 +1,7 @@
-package cm.aptoide.pt.model.v7.timeline;
+package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

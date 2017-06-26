@@ -3,9 +3,9 @@
  * Modified by Neurophobic Animal on 22/04/2016.
  */
 
-package cm.aptoide.pt.model.v7;
+package cm.aptoide.pt.dataprovider.model.v7;
 
-import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

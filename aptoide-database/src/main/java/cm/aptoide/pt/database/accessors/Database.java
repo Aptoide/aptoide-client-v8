@@ -50,7 +50,7 @@ public final class Database {
     if (isInitialized) return;
 
     //StringBuilder strBuilder = new StringBuilder(KEY);
-    //strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
+    //strBuilder.append(extract(cm.aptoide.pt.dataprovider.model.BuildConfig.APPLICATION_ID));
     //strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
     //strBuilder.append(extract(BuildConfig.APPLICATION_ID));
     //strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));

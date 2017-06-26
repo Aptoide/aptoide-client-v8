@@ -10,8 +10,8 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -126,7 +126,7 @@ public class StoreUtilsProxy {
         .toCompletable();
   }
 
-  private void saveStore(cm.aptoide.pt.model.v7.store.Store storeData,
+  private void saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
       GetStoreMetaRequest getStoreMetaRequest, StoreAccessor storeAccessor) {
     Store store = new Store();
 

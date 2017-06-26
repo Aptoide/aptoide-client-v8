@@ -3,9 +3,9 @@
  * Modified by Marcelo Benites on 01/07/2016.
  */
 
-package cm.aptoide.pt.model.v7.timeline;
+package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
