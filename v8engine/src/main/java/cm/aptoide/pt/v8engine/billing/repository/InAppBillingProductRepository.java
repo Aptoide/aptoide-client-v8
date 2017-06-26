@@ -82,7 +82,13 @@ public class InAppBillingProductRepository extends ProductRepository {
     return getServerSKUs(apiVersion, packageName, Collections.singletonList(sku), type,
         false).flatMap(
         response -> mapToProducts(apiVersion, packageName, developerPayload, response))
-        .map(products -> products.get(0));
+        .flatMap(products -> {
+          if (products.isEmpty()) {
+            return Single.error(
+                new RepositoryItemNotFoundException("No product found for sku: " + sku));
+          }
+          return Single.just(products.get(0));
+        });
   }
 
   private Single<List<Product>> mapToProducts(int apiVersion, String packageName,

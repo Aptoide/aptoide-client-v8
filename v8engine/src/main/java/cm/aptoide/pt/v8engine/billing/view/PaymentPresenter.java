@@ -191,6 +191,7 @@ public class PaymentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(__ -> view.buySelection()
+            .doOnNext(buySelection -> view.showLoading())
             .flatMapSingle(selection -> productProvider.getProduct())
             .flatMapCompletable(product -> getSelectedPaymentMethod(product).doOnSuccess(
                 payment -> paymentAnalytics.sendPaymentBuyButtonPressedEvent(product,
