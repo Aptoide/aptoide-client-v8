@@ -145,11 +145,11 @@ public class ManageUserFragment extends ImageLoaderFragment
     super.onDestroyView();
   }
 
-  @Override public void loadUserName(String name) {
+  @Override public void setUserName(String name) {
     userName.setText(name);
   }
 
-  @Override public void loadUserImage(String imagePath) {
+  @Override public void setUserImage(String imagePath) {
     loadImage(Uri.parse(imagePath));
   }
 

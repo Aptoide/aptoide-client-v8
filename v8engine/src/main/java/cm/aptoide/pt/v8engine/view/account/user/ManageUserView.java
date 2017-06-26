@@ -6,9 +6,9 @@ import rx.Observable;
 
 public interface ManageUserView extends View {
 
-  void loadUserName(String name);
+  void setUserName(String name);
 
-  void loadUserImage(String imagePath);
+  void setUserImage(String imagePath);
 
   void showLoadImageDialog();
 

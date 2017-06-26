@@ -68,9 +68,10 @@ public class ManageUserPresenter implements Presenter {
           }
         })
         .filter(data -> data != null)
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(data -> {
-          view.loadUserImage(data.getImagePathToView());
-          view.loadUserName(data.getName());
+          view.setUserImage(data.getImagePathToView());
+          view.setUserName(data.getName());
         }, err -> crashReport.log(err));
   }
 
