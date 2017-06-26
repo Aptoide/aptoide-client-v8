@@ -91,17 +91,17 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     viewPager.addOnPageChangeListener(presenter);
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
-  }
-
   @Override public void onDestroy() {
     if (viewPager != null) {
       viewPager.removeOnPageChangeListener(null);
       viewPager = null;
     }
     super.onDestroy();
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
   }
 
   @Override public void onDestroyView() {

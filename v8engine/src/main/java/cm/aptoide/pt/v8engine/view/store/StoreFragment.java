@@ -274,19 +274,19 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
-
-    setupSearch(menu);
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
           .getDefaultTheme()));
     }
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_search, menu);
+
+    setupSearch(menu);
   }
 
   protected void setupSearch(Menu menu) {

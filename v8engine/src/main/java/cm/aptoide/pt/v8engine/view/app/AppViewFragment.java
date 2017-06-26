@@ -628,9 +628,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           if (appAction != AppAction.INSTALL) {
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
                 (PermissionService) getContext())
-                .flatMap(success -> installManager.uninstall(getContext(), packageName,
-                    app.getFile()
-                        .getVername()))
+                .flatMap(success -> installManager.uninstall(packageName, app.getFile()
+                    .getVername()))
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
                 .subscribe(aVoid -> {
                 }, throwable -> throwable.printStackTrace()));

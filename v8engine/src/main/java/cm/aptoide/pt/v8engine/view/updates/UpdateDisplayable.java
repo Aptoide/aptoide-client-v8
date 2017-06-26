@@ -118,7 +118,7 @@ public class UpdateDisplayable extends Displayable {
           return Observable.just(true);
         })
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download)
+        .flatMap(success -> installManager.install(download)
             .doOnSubscribe(() -> setupEvents(download)));
   }
 

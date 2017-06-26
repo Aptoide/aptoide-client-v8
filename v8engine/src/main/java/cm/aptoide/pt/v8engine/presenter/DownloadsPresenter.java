@@ -110,6 +110,6 @@ public class DownloadsPresenter implements Presenter {
   }
 
   public void pauseInstall(Context context, DownloadsView.DownloadViewModel download) {
-    installManager.stopInstallation(context, download.getAppMd5());
+    installManager.stopInstallation(download.getAppMd5());
   }
 }

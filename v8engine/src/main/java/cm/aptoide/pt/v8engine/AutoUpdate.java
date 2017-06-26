@@ -150,8 +150,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           permissionManager.requestDownloadAccess(activity)
               .flatMap(
                   permissionGranted -> permissionManager.requestExternalStoragePermission(activity))
-              .flatMap(success -> installManager.install(activity,
-                  downloadFactory.create(autoUpdateInfo)))
+              .flatMap(success -> installManager.install(downloadFactory.create(autoUpdateInfo)))
               .filter(progress -> !isDownloading(progress))
               .first()
               .subscribe(progress -> {
