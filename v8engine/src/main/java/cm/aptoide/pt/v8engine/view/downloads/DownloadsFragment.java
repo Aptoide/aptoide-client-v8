@@ -92,11 +92,15 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 
+    return view;
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
     attachPresenter(
         new DownloadsPresenter(this, RepositoryFactory.getDownloadRepository(), installManager),
         savedInstanceState);
-
-    return view;
   }
 
   @UiThread @Override public void showActiveDownloads(List<Download> downloads) {
