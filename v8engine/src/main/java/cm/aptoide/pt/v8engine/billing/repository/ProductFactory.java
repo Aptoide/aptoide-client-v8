@@ -45,7 +45,7 @@ public class ProductFactory {
   }
 
   public List<Product> create(int apiVersion, String developerPayload, String packageName,
-      InAppBillingSkuDetailsResponse response, int packageVersionCode) {
+      InAppBillingSkuDetailsResponse response, int packageVersionCode, String applicationName) {
 
     final PaymentServiceResponse paymentServiceResponse =
         getPaymentServiceResponse(response.getPaymentServices());
@@ -77,7 +77,7 @@ public class ProductFactory {
           purchaseDataObject.getDescription(), apiVersion, purchaseDataObject.getProductId(),
           packageName, developerPayload, purchaseDataObject.getType(),
           new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(), sign,
-              taxRate), packageVersionCode));
+              taxRate), packageVersionCode, applicationName));
     }
 
     return products;

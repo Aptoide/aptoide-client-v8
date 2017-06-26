@@ -93,9 +93,10 @@ public class InAppBillingProductRepository extends ProductRepository {
 
   private Single<List<Product>> mapToProducts(int apiVersion, String packageName,
       String developerPayload, InAppBillingSkuDetailsResponse response) {
-    return packageRepository.getPackageVersionCode(packageName)
-        .map(packageVersionCode -> productFactory.create(apiVersion, developerPayload, packageName,
-            response, packageVersionCode));
+    return Single.zip(packageRepository.getPackageVersionCode(packageName),
+        packageRepository.getPackageLabel(packageName),
+        (packageVersionCode, applicationName) -> productFactory.create(apiVersion, developerPayload,
+            packageName, response, packageVersionCode, applicationName));
   }
 
   public Single<List<Product>> getProducts(int apiVersion, String packageName, List<String> skus,

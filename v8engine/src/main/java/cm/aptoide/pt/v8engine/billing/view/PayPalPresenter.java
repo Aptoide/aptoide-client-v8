@@ -3,9 +3,13 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.Product;
+import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
+import java.util.Locale;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class PayPalPresenter implements Presenter {
@@ -75,11 +79,22 @@ public class PayPalPresenter implements Presenter {
         .flatMapSingle(created -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(product -> view.showPayPal(product.getPrice()
-            .getCurrency(), product.getDescription(), product.getPrice()
+            .getCurrency(), getPaymentDescription(product), product.getPrice()
             .getAmount()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> hideLoadingAndShowError(throwable));
+  }
+
+  private String getPaymentDescription(Product product) {
+    if (product instanceof InAppProduct) {
+      return String.format(Locale.US, "%s - %s", ((InAppProduct) product).getApplicationName(),
+          product.getTitle());
+    } else if (product instanceof PaidAppProduct) {
+      return product.getTitle();
+    }
+    throw new IllegalArgumentException(
+        "Can NOT provide PayPal payment description. Unknown product.");
   }
 
   private void dismissOnPayPalError(PayPalView.PayPalResult result) {
