@@ -14,13 +14,13 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -78,7 +78,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
           return WSWidgetsUtils.loadWidgetNode(wsWidget,
               StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
               idsRepository.getUniqueIdentifier(),
-              DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+              AdNetworkUtils.isGooglePlayServicesAvailable(
                   getContext().getApplicationContext()), V8Engine.getConfiguration()
                   .getPartnerId(), accountManager.isAccountMature(), bodyInterceptor, httpClient,
               converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(

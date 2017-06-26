@@ -3,9 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import cm.aptoide.pt.dataprovider.model.v7.GetMySubscribedStoresResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -30,8 +28,7 @@ public class GetMySubscribedStoresRequest
     return interfaces.getMySubscribedStores(bypassCache, body);
   }
 
-  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody
-      implements Endless {
+  public static class Body extends BaseBody implements Endless {
 
     Sort sort;
     private Integer limit;
@@ -41,6 +38,46 @@ public class GetMySubscribedStoresRequest
 
     public Body(String accessToken) {
       setAccessToken(accessToken);
+    }
+
+    public Sort getSort() {
+      return sort;
+    }
+
+    public void setSort(Sort sort) {
+      this.sort = sort;
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
+    }
+
+    public void setLimit(Integer limit) {
+      this.limit = limit;
+    }
+
+    public Order getOrder() {
+      return order;
+    }
+
+    public void setOrder(Order order) {
+      this.order = order;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    public void setRefresh(boolean refresh) {
+      this.refresh = refresh;
     }
 
     public enum Sort {

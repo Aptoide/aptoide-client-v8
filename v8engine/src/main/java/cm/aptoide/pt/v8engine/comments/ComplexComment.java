@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.comments;
 
-import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import rx.Observable;
 
 public class ComplexComment extends Comment {

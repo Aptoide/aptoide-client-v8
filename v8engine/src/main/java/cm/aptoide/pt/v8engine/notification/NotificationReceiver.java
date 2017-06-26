@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import rx.Completable;
@@ -67,7 +67,7 @@ public class NotificationReceiver extends BroadcastReceiver {
   private void callDeepLink(Context context, Intent intent) {
     String trackUrl = intent.getStringExtra(NOTIFICATION_TRACK_URL);
     if (!TextUtils.isEmpty(trackUrl)) {
-      DataproviderUtils.knock(trackUrl);
+      AdNetworkUtils.knock(trackUrl);
     }
     String targetUrl = intent.getStringExtra(NOTIFICATION_TARGET_URL);
     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));

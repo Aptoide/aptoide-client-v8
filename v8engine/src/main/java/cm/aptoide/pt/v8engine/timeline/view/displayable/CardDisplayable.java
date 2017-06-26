@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.WindowManager;
-import cm.aptoide.pt.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;

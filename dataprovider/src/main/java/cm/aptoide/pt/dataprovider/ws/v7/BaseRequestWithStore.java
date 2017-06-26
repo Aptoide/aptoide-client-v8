@@ -8,7 +8,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -25,10 +24,26 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
   }
 
   public static class StoreCredentials {
-    @Getter private final Long id;
-    @Getter private final String name;
-    @Getter private final String username;
-    @Getter private final String passwordSha1;
+    private final Long id;
+    private final String name;
+    private final String username;
+    private final String passwordSha1;
+
+    public Long getId() {
+      return id;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getUsername() {
+      return username;
+    }
+
+    public String getPasswordSha1() {
+      return passwordSha1;
+    }
 
     public StoreCredentials() {
       this.name = null;

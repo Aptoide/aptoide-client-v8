@@ -12,7 +12,8 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.Collections;
 import java.util.List;
@@ -99,7 +100,7 @@ public class UpdateRepository {
 
   private Completable saveNewUpdates(List<App> updates) {
     return Completable.fromSingle(Observable.from(updates)
-        .map(app -> new Update(app))
+        .map(app -> mapAppUpdate(app))
         .toList()
         .toSingle()
         .flatMap(updateList -> {
@@ -107,6 +108,46 @@ public class UpdateRepository {
               updateList.size()));
           return saveNonExcludedUpdates(updateList);
         }));
+  }
+
+  private Update mapAppUpdate(App app) {
+
+    final Obb obb = app.getObb();
+
+    String mainObbFileName = null;
+    String mainObbPath = null;
+    String mainObbMd5 = null;
+    String patchObbFileName = null;
+    String patchObbPath = null;
+    String patchObbMd5 = null;
+
+    if (obb != null) {
+      final Obb.ObbItem mainObb = obb.getMain();
+      final Obb.ObbItem patchObb = obb.getPatch();
+      if (mainObb != null) {
+        mainObbFileName = mainObb.getFilename();
+        mainObbPath = mainObb.getPath();
+        mainObbMd5 = mainObb.getMd5sum();
+      }
+
+      if (patchObb != null) {
+        patchObbFileName = patchObb.getFilename();
+        patchObbPath = patchObb.getPath();
+        patchObbMd5 = patchObb.getMd5sum();
+      }
+    }
+
+    return new Update(app.getId(), app.getName(), app.getIcon(), app.getPackageName(), app.getFile()
+        .getMd5sum(), app.getFile()
+        .getPath(), app.getFile()
+        .getFilesize(), app.getFile()
+        .getVername(), app.getFile()
+        .getPathAlt(), app.getFile()
+        .getVercode(), app.getFile()
+        .getMalware()
+        .getRank()
+        .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
+        patchObbMd5);
   }
 
   public Completable removeAll(List<Update> updates) {

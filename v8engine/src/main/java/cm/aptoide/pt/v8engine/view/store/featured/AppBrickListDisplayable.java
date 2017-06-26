@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.view.store.featured;
 
 import android.support.annotation.LayoutRes;
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;

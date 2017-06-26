@@ -7,9 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.content.res.Resources;
 import android.view.WindowManager;
-import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import lombok.Data;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -46,11 +45,19 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
     APPS_GROUP, MY_STORES_SUBSCRIBED, STORES_RECOMMENDED, STORES_GROUP
   }
 
-  @Data protected static class GridSizeObject {
+  protected static class GridSizeObject {
 
     private int grid_row_size;
 
     public GridSizeObject(int grid_row_size) {
+      this.grid_row_size = grid_row_size;
+    }
+
+    public int getGrid_row_size() {
+      return grid_row_size;
+    }
+
+    public void setGrid_row_size(int grid_row_size) {
       this.grid_row_size = grid_row_size;
     }
   }
