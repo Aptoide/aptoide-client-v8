@@ -31,7 +31,8 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     }
     args.put("mode", "json");
     args.put("limit", "1");
-    args.put("lang", AptoideUtils.SystemU.getCountryCode());
+    //args.put("lang", AptoideUtils.SystemU.getCountryCode());
+    args.put("lang", ManagerPreferences.getLanguage());
 
     if (BuildConfig.DEBUG || ManagerPreferences.isDebug()) {
       String notificationType = ManagerPreferences.getNotificationType();
