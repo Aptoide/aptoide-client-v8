@@ -15,6 +15,9 @@ import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.model.v7.timeline.VideoTimelineItem;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.social.data.publisher.AptoidePublisher;
+import cm.aptoide.pt.v8engine.social.data.publisher.MediaPublisher;
+import cm.aptoide.pt.v8engine.social.data.publisher.PublisherAvatar;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +43,9 @@ public class TimelineResponseCardMapper {
         final Article article = ((ArticleTimelineItem) item).getData();
         cards.add(new Media(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
             article.getDate(), article.getApps()
-            .get(0), abUrl, article.getPublisher()
-            .getLogoUrl(), article.getPublisher()
-            .getName(), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+            .get(0), abUrl, new MediaPublisher(article.getPublisher()
+            .getName(), new PublisherAvatar(article.getPublisher()
+            .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher()
                 .getBaseUrl()),
             linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
@@ -52,9 +55,9 @@ public class TimelineResponseCardMapper {
         cards.add(
             new Media(video.getCardId(), video.getTitle(), video.getThumbnailUrl(), video.getDate(),
                 video.getApps()
-                    .get(0), abUrl, video.getPublisher()
-                .getLogoUrl(), video.getPublisher()
-                .getName(), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                    .get(0), abUrl, new MediaPublisher(video.getPublisher()
+                .getName(), new PublisherAvatar(video.getPublisher()
+                .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
                 video.getPublisher()
                     .getBaseUrl()),
                 linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
@@ -68,7 +71,8 @@ public class TimelineResponseCardMapper {
             .getName(), recommendation.getRecommendedApp()
             .getIcon(), recommendation.getSimilarApps()
             .get(0)
-            .getName(), recommendation.getTimestamp(), abUrl, CardType.RECOMMENDATION));
+            .getName(), new AptoidePublisher(), recommendation.getTimestamp(), abUrl,
+            CardType.RECOMMENDATION));
       } else if (item instanceof StoreLatestAppsTimelineItem) {
         final StoreLatestApps store = ((StoreLatestAppsTimelineItem) item).getData();
         cards.add(new cm.aptoide.pt.v8engine.social.data.StoreLatestApps(store.getCardId(),

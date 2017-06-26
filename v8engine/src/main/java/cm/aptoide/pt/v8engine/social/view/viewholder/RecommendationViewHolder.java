@@ -64,9 +64,8 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
 
   @Override public void setCard(Recommendation card, int position) {
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(Application.getConfiguration()
-            .getIcon(), headerIcon);
-    this.headerTitle.setText(getStyledTitle(itemView.getContext()));
+        .loadWithShadowCircleTransform(card.getPublisherDrawableId(), headerIcon);
+    this.headerTitle.setText(getStyledTitle(itemView.getContext(), card));
     this.headerSubTitle.setText(
         getTimeSinceRecommendation(itemView.getContext(), card.getTimestamp()));
     ImageLoader.with(itemView.getContext())
@@ -85,11 +84,10 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
     return dateCalculator.getTimeSinceDate(context, timestamp);
   }
 
-  private Spannable getStyledTitle(Context context) {
-    String aptoide = Application.getConfiguration()
-        .getMarketName();
+  private Spannable getStyledTitle(Context context, Recommendation card) {
     return spannableFactory.createColorSpan(getTitle(context.getResources()),
-        ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
+        ContextCompat.getColor(context, R.color.appstimeline_recommends_title),
+        card.getPublisherName());
   }
 
   public String getTitle(Resources resources) {

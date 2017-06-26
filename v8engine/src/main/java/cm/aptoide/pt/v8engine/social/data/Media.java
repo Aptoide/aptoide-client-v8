@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.link.Link;
+import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
 import java.util.Date;
 
 /**
@@ -22,8 +23,8 @@ public class Media implements Post {
   private final CardType cardType;
 
   public Media(String cardId, String mediaTitle, String mediaThumbnailUrl, Date date, App app,
-      String abTestURL, String publisherAvatarURL, String publisherName, Link publisherLink,
-      Link mediaLink, CardType cardType) {
+      String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink,
+      CardType cardType) {
     this.cardId = cardId;
     this.mediaTitle = mediaTitle;
     this.mediaThumbnailUrl = mediaThumbnailUrl;
@@ -31,8 +32,8 @@ public class Media implements Post {
     this.relatedApp = app;
     this.abTestURL = abTestURL;
     this.publisherLink = publisherLink;
-    this.publisherAvatarURL = publisherAvatarURL;
-    this.publisherName = publisherName;
+    this.publisherAvatarURL = publisher.getPublisherAvatar().getAvatarUrl();
+    this.publisherName = publisher.getPublisherName();
     this.mediaLink = mediaLink;
     this.cardType = cardType;
   }

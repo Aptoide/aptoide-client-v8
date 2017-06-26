@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
 import java.util.Date;
 
 /**
@@ -11,6 +12,8 @@ public class Recommendation implements Post {
   private final String appName;
   private final String appIcon;
   private final String relatedToAppName;
+  private final String publisherName;
+  private final int publisherDrawableId;
   private final Date timestamp;
   private final CardType cardType;
   private final String packageName;
@@ -18,12 +21,16 @@ public class Recommendation implements Post {
   private final long appId;
 
   public Recommendation(String cardId, long appId, String packageName, String appName,
-      String appIcon, String relatedToAppName, Date timestamp, String abUrl, CardType cardType) {
+      String appIcon, String relatedToAppName, Publisher publisher, Date timestamp, String abUrl,
+      CardType cardType) {
     this.cardId = cardId;
     this.appId = appId;
     this.packageName = packageName;
     this.appName = appName;
     this.appIcon = appIcon;
+    this.publisherName = publisher.getPublisherName();
+    this.publisherDrawableId = publisher.getPublisherAvatar()
+        .getDrawableId();
     this.relatedToAppName = relatedToAppName;
     this.timestamp = timestamp;
     this.abUrl = abUrl;
@@ -64,5 +71,13 @@ public class Recommendation implements Post {
 
   @Override public CardType getType() {
     return this.cardType;
+  }
+
+  public String getPublisherName() {
+    return publisherName;
+  }
+
+  public int getPublisherDrawableId() {
+    return publisherDrawableId;
   }
 }

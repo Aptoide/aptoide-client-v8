@@ -6,9 +6,9 @@ package cm.aptoide.pt.v8engine.social.data.publisher;
 
 public class MediaPublisher implements Publisher {
   private final String mediaName;
-  private final String mediaAvatar;
+  private final PublisherAvatar mediaAvatar;
 
-  public MediaPublisher(String mediaName, String mediaAvatar) {
+  public MediaPublisher(String mediaName, PublisherAvatar mediaAvatar) {
     this.mediaName = mediaName;
     this.mediaAvatar = mediaAvatar;
   }
@@ -17,7 +17,7 @@ public class MediaPublisher implements Publisher {
     return this.mediaName;
   }
 
-  @Override public String getPublisherAvatar() {
+  @Override public PublisherAvatar getPublisherAvatar() {
     return this.mediaAvatar;
   }
 }
