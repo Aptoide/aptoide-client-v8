@@ -6,21 +6,21 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
@@ -52,6 +52,7 @@ public class InstalledIntentService extends IntentService {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
+  private MinimalAdMapper adMapper;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -59,8 +60,7 @@ public class InstalledIntentService extends IntentService {
 
   @Override public void onCreate() {
     super.onCreate();
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getApplicationContext()).getAccountManager();
+    adMapper = new MinimalAdMapper();
     sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
     qManager = ((V8Engine) getApplicationContext()).getQManager();
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
@@ -180,7 +180,7 @@ public class InstalledIntentService extends IntentService {
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
         event.setPhoneRooted(RootShell.isRootAvailable());
-        event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
+        event.setResultStatus(Result.ResultStatus.SUCC);
         analytics.sendEvent(event);
         return;
       }
@@ -255,7 +255,7 @@ public class InstalledIntentService extends IntentService {
     return Completable.fromCallable(() -> {
       ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer(),
           getApplicationContext());
-      DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+      AdNetworkUtils.knockCpi(adMapper.map(storeMinimalAd));
       storedMinimalAdAccessor.remove(storeMinimalAd);
       return null;
     });
@@ -266,7 +266,7 @@ public class InstalledIntentService extends IntentService {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
             adsRepository, httpClient, converterFactory, qManager, getApplicationContext(),
-            sharedPreferences))
+            sharedPreferences, new MinimalAdMapper()))
         .toCompletable();
   }
 }

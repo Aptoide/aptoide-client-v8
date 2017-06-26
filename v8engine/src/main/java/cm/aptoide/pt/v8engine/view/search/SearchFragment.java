@@ -25,7 +25,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;

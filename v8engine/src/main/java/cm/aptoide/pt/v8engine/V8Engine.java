@@ -42,8 +42,13 @@ import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
+import cm.aptoide.pt.dataprovider.cache.L2Cache;
+import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
+import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -52,11 +57,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
-import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheInterceptor;
-import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -80,6 +80,7 @@ import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
 import cm.aptoide.pt.v8engine.account.RefreshTokenInvalidatorFactory;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
@@ -536,7 +537,7 @@ public abstract class V8Engine extends Application {
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
-          new InstallerFactory().create(this, installerType), getDefaultSharedPreferences(),
+          new InstallerFactory(new MinimalAdMapper()).create(this, installerType), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()));
       installManagers.put(installerType, installManager);
@@ -1097,9 +1098,9 @@ public abstract class V8Engine extends Application {
           getApplicationContext(),
           (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
           getVersionCodeProvider(),
-          (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context),
+          (context) -> AdNetworkUtils.isGooglePlayServicesAvailable(context),
           () -> V8Engine.getConfiguration()
-              .getPartnerId());
+              .getPartnerId(), new MinimalAdMapper());
     }
     return adsRepository;
   }

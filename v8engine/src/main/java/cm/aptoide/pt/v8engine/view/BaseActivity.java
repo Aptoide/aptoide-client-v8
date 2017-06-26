@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
@@ -45,7 +45,7 @@ public abstract class BaseActivity extends PermissionServiceActivity {
 
   private void setUpAnalytics() {
     Analytics.Dimensions.setGmsPresent(
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
+        AdNetworkUtils.isGooglePlayServicesAvailable(this));
   }
 
   @Override protected void onStart() {

@@ -15,7 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;

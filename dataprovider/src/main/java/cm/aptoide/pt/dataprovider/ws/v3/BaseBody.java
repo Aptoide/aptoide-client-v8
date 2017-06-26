@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 
 public class BaseBody extends HashMapNotNull<String, Object> {
 

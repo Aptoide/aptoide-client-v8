@@ -20,11 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -33,8 +28,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by neuro on 22-04-2016.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class ListAppsUpdatesRequest
-    extends V7<ListAppsUpdates, ListAppsUpdatesRequest.Body> {
+public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesRequest.Body> {
 
   private static final String TAG = ListAppsUpdatesRequest.class.getName();
 
@@ -129,16 +123,18 @@ import rx.schedulers.Schedulers;
   }
 
   private Body getBody(List<ApksData> apksData, int n, SharedPreferences sharedPreferences) {
-    return new Body(body, sharedPreferences).setApksData(apksData.subList(n,
+    Body resultBody = new Body(body, sharedPreferences);
+    resultBody.setApksData(apksData.subList(n,
         n + SPLIT_SIZE > apksData.size() ? n + apksData.size() % SPLIT_SIZE : n + SPLIT_SIZE));
+    return resultBody;
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey {
+  public static class Body extends BaseBodyWithAlphaBetaKey {
 
-    @Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;
-    @Getter private List<Long> storeIds;
-    @Setter @Getter private String aaid;
-    @Getter private String notPackageTags;
+    private List<ApksData> apksData;
+    private String aaid;
+    private List<Long> storeIds;
+    private String notPackageTags;
 
     public Body(List<ApksData> apksData, List<Long> storeIds, String aaid,
         SharedPreferences sharedPreferences) {
@@ -166,6 +162,30 @@ import rx.schedulers.Schedulers;
       this.setMature(body.isMature());
     }
 
+    public List<Long> getStoreIds() {
+      return storeIds;
+    }
+
+    public String getNotPackageTags() {
+      return notPackageTags;
+    }
+
+    public List<ApksData> getApksData() {
+      return apksData;
+    }
+
+    public void setApksData(List<ApksData> apksData) {
+      this.apksData = apksData;
+    }
+
+    public String getAaid() {
+      return aaid;
+    }
+
+    public void setAaid(String aaid) {
+      this.aaid = aaid;
+    }
+
     private void setSystemAppsUpdates(SharedPreferences sharedPreferences) {
       if (!ManagerPreferences.getUpdatesSystemAppsKey(sharedPreferences)) {
         this.notPackageTags = "system";
@@ -175,14 +195,26 @@ import rx.schedulers.Schedulers;
 
   public static class ApksData {
 
-    @Getter @JsonProperty("package") private String packageName;
-    @Getter private int vercode;
-    @Getter private String signature;
+    @JsonProperty("package") private String packageName;
+    private int vercode;
+    private String signature;
 
     public ApksData(String packageName, int vercode, String signature) {
       this.packageName = packageName;
       this.vercode = vercode;
       this.signature = signature;
+    }
+
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public int getVercode() {
+      return vercode;
+    }
+
+    public String getSignature() {
+      return signature;
     }
   }
 }

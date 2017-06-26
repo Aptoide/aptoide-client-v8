@@ -4,9 +4,6 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetFollowers;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -47,13 +44,28 @@ public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Bo
     return interfaces.getTimelineFollowers(body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody
-      implements Endless {
+  public static class Body extends BaseBody implements Endless {
 
+    private Long userId;
+    private Long storeId;
     private int limit = 25;
     private int offset;
-    @Setter @Getter private Long userId;
-    @Setter @Getter private Long storeId;
+
+    public Long getUserId() {
+      return userId;
+    }
+
+    public void setUserId(Long userId) {
+      this.userId = userId;
+    }
+
+    public Long getStoreId() {
+      return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+      this.storeId = storeId;
+    }
 
     @Override public int getOffset() {
       return offset;

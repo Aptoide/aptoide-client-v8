@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;

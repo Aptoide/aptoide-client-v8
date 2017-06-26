@@ -31,7 +31,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.SetComment;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;

@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.utils.AptoideUtils;

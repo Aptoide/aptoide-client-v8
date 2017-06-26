@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 
 /**
@@ -20,7 +20,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
             DownloadEvent.class);
     if (report != null) {
-      report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.FAIL);
+      report.setResultStatus(Result.ResultStatus.FAIL);
       report.setError(throwable);
       analytics.sendEvent(report);
     }

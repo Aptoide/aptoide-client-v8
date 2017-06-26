@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.v8engine.billing.PaymentConfirmation;
 
 public class PaymentConfirmationFactory {

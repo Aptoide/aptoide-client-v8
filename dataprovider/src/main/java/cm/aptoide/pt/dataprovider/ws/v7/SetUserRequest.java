@@ -6,8 +6,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -55,7 +53,7 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
     return interfaces.setUser(body);
   }
 
-  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  public static class Body extends BaseBody {
 
     public String user_access;
     public UserProperties userProperties;
@@ -64,13 +62,37 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
       this.user_access = user_access;
       userProperties = new UserProperties(userName);
     }
+
+    public String getUser_access() {
+      return user_access;
+    }
+
+    public void setUser_access(String user_access) {
+      this.user_access = user_access;
+    }
+
+    public UserProperties getUserProperties() {
+      return userProperties;
+    }
+
+    public void setUserProperties(UserProperties userProperties) {
+      this.userProperties = userProperties;
+    }
   }
 
-  @Data public static class UserProperties {
+  public static class UserProperties {
 
     private String name;
 
     public UserProperties(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
       this.name = name;
     }
   }

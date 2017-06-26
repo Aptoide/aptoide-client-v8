@@ -3,7 +3,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -42,7 +41,7 @@ public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Bod
     return interfaces.shareCard(body, body.getAccessToken());
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  public static class Body extends BaseBody {
 
     private final String cardUid;
     private final Long storeId;

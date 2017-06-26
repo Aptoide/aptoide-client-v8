@@ -11,11 +11,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -23,7 +18,7 @@ import rx.Observable;
 /**
  * Created by neuro on 22-04-2016.
  */
-@EqualsAndHashCode(callSuper = true) public class GetAppRequest
+public class GetAppRequest
     extends V7<GetApp, GetAppRequest.Body> {
 
   private GetAppRequest(String baseHost, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
@@ -97,15 +92,43 @@ import rx.Observable;
     return interfaces.getApp(body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithApp {
+  public static class Body extends BaseBodyWithApp {
 
-    @Getter private Long appId;
-    @Getter private String packageName;
-    @Getter private boolean refresh;
-    @Setter @JsonProperty("package_uname") private String uname;
-    @Getter @JsonProperty("apk_md5sum") private String md5;
-    @Getter @JsonProperty("store_name") private String storeName;
-    @Getter private Node nodes;
+    private Long appId;
+    private String packageName;
+    private boolean refresh;
+    @JsonProperty("package_uname") private String uname;
+    @JsonProperty("apk_md5sum") private String md5;
+    @JsonProperty("store_name") private String storeName;
+    private Node nodes;
+
+    public Long getAppId() {
+      return appId;
+    }
+
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    public String getUname() {
+      return uname;
+    }
+
+    public String getMd5() {
+      return md5;
+    }
+
+    public String getStoreName() {
+      return storeName;
+    }
+
+    public Node getNodes() {
+      return nodes;
+    }
 
     public Body(Long appId, Boolean refresh, String packageName,
         SharedPreferences sharedPreferences) {
@@ -151,22 +174,56 @@ import rx.Observable;
       this.appId = appId;
     }
 
-    @Data private static class Node {
+    private static class Node {
 
       private Meta meta;
       private Versions versions;
 
+      public Meta getMeta() {
+        return meta;
+      }
+
+      public void setMeta(Meta meta) {
+        this.meta = meta;
+      }
+
+      public Versions getVersions() {
+        return versions;
+      }
+
+      public void setVersions(Versions versions) {
+        this.versions = versions;
+      }
+
       public Node(long appId, String packageName) {
-        this.meta = new Meta().setAppId(appId);
-        this.versions = new Versions().setPackageName(packageName);
+        this.meta = new Meta();
+        this.meta.setAppId(appId);
+        this.versions = new Versions();
+        this.versions.setPackageName(packageName);
       }
 
-      @Data @Accessors(chain = true) private static class Meta {
+      private static class Meta {
         private long appId;
+
+        public long getAppId() {
+          return appId;
+        }
+
+        public void setAppId(long appId) {
+          this.appId = appId;
+        }
       }
 
-      @Data @Accessors(chain = true) private static class Versions {
+      private static class Versions {
         private String packageName;
+
+        public String getPackageName() {
+          return packageName;
+        }
+
+        public void setPackageName(String packageName) {
+          this.packageName = packageName;
+        }
       }
     }
   }

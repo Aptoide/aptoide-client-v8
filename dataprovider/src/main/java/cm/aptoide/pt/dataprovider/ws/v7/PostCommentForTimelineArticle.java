@@ -8,9 +8,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -56,13 +53,11 @@ public class PostCommentForTimelineArticle
     return interfaces.postTimelineComment(body, true);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  public static class Body extends BaseBody {
 
     @JsonProperty("card_uid") private String timelineArticleId;
     @JsonProperty("comment_id") private Long previousCommentId;
     private String body;
-    //private String commentType = CommentType.TIMELINE.name();
 
     public Body(String timelineArticleId, String text, long previousCommentId) {
       this(timelineArticleId, text);
@@ -72,6 +67,30 @@ public class PostCommentForTimelineArticle
     public Body(String timelineArticleId, String text) {
       this.timelineArticleId = timelineArticleId;
       this.body = text;
+    }
+
+    public String getTimelineArticleId() {
+      return timelineArticleId;
+    }
+
+    public void setTimelineArticleId(String timelineArticleId) {
+      this.timelineArticleId = timelineArticleId;
+    }
+
+    public Long getPreviousCommentId() {
+      return previousCommentId;
+    }
+
+    public void setPreviousCommentId(Long previousCommentId) {
+      this.previousCommentId = previousCommentId;
+    }
+
+    public String getBody() {
+      return body;
+    }
+
+    public void setBody(String body) {
+      this.body = body;
     }
   }
 }

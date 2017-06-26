@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.model.v3.PaymentServiceResponse;
+import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Price;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;

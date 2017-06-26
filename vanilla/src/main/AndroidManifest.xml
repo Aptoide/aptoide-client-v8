@@ -108,7 +108,7 @@
           android:name="android.content.SyncAdapter"
           android:resource="@xml/sync"/>
       <meta-data
-          android:name="cm.aptoide.pt.dataprovider.image.GlideModifications"
+          android:name="cm.aptoide.pt.v8engine.networking.image.GlideModifications"
           android:value="GlideModule"/>
     </service>
   </application>

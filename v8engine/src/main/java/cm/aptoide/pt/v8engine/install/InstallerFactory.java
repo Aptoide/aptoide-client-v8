@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
@@ -27,6 +28,11 @@ public class InstallerFactory {
 
   public static final int DEFAULT = 0;
   public static final int ROLLBACK = 1;
+  private final MinimalAdMapper adMapper;
+
+  public InstallerFactory(MinimalAdMapper adMapper) {
+    this.adMapper = adMapper;
+  }
 
   public Installer create(Context context, int type) {
     switch (type) {
@@ -55,6 +61,6 @@ public class InstallerFactory {
   @NonNull private DownloadInstallationProvider getInstallationProvider(
       AptoideDownloadManager downloadManager) {
     return new DownloadInstallationProvider(downloadManager,
-        AccessorFactory.getAccessorFor(Download.class));
+        AccessorFactory.getAccessorFor(Download.class), adMapper);
   }
 }

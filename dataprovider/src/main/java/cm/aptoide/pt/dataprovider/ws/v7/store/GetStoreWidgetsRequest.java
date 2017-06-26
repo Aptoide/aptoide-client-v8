@@ -15,9 +15,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -25,7 +22,7 @@ import rx.Observable;
 /**
  * Created by neuro on 22-04-2016.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class GetStoreWidgetsRequest
+public class GetStoreWidgetsRequest
     extends BaseRequestWithStore<GetStoreWidgets, GetStoreWidgetsRequest.Body> {
 
   private final String url;
@@ -50,16 +47,20 @@ import rx.Observable;
         sharedPreferences);
   }
 
+  public String getUrl() {
+    return url;
+  }
+
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getStoreWidgets(url, body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {
+  public static class Body extends BaseBodyWithStore {
 
-    @Getter private WidgetsArgs widgetsArgs;
-    @Getter private StoreContext context;
-    @Getter private String storeName;
+    private WidgetsArgs widgetsArgs;
+    private StoreContext context;
+    private String storeName;
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
       super(storeCredentials);
@@ -72,6 +73,18 @@ import rx.Observable;
       this.widgetsArgs = widgetsArgs;
       this.context = storeContext;
       this.storeName = storeName;
+    }
+
+    public WidgetsArgs getWidgetsArgs() {
+      return widgetsArgs;
+    }
+
+    public StoreContext getContext() {
+      return context;
+    }
+
+    @Override public String getStoreName() {
+      return storeName;
     }
   }
 }
