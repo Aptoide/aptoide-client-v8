@@ -3,6 +3,7 @@ package cm.aptoide.pt.spotandshareapp.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.v8engine.view.ActivityView;
 
 public class MainActivity extends ActivityView implements MainActivityView {
 
