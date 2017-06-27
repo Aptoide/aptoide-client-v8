@@ -12,6 +12,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
+import cm.aptoide.pt.v8engine.FirstLaunchAnalytics;
 import cm.aptoide.pt.v8engine.V8Engine;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -215,6 +216,8 @@ public class Analytics {
         FacebookSdk.sdkInitialize(application);
         AppEventsLogger.activateApp(application);
         facebookLogger = AppEventsLogger.newLogger(application);
+        FirstLaunchAnalytics firstLaunchAnalytics =
+            new FirstLaunchAnalytics(facebookLogger, Analytics.getInstance());
         Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(((V8Engine) application).getIdsRepository()
               .getUniqueIdentifier());
@@ -224,6 +227,7 @@ public class Analytics {
                 SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
                     PreferenceManager.getDefaultSharedPreferences(application))))
             .doOnNext(__ -> setupDimensions(application))
+            .doOnCompleted(() -> firstLaunchAnalytics.sendFirstLaunchEvent())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
