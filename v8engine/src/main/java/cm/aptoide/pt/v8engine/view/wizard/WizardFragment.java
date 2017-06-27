@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -178,9 +179,9 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   }
 
   private void createRadioButtons() {
+    int size = AptoideUtils.ScreenU.getPixelsForDip(18, getResources());
     RadioGroup.LayoutParams layoutParams =
-        new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
-            RadioGroup.LayoutParams.WRAP_CONTENT);
+        new RadioGroup.LayoutParams(size, size);
 
     final int pages = viewPagerAdapter.getCount();
     wizardButtons = new ArrayList<>(pages);
