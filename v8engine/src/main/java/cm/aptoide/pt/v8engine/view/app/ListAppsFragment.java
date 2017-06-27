@@ -1,11 +1,11 @@
 package cm.aptoide.pt.v8engine.view.app;
 
-import cm.aptoide.pt.dataprovider.ws.v7.Endless;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.ws.v7.Endless;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.GetStoreEndlessFragment;
 import cm.aptoide.pt.v8engine.view.store.featured.AppBrickListDisplayable;

@@ -7,8 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

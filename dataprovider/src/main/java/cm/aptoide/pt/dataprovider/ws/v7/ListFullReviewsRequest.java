@@ -8,8 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -89,10 +89,12 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
     private String packageName;
     private String storeName;
     private Integer subLimit;
+
     public Body(boolean refresh, BaseRequestWithStore.StoreCredentials storeCredentials) {
       super(storeCredentials);
       this.refresh = refresh;
     }
+
     public Body(long storeId, int limit, int offset, boolean refresh,
         BaseRequestWithStore.StoreCredentials storeCredentials) {
       super(storeCredentials);
@@ -101,6 +103,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
       this.offset = offset;
       this.refresh = refresh;
     }
+
     public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh) {
 
       this.packageName = packageName;

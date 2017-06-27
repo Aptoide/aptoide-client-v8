@@ -7,8 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import okhttp3.OkHttpClient;
@@ -18,8 +18,7 @@ import rx.Observable;
 /**
  * Created by neuro on 22-04-2016.
  */
-public class GetAppRequest
-    extends V7<GetApp, GetAppRequest.Body> {
+public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
   private GetAppRequest(String baseHost, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -102,34 +101,6 @@ public class GetAppRequest
     @JsonProperty("store_name") private String storeName;
     private Node nodes;
 
-    public Long getAppId() {
-      return appId;
-    }
-
-    public String getPackageName() {
-      return packageName;
-    }
-
-    public boolean isRefresh() {
-      return refresh;
-    }
-
-    public String getUname() {
-      return uname;
-    }
-
-    public String getMd5() {
-      return md5;
-    }
-
-    public String getStoreName() {
-      return storeName;
-    }
-
-    public Node getNodes() {
-      return nodes;
-    }
-
     public Body(Long appId, Boolean refresh, String packageName,
         SharedPreferences sharedPreferences) {
       this(appId, sharedPreferences);
@@ -174,10 +145,45 @@ public class GetAppRequest
       this.appId = appId;
     }
 
+    public Long getAppId() {
+      return appId;
+    }
+
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    public String getUname() {
+      return uname;
+    }
+
+    public String getMd5() {
+      return md5;
+    }
+
+    public String getStoreName() {
+      return storeName;
+    }
+
+    public Node getNodes() {
+      return nodes;
+    }
+
     private static class Node {
 
       private Meta meta;
       private Versions versions;
+
+      public Node(long appId, String packageName) {
+        this.meta = new Meta();
+        this.meta.setAppId(appId);
+        this.versions = new Versions();
+        this.versions.setPackageName(packageName);
+      }
 
       public Meta getMeta() {
         return meta;
@@ -193,13 +199,6 @@ public class GetAppRequest
 
       public void setVersions(Versions versions) {
         this.versions = versions;
-      }
-
-      public Node(long appId, String packageName) {
-        this.meta = new Meta();
-        this.meta.setAppId(appId);
-        this.versions = new Versions();
-        this.versions.setPackageName(packageName);
       }
 
       private static class Meta {

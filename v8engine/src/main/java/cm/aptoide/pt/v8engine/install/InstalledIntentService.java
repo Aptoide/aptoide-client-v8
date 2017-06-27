@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -53,6 +54,7 @@ public class InstalledIntentService extends IntentService {
   private Converter.Factory converterFactory;
   private QManager qManager;
   private MinimalAdMapper adMapper;
+  private InstallAnalytics installAnalytics;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -74,6 +76,8 @@ public class InstalledIntentService extends IntentService {
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
+    installAnalytics =
+        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()));
   }
 
   @Override protected void onHandleIntent(Intent intent) {
@@ -152,6 +156,7 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
     installedRepository.save(new Installed(packageInfo, getPackageManager()));
+    installAnalytics.sendInstalledEvent(packageName);
     return packageInfo;
   }
 
@@ -184,6 +189,9 @@ public class InstalledIntentService extends IntentService {
         analytics.sendEvent(event);
         return;
       }
+
+      CrashReport.getInstance()
+          .log(new NullPointerException("Event is null."));
       return;
     }
 
@@ -203,7 +211,7 @@ public class InstalledIntentService extends IntentService {
         .first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
+      installAnalytics.sendRepalcedEvent(packageName);
     }
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
