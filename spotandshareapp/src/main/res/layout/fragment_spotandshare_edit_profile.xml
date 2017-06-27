@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+  <ImageView
+      android:id="@+id/actual_avatar"
+      android:layout_width="72dp"
+      android:layout_height="72dp"
+      android:layout_centerHorizontal="true"
+      android:layout_margin="20dp"
+      android:src="@drawable/unknown_avatar"
+      />
+
+  <EditText
+      android:id="@+id/username_edit_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/actual_avatar"
+      android:layout_gravity="center"
+      android:layout_marginBottom="20dp"
+      android:layout_marginLeft="20dp"
+      android:layout_marginRight="20dp"
+      />
+
+  <LinearLayout
+      android:id="@+id/first_row_avatar_options"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/username_edit_text"
+      android:gravity="center"
+      android:orientation="horizontal"
+      >
+
+    <ImageView
+        android:id="@+id/first_option_avatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="10dp"
+        android:background="@color/green"
+        />
+    <ImageView
+        android:id="@+id/second_option_avatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="10dp"
+        android:background="@color/aptoide_orange"
+        />
+    <ImageView
+        android:id="@+id/third_option_avatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="10dp"
+        android:background="@color/light_blue"
+        />
+  </LinearLayout>
+
+
+  <LinearLayout
+      android:id="@+id/second_row_avatar_options"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/first_row_avatar_options"
+      android:gravity="center"
+      android:orientation="horizontal"
+      >
+
+    <ImageView
+        android:id="@+id/fourth_option_avatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="10dp"
+        android:background="@color/amber"
+        />
+    <ImageView
+        android:id="@+id/fifth_option_avatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="10dp"
+        android:background="@color/grey_fog_normal"
+        />
+    <ImageView
+        android:id="@+id/sixth_option_avatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="10dp"
+        android:background="@color/teal_700"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:orientation="horizontal"
+      android:weightSum="1"
+      >
+
+    <Button
+        android:id="@+id/cancel_profile_edition_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="@string/spotandshare_button_cancel_profile_edition"
+        >
+
+    </Button>
+
+    <Button
+        android:id="@+id/save_profile_edition_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="@string/spotandshare_button_save_profile_edition"
+        >
+    </Button>
+
+  </LinearLayout>
+
+</RelativeLayout>

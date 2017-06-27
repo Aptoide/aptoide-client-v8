@@ -94,6 +94,7 @@ android {
 dependencies {
 
   compile project(path: ':v8engine', configuration: 'prodRelease')
+  compile project(':spotandshareandroid')
 }
 
 String getDate() {
