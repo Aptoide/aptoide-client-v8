@@ -68,6 +68,10 @@ public class ResponseCacheEntry {
     }
   }
 
+  public static String getDefaultCharset() {
+    return DEFAULT_CHARSET;
+  }
+
   //@JsonIgnore
   public Response getResponse(Request request) {
     Response.Builder builder = new Response.Builder();
@@ -99,10 +103,6 @@ public class ResponseCacheEntry {
 
   @JsonIgnore boolean isValid() {
     return System.currentTimeMillis() <= validity;
-  }
-
-  public static String getDefaultCharset() {
-    return DEFAULT_CHARSET;
   }
 
   public int getCode() {

@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
@@ -144,6 +144,39 @@ public class Analytics {
     }
   }
 
+  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
+    if (checkAcceptability(flags, FABRIC)) {
+      CustomEvent customEvent = new CustomEvent(event);
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
+      }
+      Answers.getInstance()
+          .logCustom(customEvent);
+      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    logFacebookEvents(eventName, parameters);
+  }
+
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
+    facebookLogger.logEvent(eventName, parameters);
+  }
+
   public void save(@NonNull String key, @NonNull Event event) {
     saver.save(key, event);
   }
@@ -168,38 +201,6 @@ public class Analytics {
     } else {
       logFacebookEvents(eventName, attributes);
     }
-  }
-
-  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
-    if (checkAcceptability(flags, FABRIC)) {
-      CustomEvent customEvent = new CustomEvent(event);
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
-      }
-      Answers.getInstance().logCustom(customEvent);
-      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    if (map != null) {
-      for (String s : map.keySet()) {
-        parameters.putString(s, map.get(s));
-      }
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
-    facebookLogger.logEvent(eventName, parameters);
   }
 
   public static class Lifecycle {

@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.analytics.events;
 
 import cm.aptoide.pt.v8engine.analytics.Event;
 import com.flurry.android.FlurryAgent;
-import java.util.HashMap;
 import java.util.Map;
 
 public class FlurryEvent implements Event {

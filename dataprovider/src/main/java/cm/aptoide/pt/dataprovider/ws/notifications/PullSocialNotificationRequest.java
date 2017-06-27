@@ -64,7 +64,9 @@ public class PullSocialNotificationRequest
         converterFactory);
   }
 
-  @Override protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(Service interfaces, boolean bypassCache) {
+  @Override
+  protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(Service interfaces,
+      boolean bypassCache) {
     return interfaces.getPullSocialNotifications(true, id, pretendedNotificationTypes, options);
   }
 }
