@@ -1,4 +1,4 @@
-package com.example.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -18,6 +18,6 @@ import static org.junit.Assert.assertEquals;
     // Context of the app under test.
     Context appContext = InstrumentationRegistry.getTargetContext();
 
-    assertEquals("com.example.spotandshareandroid.test", appContext.getPackageName());
+    assertEquals("cm.aptoide.pt.spotandshareandroid.test", appContext.getPackageName());
   }
 }

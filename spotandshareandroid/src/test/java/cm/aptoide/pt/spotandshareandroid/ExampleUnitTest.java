@@ -1,4 +1,4 @@
-package com.example.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid;
 
 import org.junit.Test;
 
