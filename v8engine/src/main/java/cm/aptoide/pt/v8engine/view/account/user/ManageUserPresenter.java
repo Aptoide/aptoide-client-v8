@@ -69,6 +69,7 @@ public class ManageUserPresenter implements Presenter {
         })
         .filter(data -> data != null)
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(data -> {
           view.setUserImage(data.getImagePathToView());
           view.setUserName(data.getName());
@@ -110,7 +111,6 @@ public class ManageUserPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.selectUserImageClick()
-            .retry()
             .doOnNext(__2 -> view.showLoadImageDialog()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
