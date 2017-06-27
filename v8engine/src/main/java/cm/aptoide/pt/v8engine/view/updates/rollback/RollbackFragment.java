@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -34,7 +35,7 @@ import rx.schedulers.Schedulers;
 public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final SimpleDateFormat dateFormat =
-      new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT);
+      new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
   private TextView emptyData;
   private Installer installManager;
 
@@ -128,7 +129,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       displayables.add(new RollbackDisplayable(installManager, rollback));
     }
 
-    Calendar.getInstance(AptoideUtils.LocaleU.DEFAULT);
+    Calendar.getInstance(Locale.getDefault());
     return displayables;
   }
 }

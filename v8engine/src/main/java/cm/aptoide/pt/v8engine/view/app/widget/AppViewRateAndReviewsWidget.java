@@ -47,6 +47,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -142,7 +143,7 @@ import rx.functions.Action1;
 
     float ratingAvg = stats.getRating()
         .getAvg();
-    ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", ratingAvg));
+    ratingValue.setText(String.format(Locale.getDefault(), "%.1f", ratingAvg));
     ratingBar.setRating(ratingAvg);
 
     Action1<Throwable> handleError = throwable -> CrashReport.getInstance()

@@ -6,6 +6,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import java.util.Locale;
 
 public class RatingTotalsLayout {
 
@@ -23,7 +24,7 @@ public class RatingTotalsLayout {
     GetAppMeta.Stats stats = data.getStats();
     usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating()
         .getTotal()));
-    ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", stats.getRating()
+    ratingValue.setText(String.format(Locale.getDefault(), "%.1f", stats.getRating()
         .getAvg()));
     ratingBar.setRating(stats.getRating()
         .getAvg());
