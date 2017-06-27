@@ -20,6 +20,7 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareMainFragmentPresenter;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 
