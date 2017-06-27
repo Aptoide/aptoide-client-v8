@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.dataprovider;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.logger.Logger;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

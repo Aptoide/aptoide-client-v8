@@ -5,11 +5,8 @@
 
 package cm.aptoide.pt.database.realm;
 
-import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.R;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

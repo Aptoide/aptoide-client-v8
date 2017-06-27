@@ -13,13 +13,13 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 public class BaseBodyWithAlphaBetaKey extends BaseBody {
   private String notApkTags;
 
-  public String getNotApkTags() {
-    return notApkTags;
-  }
-
   protected BaseBodyWithAlphaBetaKey(SharedPreferences sharedPreferences) {
     if (ManagerPreferences.getUpdatesFilterAlphaBetaKey(sharedPreferences)) {
       this.notApkTags = "alpha,beta";
     }
+  }
+
+  public String getNotApkTags() {
+    return notApkTags;
   }
 }

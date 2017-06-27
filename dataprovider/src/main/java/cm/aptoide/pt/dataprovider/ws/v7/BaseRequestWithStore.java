@@ -29,22 +29,6 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
     private final String username;
     private final String passwordSha1;
 
-    public Long getId() {
-      return id;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public String getUsername() {
-      return username;
-    }
-
-    public String getPasswordSha1() {
-      return passwordSha1;
-    }
-
     public StoreCredentials() {
       this.name = null;
       this.id = null;
@@ -71,6 +55,22 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
       this.name = name;
       this.username = username;
       this.passwordSha1 = passwordSha1;
+    }
+
+    public Long getId() {
+      return id;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getUsername() {
+      return username;
+    }
+
+    public String getPasswordSha1() {
+      return passwordSha1;
     }
   }
 }
