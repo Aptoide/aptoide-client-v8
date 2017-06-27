@@ -3,7 +3,8 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 import android.os.Bundle;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
-import cm.aptoide.pt.spotandshareapp.view.View;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.presenter.View;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
