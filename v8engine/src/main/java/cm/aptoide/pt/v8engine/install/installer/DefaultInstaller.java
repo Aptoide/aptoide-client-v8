@@ -167,13 +167,14 @@ public class DefaultInstaller implements Installer {
           .map(success -> installation)
           .startWith(
               updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_INSTALLING))
-          .doOnError(throwable -> {
+          .onErrorResumeNext(throwable -> {
             if (throwable instanceof RootCommandTimeoutException) {
-              updateInstallation(installation, Installed.TYPE_ROOT,
-                  Installed.STATUS_ROOT_TIMEOUT).save();
+              updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_ROOT_TIMEOUT).save();
+              return Observable.empty();
+            } else {
+              return Observable.error(throwable);
             }
-          })
-          .onErrorResumeNext(Observable.empty());
+          });
     } else {
       return Observable.error(new InstallationException("User doesn't allow root installation"));
     }
