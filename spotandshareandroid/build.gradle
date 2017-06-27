@@ -32,4 +32,10 @@ dependencies {
   })
   compile 'com.android.support:appcompat-v7:25.3.1'
   testCompile 'junit:junit:4.12'
+
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+
+  compile project(':spotandshare')
 }
