@@ -8,7 +8,7 @@
     >
 
   <FrameLayout
-      android:id="@+id/start_spotandshare_frame_layout"
+      android:id="@+id/fragment_placeholder"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       />
