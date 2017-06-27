@@ -1,9 +1,11 @@
+include ':spotandshareapp'
 /*
  * Copyright (c) 2016.
  * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 include 'vanilla',
+    ':spotandshareapp',
     ':v8engine',
     ':dataprovider',
     ':aptoidepreferences',
