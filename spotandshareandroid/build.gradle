@@ -1,4 +1,9 @@
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+  jvmArgs '-noverify'
+}
 
 android {
   compileSdkVersion 25
