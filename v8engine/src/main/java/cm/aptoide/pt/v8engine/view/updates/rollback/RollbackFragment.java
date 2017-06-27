@@ -85,7 +85,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
 
-    installManager = new InstallerFactory(new MinimalAdMapper()).create(getContext(), InstallerFactory.ROLLBACK);
+    installManager =
+        new InstallerFactory(new MinimalAdMapper()).create(getContext(), InstallerFactory.ROLLBACK);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

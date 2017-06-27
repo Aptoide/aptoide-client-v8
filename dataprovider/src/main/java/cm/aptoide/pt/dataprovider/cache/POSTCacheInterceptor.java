@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.cache;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.logger.Logger;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.Interceptor;

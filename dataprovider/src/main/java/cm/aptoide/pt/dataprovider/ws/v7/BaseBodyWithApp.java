@@ -9,6 +9,10 @@ public class BaseBodyWithApp extends BaseBodyWithAlphaBetaKey {
   private String storeUser;
   private String storePassSha1;
 
+  public BaseBodyWithApp(SharedPreferences sharedPreferences) {
+    super(sharedPreferences);
+  }
+
   public String getStoreUser() {
     return storeUser;
   }
@@ -23,9 +27,5 @@ public class BaseBodyWithApp extends BaseBodyWithAlphaBetaKey {
 
   public void setStorePassSha1(String storePassSha1) {
     this.storePassSha1 = storePassSha1;
-  }
-
-  public BaseBodyWithApp(SharedPreferences sharedPreferences) {
-    super(sharedPreferences);
   }
 }
