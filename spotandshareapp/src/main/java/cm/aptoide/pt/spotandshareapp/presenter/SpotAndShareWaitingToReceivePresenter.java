@@ -3,7 +3,8 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 import android.os.Bundle;
 import android.util.Log;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareWaitingToReceiveView;
-import cm.aptoide.pt.spotandshareapp.view.View;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
