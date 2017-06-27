@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;

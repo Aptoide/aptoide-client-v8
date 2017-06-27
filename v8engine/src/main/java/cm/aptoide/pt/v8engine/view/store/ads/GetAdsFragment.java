@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;

@@ -3,11 +3,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.GetUserInfo;
+import cm.aptoide.pt.dataprovider.model.v7.GetUserInfo;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -49,13 +47,29 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
     return interfaces.getUserInfo(body, bypassCache);
   }
 
-  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  public static class Body extends BaseBody {
 
     private List<String> nodes;
     private boolean refresh;
 
     public Body(List<String> nodes) {
       this.nodes = nodes;
+    }
+
+    public List<String> getNodes() {
+      return nodes;
+    }
+
+    public void setNodes(List<String> nodes) {
+      this.nodes = nodes;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    public void setRefresh(boolean refresh) {
+      this.refresh = refresh;
     }
   }
 }

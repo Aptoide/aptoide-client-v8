@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
-import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 

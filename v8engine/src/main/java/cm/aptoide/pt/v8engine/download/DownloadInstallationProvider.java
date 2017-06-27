@@ -11,8 +11,9 @@ import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.installer.InstallationProvider;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstallation;
@@ -29,11 +30,13 @@ public class DownloadInstallationProvider implements InstallationProvider {
   private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
+  private final MinimalAdMapper adMapper;
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
-      DownloadAccessor downloadAccessor) {
+      DownloadAccessor downloadAccessor, MinimalAdMapper adMapper) {
     this.downloadManager = downloadManager;
     this.downloadAccessor = downloadAccessor;
+    this.adMapper = adMapper;
     this.storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
   }
 
@@ -58,7 +61,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
   @NonNull private Action1<StoredMinimalAd> handleCpd() {
     return storedMinimalAd -> {
       if (storedMinimalAd != null && storedMinimalAd.getCpdUrl() != null) {
-        DataproviderUtils.AdNetworksUtils.knockCpd(storedMinimalAd);
+        AdNetworkUtils.knockCpd(adMapper.map(storedMinimalAd));
         storedMinimalAd.setCpdUrl(null);
         storedMinimalAdAccessor.insert(storedMinimalAd);
       }

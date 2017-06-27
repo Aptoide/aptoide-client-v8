@@ -13,7 +13,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import java.util.LinkedList;
 import java.util.List;

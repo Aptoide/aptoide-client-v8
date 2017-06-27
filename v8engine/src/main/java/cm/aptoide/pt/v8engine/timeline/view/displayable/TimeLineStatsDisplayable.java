@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
-import cm.aptoide.pt.model.v7.TimelineStats;
+import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;

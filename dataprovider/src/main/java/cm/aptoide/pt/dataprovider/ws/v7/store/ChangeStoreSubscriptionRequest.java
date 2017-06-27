@@ -9,8 +9,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -53,11 +51,11 @@ public class ChangeStoreSubscriptionRequest
     return interfaces.changeStoreSubscription(bypassCache, body);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
-    @Getter private final String storeName;
-    @Getter private final ChangeStoreSubscriptionResponse.StoreSubscriptionState status;
-    @Getter private String storePassSha1;
-    @Getter private String storeUser;
+  public static class Body extends BaseBody {
+    private final String storeName;
+    private final ChangeStoreSubscriptionResponse.StoreSubscriptionState status;
+    private String storePassSha1;
+    private String storeUser;
 
     public Body(String storeName, ChangeStoreSubscriptionResponse.StoreSubscriptionState status) {
       this.storeName = storeName;
@@ -70,6 +68,22 @@ public class ChangeStoreSubscriptionRequest
       this.storePassSha1 = storePassSha1;
       this.status = status;
       this.storeUser = storeUser;
+    }
+
+    public String getStoreName() {
+      return storeName;
+    }
+
+    public ChangeStoreSubscriptionResponse.StoreSubscriptionState getStatus() {
+      return status;
+    }
+
+    public String getStorePassSha1() {
+      return storePassSha1;
+    }
+
+    public String getStoreUser() {
+      return storeUser;
     }
   }
 }

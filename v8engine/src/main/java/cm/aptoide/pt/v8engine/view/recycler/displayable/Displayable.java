@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.view.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;

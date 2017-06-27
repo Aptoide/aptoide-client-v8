@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.view.reviews;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 

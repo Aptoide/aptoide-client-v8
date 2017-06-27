@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.notification.view.InboxFragment;
 import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
 import cm.aptoide.pt.v8engine.view.account.user.ManageUserFragment;
