@@ -30,7 +30,7 @@ public class AccountGroupNameProvider implements GroupNameProvider {
         .toSingle()
         .flatMap(account -> {
           String username;
-          if (account.isLoggedIn() && (username = account.getNickname()) != null) {
+          if (account.isLoggedIn() && !TextUtils.isEmpty(username = account.getNickname())) {
             if (username.length() > 17) {
               username = username.substring(0, 17);
             }
