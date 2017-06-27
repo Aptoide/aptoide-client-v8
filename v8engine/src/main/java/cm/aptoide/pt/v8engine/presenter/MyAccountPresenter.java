@@ -103,7 +103,7 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.editUserProfileClick()
             .flatMap(click -> accountManager.accountStatus())
-            .doOnNext(account -> navigator.navigateToEditProfileView(account)))
+            .doOnNext(account -> navigator.navigateToEditProfileView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));

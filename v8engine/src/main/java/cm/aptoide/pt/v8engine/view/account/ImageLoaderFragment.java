@@ -257,7 +257,7 @@ public abstract class ImageLoaderFragment extends PermissionServiceFragment {
         String imageError = imageHasErrors(filePath);
         if (TextUtils.isEmpty(imageError)) {
           loadImage(imageUri);
-          setImageRealPath(filePath);
+          setImagePath(imageUri, filePath);
         } else {
           showIconPropertiesError(imageError);
         }
@@ -270,7 +270,7 @@ public abstract class ImageLoaderFragment extends PermissionServiceFragment {
     }
   }
 
-  protected abstract void setImageRealPath(String filePath);
+  protected abstract void setImagePath(Uri filePathForView, String filePathToUpload);
 
   private enum ImageErrors {
     ERROR_DECODING, MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE

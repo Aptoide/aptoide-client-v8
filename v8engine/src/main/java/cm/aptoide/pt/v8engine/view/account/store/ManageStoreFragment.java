@@ -272,8 +272,8 @@ public class ManageStoreFragment extends ImageLoaderFragment
             .log(err));
   }
 
-  @Override protected void setImageRealPath(String filePath) {
-    currentModel.setStoreImagePath(filePath);
+  @Override protected void setImagePath(Uri pathToView, String pathToUpload) {
+    currentModel.setStoreImagePath(pathToUpload);
   }
 
   private void loadImageFromGallery() {

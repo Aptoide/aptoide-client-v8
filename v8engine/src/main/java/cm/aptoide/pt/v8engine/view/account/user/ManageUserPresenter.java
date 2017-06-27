@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.account.user;
 
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -22,44 +22,27 @@ public class ManageUserPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final ThrowableToStringMapper errorMapper;
   private final FragmentNavigator fragmentNavigator;
+  private final ManageUserFragment.ViewModel userData;
+  private final boolean isEditProfile;
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
       AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, ManageUserFragment.ViewModel userData,
+      boolean isEditProfile) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.errorMapper = errorMapper;
     this.fragmentNavigator = fragmentNavigator;
+    this.userData = userData;
+    this.isEditProfile = isEditProfile;
   }
 
   @Override public void present() {
-
-    Observable<Void> handleSaveDataClick = view.saveUserDataButtonClick()
-        .doOnNext(__ -> view.showProgressDialog())
-        .flatMap(userData -> saveUSerData(userData).observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.dismissProgressDialog())
-            .doOnCompleted(() -> sendAnalytics(userData.hasImage()))
-            .doOnCompleted(() -> navigateAway(userData.isEditProfile()))
-            .onErrorResumeNext(err -> handleSaveUserDataError(err, userData.isEditProfile()))
-            .toObservable())
-        .retry()
-        .map(__ -> null);
-
-    Observable<Void> handleCancelClick = view.cancelButtonClick()
-        .doOnNext(__ -> navigateBack());
-
-    Observable<Void> handleSelectImageClick = view.selectUserImageClick()
-        .retry()
-        .doOnNext(__ -> view.showLoadImageDialog());
-
-    view.getLifecycle()
-        .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(
-            __ -> Observable.merge(handleCancelClick, handleSaveDataClick, handleSelectImageClick))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+    handleSaveDataClick();
+    handleCancelClick();
+    handleSelectImageClick();
+    onViewCreatedLoadUserData();
   }
 
   @Override public void saveState(Bundle state) {
@@ -68,6 +51,70 @@ public class ManageUserPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void onViewCreatedLoadUserData() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMapSingle(__ -> accountManager.accountStatus()
+            .first()
+            .toSingle())
+        .map(userAccount -> {
+          if (userData == null && isEditProfile) {
+            return new ManageUserFragment.ViewModel(userAccount.getNickname(), null,
+                userAccount.getAvatar());
+          } else {
+            return userData;
+          }
+        })
+        .filter(data -> data != null)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(data -> {
+          view.setUserImage(data.getImagePathToView());
+          view.setUserName(data.getName());
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleSaveDataClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.saveUserDataButtonClick()
+            .doOnNext(__2 -> view.showProgressDialog())
+            .flatMap(userData -> saveUserData(userData))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  @NonNull private Observable<Void> saveUserData(ManageUserFragment.ViewModel userData) {
+    return updateUserAccount(userData).observeOn(AndroidSchedulers.mainThread())
+        .doOnCompleted(() -> view.dismissProgressDialog())
+        .doOnCompleted(() -> sendAnalytics(userData.hasImageToView()))
+        .doOnCompleted(() -> navigateAway(isEditProfile))
+        .onErrorResumeNext(err -> handleSaveUserDataError(err, isEditProfile))
+        .toObservable();
+  }
+
+  private void handleCancelClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.cancelButtonClick()
+            .doOnNext(__2 -> navigateBack()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleSelectImageClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.selectUserImageClick()
+            .doOnNext(__2 -> view.showLoadImageDialog()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private Completable handleSaveUserDataError(Throwable throwable, boolean isEditProfile) {
@@ -115,10 +162,10 @@ public class ManageUserPresenter implements Presenter {
     fragmentNavigator.popBackStack();
   }
 
-  private Completable saveUSerData(ManageUserFragment.ViewModel userData) {
-    if (TextUtils.isEmpty(userData.getImage())) {
-      return accountManager.updateAccount(userData.getName());
+  private Completable updateUserAccount(ManageUserFragment.ViewModel userData) {
+    if (userData.hasImageToUpload()) {
+      return accountManager.updateAccount(userData.getName(), userData.getImagePathToUpload());
     }
-    return accountManager.updateAccount(userData.getName(), userData.getImage());
+    return accountManager.updateAccount(userData.getName());
   }
 }
