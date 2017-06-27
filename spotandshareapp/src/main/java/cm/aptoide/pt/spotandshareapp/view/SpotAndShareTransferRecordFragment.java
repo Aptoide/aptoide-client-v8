@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 
 /**
  * Created by filipe on 12-06-2017.
