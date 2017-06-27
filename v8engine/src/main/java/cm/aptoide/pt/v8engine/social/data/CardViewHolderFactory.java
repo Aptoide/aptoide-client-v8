@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PopularAppViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.ProgressViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.RecommendationViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.SocialMediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialRecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.StoreLatestAppsViewHolder;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
@@ -41,7 +42,7 @@ public class CardViewHolderFactory {
       case ARTICLE:
       case VIDEO:
         return new MediaViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_article_item, parent, false), cardTouchEventPublishSubject,
+            .inflate(R.layout.timeline_media_item, parent, false), cardTouchEventPublishSubject,
             dateCalculator, spannableFactory);
       case RECOMMENDATION:
         return new RecommendationViewHolder(LayoutInflater.from(parent.getContext())
@@ -67,6 +68,11 @@ public class CardViewHolderFactory {
                 ? R.string.displayable_social_timeline_recommendation_atptoide_team_recommends
                 : R.string.x_installed_and_recommended, cardTouchEventPublishSubject,
             dateCalculator, spannableFactory);
+      case SOCIAL_ARTICLE:
+      case SOCIAL_VIDEO:
+        return new SocialMediaViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_social_media_item, parent, false),
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));

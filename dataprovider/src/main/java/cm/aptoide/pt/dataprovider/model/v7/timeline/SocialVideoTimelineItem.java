@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
     return this.socialVideo.getAb();
   }
 
-  @Override public TimelineCard getData() {
+  @Override public SocialVideo getData() {
     return socialVideo;
   }
 }

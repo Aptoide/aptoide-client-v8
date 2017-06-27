@@ -7,10 +7,14 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.PopularAppTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.RecommendationTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialArticle;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstallTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendation;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendationTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialVideo;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialVideoTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestAppsTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
@@ -116,8 +120,9 @@ public class TimelineResponseCardMapper {
         final SocialRecommendation socialRecommendation =
             ((SocialRecommendationTimelineItem) item).getData();
         cards.add(new RatedRecommendation(socialRecommendation.getCardId(),
-            new Poster(socialRecommendation.getUser(), socialRecommendation.getStore()), socialRecommendation.getApp()
-            .getId(), socialRecommendation.getApp()
+            new Poster(socialRecommendation.getUser(), socialRecommendation.getStore()),
+            socialRecommendation.getApp()
+                .getId(), socialRecommendation.getApp()
             .getPackageName(), socialRecommendation.getApp()
             .getName(), socialRecommendation.getApp()
             .getIcon(), socialRecommendation.getApp()
@@ -127,15 +132,38 @@ public class TimelineResponseCardMapper {
       } else if (item instanceof SocialInstallTimelineItem) {
         final SocialInstall socialInstall = ((SocialInstallTimelineItem) item).getData();
         cards.add(new RatedRecommendation(socialInstall.getCardId(),
-            new Poster(socialInstall.getUser(), socialInstall.getStore()),
-            socialInstall.getApp()
-                .getId(), socialInstall.getApp()
+            new Poster(socialInstall.getUser(), socialInstall.getStore()), socialInstall.getApp()
+            .getId(), socialInstall.getApp()
             .getPackageName(), socialInstall.getApp()
             .getName(), socialInstall.getApp()
             .getIcon(), socialInstall.getApp()
             .getStats()
             .getRating()
             .getAvg(), socialInstall.getDate(), abUrl, CardType.SOCIAL_INSTALL));
+      } else if (item instanceof SocialArticleTimelineItem) {
+        final SocialArticle socialArticle = ((SocialArticleTimelineItem) item).getData();
+        cards.add(new SocialMedia(socialArticle.getCardId(),
+            new Poster(socialArticle.getUser(), socialArticle.getStore()), socialArticle.getTitle(),
+            socialArticle.getThumbnailUrl(), socialArticle.getDate(), socialArticle.getApps()
+            .get(0), abUrl, new MediaPublisher(socialArticle.getPublisher()
+            .getName(), new PublisherAvatar(socialArticle.getPublisher()
+            .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+            socialArticle.getPublisher()
+                .getBaseUrl()),
+            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
+            CardType.SOCIAL_ARTICLE));
+      } else if (item instanceof SocialVideoTimelineItem) {
+        final SocialVideo socialVideo = ((SocialVideoTimelineItem) item).getData();
+        cards.add(new SocialMedia(socialVideo.getCardId(),
+            new Poster(socialVideo.getUser(), socialVideo.getStore()), socialVideo.getTitle(),
+            socialVideo.getThumbnailUrl(), socialVideo.getDate(), socialVideo.getApps()
+            .get(0), abUrl, new MediaPublisher(socialVideo.getPublisher()
+            .getName(), new PublisherAvatar(socialVideo.getPublisher()
+            .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+            socialVideo.getPublisher()
+                .getBaseUrl()),
+            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialVideo.getUrl()),
+            CardType.SOCIAL_VIDEO));
       }
     }
 
