@@ -21,6 +21,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
@@ -34,6 +35,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -159,6 +161,7 @@ import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -173,6 +176,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
@@ -357,8 +361,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
       Intent retryActionIntent = new Intent(this, RootInstallNotificationEventReceiver.class);
       retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
-      PendingIntent retryPendingIntent = PendingIntent.getBroadcast(this, 2, retryActionIntent,
-          PendingIntent.FLAG_UPDATE_CURRENT);
+      PendingIntent retryPendingIntent =
+          PendingIntent.getBroadcast(this, 2, retryActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
       NotificationCompat.Action action =
           new NotificationCompat.Action(R.drawable.ic_refresh_black_24dp,
@@ -966,6 +970,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private Completable discoverAndSaveInstalledApps() {
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     return Observable.fromCallable(() -> {
       // remove the current installed apps
       //AccessorFactory.getAccessorFor(Installed.class).removeAll();
@@ -984,11 +989,30 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .flatMapIterable(list -> list)
         .map(packageInfo -> new Installed(packageInfo))
         .toList()
+        .flatMap(appsInstalled -> installedAccessor.getAll()
+            .first()
+            .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
+                installed -> installed.setStatus(Installed.STATUS_UNINSTALLED))))
         .doOnNext(list -> {
-          AccessorFactory.getAccessorFor(Installed.class)
-              .insertAll(list);
+          installedAccessor.removeAll();
+          installedAccessor.insertAll(list);
         })
         .toCompletable();
+  }
+
+  public <T> List<T> combineLists(List<T> list1, List<T> list2, @Nullable Action1<T> transformer) {
+    List<T> toReturn = new ArrayList<>(list1.size() + list2.size());
+    toReturn.addAll(list1);
+    for (T item : list2) {
+      if (!toReturn.contains(item)) {
+        if (transformer != null) {
+          transformer.call(item);
+        }
+        toReturn.add(item);
+      }
+    }
+
+    return toReturn;
   }
 
   private Completable refreshUpdates() {

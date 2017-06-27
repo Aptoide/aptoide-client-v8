@@ -32,6 +32,14 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
     return getAllInstalledSorted(Sort.ASCENDING);
   }
 
+  /**
+   * @return all the entries from this table even not installed apps
+   * if you want only installed apps consider using the install manager
+   */
+  public Observable<List<Installed>> getAll() {
+    return database.getAll(Installed.class);
+  }
+
   public Observable<List<Installed>> getAllInstalledSorted(Sort sort) {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)

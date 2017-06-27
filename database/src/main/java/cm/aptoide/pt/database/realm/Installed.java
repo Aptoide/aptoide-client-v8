@@ -65,6 +65,24 @@ public class Installed extends RealmObject {
     setType(TYPE_UNKNOWN);
   }
 
+  @Override public int hashCode() {
+    int result = packageAndVersionCode.hashCode();
+    result = 31 * result + packageName.hashCode();
+    result = 31 * result + versionCode;
+    return result;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Installed installed = (Installed) o;
+
+    if (versionCode != installed.versionCode) return false;
+    if (!packageAndVersionCode.equals(installed.packageAndVersionCode)) return false;
+    return packageName.equals(installed.packageName);
+  }
+
   public void setPackageAndVersionCode(String packageAndVersionCode) {
     this.packageAndVersionCode = packageAndVersionCode;
   }
