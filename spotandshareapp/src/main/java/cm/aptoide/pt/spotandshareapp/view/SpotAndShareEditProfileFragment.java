@@ -17,6 +17,7 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatar;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
