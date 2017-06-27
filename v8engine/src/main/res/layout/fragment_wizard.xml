@@ -27,7 +27,7 @@
       android:measureWithLargestChild="false"
       android:minHeight="48dp"
       android:orientation="horizontal"
-      android:weightSum="6"
+      android:weightSum="4"
       tools:background="@color/red"
       tools:visibility="visible"
       >
@@ -37,17 +37,19 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         />
+
     <RadioGroup
         android:id="@+id/view_pager_radio_group"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_gravity="center"
+        android:layout_weight="2"
         android:baselineAligned="false"
         android:clickable="false"
-        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal"
-        tools:minHeight="25dp"
-        tools:background="@color/almost_black"
+        tools:background="@color/grey_medium"
+        tools:layout_height="25dp"
         />
 
     <!-- only one of the next 2 elements will be visible -->
