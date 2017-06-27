@@ -9,10 +9,10 @@
     android:layout_width="match_parent"
     android:layout_height="110dp"
     android:layout_gravity="center"
+    android:background="@drawable/follow_store"
     android:gravity="center"
     android:orientation="vertical"
     style="?attr/backgroundCard"
-    android:background="@drawable/follow_store"
     >
   <ImageView
       android:id="@+id/follow_store_image"
