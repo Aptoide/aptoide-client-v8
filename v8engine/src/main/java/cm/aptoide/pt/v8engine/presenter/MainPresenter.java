@@ -90,11 +90,10 @@ public class MainPresenter implements Presenter {
     if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
       SecurePreferences.setWizardAvailable(false, securePreferences);
     } else {
-      //if (SecurePreferences.isWizardAvailable(securePreferences)) {
-      //  showWizard();
-      //  SecurePreferences.setWizardAvailable(false, securePreferences);
-      //}
-      showWizard();
+      if (SecurePreferences.isWizardAvailable(securePreferences)) {
+        showWizard();
+        SecurePreferences.setWizardAvailable(false, securePreferences);
+      }
     }
   }
 

@@ -18,8 +18,6 @@ import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
  */
 public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSignUpView {
 
-  private static final String TAG = LoginSignUpFragment.class.getName();
-
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String NAVIGATE_TO_HOME = "clean_back_stack";
