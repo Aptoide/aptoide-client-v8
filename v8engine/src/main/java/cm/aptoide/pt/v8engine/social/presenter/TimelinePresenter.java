@@ -169,7 +169,9 @@ public class TimelinePresenter implements Presenter {
                     AppViewFragment.OpenType.OPEN_ONLY));
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.SOCIAL_RECOMMENDATION)) {
+              .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_INSTALL)) {
             RatedRecommendation card = (RatedRecommendation) cardTouchEvent.getCard();
             fragmentNavigator.navigateTo(
                 AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),

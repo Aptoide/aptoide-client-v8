@@ -17,6 +17,7 @@ import rx.subjects.PublishSubject;
  */
 
 public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommendation> {
+  private final int titleStringResourceId;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
   private final ImageView headerPrimaryAvatar;
@@ -29,9 +30,10 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
   private final RatingBar appRating;
   private final Button getAppButton;
 
-  public SocialRecommendationViewHolder(View view,
+  public SocialRecommendationViewHolder(View view, int titleStringResourceId,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator) {
     super(view);
+    this.titleStringResourceId = titleStringResourceId;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
 
@@ -50,6 +52,9 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
   }
 
   @Override public void setCard(RatedRecommendation card, int position) {
+    // TODO: 27/06/2017 set card title correctly, now it only distinguish the installed from recommendation cards.
+    this.headerPrimaryName.setText(itemView.getContext()
+        .getString(titleStringResourceId, "X"));
     this.timestamp.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
     ImageLoader.with(itemView.getContext())

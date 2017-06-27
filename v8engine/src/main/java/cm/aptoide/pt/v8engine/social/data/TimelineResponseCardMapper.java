@@ -7,6 +7,8 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.PopularAppTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.RecommendationTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstall;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstallTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendation;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendationTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestAppsTimelineItem;
@@ -121,6 +123,16 @@ public class TimelineResponseCardMapper {
             .getStats()
             .getRating()
             .getAvg(), socialRecommendation.getDate(), abUrl, CardType.SOCIAL_RECOMMENDATION));
+      } else if (item instanceof SocialInstallTimelineItem) {
+        final SocialInstall socialInstall = ((SocialInstallTimelineItem) item).getData();
+        cards.add(new RatedRecommendation(socialInstall.getCardId(), socialInstall.getApp()
+            .getId(), socialInstall.getApp()
+            .getPackageName(), socialInstall.getApp()
+            .getName(), socialInstall.getApp()
+            .getIcon(), socialInstall.getApp()
+            .getStats()
+            .getRating()
+            .getAvg(), socialInstall.getDate(), abUrl, CardType.SOCIAL_INSTALL));
       }
     }
 
