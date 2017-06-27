@@ -5,6 +5,11 @@ import rx.Completable;
 import rx.Observable;
 
 public interface ManageUserView extends View {
+
+  void setUserName(String name);
+
+  void setUserImage(String imagePath);
+
   void showLoadImageDialog();
 
   Observable<ManageUserFragment.ViewModel> saveUserDataButtonClick();
