@@ -63,7 +63,10 @@ public class CardViewHolderFactory {
       case SOCIAL_INSTALL:
         return new SocialRecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_social_recommendation_item, parent, false),
-            cardTouchEventPublishSubject, dateCalculator);
+            cardType.equals(CardType.SOCIAL_RECOMMENDATION)
+                ? R.string.displayable_social_timeline_recommendation_atptoide_team_recommends
+                : R.string.x_installed_and_recommended, cardTouchEventPublishSubject,
+            dateCalculator, spannableFactory);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));

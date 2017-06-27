@@ -17,10 +17,10 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Video;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.VideoTimelineItem;
 import cm.aptoide.pt.v8engine.Progress;
-import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.MediaPublisher;
+import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
 import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.PublisherAvatar;
 import java.util.ArrayList;
@@ -116,27 +116,26 @@ public class TimelineResponseCardMapper {
         final SocialRecommendation socialRecommendation =
             ((SocialRecommendationTimelineItem) item).getData();
         cards.add(new RatedRecommendation(socialRecommendation.getCardId(),
-            socialRecommendation.getApp()
-                .getId(), socialRecommendation.getApp()
+            new Poster(socialRecommendation.getUser(), socialRecommendation.getStore()), socialRecommendation.getApp()
+            .getId(), socialRecommendation.getApp()
             .getPackageName(), socialRecommendation.getApp()
             .getName(), socialRecommendation.getApp()
             .getIcon(), socialRecommendation.getApp()
             .getStats()
             .getRating()
-            .getAvg(), socialRecommendation.getDate(), abUrl,
-            R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
-            CardType.SOCIAL_RECOMMENDATION));
+            .getAvg(), socialRecommendation.getDate(), abUrl, CardType.SOCIAL_RECOMMENDATION));
       } else if (item instanceof SocialInstallTimelineItem) {
         final SocialInstall socialInstall = ((SocialInstallTimelineItem) item).getData();
-        cards.add(new RatedRecommendation(socialInstall.getCardId(), socialInstall.getApp()
-            .getId(), socialInstall.getApp()
+        cards.add(new RatedRecommendation(socialInstall.getCardId(),
+            new Poster(socialInstall.getUser(), socialInstall.getStore()),
+            socialInstall.getApp()
+                .getId(), socialInstall.getApp()
             .getPackageName(), socialInstall.getApp()
             .getName(), socialInstall.getApp()
             .getIcon(), socialInstall.getApp()
             .getStats()
             .getRating()
-            .getAvg(), socialInstall.getDate(), abUrl, R.string.x_installed_and_recommended,
-            CardType.SOCIAL_INSTALL));
+            .getAvg(), socialInstall.getDate(), abUrl, CardType.SOCIAL_INSTALL));
       }
     }
 
