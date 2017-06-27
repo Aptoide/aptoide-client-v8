@@ -9,7 +9,7 @@ import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import okhttp3.MultipartBody;
@@ -44,7 +44,7 @@ public interface Service {
   Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
 
   @POST("checkProductPayment") @FormUrlEncoded
-  Observable<PaymentConfirmationResponse> getPaymentConfirmation(@FieldMap BaseBody args);
+  Observable<TransactionResponse> getPaymentConfirmation(@FieldMap BaseBody args);
 
   @POST("productPurchaseAuthorization") @FormUrlEncoded
   Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);

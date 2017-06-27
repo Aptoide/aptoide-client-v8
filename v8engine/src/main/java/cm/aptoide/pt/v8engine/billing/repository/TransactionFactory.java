@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.v8engine.billing.PayPalTransaction;
 import cm.aptoide.pt.v8engine.billing.Transaction;
 
@@ -23,13 +23,15 @@ public class TransactionFactory {
     return new Transaction(productId, payerId, status, paymentMethodId);
   }
 
-  public Transaction map(int productId, PaymentConfirmationResponse response, String payerId) {
-    if (response.getPaymentConfirmationId() != null) {
-      return new PayPalTransaction(productId, payerId, response.getPaymentConfirmationId(),
-          Transaction.Status.valueOf(response.getPaymentStatus()), response.getPaymentMethodId());
+  public Transaction map(int productId, TransactionResponse response, String payerId) {
+    if (response.getLocalMetadata() != null) {
+      return new PayPalTransaction(productId, payerId, response.getLocalMetadata(),
+          Transaction.Status.valueOf(response.getTransactionStatus()),
+          response.getPaymentMethodId());
     } else {
       return new Transaction(productId, payerId,
-          Transaction.Status.valueOf(response.getPaymentStatus()), response.getPaymentMethodId());
+          Transaction.Status.valueOf(response.getTransactionStatus()),
+          response.getPaymentMethodId());
     }
   }
 

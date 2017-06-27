@@ -12,10 +12,10 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by marcelobenites on 16/11/16.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class PaymentConfirmationResponse
+@Data @EqualsAndHashCode(callSuper = true) public class TransactionResponse
     extends BaseV3Response {
 
-  @JsonProperty("payStatus") private String paymentStatus;
-  @JsonProperty("paykey") private String paymentConfirmationId;
+  @JsonProperty("payStatus") private String transactionStatus;
+  @JsonProperty("paykey") private String localMetadata;
   @JsonProperty("paymentId") private int paymentMethodId;
 }

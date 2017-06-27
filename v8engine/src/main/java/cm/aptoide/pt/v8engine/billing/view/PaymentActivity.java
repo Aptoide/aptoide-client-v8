@@ -57,6 +57,8 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private AlertDialog unknownErrorDialog;
   private SparseArray<PaymentMethodViewModel> paymentMap;
   private SpannableFactory spannableFactory;
+  private boolean paymentLoading;
+  private boolean transactionLoading;
 
   public static Intent getIntent(Context context, long appId, String storeName, boolean sponsored) {
     final Intent intent = new Intent(context, PaymentActivity.class);
@@ -106,6 +108,9 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
             .setPositiveButton(android.R.string.ok, null)
             .create();
 
+    paymentLoading = false;
+    transactionLoading = false;
+
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
     final PaymentAnalytics paymentAnalytics =
@@ -148,7 +153,13 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     paymentRadioGroup.check(payment.getId());
   }
 
-  @Override public void showLoading() {
+  @Override public void showPaymentLoading() {
+    paymentLoading = true;
+    progressView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void showTransactionLoading() {
+    transactionLoading = true;
     progressView.setVisibility(View.VISIBLE);
   }
 
@@ -190,8 +201,18 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
         .getAmount());
   }
 
-  @Override public void hideLoading() {
-    progressView.setVisibility(View.GONE);
+  @Override public void hidePaymentLoading() {
+    paymentLoading = false;
+    if (!transactionLoading) {
+      progressView.setVisibility(View.GONE);
+    }
+  }
+
+  @Override public void hideTransactionLoading() {
+    transactionLoading = false;
+    if (!paymentLoading) {
+      progressView.setVisibility(View.GONE);
+    }
   }
 
   @Override public void dismiss(Purchase purchase) {

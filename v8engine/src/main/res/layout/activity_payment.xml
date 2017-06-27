@@ -210,6 +210,7 @@
       android:gravity="center"
       android:orientation="vertical"
       android:visibility="gone"
+      tools:visibility="visible"
       >
     <ProgressBar
         android:layout_width="wrap_content"

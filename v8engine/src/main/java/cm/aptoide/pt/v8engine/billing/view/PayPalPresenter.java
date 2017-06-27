@@ -31,7 +31,7 @@ public class PayPalPresenter implements Presenter {
 
     onViewCreatedShowPayPalPayment();
 
-    handlePayPalPaymentConfirmationEvent();
+    handlePayPalResultEvent();
 
     handleErrorDismissEvent();
   }
@@ -54,7 +54,7 @@ public class PayPalPresenter implements Presenter {
         }, throwable -> hideLoadingAndShowError(throwable));
   }
 
-  private void handlePayPalPaymentConfirmationEvent() {
+  private void handlePayPalResultEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.results())

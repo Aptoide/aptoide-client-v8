@@ -8,34 +8,29 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 17/10/16.
- */
+public class GetTransactionRequest extends V3<TransactionResponse> {
 
-public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationResponse> {
-
-  public GetPaymentConfirmationRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+  public GetTransactionRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
         sharedPreferences);
   }
 
-  public static GetPaymentConfirmationRequest of(int productId,
-      NetworkOperatorManager operatorManager, int apiVersion,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public static GetTransactionRequest of(int productId, NetworkOperatorManager operatorManager,
+      int apiVersion, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     final BaseBody args = getBaseBody(productId, operatorManager, sharedPreferences);
     args.put("reqtype", "iabpurchasestatus");
     args.put("apiversion", String.valueOf(apiVersion));
-    return new GetPaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
+    return new GetTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
@@ -50,17 +45,17 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
     return args;
   }
 
-  public static GetPaymentConfirmationRequest of(int productId,
-      NetworkOperatorManager operatorManager, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+  public static GetTransactionRequest of(int productId, NetworkOperatorManager operatorManager,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     final BaseBody args = getBaseBody(productId, operatorManager, sharedPreferences);
     args.put("reqtype", "apkpurchasestatus");
-    return new GetPaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
+    return new GetTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<PaymentConfirmationResponse> loadDataFromNetwork(Service service,
+  @Override protected Observable<TransactionResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
     return service.getPaymentConfirmation(map);
   }

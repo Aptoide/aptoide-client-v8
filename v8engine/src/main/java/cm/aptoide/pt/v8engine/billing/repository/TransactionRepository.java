@@ -36,11 +36,11 @@ public abstract class TransactionRepository {
 
   public Observable<Transaction> getTransaction(Product product) {
     return payer.getId()
-        .flatMapObservable(
-            payerId -> transactionAccessor.getPersistedTransactions(product.getId(), payerId)
+        .flatMapObservable(payerId -> syncTransaction(product).andThen(
+            transactionAccessor.getPersistedTransactions(product.getId(), payerId)
                 .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
                     .map(paymentConfirmation -> transactionFactory.map(paymentConfirmation))
-                    .switchIfEmpty(syncTransaction(product).toObservable())));
+                    .switchIfEmpty(syncTransaction(product).toObservable()))));
   }
 
   public Completable createTransaction(Product product, int paymentMethodId,

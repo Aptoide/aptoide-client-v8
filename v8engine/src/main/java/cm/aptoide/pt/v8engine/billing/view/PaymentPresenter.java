@@ -101,17 +101,17 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(created -> userLoggedIn())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(loggedIn -> view.showLoading())
+        .doOnNext(loggedIn -> view.showPaymentLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
         .flatMapCompletable(product -> billing.getAvailablePaymentMethods(product)
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(payments -> showPaymentInformation(product, payments))
-            .doOnCompleted(() -> view.hideLoading()))
+            .doOnCompleted(() -> view.hidePaymentLoading()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(__ -> {
         }, throwable -> {
-          view.hideLoading();
+          view.hidePaymentLoading();
           view.dismiss(throwable);
         });
   }
@@ -121,28 +121,27 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(created -> userLoggedIn())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(loggedIn -> view.showLoading())
+        .doOnNext(loggedIn -> view.showTransactionLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
         .flatMap(product -> billing.getConfirmation(product)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(confirmation -> {
               if (confirmation.isFailed()) {
-                view.hideLoading();
+                view.hideTransactionLoading();
                 view.showUnknownError();
               } else if (confirmation.isNew()) {
-                view.hideLoading();
-              } else if (confirmation.isPending()) {
-                view.showLoading();
-              } else if (confirmation.isCompleted()) {
-                view.showLoading();
+                view.hideTransactionLoading();
+              } else if (confirmation.isPending() || confirmation.isCompleted()) {
+                view.showTransactionLoading();
               }
             })
             .first(confirmation -> confirmation.isCompleted())
             .flatMapSingle(confirmation -> billing.getPurchase(product)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(purchase -> view.hideTransactionLoading())
         .subscribe(purchase -> view.dismiss(purchase), throwable -> {
-          view.hideLoading();
+          view.hideTransactionLoading();
           showError(throwable);
         });
   }
@@ -191,7 +190,7 @@ public class PaymentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(__ -> view.buySelection()
-            .doOnNext(buySelection -> view.showLoading())
+            .doOnNext(buySelection -> view.showPaymentLoading())
             .flatMapSingle(selection -> productProvider.getProduct())
             .flatMapCompletable(product -> getSelectedPaymentMethod(product).doOnSuccess(
                 payment -> paymentAnalytics.sendPaymentBuyButtonPressedEvent(product,
@@ -202,13 +201,13 @@ public class PaymentPresenter implements Presenter {
 
                       if (throwable instanceof PaymentNotAuthorizedException) {
                         paymentNavigator.navigateToAuthorizationView(payment, product);
-                        view.hideLoading();
+                        view.hidePaymentLoading();
                         return Completable.complete();
                       }
 
                       if (throwable instanceof PaymentLocalProcessingRequiredException) {
                         paymentNavigator.navigateToLocalPaymentView(payment, product);
-                        view.hideLoading();
+                        view.hidePaymentLoading();
                         return Completable.complete();
                       }
 
@@ -216,7 +215,7 @@ public class PaymentPresenter implements Presenter {
                     })))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> {
-              view.hideLoading();
+              view.hidePaymentLoading();
               showError(throwable);
             })
             .retry())

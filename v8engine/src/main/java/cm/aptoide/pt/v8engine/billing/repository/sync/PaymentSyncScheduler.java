@@ -28,6 +28,7 @@ public class PaymentSyncScheduler {
     this.androidAccountProvider = androidAccountProvider;
     this.syncDataConverter = converter;
     this.authority = authority;
+    ContentResolver.setMasterSyncAutomatically(true);
   }
 
   public Completable scheduleAuthorizationSync(int paymentId) {

@@ -10,11 +10,11 @@ import android.content.SyncResult;
 import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentConfirmationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.GetTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.PayPalTransaction;
 import cm.aptoide.pt.v8engine.billing.Payer;
@@ -102,15 +102,15 @@ public class TransactionSync extends ScheduledSync {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
-            return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
+            return GetTransactionRequest.of(product.getId(), operatorManager,
                 ((InAppProduct) product).getApiVersion(), bodyInterceptorV3, httpClient,
                 converterFactory, tokenInvalidator, sharedPreferences)
                 .observe()
-                .cast(PaymentConfirmationResponse.class)
+                .cast(TransactionResponse.class)
                 .toSingle();
           }
-          return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
-              bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+          return GetTransactionRequest.of(product.getId(), operatorManager, bodyInterceptorV3,
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe()
               .toSingle();
         })

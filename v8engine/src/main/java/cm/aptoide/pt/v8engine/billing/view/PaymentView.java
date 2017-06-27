@@ -23,13 +23,17 @@ public interface PaymentView extends View {
 
   void selectPayment(PaymentMethodViewModel payment);
 
-  void showLoading();
+  void showPaymentLoading();
+
+  void showTransactionLoading();
 
   void showPayments(List<PaymentMethodViewModel> paymentList);
 
   void showProduct(Product product);
 
-  void hideLoading();
+  void hidePaymentLoading();
+
+  void hideTransactionLoading();
 
   void dismiss(Purchase purchase);
 
