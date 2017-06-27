@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.leak.LeakFragment;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import com.appsee.Appsee;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -41,42 +42,17 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     fragmentNavigator = ((ActivityView) getActivity()).getFragmentNavigator();
     activityNavigator = ((ActivityView) getActivity()).getActivityNavigator();
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    if (presenter != null) {
-      presenter.saveState(outState);
-    } else {
-      Logger.w(this.getClass()
-          .getName(), "No presenter was attached.");
+  @Override public void onResume() {
+    super.onResume();
+    if (getUserVisibleHint()) {
+      Appsee.startScreen(this.getClass()
+          .getSimpleName());
     }
-
-    super.onSaveInstanceState(outState);
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override public void onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-  }
-
-  /**
-   * Do not override this method in fragments to handle back stack navigation, before deciding if
-   * toolbar menu items should be handled in activity or the fragment.
-   *
-   * The back navigation menu item selection handling is currently done in the {@link
-   * MainActivity}.
-   */
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      fragmentNavigator.popBackStack();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   @NonNull @Override
@@ -117,5 +93,47 @@ public abstract class FragmentView extends LeakFragment implements View {
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
+  }
+
+  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      Appsee.startScreen(this.getClass()
+          .getSimpleName());
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    if (presenter != null) {
+      presenter.saveState(outState);
+    } else {
+      Logger.w(this.getClass()
+          .getName(), "No presenter was attached.");
+    }
+
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override public void onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+  }
+
+  /**
+   * Do not override this method in fragments to handle back stack navigation, before deciding if
+   * toolbar menu items should be handled in activity or the fragment.
+   *
+   * The back navigation menu item selection handling is currently done in the {@link
+   * MainActivity}.
+   */
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      fragmentNavigator.popBackStack();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 }
