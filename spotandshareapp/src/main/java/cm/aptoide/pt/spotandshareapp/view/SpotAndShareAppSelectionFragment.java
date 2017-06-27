@@ -13,6 +13,7 @@ import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import java.util.List;
 
 /**
