@@ -151,10 +151,9 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
 
   private void setupActionBar() {
     setHasOptionsMenu(true);
-
+    toolbar.setTitle(R.string.spotandshare_title_toolbar);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setTitle(R.string.spotandshare_title_toolbar);
     actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
