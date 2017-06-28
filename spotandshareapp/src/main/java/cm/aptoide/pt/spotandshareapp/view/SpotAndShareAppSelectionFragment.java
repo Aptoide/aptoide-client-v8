@@ -3,8 +3,11 @@ package cm.aptoide.pt.spotandshareapp.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -25,6 +28,7 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
 
   private RecyclerView recyclerView;
   private SpotAndShareAppSelectionAdapter adapter;
+  private Toolbar toolbar;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareAppSelectionFragment();
@@ -63,14 +67,25 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
 
   @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
+    setupToolbar();
     recyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
     attachPresenter(new SpotAndShareAppSelectionPresenter(this,
         new InstalledRepositoryDummy(getContext().getPackageManager())), savedInstanceState);
   }
 
+  private void setupToolbar() {
+    setHasOptionsMenu(true);
+    toolbar.setTitle(R.string.spotandshare_title_toolbar);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
+  }
+
   @Override public void onDestroyView() {
     adapter = null;
     recyclerView = null;
+    toolbar = null;
     super.onDestroyView();
   }
 
