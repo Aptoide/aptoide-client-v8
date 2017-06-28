@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+
 public class UserSharerTimeline {
   private User user;
   private Store store;
@@ -10,6 +12,12 @@ public class UserSharerTimeline {
   public UserSharerTimeline(User user, Store store) {
     this.user = user;
     this.store = store;
+  }
+
+  public UserSharerTimeline(Comment.User user,
+      cm.aptoide.pt.dataprovider.model.v7.store.Store store) {
+    this.user = new User(user.getName(), user.getAvatar());
+    this.store = new Store(store.getName(), store.getAvatar());
   }
 
   public User getUser() {

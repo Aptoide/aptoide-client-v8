@@ -8,7 +8,8 @@ import lombok.EqualsAndHashCode;
  * Created by jdandrade on 17/05/2017.
  */
 
-@EqualsAndHashCode class AggregatedSocialArticleTimelineItem implements TimelineItem<TimelineCard> {
+@EqualsAndHashCode public class AggregatedSocialArticleTimelineItem
+    implements TimelineItem<TimelineCard> {
   private final AggregatedSocialArticle aggregatedSocialArticle;
 
   @JsonCreator public AggregatedSocialArticleTimelineItem(

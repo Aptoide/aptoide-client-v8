@@ -1,8 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data.publisher;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.model.v7.Comment;
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 
 /**
  * Created by jdandrade on 27/06/2017.
@@ -13,10 +12,10 @@ public class Poster {
   private final String primaryAvatar;
   private final String secondaryAvatar;
   private final String secondaryName;
-  private final Comment.User user;
-  private final Store store;
+  private final UserSharerTimeline.User user;
+  private final UserSharerTimeline.Store store;
 
-  public Poster(Comment.User user, Store store) {
+  public Poster(UserSharerTimeline.User user, UserSharerTimeline.Store store) {
     this.user = user;
     this.store = store;
     if (doesUserHasStore()) {
@@ -48,7 +47,7 @@ public class Poster {
     return store != null;
   }
 
-  private String getUserName(Comment.User user) {
+  private String getUserName(UserSharerTimeline.User user) {
     return TextUtils.isEmpty(user.getName()) ? "no-user" : user.getName();
   }
 
