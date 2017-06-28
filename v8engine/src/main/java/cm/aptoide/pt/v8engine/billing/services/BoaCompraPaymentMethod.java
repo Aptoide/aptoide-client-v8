@@ -1,65 +1,71 @@
 package cm.aptoide.pt.v8engine.billing.services;
 
-import cm.aptoide.pt.v8engine.billing.Authorization;
-import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentAuthorizationAlreadyInitializedException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
-import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import rx.Completable;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.Single;
 
 public class BoaCompraPaymentMethod extends AptoidePaymentMethod {
 
-  private final Payer payer;
+  private final TransactionRepositoryFactory transactionRepositoryFactory;
   private final AuthorizationRepository authorizationRepository;
-  private final AuthorizationFactory authorizationFactory;
 
   public BoaCompraPaymentMethod(int id, String name, String description,
-      PaymentRepositoryFactory paymentRepositoryFactory, Payer payer,
-      AuthorizationRepository authorizationRepository, AuthorizationFactory authorizationFactory) {
-    super(id, name, description, paymentRepositoryFactory);
-    this.payer = payer;
+      TransactionRepositoryFactory transactionRepositoryFactory,
+      AuthorizationRepository authorizationRepository) {
+    super(id, name, description);
+    this.transactionRepositoryFactory = transactionRepositoryFactory;
     this.authorizationRepository = authorizationRepository;
-    this.authorizationFactory = authorizationFactory;
   }
 
   @Override public Completable process(Product product) {
-    return checkAuthorization().andThen(super.process(product));
+    return transactionRepositoryFactory.getTransactionRepository(product)
+        .createTransaction(getId(), product)
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof RepositoryIllegalArgumentException) {
+            return Completable.error(
+                new PaymentMethodNotAuthorizedException("Payment not authorized."));
+          }
+          return Completable.error(throwable);
+        });
   }
 
-  public Observable<WebAuthorization> getAuthorization() {
-    return authorizationRepository.getPaymentAuthorization(getId())
-        .distinctUntilChanged(authorization -> authorization.getStatus())
-        .cast(WebAuthorization.class);
-  }
-
-  protected Completable checkAuthorization() {
-    return getAuthorization().takeUntil(authorization -> authorization.isAuthorized())
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMapCompletable(authorization -> {
-
-          if (authorization.isInactive()) {
-            return authorizationRepository.createWebPaymentAuthorization(getId());
+  public Single<BoaCompraAuthorization> getInitializedAuthorization() {
+    return authorizationRepository.getAuthorization(getId())
+        .cast(BoaCompraAuthorization.class)
+        .flatMap(authorization -> {
+          if (authorization.isInitialized()) {
+            return Observable.just(authorization);
           }
 
-          if (authorization.isPendingUserConsent()) {
-            return Completable.error(new PaymentNotAuthorizedException("Pending web user consent"));
+          if (authorization.isPending() || authorization.isAuthorized()) {
+            return Observable.error(new PaymentAuthorizationAlreadyInitializedException());
+          }
+
+          return authorizationRepository.createAuthorization(getId())
+              .toObservable();
+        })
+        .first()
+        .toSingle();
+  }
+
+  public Completable authorizedProcess(Product product) {
+    return authorizationRepository.getAuthorization(getId())
+        .takeUntil(authorization -> authorization.isAuthorized())
+        .flatMapCompletable(authorization -> {
+
+          if (authorization.isInactive() || authorization.isFailed()) {
+            return Completable.error(new PaymentFailureException("Payment not authorized."));
           }
 
           if (authorization.isAuthorized()) {
-            return Completable.complete();
-          }
-
-          if (authorization.isFailed()) {
-            return payer.getId()
-                .flatMapCompletable(payerId -> authorizationRepository.saveAuthorization(
-                    authorizationFactory.create(getId(), Authorization.Status.INACTIVE, payerId)))
-                .andThen(
-                    Completable.error(new PaymentFailureException("Payment authorization failed")));
+            return process(product);
           }
 
           return Completable.complete();

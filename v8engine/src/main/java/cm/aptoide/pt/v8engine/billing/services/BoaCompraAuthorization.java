@@ -7,12 +7,12 @@ package cm.aptoide.pt.v8engine.billing.services;
 
 import cm.aptoide.pt.v8engine.billing.Authorization;
 
-public class WebAuthorization extends Authorization {
+public class BoaCompraAuthorization extends Authorization {
 
   private final String url;
   private final String redirectUrl;
 
-  public WebAuthorization(int paymentId, String url, String redirectUrl, Status status,
+  public BoaCompraAuthorization(int paymentId, String url, String redirectUrl, Status status,
       String payerId) {
     super(paymentId, payerId, status);
     this.url = url;

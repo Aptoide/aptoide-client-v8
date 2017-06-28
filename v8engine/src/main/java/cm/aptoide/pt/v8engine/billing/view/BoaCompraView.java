@@ -18,15 +18,17 @@ public interface BoaCompraView extends View {
 
   void hideLoading();
 
-  void showUrl(String url, String redirectUrl);
+  void loadBoaCompraConsentWebsite(String url, String redirectUrl);
 
-  Observable<Void> backToStoreSelection();
+  Observable<Void> backToStoreEvent();
 
   Observable<Void> backButtonSelection();
 
-  Observable<Void> urlLoad();
+  Observable<Void> boaCompraConsentWebsiteLoaded();
 
   void dismiss();
 
-  void showErrorAndDismiss();
+  void showError();
+
+  Observable<Void> errorDismissedEvent();
 }

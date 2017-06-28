@@ -8,26 +8,26 @@ package cm.aptoide.pt.v8engine.billing.repository;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
-import cm.aptoide.pt.v8engine.billing.services.AptoidePaymentMethod;
 import cm.aptoide.pt.v8engine.billing.services.BoaCompraPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.services.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.services.SandboxPaymentMethod;
 
 public class PaymentMethodMapper {
 
   public static final String PAYPAL = "paypal";
   public static final String BOACOMPRA = "boacompra";
   public static final String BOACOMPRAGOLD = "boacompragold";
-  public static final String DUMMY = "dummy";
+  public static final String SANDBOX = "dummy";
 
-  private final PaymentRepositoryFactory paymentRepositoryFactory;
+  private final TransactionRepositoryFactory transactionRepositoryFactory;
   private final AuthorizationRepository authorizationRepository;
   private final AuthorizationFactory authorizationFactory;
   private final Payer payer;
 
-  public PaymentMethodMapper(PaymentRepositoryFactory paymentRepositoryFactory,
+  public PaymentMethodMapper(TransactionRepositoryFactory transactionRepositoryFactory,
       AuthorizationRepository authorizationRepository, AuthorizationFactory authorizationFactory,
       Payer payer) {
-    this.paymentRepositoryFactory = paymentRepositoryFactory;
+    this.transactionRepositoryFactory = transactionRepositoryFactory;
     this.authorizationRepository = authorizationRepository;
     this.authorizationFactory = authorizationFactory;
     this.payer = payer;
@@ -37,15 +37,14 @@ public class PaymentMethodMapper {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPaymentMethod(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), paymentRepositoryFactory);
+            paymentService.getDescription(), transactionRepositoryFactory);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
         return new BoaCompraPaymentMethod(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), paymentRepositoryFactory, payer,
-            authorizationRepository, authorizationFactory);
-      case DUMMY:
-        return new AptoidePaymentMethod(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), paymentRepositoryFactory);
+            paymentService.getDescription(), transactionRepositoryFactory, authorizationRepository);
+      case SANDBOX:
+        return new SandboxPaymentMethod(paymentService.getId(), paymentService.getName(),
+            paymentService.getDescription(), transactionRepositoryFactory);
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());

@@ -30,14 +30,14 @@ public abstract class Authorization {
   }
 
   public boolean isPending() {
-    return Status.PENDING.equals(status) || isPendingUserConsent();
+    return Status.PENDING.equals(status) || isInitialized();
   }
 
   public boolean isInactive() {
     return Status.INACTIVE.equals(status);
   }
 
-  public boolean isPendingUserConsent() {
+  public boolean isInitialized() {
     return Status.INITIATED.equals(status);
   }
 

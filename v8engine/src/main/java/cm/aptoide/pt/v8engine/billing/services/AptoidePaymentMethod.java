@@ -7,22 +7,19 @@ package cm.aptoide.pt.v8engine.billing.services;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositoryFactory;
 import rx.Completable;
 
-public class AptoidePaymentMethod implements PaymentMethod {
+public abstract class AptoidePaymentMethod implements PaymentMethod {
 
-  private final PaymentRepositoryFactory paymentRepositoryFactory;
   private final int id;
   private final String name;
   private final String description;
 
-  public AptoidePaymentMethod(int id, String name, String description,
-      PaymentRepositoryFactory paymentRepositoryFactory) {
+  public AptoidePaymentMethod(int id, String name, String description) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.paymentRepositoryFactory = paymentRepositoryFactory;
   }
 
   @Override public int getId() {
@@ -37,8 +34,4 @@ public class AptoidePaymentMethod implements PaymentMethod {
     return description;
   }
 
-  @Override public Completable process(Product product) {
-    return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
-        .createTransaction(id, product);
-  }
 }

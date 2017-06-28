@@ -49,7 +49,7 @@ public class AuthorizationRepository {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Completable createWebPaymentAuthorization(int paymentId) {
+  public Completable createAuthorization(int paymentId) {
     return CreatePaymentAuthorizationRequest.of(paymentId, bodyInterceptorV3, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
@@ -64,12 +64,7 @@ public class AuthorizationRepository {
         .andThen(syncAuthorization(paymentId));
   }
 
-  public Completable saveAuthorization(Authorization authorization) {
-    return Completable.fromAction(() -> authotizationAccessor.insert(
-        authorizationFactory.convertToDatabasePaymentAuthorization(authorization)));
-  }
-
-  public Observable<Authorization> getPaymentAuthorization(int paymentId) {
+  public Observable<Authorization> getAuthorization(int paymentId) {
     return payer.getId()
         .flatMapObservable(
             payerId -> authotizationAccessor.getPaymentAuthorization(payerId, paymentId))

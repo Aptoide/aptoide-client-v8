@@ -7,29 +7,29 @@ package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.v8engine.billing.Authorization;
-import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
+import cm.aptoide.pt.v8engine.billing.services.BoaCompraAuthorization;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AuthorizationFactory {
 
   public Authorization create(int paymentId, Authorization.Status status, String payerId) {
-    return new WebAuthorization(paymentId, "", "", status, payerId);
+    return new BoaCompraAuthorization(paymentId, "", "", status, payerId);
   }
 
   public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
       Authorization authorization) {
     return new cm.aptoide.pt.database.realm.PaymentAuthorization(authorization.getPaymentId(),
-        ((WebAuthorization) authorization).getUrl(),
-        ((WebAuthorization) authorization).getRedirectUrl(), authorization.getStatus()
+        ((BoaCompraAuthorization) authorization).getUrl(),
+        ((BoaCompraAuthorization) authorization).getRedirectUrl(), authorization.getStatus()
         .name(), authorization.getPayerId());
   }
 
   public Authorization convertToPaymentAuthorization(
       cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return new WebAuthorization(paymentAuthorization.getPaymentId(), paymentAuthorization.getUrl(),
-        paymentAuthorization.getRedirectUrl(),
-        WebAuthorization.Status.valueOf(paymentAuthorization.getStatus()),
+    return new BoaCompraAuthorization(paymentAuthorization.getPaymentId(),
+        paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
+        Authorization.Status.valueOf(paymentAuthorization.getStatus()),
         paymentAuthorization.getPayerId());
   }
 
@@ -66,7 +66,7 @@ public class AuthorizationFactory {
   private Authorization convertToPaymentAuthorization(
       PaymentAuthorizationsResponse.PaymentAuthorizationResponse response, String payerId) {
 
-    return new WebAuthorization(response.getPaymentId(), response.getUrl(),
+    return new BoaCompraAuthorization(response.getPaymentId(), response.getUrl(),
         response.getSuccessUrl(), Authorization.Status.valueOf(response.getAuthorizationStatus()),
         payerId);
   }

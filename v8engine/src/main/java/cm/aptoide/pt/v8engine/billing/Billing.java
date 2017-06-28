@@ -8,11 +8,11 @@ package cm.aptoide.pt.v8engine.billing;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositoryFactory;
+import cm.aptoide.pt.v8engine.billing.services.BoaCompraAuthorization;
 import cm.aptoide.pt.v8engine.billing.services.BoaCompraPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.services.PayPalPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -23,14 +23,14 @@ import rx.Single;
 public class Billing {
 
   private final ProductRepositoryFactory productRepositoryFactory;
-  private final PaymentRepositoryFactory paymentRepositoryFactory;
+  private final TransactionRepositoryFactory transactionRepositoryFactory;
   private final InAppBillingRepository inAppBillingRepository;
 
   public Billing(ProductRepositoryFactory productRepositoryFactory,
-      PaymentRepositoryFactory paymentRepositoryFactory,
+      TransactionRepositoryFactory transactionRepositoryFactory,
       InAppBillingRepository inAppBillingRepository) {
     this.productRepositoryFactory = productRepositoryFactory;
-    this.paymentRepositoryFactory = paymentRepositoryFactory;
+    this.transactionRepositoryFactory = transactionRepositoryFactory;
     this.inAppBillingRepository = inAppBillingRepository;
   }
 
@@ -76,14 +76,20 @@ public class Billing {
         .flatMapCompletable(purchase -> purchase.consume());
   }
 
-  public Single<List<PaymentMethod>> getAvailablePaymentMethods(Product product) {
+  public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
     return productRepositoryFactory.getProductRepository(product)
         .getPaymentMethods(product);
   }
 
-  public Observable<WebAuthorization> getWebPaymentAuthorization(int paymentId, Product product) {
-    return getPaymentMethods(paymentId, product).flatMapObservable(
-        payment -> ((BoaCompraPaymentMethod) payment).getAuthorization());
+  public Completable processBoaCompraPayment(int paymentId, Product product) {
+    return getPaymentMethods(paymentId, product).flatMapCompletable(
+        payment -> ((BoaCompraPaymentMethod) payment).authorizedProcess(product));
+  }
+
+  public Single<BoaCompraAuthorization> getInitializedBoaCompraAuthorization(int paymentId,
+      Product product) {
+    return getPaymentMethods(paymentId, product).flatMap(
+        payment -> ((BoaCompraPaymentMethod) payment).getInitializedAuthorization());
   }
 
   public Completable processPayment(int paymentId, Product product) {
@@ -92,8 +98,7 @@ public class Billing {
   }
 
   public Completable processPayPalPayment(Product product, String payPalConfirmationId) {
-    return getAvailablePaymentMethods(product).flatMapObservable(
-        payments -> Observable.from(payments))
+    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
         .filter(payment -> payment instanceof PayPalPaymentMethod)
         .first()
         .cast(PayPalPaymentMethod.class)
@@ -101,8 +106,8 @@ public class Billing {
         .flatMapCompletable(payment -> payment.process(product, payPalConfirmationId));
   }
 
-  public Observable<Transaction> getConfirmation(Product product) {
-    return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
+  public Observable<Transaction> getTransaction(Product product) {
+    return transactionRepositoryFactory.getTransactionRepository(product)
         .getTransaction(product)
         .distinctUntilChanged(confirmation -> confirmation.getStatus());
   }
@@ -112,7 +117,7 @@ public class Billing {
         .getPurchase(product)
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof RepositoryIllegalArgumentException) {
-            return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
+            return transactionRepositoryFactory.getTransactionRepository(product)
                 .remove(product.getId())
                 .andThen(Single.error(throwable));
           }
@@ -121,11 +126,10 @@ public class Billing {
   }
 
   public Single<PaymentMethod> getPaymentMethods(int paymentId, Product product) {
-    return getAvailablePaymentMethods(product).flatMapObservable(
-        payments -> Observable.from(payments)
-            .filter(payment -> payment.getId() == paymentId)
-            .switchIfEmpty(Observable.error(
-                new PaymentFailureException("Payment " + paymentId + " not available"))))
+    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments)
+        .filter(payment -> payment.getId() == paymentId)
+        .switchIfEmpty(Observable.error(
+            new PaymentFailureException("Payment " + paymentId + " not available"))))
         .first()
         .toSingle();
   }

@@ -7,9 +7,6 @@ package cm.aptoide.pt.v8engine.billing.exception;
 
 import cm.aptoide.pt.utils.BaseException;
 
-/**
- * Created by marcelobenites on 8/10/16.
- */
 public class PaymentException extends BaseException {
 
   public PaymentException(String message) {
@@ -21,6 +18,5 @@ public class PaymentException extends BaseException {
   }
 
   public PaymentException() {
-
   }
 }

@@ -13,7 +13,7 @@ import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.presenter.PaymentMethodSelector;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -103,7 +103,7 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showPaymentLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
-        .flatMapCompletable(product -> billing.getAvailablePaymentMethods(product)
+        .flatMapCompletable(product -> billing.getPaymentMethods(product)
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(payments -> showPaymentInformation(product, payments))
             .doOnCompleted(() -> view.hidePaymentLoading()))
@@ -123,7 +123,7 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showTransactionLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
-        .flatMap(product -> billing.getConfirmation(product)
+        .flatMap(product -> billing.getTransaction(product)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(confirmation -> {
               if (confirmation.isFailed()) {
@@ -199,7 +199,7 @@ public class PaymentPresenter implements Presenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .onErrorResumeNext(throwable -> {
 
-                      if (throwable instanceof PaymentNotAuthorizedException) {
+                      if (throwable instanceof PaymentMethodNotAuthorizedException) {
                         paymentNavigator.navigateToAuthorizationView(payment, product);
                         view.hidePaymentLoading();
                         return Completable.complete();
@@ -288,7 +288,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Single<PaymentMethod> getSelectedPaymentMethod(Product product) {
-    return billing.getAvailablePaymentMethods(product)
+    return billing.getPaymentMethods(product)
         .flatMap(paymentMethods -> paymentMethodSelector.selectedPaymentMethod(paymentMethods));
   }
 

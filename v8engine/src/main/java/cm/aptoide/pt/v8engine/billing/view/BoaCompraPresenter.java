@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentAuthorizationAlreadyInitializedException;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -36,24 +37,51 @@ public class BoaCompraPresenter implements Presenter {
 
   @Override public void present() {
 
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.backButtonSelection())
-        .flatMapSingle(backButtonPressed -> productProvider.getProduct())
-        .doOnNext(product -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+    onViewCreatedProcessBoaCompraPayment();
 
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.urlLoad())
-        .doOnNext(loaded -> view.hideLoading())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+    handleBoaCompraConsentWebsiteLoadedEvent();
 
+    handleBackButtonEvent();
+
+    handleBackToStoreEvent();
+
+    handleDismissEvent();
+  }
+
+  private void onViewCreatedProcessBoaCompraPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.backToStoreSelection()
+        .flatMapSingle(__ -> productProvider.getProduct())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(product -> view.showLoading())
+        .flatMapCompletable(
+            product -> billing.getInitializedBoaCompraAuthorization(paymentId, product)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(
+                    authorization -> view.loadBoaCompraConsentWebsite(authorization.getUrl(),
+                        authorization.getRedirectUrl()))
+                .flatMapCompletable(__ -> billing.processBoaCompraPayment(paymentId, product))
+                .onErrorResumeNext(throwable -> {
+                  if (throwable instanceof PaymentAuthorizationAlreadyInitializedException) {
+                    return billing.processBoaCompraPayment(paymentId, product);
+                  }
+                  return Completable.error(throwable);
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> view.hideLoading()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.showError();
+          view.hideLoading();
+        });
+  }
+
+  private void handleBackToStoreEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.backToStoreEvent()
             .doOnNext(backToStorePressed -> view.showLoading())
             .flatMapSingle(loading -> productProvider.getProduct())
             .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product)))
@@ -61,32 +89,47 @@ public class BoaCompraPresenter implements Presenter {
         // be removed once we have a better sync implementation
         .flatMapCompletable(analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentId))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnError(throwable -> view.showErrorAndDismiss())
-        .onErrorReturn(null)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.hideLoading();
+          view.showError();
+        });
+  }
 
+  private void handleBoaCompraConsentWebsiteLoadedEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> view.showLoading())
-        .flatMap(__ -> productProvider.getProduct()
-            .flatMapObservable(product -> billing.getWebPaymentAuthorization(paymentId, product)
-                .takeUntil(webAuthorization -> !webAuthorization.isPendingUserConsent())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMapCompletable(authorization -> {
+        .flatMap(created -> view.boaCompraConsentWebsiteLoaded())
+        .doOnNext(loaded -> view.hideLoading())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.hideLoading();
+          view.showError();
+        });
+  }
 
-                  if (authorization.isPendingUserConsent()) {
-                    view.showUrl(authorization.getUrl(), authorization.getRedirectUrl());
-                    return Completable.complete();
-                  }
-
-                  return billing.processPayment(paymentId, product)
-                      .observeOn(AndroidSchedulers.mainThread())
-                      .doOnCompleted(() -> view.dismiss());
-                })))
+  private void handleBackButtonEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.backButtonSelection())
+        .flatMapSingle(backButtonPressed -> productProvider.getProduct())
+        .doOnNext(product -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnError(throwable -> view.showErrorAndDismiss())
-        .onErrorReturn(null)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.hideLoading();
+          view.showError();
+        });
+  }
+
+  private void handleDismissEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.errorDismissedEvent())
+        .doOnNext(dismiss -> view.dismiss())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

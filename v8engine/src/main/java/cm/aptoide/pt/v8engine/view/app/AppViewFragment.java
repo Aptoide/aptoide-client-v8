@@ -70,7 +70,7 @@ import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentException;
 import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
@@ -451,12 +451,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
         fragmentActivity.sendBroadcast(installApp);
       } catch (Throwable throwable) {
-        if (throwable instanceof PaymentCancellationException) {
-          Logger.i(TAG, "The user canceled.");
+        if (throwable instanceof PaymentException) {
           ShowMessage.asSnack(header.badge, R.string.user_cancelled);
         } else {
-          Logger.i(TAG,
-              "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
           ShowMessage.asSnack(header.badge, R.string.unknown_error);
         }
       }
