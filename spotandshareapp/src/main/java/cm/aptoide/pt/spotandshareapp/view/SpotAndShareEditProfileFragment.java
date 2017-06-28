@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +43,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   private Button saveProfile;
   private Button cancel;
   private List<ImageView> defaultAvatarList;
+  private Toolbar toolbar;
   private int selectedAvatar = 0;
 
   public static Fragment newInstance() {
@@ -124,6 +128,9 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     usernameEditText = (EditText) view.findViewById(R.id.username_edit_text);
     cancel = (Button) view.findViewById(R.id.cancel_profile_edition_button);
     saveProfile = (Button) view.findViewById(R.id.save_profile_edition_button);
+    toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
+
+    setupToolbar();
 
     buildImageViewList();
 
@@ -145,6 +152,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     usernameEditText = null;
     cancel = null;
     saveProfile = null;
+    toolbar = null;
     super.onDestroyView();
   }
 
@@ -156,6 +164,14 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     defaultAvatarList.add(fourthAvatar);
     defaultAvatarList.add(fifthAvatar);
     defaultAvatarList.add(sixthAvatar);
+  }
+
+  private void setupToolbar() {
+    setHasOptionsMenu(true);
+    toolbar.setTitle(R.string.spotandshare_title_toolbar);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   @Nullable @Override
