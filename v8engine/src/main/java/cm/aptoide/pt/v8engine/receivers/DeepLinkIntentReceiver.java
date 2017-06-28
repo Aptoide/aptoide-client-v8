@@ -439,6 +439,7 @@ public class DeepLinkIntentReceiver extends Activity {
     public static final String SEARCH_FRAGMENT = "searchFragment";
     public static final String GENERIC_DEEPLINK = "generic_deeplink";
     public static final String SCHEDULE_DEEPLINK = "schedule_downloads";
+    public static final String TOP_APPS_WEEK = "top_apps_week";
   }
 
   public static class DeepLinksKeys {

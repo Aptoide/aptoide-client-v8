@@ -368,4 +368,7 @@
   <string name="languages">Languages</string>
   <string name="language_dialog">Select a language</string>
 
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
+
 </resources>
