@@ -128,7 +128,11 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.VIDEO) || cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.ARTICLE)) {
+              .equals(CardType.ARTICLE) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_VIDEO)) {
             ((Media) cardTouchEvent.getCard()).getMediaLink()
                 .launch();
           } else if (cardTouchEvent.getCard()
