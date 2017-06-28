@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +39,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
   private ImageView editProfileButton;
   private ImageView userAvatar;
   private TextView username;
-  private ActionBar actionBar;
+  private Toolbar toolbar;
   private SpotAndShareMainFragmentPresenter presenter;
 
   private SpotAndShare spotAndShare;
@@ -139,6 +140,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     editProfileButton = (ImageView) view.findViewById(R.id.edit_profile_button);
     userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
     username = (TextView) view.findViewById(R.id.username);
+    toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupActionBar();
     presenter = new SpotAndShareMainFragmentPresenter(this, spotAndShare,
         new SpotAndShareUserManager(new SpotAndShareUserPersister(
@@ -149,15 +151,17 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
 
   private void setupActionBar() {
     setHasOptionsMenu(true);
-    actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setTitle("SPOTSHARE");
+
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setTitle(R.string.spotandshare_title_toolbar);
     actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   @Override public void onDestroyView() {
     receiveButton = null;
     sendButton = null;
-    actionBar = null;
+    toolbar = null;
     super.onDestroyView();
   }
 
