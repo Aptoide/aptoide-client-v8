@@ -5,6 +5,12 @@
     android:orientation="vertical"
     >
 
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/spotandshare_toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="?attr/colorPrimary"
+      />
 
   <ImageView
       android:id="@+id/actual_avatar"
@@ -13,6 +19,7 @@
       android:layout_centerHorizontal="true"
       android:layout_margin="20dp"
       android:src="@drawable/unknown_avatar"
+      android:layout_below="@id/spotandshare_toolbar"
       />
 
   <EditText
