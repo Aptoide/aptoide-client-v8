@@ -2,9 +2,11 @@ package cm.aptoide.pt.spotandshareapp;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.preference.PreferenceManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
+import cm.aptoide.pt.spotandshareapp.persister.BooleanPersister;
 import java.util.List;
 
 /**
@@ -21,7 +23,8 @@ public class SpotAndShareImpl implements SpotAndShare {
 
   public SpotAndShareImpl(Context context) {
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
-        .getSystemService(Context.WIFI_SERVICE));
+        .getSystemService(Context.WIFI_SERVICE),
+        new BooleanPersister(PreferenceManager.getDefaultSharedPreferences(context)));
   }
 
   @Override
