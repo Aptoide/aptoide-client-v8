@@ -23,7 +23,7 @@ public class AppModel {
     this.packageName = packageName;
     this.filePath = filePath;
     this.obbsFilePath = obbsFilePath;
-    this.appIcon = this.appIcon;
+    this.appIcon = appIcon;
   }
 
   public String getAppName() {

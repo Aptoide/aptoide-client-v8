@@ -141,7 +141,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
     username = (TextView) view.findViewById(R.id.username);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
-    setupActionBar();
+    setupToolbar();
     presenter = new SpotAndShareMainFragmentPresenter(this, spotAndShare,
         new SpotAndShareUserManager(new SpotAndShareUserPersister(
             getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
@@ -149,7 +149,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     attachPresenter(presenter, savedInstanceState);
   }
 
-  private void setupActionBar() {
+  private void setupToolbar() {
     setHasOptionsMenu(true);
     toolbar.setTitle(R.string.spotandshare_title_toolbar);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
