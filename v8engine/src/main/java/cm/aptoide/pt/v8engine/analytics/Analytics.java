@@ -209,6 +209,11 @@ public class Analytics {
     public static class Application {
 
       static AppEventsLogger facebookLogger;
+      private static String utmSource = "unknown";
+      private static String utmMedium = "unknown";
+      private static String utmCampaign = "unknown";
+      private static String utmContent = "unknown";
+      private static String entryPoint = "unknown";
 
       public static void onCreate(android.app.Application application) {
 
@@ -227,7 +232,9 @@ public class Analytics {
                 SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
                     PreferenceManager.getDefaultSharedPreferences(application))))
             .doOnNext(__ -> setupDimensions(application))
-            .doOnCompleted(() -> firstLaunchAnalytics.sendFirstLaunchEvent())
+            .doOnCompleted(
+                () -> firstLaunchAnalytics.sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
+                    utmContent, entryPoint))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
@@ -237,6 +244,8 @@ public class Analytics {
       private static void setupDimensions(android.app.Application application) {
         if (!checkForUTMFileInMetaINF(application)) {
           Dimensions.setUTMDimensionsToUnknown();
+        } else {
+          Dimensions.setUserProperties(utmSource, utmMedium, utmCampaign, utmContent, entryPoint);
         }
       }
 
@@ -254,31 +263,11 @@ public class Analytics {
           UTMFileParser utmFileParser = new UTMFileParser(utmInputStream);
           myZipFile.close();
 
-          String utmSource = utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE);
-          String utmMedium = utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM);
-          String utmCampaign = utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN);
-          String utmContent = utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT);
-          String entryPoint = utmFileParser.valueExtracter(UTMFileParser.ENTRY_POINT);
-
-          if (!utmSource.isEmpty()) {
-            Analytics.Dimensions.setUTMSource(utmSource);
-          }
-
-          if (!utmMedium.isEmpty()) {
-            Analytics.Dimensions.setUTMMedium(utmMedium);
-          }
-
-          if (!utmCampaign.isEmpty()) {
-            Analytics.Dimensions.setUTMCampaign(utmCampaign);
-          }
-
-          if (!utmContent.isEmpty()) {
-            Analytics.Dimensions.setUTMContent(utmContent);
-          }
-
-          if (!entryPoint.isEmpty()) {
-            Analytics.Dimensions.setEntryPointDimension(entryPoint);
-          }
+          utmSource = utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE);
+          utmMedium = utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM);
+          utmCampaign = utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN);
+          utmContent = utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT);
+          entryPoint = utmFileParser.valueExtracter(UTMFileParser.ENTRY_POINT);
 
           utmInputStream.close();
         } catch (IOException e) {
@@ -778,32 +767,57 @@ public class Analytics {
           response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
 
-    public static void setUTMSource(String utmSource) {
-      setUserProperties(UTM_SOURCE, utmSource);
+    private static void setUserPropertiesWithBundle(Bundle data) {
+      AppEventsLogger.updateUserProperties(data,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
 
-    public static void setUTMMedium(String utmMedium) {
-      setUserProperties(UTM_MEDIUM, utmMedium);
+    public static void setUserProperties(String utmSource, String utmMedium, String utmCampaign,
+        String utmContent, String entryPoint) {
+      setUserPropertiesWithBundle(
+          createUserPropertiesBundle(utmSource, utmMedium, utmCampaign, utmContent, entryPoint));
     }
 
-    public static void setUTMCampaign(String utmCampaign) {
-      setUserProperties(UTM_CAMPAIGN, utmCampaign);
+    public static Bundle createUserPropertiesBundle(String utmSource, String utmMedium,
+        String utmCampaign, String utmContent, String entryPoint) {
+      Bundle data = new Bundle();
+      data.putString(UTM_SOURCE, utmSource);
+      data.putString(UTM_MEDIUM, utmMedium);
+      data.putString(UTM_CAMPAIGN, utmCampaign);
+      data.putString(UTM_CONTENT, utmContent);
+      data.putString(ENTRY_POINT, entryPoint);
+      return data;
     }
 
-    public static void setUTMContent(String utmContent) {
-      setUserProperties(UTM_CONTENT, utmContent);
-    }
+    //public static void setUTMSource(String utmSource) {
+    //  setUserProperties(UTM_SOURCE, utmSource);
+    //}
+    //
+    //public static void setUTMMedium(String utmMedium) {
+    //  setUserProperties(UTM_MEDIUM, utmMedium);
+    //}
+    //
+    //public static void setUTMCampaign(String utmCampaign) {
+    //  setUserProperties(UTM_CAMPAIGN, utmCampaign);
+    //}
+    //
+    //public static void setUTMContent(String utmContent) {
+    //  setUserProperties(UTM_CONTENT, utmContent);
+    //}
 
     public static void setUTMDimensionsToUnknown() {
-      setUserProperties(UTM_SOURCE, UNKNOWN);
-      setUserProperties(UTM_MEDIUM, UNKNOWN);
-      setUserProperties(UTM_CAMPAIGN, UNKNOWN);
-      setUserProperties(UTM_CONTENT, UNKNOWN);
+      Bundle data = new Bundle();
+      data.putString(UTM_SOURCE, UNKNOWN);
+      data.putString(UTM_MEDIUM, UNKNOWN);
+      data.putString(UTM_CAMPAIGN, UNKNOWN);
+      data.putString(UTM_CONTENT, UNKNOWN);
+      data.putString(ENTRY_POINT, UNKNOWN);
+      setUserPropertiesWithBundle(data);
     }
 
-    public static void setEntryPointDimension(String entryPoint) {
-      setUserProperties(ENTRY_POINT, entryPoint);
-    }
+    //public static void setEntryPointDimension(String entryPoint) {
+    //  setUserProperties(ENTRY_POINT, entryPoint);
+    //}
   }
 
   public static class AppViewViewedFrom {
