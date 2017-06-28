@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.pt.v8engine.InstallationProgress;
-import java.util.List;
 import rx.Observable;
 
 /**
@@ -21,7 +19,7 @@ public interface MainView extends View {
 
   boolean showDeepLink();
 
-  void showInstallationError(List<InstallationProgress> installationProgresses);
+  void showInstallationError(int numberOfErrors);
 
   void dismissInstallationError();
 

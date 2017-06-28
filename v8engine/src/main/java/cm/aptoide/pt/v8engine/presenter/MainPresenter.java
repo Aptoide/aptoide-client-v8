@@ -10,12 +10,15 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstallCompletedNotifier;
 import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.notification.ContentPuller;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.util.ApkFy;
+import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -23,21 +26,23 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class MainPresenter implements Presenter {
 
+  private static final String TAG = MainPresenter.class.getSimpleName();
   private final MainView view;
   private final ContentPuller contentPuller;
   private final InstallManager installManager;
   private final RootInstallationRetryHandler rootInstallationRetryHandler;
   private final CrashReport crashReport;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private InstallCompletedNotifier installCompletedNotifier;
   private ApkFy apkFy;
   private AutoUpdate autoUpdate;
   private boolean firstCreated;
-  private boolean notificationShowed;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
       ApkFy apkFy, AutoUpdate autoUpdate, ContentPuller contentPuller,
-      NotificationSyncScheduler notificationSyncScheduler) {
+      NotificationSyncScheduler notificationSyncScheduler,
+      InstallCompletedNotifier installCompletedNotifier) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -46,8 +51,8 @@ public class MainPresenter implements Presenter {
     this.autoUpdate = autoUpdate;
     this.contentPuller = contentPuller;
     this.notificationSyncScheduler = notificationSyncScheduler;
+    this.installCompletedNotifier = installCompletedNotifier;
     this.firstCreated = true;
-    this.notificationShowed = false;
   }
 
   @Override public void present() {
@@ -95,8 +100,8 @@ public class MainPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(installationProgresses -> {
-          view.showInstallationError(installationProgresses);
-          notificationShowed = true;
+          watchInstalls(installationProgresses);
+          view.showInstallationError(installationProgresses.size());
         }, throwable -> crashReport.log(throwable));
 
     view.getLifecycle()
@@ -105,23 +110,25 @@ public class MainPresenter implements Presenter {
         .filter(installationProgresses -> installationProgresses.size() == 0)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(noInstallErrors -> {
-          if (notificationShowed) {
-            view.dismissInstallationError();
-            view.showInstallationSuccessMessage();
-            notificationShowed = false;
-          }
-        }, throwable -> crashReport.log(throwable));
+        .subscribe(noInstallErrors -> view.dismissInstallationError(),
+            throwable -> crashReport.log(throwable));
+
+    installCompletedNotifier.getWatcher()
+        .subscribe(allInstallsCompleted -> view.showInstallationSuccessMessage());
 
     view.getLifecycle()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(lifecycleEvent -> view.getInstallErrorsDismiss())
-        .flatMapCompletable(click -> {
-          notificationShowed = false;
-          return installManager.cleanTimedOutInstalls();
-        })
+        .flatMapCompletable(click -> installManager.cleanTimedOutInstalls())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(timeoutErrorsCleaned -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void watchInstalls(List<InstallationProgress> installationProgresses) {
+    for (InstallationProgress installationProgress : installationProgresses) {
+      installCompletedNotifier.add(installationProgress.getPackageName(),
+          installationProgress.getVersionCode(), installationProgress.getMd5());
+    }
   }
 }

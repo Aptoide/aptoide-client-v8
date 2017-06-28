@@ -32,12 +32,12 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.InstallCompletedNotifier;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.notification.ContentPuller;
 import cm.aptoide.pt.v8engine.presenter.MainPresenter;
@@ -62,7 +62,6 @@ import com.jakewharton.rxrelay.PublishRelay;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -104,13 +103,18 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
         converterFactory);
 
+    InstallCompletedNotifier installCompletedNotifier =
+        new InstallCompletedNotifier(PublishRelay.create(), installManager,
+            CrashReport.getInstance());
+
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     attachPresenter(new MainPresenter(this, installManager,
         ((V8Engine) getApplicationContext()).getRootInstallationRetryHandler(),
         CrashReport.getInstance(), new ApkFy(this, getIntent()), autoUpdate,
         new ContentPuller(this),
-        ((V8Engine) getApplicationContext()).getNotificationSyncScheduler()), savedInstanceState);
+        ((V8Engine) getApplicationContext()).getNotificationSyncScheduler(),
+        installCompletedNotifier), savedInstanceState);
   }
 
   @Override public void showWizard() {
@@ -128,13 +132,13 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     return handleDeepLinks();
   }
 
-  @Override public void showInstallationError(List<InstallationProgress> installationProgresses) {
+  @Override public void showInstallationError(int numberOfErrors) {
     String title;
-    if (installationProgresses.size() == 1) {
+    if (numberOfErrors == 1) {
       title = getString(R.string.generalscreen_short_root_install_single_app_timeout_error_message);
     } else {
       title = getString(R.string.generalscreen_short_root_install_timeout_error_message,
-          installationProgresses.size());
+          numberOfErrors);
     }
 
     Snackbar.Callback snackbarCallback = new Snackbar.Callback() {
