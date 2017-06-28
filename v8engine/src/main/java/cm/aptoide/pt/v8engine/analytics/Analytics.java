@@ -150,32 +150,6 @@ public class Analytics {
     }
   }
 
-  public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key, event);
-  }
-
-  public @Nullable Event get(String key, Class<? extends Event> clazz) {
-    return saver.get(key + clazz.getName());
-  }
-
-  public void sendEvent(Event event) {
-    event.send();
-    saver.remove(event);
-  }
-
-  /**
-   * This method is dealing with spot and share events only and should be refactored in case
-   * one would want to send the same event to fabric AND any other analytics platform
-   */
-  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
-      boolean fabric) {
-    if (fabric) {
-      logFabricEvent(eventName, attributes, FABRIC);
-    } else {
-      logFacebookEvents(eventName, attributes);
-    }
-  }
-
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -207,6 +181,32 @@ public class Analytics {
     }
     Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
     facebookLogger.logEvent(eventName, parameters);
+  }
+
+  public void save(@NonNull String key, @NonNull Event event) {
+    saver.save(key, event);
+  }
+
+  public @Nullable Event get(String key, Class<? extends Event> clazz) {
+    return saver.get(key + clazz.getName());
+  }
+
+  public void sendEvent(Event event) {
+    event.send();
+    saver.remove(event);
+  }
+
+  /**
+   * This method is dealing with spot and share events only and should be refactored in case
+   * one would want to send the same event to fabric AND any other analytics platform
+   */
+  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
+      boolean fabric) {
+    if (fabric) {
+      logFabricEvent(eventName, attributes, FABRIC);
+    } else {
+      logFacebookEvents(eventName, attributes);
+    }
   }
 
   public static class Lifecycle {

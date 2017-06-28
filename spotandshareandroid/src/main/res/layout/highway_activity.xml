@@ -4,19 +4,19 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:orientation="vertical"
-    >
+>
 
   <android.support.design.widget.AppBarLayout
       android:id="@+id/shareAppsAppbar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      >
+  >
     <android.support.v7.widget.Toolbar
         android:id="@+id/shareAppsToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="?attr/toolbarTheme"
-        />
+    />
   </android.support.design.widget.AppBarLayout>
 
   <LinearLayout
@@ -24,7 +24,7 @@
       android:layout_height="wrap_content"
       android:orientation="vertical"
       android:weightSum="1"
-      >
+  >
 
     <TextView
         android:id="@+id/share_aptoide_apk_button"
@@ -40,7 +40,7 @@
         android:text="@string/spotandshare_button_invite_friends"
         android:textColor="@color/white"
         style="@style/Aptoide.Spot.Button.Ghost.Spotandshare"
-        >
+    >
 
     </TextView>
 
@@ -50,21 +50,21 @@
         android:layout_weight="1"
         android:background="#FFFFFF"
         android:gravity="center"
-        >
+    >
 
 
       <cm.aptoide.pt.spotandshareandroid.HighwayRadarScan
           android:id="@+id/radar"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          />
+      />
 
       <cm.aptoide.pt.spotandshareandroid.HighwayRadarTextView
           android:id="@+id/hotspotTextView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:layout_margin="20dp"
-          />
+      />
 
       <TextView
           android:id="@+id/searching_groups"
@@ -75,7 +75,7 @@
           android:gravity="bottom|center"
           android:text="@string/searching_groups"
           android:textSize="16sp"
-          />
+      />
 
       <ProgressBar
           android:id="@+id/buttonsProgressBar"
@@ -85,7 +85,7 @@
           android:indeterminateDrawable="@drawable/custom_progressbarwheel"
           android:visibility="gone"
           style="?android:attr/progressBarStyleLarge"
-          />
+      />
 
 
     </RelativeLayout>
@@ -96,7 +96,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        >
+    >
 
       <ProgressBar
           android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
           android:indeterminateDrawable="@drawable/custom_progressbarwheel"
           android:indeterminateOnly="true"
           style="?android:attr/progressBarStyleLarge"
-          />
+      />
 
     </LinearLayout>
 
@@ -118,7 +118,7 @@
         android:background="#FFFFFF"
         android:orientation="horizontal"
         android:visibility="gone"
-        >
+    >
 
       <LinearLayout
           android:id="@+id/createGroup"
@@ -131,7 +131,7 @@
           android:clickable="true"
           android:orientation="vertical"
           android:weightSum="1"
-          >
+      >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
             android:layout_weight="0.9"
             android:adjustViewBounds="true"
             android:src="@drawable/creategroup"
-            />
+        />
 
         <TextView
             android:layout_width="wrap_content"
@@ -153,7 +153,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#FFFFFF"
             android:textSize="10sp"
-            />
+        />
 
       </LinearLayout>
 

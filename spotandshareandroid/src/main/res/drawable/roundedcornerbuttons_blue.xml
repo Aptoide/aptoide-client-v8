@@ -11,7 +11,10 @@
     </shape>
   </item>
 
-  <item android:drawable="@color/dark_blue" android:state_enabled="true" android:state_pressed="true"/>
-  <item android:drawable="@color/dark_blue" android:state_enabled="true" android:state_focused="true"/>
-  <item android:drawable="@color/dark_blue" android:state_enabled="true" android:state_selected="true"/>
+  <item android:drawable="@color/dark_blue" android:state_enabled="true"
+      android:state_pressed="true"/>
+  <item android:drawable="@color/dark_blue" android:state_enabled="true"
+      android:state_focused="true"/>
+  <item android:drawable="@color/dark_blue" android:state_enabled="true"
+      android:state_selected="true"/>
 </selector>

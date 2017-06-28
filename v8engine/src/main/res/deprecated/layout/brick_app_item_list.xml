@@ -38,8 +38,8 @@
         android:layout_centerVertical="true"
         android:paddingEnd="1.5dp"
         android:paddingRight="1.5dp"
-        tools:text="Little Commander worl world II"
         android:textColor="?attr/inverseTextColor"
+        tools:text="Little Commander worl world II"
         />
 
 
