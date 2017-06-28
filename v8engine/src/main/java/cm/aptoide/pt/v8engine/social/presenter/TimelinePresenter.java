@@ -19,6 +19,7 @@ import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
+import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
@@ -144,8 +145,13 @@ public class TimelinePresenter implements Presenter {
                     AppViewFragment.OpenType.OPEN_ONLY));
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.STORE)) {
-
+              .equals(CardType.STORE) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_STORE)) {
+            StoreAppCardTouchEvent storeCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
+            fragmentNavigator.navigateTo(
+                AppViewFragment.newInstance(storeCardTouchEvent.getPackageName(),
+                    AppViewFragment.OpenType.OPEN_ONLY));
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.UPDATE)) {

@@ -45,10 +45,7 @@ public class Poster {
   }
 
   private boolean doesUserHasStore() {
-    if (store != null) {
-      return true;
-    }
-    return false;
+    return store != null;
   }
 
   private String getUserName(Comment.User user) {
@@ -71,10 +68,7 @@ public class Poster {
     return secondaryName;
   }
 
-  public boolean isUserPublic() {
-    if (user != null) {
-      return true;
-    }
-    return false;
+  private boolean isUserPublic() {
+    return user != null;
   }
 }

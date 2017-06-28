@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.ProgressViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.RecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialMediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialRecommendationViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.SocialStoreViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.StoreLatestAppsViewHolder;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -72,6 +73,10 @@ public class CardViewHolderFactory {
       case SOCIAL_VIDEO:
         return new SocialMediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_social_media_item, parent, false),
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
+      case SOCIAL_STORE:
+        return new SocialStoreViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_social_store_item, parent, false),
             cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())

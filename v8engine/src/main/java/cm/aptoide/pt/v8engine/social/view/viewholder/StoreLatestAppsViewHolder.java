@@ -41,7 +41,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
       SpannableFactory spannableFactory) {
     super(view);
     this.spannableFactory = spannableFactory;
-    inflater = LayoutInflater.from(itemView.getContext());
+    this.inflater = LayoutInflater.from(itemView.getContext());
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
 

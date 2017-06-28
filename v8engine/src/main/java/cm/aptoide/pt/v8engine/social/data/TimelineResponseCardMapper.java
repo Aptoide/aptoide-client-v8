@@ -13,6 +13,8 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstallTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendation;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendationTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialStoreLatestApps;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialStoreLatestAppsTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialVideoTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestAppsTimelineItem;
@@ -164,6 +166,19 @@ public class TimelineResponseCardMapper {
                 .getBaseUrl()),
             linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialVideo.getUrl()),
             CardType.SOCIAL_VIDEO));
+      } else if (item instanceof SocialStoreLatestAppsTimelineItem) {
+        final SocialStoreLatestApps socialStoreLatestApps =
+            ((SocialStoreLatestAppsTimelineItem) item).getData();
+        cards.add(new SocialStore(socialStoreLatestApps.getCardId(),
+            new Poster(socialStoreLatestApps.getUser(), socialStoreLatestApps.getOwnerStore()),
+            socialStoreLatestApps.getSharedStore()
+                .getName(), socialStoreLatestApps.getSharedStore()
+            .getAvatar(), socialStoreLatestApps.getSharedStore()
+            .getStats()
+            .getSubscribers(), socialStoreLatestApps.getOwnerStore()
+            .getStats()
+            .getApps(), socialStoreLatestApps.getDate(), socialStoreLatestApps.getApps(), abUrl,
+            CardType.SOCIAL_STORE));
       }
     }
 

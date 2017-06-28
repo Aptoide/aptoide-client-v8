@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardUseCompatPadding="true"
+    style="@style/Widget.Aptoide.Card"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <include layout="@layout/apps_timeline_card_header"/>
+
+    <TextView
+        android:id="@+id/social_shared_by"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="72dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="7dp"
+        android:text="@string/social_timeline_shared_by"
+        android:textStyle="italic"
+        android:visibility="gone"
+        tools:text="shared by Jonenz"
+        tools:visibility="visible"
+        />
+    <include layout="@layout/apps_timeline_store_latest_body"/>
+
+    <View
+        android:id="@+id/partial_social_timeline_thumbnail_divider2"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:background="@color/timeline_separator"
+        android:visibility="visible"
+        />
+
+    <!--<include layout="@layout/social_info_bar_timeline"/>-->
+
+    <!--<include layout="@layout/social_last_comment_bar"/>-->
+
+    <!--<include layout="@layout/social_bar_timeline"/>-->
+  </LinearLayout>
+</android.support.v7.widget.CardView>
+
