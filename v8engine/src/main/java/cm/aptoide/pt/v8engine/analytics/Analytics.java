@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
@@ -55,6 +56,7 @@ public class Analytics {
   };
   private static final IdsRepository idsRepository;
   private static Analytics instance;
+  private static boolean isFirstSession;
 
   static {
     idsRepository = ((V8Engine) DataProvider.getContext()
@@ -136,31 +138,6 @@ public class Analytics {
     facebookLogger.logEvent(eventName, bundle);
   }
 
-  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
-    if (checkAcceptability(flags, FABRIC)) {
-      CustomEvent customEvent = new CustomEvent(event);
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
-      }
-      Answers.getInstance()
-          .logCustom(customEvent);
-      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    if (map != null) {
-      for (String s : map.keySet()) {
-        parameters.putString(s, map.get(s));
-      }
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
   private static void track(String event, int flags) {
 
     try {
@@ -171,14 +148,6 @@ public class Analytics {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
-    facebookLogger.logEvent(eventName, parameters);
   }
 
   public void save(@NonNull String key, @NonNull Event event) {
@@ -207,6 +176,39 @@ public class Analytics {
     }
   }
 
+  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
+    if (checkAcceptability(flags, FABRIC)) {
+      CustomEvent customEvent = new CustomEvent(event);
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
+      }
+      Answers.getInstance()
+          .logCustom(customEvent);
+      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    logFacebookEvents(eventName, parameters);
+  }
+
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
+    facebookLogger.logEvent(eventName, parameters);
+  }
+
   public static class Lifecycle {
 
     public static class Application {
@@ -223,6 +225,8 @@ public class Analytics {
           AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
           return null;
         })
+            .filter(__ -> SecurePreferences.isFirstRun())
+            .doOnNext(__ -> setupDimensions())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
