@@ -20,15 +20,12 @@ public abstract class BackButtonFragment extends FragmentView implements BackBut
     }
   }
 
-  @Override public void registerBackClickHandler(ClickHandler clickHandler) {
-    backButton.registerBackClickHandler(clickHandler);
+  @Override public void registerClickHandler(ClickHandler clickHandler) {
+    backButton.registerClickHandler(clickHandler);
   }
 
-  @Override public void unregisterBackClickHandler(ClickHandler clickHandler) {
-    backButton.unregisterBackClickHandler(clickHandler);
+  @Override public void unregisterClickHandler(ClickHandler clickHandler) {
+    backButton.unregisterClickHandler(clickHandler);
   }
 
-  @Override public void backClick() {
-    backButton.backClick();
-  }
 }

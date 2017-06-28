@@ -33,11 +33,11 @@ public class WizardPageOneFragment extends BackButtonFragment {
         return false;
       }
     };
-    registerBackClickHandler(clickHandler);
+    registerClickHandler(clickHandler);
   }
 
   @Override public void onDestroyView() {
-    unregisterBackClickHandler(clickHandler);
+    unregisterClickHandler(clickHandler);
     super.onDestroyView();
   }
 }

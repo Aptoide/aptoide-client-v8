@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import rx.Observable;
 
 /**
  * Created by marcelobenites on 09/02/17.
@@ -35,7 +36,11 @@ public class AccountNavigator {
     }
   }
 
-  @Deprecated public void navigateToLoginView() {
-    activityNavigator.navigateTo(LoginActivity.class);
+  public Observable<Boolean> navigateToLoginViewForResult(int requestCode) {
+    return activityNavigator.navigateForResult(LoginActivity.class, requestCode)
+        .flatMapSingle(result -> accountManager.accountStatus()
+            .first()
+            .toSingle())
+        .map(account -> account.isLoggedIn());
   }
 }

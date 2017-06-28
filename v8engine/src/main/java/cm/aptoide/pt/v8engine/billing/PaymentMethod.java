@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.billing;
 
 import rx.Completable;
 
-public interface Payment {
+public interface PaymentMethod {
 
   int getId();
 

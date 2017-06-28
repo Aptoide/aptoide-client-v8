@@ -1,11 +1,11 @@
 package cm.aptoide.pt.database.accessors;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
-import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
@@ -25,7 +25,7 @@ public final class AccessorFactory {
     if (clazz.equals(Scheduled.class)) {
       return (A) new ScheduledAccessor(new Database());
     } else if (clazz.equals(PaymentConfirmation.class)) {
-      return (A) new PaymentConfirmationAccessor(new Database());
+      return (A) new TransactionAccessor(new Database());
     } else if (clazz.equals(Installed.class)) {
       return (A) new InstalledAccessor(new Database());
     } else if (clazz.equals(Download.class)) {

@@ -84,7 +84,7 @@ import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
@@ -92,15 +92,15 @@ import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingProductRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
-import cm.aptoide.pt.v8engine.billing.repository.InAppPaymentConfirmationRepository;
-import cm.aptoide.pt.v8engine.billing.repository.PaidAppPaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.billing.repository.InAppTransactionRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaidAppProductRepository;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentFactory;
+import cm.aptoide.pt.v8engine.billing.repository.PaidAppTransactionRepository;
+import cm.aptoide.pt.v8engine.billing.repository.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
@@ -222,7 +222,7 @@ public abstract class V8Engine extends Application {
   private Payer accountPayer;
   private InAppBillingSerializer inAppBillingSerialzer;
   private AuthorizationFactory authorizationFactory;
-  private AptoideBilling aptoideBilling;
+  private Billing billing;
   private PurchaseIntentMapper purchaseIntentMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
@@ -681,56 +681,50 @@ public abstract class V8Engine extends Application {
     return paymentSyncScheduler;
   }
 
-  public AptoideBilling getAptoideBilling() {
+  public Billing getBilling() {
 
-    if (aptoideBilling == null) {
+    if (billing == null) {
 
-      final AuthorizationRepository authorizationRepository =
-          new AuthorizationRepository(AccessorFactory.getAccessorFor(PaymentAuthorization.class),
-              getPaymentSyncScheduler(), getAuthorizationFactory(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
-              getTokenInvalidator(), getDefaultSharedPreferences());
-
-      final ProductFactory productFactory = new ProductFactory();
-
-      final PaymentConfirmationFactory confirmationFactory = new PaymentConfirmationFactory();
+      final TransactionFactory confirmationFactory = new TransactionFactory();
 
       final PaymentRepositoryFactory paymentRepositoryFactory = new PaymentRepositoryFactory(
-          new InAppPaymentConfirmationRepository(getNetworkOperatorManager(),
+          new InAppTransactionRepository(getNetworkOperatorManager(),
               AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
-              confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
-              getTokenInvalidator(), getDefaultSharedPreferences()),
-          new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(),
+              confirmationFactory, getBaseBodyInterceptorV3(), getDefaultClient(),
+              WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
+              getDefaultSharedPreferences()),
+          new PaidAppTransactionRepository(getNetworkOperatorManager(),
               AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
-              confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
-              WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
-              getTokenInvalidator(), getDefaultSharedPreferences()));
+              confirmationFactory, getBaseBodyInterceptorV3(), WebService.getDefaultConverter(),
+              getDefaultClient(), getAccountPayer(), getTokenInvalidator(),
+              getDefaultSharedPreferences()));
+
+      final ProductFactory productFactory = new ProductFactory();
 
       final PurchaseFactory purchaseFactory =
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
 
-      final PaymentFactory paymentFactory =
-          new PaymentFactory(this, paymentRepositoryFactory, authorizationRepository,
-              getAuthorizationFactory(), getAccountPayer());
+      final PaymentMethodMapper paymentMethodMapper =
+          new PaymentMethodMapper(paymentRepositoryFactory, new AuthorizationRepository(
+              AccessorFactory.getAccessorFor(PaymentAuthorization.class), getPaymentSyncScheduler(),
+              getAuthorizationFactory(), getBaseBodyInterceptorV3(), getDefaultClient(),
+              WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
+              getDefaultSharedPreferences()), getAuthorizationFactory(), getAccountPayer());
 
       final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
-          new PaidAppProductRepository(purchaseFactory, paymentFactory, authorizationRepository,
-              paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
-              getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), productFactory,
-              getTokenInvalidator(), getDefaultSharedPreferences(), getResources()),
-          new InAppBillingProductRepository(purchaseFactory, paymentFactory,
-              authorizationRepository, paymentRepositoryFactory.getInAppConfirmationRepository(),
-              getAccountPayer(), getAuthorizationFactory(), productFactory,
+          new PaidAppProductRepository(purchaseFactory, paymentMethodMapper,
+              getNetworkOperatorManager(), getBaseBodyInterceptorV3(), getDefaultClient(),
+              WebService.getDefaultConverter(), productFactory, getTokenInvalidator(),
+              getDefaultSharedPreferences(), getResources()),
+          new InAppBillingProductRepository(purchaseFactory, paymentMethodMapper, productFactory,
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
               getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences(),
-              getPackageName(), getPackageRepository()));
+              getPackageRepository()));
 
-      aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
-          getInAppBillingRepository(), authorizationRepository);
+      billing = new Billing(productRepositoryFactory, paymentRepositoryFactory,
+          getInAppBillingRepository());
     }
-    return aptoideBilling;
+    return billing;
   }
 
   public PackageRepository getPackageRepository() {

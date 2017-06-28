@@ -2,11 +2,9 @@ package cm.aptoide.pt.v8engine.view;
 
 public interface BackButton {
 
-  void registerBackClickHandler(ClickHandler clickHandler);
+  void registerClickHandler(ClickHandler clickHandler);
 
-  void unregisterBackClickHandler(ClickHandler clickHandler);
-
-  void backClick();
+  void unregisterClickHandler(ClickHandler clickHandler);
 
   interface ClickHandler {
 

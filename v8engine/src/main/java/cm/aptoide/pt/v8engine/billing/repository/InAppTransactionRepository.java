@@ -6,11 +6,9 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
+import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
@@ -24,37 +22,29 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 
-public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepository {
+public class InAppTransactionRepository extends TransactionRepository {
 
-  private final PaymentConfirmationAccessor confirmationAccessor;
-  private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
-  private final Payer payer;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
-  public InAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
-      PaymentConfirmationAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
-      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    super(operatorManager, confirmationAccessor, backgroundSync, confirmationFactory, payer);
-    this.confirmationAccessor = confirmationAccessor;
-    this.accountManager = accountManager;
+  public InAppTransactionRepository(NetworkOperatorManager operatorManager,
+      TransactionAccessor transactionAccessor, PaymentSyncScheduler backgroundSync,
+      TransactionFactory transactionFactory, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      OkHttpClient httpClient, Converter.Factory converterFactory, Payer payer,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(operatorManager, transactionAccessor, backgroundSync, transactionFactory, payer);
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    this.payer = payer;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
+  @Override public Completable createTransaction(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences,
@@ -68,17 +58,6 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         })
         .toCompletable()
-        .andThen(syncPaymentConfirmation(product));
-  }
-
-  @Override
-  protected Single<BaseV3Response> createServerConfirmation(Product product, int paymentId,
-      String metadataId) {
-    return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-        ((InAppProduct) product).getDeveloperPayload(), metadataId, bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences,
-        ((InAppProduct) product).getPackageVersionCode())
-        .observe(true)
-        .toSingle();
+        .andThen(syncTransaction(product));
   }
 }
