@@ -55,6 +55,7 @@ import cm.aptoide.pt.v8engine.util.SettingsConstants;
 import cm.aptoide.pt.v8engine.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import cm.aptoide.pt.v8engine.view.rx.RxPreference;
+import com.appsee.Appsee;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -180,6 +181,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onDestroyView() {
     subscriptions.clear();
     super.onDestroyView();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    Appsee.startScreen(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
