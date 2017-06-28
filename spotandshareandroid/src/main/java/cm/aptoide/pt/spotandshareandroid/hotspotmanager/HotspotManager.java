@@ -13,8 +13,8 @@ public class HotspotManager {
   private final NetworkStateManager networkStateManager;
 
   public HotspotManager(Context context, WifiManager wifimanager) {
-    joinHotspotManager = new JoinHotspotManager(context, wifimanager);
-    createHotspotManager = new CreateHotspotManager(wifimanager);
-    networkStateManager = new NetworkStateManager(wifimanager);
+    this.joinHotspotManager = new JoinHotspotManager(context, wifimanager);
+    this.createHotspotManager = new CreateHotspotManager(wifimanager);
+    this.networkStateManager = new NetworkStateManager(wifimanager);
   }
 }

@@ -8,7 +8,8 @@ import android.net.wifi.WifiManager;
 
 public class NetworkStateManager {
 
-  private WifiManager wifimanager;
+  private final WifiManager wifimanager;
+
   private boolean wifiEnabledOnStart;
 
   public NetworkStateManager(WifiManager wifimanager) {
@@ -17,11 +18,9 @@ public class NetworkStateManager {
 
   public void saveActualNetworkState() {
     wifiEnabledOnStart = wifimanager.isWifiEnabled();
-    //// TODO: 26-06-2017 filipe store on shared preferences
   }
 
-  public void recoverNetworkState() {
-    //// TODO: 26-06-2017 filipe get network state on shared preferences
+  public void restoreNetworkState() {
     wifimanager.setWifiEnabled(wifiEnabledOnStart);
   }
 }
