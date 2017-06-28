@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.R;
@@ -81,6 +82,9 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
 
   @Override public void onCreateGroupError(Throwable throwable) {
     // TODO: 19-06-2017 filipe
+    Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
+        Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void onJoinGroupError(Throwable throwable) {
