@@ -559,6 +559,50 @@ public class Analytics {
     }
   }
 
+  public static class ApplicationInstall {
+
+    public static final String EVENT_NAME = "Application Install";
+    //this will be the one remaining after localytics is killed
+
+    private static final String TYPE = "Type";
+    private static final String PACKAGE_NAME = "Package Name";
+    private static final String REFERRED = "Referred";
+    private static final String TRUSTED_BADGE = "Trusted Badge";
+
+    private static final String REPLACED = "Replaced";
+    private static final String INSTALLED = "Installed";
+    private static final String DOWNGRADED_ROLLBACK = "Downgraded Rollback";
+
+    public static void installed(String packageName, String trustedBadge) {
+      innerTrack(packageName, INSTALLED, trustedBadge, ALL);
+    }
+
+    private static void innerTrack(String packageName, String type, String trustedBadge,
+        int flags) {
+      try {
+        HashMap<String, String> stringObjectHashMap = new HashMap<>();
+
+        stringObjectHashMap.put(TRUSTED_BADGE, trustedBadge);
+        stringObjectHashMap.put(TYPE, type);
+        stringObjectHashMap.put(PACKAGE_NAME, packageName);
+
+        track(EVENT_NAME, stringObjectHashMap, flags);
+
+        Bundle parameters = new Bundle();
+        parameters.putString(PACKAGE_NAME, packageName);
+        parameters.putString(TRUSTED_BADGE, trustedBadge);
+        parameters.putString(TYPE, type);
+        logFacebookEvents(EVENT_NAME, parameters);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
+    public static void replaced(String packageName, String trustedBadge) {
+      innerTrack(packageName, REPLACED, trustedBadge, ALL);
+    }
+  }
+
   public static class ApplicationLaunch {
 
     public static final String EVENT_NAME = "Application Launch";
@@ -734,14 +778,7 @@ public class Analytics {
 
   public static class Dimensions {
 
-    public static final String VERTICAL = V8Engine.getConfiguration()
-        .getVerticalDimension();
-    public static final String PARTNER = V8Engine.getConfiguration()
-        .getPartnerDimension();
     public static final String UNKNOWN = "unknown";
-    public static final String APKFY = "Apkfy";
-    public static final String WEBSITE = "Website";
-    public static final String INSTALLER = "Installer";
     public static final String GMS = "GMS";
     public static final String HAS_HGMS = "Has GMS";
     public static final String NO_GMS = "No GMS";
@@ -792,22 +829,6 @@ public class Analytics {
       return data;
     }
 
-    //public static void setUTMSource(String utmSource) {
-    //  setUserProperties(UTM_SOURCE, utmSource);
-    //}
-    //
-    //public static void setUTMMedium(String utmMedium) {
-    //  setUserProperties(UTM_MEDIUM, utmMedium);
-    //}
-    //
-    //public static void setUTMCampaign(String utmCampaign) {
-    //  setUserProperties(UTM_CAMPAIGN, utmCampaign);
-    //}
-    //
-    //public static void setUTMContent(String utmContent) {
-    //  setUserProperties(UTM_CONTENT, utmContent);
-    //}
-
     public static void setUTMDimensionsToUnknown() {
       Bundle data = new Bundle();
       data.putString(UTM_SOURCE, UNKNOWN);
@@ -817,10 +838,6 @@ public class Analytics {
       data.putString(ENTRY_POINT, UNKNOWN);
       setUserPropertiesWithBundle(data);
     }
-
-    //public static void setEntryPointDimension(String entryPoint) {
-    //  setUserProperties(ENTRY_POINT, entryPoint);
-    //}
   }
 
   public static class AppViewViewedFrom {
