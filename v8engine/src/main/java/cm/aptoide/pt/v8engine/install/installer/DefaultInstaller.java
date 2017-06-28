@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.install.installer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,7 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
@@ -51,6 +52,7 @@ public class DefaultInstaller implements Installer {
   private static final String TAG = DefaultInstaller.class.getSimpleName();
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
+  private final SharedPreferences sharedPreferences;
   private FileUtils fileUtils;
   private Analytics analytics;
   private RootAvailabilityManager rootAvailabilityManager;
@@ -59,7 +61,7 @@ public class DefaultInstaller implements Installer {
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       FileUtils fileUtils, Analytics analytics, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,
-      RootAvailabilityManager rootAvailabilityManager) {
+      RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
@@ -68,6 +70,7 @@ public class DefaultInstaller implements Installer {
     RootShell.debugMode = debug;
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Observable<Boolean> isInstalled(String md5) {
@@ -80,7 +83,7 @@ public class DefaultInstaller implements Installer {
   @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
     return rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRoot -> Analytics.RootInstall.installationType(
-            ManagerPreferences.allowRootInstallation(), isRoot))
+            ManagerPreferences.allowRootInstallation(sharedPreferences), isRoot))
         .flatMapObservable(isRoot -> installationProvider.getInstallation(md5)
             .first())
         .observeOn(Schedulers.computation())
@@ -159,7 +162,7 @@ public class DefaultInstaller implements Installer {
   }
 
   private Observable<Installation> rootInstall(Installation installation) {
-    if (ManagerPreferences.allowRootInstallation()) {
+    if (ManagerPreferences.allowRootInstallation(sharedPreferences)) {
       return Observable.create(new RootCommandOnSubscribe(installation.getId()
           .hashCode(), ROOT_INSTALL_COMMAND + installation.getFile()
           .getAbsolutePath()))
@@ -169,7 +172,8 @@ public class DefaultInstaller implements Installer {
               updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_INSTALLING))
           .onErrorResumeNext(throwable -> {
             if (throwable instanceof RootCommandTimeoutException) {
-              updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_ROOT_TIMEOUT).save();
+              updateInstallation(installation, Installed.TYPE_ROOT,
+                  Installed.STATUS_ROOT_TIMEOUT).save();
               return Observable.empty();
             } else {
               return Observable.error(throwable);
@@ -245,7 +249,7 @@ public class DefaultInstaller implements Installer {
     InstallEvent report =
         (InstallEvent) analytics.get(packageName + versionCode, InstallEvent.class);
     if (report != null) {
-      report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.FAIL);
+      report.setResultStatus(Result.ResultStatus.FAIL);
       report.setError(e);
       analytics.sendEvent(report);
     }

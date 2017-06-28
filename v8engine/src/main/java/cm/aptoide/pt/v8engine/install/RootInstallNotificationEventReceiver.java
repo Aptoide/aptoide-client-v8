@@ -24,7 +24,7 @@ public class RootInstallNotificationEventReceiver extends BroadcastReceiver {
     if (intent != null && intent.getAction() != null) {
       switch (intent.getAction()) {
         case ROOT_INSTALL_RETRY_ACTION:
-          installManager.retryTimedOutInstallations(context.getApplicationContext())
+          installManager.retryTimedOutInstallations()
               .subscribe(() -> {
               }, throwable -> crashReport.log(throwable));
         case ROOT_INSTALL_DISMISS_ACTION:

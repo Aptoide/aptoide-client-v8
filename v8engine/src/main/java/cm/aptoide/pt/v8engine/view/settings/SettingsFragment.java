@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.v8engine.view.settings;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -26,6 +28,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -65,7 +68,6 @@ import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTI
  * Created by fabio on 26-10-2015.
  *
  * @author fabio
- * @author sithengineer
  */
 public class SettingsFragment extends PreferenceFragmentCompat
     implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -96,6 +98,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private boolean trackAnalytics;
   private NotificationCenter notificationCenter;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private SharedPreferences sharedPreferences;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -104,9 +107,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     trackAnalytics = true;
-    fileManager =
-        FileManager.build(((V8Engine) getContext().getApplicationContext()).getDownloadManager(),
-            ((V8Engine) getContext().getApplicationContext()).getHttpClientCache());
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    fileManager = ((V8Engine) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
     adultContentConfirmationDialog =
@@ -135,7 +138,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .build();
 
     notificationCenter = ((V8Engine) getContext().getApplicationContext()).getNotificationCenter();
-    notificationSyncScheduler = ((V8Engine) getContext().getApplicationContext()).getNotificationSyncScheduler();
+    notificationSyncScheduler =
+        ((V8Engine) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -146,7 +150,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     adultContent =
         new AdultContent(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
             new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-            new SecureCoderDecoder.Builder(getContext()).create()));
+            new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -188,7 +192,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context);
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context,
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
@@ -208,17 +213,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
     //set AppStore name
     findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
-            Application.getConfiguration()
+            getContext().getResources(), Application.getConfiguration()
                 .getMarketName()));
 
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-            Application.getConfiguration()
+            getContext().getResources(), Application.getConfiguration()
                 .getMarketName()));
     autoUpdatepreference.setSummary(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
-            Application.getConfiguration()
+            getContext().getResources(), Application.getConfiguration()
                 .getMarketName()));
 
     subscriptions.add(RxPreference.checks(socialCampaignNotifications)
@@ -350,7 +355,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         cb.setChecked(false);
       }
 
-      ManagerPreferences.setHWSpecsFilter(filterApps);
+      ManagerPreferences.setHWSpecsFilter(filterApps, sharedPreferences);
 
       return true;
     });
@@ -370,6 +375,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .subscribe(deletedSize -> {
                   ShowMessage.asSnack(SettingsFragment.this,
                       AptoideUtils.StringU.getFormattedString(R.string.freed_space,
+                          getContext().getResources(),
                           AptoideUtils.StringU.formatBytes(deletedSize, false)));
                 }, throwable -> {
                   ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
@@ -393,17 +399,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     + "\n"
                     + getString(R.string.setting_screen_size)
                     + ": "
-                    + AptoideUtils.ScreenU.getScreenSize()
+                    + AptoideUtils.ScreenU.getScreenSize(getContext().getResources())
                     + "\n"
                     + getString(R.string.setting_esgl_version)
                     + ": "
-                    + AptoideUtils.SystemU.getGlEsVer()
+                    + AptoideUtils.SystemU.getGlEsVer(
+                ((ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE)))
                     + "\n"
                     + getString(R.string.screenCode)
                     + ": "
-                    + AptoideUtils.ScreenU.getNumericScreenSize()
+                    + AptoideUtils.ScreenU.getNumericScreenSize(getContext().getResources())
                     + "/"
-                    + AptoideUtils.ScreenU.getDensityDpi()
+                    + AptoideUtils.ScreenU.getDensityDpi(
+                ((WindowManager) getContext().getSystemService(Service.WINDOW_SERVICE)))
                     + "\n"
                     + getString(R.string.cpuAbi)
                     + ": "
@@ -432,7 +440,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
       @Override public boolean onPreferenceClick(Preference preference) {
         ((EditTextPreference) preference).setText(
-            String.valueOf(ManagerPreferences.getCacheLimit()));
+            String.valueOf(ManagerPreferences.getCacheLimit(sharedPreferences)));
         return false;
       }
     });

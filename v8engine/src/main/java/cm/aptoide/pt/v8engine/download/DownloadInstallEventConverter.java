@@ -1,11 +1,17 @@
 package cm.aptoide.pt.v8engine.download;
 
+import android.net.ConnectivityManager;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.App;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Data;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Obb;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.ResultError;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmList;
 import java.util.LinkedList;
@@ -15,43 +21,54 @@ import java.util.LinkedList;
  */
 
 abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent> {
-  public DownloadInstallAnalyticsBaseBody convert(T report,
-      DownloadInstallAnalyticsBaseBody.ResultStatus status, @Nullable Throwable error) {
 
-    DownloadInstallAnalyticsBaseBody.Data data = new DownloadInstallAnalyticsBaseBody.Data();
-    data.setOrigin(DownloadInstallAnalyticsBaseBody.DataOrigin.valueOf(report.getOrigin()
+  private final String appId;
+  private final ConnectivityManager connectivityManager;
+  private final TelephonyManager telephonyManager;
+
+  public DownloadInstallEventConverter(String appId, ConnectivityManager connectivityManager,
+      TelephonyManager telephonyManager) {
+    this.appId = appId;
+    this.connectivityManager = connectivityManager;
+    this.telephonyManager = telephonyManager;
+  }
+
+  public DownloadInstallAnalyticsBaseBody convert(T report, Result.ResultStatus status,
+      @Nullable Throwable error) {
+
+    Data data = new Data();
+    data.setOrigin(Data.DataOrigin.valueOf(report.getOrigin()
         .name()));
 
-    DownloadInstallAnalyticsBaseBody.App app = new DownloadInstallAnalyticsBaseBody.App();
+    App app = new App();
     app.setPackageName(report.getPackageName());
     app.setUrl(report.getUrl());
     data.setApp(app);
 
     if (!TextUtils.isEmpty(report.getObbUrl())) {
-      LinkedList<DownloadInstallAnalyticsBaseBody.Obb> obbs = new LinkedList<>();
-      DownloadInstallAnalyticsBaseBody.Obb obb = new DownloadInstallAnalyticsBaseBody.Obb();
+      LinkedList<Obb> obbs = new LinkedList<>();
+      Obb obb = new Obb();
       obb.setUrl(report.getObbUrl());
-      obb.setType(DownloadInstallAnalyticsBaseBody.ObbType.MAIN);
+      obb.setType(Obb.ObbType.MAIN);
       obbs.add(obb);
       if (!TextUtils.isEmpty(report.getPatchObbUrl())) {
-        obb = new DownloadInstallAnalyticsBaseBody.Obb();
-        obb.setType(DownloadInstallAnalyticsBaseBody.ObbType.PATCH);
+        obb = new Obb();
+        obb.setType(Obb.ObbType.PATCH);
         obb.setUrl(report.getPatchObbUrl());
         obbs.add(obb);
       }
       data.setObb(obbs);
     }
 
-    data.setNetwork(AptoideUtils.SystemU.getConnectionType()
+    data.setNetwork(AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
-    data.setTeleco(AptoideUtils.SystemU.getCarrierName());
+    data.setTeleco(AptoideUtils.SystemU.getCarrierName(telephonyManager));
 
-    DownloadInstallAnalyticsBaseBody.Result result = new DownloadInstallAnalyticsBaseBody.Result();
+    Result result = new Result();
     result.setStatus(status);
     if (error != null) {
 
-      DownloadInstallAnalyticsBaseBody.ResultError resultError =
-          new DownloadInstallAnalyticsBaseBody.ResultError();
+      ResultError resultError = new ResultError();
       resultError.setMessage(error.getMessage());
       resultError.setType(error.getClass()
           .getSimpleName());
@@ -59,12 +76,10 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
     }
 
     data.setResult(result);
-    return new DownloadInstallAnalyticsBaseBody(DataProvider.getConfiguration()
-        .getAppId(), convertSpecificFields(report, data));
+    return new DownloadInstallAnalyticsBaseBody(appId, convertSpecificFields(report, data));
   }
 
-  protected abstract DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(T report,
-      DownloadInstallAnalyticsBaseBody.Data data);
+  protected abstract Data convertSpecificFields(T report, Data data);
 
   public T create(Download download, DownloadInstallBaseEvent.Action action,
       DownloadInstallBaseEvent.AppContext context) {

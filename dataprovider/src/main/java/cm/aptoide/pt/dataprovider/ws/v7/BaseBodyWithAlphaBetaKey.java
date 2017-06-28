@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import lombok.Getter;
 
 /**
  * Created by diogoloureiro on 17/02/2017.
@@ -11,11 +11,15 @@ import lombok.Getter;
  */
 
 public class BaseBodyWithAlphaBetaKey extends BaseBody {
-  @Getter private String notApkTags;
+  private String notApkTags;
 
-  protected BaseBodyWithAlphaBetaKey() {
-    if (ManagerPreferences.getUpdatesFilterAlphaBetaKey()) {
+  protected BaseBodyWithAlphaBetaKey(SharedPreferences sharedPreferences) {
+    if (ManagerPreferences.getUpdatesFilterAlphaBetaKey(sharedPreferences)) {
       this.notApkTags = "alpha,beta";
     }
+  }
+
+  public String getNotApkTags() {
+    return notApkTags;
   }
 }

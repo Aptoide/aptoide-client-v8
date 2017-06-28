@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -42,26 +43,32 @@ public class InstallManager {
   private final Installer installer;
   private final DownloadRepository downloadRepository;
   private final InstalledRepository installedRepository;
+  private final SharedPreferences sharedPreferences;
+  private final SharedPreferences securePreferences;
+  private final Context context;
   private RootAvailabilityManager rootAvailabilityManager;
 
-  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
-      RootAvailabilityManager rootAvailabilityManager) {
+  public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
+      Installer installer, RootAvailabilityManager rootAvailabilityManager,
+      SharedPreferences sharedPreferences, SharedPreferences securePreferences) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
+    this.context = context;
     this.rootAvailabilityManager = rootAvailabilityManager;
     this.downloadRepository = RepositoryFactory.getDownloadRepository();
     this.installedRepository = RepositoryFactory.getInstalledRepository();
+    this.sharedPreferences = sharedPreferences;
+    this.securePreferences = securePreferences;
   }
 
-  public void stopAllInstallations(Context context) {
+  public void stopAllInstallations() {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_STOP_ALL_INSTALLS);
     context.startService(intent);
   }
 
-  public void removeInstallationFile(String md5, Context context, String packageName,
-      int versionCode) {
-    stopInstallation(context, md5);
+  public void removeInstallationFile(String md5, String packageName, int versionCode) {
+    stopInstallation(md5);
     installedRepository.remove(packageName, versionCode)
         .andThen(Completable.fromAction(() -> aptoideDownloadManager.removeDownload(md5)))
         .subscribe(() -> {
@@ -69,14 +76,14 @@ public class InstallManager {
             .log(throwable));
   }
 
-  public void stopInstallation(Context context, String md5) {
+  public void stopInstallation(String md5) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_STOP_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
     context.startService(intent);
   }
 
-  public Completable uninstall(Context context, String packageName, String versionName) {
+  public Completable uninstall(String packageName, String versionName) {
     return installer.uninstall(context, packageName, versionName);
   }
 
@@ -132,15 +139,15 @@ public class InstallManager {
             progress -> progress.getState() == InstallationProgress.InstallationStatus.INSTALLING));
   }
 
-  public Completable install(Context context, Download download) {
-    return install(context, download, false);
+  public Completable install(Download download) {
+    return install(download, false);
   }
 
-  public Completable defaultInstall(Context context, Download download) {
-    return install(context, download, true);
+  public Completable defaultInstall(Download download) {
+    return install(download, true);
   }
 
-  public Completable install(Context context, Download download, boolean forceDefaultInstall) {
+  public Completable install(Download download, boolean forceDefaultInstall) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -153,7 +160,7 @@ public class InstallManager {
         })
         .flatMap(download1 -> getInstallationProgress(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(progress -> installInBackground(context, progress, forceDefaultInstall))
+        .flatMap(progress -> installInBackground(progress, forceDefaultInstall))
         .first()
         .toCompletable();
   }
@@ -341,22 +348,21 @@ public class InstallManager {
     });
   }
 
-  private Observable<InstallationProgress> installInBackground(Context context,
-      InstallationProgress progress, boolean forceDefaultInstall) {
+  private Observable<InstallationProgress> installInBackground(InstallationProgress progress,
+      boolean forceDefaultInstall) {
     return getInstallationProgress(progress.getMd5(), progress.getPackageName(),
         progress.getVersionCode()).mergeWith(
-        startBackgroundInstallationAndWait(context, progress, forceDefaultInstall));
+        startBackgroundInstallationAndWait(progress, forceDefaultInstall));
   }
 
-  @NonNull
-  private Observable<InstallationProgress> startBackgroundInstallationAndWait(Context context,
+  @NonNull private Observable<InstallationProgress> startBackgroundInstallationAndWait(
       InstallationProgress progress, boolean forceDefaultInstall) {
-    return waitBackgroundInstallationResult(context, progress.getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(context, progress.getMd5(), forceDefaultInstall))
+    return waitBackgroundInstallationResult(progress.getMd5()).doOnSubscribe(
+        () -> startBackgroundInstallation(progress.getMd5(), forceDefaultInstall))
         .map(aVoid -> progress);
   }
 
-  private Observable<Void> waitBackgroundInstallationResult(Context context, String md5) {
+  private Observable<Void> waitBackgroundInstallationResult(String md5) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context,
         new IntentFilter(InstallService.ACTION_INSTALL_FINISHED), null, null))
         .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(
@@ -365,8 +371,7 @@ public class InstallManager {
         .map(intent -> null);
   }
 
-  private void startBackgroundInstallation(Context context, String md5,
-      boolean forceDefaultInstall) {
+  private void startBackgroundInstallation(String md5, boolean forceDefaultInstall) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
@@ -380,22 +385,22 @@ public class InstallManager {
   }
 
   public boolean showWarning() {
-    boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
+    boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed(securePreferences);
     boolean isRooted = rootAvailabilityManager.isRootAvailable()
         .toBlocking()
         .value();
-    boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
+    boolean canGiveRoot = ManagerPreferences.allowRootInstallation(securePreferences);
     return isRooted && !wasRootDialogShowed && !canGiveRoot;
   }
 
   public void rootInstallAllowed(boolean allowRoot) {
-    SecurePreferences.setRootDialogShowed(true);
-    ManagerPreferences.setAllowRootInstallation(allowRoot);
+    SecurePreferences.setRootDialogShowed(true, securePreferences);
+    ManagerPreferences.setAllowRootInstallation(allowRoot, sharedPreferences);
   }
 
-  public Observable<Boolean> startInstalls(List<Download> downloads, Context context) {
+  public Observable<Boolean> startInstalls(List<Download> downloads) {
     return Observable.from(downloads)
-        .map(download -> install(context, download).toObservable())
+        .map(download -> install(download).toObservable())
         .toList()
         .flatMap(observables -> Observable.merge(observables))
         .toList()
@@ -485,11 +490,11 @@ public class InstallManager {
         .toSingle();
   }
 
-  public Completable retryTimedOutInstallations(Context context) {
+  public Completable retryTimedOutInstallations() {
     return getTimedOutInstallations().first()
         .flatMapIterable(installationProgresses -> installationProgresses)
         .flatMapSingle(installationProgress -> getDownload(installationProgress.getMd5()))
-        .flatMapCompletable(download -> defaultInstall(context, download))
+        .flatMapCompletable(download -> defaultInstall(download))
         .toCompletable();
   }
 

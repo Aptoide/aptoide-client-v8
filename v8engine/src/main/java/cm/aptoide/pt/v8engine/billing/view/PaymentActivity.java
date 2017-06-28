@@ -9,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
@@ -22,13 +21,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -115,7 +114,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     attachPresenter(
         new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
             accountManager, new PaymentSelector(BuildConfig.DEFAULT_PAYMENT_ID,
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
+            ((V8Engine) getApplicationContext()).getDefaultSharedPreferences()),
             new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
             new PaymentNavigator(getActivityNavigator()), paymentAnalytics,
             ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),

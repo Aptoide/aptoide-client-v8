@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.downloads.active;
 
-import android.content.Context;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
@@ -50,8 +49,8 @@ public class ActiveDownloadDisplayable extends Displayable {
     super.onPause();
   }
 
-  public void pauseInstall(Context context) {
-    installManager.stopInstallation(context, installation.getMd5());
+  public void pauseInstall() {
+    installManager.stopInstallation(installation.getMd5());
   }
 
   public Observable<InstallationProgress> getInstallationObservable() {

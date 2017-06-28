@@ -14,6 +14,7 @@ import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
@@ -29,6 +30,11 @@ public class InstallerFactory {
 
   public static final int DEFAULT = 0;
   public static final int ROLLBACK = 1;
+  private final MinimalAdMapper adMapper;
+
+  public InstallerFactory(MinimalAdMapper adMapper) {
+    this.adMapper = adMapper;
+  }
 
   public Installer create(Context context, int type) {
     switch (type) {
@@ -44,9 +50,11 @@ public class InstallerFactory {
   @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
     return new DefaultInstaller(context.getPackageManager(),
         getInstallationProvider(((V8Engine) context.getApplicationContext()).getDownloadManager()),
-        new FileUtils(), Analytics.getInstance(), ToolboxManager.isDebug() || BuildConfig.DEBUG,
-        RepositoryFactory.getInstalledRepository(), 180000,
-        ((V8Engine) context.getApplicationContext()).getRootAvailabilityManager());
+        new FileUtils(), Analytics.getInstance(), ToolboxManager.isDebug(
+        ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences())
+        || BuildConfig.DEBUG, RepositoryFactory.getInstalledRepository(), 180000,
+        ((V8Engine) context.getApplicationContext()).getRootAvailabilityManager(),
+        ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @NonNull private RollbackInstaller getRollbackInstaller(Context context) {
@@ -58,6 +66,7 @@ public class InstallerFactory {
   @NonNull private DownloadInstallationProvider getInstallationProvider(
       AptoideDownloadManager downloadManager) {
     return new DownloadInstallationProvider(downloadManager,
-        AccessorFactory.getAccessorFor(Download.class), RepositoryFactory.getInstalledRepository());
+        AccessorFactory.getAccessorFor(Download.class), RepositoryFactory.getInstalledRepository(),
+        adMapper);
   }
 }

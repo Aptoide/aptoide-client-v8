@@ -35,6 +35,19 @@ public class ProductProvider {
   private final String packageName;
   private final String developerPayload;
 
+  private ProductProvider(AptoideBilling billing, long appId, String storeName, boolean sponsored,
+      int apiVersion, String type, String sku, String packageName, String developerPayload) {
+    this.billing = billing;
+    this.appId = appId;
+    this.storeName = storeName;
+    this.sponsored = sponsored;
+    this.apiVersion = apiVersion;
+    this.type = type;
+    this.sku = sku;
+    this.packageName = packageName;
+    this.developerPayload = developerPayload;
+  }
+
   public static ProductProvider fromIntent(AptoideBilling billing, Intent intent) {
     return new ProductProvider(billing, intent.getLongExtra(EXTRA_APP_ID, -1),
         intent.getStringExtra(EXTRA_STORE_NAME), intent.getBooleanExtra(EXTRA_SPONSORED, false),
@@ -60,19 +73,6 @@ public class ProductProvider {
     bundle.putString(ProductProvider.EXTRA_SKU, sku);
     bundle.putString(ProductProvider.EXTRA_DEVELOPER_PAYLOAD, developerPayload);
     return bundle;
-  }
-
-  private ProductProvider(AptoideBilling billing, long appId, String storeName, boolean sponsored,
-      int apiVersion, String type, String sku, String packageName, String developerPayload) {
-    this.billing = billing;
-    this.appId = appId;
-    this.storeName = storeName;
-    this.sponsored = sponsored;
-    this.apiVersion = apiVersion;
-    this.type = type;
-    this.sku = sku;
-    this.packageName = packageName;
-    this.developerPayload = developerPayload;
   }
 
   public Single<Product> getProduct() {

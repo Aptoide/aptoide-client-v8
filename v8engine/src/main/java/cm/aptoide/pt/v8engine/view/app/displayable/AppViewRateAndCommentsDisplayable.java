@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view.app.displayable;
 
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;

@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -87,7 +87,7 @@ import rx.schedulers.Schedulers;
         }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(cancelDownloadButton)
-        .subscribe(click -> displayable.removeDownload(context), err -> {
+        .subscribe(click -> displayable.removeDownload(), err -> {
           CrashReport.getInstance()
               .log(err);
         }));

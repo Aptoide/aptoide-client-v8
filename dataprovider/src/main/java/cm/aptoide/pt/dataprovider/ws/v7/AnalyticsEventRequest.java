@@ -1,9 +1,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
-import cm.aptoide.pt.model.v7.BaseV7Response;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -21,8 +22,10 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
 
   private AnalyticsEventRequest(Body body, String action, String name, String context,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.action = action;
     this.name = name;
     this.context = context;
@@ -30,13 +33,12 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
 
   public static AnalyticsEventRequest of(String eventName, String context, String action,
       Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(
-        DataProvider.getConfiguration()
-            .getAppId(), data);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences) {
+    final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(appId, data);
 
     return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

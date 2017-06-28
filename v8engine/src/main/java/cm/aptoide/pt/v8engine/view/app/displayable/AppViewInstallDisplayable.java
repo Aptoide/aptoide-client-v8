@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.app.displayable;
 
 import android.widget.Button;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;

@@ -6,14 +6,16 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.view.WindowManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.model.v7.timeline.AppUpdate;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -68,6 +70,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private TimelineSocialActionData timelineSocialActionData;
   @Getter private float appRating;
   @Getter private Long updateStoreId;
+  private Resources resources;
 
   public AppUpdateDisplayable() {
   }
@@ -78,8 +81,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
       long appId, String abUrl, InstallManager installManager, PermissionManager permissionManager,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DownloadEventConverter downloadConverter, InstallEventConverter installConverter,
-      Analytics analytics, String storeTheme) {
-    super(appUpdate, timelineAnalytics);
+      Analytics analytics, String storeTheme, Resources resources, WindowManager windowManager) {
+    super(appUpdate, timelineAnalytics, windowManager);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
     this.storeName = storeName;
@@ -105,13 +108,15 @@ public class AppUpdateDisplayable extends CardDisplayable {
         .getAvg();
     this.updateStoreId = appUpdate.getStore()
         .getId();
+    this.resources = resources;
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
       DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
       PermissionManager permissionManager, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, InstallEventConverter installConverter,
-      Analytics analytics, DownloadEventConverter downloadConverter) {
+      Analytics analytics, DownloadEventConverter downloadConverter, Resources resources,
+      WindowManager windowManager) {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
@@ -132,13 +137,13 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getId(), abTestingURL, installManager, permissionManager, timelineAnalytics,
         socialRepository, downloadConverter, installConverter, analytics, appUpdate.getStore()
         .getAppearance()
-        .getTheme());
+        .getTheme(), resources, windowManager);
   }
 
   public Observable<InstallationProgress> update(Context context) {
     if (installManager.showWarning()) {
       GenericDialogs.createGenericYesNoCancelMessage(context, null,
-          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, resources))
           .subscribe(eResponse -> {
             switch (eResponse) {
               case YES:
@@ -150,7 +155,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
             }
           });
     }
-    return installManager.install(context, download)
+    return installManager.install(download)
         .andThen(
             installManager.getInstallationProgress(download.getMd5(), download.getPackageName(),
                 download.getVersionCode()))
@@ -229,26 +234,29 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), updateStoreId, privacyResult,
         shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(),
             getStoreName(), BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
+  @Override
+  public void share(String cardId, ShareCardCallback shareCardCallback, Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), updateStoreId, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(),
             getStoreName(), BLANK));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getStoreName(),
             BLANK));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getStoreName(),
             BLANK));

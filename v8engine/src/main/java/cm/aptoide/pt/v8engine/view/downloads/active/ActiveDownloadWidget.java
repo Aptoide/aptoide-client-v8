@@ -5,11 +5,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -44,20 +44,22 @@ import rx.schedulers.Schedulers;
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     compositeSubscription.add(RxView.clicks(pauseCancelButton)
-        .subscribe(click -> displayable.pauseInstall(getContext()),
-            throwable -> CrashReport.getInstance().log(throwable)));
+        .subscribe(click -> displayable.pauseInstall(),
+            throwable -> CrashReport.getInstance()
+                .log(throwable)));
 
     compositeSubscription.add(displayable.getInstallationObservable()
         .observeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(installation -> updateUi(installation),
-            throwable -> CrashReport.getInstance().log(throwable)));
+        .subscribe(installation -> updateUi(installation), throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private Void updateUi(InstallationProgress installation) {
     appName.setText(installation.getAppName());
     if (!TextUtils.isEmpty(installation.getIcon())) {
-      ImageLoader.with(getContext()).load(installation.getIcon(), appIcon);
+      ImageLoader.with(getContext())
+          .load(installation.getIcon(), appIcon);
     }
 
     progressBar.setIndeterminate(installation.isIndeterminate());

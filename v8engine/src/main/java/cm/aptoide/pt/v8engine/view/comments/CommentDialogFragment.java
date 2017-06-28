@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.comments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -10,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -17,8 +21,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -57,6 +59,8 @@ public class CommentDialogFragment
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -126,11 +130,15 @@ public class CommentDialogFragment
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
+    onEmptyTextError =
+        AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -267,30 +275,32 @@ public class CommentDialogFragment
       case REVIEW:
         // new comment on a review
         return PostCommentForReview.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
-            converterFactory)
+            converterFactory, tokenInvalidator, sharedPreferences)
             .observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
-              converterFactory)
+              converterFactory, tokenInvalidator, sharedPreferences)
               .observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory)
+            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences)
             .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText, baseBodyBodyInterceptor,
-              httpClient, converterFactory)
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe();
         }
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory)
+            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences)
             .observe();
     }
     // default case

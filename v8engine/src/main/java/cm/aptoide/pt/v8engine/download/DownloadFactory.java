@@ -12,10 +12,10 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Obb;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.listapp.File;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.IdUtils;
 import cm.aptoide.pt.v8engine.AutoUpdate;
@@ -318,9 +318,25 @@ public class DownloadFactory {
     download.setScheduled(true);
     download.setFilesToDownload(
         createFileList(scheduled.getMd5(), scheduled.getPackageName(), path, scheduled.getMd5(),
-            scheduled.getObb(), alternativePath, scheduled.getVerCode(),
+            extractObb(scheduled), alternativePath, scheduled.getVerCode(),
             scheduled.getVersionName()));
     return download;
+  }
+
+  private Obb extractObb(Scheduled scheduled) {
+    Obb obb = new Obb();
+    Obb.ObbItem mainItem = new Obb.ObbItem();
+    mainItem.setFilename(scheduled.getMainObbName());
+    mainItem.setPath(scheduled.getMainObbPath());
+    mainItem.setMd5sum(scheduled.getMainObbMd5());
+    obb.setMain(mainItem);
+
+    Obb.ObbItem patchItem = new Obb.ObbItem();
+    patchItem.setFilename(scheduled.getPatchObbName());
+    patchItem.setPath(scheduled.getPatchObbPath());
+    patchItem.setMd5sum(scheduled.getPatchObbMd5());
+    obb.setPatch(patchItem);
+    return null;
   }
 
   private class ApkPaths {

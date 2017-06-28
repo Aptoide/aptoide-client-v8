@@ -16,11 +16,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
@@ -72,11 +72,13 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       .getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
   private InstalledRepository installedRepository;
+  private MinimalAdMapper adMapper;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     installedRepository = RepositoryFactory.getInstalledRepository();
 
+    adMapper = new MinimalAdMapper();
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
     Analytics.ApplicationLaunch.website(uri);
@@ -238,7 +240,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
         if (ad != null) {
           Intent i = new Intent(this, startClass);
-          i.putExtra(DeepLinksTargets.FROM_AD, MinimalAd.from(ad));
+          i.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
           startActivity(i);
         } else {
           finish();

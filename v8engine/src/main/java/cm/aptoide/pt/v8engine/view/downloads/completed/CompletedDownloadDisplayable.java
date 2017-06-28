@@ -16,7 +16,6 @@ import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.Observable;
-import rx.functions.Action0;
 
 /**
  * Created by trinkes on 7/15/16.
@@ -29,9 +28,6 @@ public class CompletedDownloadDisplayable extends Displayable {
   private final InstallEventConverter installConverter;
 
   private final InstallationProgress installation;
-
-  private Action0 onPauseAction;
-  private Action0 onResumeAction;
 
   public CompletedDownloadDisplayable() {
     this.installManager = null;
@@ -59,23 +55,9 @@ public class CompletedDownloadDisplayable extends Displayable {
     return R.layout.completed_donwload_row_layout;
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    if (onResumeAction != null) {
-      onResumeAction.call();
-    }
-  }
-
-  @Override public void onPause() {
-    if (onPauseAction != null) {
-      onResumeAction.call();
-    }
-    super.onPause();
-  }
-
-  public void removeDownload(Context context) {
-    installManager.removeInstallationFile(installation.getMd5(), context,
-        installation.getPackageName(), installation.getVersionCode());
+  public void removeDownload() {
+    installManager.removeInstallationFile(installation.getMd5(), installation.getPackageName(),
+        installation.getVersionCode());
   }
 
   public Observable<InstallationProgress.InstallationStatus> downloadStatus() {
@@ -93,7 +75,8 @@ public class CompletedDownloadDisplayable extends Displayable {
         .flatMap(installationProgress -> {
           if (installationProgress.getState()
               == InstallationProgress.InstallationStatus.INSTALLED) {
-            AptoideUtils.SystemU.openApp(installation.getPackageName());
+            AptoideUtils.SystemU.openApp(installation.getPackageName(), context.getPackageManager(),
+                context);
             return Observable.empty();
           } else {
             return resumeDownload(context, permissionRequest);
@@ -108,7 +91,7 @@ public class CompletedDownloadDisplayable extends Displayable {
         .toObservable()
         .flatMap(download -> permissionManager.requestExternalStoragePermission(permissionRequest)
             .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-            .flatMap(success -> installManager.install(context, download)
+            .flatMap(success -> installManager.install(download)
                 .toObservable()
                 .flatMap(downloadProgress -> installManager.getInstallationProgress(
                     installation.getMd5(), installation.getPackageName(),
@@ -131,14 +114,6 @@ public class CompletedDownloadDisplayable extends Displayable {
     return installation;
   }
 
-  public void setOnPauseAction(Action0 onPauseAction) {
-    this.onPauseAction = onPauseAction;
-  }
-
-  public void setOnResumeAction(Action0 onResumeAction) {
-    this.onResumeAction = onResumeAction;
-  }
-
   public String getStatusName(Context context) {
     switch (installation.getState()) {
       case INSTALLING:
@@ -152,7 +127,7 @@ public class CompletedDownloadDisplayable extends Displayable {
       case FAILED:
         switch (installation.getError()) {
           case GENERIC_ERROR:
-            return context.getString(cm.aptoide.pt.database.R.string.simple_error_occured);
+            return context.getString(R.string.simple_error_occured);
           case NOT_ENOUGH_SPACE_ERROR:
             return context.getString(cm.aptoide.pt.database.R.string.out_of_space_error);
           default:

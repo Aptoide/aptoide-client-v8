@@ -1,9 +1,9 @@
 package cm.aptoide.pt.v8engine.timeline;
 
-import cm.aptoide.pt.model.v7.timeline.AppUpdate;
-import cm.aptoide.pt.model.v7.timeline.Recommendation;
-import cm.aptoide.pt.model.v7.timeline.TimelineCard;
-import cm.aptoide.pt.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import java.util.Set;
 import rx.Observable;

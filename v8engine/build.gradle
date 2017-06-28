@@ -109,22 +109,20 @@ dependencies {
   // inter-projects dependencies
   //
 
-  compile project(path: ':database', configuration: 'release')
+  compile project(path: ':aptoide-database', configuration: 'release')
 
   internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
-  internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalRelease')
+  internalCompile project(path: ':aptoide-account-manager', configuration: 'internalRelease')
 
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+  prodCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
   leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  leakCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+  leakCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
 
   compile project(path: ':utils', configuration: 'release')
-  compile project(path: ':utilsdesign', configuration: 'release')
   compile project(path: ':crashreports', configuration: 'release')
-  compile project(path: ':imageloader', configuration: 'release')
   compile project(path: ':downloadmanager', configuration: 'release')
 
   //
@@ -139,7 +137,6 @@ dependencies {
 
   // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
   androidTestCompile "junit:junit:${JUNIT_VERSION}"
@@ -232,4 +229,8 @@ dependencies {
 
   leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
   compile project(path: ':spotandshare')
+
+
+  compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
+  //annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
 }

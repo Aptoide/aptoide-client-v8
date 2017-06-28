@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -16,9 +17,10 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.download.ScheduledDownloadRepository;
@@ -44,11 +46,13 @@ public final class RepositoryFactory {
     return new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
   }
 
-  public static UpdateRepository getUpdateRepository(Context context) {
+  public static UpdateRepository getUpdateRepository(Context context,
+      SharedPreferences sharedPreferences) {
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
         getIdsRepository(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
+        context.getPackageManager());
   }
 
   private static IdsRepository getIdsRepository(Context context) {
@@ -82,11 +86,13 @@ public final class RepositoryFactory {
         (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
   }
 
-  public static AppRepository getAppRepository(Context context) {
+  public static AppRepository getAppRepository(Context context,
+      SharedPreferences sharedPreferences) {
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(), getHttpClient(context),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
+        context.getResources());
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
@@ -99,9 +105,14 @@ public final class RepositoryFactory {
   }
 
   public static SocialRepository getSocialRepository(Context context,
-      TimelineAnalytics timelineAnalytics) {
+      TimelineAnalytics timelineAnalytics, SharedPreferences sharedPreferences) {
     return new SocialRepository(getAccountManager(context),
         ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7(),
-        WebService.getDefaultConverter(), getHttpClient(context), timelineAnalytics);
+        WebService.getDefaultConverter(), getHttpClient(context), timelineAnalytics,
+        getTokenInvalidator(context), sharedPreferences);
+  }
+
+  private static TokenInvalidator getTokenInvalidator(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getTokenInvalidator();
   }
 }

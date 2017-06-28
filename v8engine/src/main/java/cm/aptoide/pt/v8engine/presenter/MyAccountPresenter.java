@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -18,20 +19,32 @@ public class MyAccountPresenter implements Presenter {
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
+  private final SharedPreferences sharedPreferences;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory) {
+      LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.navigator = navigator;
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public void present() {
-    //todo(pribeiro): error handling
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(resumed -> accountManager.accountStatus()
+            .first())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(account -> view.showAccount(account))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
@@ -59,7 +72,13 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.haveNotifications())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(hasNotifications -> view.showHeader(hasNotifications))
+        .doOnNext(hasNotifications -> {
+          if (hasNotifications) {
+            view.showHeader();
+          } else {
+            view.hideHeader();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable));
@@ -84,7 +103,7 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.editUserProfileClick()
             .flatMap(click -> accountManager.accountStatus())
-            .doOnNext(account -> navigator.navigateToEditProfileView(account)))
+            .doOnNext(account -> navigator.navigateToEditProfileView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
@@ -103,7 +122,7 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(click -> accountManager.logout()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
-              ManagerPreferences.setAddressBookSyncValues(false);
+              ManagerPreferences.setAddressBookSyncValues(false, sharedPreferences);
               view.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())

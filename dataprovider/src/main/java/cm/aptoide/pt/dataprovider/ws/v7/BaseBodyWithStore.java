@@ -5,18 +5,15 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-
 /**
  * Created by neuro on 23-05-2016.
  */
-@EqualsAndHashCode(callSuper = true) public class BaseBodyWithStore extends BaseBody {
+public class BaseBodyWithStore extends BaseBody {
 
-  @Getter private Long storeId;
-  @Getter private String storeName;
-  @Getter private String storeUser;
-  @Getter private String storePassSha1;
+  private Long storeId;
+  private String storeName;
+  private String storeUser;
+  private String storePassSha1;
 
   public BaseBodyWithStore() {
   }
@@ -26,5 +23,21 @@ import lombok.Getter;
     this.storeName = storeCredentials.getName();
     this.storeUser = storeCredentials.getUsername();
     this.storePassSha1 = storeCredentials.getPasswordSha1();
+  }
+
+  public Long getStoreId() {
+    return storeId;
+  }
+
+  public String getStoreName() {
+    return storeName;
+  }
+
+  public String getStoreUser() {
+    return storeUser;
+  }
+
+  public String getStorePassSha1() {
+    return storePassSha1;
   }
 }

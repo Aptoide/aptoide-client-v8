@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.timeline.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -14,18 +16,23 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.GridLayoutManager;
+import android.telephony.TelephonyManager;
 import android.view.View;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.Datalist;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v7.Datalist;
-import cm.aptoide.pt.model.v7.timeline.TimelineCard;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -39,7 +46,6 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.timeline.PackageRepository;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.TimelineCardFilter;
@@ -47,6 +53,7 @@ import cm.aptoide.pt.v8engine.timeline.TimelineRepository;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
@@ -236,21 +243,28 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         ((V8Engine) applicationContext).getBaseBodyInterceptorV7();
     final OkHttpClient httpClient = ((V8Engine) applicationContext).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    SharedPreferences sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(applicationContext), bodyInterceptor, httpClient,
-        converterFactory);
-    dateCalculator = new DateCalculator();
+        converterFactory, tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId(), sharedPreferences);
+    dateCalculator = new DateCalculator(getContext().getApplicationContext(),
+        getContext().getApplicationContext()
+            .getResources());
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
-    packageRepository = new PackageRepository(getContext().getPackageManager());
+    packageRepository = ((V8Engine) getContext().getApplicationContext()).getPackageRepository();
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
     InstalledRepository installedRepository = RepositoryFactory.getInstalledRepository();
 
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics);
+            timelineAnalytics, tokenInvalidator, sharedPreferences);
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final InstallManager installManager =
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(
@@ -258,15 +272,29 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            installedRepository), bodyInterceptor, httpClient, converterFactory);
+            installedRepository), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences);
 
+    final ConnectivityManager connectivityManager =
+        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    final TelephonyManager telephonyManager =
+        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+    final WindowManager windowManager =
+        (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
     cardToDisplayable =
         new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
             permissionManager, storeCredentialsProvider,
-            new InstallEventConverter(bodyInterceptor, httpClient, converterFactory),
+            new InstallEventConverter(bodyInterceptor, httpClient, converterFactory,
+                tokenInvalidator, V8Engine.getConfiguration()
+                .getAppId(), sharedPreferences, connectivityManager, telephonyManager),
             Analytics.getInstance(),
-            new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory),
-            installedRepository);
+            new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
+                tokenInvalidator, V8Engine.getConfiguration()
+                .getAppId(), sharedPreferences, connectivityManager, telephonyManager),
+            installedRepository,
+            new TimelineNavigator(getFragmentNavigator(), getContext().getString(R.string.likes)),
+            getContext().getResources(), Application.getConfiguration()
+            .getMarketName(), windowManager);
 
     refreshSubject = BehaviorRelay.create();
 
@@ -313,7 +341,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           TimeLineStatsDisplayable timeLineStatsDisplayable =
               new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
                   timelineAnalytics, userId == null,
-                  storeContext == StoreContext.home ? 0 : storeId);
+                  storeContext == StoreContext.home ? 0 : storeId, getContext().getResources());
           displayableDatalist.getList()
               .add(0, timeLineStatsDisplayable);
           return displayableDatalist;

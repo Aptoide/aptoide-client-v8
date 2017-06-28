@@ -5,15 +5,12 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -34,32 +31,39 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private String url;
 
   protected ListFullReviewsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public ListFullReviewsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    this(body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
     this.url = url;
   }
 
   public static ListFullReviewsRequest of(long storeId, int limit, int offset,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
 
-    Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
-        storeCredentials);
-    return new ListFullReviewsRequest(body, bodyInterceptor, httpClient, converterFactory);
+    Body body = new Body(storeId, limit, offset,
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences), storeCredentials);
+    return new ListFullReviewsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   public static ListFullReviewsRequest ofAction(String url, boolean refresh,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
-        new Body(refresh, storeCredentials), bodyInterceptor, httpClient, converterFactory);
+        new Body(refresh, storeCredentials), bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces,
@@ -71,18 +75,15 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
     }
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBodyWithStore implements Endless {
+  public static class Body extends BaseBodyWithStore implements Endless {
 
-    @Getter private Integer limit;
-    @Getter @Setter private int offset;
+    private int offset;
+    private Integer limit;
+    private boolean refresh;
     private String lang;
     private boolean mature;
-    @Getter private boolean refresh;
-
     private Order order;
     private Sort sort;
-
     private Long storeId;
     private Long reviewId;
     private String packageName;
@@ -110,6 +111,22 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
       this.limit = limit;
       this.subLimit = subLimit;
       this.refresh = refresh;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
     }
 
     public enum Sort {

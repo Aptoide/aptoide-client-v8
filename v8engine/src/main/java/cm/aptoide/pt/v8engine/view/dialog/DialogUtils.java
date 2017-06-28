@@ -7,9 +7,12 @@ package cm.aptoide.pt.v8engine.view.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,13 +20,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -41,7 +45,11 @@ import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
-public class DialogUtils {
+/**
+ * Use specific {@link DialogFragment}s for this use cases. Avoid adding more dialog builder methods
+ * to this class.
+ */
+@Deprecated public class DialogUtils {
 
   private static final String TAG = DialogUtils.class.getSimpleName();
   private final Locale LOCALE = Locale.getDefault();
@@ -51,16 +59,23 @@ public class DialogUtils {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final InstalledRepository installedRepository;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
+  private final Resources resources;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, InstalledRepository installedRepository) {
+      Converter.Factory converterFactory, InstalledRepository installedRepository,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.installedRepository = installedRepository;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -120,7 +135,8 @@ public class DialogUtils {
         final int reviewRating = Math.round(reviewRatingBar.getRating());
 
         if (TextUtils.isEmpty(reviewTitle)) {
-          titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+          titleTextInputLayout.setError(
+              AptoideUtils.StringU.getResString(R.string.error_MARG_107, resources));
           return;
         }
 
@@ -132,7 +148,7 @@ public class DialogUtils {
           if (response.isOk()) {
             Logger.d(TAG, "review added");
             ShowMessage.asSnack(activity, R.string.review_success);
-            ManagerPreferences.setForceServerRefreshFlag(true);
+            ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
             subscriber.onNext(GenericDialogs.EResponse.YES);
             subscriber.onCompleted();
           } else {
@@ -155,11 +171,13 @@ public class DialogUtils {
         if (storeName != null) {
 
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName))
+              bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
+              tokenInvalidator, sharedPreferences)
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-              httpClient, converterFactory, isAppInstalled(packageName))
+              httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator,
+              sharedPreferences)
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -218,7 +236,8 @@ public class DialogUtils {
       final int reviewRating = Math.round(reviewRatingBar.getRating());
 
       if (TextUtils.isEmpty(reviewTitle)) {
-        titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+        titleTextInputLayout.setError(
+            AptoideUtils.StringU.getResString(R.string.error_MARG_107, resources));
         return;
       }
 
@@ -229,7 +248,7 @@ public class DialogUtils {
         if (response.isOk()) {
           Logger.d(TAG, "review added");
           ShowMessage.asSnack(activity, R.string.review_success);
-          ManagerPreferences.setForceServerRefreshFlag(true);
+          ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
           if (onPositiveCallback != null) {
             onPositiveCallback.call();
           }
@@ -246,11 +265,13 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName))
+            bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
+            tokenInvalidator, sharedPreferences)
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-            httpClient, converterFactory, isAppInstalled(packageName))
+            httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator,
+            sharedPreferences)
             .execute(successRequestListener, errorRequestListener);
       }
     });

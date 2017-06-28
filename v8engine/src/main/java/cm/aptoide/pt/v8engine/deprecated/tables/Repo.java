@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import io.realm.RealmObject;
 
@@ -82,7 +83,7 @@ public class Repo extends BaseTable {
     return NAME;
   }
 
-  @Override public RealmObject convert(Cursor cursor) {
+  @Override public RealmObject convert(Cursor cursor, PackageManager packageManager) {
     cm.aptoide.pt.database.realm.Store realmObject = new cm.aptoide.pt.database.realm.Store();
     realmObject.setStoreId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
     realmObject.setDownloads(cursor.getLong(cursor.getColumnIndex(COLUMN_DOWNLOADS)));

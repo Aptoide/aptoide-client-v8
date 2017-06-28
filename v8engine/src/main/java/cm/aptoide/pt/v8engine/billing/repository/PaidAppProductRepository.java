@@ -5,12 +5,15 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.Product;
@@ -35,13 +38,17 @@ public class PaidAppProductRepository extends ProductRepository {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final ProductFactory productFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
+  private final Resources resources;
 
   public PaidAppProductRepository(PurchaseFactory purchaseFactory, PaymentFactory paymentFactory,
       AuthorizationRepository authorizationRepository,
       PaymentConfirmationRepository confirmationRepository, Payer payer,
       AuthorizationFactory authorizationFactory, NetworkOperatorManager operatorManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, ProductFactory productFactory) {
+      Converter.Factory converterFactory, ProductFactory productFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
     super(paymentFactory);
     this.purchaseFactory = purchaseFactory;
     this.operatorManager = operatorManager;
@@ -49,6 +56,9 @@ public class PaidAppProductRepository extends ProductRepository {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.productFactory = productFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   public Single<Product> getProduct(long appId, boolean sponsored, String storeName) {
@@ -80,7 +90,7 @@ public class PaidAppProductRepository extends ProductRepository {
   private Single<PaidApp> getServerPaidApp(boolean bypassCache, long appId, boolean sponsored,
       String storeName) {
     return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
-        httpClient, converterFactory)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
         .observe(bypassCache)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {

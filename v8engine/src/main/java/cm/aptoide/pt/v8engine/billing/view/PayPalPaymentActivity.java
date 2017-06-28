@@ -72,7 +72,8 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
             PayPalService.EXTRA_PAYPAL_CONFIGURATION,
             new PayPalConfiguration().environment(BuildConfig.PAYPAL_ENVIRONMENT)
                 .clientId(BuildConfig.PAYPAL_KEY)
-                .merchantName(V8Engine.getConfiguration().getMarketName()))
+                .merchantName(V8Engine.getConfiguration()
+                    .getMarketName()))
             .putExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT, payment),
         PAY_APP_REQUEST_CODE);
   }
@@ -83,6 +84,10 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
 
   @Override public void hideLoading() {
     progressBar.setVisibility(View.GONE);
+  }
+
+  @Override public Observable<String> paymentConfirmationId() {
+    return authorizationSubject;
   }
 
   @Override public void showNetworkError() {
@@ -101,10 +106,6 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
     finish();
   }
 
-  @Override public Observable<String> paymentConfirmationId() {
-    return authorizationSubject;
-  }
-
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == PAY_APP_REQUEST_CODE) {
@@ -112,7 +113,8 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
         final PaymentConfirmation confirmation = data.getParcelableExtra(
             com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
         if (confirmation != null) {
-          authorizationSubject.onNext(confirmation.getProofOfPayment().getPaymentId());
+          authorizationSubject.onNext(confirmation.getProofOfPayment()
+              .getPaymentId());
         }
       } else if (resultCode == Activity.RESULT_CANCELED) {
         authorizationSubject.onError(

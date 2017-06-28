@@ -30,8 +30,7 @@ public abstract class Authorization {
   }
 
   public boolean isPending() {
-    return Status.PENDING.equals(status)
-        || isPendingUserConsent();
+    return Status.PENDING.equals(status) || isPendingUserConsent();
   }
 
   public boolean isInactive() {

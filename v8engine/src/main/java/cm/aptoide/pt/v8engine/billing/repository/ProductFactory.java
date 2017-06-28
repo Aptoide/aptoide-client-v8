@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.model.v3.PaymentServiceResponse;
+import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Price;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
@@ -39,11 +39,12 @@ public class ProductFactory {
         .getSymbol(), app.getPayment()
         .getPaymentServices()
         .get(0)
-        .getTaxRate()), sponsored);
+        .getTaxRate()), sponsored, app.getPath()
+        .getVersionCode());
   }
 
   public List<Product> create(int apiVersion, String developerPayload, String packageName,
-      InAppBillingSkuDetailsResponse response) {
+      InAppBillingSkuDetailsResponse response, int packageVersionCode) {
 
     final PaymentServiceResponse paymentServiceResponse =
         (response.getPaymentServices() != null && !response.getPaymentServices()
@@ -77,7 +78,7 @@ public class ProductFactory {
           purchaseDataObject.getDescription(), apiVersion, purchaseDataObject.getProductId(),
           packageName, developerPayload, purchaseDataObject.getType(),
           new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(), sign,
-              taxRate)));
+              taxRate), packageVersionCode));
     }
 
     return products;

@@ -16,16 +16,15 @@ import rx.schedulers.Schedulers;
 
 public class NotificationSyncService extends Service {
   public static final String NOTIFICATIONS_SOCIAL_ACTION = "PUSH_NOTIFICATIONS_SOCIAL_ACTION";
-  public static final String NOTIFICATIONS_CAMPAIGN_ACTION =
-      "PUSH_NOTIFICATIONS_CAMPAIGN_ACTION";
+  public static final String NOTIFICATIONS_CAMPAIGN_ACTION = "PUSH_NOTIFICATIONS_CAMPAIGN_ACTION";
   private NotificationSync notificationSync;
 
   @Override public void onCreate() {
     super.onCreate();
 
     NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
-    NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor,
-        Schedulers.io());
+    NotificationProvider notificationProvider =
+        new NotificationProvider(notificationAccessor, Schedulers.io());
     final NotificationNetworkService notificationHandler =
         ((V8Engine) getApplicationContext()).getNotificationNetworkService();
     notificationSync = new NotificationSync(notificationProvider, notificationHandler);

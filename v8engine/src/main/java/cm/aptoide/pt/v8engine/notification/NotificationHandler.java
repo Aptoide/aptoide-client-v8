@@ -1,8 +1,9 @@
 package cm.aptoide.pt.v8engine.notification;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
@@ -21,32 +22,38 @@ import rx.Single;
 
 public class NotificationHandler implements NotificationNetworkService {
   private final PublishRelay<AptoideNotification> handler;
-  private String applicationId;
-  private OkHttpClient httpClient;
-  private Converter.Factory converterFactory;
-  private IdsRepository idsRepository;
-  private String versionName;
-  private AptoideAccountManager accountManager;
+  private final String applicationId;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
+  private final IdsRepository idsRepository;
+  private final String versionName;
+  private final AptoideAccountManager accountManager;
+  private final String extraId;
+  private final SharedPreferences sharedPreferences;
+  private final Resources resources;
 
   public NotificationHandler(String applicationId, OkHttpClient httpClient,
       Converter.Factory converterFactory, IdsRepository idsRepository, String versionName,
-      AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager, String extraId, PublishRelay<AptoideNotification> relay,
+      SharedPreferences sharedPreferences, Resources resources) {
     this.applicationId = applicationId;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.idsRepository = idsRepository;
     this.versionName = versionName;
     this.accountManager = accountManager;
-    handler = PublishRelay.create();
+    this.handler = relay;
+    this.extraId = extraId;
+    this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   @Override public Single<List<AptoideNotification>> getSocialNotifications() {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
-            versionName, applicationId, httpClient, converterFactory,
-            DataProvider.getConfiguration()
-                .getExtraId(), account.getAccessToken())
+            versionName, applicationId, httpClient, converterFactory, extraId,
+            account.getAccessToken(), sharedPreferences, resources)
             .observe()
             .map(response -> convertSocialNotifications(response, account.getId())))
         .flatMap(notifications -> handle(notifications))
@@ -56,12 +63,15 @@ public class NotificationHandler implements NotificationNetworkService {
   @Override public Single<List<AptoideNotification>> getCampaignNotifications() {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(),
-            versionName, applicationId, httpClient, converterFactory)
-            .observe()
-            .map(response -> convertCampaignNotifications(response, account.getId()))
-            .first()
-            .flatMap(notifications -> handle(notifications)))
+        .flatMap(account -> {
+          return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(),
+              versionName, applicationId, httpClient, converterFactory, extraId, sharedPreferences,
+              resources)
+              .observe()
+              .map(response -> convertCampaignNotifications(response, account.getId()))
+              .first()
+              .flatMap(notifications -> handle(notifications));
+        })
         .toSingle();
   }
 

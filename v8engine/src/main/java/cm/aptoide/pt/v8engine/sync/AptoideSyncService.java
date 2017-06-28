@@ -14,7 +14,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
@@ -42,7 +42,9 @@ public class AptoideSyncService extends Service {
             ((V8Engine) getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
-            ((V8Engine) getApplicationContext()).getAccountPayer());
+            ((V8Engine) getApplicationContext()).getAccountPayer(),
+            ((V8Engine) getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getApplicationContext()).getDefaultSharedPreferences());
       }
     }
   }

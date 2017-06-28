@@ -1,11 +1,13 @@
 package cm.aptoide.pt.v8engine.view.reviews;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.model.v7.FullReview;
+import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.FullReview;
-import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -46,7 +48,9 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
           FullReview review = reviews.get(i);
           displayables.add(new RowReviewDisplayable(review));
         }
-        addDisplayable(new DisplayableGroup(displayables));
+        addDisplayable(new DisplayableGroup(displayables,
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+            getContext().getResources()));
       }
     };
   }

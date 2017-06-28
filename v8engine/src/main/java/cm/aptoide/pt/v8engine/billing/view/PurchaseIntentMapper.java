@@ -69,10 +69,12 @@ public class PurchaseIntentMapper {
   }
 
   public Intent map(Throwable throwable) {
-    return new Intent().putExtra(InAppBillingBinder.RESPONSE_CODE, throwableCodeMapper.map(throwable));
+    return new Intent().putExtra(InAppBillingBinder.RESPONSE_CODE,
+        throwableCodeMapper.map(throwable));
   }
 
   public Intent mapCancellation() {
-    return new Intent().putExtra(InAppBillingBinder.RESPONSE_CODE, InAppBillingBinder.RESULT_USER_CANCELLED);
+    return new Intent().putExtra(InAppBillingBinder.RESPONSE_CODE,
+        InAppBillingBinder.RESULT_USER_CANCELLED);
   }
 }

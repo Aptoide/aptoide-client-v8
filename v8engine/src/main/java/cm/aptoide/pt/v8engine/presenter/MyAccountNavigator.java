@@ -1,11 +1,9 @@
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.accountmanager.Account;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.notification.view.InboxFragment;
-import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
-import cm.aptoide.pt.v8engine.view.account.user.CreateUserFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.user.ManageUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 
 /**
@@ -25,15 +23,14 @@ public class MyAccountNavigator {
   }
 
   public void navigateToEditStoreView(Store store) {
-    fragmentNavigator.navigateTo(CreateStoreFragment.newInstance(
-        new ManageStoreModel(store.getId(), store.getAvatar(), false, store.getAppearance()
+    ManageStoreFragment.ViewModel viewModel = new ManageStoreFragment.ViewModel(store.getId(),
+        store.getAppearance()
             .getTheme(), store.getName(), store.getAppearance()
-            .getDescription())));
+        .getDescription(), store.getAvatar());
+    fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(viewModel, false));
   }
 
-  public void navigateToEditProfileView(Account account) {
-    fragmentNavigator.navigateTo(
-        CreateUserFragment.newInstance(account.getAvatar(), account.getNickname(),
-            CreateUserFragment.FROM_MY_ACCOUNT));
+  public void navigateToEditProfileView() {
+    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToEdit());
   }
 }

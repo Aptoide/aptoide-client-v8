@@ -184,8 +184,7 @@ public class AptoideDownloadManager {
           downloadAccessor.save(downloads);
           Logger.d(TAG, "Downloads paused");
         }, err -> {
-          CrashReport.getInstance()
-              .log(err);
+          Logger.e(TAG, err);
         });
   }
 

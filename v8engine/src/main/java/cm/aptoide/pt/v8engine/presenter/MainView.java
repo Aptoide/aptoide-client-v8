@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Intent;
 import rx.Observable;
 
 /**
@@ -13,12 +14,6 @@ import rx.Observable;
 
 public interface MainView extends View {
 
-  void showWizard();
-
-  void showHome();
-
-  boolean showDeepLink();
-
   void showInstallationError(int numberOfErrors);
 
   void dismissInstallationError();
@@ -26,4 +21,6 @@ public interface MainView extends View {
   void showInstallationSuccessMessage();
 
   Observable<Void> getInstallErrorsDismiss();
+
+  Intent getIntentAfterCreate();
 }

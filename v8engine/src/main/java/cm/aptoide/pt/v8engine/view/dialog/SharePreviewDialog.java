@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.dialog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -16,12 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -59,26 +60,31 @@ public class SharePreviewDialog {
   private final AptoideAccountManager accountManager;
   private final boolean dontShowMeAgainOption;
   private final SharePreviewOpenMode openMode;
+  private final TimelineAnalytics timelineAnalytics;
+  private final SharedPreferences sharedPreferences;
+
   @Nullable private Displayable displayable;
   private boolean privacyResult;
-  private TimelineAnalytics timelineAnalytics;
 
   public SharePreviewDialog(Displayable cardDisplayable, AptoideAccountManager accountManager,
       boolean dontShowMeAgainOption, SharePreviewOpenMode openMode,
-      TimelineAnalytics timelineAnalytics) {
+      TimelineAnalytics timelineAnalytics, SharedPreferences sharedPreferences) {
     this.displayable = cardDisplayable;
     this.accountManager = accountManager;
     this.dontShowMeAgainOption = dontShowMeAgainOption;
     this.openMode = openMode;
     this.timelineAnalytics = timelineAnalytics;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public SharePreviewDialog(AptoideAccountManager accountManager, boolean dontShowMeAgainOption,
-      SharePreviewOpenMode openMode, TimelineAnalytics timelineAnalytics) {
+      SharePreviewOpenMode openMode, TimelineAnalytics timelineAnalytics,
+      SharedPreferences sharedPreferences) {
     this.accountManager = accountManager;
     this.dontShowMeAgainOption = dontShowMeAgainOption;
     this.openMode = openMode;
     this.timelineAnalytics = timelineAnalytics;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public AlertDialog.Builder getPreviewDialogBuilder(Context context) {
@@ -206,8 +212,7 @@ public class SharePreviewDialog {
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
       TextView appName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView appSubTitle =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
       ImageLoader.with(context)
@@ -221,7 +226,14 @@ public class SharePreviewDialog {
           .getMeta()
           .getData()
           .getName());
-      appSubTitle.setText(R.string.social_timeline_share_dialog_installed_and_recommended);
+
+      ratingBar.setRating(((AppViewInstallDisplayable) displayable).getPojo()
+          .getNodes()
+          .getMeta()
+          .getData()
+          .getStats()
+          .getRating()
+          .getAvg());
 
       SpannableFactory spannableFactory = new SpannableFactory();
 
@@ -755,7 +767,7 @@ public class SharePreviewDialog {
           alertDialog.setNeutralButton(R.string.dont_show_this_again, (dialogInterface, i) -> {
             subscriber.onNext(GenericDialogs.EResponse.CANCEL);
             subscriber.onCompleted();
-            ManagerPreferences.setShowPreviewDialog(false);
+            ManagerPreferences.setShowPreviewDialog(false, sharedPreferences);
           });
         }
       }

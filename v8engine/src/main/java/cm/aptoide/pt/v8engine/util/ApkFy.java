@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.DeepLinkIntentReceiver;
@@ -23,14 +24,16 @@ public class ApkFy {
 
   private final Context context;
   private final Intent intent;
+  private final SharedPreferences securePreferences;
 
-  public ApkFy(Context context, Intent intent) {
+  public ApkFy(Context context, Intent intent, SharedPreferences securePreferences) {
     this.context = context;
     this.intent = intent;
+    this.securePreferences = securePreferences;
   }
 
   public void run() {
-    if (SecurePreferences.shouldRunApkFy()) {
+    if (SecurePreferences.shouldRunApkFy(securePreferences)) {
       Long appId = extractAppId(context);
       if (appId != null) {
         intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
@@ -38,7 +41,7 @@ public class ApkFy {
         intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.SHOULD_INSTALL,
             AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP);
       }
-      SecurePreferences.setApkFyRun();
+      SecurePreferences.setApkFyRun(securePreferences);
     }
   }
 

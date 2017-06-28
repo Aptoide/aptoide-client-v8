@@ -5,14 +5,17 @@
 
 package cm.aptoide.pt.v8engine.app;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
@@ -34,12 +37,16 @@ public class AppRepository {
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
+  private final Resources resources;
 
   public AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       StoreCredentialsProviderImpl storeCredentialsProvider, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, Resources resources) {
     this.operatorManager = operatorManager;
     this.accountManager = accountManager;
     this.bodyInterceptorV7 = bodyInterceptorV7;
@@ -47,6 +54,9 @@ public class AppRepository {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
@@ -58,7 +68,7 @@ public class AppRepository {
     return GetAppRequest.of(appId, V8Engine.getConfiguration()
             .getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptorV7, httpClient, converterFactory)
+        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -114,7 +124,7 @@ public class AppRepository {
   private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
-        httpClient, converterFactory)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {
@@ -128,7 +138,8 @@ public class AppRepository {
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName, bodyInterceptorV7, httpClient, converterFactory)
+    return GetAppRequest.of(packageName, storeName, bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -148,7 +159,8 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofMd5(md5, bodyInterceptorV7, httpClient, converterFactory)
+    return GetAppRequest.ofMd5(md5, bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -168,7 +180,8 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getAppFromUname(String uname, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofUname(uname, bodyInterceptorV7, httpClient, converterFactory)
+    return GetAppRequest.ofUname(uname, bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {

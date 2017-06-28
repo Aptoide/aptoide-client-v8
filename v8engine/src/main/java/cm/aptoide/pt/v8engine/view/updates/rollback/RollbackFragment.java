@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -33,7 +35,7 @@ import rx.schedulers.Schedulers;
 public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final SimpleDateFormat dateFormat =
-      new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT);
+      new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
   private TextView emptyData;
   private Installer installManager;
 
@@ -84,7 +86,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
 
-    installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager =
+        new InstallerFactory(new MinimalAdMapper()).create(getContext(), InstallerFactory.ROLLBACK);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -102,7 +105,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
         .subscribe(rollbacks -> {
           if (rollbacks == null || rollbacks.isEmpty()) {
             emptyData.setText(AptoideUtils.StringU.getFormattedString(R.string.no_rollbacks_msg,
-                Application.getConfiguration()
+                getContext().getResources(), Application.getConfiguration()
                     .getMarketName()));
             emptyData.setVisibility(View.VISIBLE);
           } else {
@@ -126,7 +129,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       displayables.add(new RollbackDisplayable(installManager, rollback));
     }
 
-    Calendar.getInstance(AptoideUtils.LocaleU.DEFAULT);
+    Calendar.getInstance(Locale.getDefault());
     return displayables;
   }
 }

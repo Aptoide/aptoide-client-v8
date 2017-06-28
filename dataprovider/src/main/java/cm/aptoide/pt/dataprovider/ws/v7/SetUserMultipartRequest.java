@@ -1,10 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -21,23 +22,26 @@ import rx.Observable;
 public class SetUserMultipartRequest
     extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-      + "/api/7/";
-
   private final MultipartBody.Part multipartBody;
 
-  private SetUserMultipartRequest(MultipartBody.Part file,
-      HashMapNotNull<String, RequestBody> body, OkHttpClient httpClient,
-      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+  private SetUserMultipartRequest(MultipartBody.Part file, HashMapNotNull<String, RequestBody> body,
+      OkHttpClient httpClient, Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
+      TokenInvalidator tokenInvalidator) {
+    super(body, getHost(), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     multipartBody = file;
+  }
+
+  public static String getHost() {
+    return BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
   }
 
   public static SetUserMultipartRequest of(String username, String userAvatar,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, ObjectMapper serializer) {
+      Converter.Factory converterFactory, ObjectMapper serializer,
+      TokenInvalidator tokenInvalidator) {
 
     final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
@@ -51,7 +55,7 @@ public class SetUserMultipartRequest
 
     return new SetUserMultipartRequest(
         requestBodyFactory.createBodyPartFromFile("user_avatar", new File(userAvatar)), body,
-        httpClient, converterFactory, bodyInterceptor);
+        httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
