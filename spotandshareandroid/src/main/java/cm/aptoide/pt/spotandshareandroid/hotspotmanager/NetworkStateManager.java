@@ -9,22 +9,18 @@ import android.net.wifi.WifiManager;
 public class NetworkStateManager {
 
   private final WifiManager wifimanager;
-  private final Persister<String, Boolean> booleanPersister;
-  private final String key;
 
-  public NetworkStateManager(WifiManager wifimanager, Persister<String, Boolean> booleanPersister) {
+  private boolean wifiEnabledOnStart;
+
+  public NetworkStateManager(WifiManager wifimanager) {
     this.wifimanager = wifimanager;
-    this.booleanPersister = booleanPersister;
-
-    key = getClass().getSimpleName() + "WIFI_STATE";
   }
 
   public void saveActualNetworkState() {
-    booleanPersister.save(key, wifimanager.isWifiEnabled());
+    wifiEnabledOnStart = wifimanager.isWifiEnabled();
   }
 
   public void restoreNetworkState() {
-    Boolean wifiEnabledOnStart = booleanPersister.load(key);
     wifimanager.setWifiEnabled(wifiEnabledOnStart);
   }
 }
