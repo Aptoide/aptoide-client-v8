@@ -3,6 +3,9 @@ package cm.aptoide.pt.spotandshareapp.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +25,7 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
     implements SpotAndShareWaitingToReceiveView {
 
   private ImageView refreshButton;
+  private Toolbar toolbar;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareWaitingToReceiveFragment();
@@ -35,12 +39,22 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     refreshButton = (ImageView) view.findViewById(R.id.sync_image);
+    toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
+    setupToolbar();
     attachPresenter(new SpotAndShareWaitingToReceivePresenter(this), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
     refreshButton = null;
     super.onDestroyView();
+  }
+
+  private void setupToolbar() {
+    setHasOptionsMenu(true);
+    toolbar.setTitle(R.string.spotandshare_title_toolbar);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   @Nullable @Override
