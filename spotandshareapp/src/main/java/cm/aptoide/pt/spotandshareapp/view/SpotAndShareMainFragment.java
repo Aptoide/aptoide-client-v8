@@ -5,6 +5,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +38,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
   private ImageView editProfileButton;
   private ImageView userAvatar;
   private TextView username;
+  private ActionBar actionBar;
   private SpotAndShareMainFragmentPresenter presenter;
 
   private SpotAndShare spotAndShare;
@@ -136,7 +139,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     editProfileButton = (ImageView) view.findViewById(R.id.edit_profile_button);
     userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
     username = (TextView) view.findViewById(R.id.username);
-
+    setupActionBar();
     presenter = new SpotAndShareMainFragmentPresenter(this, spotAndShare,
         new SpotAndShareUserManager(new SpotAndShareUserPersister(
             getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
@@ -144,9 +147,17 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     attachPresenter(presenter, savedInstanceState);
   }
 
+  private void setupActionBar() {
+    setHasOptionsMenu(true);
+    actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setTitle("SPOTSHARE");
+    actionBar.setDisplayHomeAsUpEnabled(true);
+  }
+
   @Override public void onDestroyView() {
     receiveButton = null;
     sendButton = null;
+    actionBar = null;
     super.onDestroyView();
   }
 
