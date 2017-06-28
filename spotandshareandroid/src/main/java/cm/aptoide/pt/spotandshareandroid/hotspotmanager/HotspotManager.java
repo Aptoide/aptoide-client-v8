@@ -12,10 +12,9 @@ public class HotspotManager {
   @Delegate private final CreateHotspotManager createHotspotManager;
   private final NetworkStateManager networkStateManager;
 
-  public HotspotManager(Context context, WifiManager wifimanager,
-      Persister<String, Boolean> booleanPersister) {
-    joinHotspotManager = new JoinHotspotManager(context, wifimanager);
-    createHotspotManager = new CreateHotspotManager(wifimanager);
-    networkStateManager = new NetworkStateManager(wifimanager, booleanPersister);
+  public HotspotManager(Context context, WifiManager wifimanager) {
+    this.joinHotspotManager = new JoinHotspotManager(context, wifimanager);
+    this.createHotspotManager = new CreateHotspotManager(wifimanager);
+    this.networkStateManager = new NetworkStateManager(wifimanager);
   }
 }
