@@ -11,7 +11,7 @@ import cm.aptoide.pt.v8engine.view.leak.LeakActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public class ActivityResultNavigator extends LeakActivity implements ActivityNavigator {
+public abstract class ActivityResultNavigator extends LeakActivity implements ActivityNavigator {
 
   private PublishRelay<Result> resultRelay;
 
@@ -23,6 +23,11 @@ public class ActivityResultNavigator extends LeakActivity implements ActivityNav
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     resultRelay.call(new Result(requestCode, resultCode, data));
+  }
+
+  @Override public void finish(int code, Bundle bundle) {
+    setResult(code, new Intent().putExtras(bundle));
+    finish();
   }
 
   @Override

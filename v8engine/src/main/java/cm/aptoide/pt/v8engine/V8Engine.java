@@ -113,7 +113,7 @@ import cm.aptoide.pt.v8engine.sync.adapter.PaymentSyncAdapterScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.sync.adapter.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
-import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
+import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
@@ -243,7 +243,7 @@ public abstract class V8Engine extends Application {
   private InAppBillingSerializer inAppBillingSerialzer;
   private AuthorizationFactory authorizationFactory;
   private Billing billing;
-  private PurchaseIntentMapper purchaseIntentMapper;
+  private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
   private NotificationHandler notificationHandler;
@@ -814,11 +814,11 @@ public abstract class V8Engine extends Application {
     return paymentThrowableCodeMapper;
   }
 
-  public PurchaseIntentMapper getPurchaseIntentMapper() {
-    if (purchaseIntentMapper == null) {
-      purchaseIntentMapper = new PurchaseIntentMapper(getPaymentThrowableCodeMapper());
+  public PurchaseBundleMapper getPurchaseBundleMapper() {
+    if (purchaseBundleMapper == null) {
+      purchaseBundleMapper = new PurchaseBundleMapper(getPaymentThrowableCodeMapper());
     }
-    return purchaseIntentMapper;
+    return purchaseBundleMapper;
   }
 
   public InAppBillingSerializer getInAppBillingSerializer() {

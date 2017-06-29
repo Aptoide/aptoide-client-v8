@@ -90,10 +90,10 @@ public class PaymentPresenter implements Presenter {
         .flatMap(__ -> accountNavigator.navigateToLoginViewForResult(LOGIN_REQUEST_CODE))
         .filter(loggedIn -> !loggedIn)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> view.dismiss())
+        .doOnNext(__ -> paymentNavigator.dismiss())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> view.dismiss(throwable));
+        }, throwable -> paymentNavigator.dismiss(throwable));
   }
 
   private void onViewCreatedShowPaymentInformation() {
@@ -112,7 +112,7 @@ public class PaymentPresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> {
           view.hidePaymentLoading();
-          view.dismiss(throwable);
+          paymentNavigator.dismiss(throwable);
         });
   }
 
@@ -140,7 +140,7 @@ public class PaymentPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(purchase -> view.hideTransactionLoading())
-        .subscribe(purchase -> view.dismiss(purchase), throwable -> {
+        .subscribe(purchase -> paymentNavigator.dismiss(purchase), throwable -> {
           view.hideTransactionLoading();
           showError(throwable);
         });
@@ -154,10 +154,10 @@ public class PaymentPresenter implements Presenter {
         .flatMapSingle(cancellation -> productProvider.getProduct())
         .flatMapCompletable(
             product -> sendTapOutsideAnalytics().observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> view.dismiss()))
+                .doOnCompleted(() -> paymentNavigator.dismiss()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> view.dismiss(throwable));
+        }, throwable -> paymentNavigator.dismiss(throwable));
   }
 
   private void handleCancellationSelection() {
@@ -167,10 +167,10 @@ public class PaymentPresenter implements Presenter {
         .flatMap(product -> view.cancellationSelection())
         .flatMapCompletable(
             product -> sendCancellationAnalytics().observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> view.dismiss()))
+                .doOnCompleted(() -> paymentNavigator.dismiss()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> view.dismiss());
+        }, throwable -> paymentNavigator.dismiss());
   }
 
   private void handlePaymentSelection() {
@@ -183,7 +183,7 @@ public class PaymentPresenter implements Presenter {
         .flatMapCompletable(payment -> paymentMethodSelector.selectPaymentMethod(payment))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> view.dismiss(throwable));
+        }, throwable -> paymentNavigator.dismiss(throwable));
   }
 
   private void handleBuySelection() {
@@ -221,7 +221,7 @@ public class PaymentPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> view.dismiss(throwable));
+        }, throwable -> paymentNavigator.dismiss(throwable));
   }
 
   private void onViewDestroyedHideAllErrors() {
@@ -230,7 +230,7 @@ public class PaymentPresenter implements Presenter {
         .doOnNext(destroyed -> view.hideAllErrors())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> view.dismiss(throwable));
+        }, throwable -> paymentNavigator.dismiss(throwable));
   }
 
   private void showError(Throwable throwable) {

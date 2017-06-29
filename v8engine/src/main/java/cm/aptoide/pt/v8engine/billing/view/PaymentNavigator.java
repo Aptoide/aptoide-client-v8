@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
+import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.methods.BoaCompraPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.methods.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
@@ -11,9 +13,11 @@ import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 
 public class PaymentNavigator {
 
+  private final PurchaseBundleMapper bundleMapper;
   private final ActivityNavigator activityNavigator;
 
-  public PaymentNavigator(ActivityNavigator activityNavigator) {
+  public PaymentNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator) {
+    this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
   }
 
@@ -32,6 +36,18 @@ public class PaymentNavigator {
     } else {
       throw new IllegalArgumentException("Invalid local payment.");
     }
+  }
+
+  public void dismiss(Purchase purchase) {
+    activityNavigator.finish(Activity.RESULT_OK, bundleMapper.map(purchase));
+  }
+
+  public void dismiss(Throwable throwable) {
+    activityNavigator.finish(Activity.RESULT_CANCELED, bundleMapper.map(throwable));
+  }
+
+  public void dismiss() {
+    activityNavigator.finish(Activity.RESULT_CANCELED, bundleMapper.mapCancellation());
   }
 
   private Bundle getProductBundle(PaymentMethod paymentMethod, Product product) {

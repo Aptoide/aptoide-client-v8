@@ -50,8 +50,9 @@ public class PayPalActivity extends ProductActivity implements PayPalView {
     authorizationSubject = PublishRelay.create();
 
     attachPresenter(new PayPalPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
-        ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getBilling(), getIntent()),
-        ((V8Engine) getApplicationContext()).getPaymentAnalytics()), savedInstanceState);
+            ProductProvider.fromBundle(((V8Engine) getApplicationContext()).getBilling(),
+                getIntent().getExtras()), ((V8Engine) getApplicationContext()).getPaymentAnalytics()),
+        savedInstanceState);
   }
 
   @Override

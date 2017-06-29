@@ -12,7 +12,7 @@
     >
 
   <FrameLayout
-      android:id="@+id/payment_activity_overlay"
+      android:id="@+id/fragment_payment_overlay"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/overlay_black"
@@ -21,7 +21,7 @@
       />
 
   <ScrollView
-      android:id="@+id/activity_payment_card"
+      android:id="@+id/fragment_payment_card"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
@@ -38,7 +38,7 @@
         >
 
       <RelativeLayout
-          android:id="@+id/activity_payment_header"
+          android:id="@+id/fragment_payment_header"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal"
@@ -46,7 +46,7 @@
           >
 
         <ImageView
-            android:id="@+id/activity_payment_product_icon"
+            android:id="@+id/fragment_payment_product_icon"
             android:layout_width="80dp"
             android:layout_height="80dp"
             tools:ignore="contentDescription"
@@ -54,7 +54,7 @@
             />
 
         <TextView
-            android:id="@+id/activity_payment_product_name"
+            android:id="@+id/fragment_payment_product_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -67,10 +67,10 @@
 
 
         <TextView
-            android:id="@+id/activity_payment_product_description"
+            android:id="@+id/fragment_payment_product_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_payment_product_name"
+            android:layout_below="@+id/fragment_payment_product_name"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="96dp"
             android:layout_marginStart="96dp"
@@ -83,7 +83,7 @@
       </RelativeLayout>
 
       <LinearLayout
-          android:id="@+id/activity_payment_body"
+          android:id="@+id/fragment_payment_body"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="16dp"
@@ -114,7 +114,7 @@
               />
 
           <TextView
-              android:id="@+id/activity_product_price"
+              android:id="@+id/fragment_product_price"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_centerVertical="true"
@@ -133,14 +133,14 @@
         </RelativeLayout>
 
         <View
-            android:id="@+id/activity_payment_selected_divider"
+            android:id="@+id/fragment_payment_selected_divider"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/activity_payment_dark_gray"
+            android:background="@color/fragment_payment_dark_gray"
             />
 
         <RadioGroup
-            android:id="@+id/activity_payment_list"
+            android:id="@+id/fragment_payment_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -149,12 +149,12 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/activity_payment_dark_gray"
+            android:background="@color/fragment_payment_dark_gray"
             />
       </LinearLayout>
 
       <TextView
-          android:id="@+id/activity_payment_no_payments_text"
+          android:id="@+id/fragment_payment_no_payments_text"
           android:layout_width="match_parent"
           android:layout_height="100dp"
           android:layout_marginBottom="16dp"
@@ -165,7 +165,7 @@
           />
 
       <RelativeLayout
-          android:id="@+id/activity_payment_buttons"
+          android:id="@+id/fragment_payment_buttons"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:padding="8dp"
@@ -173,7 +173,7 @@
           >
 
         <Button
-            android:id="@+id/activity_payment_cancel_button"
+            android:id="@+id/fragment_payment_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -183,7 +183,7 @@
             />
 
         <Button
-            android:id="@+id/activity_payment_buy_button"
+            android:id="@+id/fragment_payment_buy_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -196,15 +196,15 @@
   </ScrollView>
 
   <LinearLayout
-      android:id="@+id/activity_payment_global_progress_bar"
+      android:id="@+id/fragment_payment_global_progress_bar"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_alignBottom="@id/activity_payment_card"
-      android:layout_alignEnd="@id/activity_payment_card"
-      android:layout_alignLeft="@id/activity_payment_card"
-      android:layout_alignRight="@id/activity_payment_card"
-      android:layout_alignStart="@id/activity_payment_card"
-      android:layout_alignTop="@id/activity_payment_card"
+      android:layout_alignBottom="@id/fragment_payment_card"
+      android:layout_alignEnd="@id/fragment_payment_card"
+      android:layout_alignLeft="@id/fragment_payment_card"
+      android:layout_alignRight="@id/fragment_payment_card"
+      android:layout_alignStart="@id/fragment_payment_card"
+      android:layout_alignTop="@id/fragment_payment_card"
       android:background="@drawable/dialog_bg"
       android:clickable="true"
       android:gravity="center"

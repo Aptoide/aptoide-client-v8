@@ -35,12 +35,6 @@ public interface PaymentView extends View {
 
   void hideTransactionLoading();
 
-  void dismiss(Purchase purchase);
-
-  void dismiss(Throwable throwable);
-
-  void dismiss();
-
   void showPaymentsNotFoundMessage();
 
   void showNetworkError();

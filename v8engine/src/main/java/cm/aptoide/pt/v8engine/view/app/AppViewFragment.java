@@ -73,7 +73,7 @@ import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentException;
 import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
-import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
+import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
@@ -181,7 +181,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
   private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-  private PurchaseIntentMapper purchaseIntentMapper;
+  private PurchaseBundleMapper purchaseBundleMapper;
   private ShareAppHelper shareAppHelper;
   private QManager qManager;
   private DownloadFactory downloadFactory;
@@ -264,8 +264,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreate(savedInstanceState);
     adMapper = new MinimalAdMapper();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
-    purchaseIntentMapper =
-        ((V8Engine) getContext().getApplicationContext()).getPurchaseIntentMapper();
+    purchaseBundleMapper =
+        ((V8Engine) getContext().getApplicationContext()).getPurchaseBundleMapper();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
@@ -443,7 +443,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (requestCode == PAY_APP_REQUEST_CODE) {
       try {
         final PaidAppPurchase purchase =
-            (PaidAppPurchase) purchaseIntentMapper.map(data, resultCode);
+            (PaidAppPurchase) purchaseBundleMapper.map(data.getExtras(), resultCode);
 
         FragmentActivity fragmentActivity = getActivity();
         Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
