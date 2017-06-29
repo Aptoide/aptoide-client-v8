@@ -27,9 +27,12 @@ public class CardViewHolderFactory {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
+  private final MinimalCardViewFactory minimalCardViewFactory;
 
   public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
-      DateCalculator dateCalculator, SpannableFactory spannableFactory) {
+      DateCalculator dateCalculator, SpannableFactory spannableFactory,
+      MinimalCardViewFactory minimalCardViewFactory) {
+    this.minimalCardViewFactory = minimalCardViewFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -82,7 +85,7 @@ public class CardViewHolderFactory {
       case AGGREGATED_SOCIAL_ARTICLE:
         return new AggregatedMediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_media_item, parent, false),
-            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory, minimalCardViewFactory);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));

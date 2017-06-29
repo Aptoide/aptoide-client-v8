@@ -189,7 +189,7 @@ public class TimelineResponseCardMapper {
             .getName(), socialStoreLatestApps.getSharedStore()
             .getAvatar(), socialStoreLatestApps.getSharedStore()
             .getStats()
-            .getSubscribers(), socialStoreLatestApps.getOwnerStore()
+            .getSubscribers(), socialStoreLatestApps.getSharedStore()
             .getStats()
             .getApps(), socialStoreLatestApps.getDate(), socialStoreLatestApps.getApps(), abUrl,
             CardType.SOCIAL_STORE));
@@ -208,7 +208,8 @@ public class TimelineResponseCardMapper {
             .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             aggregatedSocialArticle.getPublisher()
                 .getBaseUrl()), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-            aggregatedSocialArticle.getUrl()), CardType.AGGREGATED_SOCIAL_ARTICLE));
+            aggregatedSocialArticle.getUrl()), aggregatedSocialArticle.getMinimalCardList(),
+            CardType.AGGREGATED_SOCIAL_ARTICLE));
       }
     }
 

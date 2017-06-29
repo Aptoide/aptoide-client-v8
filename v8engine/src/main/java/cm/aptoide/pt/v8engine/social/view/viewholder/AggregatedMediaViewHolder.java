@@ -1,7 +1,9 @@
 package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.graphics.Typeface;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
@@ -9,6 +11,7 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.AggregatedMedia;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
+import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -32,11 +35,16 @@ public class AggregatedMediaViewHolder extends CardViewHolder<AggregatedMedia> {
   private final TextView relatedTo;
   private final ImageView playIcon;
   private final TextView morePostersLabel;
+  private final FrameLayout minimalCardContainer;
+  private final LayoutInflater inflater;
+  private final MinimalCardViewFactory minimalCardViewFactory;
 
   public AggregatedMediaViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory) {
+      SpannableFactory spannableFactory, MinimalCardViewFactory minimalCardViewFactory) {
     super(view);
+    this.minimalCardViewFactory = minimalCardViewFactory;
+    this.inflater = LayoutInflater.from(itemView.getContext());
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -52,6 +60,8 @@ public class AggregatedMediaViewHolder extends CardViewHolder<AggregatedMedia> {
     this.playIcon = (ImageView) itemView.findViewById(R.id.play_button);
     this.morePostersLabel =
         (TextView) itemView.findViewById(R.id.timeline_header_aditional_number_of_shares_circular);
+    this.minimalCardContainer =
+        (FrameLayout) itemView.findViewById(R.id.timeline_sub_minimal_card_container);
   }
 
   @Override public void setCard(AggregatedMedia card, int position) {
@@ -69,7 +79,7 @@ public class AggregatedMediaViewHolder extends CardViewHolder<AggregatedMedia> {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPosters()
             .get(1)
-            .getSecondaryAvatar(), this.headerAvatar2);
+            .getPrimaryAvatar(), this.headerAvatar2);
     this.headerNames.setText(getCardHeaderNames(card));
     this.headerTimestamp.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
@@ -85,6 +95,10 @@ public class AggregatedMediaViewHolder extends CardViewHolder<AggregatedMedia> {
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     showMorePostersLabel(card);
+
+    minimalCardContainer.removeAllViews();
+    minimalCardContainer.addView(
+        minimalCardViewFactory.getView(card.getMinimalCards(), inflater, itemView.getContext()));
   }
 
   private void showMorePostersLabel(AggregatedMedia card) {

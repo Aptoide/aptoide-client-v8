@@ -28,6 +28,7 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
+import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.SocialService;
@@ -90,11 +91,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     cardTouchEventPublishSubject = PublishSubject.create();
+    final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
+        getContext().getApplicationContext()
+            .getResources());
     adapter = new CardAdapter(Collections.emptyList(),
-        new CardViewHolderFactory(cardTouchEventPublishSubject,
-            new DateCalculator(getContext().getApplicationContext(),
-                getContext().getApplicationContext()
-                    .getResources()), new SpannableFactory()), new ProgressCard());
+        new CardViewHolderFactory(cardTouchEventPublishSubject, dateCalculator,
+            new SpannableFactory(), new MinimalCardViewFactory(dateCalculator)),
+        new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
   }
