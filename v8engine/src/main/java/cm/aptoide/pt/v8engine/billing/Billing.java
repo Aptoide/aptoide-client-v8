@@ -7,12 +7,12 @@ package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
-import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
-import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.methods.BoaCompraAuthorization;
 import cm.aptoide.pt.v8engine.billing.methods.BoaCompraPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.methods.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
+import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -23,14 +23,14 @@ import rx.Single;
 public class Billing {
 
   private final ProductRepositoryFactory productRepositoryFactory;
-  private final TransactionRepositoryFactory transactionRepositoryFactory;
+  private final TransactionRepositorySelector transactionRepositorySelector;
   private final InAppBillingRepository inAppBillingRepository;
 
   public Billing(ProductRepositoryFactory productRepositoryFactory,
-      TransactionRepositoryFactory transactionRepositoryFactory,
+      TransactionRepositorySelector transactionRepositorySelector,
       InAppBillingRepository inAppBillingRepository) {
     this.productRepositoryFactory = productRepositoryFactory;
-    this.transactionRepositoryFactory = transactionRepositoryFactory;
+    this.transactionRepositorySelector = transactionRepositorySelector;
     this.inAppBillingRepository = inAppBillingRepository;
   }
 
@@ -107,9 +107,9 @@ public class Billing {
   }
 
   public Observable<Transaction> getTransaction(Product product) {
-    return transactionRepositoryFactory.getTransactionRepository(product)
+    return transactionRepositorySelector.select(product)
         .getTransaction(product)
-        .distinctUntilChanged(confirmation -> confirmation.getStatus());
+        .distinctUntilChanged(transaction -> transaction.getStatus());
   }
 
   public Single<Purchase> getPurchase(Product product) {
@@ -117,7 +117,7 @@ public class Billing {
         .getPurchase(product)
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof RepositoryIllegalArgumentException) {
-            return transactionRepositoryFactory.getTransactionRepository(product)
+            return transactionRepositorySelector.select(product)
                 .remove(product.getId())
                 .andThen(Single.error(throwable));
           }

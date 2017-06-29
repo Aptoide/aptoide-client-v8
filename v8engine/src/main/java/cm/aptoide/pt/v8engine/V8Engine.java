@@ -103,11 +103,11 @@ import cm.aptoide.pt.v8engine.billing.repository.InAppTransactionRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaidAppProductRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaidAppTransactionRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentMethodMapper;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
@@ -757,18 +757,18 @@ public abstract class V8Engine extends Application {
 
       final TransactionFactory confirmationFactory = new TransactionFactory();
 
-      final TransactionRepositoryFactory
-          transactionRepositoryFactory = new TransactionRepositoryFactory(
-          new InAppTransactionRepository(getNetworkOperatorManager(),
-              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
-              confirmationFactory, getBaseBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
-              getDefaultSharedPreferences()),
-          new PaidAppTransactionRepository(getNetworkOperatorManager(),
-              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
-              confirmationFactory, getBaseBodyInterceptorV3(), WebService.getDefaultConverter(),
-              getDefaultClient(), getAccountPayer(), getTokenInvalidator(),
-              getDefaultSharedPreferences()));
+      final TransactionRepositorySelector transactionRepositorySelector =
+          new TransactionRepositorySelector(
+              new InAppTransactionRepository(getNetworkOperatorManager(),
+                  AccessorFactory.getAccessorFor(PaymentConfirmation.class),
+                  getPaymentSyncScheduler(), confirmationFactory, getBaseBodyInterceptorV3(),
+                  getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
+                  getTokenInvalidator(), getDefaultSharedPreferences()),
+              new PaidAppTransactionRepository(getNetworkOperatorManager(),
+                  AccessorFactory.getAccessorFor(PaymentConfirmation.class),
+                  getPaymentSyncScheduler(), confirmationFactory, getBaseBodyInterceptorV3(),
+                  WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
+                  getTokenInvalidator(), getDefaultSharedPreferences()));
 
       final ProductFactory productFactory = new ProductFactory();
 
@@ -776,11 +776,11 @@ public abstract class V8Engine extends Application {
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
 
       final PaymentMethodMapper paymentMethodMapper =
-          new PaymentMethodMapper(transactionRepositoryFactory, new AuthorizationRepository(
+          new PaymentMethodMapper(transactionRepositorySelector, new AuthorizationRepository(
               AccessorFactory.getAccessorFor(PaymentAuthorization.class), getPaymentSyncScheduler(),
               getAuthorizationFactory(), getBaseBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
-              getDefaultSharedPreferences()), getAuthorizationFactory(), getAccountPayer());
+              getDefaultSharedPreferences()));
 
       final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
           new PaidAppProductRepository(purchaseFactory, paymentMethodMapper,
@@ -792,7 +792,7 @@ public abstract class V8Engine extends Application {
               getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences(),
               getPackageRepository()));
 
-      billing = new Billing(productRepositoryFactory, transactionRepositoryFactory,
+      billing = new Billing(productRepositoryFactory, transactionRepositorySelector,
           getInAppBillingRepository());
     }
     return billing;

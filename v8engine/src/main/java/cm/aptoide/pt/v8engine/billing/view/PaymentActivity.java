@@ -254,9 +254,4 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     setResult(code, intent);
     finish();
   }
-
-  private void finish(int code) {
-    setResult(code);
-    finish();
-  }
 }

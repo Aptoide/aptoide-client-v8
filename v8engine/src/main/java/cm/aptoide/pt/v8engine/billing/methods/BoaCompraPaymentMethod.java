@@ -1,31 +1,49 @@
 package cm.aptoide.pt.v8engine.billing.methods;
 
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentAuthorizationAlreadyInitializedException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositoryFactory;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class BoaCompraPaymentMethod extends AptoidePaymentMethod {
+public class BoaCompraPaymentMethod implements PaymentMethod {
 
-  private final TransactionRepositoryFactory transactionRepositoryFactory;
+  private final int id;
+  private final String name;
+  private final String description;
+  private final TransactionRepositorySelector transactionRepositorySelector;
   private final AuthorizationRepository authorizationRepository;
 
   public BoaCompraPaymentMethod(int id, String name, String description,
-      TransactionRepositoryFactory transactionRepositoryFactory,
+      TransactionRepositorySelector transactionRepositorySelector,
       AuthorizationRepository authorizationRepository) {
-    super(id, name, description);
-    this.transactionRepositoryFactory = transactionRepositoryFactory;
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.transactionRepositorySelector = transactionRepositorySelector;
     this.authorizationRepository = authorizationRepository;
   }
 
+  @Override public int getId() {
+    return id;
+  }
+
+  @Override public String getName() {
+    return name;
+  }
+
+  @Override public String getDescription() {
+    return description;
+  }
+
   @Override public Completable process(Product product) {
-    return transactionRepositoryFactory.getTransactionRepository(product)
+    return transactionRepositorySelector.select(product)
         .createTransaction(getId(), product)
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof RepositoryIllegalArgumentException) {
