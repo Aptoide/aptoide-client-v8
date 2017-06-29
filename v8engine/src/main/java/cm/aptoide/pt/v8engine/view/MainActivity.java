@@ -122,12 +122,15 @@ public class MainActivity extends TabNavigatorActivity
     Snackbar.Callback snackbarCallback = new Snackbar.Callback() {
       @Override public void onDismissed(Snackbar snackbar, int event) {
         super.onDismissed(snackbar, event);
-        installErrorsDismissEvent.call(null);
+        if (event == DISMISS_EVENT_SWIPE) {
+          installErrorsDismissEvent.call(null);
+        }
       }
     };
     snackbar = Snackbar.make(snackBarLayout, title, Snackbar.LENGTH_INDEFINITE)
         .setAction(R.string.generalscreen_short_root_install_timeout_error_action,
             view -> installManager.retryTimedOutInstallations()
+                .andThen(installManager.cleanTimedOutInstalls())
                 .subscribe())
         .addCallback(snackbarCallback);
     snackbar.show();
