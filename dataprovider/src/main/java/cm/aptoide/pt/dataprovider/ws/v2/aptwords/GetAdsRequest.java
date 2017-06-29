@@ -159,9 +159,10 @@ import rx.Observable;
   }
 
   @Partners public static GetAdsRequest ofNotification(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature) {
+      boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature,
+      String excludedPackage) {
     return of(Location.notification, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
-        oemid, mature);
+        oemid, mature).setExcludedPackage(excludedPackage);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
