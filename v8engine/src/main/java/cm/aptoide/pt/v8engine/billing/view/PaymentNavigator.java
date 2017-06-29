@@ -5,8 +5,8 @@ import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
-import cm.aptoide.pt.v8engine.billing.services.BoaCompraPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.services.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.BoaCompraPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 
 public class PaymentNavigator {

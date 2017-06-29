@@ -8,9 +8,9 @@ package cm.aptoide.pt.v8engine.billing.repository;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
-import cm.aptoide.pt.v8engine.billing.services.BoaCompraPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.services.PayPalPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.services.SandboxPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.BoaCompraPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.SandboxPaymentMethod;
 
 public class PaymentMethodMapper {
 

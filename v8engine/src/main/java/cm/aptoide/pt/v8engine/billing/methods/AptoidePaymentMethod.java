@@ -3,12 +3,9 @@
  * Modified by Marcelo Benites on 02/01/2017.
  */
 
-package cm.aptoide.pt.v8engine.billing.services;
+package cm.aptoide.pt.v8engine.billing.methods;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
-import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositoryFactory;
-import rx.Completable;
 
 public abstract class AptoidePaymentMethod implements PaymentMethod {
 
@@ -33,5 +30,4 @@ public abstract class AptoidePaymentMethod implements PaymentMethod {
   @Override public String getDescription() {
     return description;
   }
-
 }

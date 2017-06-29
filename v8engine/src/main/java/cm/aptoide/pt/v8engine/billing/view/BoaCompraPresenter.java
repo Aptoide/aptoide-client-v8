@@ -48,6 +48,14 @@ public class BoaCompraPresenter implements Presenter {
     handleDismissEvent();
   }
 
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
+  }
+
   private void onViewCreatedProcessBoaCompraPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -132,13 +140,5 @@ public class BoaCompraPresenter implements Presenter {
         .doOnNext(dismiss -> view.dismiss())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

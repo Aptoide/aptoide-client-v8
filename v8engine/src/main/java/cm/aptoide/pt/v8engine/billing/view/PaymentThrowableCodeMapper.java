@@ -10,7 +10,6 @@ import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
-import javax.security.auth.login.LoginException;
 
 public class PaymentThrowableCodeMapper {
 
