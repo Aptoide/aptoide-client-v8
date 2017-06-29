@@ -58,6 +58,10 @@
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
 
+    <meta-data
+        android:name="CHANNEL"
+        android:value="Aptoide"/>
+
     <service android:name=".v8engine.account.AccountAuthenticatorService">
       <intent-filter>
         <action android:name="android.accounts.AccountAuthenticator"/>

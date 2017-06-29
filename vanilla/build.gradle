@@ -211,7 +211,7 @@ dependencies {
     exclude group: "com.android.support", module: "support-annotations"
   }
 
-  compile 'com.appsflyer:af-android-sdk:4+@aar'
+  compile 'com.appsflyer:af-android-sdk:4.7.4@aar'
 }
 
 String getDate() {
