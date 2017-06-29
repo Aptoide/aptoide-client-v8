@@ -14,24 +14,25 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class PayPalPresenter implements Presenter {
 
+  private static final int PAY_APP_REQUEST_CODE = 12;
   private final PayPalView view;
   private final Billing billing;
   private final ProductProvider productProvider;
   private final PaymentAnalytics analytics;
+  private final PaymentNavigator paymentNavigator;
 
   public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
-      PaymentAnalytics analytics) {
+      PaymentAnalytics analytics, PaymentNavigator paymentNavigator) {
     this.view = view;
     this.billing = billing;
     this.productProvider = productProvider;
     this.analytics = analytics;
+    this.paymentNavigator = paymentNavigator;
   }
 
   @Override public void present() {
 
     onViewCreatedShowPayPalPayment();
-
-    handlePayPalResultEvent();
 
     handleErrorDismissEvent();
   }
@@ -48,26 +49,7 @@ public class PayPalPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismisses())
-        .doOnNext(product -> view.dismiss())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> hideLoadingAndShowError(throwable));
-  }
-
-  private void handlePayPalResultEvent() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.results())
-        .doOnNext(__ -> view.showLoading())
-        .doOnNext(result -> analytics.sendPayPalResultEvent(result))
-        .doOnNext(result -> dismissOnPayPalError(result))
-        .filter(result -> result.getStatus() == PayPalView.PayPalResult.SUCCESS)
-        .flatMapCompletable(result -> productProvider.getProduct()
-            .flatMapCompletable(
-                product -> billing.processPayPalPayment(product, result.getPaymentConfirmationId()))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.dismiss()))
-        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(product -> paymentNavigator.popBackStackWithResult())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> hideLoadingAndShowError(throwable));
@@ -78,9 +60,17 @@ public class PayPalPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(created -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(product -> view.showPayPal(product.getPrice()
-            .getCurrency(), getPaymentDescription(product), product.getPrice()
-            .getAmount()))
+        .doOnNext(product -> paymentNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
+            product.getPrice()
+                .getCurrency(), getPaymentDescription(product), product.getPrice()
+                .getAmount())
+            .doOnNext(result -> analytics.sendPayPalResultEvent(result))
+            .doOnNext(result -> dismissOnPayPalError(result))
+            .filter(result -> result.getStatus() == PaymentNavigator.PayPalResult.SUCCESS)
+            .flatMapCompletable(
+                result -> billing.processPayPalPayment(product, result.getPaymentConfirmationId()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> paymentNavigator.popBackStackWithResult()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> hideLoadingAndShowError(throwable));
@@ -97,14 +87,14 @@ public class PayPalPresenter implements Presenter {
         "Can NOT provide PayPal payment description. Unknown product.");
   }
 
-  private void dismissOnPayPalError(PayPalView.PayPalResult result) {
+  private void dismissOnPayPalError(PaymentNavigator.PayPalResult result) {
     switch (result.getStatus()) {
-      case PayPalView.PayPalResult.CANCELLED:
-      case PayPalView.PayPalResult.ERROR:
+      case PaymentNavigator.PayPalResult.CANCELLED:
+      case PaymentNavigator.PayPalResult.ERROR:
         view.hideLoading();
-        view.dismiss();
+        paymentNavigator.popBackStackWithResult();
         break;
-      case PayPalView.PayPalResult.SUCCESS:
+      case PaymentNavigator.PayPalResult.SUCCESS:
       default:
     }
   }

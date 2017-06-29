@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.navigator;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
@@ -35,6 +36,15 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
       int requestCode) {
     final Intent intent = new Intent();
     intent.setComponent(new ComponentName(this, activityClass));
+    startActivityForResult(intent, requestCode);
+    return resultRelay.filter(result -> result.getRequestCode() == requestCode);
+  }
+
+  @Override public Observable<Result> navigateForResult(Class<? extends Activity> activityClass,
+      int requestCode, Bundle bundle) {
+    final Intent intent = new Intent();
+    intent.setComponent(new ComponentName(this, activityClass));
+    intent.putExtras(bundle);
     startActivityForResult(intent, requestCode);
     return resultRelay.filter(result -> result.getRequestCode() == requestCode);
   }

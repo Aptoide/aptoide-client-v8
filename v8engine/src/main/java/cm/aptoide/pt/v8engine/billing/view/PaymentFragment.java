@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -27,6 +26,7 @@ import cm.aptoide.pt.v8engine.presenter.PaymentMethodSelector;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxRadioGroup;
 import java.util.List;
@@ -47,8 +47,8 @@ public class PaymentFragment extends FragmentView implements PaymentView {
   private Button buyButton;
   private TextView productPrice;
 
-  private AlertDialog networkErrorDialog;
-  private AlertDialog unknownErrorDialog;
+  private RxAlertDialog networkErrorDialog;
+  private RxAlertDialog unknownErrorDialog;
   private SparseArray<PaymentMethodViewModel> paymentMap;
   private SpannableFactory spannableFactory;
 
@@ -128,13 +128,14 @@ public class PaymentFragment extends FragmentView implements PaymentView {
     final ContextThemeWrapper dialogTheme =
         new ContextThemeWrapper(getContext(), R.style.AptoideThemeDefault);
 
-    networkErrorDialog = new AlertDialog.Builder(dialogTheme).setMessage(R.string.connection_error)
-        .setPositiveButton(android.R.string.ok, null)
-        .create();
+    networkErrorDialog =
+        new RxAlertDialog.Builder(dialogTheme).setMessage(R.string.connection_error)
+            .setPositiveButton(android.R.string.ok)
+            .build();
     unknownErrorDialog =
-        new AlertDialog.Builder(dialogTheme).setMessage(R.string.all_message_general_error)
-            .setPositiveButton(android.R.string.ok, null)
-            .create();
+        new RxAlertDialog.Builder(dialogTheme).setMessage(R.string.all_message_general_error)
+            .setPositiveButton(android.R.string.ok)
+            .build();
 
     attachPresenter(
         new PaymentPresenter(this, billing, accountManager, paymentMethodSelector, accountNavigator,
