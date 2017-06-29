@@ -24,7 +24,7 @@ import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.presenter.PaymentMethodSelector;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
@@ -33,7 +33,7 @@ import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class PaymentFragment extends FragmentView implements PaymentView {
+public class PaymentFragment extends PermissionServiceFragment implements PaymentView {
 
   private View overlay;
   private View body;
@@ -63,23 +63,7 @@ public class PaymentFragment extends FragmentView implements PaymentView {
   private AccountNavigator accountNavigator;
   private PaymentNavigator paymentNavigator;
 
-  public static Fragment create(long appId, String storeName, boolean sponsored) {
-    final Bundle bundle = ProductProvider.createBundle(appId, storeName, sponsored);
-    final PaymentFragment fragment = new PaymentFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
   public static Fragment create(Bundle bundle) {
-    final PaymentFragment fragment = new PaymentFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
-  public static Fragment create(int apiVersion, String packageName, String sku, String type,
-      String developerPayload) {
-    final Bundle bundle =
-        ProductProvider.createBundle(apiVersion, packageName, type, sku, developerPayload);
     final PaymentFragment fragment = new PaymentFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -97,7 +81,7 @@ public class PaymentFragment extends FragmentView implements PaymentView {
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     paymentNavigator =
         new PaymentNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator());
+            getActivityNavigator(), getFragmentNavigator());
   }
 
   @Nullable @Override
@@ -158,8 +142,8 @@ public class PaymentFragment extends FragmentView implements PaymentView {
     paymentMap = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
-    unknownErrorDialog = null;
     unknownErrorDialog.dismiss();
+    unknownErrorDialog = null;
     paymentLoading = false;
     transactionLoading = false;
     super.onDestroyView();
@@ -270,10 +254,5 @@ public class PaymentFragment extends FragmentView implements PaymentView {
     if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
       unknownErrorDialog.show();
     }
-  }
-
-  @Override public void hideAllErrors() {
-    networkErrorDialog.dismiss();
-    unknownErrorDialog.dismiss();
   }
 }

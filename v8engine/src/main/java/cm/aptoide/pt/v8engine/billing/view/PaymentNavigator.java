@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.billing.methods.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -22,15 +23,20 @@ import rx.Observable;
 
 public class PaymentNavigator {
 
+  public static final String EXTRA_PAYMENT_ID =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PAYMENT_ID";
   private final PurchaseBundleMapper bundleMapper;
   private final ActivityNavigator activityNavigator;
+  private final FragmentNavigator fragmentNavigator;
 
-  public PaymentNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator) {
+  public PaymentNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
+      FragmentNavigator fragmentNavigator) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
+    this.fragmentNavigator = fragmentNavigator;
   }
 
-  public void navigateToAuthorizationView(PaymentMethod paymentMethod, Product product) {
+  public void navigateToAuthorizedPaymentView(PaymentMethod paymentMethod, Product product) {
     if (paymentMethod instanceof BoaCompraPaymentMethod) {
       activityNavigator.navigateTo(BoaCompraActivity.class,
           getProductBundle(paymentMethod, product));
@@ -41,14 +47,18 @@ public class PaymentNavigator {
 
   public void navigateToLocalPaymentView(PaymentMethod paymentMethod, Product product) {
     if (paymentMethod instanceof PayPalPaymentMethod) {
-      activityNavigator.navigateTo(PayPalActivity.class, getProductBundle(paymentMethod, product));
+      fragmentNavigator.navigateTo(PayPalFragment.create(getProductBundle(paymentMethod, product)));
     } else {
       throw new IllegalArgumentException("Invalid local payment.");
     }
   }
 
-  public Observable<PayPalResult> navigateToPayPalForResult(int requestCode, String currency,
-      String description, double amount) {
+  public void popLocalPaymentView() {
+    fragmentNavigator.popBackStack();
+  }
+
+  public void navigateToPayPalForResult(int requestCode, String currency, String description,
+      double amount) {
 
     final Bundle bundle = new Bundle();
     bundle.putParcelable(PayPalService.EXTRA_PAYPAL_CONFIGURATION,
@@ -60,34 +70,37 @@ public class PaymentNavigator {
         new PayPalPayment(new BigDecimal(amount), currency, description,
             PayPalPayment.PAYMENT_INTENT_SALE));
 
-    return activityNavigator.navigateForResult(
-        com.paypal.android.sdk.payments.PaymentActivity.class, requestCode, bundle)
+    activityNavigator.navigateForResult(com.paypal.android.sdk.payments.PaymentActivity.class,
+        requestCode, bundle);
+  }
+
+  public Observable<PayPalResult> payPalResults(int requestCode) {
+    return activityNavigator.results(requestCode)
         .map(result -> map(result));
   }
 
-  public void popBackStackWithResult(Purchase purchase) {
+  public void popPaymentViewWithResult(Purchase purchase) {
     activityNavigator.finish(Activity.RESULT_OK, bundleMapper.map(purchase));
   }
 
-  public void popBackStackWithResult(Throwable throwable) {
+  public void popPaymentViewWithResult(Throwable throwable) {
     activityNavigator.finish(Activity.RESULT_CANCELED, bundleMapper.map(throwable));
   }
 
-  public void popBackStackWithResult() {
+  public void popPaymentViewWithResult() {
     activityNavigator.finish(Activity.RESULT_CANCELED, bundleMapper.mapCancellation());
   }
 
   private Bundle getProductBundle(PaymentMethod paymentMethod, Product product) {
-    final Bundle bundle;
+    Bundle bundle = new Bundle();
+    bundle.putInt(EXTRA_PAYMENT_ID, paymentMethod.getId());
     if (product instanceof InAppProduct) {
-      bundle =
-          ProductActivity.getBundle(paymentMethod.getId(), ((InAppProduct) product).getApiVersion(),
-              ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(),
-              ((InAppProduct) product).getSku(), ((InAppProduct) product).getDeveloperPayload());
+      bundle = ProductProvider.createBundle(((InAppProduct) product).getApiVersion(),
+          ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(),
+          ((InAppProduct) product).getSku(), ((InAppProduct) product).getSku());
     } else if (product instanceof PaidAppProduct) {
-      bundle =
-          ProductActivity.getBundle(paymentMethod.getId(), ((PaidAppProduct) product).getAppId(),
-              ((PaidAppProduct) product).getStoreName(), ((PaidAppProduct) product).isSponsored());
+      bundle = ProductProvider.createBundle(((PaidAppProduct) product).getAppId(),
+          ((PaidAppProduct) product).getStoreName(), ((PaidAppProduct) product).isSponsored());
     } else {
       throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
     }

@@ -16,11 +16,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.view.BaseActivity;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public class BoaCompraActivity extends ProductActivity implements BoaCompraView {
+public class BoaCompraActivity extends BaseActivity implements BoaCompraView {
 
   private WebView webView;
   private View progressBarContainer;
@@ -54,7 +55,7 @@ public class BoaCompraActivity extends ProductActivity implements BoaCompraView 
     registerClickHandler(clickHandler);
 
     attachPresenter(new BoaCompraPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
-        getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
+        getIntent().getIntExtra(PaymentNavigator.EXTRA_PAYMENT_ID, 0),
         ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
         ((V8Engine) getApplicationContext()).getPaymentSyncScheduler(),
         ProductProvider.fromBundle(((V8Engine) getApplicationContext()).getBilling(),

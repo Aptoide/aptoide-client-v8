@@ -9,7 +9,7 @@
     >
 
   <ProgressBar
-      android:id="@+id/activity_paypal_authorization_preogress_bar"
+      android:id="@+id/fragment_paypal_progress_bar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:theme="@style/AptoideThemeDefault"

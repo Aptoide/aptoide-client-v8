@@ -10,7 +10,8 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
 import java.util.Locale;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.Completable;
+import rx.Scheduler;
 
 public class PayPalPresenter implements Presenter {
 
@@ -20,19 +21,23 @@ public class PayPalPresenter implements Presenter {
   private final ProductProvider productProvider;
   private final PaymentAnalytics analytics;
   private final PaymentNavigator paymentNavigator;
+  private final Scheduler viewScheduler;
 
   public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
-      PaymentAnalytics analytics, PaymentNavigator paymentNavigator) {
+      PaymentAnalytics analytics, PaymentNavigator paymentNavigator, Scheduler viewScheduler) {
     this.view = view;
     this.billing = billing;
     this.productProvider = productProvider;
     this.analytics = analytics;
     this.paymentNavigator = paymentNavigator;
+    this.viewScheduler = viewScheduler;
   }
 
   @Override public void present() {
 
     onViewCreatedShowPayPalPayment();
+
+    handlePayPalResultEvent();
 
     handleErrorDismissEvent();
   }
@@ -45,35 +50,57 @@ public class PayPalPresenter implements Presenter {
 
   }
 
-  private void handleErrorDismissEvent() {
+  private void onViewCreatedShowPayPalPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.errorDismisses())
-        .doOnNext(product -> paymentNavigator.popBackStackWithResult())
+        .flatMapSingle(created -> productProvider.getProduct())
+        .observeOn(viewScheduler)
+        .doOnNext(product -> paymentNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
+            product.getPrice()
+                .getCurrency(), getPaymentDescription(product), product.getPrice()
+                .getAmount()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> hideLoadingAndShowError(throwable));
   }
 
-  private void onViewCreatedShowPayPalPayment() {
+  private void handlePayPalResultEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(created -> productProvider.getProduct())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(product -> paymentNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
-            product.getPrice()
-                .getCurrency(), getPaymentDescription(product), product.getPrice()
-                .getAmount())
+        .flatMap(created -> paymentNavigator.payPalResults(PAY_APP_REQUEST_CODE)
+            .doOnNext(result -> view.showLoading())
             .doOnNext(result -> analytics.sendPayPalResultEvent(result))
-            .doOnNext(result -> dismissOnPayPalError(result))
-            .filter(result -> result.getStatus() == PaymentNavigator.PayPalResult.SUCCESS)
-            .flatMapCompletable(
-                result -> billing.processPayPalPayment(product, result.getPaymentConfirmationId()))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> paymentNavigator.popBackStackWithResult()))
+            .flatMapCompletable(result -> processPayPalPayment(result).observeOn(viewScheduler)
+                .doOnCompleted(() -> {
+                  view.hideLoading();
+                  paymentNavigator.popLocalPaymentView();
+                })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> hideLoadingAndShowError(throwable));
+  }
+
+  private void handleErrorDismissEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.errorDismisses())
+        .doOnNext(product -> paymentNavigator.popLocalPaymentView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> hideLoadingAndShowError(throwable));
+  }
+
+  private Completable processPayPalPayment(PaymentNavigator.PayPalResult result) {
+    switch (result.getStatus()) {
+      case PaymentNavigator.PayPalResult.SUCCESS:
+        return productProvider.getProduct()
+            .flatMapCompletable(product -> billing.processPayPalPayment(product,
+                result.getPaymentConfirmationId()));
+      case PaymentNavigator.PayPalResult.CANCELLED:
+      case PaymentNavigator.PayPalResult.ERROR:
+      default:
+        return Completable.complete();
+    }
   }
 
   private String getPaymentDescription(Product product) {
@@ -85,18 +112,6 @@ public class PayPalPresenter implements Presenter {
     }
     throw new IllegalArgumentException(
         "Can NOT provide PayPal payment description. Unknown product.");
-  }
-
-  private void dismissOnPayPalError(PaymentNavigator.PayPalResult result) {
-    switch (result.getStatus()) {
-      case PaymentNavigator.PayPalResult.CANCELLED:
-      case PaymentNavigator.PayPalResult.ERROR:
-        view.hideLoading();
-        paymentNavigator.popBackStackWithResult();
-        break;
-      case PaymentNavigator.PayPalResult.SUCCESS:
-      default:
-    }
   }
 
   private void hideLoadingAndShowError(Throwable throwable) {

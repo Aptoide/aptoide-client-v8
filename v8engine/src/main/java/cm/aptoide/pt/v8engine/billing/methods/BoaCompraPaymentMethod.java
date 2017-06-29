@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.billing.methods;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentAuthorizationAlreadyInitializedException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
@@ -54,7 +54,7 @@ public class BoaCompraPaymentMethod implements PaymentMethod {
         });
   }
 
-  public Single<BoaCompraAuthorization> getInitializedAuthorization() {
+  public Single<BoaCompraAuthorization> getAuthorization() {
     return authorizationRepository.getAuthorization(getId())
         .cast(BoaCompraAuthorization.class)
         .flatMap(authorization -> {
@@ -63,7 +63,7 @@ public class BoaCompraPaymentMethod implements PaymentMethod {
           }
 
           if (authorization.isPending() || authorization.isAuthorized()) {
-            return Observable.error(new PaymentAuthorizationAlreadyInitializedException());
+            return Observable.error(new PaymentMethodAlreadyAuthorizedException());
           }
 
           return authorizationRepository.createAuthorization(getId())

@@ -33,7 +33,8 @@ public class PaymentActivity extends BaseActivity {
     setContentView(R.layout.empty_frame);
 
     if (savedInstanceState == null) {
-      getFragmentNavigator().navigateTo(PaymentFragment.create(getIntent().getExtras()));
+      getFragmentNavigator().navigateToWithoutBackSave(
+          PaymentFragment.create(getIntent().getExtras()));
     }
   }
 }

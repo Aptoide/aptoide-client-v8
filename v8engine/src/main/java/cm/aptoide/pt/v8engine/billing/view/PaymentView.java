@@ -41,8 +41,6 @@ public interface PaymentView extends View {
 
   void showUnknownError();
 
-  void hideAllErrors();
-
   class PaymentMethodViewModel {
 
     private final int id;

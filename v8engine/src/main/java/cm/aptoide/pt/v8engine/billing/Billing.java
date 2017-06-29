@@ -86,10 +86,9 @@ public class Billing {
         payment -> ((BoaCompraPaymentMethod) payment).authorizedProcess(product));
   }
 
-  public Single<BoaCompraAuthorization> getInitializedBoaCompraAuthorization(int paymentId,
-      Product product) {
+  public Single<BoaCompraAuthorization> getBoaCompraAuthorization(int paymentId, Product product) {
     return getPaymentMethods(paymentId, product).flatMap(
-        payment -> ((BoaCompraPaymentMethod) payment).getInitializedAuthorization());
+        payment -> ((BoaCompraPaymentMethod) payment).getAuthorization());
   }
 
   public Completable processPayment(int paymentId, Product product) {

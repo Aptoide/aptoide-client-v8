@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentAuthorizationAlreadyInitializedException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -62,21 +62,19 @@ public class BoaCompraPresenter implements Presenter {
         .flatMapSingle(__ -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(product -> view.showLoading())
-        .flatMapCompletable(
-            product -> billing.getInitializedBoaCompraAuthorization(paymentId, product)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(
-                    authorization -> view.loadBoaCompraConsentWebsite(authorization.getUrl(),
-                        authorization.getRedirectUrl()))
-                .flatMapCompletable(__ -> billing.processBoaCompraPayment(paymentId, product))
-                .onErrorResumeNext(throwable -> {
-                  if (throwable instanceof PaymentAuthorizationAlreadyInitializedException) {
-                    return billing.processBoaCompraPayment(paymentId, product);
-                  }
-                  return Completable.error(throwable);
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> view.hideLoading()))
+        .flatMapCompletable(product -> billing.getBoaCompraAuthorization(paymentId, product)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess(authorization -> view.loadBoaCompraConsentWebsite(authorization.getUrl(),
+                authorization.getRedirectUrl()))
+            .flatMapCompletable(__ -> billing.processBoaCompraPayment(paymentId, product))
+            .onErrorResumeNext(throwable -> {
+              if (throwable instanceof PaymentMethodAlreadyAuthorizedException) {
+                return billing.processBoaCompraPayment(paymentId, product);
+              }
+              return Completable.error(throwable);
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> view.hideLoading()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
