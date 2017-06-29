@@ -28,6 +28,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
 import com.facebook.FacebookSdk;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import rx.functions.Action0;
 
 /**
@@ -43,6 +46,7 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
 
   private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
   private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 101;
+  private static final int MULTIPLE_PERMISSIONS_REQUEST_ID = 102;
 
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
@@ -50,6 +54,8 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
   @Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
   @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
   @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
+  @Nullable private Action0 toRunWhenAccessToMultiplePermissionsIsGranted;
+  @Nullable private Action0 toRunWhenAccessToMultiplePermissionsIsDenied;
 
   private SharedPreferences sharedPreferences;
   private ConnectivityManager connectivityManager;
@@ -378,9 +384,68 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
         }
         break;
 
+      case MULTIPLE_PERMISSIONS_REQUEST_ID:
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          Logger.v(TAG, "access to get accounts was granted");
+          if (toRunWhenAccessToMultiplePermissionsIsGranted != null) {
+            toRunWhenAccessToMultiplePermissionsIsGranted.call();
+          }
+        } else {
+          if (toRunWhenAccessToMultiplePermissionsIsDenied != null) {
+            toRunWhenAccessToMultiplePermissionsIsDenied.call();
+          }
+          ShowMessage.asSnack(findViewById(android.R.id.content),
+              "access to multiple permissions was denied");
+        }
+        break;
+
       default:
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         break;
     }
+  }
+
+  @Override public void requestMultiplePermissions(@StringRes int rationaleMessage,
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied,
+      String... permissions) {
+    String[] filterNeededPermissions = filterNeededPermissions(permissions);
+    if (filterNeededPermissions.length > 0) {
+      requestPermissions(rationaleMessage, filterNeededPermissions);
+    }
+  }
+
+  private void requestPermissions(@StringRes int rationaleMessage, String[] permissions) {
+
+    showMessageOKCancel(rationaleMessage, new SimpleSubscriber<GenericDialogs.EResponse>() {
+
+      @Override public void onNext(GenericDialogs.EResponse eResponse) {
+        super.onNext(eResponse);
+        if (eResponse != GenericDialogs.EResponse.YES) {
+          if (toRunWhenAccessToMultiplePermissionsIsDenied != null) {
+            toRunWhenAccessToMultiplePermissionsIsDenied.call();
+          }
+          return;
+        }
+
+        ActivityCompat.requestPermissions(PermissionServiceActivity.this, permissions,
+            MULTIPLE_PERMISSIONS_REQUEST_ID);
+      }
+    });
+
+    Logger.v(TAG, "requesting multiple permission");
+  }
+
+  private String[] filterNeededPermissions(String[] permissions) {
+    List<String> tmp = Arrays.asList(permissions);
+
+    Iterator<String> iterator = tmp.iterator();
+    while (iterator.hasNext()) {
+      String next = iterator.next();
+      if (ContextCompat.checkSelfPermission(this, next) == PackageManager.PERMISSION_GRANTED) {
+        iterator.remove();
+      }
+    }
+
+    return (String[]) tmp.toArray();
   }
 }
