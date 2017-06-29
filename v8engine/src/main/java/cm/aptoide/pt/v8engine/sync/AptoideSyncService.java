@@ -31,20 +31,20 @@ public class AptoideSyncService extends Service {
     super.onCreate();
     synchronized (lock) {
       if (syncAdapter == null) {
-        syncAdapter = new AptoideSyncAdapter(getApplicationContext(), true, false,
-            new TransactionFactory(),
-            ((V8Engine) getApplicationContext()).getAuthorizationFactory(),
-            new ProductBundleMapper(), new NetworkOperatorManager(
-            (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
-            AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-            AccessorFactory.getAccessorFor(PaymentAuthorization.class),
-            ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(),
-            ((V8Engine) getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
-            ((V8Engine) getApplicationContext()).getAccountPayer(),
-            ((V8Engine) getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getApplicationContext()).getDefaultSharedPreferences());
+        syncAdapter =
+            new AptoideSyncAdapter(getApplicationContext(), true, false, new TransactionFactory(),
+                ((V8Engine) getApplicationContext()).getAuthorizationFactory(),
+                new ProductBundleMapper(), new NetworkOperatorManager(
+                (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
+                AccessorFactory.getAccessorFor(PaymentConfirmation.class),
+                AccessorFactory.getAccessorFor(PaymentAuthorization.class),
+                ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(),
+                ((V8Engine) getApplicationContext()).getDefaultClient(),
+                WebService.getDefaultConverter(),
+                ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
+                ((V8Engine) getApplicationContext()).getAccountPayer(),
+                ((V8Engine) getApplicationContext()).getTokenInvalidator(),
+                ((V8Engine) getApplicationContext()).getDefaultSharedPreferences());
       }
     }
   }

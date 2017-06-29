@@ -44,7 +44,8 @@ public class PaymentMethodSelector {
         .subscribeOn(Schedulers.io());
   }
 
-  private Observable<PaymentMethod> paymentMethod(List<PaymentMethod> paymentMethods, int paymentId) {
+  private Observable<PaymentMethod> paymentMethod(List<PaymentMethod> paymentMethods,
+      int paymentId) {
     return Observable.from(paymentMethods)
         .filter(payment -> paymentId != 0 && paymentId == payment.getId());
   }

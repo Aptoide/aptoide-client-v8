@@ -25,8 +25,8 @@ public class PaymentConfirmation extends RealmObject {
   public PaymentConfirmation() {
   }
 
-  public PaymentConfirmation(String localMetadata, int productId, String status,
-      String payerId, int paymentMethodId) {
+  public PaymentConfirmation(String localMetadata, int productId, String status, String payerId,
+      int paymentMethodId) {
     this.paymentConfirmationId = localMetadata;
     this.status = status;
     this.productId = productId;

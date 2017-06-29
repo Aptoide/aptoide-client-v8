@@ -24,8 +24,8 @@ import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.repository.sync.AuthorizationSync;
-import cm.aptoide.pt.v8engine.billing.repository.sync.TransactionSync;
 import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
+import cm.aptoide.pt.v8engine.billing.repository.sync.TransactionSync;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -54,8 +54,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
       TransactionFactory confirmationConverter, AuthorizationFactory authorizationConverter,
       ProductBundleMapper productConverter, NetworkOperatorManager operatorManager,
-      TransactionAccessor confirmationAccessor,
-      PaymentAuthorizationAccessor authorizationAcessor,
+      TransactionAccessor confirmationAccessor, PaymentAuthorizationAccessor authorizationAcessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics, Payer payer,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {

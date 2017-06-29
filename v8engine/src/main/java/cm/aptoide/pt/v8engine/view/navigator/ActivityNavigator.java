@@ -7,7 +7,8 @@ import rx.Observable;
 
 public interface ActivityNavigator {
 
-  Observable<Result> navigateForResult(Class<? extends AppCompatActivity> activityClass, int requestCode);
+  Observable<Result> navigateForResult(Class<? extends AppCompatActivity> activityClass,
+      int requestCode);
 
   void navigateTo(Class<? extends AppCompatActivity> activityClass);
 

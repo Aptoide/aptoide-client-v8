@@ -27,5 +27,4 @@ public abstract class BackButtonFragment extends FragmentView implements BackBut
   @Override public void unregisterClickHandler(ClickHandler clickHandler) {
     backButton.unregisterClickHandler(clickHandler);
   }
-
 }
