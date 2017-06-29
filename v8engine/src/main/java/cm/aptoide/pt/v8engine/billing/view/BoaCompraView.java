@@ -12,7 +12,7 @@ import rx.Observable;
  * Created by marcelobenites on 15/02/17.
  */
 
-public interface WebAuthorizationView extends View {
+public interface BoaCompraView extends View {
 
   void showLoading();
 

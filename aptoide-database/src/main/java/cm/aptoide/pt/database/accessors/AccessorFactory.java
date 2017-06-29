@@ -25,7 +25,7 @@ public final class AccessorFactory {
     if (clazz.equals(Scheduled.class)) {
       return (A) new ScheduledAccessor(new Database());
     } else if (clazz.equals(PaymentConfirmation.class)) {
-      return (A) new PaymentConfirmationAccessor(new Database());
+      return (A) new TransactionAccessor(new Database());
     } else if (clazz.equals(Installed.class)) {
       return (A) new InstalledAccessor(new Database());
     } else if (clazz.equals(Download.class)) {

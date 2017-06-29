@@ -69,10 +69,10 @@
         android:theme="@style/AppBaseTheme.NoTitle.Transparent.WhiteGreen"/>
 
     <activity
-        android:name=".billing.view.PayPalPaymentActivity"
+        android:name=".billing.view.PayPalActivity"
         android:theme="@style/AppBaseTheme.NoTitle"/>
 
-    <activity android:name=".billing.view.WebAuthorizationActivity"/>
+    <activity android:name=".billing.view.BoaCompraActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.view.SpotSharePreviewActivity"/>
 

@@ -9,14 +9,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentException;
+import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -24,16 +23,15 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import java.math.BigDecimal;
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
-public class PayPalPaymentActivity extends ProductActivity implements PayPalPaymentView {
+public class PayPalActivity extends ProductActivity implements PayPalView {
 
   private static final int PAY_APP_REQUEST_CODE = 12;
 
-  private PublishSubject<String> authorizationSubject;
+  private PublishRelay<PayPalResult> authorizationSubject;
   private ProgressBar progressBar;
-  private AlertDialog unknownErrorDialog;
-  private AlertDialog networkErrorDialog;
+  private RxAlertDialog unknownErrorDialog;
+  private RxAlertDialog networkErrorDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -41,23 +39,18 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
 
     progressBar = (ProgressBar) findViewById(R.id.activity_paypal_authorization_preogress_bar);
 
-    networkErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.connection_error)
-        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-          finish();
-        })
-        .create();
-    unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
-        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-          finish();
-        })
-        .create();
+    networkErrorDialog = new RxAlertDialog.Builder(this).setMessage(R.string.connection_error)
+        .setPositiveButton(R.string.ok)
+        .build();
+    unknownErrorDialog = new RxAlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
+        .setPositiveButton(R.string.ok)
+        .build();
 
-    authorizationSubject = PublishSubject.create();
+    authorizationSubject = PublishRelay.create();
 
-    attachPresenter(
-        new PayPalPaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
-            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
-                getIntent())), savedInstanceState);
+    attachPresenter(new PayPalPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
+        ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getBilling(), getIntent()),
+        ((V8Engine) getApplicationContext()).getPaymentAnalytics()), savedInstanceState);
   }
 
   @Override
@@ -86,7 +79,7 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
     progressBar.setVisibility(View.GONE);
   }
 
-  @Override public Observable<String> paymentConfirmationId() {
+  @Override public Observable<PayPalResult> results() {
     return authorizationSubject;
   }
 
@@ -102,6 +95,11 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
     }
   }
 
+  @Override public Observable<Void> errorDismisses() {
+    return Observable.merge(networkErrorDialog.dismisses(), unknownErrorDialog.dismisses())
+        .map(dialogInterface -> null);
+  }
+
   @Override public void dismiss() {
     finish();
   }
@@ -112,15 +110,17 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
       if (resultCode == Activity.RESULT_OK) {
         final PaymentConfirmation confirmation = data.getParcelableExtra(
             com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-        if (confirmation != null) {
-          authorizationSubject.onNext(confirmation.getProofOfPayment()
-              .getPaymentId());
+        if (confirmation != null && confirmation.getProofOfPayment() != null) {
+          authorizationSubject.call(new PayPalResult(PayPalResult.SUCCESS,
+              confirmation.getProofOfPayment()
+                  .getPaymentId()));
+        } else {
+          authorizationSubject.call(new PayPalResult(PayPalResult.ERROR, null));
         }
       } else if (resultCode == Activity.RESULT_CANCELED) {
-        authorizationSubject.onError(
-            new PaymentCancellationException("User cancelled PayPal local processing."));
+        authorizationSubject.call(new PayPalResult(PayPalResult.CANCELLED, null));
       } else if (resultCode == PayPalFuturePaymentActivity.RESULT_EXTRAS_INVALID) {
-        authorizationSubject.onError(new PaymentException("Unknown PayPal local processing error"));
+        authorizationSubject.call(new PayPalResult(PayPalResult.ERROR, null));
       }
     }
   }

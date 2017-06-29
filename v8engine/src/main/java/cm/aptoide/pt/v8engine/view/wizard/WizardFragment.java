@@ -186,7 +186,8 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
     // set button margin
     int buttonMargin = AptoideUtils.ScreenU.getPixelsForDip(2, getResources());
-    ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) buttonLayoutParams;
+    ViewGroup.MarginLayoutParams marginLayoutParams =
+        (ViewGroup.MarginLayoutParams) buttonLayoutParams;
     marginLayoutParams.setMargins(buttonMargin, buttonMargin, buttonMargin, buttonMargin);
 
     final int pages = viewPagerAdapter.getCount();

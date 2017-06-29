@@ -7,13 +7,12 @@ package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
-import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
-import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
+import cm.aptoide.pt.v8engine.billing.services.BoaCompraPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.services.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
-import cm.aptoide.pt.v8engine.billing.services.WebPayment;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -21,24 +20,21 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class AptoideBilling {
+public class Billing {
 
   private final ProductRepositoryFactory productRepositoryFactory;
   private final PaymentRepositoryFactory paymentRepositoryFactory;
   private final InAppBillingRepository inAppBillingRepository;
-  private final AuthorizationRepository authorizationRepository;
 
-  public AptoideBilling(ProductRepositoryFactory productRepositoryFactory,
+  public Billing(ProductRepositoryFactory productRepositoryFactory,
       PaymentRepositoryFactory paymentRepositoryFactory,
-      InAppBillingRepository inAppBillingRepository,
-      AuthorizationRepository authorizationRepository) {
+      InAppBillingRepository inAppBillingRepository) {
     this.productRepositoryFactory = productRepositoryFactory;
     this.paymentRepositoryFactory = paymentRepositoryFactory;
     this.inAppBillingRepository = inAppBillingRepository;
-    this.authorizationRepository = authorizationRepository;
   }
 
-  public Single<Boolean> isBillingSupported(String packageName, int apiVersion, String type) {
+  public Single<Boolean> isSupported(String packageName, int apiVersion, String type) {
     return inAppBillingRepository.getInAppBilling(apiVersion, packageName, type)
         .map(billing -> true)
         .onErrorResumeNext(throwable -> {
@@ -80,33 +76,34 @@ public class AptoideBilling {
         .flatMapCompletable(purchase -> purchase.consume());
   }
 
-  public Single<List<Payment>> getPayments(Product product) {
+  public Single<List<PaymentMethod>> getAvailablePaymentMethods(Product product) {
     return productRepositoryFactory.getProductRepository(product)
-        .getPayments(product);
+        .getPaymentMethods(product);
   }
 
   public Observable<WebAuthorization> getWebPaymentAuthorization(int paymentId, Product product) {
-    return getWebPayment(paymentId, product).flatMapObservable(
-        payment -> payment.getAuthorization());
+    return getPaymentMethods(paymentId, product).flatMapObservable(
+        payment -> ((BoaCompraPaymentMethod) payment).getAuthorization());
   }
 
-  public Completable processWebPayment(int paymentId, Product product) {
-    return getWebPayment(paymentId, product).flatMapCompletable(
+  public Completable processPayment(int paymentId, Product product) {
+    return getPaymentMethods(paymentId, product).flatMapCompletable(
         payment -> payment.process(product));
   }
 
-  public Completable processPayPalPayment(Product product, String paymentConfirmationId) {
-    return getPayments(product).flatMapObservable(payments -> Observable.from(payments))
-        .filter(payment -> payment instanceof PayPalPayment)
+  public Completable processPayPalPayment(Product product, String payPalConfirmationId) {
+    return getAvailablePaymentMethods(product).flatMapObservable(
+        payments -> Observable.from(payments))
+        .filter(payment -> payment instanceof PayPalPaymentMethod)
         .first()
-        .cast(PayPalPayment.class)
+        .cast(PayPalPaymentMethod.class)
         .toSingle()
-        .flatMapCompletable(payment -> payment.process(product, paymentConfirmationId));
+        .flatMapCompletable(payment -> payment.process(product, payPalConfirmationId));
   }
 
-  public Observable<PaymentConfirmation> getConfirmation(Product product) {
+  public Observable<Transaction> getConfirmation(Product product) {
     return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
-        .getPaymentConfirmation(product)
+        .getTransaction(product)
         .distinctUntilChanged(confirmation -> confirmation.getStatus());
   }
 
@@ -123,13 +120,13 @@ public class AptoideBilling {
         });
   }
 
-  private Single<WebPayment> getWebPayment(int paymentId, Product product) {
-    return getPayments(product).flatMapObservable(payments -> Observable.from(payments)
-        .filter(payment -> payment.getId() == paymentId)
-        .switchIfEmpty(Observable.error(
-            new PaymentFailureException("Payment " + paymentId + "not available"))))
+  public Single<PaymentMethod> getPaymentMethods(int paymentId, Product product) {
+    return getAvailablePaymentMethods(product).flatMapObservable(
+        payments -> Observable.from(payments)
+            .filter(payment -> payment.getId() == paymentId)
+            .switchIfEmpty(Observable.error(
+                new PaymentFailureException("Payment " + paymentId + " not available"))))
         .first()
-        .cast(WebPayment.class)
         .toSingle();
   }
 }

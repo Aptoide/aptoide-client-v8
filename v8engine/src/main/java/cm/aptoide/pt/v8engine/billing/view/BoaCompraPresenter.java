@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -14,20 +14,20 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class WebAuthorizationPresenter implements Presenter {
+public class BoaCompraPresenter implements Presenter {
 
-  private final WebAuthorizationView view;
-  private final AptoideBilling aptoideBilling;
+  private final BoaCompraView view;
+  private final Billing billing;
   private final int paymentId;
   private final PaymentAnalytics analytics;
   private final PaymentSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
 
-  public WebAuthorizationPresenter(WebAuthorizationView view, AptoideBilling aptoideBilling,
-      int paymentId, PaymentAnalytics analytics, PaymentSyncScheduler syncScheduler,
+  public BoaCompraPresenter(BoaCompraView view, Billing billing, int paymentId,
+      PaymentAnalytics analytics, PaymentSyncScheduler syncScheduler,
       ProductProvider productProvider) {
     this.view = view;
-    this.aptoideBilling = aptoideBilling;
+    this.billing = billing;
     this.paymentId = paymentId;
     this.analytics = analytics;
     this.syncScheduler = syncScheduler;
@@ -70,21 +70,20 @@ public class WebAuthorizationPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
         .flatMap(__ -> productProvider.getProduct()
-            .flatMapObservable(
-                product -> aptoideBilling.getWebPaymentAuthorization(paymentId, product)
-                    .takeUntil(webAuthorization -> !webAuthorization.isPendingUserConsent())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .flatMapCompletable(authorization -> {
+            .flatMapObservable(product -> billing.getWebPaymentAuthorization(paymentId, product)
+                .takeUntil(webAuthorization -> !webAuthorization.isPendingUserConsent())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapCompletable(authorization -> {
 
-                      if (authorization.isPendingUserConsent()) {
-                        view.showUrl(authorization.getUrl(), authorization.getRedirectUrl());
-                        return Completable.complete();
-                      }
+                  if (authorization.isPendingUserConsent()) {
+                    view.showUrl(authorization.getUrl(), authorization.getRedirectUrl());
+                    return Completable.complete();
+                  }
 
-                      return aptoideBilling.processWebPayment(paymentId, product)
-                          .observeOn(AndroidSchedulers.mainThread())
-                          .doOnCompleted(() -> view.dismiss());
-                    })))
+                  return billing.processPayment(paymentId, product)
+                      .observeOn(AndroidSchedulers.mainThread())
+                      .doOnCompleted(() -> view.dismiss());
+                })))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.showErrorAndDismiss())
         .onErrorReturn(null)
