@@ -1,6 +1,7 @@
 buildscript {
 
   repositories {
+    mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
   }
 
@@ -211,7 +212,7 @@ dependencies {
     exclude group: "com.android.support", module: "support-annotations"
   }
 
-  compile 'com.appsflyer:af-android-sdk:4.7.4@aar'
+  compile "com.appsflyer:af-android-sdk:${APPS_FLYER_VERSION}"
 }
 
 String getDate() {

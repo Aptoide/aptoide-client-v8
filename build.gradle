@@ -117,6 +117,9 @@ ext {
 
   LEAK_CANARY_VERSION = '1.5'
   PARCELER_VERSION = '1.1.6'
+
+  //AppsFlyer
+  APPS_FLYER_VERSION = '4+@aar'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html
