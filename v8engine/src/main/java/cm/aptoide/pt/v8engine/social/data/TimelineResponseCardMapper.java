@@ -3,6 +3,8 @@ package cm.aptoide.pt.v8engine.social.data;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideo;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideoTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Article;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.ArticleTimelineItem;
@@ -210,6 +212,23 @@ public class TimelineResponseCardMapper {
                 .getBaseUrl()), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             aggregatedSocialArticle.getUrl()), aggregatedSocialArticle.getMinimalCardList(),
             CardType.AGGREGATED_SOCIAL_ARTICLE));
+      } else if (item instanceof AggregatedSocialVideoTimelineItem) {
+        final AggregatedSocialVideo aggregatedSocialVideo =
+            ((AggregatedSocialVideoTimelineItem) item).getData();
+        List<Poster> posters = new ArrayList<>();
+        for (UserSharerTimeline sharer : aggregatedSocialVideo.getSharers()) {
+          posters.add(new Poster(sharer.getUser(), sharer.getStore()));
+        }
+        cards.add(new AggregatedMedia("n/a", posters, aggregatedSocialVideo.getTitle(),
+            aggregatedSocialVideo.getThumbnailUrl(), aggregatedSocialVideo.getDate(),
+            aggregatedSocialVideo.getApps()
+                .get(0), abUrl, new MediaPublisher(aggregatedSocialVideo.getPublisher()
+            .getName(), new PublisherAvatar(aggregatedSocialVideo.getPublisher()
+            .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+            aggregatedSocialVideo.getPublisher()
+                .getBaseUrl()), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+            aggregatedSocialVideo.getUrl()), aggregatedSocialVideo.getMinimalCards(),
+            CardType.AGGREGATED_SOCIAL_VIDEO));
       }
     }
 

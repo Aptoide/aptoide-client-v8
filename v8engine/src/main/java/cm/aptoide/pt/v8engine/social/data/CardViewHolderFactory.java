@@ -83,6 +83,7 @@ public class CardViewHolderFactory {
             .inflate(R.layout.timeline_social_store_item, parent, false),
             cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case AGGREGATED_SOCIAL_ARTICLE:
+      case AGGREGATED_SOCIAL_VIDEO:
         return new AggregatedMediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_media_item, parent, false),
             cardTouchEventPublishSubject, dateCalculator, spannableFactory, minimalCardViewFactory);

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by jdandrade on 19/05/2017.
  */
 
-class AggregatedSocialVideoTimelineItem implements TimelineItem<TimelineCard> {
+public class AggregatedSocialVideoTimelineItem implements TimelineItem<TimelineCard> {
 
   private AggregatedSocialVideo aggregatedSocialVideo;
 
