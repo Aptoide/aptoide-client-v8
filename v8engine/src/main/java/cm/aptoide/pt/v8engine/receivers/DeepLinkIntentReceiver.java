@@ -440,6 +440,7 @@ public class DeepLinkIntentReceiver extends Activity {
     public static final String GENERIC_DEEPLINK = "generic_deeplink";
     public static final String SCHEDULE_DEEPLINK = "schedule_downloads";
     public static final String TOP_APPS_WEEK = "top_apps_week";
+    public static final String TOP_APPS_DAY = "top_apps_day";
   }
 
   public static class DeepLinksKeys {
@@ -459,6 +460,8 @@ public class DeepLinkIntentReceiver extends Activity {
     public static final String LAYOUT = "layout";
     public static final String TITLE = "title";
     public static final String STORE_THEME = "storetheme";
+
+    public static final String MINIMAL_AD = "minimalad";
   }
 
   class MyAppDownloader extends AsyncTask<String, Void, Void> {

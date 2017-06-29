@@ -160,7 +160,7 @@ import rx.Observable;
 
   @Partners public static GetAdsRequest ofNotification(String aptoideClientUUID,
       boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature) {
-    return of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
+    return of(Location.notification, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
         oemid, mature);
   }
 
