@@ -1,6 +1,9 @@
 package cm.aptoide.pt.v8engine.social.view.viewholder;
 
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -72,8 +75,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPoster()
             .getSecondaryAvatar(), this.headerSecondaryAvatar);
-    this.headerPrimaryName.setText(card.getPoster()
-        .getPrimaryName());
+    this.headerPrimaryName.setText(getStyledStoreName(card));
     this.headerSecondaryName.setText(card.getPoster()
         .getSecondaryName());
     this.timestamp.setText(
@@ -82,9 +84,17 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
     ImageLoader.with(itemView.getContext())
         .load(card.getStoreAvatar(), storeAvatarFollow);
     this.storeNameFollow.setText(card.getStoreName());
-    this.storeNumberFollowers.setText(card.getSubscribers());
-    this.storeNumberApps.setText(card.getAppsNumber());
+    this.storeNumberFollowers.setText(String.valueOf(card.getSubscribers()));
+    this.storeNumberApps.setText(String.valueOf(card.getAppsNumber()));
     showStoreLatestApps(card);
+  }
+
+  @NonNull private Spannable getStyledStoreName(SocialStore card) {
+    return spannableFactory.createColorSpan(itemView.getContext()
+            .getString(R.string.store_has_new_apps, card.getPoster()
+                .getPrimaryName()),
+        ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha), card.getPoster()
+            .getPrimaryName());
   }
 
   private void showStoreLatestApps(SocialStore card) {
