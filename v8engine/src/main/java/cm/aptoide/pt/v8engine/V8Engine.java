@@ -108,8 +108,10 @@ import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
+import cm.aptoide.pt.v8engine.sync.alarm.NotificationAlarmManagerScheduler;
+import cm.aptoide.pt.v8engine.sync.adapter.PaymentSyncAdapterScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
-import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
+import cm.aptoide.pt.v8engine.sync.adapter.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
@@ -141,7 +143,7 @@ import cm.aptoide.pt.v8engine.notification.NotificationNetworkService;
 import cm.aptoide.pt.v8engine.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.v8engine.notification.NotificationSyncService;
+import cm.aptoide.pt.v8engine.sync.alarm.NotificationSyncService;
 import cm.aptoide.pt.v8engine.notification.NotificationsCleaner;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
@@ -463,15 +465,15 @@ public abstract class V8Engine extends Application {
             ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences());
       }
 
-      final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
-          new NotificationSyncScheduler.Schedule(
+      final List<NotificationAlarmManagerScheduler.Schedule> scheduleList = Arrays.asList(
+          new NotificationAlarmManagerScheduler.Schedule(
               NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY),
-          new NotificationSyncScheduler.Schedule(
+          new NotificationAlarmManagerScheduler.Schedule(
               NotificationSyncService.NOTIFICATIONS_SOCIAL_ACTION,
               pushNotificationSocialPeriodicity));
 
       notificationSyncScheduler =
-          new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
+          new NotificationAlarmManagerScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
               NotificationSyncService.class, scheduleList, true);
     }
     return notificationSyncScheduler;
@@ -745,7 +747,7 @@ public abstract class V8Engine extends Application {
   public PaymentSyncScheduler getPaymentSyncScheduler() {
     if (paymentSyncScheduler == null) {
       paymentSyncScheduler =
-          new PaymentSyncScheduler(new ProductBundleMapper(), getAndroidAccountProvider(),
+          new PaymentSyncAdapterScheduler(new ProductBundleMapper(), getAndroidAccountProvider(),
               getConfiguration().getContentAuthority());
     }
     return paymentSyncScheduler;

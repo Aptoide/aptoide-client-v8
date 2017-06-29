@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.notification;
+package cm.aptoide.pt.v8engine.sync.alarm;
 
 import android.app.Service;
 import android.content.Intent;
@@ -8,11 +8,9 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.notification.NotificationNetworkService;
+import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import rx.schedulers.Schedulers;
-
-/**
- * Created by trinkes on 09/05/2017.
- */
 
 public class NotificationSyncService extends Service {
   public static final String NOTIFICATIONS_SOCIAL_ACTION = "PUSH_NOTIFICATIONS_SOCIAL_ACTION";

@@ -1,5 +1,7 @@
-package cm.aptoide.pt.v8engine.notification;
+package cm.aptoide.pt.v8engine.sync.alarm;
 
+import cm.aptoide.pt.v8engine.notification.NotificationNetworkService;
+import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import rx.Completable;
 
 /**

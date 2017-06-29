@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.repository.sync;
+package cm.aptoide.pt.v8engine.sync.adapter;
 
 import android.content.SharedPreferences;
 import android.content.SyncResult;
@@ -26,7 +26,6 @@ import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import cm.aptoide.pt.v8engine.sync.ScheduledSync;
 import java.io.IOException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.sync;
+package cm.aptoide.pt.v8engine.sync.adapter;
 
 import android.app.Service;
 import android.content.Intent;
@@ -17,7 +17,6 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
-import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
 
 /**
  * Created by marcelobenites on 18/11/16.

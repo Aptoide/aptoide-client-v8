@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.repository.sync;
+package cm.aptoide.pt.v8engine.sync.adapter;
 
 import android.content.SharedPreferences;
 import android.content.SyncResult;
@@ -17,7 +17,6 @@ import cm.aptoide.pt.v8engine.billing.Authorization;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
-import cm.aptoide.pt.v8engine.sync.ScheduledSync;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

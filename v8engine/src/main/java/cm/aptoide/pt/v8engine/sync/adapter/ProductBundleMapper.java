@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 19/12/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.repository.sync;
+package cm.aptoide.pt.v8engine.sync.adapter;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Price;

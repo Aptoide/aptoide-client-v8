@@ -98,7 +98,7 @@
     </service>
 
     <service
-        android:name=".v8engine.sync.AptoideSyncService"
+        android:name=".v8engine.sync.adapter.AptoideSyncService"
         android:exported="true">
       <intent-filter>
         <action android:name="android.content.SyncAdapter"/>

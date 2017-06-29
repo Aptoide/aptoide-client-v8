@@ -220,7 +220,7 @@
     </receiver>
 
     <service android:name=".notification.PullingContentService"/>
-    <service android:name=".notification.NotificationSyncService"/>
+    <service android:name=".sync.alarm.NotificationSyncService"/>
 
     <receiver android:name=".notification.NotificationReceiver">
       <intent-filter>
