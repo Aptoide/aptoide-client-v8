@@ -7,8 +7,13 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequestBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.FirstLaunchAnalytics;
@@ -27,6 +32,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipFile;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -214,12 +221,26 @@ public class Analytics {
 
     public static class Application {
 
+      private static final String UNKNOWN = "unknown";
+      private static final String BI_ACTION = "OPEN";
+      private static final String EVENT_NAME = "FIRST_LAUNCH";
+      private static final String CONTEXT = "APPLICATION";
+      private static final String UTM_SOURCE = "utm_source";
+      private static final String UTM_MEDIUM = "utm_medium";
+      private static final String UTM_CAMPAIGN = "utm_campaign";
+      private static final String UTM_CONTENT = "utm_content";
+      private static final String ENTRY_POINT = "entry_point";
+      private static final String URL = "url";
+      private static final String PACKAGE = "package";
+      private static final String COUNTRY = "country";
+      private static final String BROWSER = "browser";
+      private static final String SITE_VERSION = "site_version";
       static AppEventsLogger facebookLogger;
-      private static String utmSource = "unknown";
-      private static String utmMedium = "unknown";
-      private static String utmCampaign = "unknown";
-      private static String utmContent = "unknown";
-      private static String entryPoint = "unknown";
+      private static String utmSource = UNKNOWN;
+      private static String utmMedium = UNKNOWN;
+      private static String utmCampaign = UNKNOWN;
+      private static String utmContent = UNKNOWN;
+      private static String entryPoint = UNKNOWN;
 
       public static void onCreate(android.app.Application application) {
 
@@ -229,19 +250,39 @@ public class Analytics {
         facebookLogger = AppEventsLogger.newLogger(application);
         FirstLaunchAnalytics firstLaunchAnalytics =
             new FirstLaunchAnalytics(facebookLogger, Analytics.getInstance());
+        final Converter.Factory converterFactory = WebService.getDefaultConverter();
+        final OkHttpClient okHttpClient =
+            ((V8Engine) application.getApplicationContext()).getDefaultClient();
+        final BodyInterceptor<BaseBody> bodyInterceptor =
+            ((V8Engine) application.getApplicationContext()).getBaseBodyInterceptorV7();
         Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
           return null;
         })
             .filter(__ -> SecurePreferences.isFirstRun())
             .doOnNext(__ -> setupDimensions(application))
-            .doOnCompleted(
-                () -> firstLaunchAnalytics.sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
-                    utmContent, entryPoint))
+            .doOnCompleted(() -> {
+              firstLaunchAnalytics.sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
+                  utmContent, entryPoint);
+              UTMTrackingBuilder utmTrackingBuilder =
+                  new UTMTrackingBuilder(getTracking(application), getUTM());
+              BIUTMAnalyticsRequestBody body =
+                  new BIUTMAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
+              BIUTMAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
+                  okHttpClient, converterFactory)
+                  .observe()
+                  .observeOn(Schedulers.io())
+                  .subscribe(baseV7Response -> {
+                  }, throwable -> throwable.printStackTrace());
+            })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
             }, Throwable::printStackTrace);
+      }
+
+      private static UTM getUTM() {
+        return new UTM(utmSource, utmMedium, utmCampaign, utmContent, entryPoint);
       }
 
       private static void setupDimensions(android.app.Application application) {
@@ -263,14 +304,14 @@ public class Analytics {
           final InputStream utmInputStream =
               myZipFile.getInputStream(myZipFile.getEntry("META-INF/utm"));
 
-          UTMFileParser utmFileParser = new UTMFileParser(utmInputStream);
+          UTMTrackingFileParser utmTrackingFileParser = new UTMTrackingFileParser(utmInputStream);
           myZipFile.close();
 
-          utmSource = utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE);
-          utmMedium = utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM);
-          utmCampaign = utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN);
-          utmContent = utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT);
-          entryPoint = utmFileParser.valueExtracter(UTMFileParser.ENTRY_POINT);
+          utmSource = utmTrackingFileParser.valueExtracter(UTM_SOURCE);
+          utmMedium = utmTrackingFileParser.valueExtracter(UTM_MEDIUM);
+          utmCampaign = utmTrackingFileParser.valueExtracter(UTM_CAMPAIGN);
+          utmContent = utmTrackingFileParser.valueExtracter(UTM_CONTENT);
+          entryPoint = utmTrackingFileParser.valueExtracter(ENTRY_POINT);
 
           utmInputStream.close();
         } catch (IOException e) {
@@ -292,6 +333,39 @@ public class Analytics {
           Logger.d(TAG, "No utm file.");
         }
         return true;
+      }
+
+      private static Tracking getTracking(android.app.Application application) {
+        Tracking tracking = null;
+        try {
+          tracking = createTrackingObject(getTrackingFile(application));
+        } catch (Exception e) {
+          Logger.d(TAG, "Failed to parse utm/tracking files");
+          return new Tracking(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
+        }
+        return tracking;
+      }
+
+      private static ZipFile getTrackingFile(android.app.Application application) throws Exception {
+        final String sourceDir = application.getApplicationContext()
+            .getPackageManager()
+            .getPackageInfo(application.getApplicationContext()
+                .getPackageName(), 0).applicationInfo.sourceDir;
+        return new ZipFile(sourceDir);
+      }
+
+      private static Tracking createTrackingObject(ZipFile zipFile) throws IOException {
+        InputStream inputStream = zipFile.getInputStream(zipFile.getEntry("META-INF/tracking"));
+        UTMTrackingFileParser utmTrackingFileParser = new UTMTrackingFileParser(inputStream);
+        zipFile.close();
+
+        String url = utmTrackingFileParser.valueExtracter(URL);
+        String packageName = utmTrackingFileParser.valueExtracter(PACKAGE);
+        String country = utmTrackingFileParser.valueExtracter(COUNTRY);
+        String browser = utmTrackingFileParser.valueExtracter(BROWSER);
+        String siteVersion = utmTrackingFileParser.valueExtracter(SITE_VERSION);
+
+        return new Tracking(url, packageName, country, browser, siteVersion);
       }
     }
 
