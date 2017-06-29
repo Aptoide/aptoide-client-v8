@@ -1,5 +1,6 @@
-package cm.aptoide.pt.spotandshareandroid.hotspotmanager.entities;
+package cm.aptoide.pt.spotandshareandroid.hotspotmanager.scanner;
 
+import android.net.wifi.ScanResult;
 import lombok.Data;
 
 @Data public class Hotspot {
@@ -20,5 +21,11 @@ import lombok.Data;
 
   public boolean isHidden() {
     return ssid == null || ssid.equals("");
+  }
+
+  public static Hotspot from(ScanResult scanResult) {
+    String ssid = scanResult.SSID;
+
+    return new Hotspot(ssid);
   }
 }
