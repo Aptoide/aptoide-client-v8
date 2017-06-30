@@ -152,10 +152,10 @@ import rx.Observable;
         googlePlayServicesAvailable, oemid, mature);
   }
 
-  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature) {
-    return of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
-        oemid, mature);
+  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature, List<String> excludedPackages){
+      GetAdsRequest getAdsRequest = of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable, oemid, mature);
+      getAdsRequest.setExcludedPackage(AptoideUtils.StringU.commaSeparatedValues(excludedPackages));
+      return getAdsRequest;
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
