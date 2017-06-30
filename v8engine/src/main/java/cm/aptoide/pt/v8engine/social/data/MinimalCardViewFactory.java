@@ -21,6 +21,7 @@ import java.util.List;
 
 public class MinimalCardViewFactory {
 
+  public static final int MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS = 2;
   private final DateCalculator dateCalculator;
   private TextView minimalCardHeaderMainName;
   private ImageView minimalCardHeaderMainAvatar;
@@ -109,6 +110,18 @@ public class MinimalCardViewFactory {
       minimalCardContainer.addView(
           getMinimalCardView(minimalCard, inflater, context, minimalCardContainer));
     }
+    return minimalCardContainer;
+  }
+
+  public View getView(List<MinimalCard> minimalCards, int numberOfCardsToShow,
+      LayoutInflater inflater, Context context) {
+    LinearLayout minimalCardContainer = new LinearLayout(context);
+
+    for (int i = 0; i < numberOfCardsToShow && i < minimalCards.size(); i++) {
+      minimalCardContainer.addView(
+          getMinimalCardView(minimalCards.get(i), inflater, context, minimalCardContainer));
+    }
+
     return minimalCardContainer;
   }
 }

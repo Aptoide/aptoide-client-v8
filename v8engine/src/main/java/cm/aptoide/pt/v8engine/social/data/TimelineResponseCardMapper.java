@@ -3,6 +3,8 @@ package cm.aptoide.pt.v8engine.social.data;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstall;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstallTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideo;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideoTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdateTimelineItem;
@@ -229,6 +231,23 @@ public class TimelineResponseCardMapper {
                 .getBaseUrl()), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             aggregatedSocialVideo.getUrl()), aggregatedSocialVideo.getMinimalCards(),
             CardType.AGGREGATED_SOCIAL_VIDEO));
+      } else if (item instanceof AggregatedSocialInstallTimelineItem) {
+        final AggregatedSocialInstall aggregatedSocialInstall =
+            ((AggregatedSocialInstallTimelineItem) item).getData();
+        List<Poster> posters = new ArrayList<>();
+        for (UserSharerTimeline sharer : aggregatedSocialInstall.getSharers()) {
+          posters.add(new Poster(sharer.getUser(), sharer.getStore()));
+        }
+        cards.add(new AggregatedRecommendation("n/a", posters,
+            aggregatedSocialInstall.getMinimalCardList(), aggregatedSocialInstall.getApp()
+            .getIcon(), aggregatedSocialInstall.getApp()
+            .getName(), aggregatedSocialInstall.getApp()
+            .getId(), aggregatedSocialInstall.getApp()
+            .getStats()
+            .getRating()
+            .getAvg(), aggregatedSocialInstall.getApp()
+            .getPackageName(), aggregatedSocialInstall.getDate(), abUrl,
+            CardType.AGGREGATED_SOCIAL_INSTALL));
       }
     }
 

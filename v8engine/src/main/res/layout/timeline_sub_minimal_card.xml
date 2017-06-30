@@ -11,7 +11,7 @@
     android:layout_marginStart="12dp"
     android:background="@drawable/minimal_card_background"
     android:orientation="vertical"
-    app:cardBackgroundColor="#fafafa"
+    app:cardBackgroundColor="#eeeeee"
     style="@style/Widget.Aptoide.Card"
     >
 

@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.social.data.AggregatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
@@ -187,6 +188,13 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.SOCIAL_INSTALL)) {
             RatedRecommendation card = (RatedRecommendation) cardTouchEvent.getCard();
+            fragmentNavigator.navigateTo(
+                AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
+                    AppViewFragment.OpenType.OPEN_ONLY));
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+            AggregatedRecommendation card = (AggregatedRecommendation) cardTouchEvent.getCard();
             fragmentNavigator.navigateTo(
                 AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
                     AppViewFragment.OpenType.OPEN_ONLY));
