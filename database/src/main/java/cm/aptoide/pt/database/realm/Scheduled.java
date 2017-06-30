@@ -208,7 +208,7 @@ public class Scheduled extends RealmObject {
     patchItem.setPath(this.patchObbPath);
     patchItem.setMd5sum(this.patchObbMd5);
     obb.setPatch(patchItem);
-    return null;
+    return obb;
   }
 
   public boolean isDownloading() {
