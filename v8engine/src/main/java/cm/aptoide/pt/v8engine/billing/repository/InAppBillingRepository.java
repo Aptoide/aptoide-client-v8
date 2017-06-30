@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
+import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -27,14 +27,14 @@ import rx.Observable;
  */
 public class InAppBillingRepository {
 
-  private final PaymentConfirmationAccessor confirmationAccessor;
+  private final TransactionAccessor confirmationAccessor;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
-  public InAppBillingRepository(PaymentConfirmationAccessor confirmationAccessor,
+  public InAppBillingRepository(TransactionAccessor confirmationAccessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {

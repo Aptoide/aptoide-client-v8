@@ -1,26 +1,16 @@
-/*
- * Copyright (c) 2016.
- * Modified by Marcelo Benites on 10/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.billing;
 
-/**
- * Created by marcelobenites on 8/10/16.
- */
-public class PaymentConfirmation {
-
+public class Transaction {
   private final int productId;
   private final String payerId;
-  private final String paymentConfirmationId;
-  private Status status;
+  private final Status status;
+  private final int paymentMethodId;
 
-  public PaymentConfirmation(int productId, String payerId, String paymentConfirmationId,
-      Status status) {
+  public Transaction(int productId, String payerId, Status status, int paymentMethodId) {
     this.productId = productId;
     this.payerId = payerId;
-    this.paymentConfirmationId = paymentConfirmationId;
     this.status = status;
+    this.paymentMethodId = paymentMethodId;
   }
 
   public String getPayerId() {
@@ -29,10 +19,6 @@ public class PaymentConfirmation {
 
   public int getProductId() {
     return productId;
-  }
-
-  public String getPaymentConfirmationId() {
-    return paymentConfirmationId;
   }
 
   public Status getStatus() {
@@ -55,6 +41,10 @@ public class PaymentConfirmation {
 
   public boolean isFailed() {
     return Status.CANCELED.equals(status) || Status.FAILED.equals(status);
+  }
+
+  public int getPaymentMethodId() {
+    return paymentMethodId;
   }
 
   public enum Status {

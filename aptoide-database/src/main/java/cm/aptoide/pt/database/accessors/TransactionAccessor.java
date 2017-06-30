@@ -12,13 +12,13 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 9/1/16.
  */
-public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmation> {
+public class TransactionAccessor extends SimpleAccessor<PaymentConfirmation> {
 
-  protected PaymentConfirmationAccessor(Database database) {
+  protected TransactionAccessor(Database database) {
     super(database, PaymentConfirmation.class);
   }
 
-  public Observable<List<PaymentConfirmation>> getPaymentConfirmations(int productId,
+  public Observable<List<PaymentConfirmation>> getPersistedTransactions(int productId,
       String payerId) {
     return database.getRealm()
         .map(realm -> realm.where(PaymentConfirmation.class)

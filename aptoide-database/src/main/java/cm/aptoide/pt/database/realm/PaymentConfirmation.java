@@ -9,9 +9,6 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
-/**
- * Created by marcelobenites on 8/18/16.
- */
 public class PaymentConfirmation extends RealmObject {
 
   public static final String PRODUCT_ID = "productId";
@@ -21,24 +18,27 @@ public class PaymentConfirmation extends RealmObject {
   @Required private String payerId;
   @Required private String status;
 
+  private int paymentMethodId;
+
   private String paymentConfirmationId;
 
   public PaymentConfirmation() {
   }
 
-  public PaymentConfirmation(String paymentConfirmationId, int productId, String status,
-      String payerId) {
-    this.paymentConfirmationId = paymentConfirmationId;
+  public PaymentConfirmation(String localMetadata, int productId, String status, String payerId,
+      int paymentMethodId) {
+    this.paymentConfirmationId = localMetadata;
     this.status = status;
     this.productId = productId;
     this.payerId = payerId;
+    this.paymentMethodId = paymentMethodId;
   }
 
   public String getPayerId() {
     return payerId;
   }
 
-  public String getPaymentConfirmationId() {
+  public String getLocalMetadata() {
     return paymentConfirmationId;
   }
 
@@ -48,5 +48,9 @@ public class PaymentConfirmation extends RealmObject {
 
   public String getStatus() {
     return status;
+  }
+
+  public int getPaymentMethodId() {
+    return paymentMethodId;
   }
 }

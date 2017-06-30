@@ -31,7 +31,6 @@ public class MyAccountNavigator {
   }
 
   public void navigateToEditProfileView() {
-    fragmentNavigator.navigateTo(
-        ManageUserFragment.newInstanceToEdit());
+    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToEdit());
   }
 }
