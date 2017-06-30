@@ -24,8 +24,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -175,13 +175,12 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .map(scheduled -> downloadFactory.create(scheduled))
         .flatMap(downloadItem -> installManager.install(downloadItem)
             .toObservable()
-            .flatMap(
-                downloadProgress -> installManager.getInstallationProgress(downloadItem.getMd5(),
+            .flatMap(downloadProgress -> installManager.getInstall(downloadItem.getMd5(),
                     downloadItem.getPackageName(), downloadItem.getVersionCode()))
             .doOnSubscribe(() -> setupEvents(downloadItem,
                 isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
             .filter(installationProgress -> installationProgress.getState()
-                == InstallationProgress.InstallationStatus.INSTALLED)
+                == Install.InstallationStatus.INSTALLED)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
                 downloadItem.getMd5())))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

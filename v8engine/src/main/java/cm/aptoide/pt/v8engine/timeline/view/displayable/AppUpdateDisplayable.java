@@ -18,8 +18,8 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -140,7 +140,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
         .getTheme(), resources, windowManager);
   }
 
-  public Observable<InstallationProgress> update(Context context) {
+  public Observable<Install> update(Context context) {
     if (installManager.showWarning()) {
       GenericDialogs.createGenericYesNoCancelMessage(context, null,
           AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, resources))
@@ -156,8 +156,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
           });
     }
     return installManager.install(download)
-        .andThen(
-            installManager.getInstallationProgress(download.getMd5(), download.getPackageName(),
+        .andThen(installManager.getInstall(download.getMd5(), download.getPackageName(),
                 download.getVersionCode()))
         .doOnSubscribe(() -> setupEvents());
   }
@@ -262,8 +261,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
             BLANK));
   }
 
-  public @StringRes int getErrorMessage(InstallationProgress installationProgress) {
-    switch (installationProgress.getError()) {
+  public @StringRes int getErrorMessage(Install install) {
+    switch (install.getError()) {
       case GENERIC_ERROR:
         return getUpdateErrorText();
       case NOT_ENOUGH_SPACE_ERROR:

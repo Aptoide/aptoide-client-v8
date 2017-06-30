@@ -13,8 +13,8 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -155,10 +155,10 @@ public class UpdateDisplayable extends Displayable {
   }
 
   public Observable<Boolean> shouldShowProgress() {
-    return installManager.getInstallationProgress(getMd5(), getPackageName(),
+    return installManager.getInstall(getMd5(), getPackageName(),
         getUpdateVersionCode())
         .map(installationProgress -> installationProgress.getState()
-            == InstallationProgress.InstallationStatus.INSTALLING
+            == Install.InstallationStatus.INSTALLING
             || installationProgress.isIndeterminate());
   }
 

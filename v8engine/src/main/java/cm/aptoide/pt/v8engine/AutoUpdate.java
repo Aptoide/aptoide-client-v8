@@ -152,15 +152,13 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
               .flatMap(success -> installManager.install(downloadFactory.create(autoUpdateInfo))
                   .toObservable())
               .first()
-              .flatMap(
-                  downloadProgress -> installManager.getInstallationProgress(autoUpdateInfo.md5,
+              .flatMap(downloadProgress -> installManager.getInstall(autoUpdateInfo.md5,
                       autoUpdateInfo.packageName, autoUpdateInfo.vercode))
               .skipWhile(installationProgress -> installationProgress.getState()
-                  != InstallationProgress.InstallationStatus.INSTALLING)
-              .first(progress -> progress.getState()
-                  != InstallationProgress.InstallationStatus.INSTALLING)
+                  != Install.InstallationStatus.INSTALLING)
+              .first(progress -> progress.getState() != Install.InstallationStatus.INSTALLING)
               .subscribe(progress -> {
-                if (progress.getState() == InstallationProgress.InstallationStatus.FAILED) {
+                if (progress.getState() == Install.InstallationStatus.FAILED) {
                   ShowMessage.asSnack(activity, R.string.error_SYS_1);
                 }
                 dismissDialog();

@@ -16,8 +16,8 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -100,17 +100,17 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
   }
 
-  @UiThread @Override public void showActiveDownloads(List<InstallationProgress> downloads) {
+  @UiThread @Override public void showActiveDownloads(List<Install> downloads) {
     setEmptyDownloadVisible(false);
     adapter.setActiveDownloads(downloads);
   }
 
-  @UiThread @Override public void showStandByDownloads(List<InstallationProgress> downloads) {
+  @UiThread @Override public void showStandByDownloads(List<Install> downloads) {
     setEmptyDownloadVisible(false);
     adapter.setStandByDownloads(downloads);
   }
 
-  @UiThread @Override public void showCompletedDownloads(List<InstallationProgress> downloads) {
+  @UiThread @Override public void showCompletedDownloads(List<Install> downloads) {
     setEmptyDownloadVisible(false);
     adapter.setCompletedDownloads(downloads);
   }

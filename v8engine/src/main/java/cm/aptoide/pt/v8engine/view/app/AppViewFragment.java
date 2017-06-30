@@ -693,7 +693,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public Observable<AppAction> installAction(String packageName, int versionCode) {
-    return installManager.getInstallationProgress(md5, packageName, versionCode)
+    return installManager.getInstall(md5, packageName, versionCode)
         .map(installationProgress -> installationProgress.getType())
         .map(installationType -> {
           AppAction action;

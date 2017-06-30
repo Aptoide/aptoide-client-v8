@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.InstallationProgress;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
@@ -55,7 +55,7 @@ import rx.schedulers.Schedulers;
             .log(throwable)));
   }
 
-  private Void updateUi(InstallationProgress installation) {
+  private Void updateUi(Install installation) {
     appName.setText(installation.getAppName());
     if (!TextUtils.isEmpty(installation.getIcon())) {
       ImageLoader.with(getContext())
@@ -66,7 +66,7 @@ import rx.schedulers.Schedulers;
     progressBar.setProgress(installation.getProgress());
     downloadProgressTv.setText(String.format("%d%%", installation.getProgress()));
     if (installation.isIndeterminate()
-        || installation.getState() == InstallationProgress.InstallationStatus.INSTALLED) {
+        || installation.getState() == Install.InstallationStatus.INSTALLED) {
       downloadSpeedTv.setText("");
     } else {
       downloadSpeedTv.setText(String.valueOf(

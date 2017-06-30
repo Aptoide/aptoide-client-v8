@@ -294,7 +294,7 @@ public class InstallService extends Service {
         ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
 
-  private Notification buildNotification(InstallationProgress installation,
+  private Notification buildNotification(Install installation,
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this);

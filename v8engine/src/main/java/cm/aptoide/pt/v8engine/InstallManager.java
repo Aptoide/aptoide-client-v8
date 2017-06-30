@@ -87,41 +87,38 @@ public class InstallManager {
     return installer.uninstall(context, packageName, versionName);
   }
 
-  public Observable<List<InstallationProgress>> getTimedOutInstallations() {
-    return getInstallations().flatMap(
-        installationProgresses -> Observable.from(installationProgresses)
-            .filter(installationProgress -> installationProgress.getState()
-                .equals(InstallationProgress.InstallationStatus.INSTALLATION_TIMEOUT))
-            .toList());
+  public Observable<List<Install>> getTimedOutInstallations() {
+    return getInstallations().flatMap(installs -> Observable.from(installs)
+        .filter(install -> install.getState()
+            .equals(Install.InstallationStatus.INSTALLATION_TIMEOUT))
+        .toList());
   }
 
-  public Observable<List<InstallationProgress>> getInstallations() {
+  public Observable<List<Install>> getInstallations() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloads(),
         installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
-            .flatMap(
-                download -> getInstallationProgress(download.getMd5(), download.getPackageName(),
-                    download.getVersionCode()).first())
+            .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
+                download.getVersionCode()).first())
             .toList())
-        .map(installationProgresses -> sortList(installationProgresses));
+        .map(installs -> sortList(installs));
   }
 
-  private List<InstallationProgress> sortList(List<InstallationProgress> installationProgresses) {
-    Collections.sort(installationProgresses, (installationProgress, t1) -> {
+  private List<Install> sortList(List<Install> installs) {
+    Collections.sort(installs, (install, t1) -> {
       int toReturn;
-      if (installationProgress.getState() == InstallationProgress.InstallationStatus.INSTALLING
-          && !installationProgress.isIndeterminate()) {
+      if (install.getState() == Install.InstallationStatus.INSTALLING
+          && !install.isIndeterminate()) {
         toReturn = 1;
-      } else if (t1.getState() == InstallationProgress.InstallationStatus.INSTALLING
-          && !t1.isIndeterminate()) {
+      } else if (t1.getState() == Install.InstallationStatus.INSTALLING && !t1.isIndeterminate()) {
         toReturn = -1;
       } else {
-        int diff = installationProgress.getState()
+        int diff = install.getState()
             .ordinal() - t1.getState()
             .ordinal();
         if (diff == 0) {
-          toReturn = installationProgress.getPackageName()
+          toReturn = install.getPackageName()
               .compareTo(t1.getPackageName());
         } else {
           toReturn = diff;
@@ -129,14 +126,13 @@ public class InstallManager {
       }
       return toReturn;
     });
-    Collections.reverse(installationProgresses);
-    return installationProgresses;
+    Collections.reverse(installs);
+    return installs;
   }
 
-  public Observable<InstallationProgress> getCurrentInstallation() {
-    return getInstallations().flatMap(progresses -> Observable.from(progresses)
-        .filter(
-            progress -> progress.getState() == InstallationProgress.InstallationStatus.INSTALLING));
+  public Observable<Install> getCurrentInstallation() {
+    return getInstallations().flatMap(installs -> Observable.from(installs)
+        .filter(install -> install.getState() == Install.InstallationStatus.INSTALLING));
   }
 
   public Completable install(Download download) {
@@ -158,25 +154,23 @@ public class InstallManager {
             downloadRepository.save(downloadProgress);
           }
         })
-        .flatMap(download1 -> getInstallationProgress(download.getMd5(), download.getPackageName(),
+        .flatMap(download1 -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(progress -> installInBackground(progress, forceDefaultInstall))
+        .flatMap(install -> installInBackground(install, forceDefaultInstall))
         .first()
         .toCompletable();
   }
 
-  public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
-      int versioncode) {
+  public Observable<Install> getInstall(String md5, String packageName, int versioncode) {
     return Observable.combineLatest(aptoideDownloadManager.getAsListDownload(md5),
         installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
-        (download, installationState, installationType) -> createInstallationProgress(download,
+        (download, installationState, installationType) -> createInstall(download,
             installationState, md5, packageName, versioncode, installationType));
   }
 
-  private InstallationProgress createInstallationProgress(Download download,
-      InstallationState installationState, String md5, String packageName, int versioncode,
-      InstallationProgress.InstallationType installationType) {
-    return new InstallationProgress(mapInstallationProgress(download),
+  private Install createInstall(Download download, InstallationState installationState, String md5,
+      String packageName, int versioncode, Install.InstallationType installationType) {
+    return new Install(mapInstallation(download),
         mapInstallationStatus(download, installationState), installationType,
         mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
         versioncode, getAppName(download, installationState),
@@ -212,32 +206,32 @@ public class InstallManager {
         installationState.getType(), download);
   }
 
-  private InstallationProgress.InstallationStatus mapInstallationStatus(Download download,
+  private Install.InstallationStatus mapInstallationStatus(Download download,
       InstallationState installationState) {
 
     if (installationState.getStatus() == Installed.STATUS_COMPLETED) {
-      return InstallationProgress.InstallationStatus.INSTALLED;
+      return Install.InstallationStatus.INSTALLED;
     }
 
     if (installationState.getStatus() == Installed.STATUS_INSTALLING
         && installationState.getType() != Installed.TYPE_DEFAULT) {
-      return InstallationProgress.InstallationStatus.INSTALLING;
+      return Install.InstallationStatus.INSTALLING;
     }
 
     if (installationState.getStatus() == Installed.STATUS_WAITING
         && download != null
         && download.getOverallDownloadStatus() == Download.COMPLETED) {
-      return InstallationProgress.InstallationStatus.INSTALLING;
+      return Install.InstallationStatus.INSTALLING;
     }
 
     if (installationState.getStatus() == Installed.STATUS_ROOT_TIMEOUT) {
-      return InstallationProgress.InstallationStatus.INSTALLATION_TIMEOUT;
+      return Install.InstallationStatus.INSTALLATION_TIMEOUT;
     }
 
     return mapDownloadState(download);
   }
 
-  private int mapInstallationProgress(Download download) {
+  private int mapInstallation(Download download) {
     int progress = 0;
     if (download != null) {
       progress = download.getOverallProgress();
@@ -274,22 +268,21 @@ public class InstallManager {
     return isIndeterminate;
   }
 
-  private InstallationProgress.InstallationStatus mapDownloadState(Download download) {
-    InstallationProgress.InstallationStatus status =
-        InstallationProgress.InstallationStatus.UNINSTALLED;
+  private Install.InstallationStatus mapDownloadState(Download download) {
+    Install.InstallationStatus status = Install.InstallationStatus.UNINSTALLED;
     if (download != null) {
       switch (download.getOverallDownloadStatus()) {
         case Download.FILE_MISSING:
         case Download.INVALID_STATUS:
         case Download.NOT_DOWNLOADED:
         case Download.COMPLETED:
-          status = InstallationProgress.InstallationStatus.UNINSTALLED;
+          status = Install.InstallationStatus.UNINSTALLED;
           break;
         case Download.PAUSED:
-          status = InstallationProgress.InstallationStatus.PAUSED;
+          status = Install.InstallationStatus.PAUSED;
           break;
         case Download.ERROR:
-          status = InstallationProgress.InstallationStatus.FAILED;
+          status = Install.InstallationStatus.FAILED;
           break;
         case Download.RETRY:
         case Download.STARTED:
@@ -299,7 +292,7 @@ public class InstallManager {
         case Download.PROGRESS:
         case Download.IN_QUEUE:
         case Download.PENDING:
-          status = InstallationProgress.InstallationStatus.INSTALLING;
+          status = Install.InstallationStatus.INSTALLING;
           break;
       }
     }
@@ -348,18 +341,17 @@ public class InstallManager {
     });
   }
 
-  private Observable<InstallationProgress> installInBackground(InstallationProgress progress,
-      boolean forceDefaultInstall) {
-    return getInstallationProgress(progress.getMd5(), progress.getPackageName(),
-        progress.getVersionCode()).mergeWith(
-        startBackgroundInstallationAndWait(progress, forceDefaultInstall));
+  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall) {
+    return getInstall(install.getMd5(), install.getPackageName(),
+        install.getVersionCode()).mergeWith(
+        startBackgroundInstallationAndWait(install, forceDefaultInstall));
   }
 
-  @NonNull private Observable<InstallationProgress> startBackgroundInstallationAndWait(
-      InstallationProgress progress, boolean forceDefaultInstall) {
-    return waitBackgroundInstallationResult(progress.getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(progress.getMd5(), forceDefaultInstall))
-        .map(aVoid -> progress);
+  @NonNull private Observable<Install> startBackgroundInstallationAndWait(Install install,
+      boolean forceDefaultInstall) {
+    return waitBackgroundInstallationResult(install.getMd5()).doOnSubscribe(
+        () -> startBackgroundInstallation(install.getMd5(), forceDefaultInstall))
+        .map(aVoid -> install);
   }
 
   private Observable<Void> waitBackgroundInstallationResult(String md5) {
@@ -404,7 +396,7 @@ public class InstallManager {
         .toList()
         .flatMap(observables -> Observable.merge(observables))
         .toList()
-        .map(progresses -> true)
+        .map(installs -> true)
         .onErrorReturn(throwable -> false);
   }
 
@@ -440,18 +432,18 @@ public class InstallManager {
         .toCompletable();
   }
 
-  private Observable<InstallationProgress.InstallationType> getInstallationType(String packageName,
+  private Observable<Install.InstallationType> getInstallationType(String packageName,
       int versionCode) {
     return installedRepository.getInstalled(packageName)
         .map(installed -> {
           if (installed == null) {
-            return InstallationProgress.InstallationType.INSTALL;
+            return Install.InstallationType.INSTALL;
           } else if (installed.getVersionCode() == versionCode) {
-            return InstallationProgress.InstallationType.INSTALLED;
+            return Install.InstallationType.INSTALLED;
           } else if (installed.getVersionCode() > versionCode) {
-            return InstallationProgress.InstallationType.DOWNGRADE;
+            return Install.InstallationType.DOWNGRADE;
           } else {
-            return InstallationProgress.InstallationType.UPDATE;
+            return Install.InstallationType.UPDATE;
           }
         });
   }
@@ -460,18 +452,18 @@ public class InstallManager {
     return onAppInstalled(installed);
   }
 
-  public InstallationProgress.Error getError(Download download) {
-    InstallationProgress.Error error = InstallationProgress.Error.NO_ERROR;
+  public Install.Error getError(Download download) {
+    Install.Error error = Install.Error.NO_ERROR;
     if (download != null) {
       switch (download.getDownloadError()) {
         case Download.GENERIC_ERROR:
-          error = InstallationProgress.Error.GENERIC_ERROR;
+          error = Install.Error.GENERIC_ERROR;
           break;
         case Download.NOT_ENOUGH_SPACE_ERROR:
-          error = InstallationProgress.Error.NOT_ENOUGH_SPACE_ERROR;
+          error = Install.Error.NOT_ENOUGH_SPACE_ERROR;
           break;
         case Download.NO_ERROR:
-          error = InstallationProgress.Error.NO_ERROR;
+          error = Install.Error.NO_ERROR;
           break;
       }
     }
@@ -492,17 +484,17 @@ public class InstallManager {
 
   public Completable retryTimedOutInstallations() {
     return getTimedOutInstallations().first()
-        .flatMapIterable(installationProgresses -> installationProgresses)
-        .flatMapSingle(installationProgress -> getDownload(installationProgress.getMd5()))
+        .flatMapIterable(installs -> installs)
+        .flatMapSingle(install -> getDownload(install.getMd5()))
         .flatMapCompletable(download -> defaultInstall(download))
         .toCompletable();
   }
 
   public Completable cleanTimedOutInstalls() {
     return getTimedOutInstallations().first()
-        .flatMap(installationProgress -> Observable.from(installationProgress)
-            .flatMap(installation -> installedRepository.get(installation.getPackageName(),
-                installation.getVersionCode())
+        .flatMap(installs -> Observable.from(installs)
+            .flatMap(install -> installedRepository.get(install.getPackageName(),
+                install.getVersionCode())
                 .first()
                 .doOnNext(installed -> {
                   installed.setStatus(Installed.STATUS_UNINSTALLED);

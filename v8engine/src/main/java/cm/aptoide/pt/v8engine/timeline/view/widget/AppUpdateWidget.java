@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.v8engine.InstallationProgress;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -124,8 +124,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     return AppUpdateDisplayable.CARD_TYPE_NAME;
   }
 
-  @UiThread void updateInstallProgress(AppUpdateDisplayable displayable,
-      InstallationProgress downloadProgress) {
+  @UiThread void updateInstallProgress(AppUpdateDisplayable displayable, Install downloadProgress) {
     errorText.setVisibility(View.GONE);
 
     switch (downloadProgress.getState()) {

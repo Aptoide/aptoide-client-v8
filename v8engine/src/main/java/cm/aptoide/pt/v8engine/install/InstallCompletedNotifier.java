@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.install;
 
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
@@ -29,9 +29,9 @@ public class InstallCompletedNotifier {
     App app = new App(packageName, versionCode, md5);
     if (!appToCheck.contains(app)) {
       appToCheck.add(app);
-      installManager.getInstallationProgress(md5, packageName, versionCode)
+      installManager.getInstall(md5, packageName, versionCode)
           .filter(installationProgress -> installationProgress.getState()
-              .equals(InstallationProgress.InstallationStatus.INSTALLED))
+              .equals(Install.InstallationStatus.INSTALLED))
           .first()
           .subscribe(installationProgress -> installFinished(app),
               throwable -> crashReport.log(throwable));

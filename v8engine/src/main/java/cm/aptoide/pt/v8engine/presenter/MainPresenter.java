@@ -12,8 +12,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallCompletedNotifier;
@@ -158,10 +158,10 @@ public class MainPresenter implements Presenter {
     fragmentNavigator.navigateToWithoutBackSave(home);
   }
 
-  private void watchInstalls(List<InstallationProgress> installationProgresses) {
-    for (InstallationProgress installationProgress : installationProgresses) {
-      installCompletedNotifier.add(installationProgress.getPackageName(),
-          installationProgress.getVersionCode(), installationProgress.getMd5());
+  private void watchInstalls(List<Install> installs) {
+    for (Install install : installs) {
+      installCompletedNotifier.add(install.getPackageName(), install.getVersionCode(),
+          install.getMd5());
     }
   }
 }

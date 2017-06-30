@@ -2,8 +2,8 @@ package cm.aptoide.pt.v8engine.install.installer;
 
 import android.content.Context;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;
@@ -21,7 +21,7 @@ public class RootInstallationRetryHandler {
   private final int notificationId;
   private final SystemNotificationShower systemNotificationShower;
   private final InstallManager installManager;
-  private final PublishRelay<List<InstallationProgress>> handler;
+  private final PublishRelay<List<Install>> handler;
   private int count;
   private Context context;
   private Subscription subscription;
@@ -29,7 +29,7 @@ public class RootInstallationRetryHandler {
 
   public RootInstallationRetryHandler(int notificationId,
       SystemNotificationShower systemNotificationShower, InstallManager installManager,
-      PublishRelay<List<InstallationProgress>> handler, int initialCount, Context context,
+      PublishRelay<List<Install>> handler, int initialCount, Context context,
       RootInstallErrorNotificationFactory rootInstallErrorNotificationFactory) {
     this.notificationId = notificationId;
     this.systemNotificationShower = systemNotificationShower;
@@ -54,17 +54,17 @@ public class RootInstallationRetryHandler {
         }, throwable -> Logger.e(TAG, "start: " + throwable));
   }
 
-  private void showNotification(List<InstallationProgress> installationProgresses) {
+  private void showNotification(List<Install> installs) {
     if (count == 0) {
-      showSystemNotification(installationProgresses);
+      showSystemNotification(installs);
     } else {
-      handler.call(installationProgresses);
+      handler.call(installs);
     }
   }
 
-  private void showSystemNotification(List<InstallationProgress> installationProgresses) {
+  private void showSystemNotification(List<Install> installs) {
     systemNotificationShower.showNotification(context,
-        rootInstallErrorNotificationFactory.create(context, installationProgresses));
+        rootInstallErrorNotificationFactory.create(context, installs));
   }
 
   private void dismissNotifications() {
@@ -78,7 +78,7 @@ public class RootInstallationRetryHandler {
     }
   }
 
-  public Observable<List<InstallationProgress>> retries() {
+  public Observable<List<Install>> retries() {
     return handler.doOnSubscribe(() -> count++)
         .doOnUnsubscribe(() -> count--);
   }

@@ -43,8 +43,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -229,53 +229,53 @@ import rx.android.schedulers.AndroidSchedulers;
     permissionRequest = ((PermissionService) getContext());
   }
 
-  private void updateUi(AppViewInstallDisplayable displayable,
-      InstallationProgress installationProgress, boolean isSetup, GetApp getApp) {
-    InstallationProgress.InstallationStatus state = installationProgress.getState();
+  private void updateUi(AppViewInstallDisplayable displayable, Install install, boolean isSetup,
+      GetApp getApp) {
+    Install.InstallationStatus state = install.getState();
     switch (state) {
       case INSTALLING:
-        updateInstallingUi(installationProgress, getApp.getNodes()
+        updateInstallingUi(install, getApp.getNodes()
             .getMeta()
             .getData(), isSetup);
         break;
       case INSTALLATION_TIMEOUT:
         if (isSetup) {
-          updateUninstalledUi(displayable, getApp, isSetup, installationProgress.getType());
+          updateUninstalledUi(displayable, getApp, isSetup, install.getType());
         } else {
-          updateInstallingUi(installationProgress, getApp.getNodes()
+          updateInstallingUi(install, getApp.getNodes()
               .getMeta()
               .getData(), isSetup);
         }
         break;
       case PAUSED:
-        updatePausedUi(installationProgress, getApp, isSetup);
+        updatePausedUi(install, getApp, isSetup);
         break;
       case INSTALLED:
         //current installed version
-        updateInstalledUi(installationProgress);
+        updateInstalledUi(install);
         break;
       case UNINSTALLED:
         //App not installed
-        updateUninstalledUi(displayable, getApp, isSetup, installationProgress.getType());
+        updateUninstalledUi(displayable, getApp, isSetup, install.getType());
         break;
       case FAILED:
-        updateFailedUi(isSetup, displayable, installationProgress, getApp);
+        updateFailedUi(isSetup, displayable, install, getApp);
         break;
     }
   }
 
   private void updateFailedUi(boolean isSetup, AppViewInstallDisplayable displayable,
-      InstallationProgress installationProgress, GetApp getApp) {
+      Install install, GetApp getApp) {
     if (isSetup) {
-      updateUninstalledUi(displayable, getApp, isSetup, installationProgress.getType());
+      updateUninstalledUi(displayable, getApp, isSetup, install.getType());
     } else {
-      updatePausedUi(installationProgress, getApp, isSetup);
-      showErrorMessage(installationProgress.getError());
+      updatePausedUi(install, getApp, isSetup);
+      showErrorMessage(install.getError());
     }
   }
 
   @NonNull private void updateUninstalledUi(AppViewInstallDisplayable displayable, GetApp getApp,
-      boolean isSetup, InstallationProgress.InstallationType installationType) {
+      boolean isSetup, Install.InstallationType installationType) {
 
     GetAppMeta.App app = getApp.getNodes()
         .getMeta()
@@ -299,30 +299,29 @@ import rx.android.schedulers.AndroidSchedulers;
     setupDownloadControls(app, isSetup, installationType);
   }
 
-  private void updateInstalledUi(InstallationProgress installationProgress) {
+  private void updateInstalledUi(Install install) {
     setDownloadBarInvisible();
-    setupActionButton(R.string.open,
-        v -> AptoideUtils.SystemU.openApp(installationProgress.getPackageName(),
+    setupActionButton(R.string.open, v -> AptoideUtils.SystemU.openApp(install.getPackageName(),
             getContext().getPackageManager(), getContext()));
   }
 
-  private void updatePausedUi(InstallationProgress installationProgress, GetApp app,
+  private void updatePausedUi(Install install, GetApp app,
       boolean isSetup) {
 
-    showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
+    showProgress(install.getProgress(), install.isIndeterminate());
     actionResume.setVisibility(View.VISIBLE);
     actionPause.setVisibility(View.GONE);
     setupDownloadControls(app.getNodes()
         .getMeta()
-        .getData(), isSetup, installationProgress.getType());
+        .getData(), isSetup, install.getType());
   }
 
-  private void updateInstallingUi(InstallationProgress installationProgress, GetAppMeta.App app,
+  private void updateInstallingUi(Install install, GetAppMeta.App app,
       boolean isSetup) {
-    showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
+    showProgress(install.getProgress(), install.isIndeterminate());
     actionResume.setVisibility(View.GONE);
     actionPause.setVisibility(View.VISIBLE);
-    setupDownloadControls(app, isSetup, installationProgress.getType());
+    setupDownloadControls(app, isSetup, install.getType());
   }
 
   private void showProgress(int progress, boolean isIndeterminate) {
@@ -568,7 +567,7 @@ import rx.android.schedulers.AndroidSchedulers;
     };
   }
 
-  private Completable showErrorMessage(InstallationProgress.Error error) {
+  private Completable showErrorMessage(Install.Error error) {
     Completable completable;
     switch (error) {
       case GENERIC_ERROR:
@@ -591,7 +590,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void setupDownloadControls(GetAppMeta.App app, boolean isSetup,
-      InstallationProgress.InstallationType installationType) {
+      Install.InstallationType installationType) {
     if (isSetup) {
       int actionInstall;
       switch (installationType) {

@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.view.app.displayable;
 import android.widget.Button;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
@@ -92,8 +92,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     return R.layout.displayable_app_view_install;
   }
 
-  public Observable<InstallationProgress> getInstallState() {
-    return installManager.getInstallationProgress(md5, packageName, versionCode);
+  public Observable<Install> getInstallState() {
+    return installManager.getInstall(md5, packageName, versionCode);
   }
 
   public DownloadFactory getDownloadFactory() {

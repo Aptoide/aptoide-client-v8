@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.downloads.active;
 
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.Observable;
@@ -13,7 +13,7 @@ import rx.functions.Action0;
 public class ActiveDownloadDisplayable extends Displayable {
 
   private final InstallManager installManager;
-  private final InstallationProgress installation;
+  private final Install installation;
   private Action0 onResumeAction;
   private Action0 onPauseAction;
 
@@ -22,7 +22,7 @@ public class ActiveDownloadDisplayable extends Displayable {
     this.installation = null;
   }
 
-  public ActiveDownloadDisplayable(InstallationProgress installation, InstallManager installManager) {
+  public ActiveDownloadDisplayable(Install installation, InstallManager installManager) {
     this.installation = installation;
     this.installManager = installManager;
   }
@@ -53,8 +53,8 @@ public class ActiveDownloadDisplayable extends Displayable {
     installManager.stopInstallation(installation.getMd5());
   }
 
-  public Observable<InstallationProgress> getInstallationObservable() {
-    return installManager.getInstallationProgress(installation.getMd5(),
+  public Observable<Install> getInstallationObservable() {
+    return installManager.getInstall(installation.getMd5(),
         installation.getPackageName(), installation.getVersionCode());
   }
 

@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.v8engine.InstallationProgress;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
@@ -51,7 +51,7 @@ import rx.schedulers.Schedulers;
 
   @Override public void bindView(CompletedDownloadDisplayable displayable) {
     final FragmentActivity context = getContext();
-    InstallationProgress installation = displayable.getInstallation();
+    Install installation = displayable.getInstallation();
     appName.setText(installation.getAppName());
     if (!TextUtils.isEmpty(installation.getIcon())) {
       ImageLoader.with(context)
@@ -68,8 +68,8 @@ import rx.schedulers.Schedulers;
     compositeSubscription.add(RxView.clicks(itemView)
         .flatMap(click -> displayable.downloadStatus()
             .first()
-            .filter(status -> status == InstallationProgress.InstallationStatus.UNINSTALLED
-                || status == InstallationProgress.InstallationStatus.INSTALLED)
+            .filter(status -> status == Install.InstallationStatus.UNINSTALLED
+                || status == Install.InstallationStatus.INSTALLED)
             .flatMap(
                 status -> displayable.installOrOpenDownload(context, (PermissionService) context)))
         .retry()
@@ -79,8 +79,8 @@ import rx.schedulers.Schedulers;
     compositeSubscription.add(RxView.clicks(resumeDownloadButton)
         .flatMap(click -> displayable.downloadStatus()
             .first()
-            .filter(status -> status == InstallationProgress.InstallationStatus.PAUSED
-                || status == InstallationProgress.InstallationStatus.FAILED)
+            .filter(status -> status == Install.InstallationStatus.PAUSED
+                || status == Install.InstallationStatus.FAILED)
             .flatMap(status -> displayable.resumeDownload(context, (PermissionService) context)))
         .retry()
         .subscribe(success -> {
@@ -98,8 +98,8 @@ import rx.schedulers.Schedulers;
         .sample(1, TimeUnit.SECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(downloadStatus -> {
-          if (downloadStatus == InstallationProgress.InstallationStatus.PAUSED
-              || downloadStatus == InstallationProgress.InstallationStatus.FAILED) {
+          if (downloadStatus == Install.InstallationStatus.PAUSED
+              || downloadStatus == Install.InstallationStatus.FAILED) {
             resumeDownloadButton.setVisibility(View.VISIBLE);
           } else {
             resumeDownloadButton.setVisibility(View.GONE);
@@ -108,10 +108,10 @@ import rx.schedulers.Schedulers;
             .log(throwable)));
   }
 
-  private void updateStatus(InstallationProgress installation,
+  private void updateStatus(Install installation,
       CompletedDownloadDisplayable displayable) {
     final FragmentActivity context = getContext();
-    if (installation.getState() == InstallationProgress.InstallationStatus.FAILED) {
+    if (installation.getState() == Install.InstallationStatus.FAILED) {
       int statusTextColor;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         statusTextColor = context.getColor(R.color.red_700);

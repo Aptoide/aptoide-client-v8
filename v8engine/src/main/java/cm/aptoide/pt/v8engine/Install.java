@@ -8,7 +8,7 @@ import lombok.ToString;
  * Created by trinkes on 10/04/2017.
  */
 
-public @ToString(of = { "state", "isIndeterminate" }) class InstallationProgress {
+public @ToString(of = { "state", "isIndeterminate" }) class Install {
   private final int progress;
   private final InstallationStatus state;
   private final InstallationType type;
@@ -21,7 +21,7 @@ public @ToString(of = { "state", "isIndeterminate" }) class InstallationProgress
   private final String icon;
   private final Error error;
 
-  public InstallationProgress(int progress, InstallationStatus state, InstallationType type,
+  public Install(int progress, InstallationStatus state, InstallationType type,
       boolean isIndeterminate, int speed, String md5, String packageName, int versionCode,
       String appName, String icon, Error error) {
     this.progress = progress;
@@ -99,7 +99,7 @@ public @ToString(of = { "state", "isIndeterminate" }) class InstallationProgress
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final InstallationProgress that = (InstallationProgress) o;
+    final Install that = (Install) o;
 
     if (versionCode != that.versionCode) return false;
     if (state != that.state) return false;

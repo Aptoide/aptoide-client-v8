@@ -5,8 +5,8 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -27,7 +27,7 @@ public class CompletedDownloadDisplayable extends Displayable {
   private final Analytics analytics;
   private final InstallEventConverter installConverter;
 
-  private final InstallationProgress installation;
+  private final Install installation;
 
   public CompletedDownloadDisplayable() {
     this.installManager = null;
@@ -37,7 +37,7 @@ public class CompletedDownloadDisplayable extends Displayable {
     this.installation = null;
   }
 
-  public CompletedDownloadDisplayable(InstallationProgress installation,
+  public CompletedDownloadDisplayable(Install installation,
       InstallManager installManager, DownloadEventConverter converter, Analytics analytics,
       InstallEventConverter installConverter) {
     this.installation = installation;
@@ -60,21 +60,20 @@ public class CompletedDownloadDisplayable extends Displayable {
         installation.getVersionCode());
   }
 
-  public Observable<InstallationProgress.InstallationStatus> downloadStatus() {
-    return installManager.getInstallationProgress(installation.getMd5(),
+  public Observable<Install.InstallationStatus> downloadStatus() {
+    return installManager.getInstall(installation.getMd5(),
         installation.getPackageName(), installation.getVersionCode())
         .map(installationProgress -> installationProgress.getState())
-        .onErrorReturn(throwable -> InstallationProgress.InstallationStatus.UNINSTALLED);
+        .onErrorReturn(throwable -> Install.InstallationStatus.UNINSTALLED);
   }
 
-  public Observable<InstallationProgress> installOrOpenDownload(Context context,
+  public Observable<Install> installOrOpenDownload(Context context,
       PermissionService permissionRequest) {
-    return installManager.getInstallationProgress(installation.getMd5(),
+    return installManager.getInstall(installation.getMd5(),
         installation.getPackageName(), installation.getVersionCode())
         .first()
         .flatMap(installationProgress -> {
-          if (installationProgress.getState()
-              == InstallationProgress.InstallationStatus.INSTALLED) {
+          if (installationProgress.getState() == Install.InstallationStatus.INSTALLED) {
             AptoideUtils.SystemU.openApp(installation.getPackageName(), context.getPackageManager(),
                 context);
             return Observable.empty();
@@ -84,7 +83,7 @@ public class CompletedDownloadDisplayable extends Displayable {
         });
   }
 
-  public Observable<InstallationProgress> resumeDownload(Context context,
+  public Observable<Install> resumeDownload(Context context,
       PermissionService permissionRequest) {
     PermissionManager permissionManager = new PermissionManager();
     return installManager.getDownload(installation.getMd5())
@@ -93,7 +92,7 @@ public class CompletedDownloadDisplayable extends Displayable {
             .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
             .flatMap(success -> installManager.install(download)
                 .toObservable()
-                .flatMap(downloadProgress -> installManager.getInstallationProgress(
+                .flatMap(downloadProgress -> installManager.getInstall(
                     installation.getMd5(), installation.getPackageName(),
                     installation.getVersionCode()))
                 .doOnSubscribe(() -> setupEvents(download))));
@@ -110,7 +109,7 @@ public class CompletedDownloadDisplayable extends Displayable {
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
-  public InstallationProgress getInstallation() {
+  public Install getInstallation() {
     return installation;
   }
 

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import cm.aptoide.pt.v8engine.InstallationProgress;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import java.util.List;
 
@@ -24,21 +24,19 @@ public class RootInstallErrorNotificationFactory {
     this.dismissAction = dismissAction;
   }
 
-  public RootInstallErrorNotification create(Context context,
-      List<InstallationProgress> installationProgresses) {
+  public RootInstallErrorNotification create(Context context, List<Install> installs) {
     return new RootInstallErrorNotification(notificationId, icon,
-        getNotificationTitle(context, installationProgresses), notificationAction, dismissAction);
+        getNotificationTitle(context, installs), notificationAction, dismissAction);
   }
 
-  @NonNull private String getNotificationTitle(Context context,
-      List<InstallationProgress> installationProgresses) {
+  @NonNull private String getNotificationTitle(Context context, List<Install> installs) {
     String title;
-    if (installationProgresses.size() == 1) {
+    if (installs.size() == 1) {
       title = context.getString(
           R.string.generalscreen_short_root_install_single_app_timeout_error_message);
     } else {
       title = context.getString(R.string.generalscreen_short_root_install_timeout_error_message,
-          installationProgresses.size());
+          installs.size());
     }
     return title;
   }

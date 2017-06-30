@@ -2,8 +2,8 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.List;
 import rx.Observable;
@@ -53,7 +53,7 @@ public class DownloadsPresenter implements Presenter {
   @Override public void restoreState(Bundle state) {
   }
 
-  private Observable<Void> setActive(List<InstallationProgress> downloads) {
+  private Observable<Void> setActive(List<Install> downloads) {
     return Observable.from(downloads)
         .filter(d -> isInstalling(d))
         .toList()
@@ -62,7 +62,7 @@ public class DownloadsPresenter implements Presenter {
         .map(__ -> null);
   }
 
-  private Observable<Void> setStandBy(List<InstallationProgress> downloads) {
+  private Observable<Void> setStandBy(List<Install> downloads) {
     return Observable.from(downloads)
         .filter(d -> isStandingBy(d))
         .toList()
@@ -71,7 +71,7 @@ public class DownloadsPresenter implements Presenter {
         .map(__ -> null);
   }
 
-  private Observable<Void> setCompleted(List<InstallationProgress> downloads) {
+  private Observable<Void> setCompleted(List<Install> downloads) {
     return Observable.from(downloads)
         .filter(d -> !isInstalling(d) && !isStandingBy(d))
         .toList()
@@ -80,14 +80,14 @@ public class DownloadsPresenter implements Presenter {
         .map(__ -> null);
   }
 
-  private boolean isInstalling(InstallationProgress progress) {
+  private boolean isInstalling(Install progress) {
     return progress.isIndeterminate()
-        || progress.getState() == InstallationProgress.InstallationStatus.INSTALLING;
+        || progress.getState() == Install.InstallationStatus.INSTALLING;
   }
 
-  private boolean isStandingBy(InstallationProgress progress) {
-    return progress.getState() == InstallationProgress.InstallationStatus.FAILED
-        || progress.getState() == InstallationProgress.InstallationStatus.PAUSED;
+  private boolean isStandingBy(Install progress) {
+    return progress.getState() == Install.InstallationStatus.FAILED
+        || progress.getState() == Install.InstallationStatus.PAUSED;
   }
 
   public void pauseInstall(Context context, DownloadsView.DownloadViewModel download) {
