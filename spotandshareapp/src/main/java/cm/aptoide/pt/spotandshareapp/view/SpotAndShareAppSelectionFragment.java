@@ -44,7 +44,7 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
   }
 
   @Override public void setupRecyclerView(List<AppModel> installedApps) {
-    adapter = new SpotAndShareAppSelectionAdapter(
+    adapter = new SpotAndShareAppSelectionAdapter(getContext().getApplicationContext(),
         new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
         installedApps);
     recyclerView.setAdapter(adapter);

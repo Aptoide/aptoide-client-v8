@@ -1,10 +1,12 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.spotandshareapp.AppModel;
@@ -21,10 +23,13 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
   private static final int TYPE_HEADER = 0;
   private static final int TYPE_ITEM = 1;
 
+  private Context context;
   private Header header;
   private List<AppModel> installedApps;
 
-  public SpotAndShareAppSelectionAdapter(Header header, List<AppModel> installedApps) {
+  public SpotAndShareAppSelectionAdapter(Context context, Header header,
+      List<AppModel> installedApps) {
+    this.context = context;
     this.header = header;
     this.installedApps = installedApps;
   }
@@ -51,6 +56,8 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
       ViewHolderItem viewHolderItem = (ViewHolderItem) holder;
       viewHolderItem.appIcon.setImageDrawable(installedApps.get(position - 1)
           .getAppIcon());
+      viewHolderItem.appName.setText(installedApps.get(position - 1)
+          .getAppName());
     }
   }
 
@@ -82,10 +89,14 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
   class ViewHolderItem extends ViewHolder {
 
     private ImageView appIcon;
+    private TextView appName;
+    private FrameLayout frameLayout;
 
     public ViewHolderItem(View itemView) {
       super(itemView);
       appIcon = (ImageView) itemView.findViewById(R.id.app_item_image_view);
+      appName = (TextView) itemView.findViewById(R.id.app_item_text_view);
+      frameLayout = (FrameLayout) itemView.findViewById(R.id.app_item_frame_layout);
     }
   }
 }
