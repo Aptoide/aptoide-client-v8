@@ -192,7 +192,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
-import static cm.aptoide.pt.preferences.secure.SecureKeys.IS_PHONE_ROOTED;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 /**
@@ -1149,6 +1148,8 @@ public abstract class V8Engine extends Application {
   public RootAvailabilityManager getRootAvailabilityManager() {
     if (rootAvailabilityManager == null) {
       rootAvailabilityManager = new RootAvailabilityManager(new RootValueSaver() {
+        final String IS_PHONE_ROOTED = "IS_PHONE_ROOTED";
+
         @Override public Single<Boolean> isPhoneRoot() {
           return getSecurePreferences().getBoolean(IS_PHONE_ROOTED, false)
               .first()
