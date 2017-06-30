@@ -20,16 +20,12 @@ public class UTMTrackingBuilder {
     BIUTMAnalyticsRequestBody.Data data = new BIUTMAnalyticsRequestBody.Data();
     data.setEntryPoint(this.utm.getEntryPoint());
     data.setSiteVersion(tracking.getSiteVersion());
+    data.setUserAgent(tracking.getUserAgent());
 
     BIUTMAnalyticsRequestBody.App app = new BIUTMAnalyticsRequestBody.App();
     app.setPackageName(tracking.getPackageName());
     app.setUrl(tracking.getUrl());
     data.setApp(app);
-
-    BIUTMAnalyticsRequestBody.Device device = new BIUTMAnalyticsRequestBody.Device();
-    device.setBrowser(tracking.getBrowser());
-    device.setCountry(tracking.getCountry());
-    data.setDevice(device);
 
     BIUTMAnalyticsRequestBody.UTM utm = new BIUTMAnalyticsRequestBody.UTM();
     utm.setCampaign(this.utm.getUtmCampaign());

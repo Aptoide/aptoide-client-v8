@@ -235,6 +235,7 @@ public class Analytics {
       private static final String COUNTRY = "country";
       private static final String BROWSER = "browser";
       private static final String SITE_VERSION = "site_version";
+      private static final String USER_AGENT = "user_agent";
       static AppEventsLogger facebookLogger;
       private static String utmSource = UNKNOWN;
       private static String utmMedium = UNKNOWN;
@@ -341,7 +342,7 @@ public class Analytics {
           tracking = createTrackingObject(getTrackingFile(application));
         } catch (Exception e) {
           Logger.d(TAG, "Failed to parse utm/tracking files");
-          return new Tracking(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
+          return new Tracking(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
         }
         return tracking;
       }
@@ -364,8 +365,9 @@ public class Analytics {
         String country = utmTrackingFileParser.valueExtracter(COUNTRY);
         String browser = utmTrackingFileParser.valueExtracter(BROWSER);
         String siteVersion = utmTrackingFileParser.valueExtracter(SITE_VERSION);
+        String userAgent = utmTrackingFileParser.valueExtracter(USER_AGENT);
 
-        return new Tracking(url, packageName, country, browser, siteVersion);
+        return new Tracking(url, packageName, country, browser, siteVersion, userAgent);
       }
     }
 

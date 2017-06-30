@@ -13,13 +13,15 @@ import lombok.Data;
   private final String country;
   private final String browser;
   private final String siteVersion;
+  private final String userAgent;
 
   public Tracking(String url, String packageName, String country, String browser,
-      String siteVersion) {
+      String siteVersion, String userAgent) {
     this.url = url;
     this.packageName = packageName;
     this.country = country;
     this.browser = browser;
     this.siteVersion = siteVersion;
+    this.userAgent = userAgent;
   }
 }

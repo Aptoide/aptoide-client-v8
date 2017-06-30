@@ -19,18 +19,13 @@ import lombok.Data;
     private String entryPoint;
     private String siteVersion;
     private App app;
-    private Device device;
     private UTM utm;
+    private String userAgent;
   }
 
   @lombok.Data public static class App {
     private String url;
     @JsonProperty("package") private String packageName;
-  }
-
-  @lombok.Data public static class Device {
-    private String country;
-    private String browser;
   }
 
   @lombok.Data public static class UTM {
