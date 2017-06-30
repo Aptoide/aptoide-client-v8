@@ -23,7 +23,6 @@ import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
@@ -37,19 +36,19 @@ public class TimelinePresenter implements Presenter {
   private final TimelineView view;
   private final SocialManager socialManager;
   private final CrashReport crashReport;
-  private final FragmentNavigator fragmentNavigator;
+  private final TimelineNavigation timelineNavigation;
   private final PermissionManager permissionManager;
   private final PermissionService permissionRequest;
   private final InstallManager installManager;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull SocialManager socialManager,
-      CrashReport crashReport, FragmentNavigator fragmentNavigator,
+      CrashReport crashReport, TimelineNavigation timelineNavigation,
       PermissionManager permissionManager, PermissionService permissionRequest,
       InstallManager installManager) {
     this.view = cardsView;
     this.socialManager = socialManager;
     this.crashReport = crashReport;
-    this.fragmentNavigator = fragmentNavigator;
+    this.timelineNavigation = timelineNavigation;
     this.permissionManager = permissionManager;
     this.permissionRequest = permissionRequest;
     this.installManager = installManager;
@@ -145,18 +144,16 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.RECOMMENDATION)) {
             Recommendation card = (Recommendation) cardTouchEvent.getCard();
-            fragmentNavigator.navigateTo(
-                AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
-                    AppViewFragment.OpenType.OPEN_ONLY));
+            timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
+                AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.STORE) || cardTouchEvent.getCard()
               .getType()
               .equals(CardType.SOCIAL_STORE)) {
             StoreAppCardTouchEvent storeCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
-            fragmentNavigator.navigateTo(
-                AppViewFragment.newInstance(storeCardTouchEvent.getPackageName(),
-                    AppViewFragment.OpenType.OPEN_ONLY));
+            timelineNavigation.navigateToAppView(storeCardTouchEvent.getPackageName(),
+                AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.UPDATE)) {
@@ -179,25 +176,22 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.POPULAR_APP)) {
             PopularApp card = (PopularApp) cardTouchEvent.getCard();
-            fragmentNavigator.navigateTo(
-                AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
-                    AppViewFragment.OpenType.OPEN_ONLY));
+            timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
+                AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
               .getType()
               .equals(CardType.SOCIAL_INSTALL)) {
             RatedRecommendation card = (RatedRecommendation) cardTouchEvent.getCard();
-            fragmentNavigator.navigateTo(
-                AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
-                    AppViewFragment.OpenType.OPEN_ONLY));
+            timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
+                AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
             AggregatedRecommendation card = (AggregatedRecommendation) cardTouchEvent.getCard();
-            fragmentNavigator.navigateTo(
-                AppViewFragment.newInstance(card.getAppId(), card.getPackageName(),
-                    AppViewFragment.OpenType.OPEN_ONLY));
+            timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
+                AppViewFragment.OpenType.OPEN_ONLY);
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

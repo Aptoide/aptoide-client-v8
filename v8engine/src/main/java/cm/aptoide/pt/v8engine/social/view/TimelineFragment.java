@@ -33,6 +33,7 @@ import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.SocialService;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
+import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
@@ -122,16 +123,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     attachPresenter(new TimelinePresenter(this, new SocialManager(
-            new SocialService(getArguments().getString(ACTION_KEY),
-                ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-                ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-                WebService.getDefaultConverter(),
-                new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-                RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
-                Integer.MAX_VALUE, tokenInvalidator, sharedPreferences), installManager,
-            new DownloadFactory()), CrashReport.getInstance(), getFragmentNavigator(),
-            new PermissionManager(), (PermissionService) getContext(), installManager),
-        savedInstanceState);
+        new SocialService(getArguments().getString(ACTION_KEY),
+            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(),
+            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
+            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
+            Integer.MAX_VALUE, tokenInvalidator, sharedPreferences), installManager,
+        new DownloadFactory()), CrashReport.getInstance(),
+        new TimelineNavigator(getFragmentNavigator()), new PermissionManager(),
+        (PermissionService) getContext(), installManager), savedInstanceState);
   }
 
   @Override public void showCards(List<Post> cards) {
