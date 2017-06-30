@@ -53,7 +53,7 @@ import cm.aptoide.pt.v8engine.timeline.TimelineRepository;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
@@ -290,7 +290,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
                 tokenInvalidator, V8Engine.getConfiguration()
                 .getAppId(), sharedPreferences, connectivityManager, telephonyManager),
-            new TimelineNavigator(getFragmentNavigator(), getContext().getString(R.string.likes)),
+            new AppsTimelineNavigator(getFragmentNavigator(), getContext().getString(R.string.likes)),
             getContext().getResources(), Application.getConfiguration()
             .getMarketName(), windowManager);
 
