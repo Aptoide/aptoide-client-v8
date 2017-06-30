@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.updates.rollback;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -16,12 +17,14 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.FooterRowDisplayable;
+import com.crashlytics.android.answers.Answers;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +41,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
   private TextView emptyData;
   private Installer installManager;
+  private Analytics analytics;
 
   public RollbackFragment() {
   }
@@ -77,6 +81,11 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    analytics = Analytics.getInstance();
+  }
+
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
   }
@@ -87,7 +96,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     setHasOptionsMenu(true);
 
     installManager =
-        new InstallerFactory(new MinimalAdMapper()).create(getContext(), InstallerFactory.ROLLBACK);
+        new InstallerFactory(new MinimalAdMapper(), Answers.getInstance(), analytics).create(
+            getContext(), InstallerFactory.ROLLBACK);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
