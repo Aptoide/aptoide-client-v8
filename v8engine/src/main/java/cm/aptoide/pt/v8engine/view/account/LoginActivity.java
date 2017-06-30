@@ -23,7 +23,7 @@ public class LoginActivity extends LoginBottomSheetActivity {
     loadExtras(getIntent());
 
     if (savedInstanceState == null) {
-      getFragmentNavigator().navigateTo(
+      getFragmentNavigator().navigateToWithoutBackSave(
           LoginSignUpFragment.newInstance(false, true, false, accountType, authType, isNewAccount));
     }
   }

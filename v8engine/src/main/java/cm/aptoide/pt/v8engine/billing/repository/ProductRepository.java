@@ -6,28 +6,30 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.v8engine.billing.Payment;
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
+import java.util.Collections;
 import java.util.List;
 import rx.Observable;
 import rx.Single;
 
 public abstract class ProductRepository {
 
-  private final PaymentFactory paymentFactory;
+  private final PaymentMethodMapper paymentMethodMapper;
 
-  protected ProductRepository(PaymentFactory paymentFactory) {
-    this.paymentFactory = paymentFactory;
+  protected ProductRepository(PaymentMethodMapper paymentMethodMapper) {
+    this.paymentMethodMapper = paymentMethodMapper;
   }
 
   public abstract Single<Purchase> getPurchase(Product product);
 
-  public abstract Single<List<Payment>> getPayments(Product product);
+  public abstract Single<List<PaymentMethod>> getPaymentMethods(Product product);
 
-  protected Single<List<Payment>> convertResponseToPayment(List<PaymentServiceResponse> payments) {
-    return Observable.from(payments)
-        .map(paymentService -> paymentFactory.create(paymentService))
+  protected Single<List<PaymentMethod>> convertResponsesToPaymentMethods(
+      List<PaymentServiceResponse> payments) {
+    return Observable.from((payments == null) ? Collections.emptyList() : payments)
+        .map(paymentService -> paymentMethodMapper.map(paymentService))
         .toList()
         .toSingle();
   }

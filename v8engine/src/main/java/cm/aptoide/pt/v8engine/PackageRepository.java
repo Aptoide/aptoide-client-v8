@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -98,6 +99,18 @@ public class PackageRepository {
       try {
         final PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
         return Single.just(packageInfo.versionCode);
+      } catch (Exception e) {
+        return Single.error(e);
+      }
+    });
+  }
+
+  public Single<String> getPackageLabel(String packageName) {
+    return Single.defer(() -> {
+      try {
+        final ApplicationInfo packageInfo = packageManager.getApplicationInfo(packageName, 0);
+        return Single.just(packageManager.getApplicationLabel(packageInfo)
+            .toString());
       } catch (Exception e) {
         return Single.error(e);
       }

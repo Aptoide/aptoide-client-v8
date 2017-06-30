@@ -176,7 +176,7 @@ public class HomeFragment extends StoreFragment {
     if (toolbar != null) {
       toolbar.setNavigationOnClickListener(null);
     }
-    unregisterBackClickHandler(backClickHandler);
+    unregisterClickHandler(backClickHandler);
     super.onDestroyView();
   }
 
@@ -253,7 +253,7 @@ public class HomeFragment extends StoreFragment {
         return false;
       }
     };
-    registerBackClickHandler(backClickHandler);
+    registerClickHandler(backClickHandler);
   }
 
   private void setupNavigationView() {
