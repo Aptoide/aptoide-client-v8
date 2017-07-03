@@ -64,8 +64,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
 
     attachPresenter(
         new PayPalPresenter(this, billing, productProvider, paymentAnalytics, paymentNavigator,
-            AndroidSchedulers.mainThread()),
-        savedInstanceState);
+            AndroidSchedulers.mainThread()), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

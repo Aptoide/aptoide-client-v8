@@ -23,8 +23,6 @@ import rx.Observable;
 
 public class PaymentNavigator {
 
-  public static final String EXTRA_PAYMENT_ID =
-      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PAYMENT_ID";
   private final PurchaseBundleMapper bundleMapper;
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
@@ -38,16 +36,20 @@ public class PaymentNavigator {
 
   public void navigateToAuthorizedPaymentView(PaymentMethod paymentMethod, Product product) {
     if (paymentMethod instanceof BoaCompraPaymentMethod) {
-      activityNavigator.navigateTo(BoaCompraActivity.class,
-          getProductBundle(paymentMethod, product));
+      fragmentNavigator.navigateTo(
+          BoaCompraFragment.create(getProductBundle(product), paymentMethod.getId()));
     } else {
       throw new IllegalArgumentException("Invalid authorized payment.");
     }
   }
 
+  public void popAuthorizedPaymentView() {
+    fragmentNavigator.popBackStack();
+  }
+
   public void navigateToLocalPaymentView(PaymentMethod paymentMethod, Product product) {
     if (paymentMethod instanceof PayPalPaymentMethod) {
-      fragmentNavigator.navigateTo(PayPalFragment.create(getProductBundle(paymentMethod, product)));
+      fragmentNavigator.navigateTo(PayPalFragment.create(getProductBundle(product)));
     } else {
       throw new IllegalArgumentException("Invalid local payment.");
     }
@@ -91,20 +93,17 @@ public class PaymentNavigator {
     activityNavigator.finish(Activity.RESULT_CANCELED, bundleMapper.mapCancellation());
   }
 
-  private Bundle getProductBundle(PaymentMethod paymentMethod, Product product) {
-    Bundle bundle = new Bundle();
-    bundle.putInt(EXTRA_PAYMENT_ID, paymentMethod.getId());
+  private Bundle getProductBundle(Product product) {
     if (product instanceof InAppProduct) {
-      bundle = ProductProvider.createBundle(((InAppProduct) product).getApiVersion(),
+      return ProductProvider.createBundle(((InAppProduct) product).getApiVersion(),
           ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(),
           ((InAppProduct) product).getSku(), ((InAppProduct) product).getSku());
     } else if (product instanceof PaidAppProduct) {
-      bundle = ProductProvider.createBundle(((PaidAppProduct) product).getAppId(),
+      return ProductProvider.createBundle(((PaidAppProduct) product).getAppId(),
           ((PaidAppProduct) product).getStoreName(), ((PaidAppProduct) product).isSponsored());
     } else {
       throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
     }
-    return bundle;
   }
 
   private PayPalResult map(ActivityNavigator.Result result) {

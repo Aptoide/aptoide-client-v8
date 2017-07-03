@@ -138,11 +138,10 @@ public class PaymentPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(purchase -> view.hideTransactionLoading())
-        .subscribe(purchase -> paymentNavigator.popPaymentViewWithResult(purchase),
-            throwable -> {
-              view.hideTransactionLoading();
-              showError(throwable);
-            });
+        .subscribe(purchase -> paymentNavigator.popPaymentViewWithResult(purchase), throwable -> {
+          view.hideTransactionLoading();
+          showError(throwable);
+        });
   }
 
   private void handleTapOutsideEvent() {
@@ -178,7 +177,7 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(created -> view.paymentSelection())
         .flatMapSingle(paymentMethodViewModel -> productProvider.getProduct()
-            .flatMap(product -> billing.getPaymentMethods(paymentMethodViewModel.getId(), product)))
+            .flatMap(product -> billing.getPaymentMethod(paymentMethodViewModel.getId(), product)))
         .flatMapCompletable(payment -> paymentMethodSelector.selectPaymentMethod(payment))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

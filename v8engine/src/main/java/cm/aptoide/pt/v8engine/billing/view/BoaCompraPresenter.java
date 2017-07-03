@@ -19,20 +19,22 @@ public class BoaCompraPresenter implements Presenter {
 
   private final BoaCompraView view;
   private final Billing billing;
-  private final int paymentId;
   private final PaymentAnalytics analytics;
   private final PaymentSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
+  private final PaymentNavigator navigator;
+  private final int paymentId;
 
-  public BoaCompraPresenter(BoaCompraView view, Billing billing, int paymentId,
-      PaymentAnalytics analytics, PaymentSyncScheduler syncScheduler,
-      ProductProvider productProvider) {
+  public BoaCompraPresenter(BoaCompraView view, Billing billing, PaymentAnalytics analytics,
+      PaymentSyncScheduler syncScheduler, ProductProvider productProvider,
+      PaymentNavigator navigator, int paymentId) {
     this.view = view;
     this.billing = billing;
-    this.paymentId = paymentId;
     this.analytics = analytics;
     this.syncScheduler = syncScheduler;
     this.productProvider = productProvider;
+    this.navigator = navigator;
+    this.paymentId = paymentId;
   }
 
   @Override public void present() {
@@ -62,14 +64,14 @@ public class BoaCompraPresenter implements Presenter {
         .flatMapSingle(__ -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(product -> view.showLoading())
-        .flatMapCompletable(product -> billing.getBoaCompraAuthorization(paymentId, product)
+        .flatMapCompletable(product -> billing.getBoaCompraAuthorization(product)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess(authorization -> view.loadBoaCompraConsentWebsite(authorization.getUrl(),
                 authorization.getRedirectUrl()))
-            .flatMapCompletable(__ -> billing.processBoaCompraPayment(paymentId, product))
+            .flatMapCompletable(__ -> billing.processBoaCompraPayment(product))
             .onErrorResumeNext(throwable -> {
               if (throwable instanceof PaymentMethodAlreadyAuthorizedException) {
-                return billing.processBoaCompraPayment(paymentId, product);
+                return billing.processBoaCompraPayment(product);
               }
               return Completable.error(throwable);
             })
@@ -135,7 +137,7 @@ public class BoaCompraPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> view.dismiss())
+        .doOnNext(dismiss -> navigator.popAuthorizedPaymentView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

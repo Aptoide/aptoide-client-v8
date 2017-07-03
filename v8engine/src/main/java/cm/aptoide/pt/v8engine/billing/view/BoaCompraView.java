@@ -26,8 +26,6 @@ public interface BoaCompraView extends View {
 
   Observable<Void> boaCompraConsentWebsiteLoaded();
 
-  void dismiss();
-
   void showError();
 
   Observable<Void> errorDismissedEvent();

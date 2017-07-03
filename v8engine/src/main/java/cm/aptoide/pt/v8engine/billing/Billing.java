@@ -81,18 +81,26 @@ public class Billing {
         .getPaymentMethods(product);
   }
 
-  public Completable processBoaCompraPayment(int paymentId, Product product) {
-    return getPaymentMethods(paymentId, product).flatMapCompletable(
-        payment -> ((BoaCompraPaymentMethod) payment).authorizedProcess(product));
+  public Single<PaymentMethod> getPaymentMethod(int paymentId, Product product) {
+    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments)
+        .filter(payment -> payment.getId() == paymentId)
+        .switchIfEmpty(Observable.error(
+            new PaymentFailureException("Payment " + paymentId + " not available"))))
+        .first()
+        .toSingle();
   }
 
-  public Single<BoaCompraAuthorization> getBoaCompraAuthorization(int paymentId, Product product) {
-    return getPaymentMethods(paymentId, product).flatMap(
-        payment -> ((BoaCompraPaymentMethod) payment).getAuthorization());
+  public Completable processBoaCompraPayment(Product product) {
+    return getBoaCompraPaymentMethod(product).flatMapCompletable(
+        payment -> payment.authorizedProcess(product));
+  }
+
+  public Single<BoaCompraAuthorization> getBoaCompraAuthorization(Product product) {
+    return getBoaCompraPaymentMethod(product).flatMap(payment -> payment.getAuthorization());
   }
 
   public Completable processPayment(int paymentId, Product product) {
-    return getPaymentMethods(paymentId, product).flatMapCompletable(
+    return getPaymentMethod(paymentId, product).flatMapCompletable(
         payment -> payment.process(product));
   }
 
@@ -124,12 +132,11 @@ public class Billing {
         });
   }
 
-  public Single<PaymentMethod> getPaymentMethods(int paymentId, Product product) {
-    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments)
-        .filter(payment -> payment.getId() == paymentId)
-        .switchIfEmpty(Observable.error(
-            new PaymentFailureException("Payment " + paymentId + " not available"))))
+  private Single<BoaCompraPaymentMethod> getBoaCompraPaymentMethod(Product product) {
+    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
+        .filter(payment -> payment instanceof BoaCompraPaymentMethod)
         .first()
+        .cast(BoaCompraPaymentMethod.class)
         .toSingle();
   }
 }

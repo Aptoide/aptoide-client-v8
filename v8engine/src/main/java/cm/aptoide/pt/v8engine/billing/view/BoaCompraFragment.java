@@ -1,14 +1,11 @@
-/*
- * Copyright (c) 2017.
- * Modified by Marcelo Benites on 26/01/2017.
- */
-
 package cm.aptoide.pt.v8engine.billing.view;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -16,12 +13,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.BaseActivity;
+import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public class BoaCompraActivity extends BaseActivity implements BoaCompraView {
+public class BoaCompraFragment extends PermissionServiceFragment implements BoaCompraView {
+
+  public static final String EXTRA_PAYMENT_ID =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PAYMENT_ID";
 
   private WebView webView;
   private View progressBarContainer;
@@ -30,45 +30,68 @@ public class BoaCompraActivity extends BaseActivity implements BoaCompraView {
   private PublishRelay<Void> redirectUrlSubject;
   private PublishRelay<Void> backButtonSelectionSubject;
   private ClickHandler clickHandler;
+  private int paymentId;
 
-  @SuppressLint("SetJavaScriptEnabled") @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
+  public static Fragment create(Bundle bundle, int paymentId) {
+    final BoaCompraFragment fragment = new BoaCompraFragment();
+    bundle.putInt(EXTRA_PAYMENT_ID, paymentId);
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_web_authorization);
-
-    webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
-    webView.getSettings()
-        .setJavaScriptEnabled(true);
-    webView.setWebChromeClient(new WebChromeClient());
-    progressBarContainer = findViewById(R.id.activity_web_authorization_preogress_bar);
-    unknownErrorDialog =
-        new RxAlertDialog.Builder(this).setMessage(R.string.all_message_general_error)
-            .setPositiveButton(R.string.ok)
-            .build();
     mainUrlSubject = PublishRelay.create();
     redirectUrlSubject = PublishRelay.create();
     backButtonSelectionSubject = PublishRelay.create();
+    paymentId = getArguments().getInt(EXTRA_PAYMENT_ID);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_boa_compra, container, false);
+  }
+
+  @SuppressLint("SetJavaScriptEnabled") @Override
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    webView = (WebView) view.findViewById(R.id.activity_boa_compra_authorization_web_view);
+    webView.getSettings()
+        .setJavaScriptEnabled(true);
+    webView.setWebChromeClient(new WebChromeClient());
+    progressBarContainer = view.findViewById(R.id.activity_web_authorization_preogress_bar);
+    unknownErrorDialog =
+        new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
+            .setPositiveButton(R.string.ok)
+            .build();
     clickHandler = () -> {
       backButtonSelectionSubject.call(null);
       return false;
     };
     registerClickHandler(clickHandler);
 
-    attachPresenter(new BoaCompraPresenter(this, ((V8Engine) getApplicationContext()).getBilling(),
-        getIntent().getIntExtra(PaymentNavigator.EXTRA_PAYMENT_ID, 0),
-        ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
-        ((V8Engine) getApplicationContext()).getPaymentSyncScheduler(),
-        ProductProvider.fromBundle(((V8Engine) getApplicationContext()).getBilling(),
-            getIntent().getExtras())), savedInstanceState);
+    attachPresenter(
+        new BoaCompraPresenter(this, ((V8Engine) getContext().getApplicationContext()).getBilling(),
+            ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics(),
+            ((V8Engine) getContext().getApplicationContext()).getPaymentSyncScheduler(),
+            ProductProvider.fromBundle(
+                ((V8Engine) getContext().getApplicationContext()).getBilling(), getArguments()),
+            new PaymentNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+                getActivityNavigator(), getFragmentNavigator()), paymentId), savedInstanceState);
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
+  @Override public void onDestroyView() {
     ((ViewGroup) webView.getParent()).removeView(webView);
     webView.setWebViewClient(null);
     webView.destroy();
+    webView = null;
     unknownErrorDialog.dismiss();
+    unknownErrorDialog = null;
     unregisterClickHandler(clickHandler);
+    clickHandler = null;
+    progressBarContainer = null;
+    super.onDestroyView();
   }
 
   @Override public void showLoading() {
@@ -109,10 +132,6 @@ public class BoaCompraActivity extends BaseActivity implements BoaCompraView {
 
   @Override public Observable<Void> boaCompraConsentWebsiteLoaded() {
     return mainUrlSubject;
-  }
-
-  @Override public void dismiss() {
-    finish();
   }
 
   @Override public void showError() {

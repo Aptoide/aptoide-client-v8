@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
 import rx.Observable;
