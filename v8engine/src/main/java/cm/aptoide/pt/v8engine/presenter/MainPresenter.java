@@ -99,7 +99,7 @@ public class MainPresenter implements Presenter {
         .flatMap(lifecycleEvent -> rootInstallationRetryHandler.retries()
             .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .distinctUntilChanged(installationProgresses -> installationProgresses.size())
-        .filter(installationProgresses -> installationProgresses.size() > 0)
+        .filter(installationProgresses -> !installationProgresses.isEmpty())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(installationProgresses -> {
@@ -110,13 +110,16 @@ public class MainPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(lifecycleEvent -> installManager.getTimedOutInstallations())
-        .filter(installationProgresses -> installationProgresses.size() == 0)
+        .filter(installationProgresses -> !installationProgresses.isEmpty())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(noInstallErrors -> view.dismissInstallationError(),
             throwable -> crashReport.log(throwable));
 
-    installCompletedNotifier.getWatcher()
+    view.getLifecycle()
+        .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .flatMap(event -> installCompletedNotifier.getWatcher())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(allInstallsCompleted -> view.showInstallationSuccessMessage());
 
     view.getLifecycle()
