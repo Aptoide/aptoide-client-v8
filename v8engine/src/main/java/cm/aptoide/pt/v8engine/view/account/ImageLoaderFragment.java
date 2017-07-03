@@ -5,39 +5,12 @@
 
 package cm.aptoide.pt.v8engine.view.account;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
-import android.text.TextUtils;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
-import com.jakewharton.rxbinding.view.RxView;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
 /**
  * Created by pedroribeiro on 02/12/16.
  */
-public abstract class ImageLoaderFragment extends PermissionServiceFragment {
-
+public abstract class ImageLoaderFragment {
+  // public abstract class ImageLoaderFragment extends PermissionServiceFragment {
+/*
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;
   private static final String EXTRA_FILE_NAME = "file_name";
@@ -299,4 +272,6 @@ public abstract class ImageLoaderFragment extends PermissionServiceFragment {
       return size;
     }
   }
+  */
 }
+

@@ -33,8 +33,7 @@ import rx.functions.Action0;
 /**
  * Created by marcelobenites on 18/01/17.
  */
-
-public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
+@Deprecated public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
     implements PermissionService {
 
   private static final String TAG = PermissionServiceActivity.class.getName();

@@ -1,15 +1,16 @@
 package cm.aptoide.pt.v8engine.view.account.user;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.account.UriToPathResolver;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeoutException;
 import rx.Completable;
@@ -21,27 +22,28 @@ public class ManageUserPresenter implements Presenter {
   private final CrashReport crashReport;
   private final AptoideAccountManager accountManager;
   private final ThrowableToStringMapper errorMapper;
-  private final FragmentNavigator fragmentNavigator;
+  private final ManageUserNavigator navigator;
   private final ManageUserFragment.ViewModel userData;
   private final boolean isEditProfile;
+  private final UriToPathResolver uriToPathResolver;
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
       AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
-      FragmentNavigator fragmentNavigator, ManageUserFragment.ViewModel userData,
-      boolean isEditProfile) {
+      ManageUserNavigator navigator, ManageUserFragment.ViewModel userData, boolean isEditProfile,
+      UriToPathResolver uriToPathResolver) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.errorMapper = errorMapper;
-    this.fragmentNavigator = fragmentNavigator;
+    this.navigator = navigator;
     this.userData = userData;
     this.isEditProfile = isEditProfile;
+    this.uriToPathResolver = uriToPathResolver;
   }
 
   @Override public void present() {
     handleSaveDataClick();
     handleCancelClick();
-    handleSelectImageClick();
     onViewCreatedLoadUserData();
   }
 
@@ -60,18 +62,26 @@ public class ManageUserPresenter implements Presenter {
             .first()
             .toSingle())
         .map(userAccount -> {
-          if (userData == null && isEditProfile) {
-            return new ManageUserFragment.ViewModel(userAccount.getNickname(), null,
-                userAccount.getAvatar());
-          } else {
+
+          // in case of configuration changes, after an edition, this is prefered
+          if (userData.hasData()) {
             return userData;
           }
+
+          // if it is an edition and not after a configuration change event
+          // after a configuration change this values could differ
+          if (isEditProfile) {
+            return new ManageUserFragment.ViewModel(userAccount.getNickname(),
+                userAccount.getAvatar());
+          }
+
+          return null;
         })
         .filter(data -> data != null)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(data -> {
-          view.setUserImage(data.getImagePathToView());
+          view.loadImageStateless(data.getPictureUri());
           view.setUserName(data.getName());
         }, err -> crashReport.log(err));
   }
@@ -84,15 +94,14 @@ public class ManageUserPresenter implements Presenter {
             .flatMap(userData -> saveUserData(userData))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        .subscribe();
   }
 
   @NonNull private Observable<Void> saveUserData(ManageUserFragment.ViewModel userData) {
     return updateUserAccount(userData).observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> view.dismissProgressDialog())
-        .doOnCompleted(() -> sendAnalytics(userData.hasImageToView()))
-        .doOnCompleted(() -> navigateAway(isEditProfile))
+        .doOnCompleted(() -> sendAnalytics(userData))
+        .doOnCompleted(() -> navigator.navigateAway(isEditProfile))
         .onErrorResumeNext(err -> handleSaveUserDataError(err, isEditProfile))
         .toObservable();
   }
@@ -101,17 +110,7 @@ public class ManageUserPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonClick()
-            .doOnNext(__2 -> navigateBack()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void handleSelectImageClick() {
-    view.getLifecycle()
-        .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.selectUserImageClick()
-            .doOnNext(__2 -> view.showLoadImageDialog()))
+            .doOnNext(__2 -> navigator.back()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -123,7 +122,7 @@ public class ManageUserPresenter implements Presenter {
     if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {
       // navigate away
       errorHandler = view.showErrorMessage(message)
-          .doOnCompleted(() -> navigateAway(isEditProfile));
+          .doOnCompleted(() -> navigator.navigateAway(isEditProfile));
     } else {
       // show message but do not navigate
       errorHandler = view.showErrorMessage(message);
@@ -133,38 +132,15 @@ public class ManageUserPresenter implements Presenter {
         .andThen(errorHandler);
   }
 
-  private void sendAnalytics(boolean hasImage) {
-    Analytics.Account.createdUserProfile(hasImage);
-  }
-
-  private void navigateAway(boolean isEditProfile) {
-    final boolean showPrivacyConfigs = Application.getConfiguration()
-        .isCreateStoreAndSetUserPrivacyAvailable();
-    if (isEditProfile) {
-      navigateBack();
-    } else if (showPrivacyConfigs) {
-      navigateToProfileStepOne();
-    } else {
-      navigateToHome();
-    }
-  }
-
-  private void navigateToProfileStepOne() {
-    fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(ProfileStepOneFragment.newInstance());
-  }
-
-  private void navigateToHome() {
-    fragmentNavigator.navigateToHomeCleaningBackStack();
-  }
-
-  private void navigateBack() {
-    fragmentNavigator.popBackStack();
+  private void sendAnalytics(ManageUserFragment.ViewModel userData) {
+    Analytics.Account.createdUserProfile(!TextUtils.isEmpty(userData.getPictureUri()));
   }
 
   private Completable updateUserAccount(ManageUserFragment.ViewModel userData) {
-    if (userData.hasImageToUpload()) {
-      return accountManager.updateAccount(userData.getName(), userData.getImagePathToUpload());
+    if (userData.hasNewPicture()) {
+      final String mediaStoragePath =
+          uriToPathResolver.getMediaStoragePath(Uri.parse(userData.getPictureUri()));
+      return accountManager.updateAccount(userData.getName(), mediaStoragePath);
     }
     return accountManager.updateAccount(userData.getName());
   }
