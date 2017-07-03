@@ -32,8 +32,8 @@ public class DownloadInstallationProvider implements InstallationProvider {
   private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
   private final MinimalAdMapper adMapper;
-  private InstalledRepository installedRepository;
-  private StoredMinimalAdAccessor storedMinimalAdAccessor;
+  private final InstalledRepository installedRepository;
+  private final StoredMinimalAdAccessor storedMinimalAdAccessor;
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
       DownloadAccessor downloadAccessor, InstalledRepository installedRepository,
