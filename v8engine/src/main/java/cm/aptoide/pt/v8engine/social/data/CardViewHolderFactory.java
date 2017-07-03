@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedRecommendationViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AppUpdateViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.CardViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.MediaViewHolder;
@@ -91,6 +92,10 @@ public class CardViewHolderFactory {
       case AGGREGATED_SOCIAL_INSTALL:
         return new AggregatedRecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_recommendation_item, parent, false),
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory, minimalCardViewFactory);
+      case AGGREGATED_SOCIAL_STORE:
+        return new AggregatedStoreViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_aggregated_store_item, parent, false),
             cardTouchEventPublishSubject, dateCalculator, spannableFactory, minimalCardViewFactory);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())

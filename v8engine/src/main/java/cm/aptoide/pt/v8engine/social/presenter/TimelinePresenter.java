@@ -150,7 +150,9 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.STORE) || cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.SOCIAL_STORE)) {
+              .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
             StoreAppCardTouchEvent storeCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
             timelineNavigation.navigateToAppView(storeCardTouchEvent.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);

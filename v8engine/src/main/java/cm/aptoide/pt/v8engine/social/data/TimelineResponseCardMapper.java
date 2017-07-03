@@ -5,6 +5,8 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstall;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstallTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialStoreLatestApps;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialStoreLatestAppsTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideo;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideoTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdateTimelineItem;
@@ -248,6 +250,23 @@ public class TimelineResponseCardMapper {
             .getAvg(), aggregatedSocialInstall.getApp()
             .getPackageName(), aggregatedSocialInstall.getDate(), abUrl,
             CardType.AGGREGATED_SOCIAL_INSTALL));
+      } else if (item instanceof AggregatedSocialStoreLatestAppsTimelineItem) {
+        final AggregatedSocialStoreLatestApps aggregatedSocialStoreLatestApps =
+            ((AggregatedSocialStoreLatestAppsTimelineItem) item).getData();
+        List<Poster> posters = new ArrayList<>();
+        for (UserSharerTimeline sharer : aggregatedSocialStoreLatestApps.getSharers()) {
+          posters.add(new Poster(sharer.getUser(), sharer.getStore()));
+        }
+        cards.add(new AggregatedStore("n/a", posters,
+            aggregatedSocialStoreLatestApps.getMinimalCardList(),
+            aggregatedSocialStoreLatestApps.getSharedStore()
+                .getName(), aggregatedSocialStoreLatestApps.getSharedStore()
+            .getAvatar(), aggregatedSocialStoreLatestApps.getSharedStore()
+            .getStats()
+            .getSubscribers(), aggregatedSocialStoreLatestApps.getSharedStore()
+            .getStats()
+            .getApps(), aggregatedSocialStoreLatestApps.getDate(),
+            aggregatedSocialStoreLatestApps.getApps(), abUrl, CardType.AGGREGATED_SOCIAL_STORE));
       }
     }
 
