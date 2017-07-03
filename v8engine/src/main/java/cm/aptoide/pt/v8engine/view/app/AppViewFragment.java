@@ -481,8 +481,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               .getRating() != null ? app.getStats()
               .getRating()
               .getAvg() : 0f), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW,
-          app.getStore()
-              .getId());
+          app != null ? app.getStore()
+              .getId() : null);
       appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {
