@@ -28,10 +28,6 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .flatMap(installs -> filterCompleted(installs));
   }
 
-  public Observable<List<Installed>> getAllInstalledSorted() {
-    return getAllInstalledSorted(Sort.ASCENDING);
-  }
-
   /**
    * @return all the entries from this table even not installed apps
    * if you want only installed apps consider using the install manager
@@ -40,10 +36,10 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
     return database.getAll(Installed.class);
   }
 
-  public Observable<List<Installed>> getAllInstalledSorted(Sort sort) {
+  public Observable<List<Installed>> getAllInstalledSorted() {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
-            .findAllSorted(Installed.NAME, sort)
+            .findAllSorted(Installed.NAME, Sort.ASCENDING)
             .asObservable()
             .unsubscribeOn(RealmSchedulers.getScheduler()))
         .flatMap(installed -> database.copyFromRealm(installed))
