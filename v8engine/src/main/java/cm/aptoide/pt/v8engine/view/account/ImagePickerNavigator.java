@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.account.store;
+package cm.aptoide.pt.v8engine.view.account;
 
 import android.app.Activity;
 import android.content.Intent;

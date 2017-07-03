@@ -33,11 +33,12 @@ import cm.aptoide.pt.v8engine.presenter.CompositePresenter;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.account.ImagePickerErrorHandler;
+import cm.aptoide.pt.v8engine.view.account.ImagePickerNavigator;
 import cm.aptoide.pt.v8engine.view.account.ImagePickerPresenter;
 import cm.aptoide.pt.v8engine.view.account.ImageValidator;
 import cm.aptoide.pt.v8engine.view.account.PhotoFileGenerator;
 import cm.aptoide.pt.v8engine.view.account.UriToPathResolver;
-import cm.aptoide.pt.v8engine.view.account.store.exception.InvalidImageException;
+import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.dialog.ImagePickerDialog;
 import cm.aptoide.pt.v8engine.view.permission.AccountPermissionProvider;
@@ -228,9 +229,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver,
             imagePickerNavigator);
 
+    final ManageStoreNavigator manageStoreNavigator =
+        new ManageStoreNavigator(getFragmentNavigator(), goToHome);
+
     final ManageStorePresenter presenter =
-        new ManageStorePresenter(this, crashReport, goToHome, storeManager, getFragmentNavigator(),
-            getResources(), uriToPathResolver, packageName);
+        new ManageStorePresenter(this, crashReport, storeManager, getResources(), uriToPathResolver,
+            packageName, manageStoreNavigator);
 
     attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)), null);
   }

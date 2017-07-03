@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.account.store.exception;
+package cm.aptoide.pt.v8engine.view.account.exception;
 
 import java.util.List;
 

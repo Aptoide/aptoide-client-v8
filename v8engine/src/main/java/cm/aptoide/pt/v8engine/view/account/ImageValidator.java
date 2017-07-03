@@ -2,8 +2,7 @@ package cm.aptoide.pt.v8engine.view.account;
 
 import android.graphics.Bitmap;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.account.store.ImageInfo;
-import cm.aptoide.pt.v8engine.view.account.store.exception.InvalidImageException;
+import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

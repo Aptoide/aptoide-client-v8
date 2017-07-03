@@ -9,33 +9,30 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.UriToPathResolver;
-import cm.aptoide.pt.v8engine.view.account.store.exception.InvalidImageException;
-import cm.aptoide.pt.v8engine.view.account.store.exception.StoreCreationException;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
+import cm.aptoide.pt.v8engine.view.account.exception.StoreCreationException;
 import rx.Completable;
 
 public class ManageStorePresenter implements Presenter {
 
   private final ManageStoreView view;
   private final CrashReport crashReport;
-  private final boolean goBackToHome;
   private final StoreManager storeManager;
-  private final FragmentNavigator fragmentNavigator;
   private final Resources resources;
   private final UriToPathResolver uriToPathResolver;
   private final String applicationPackageName;
+  private final ManageStoreNavigator navigator;
 
-  public ManageStorePresenter(ManageStoreView view, CrashReport crashReport, boolean goBackToHome,
-      StoreManager storeManager, FragmentNavigator fragmentNavigator, Resources resources,
-      UriToPathResolver uriToPathResolver, String applicationPackageName) {
+  public ManageStorePresenter(ManageStoreView view, CrashReport crashReport,
+      StoreManager storeManager, Resources resources, UriToPathResolver uriToPathResolver,
+      String applicationPackageName, ManageStoreNavigator navigator) {
     this.view = view;
     this.crashReport = crashReport;
-    this.goBackToHome = goBackToHome;
     this.storeManager = storeManager;
-    this.fragmentNavigator = fragmentNavigator;
     this.resources = resources;
     this.uriToPathResolver = uriToPathResolver;
     this.applicationPackageName = applicationPackageName;
+    this.navigator = navigator;
   }
 
   @Override public void present() {
@@ -55,13 +52,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
-            .doOnNext(__2 -> {
-              if (goBackToHome) {
-                navigateHome();
-                return;
-              }
-              navigateBack();
-            }))
+            .doOnNext(__2 -> navigator.navigate()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -71,15 +62,18 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveDataClick()
-            .retry()
-            .flatMap(storeModel -> handleSaveClick(storeModel).toObservable()))
+            .flatMap(storeModel -> handleSaveClick(storeModel).toObservable())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
   private Completable handleSaveClick(ManageStoreFragment.ViewModel storeModel) {
-    final String mediaStoragePath =
-        uriToPathResolver.getMediaStoragePath(Uri.parse(storeModel.getPictureUri()));
+    String mediaStoragePath = "";
+    if (storeModel.hasNewAvatar()) {
+      mediaStoragePath =
+          uriToPathResolver.getMediaStoragePath(Uri.parse(storeModel.getPictureUri()));
+    }
 
     Completable saveDataCompletable =
         storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
@@ -91,21 +85,7 @@ public class ManageStorePresenter implements Presenter {
     return Completable.fromAction(() -> view.showWaitProgressBar())
         .andThen(saveDataCompletable)
         .doOnCompleted(() -> view.dismissWaitProgressBar())
-        .doOnCompleted(() -> {
-          if (goBackToHome) {
-            navigateHome();
-          } else {
-            navigateBack();
-          }
-        });
-  }
-
-  private void navigateHome() {
-    fragmentNavigator.navigateToHomeCleaningBackStack();
-  }
-
-  private void navigateBack() {
-    fragmentNavigator.popBackStack();
+        .doOnCompleted(() -> navigator.navigate());
   }
 
   private Completable handleStoreCreationErrors(Throwable err) {

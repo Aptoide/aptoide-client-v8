@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.account.store;
+package cm.aptoide.pt.v8engine.view.account;
 
 public class ImageInfo {
   private final int height;

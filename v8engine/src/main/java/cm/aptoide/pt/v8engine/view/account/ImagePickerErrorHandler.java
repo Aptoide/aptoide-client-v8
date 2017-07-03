@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.account.store.exception.InvalidImageException;
+import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import rx.Observable;
 
 public class ImagePickerErrorHandler {

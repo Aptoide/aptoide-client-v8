@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.view.account;
 
 import android.content.DialogInterface;
 import cm.aptoide.pt.v8engine.presenter.View;
-import cm.aptoide.pt.v8engine.view.account.store.exception.InvalidImageException;
+import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import rx.Observable;
 
 public interface ImagePickerView extends View {
