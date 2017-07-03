@@ -18,6 +18,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -71,6 +73,7 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
     return interfaces.listAppVersions(body, bypassCache);
   }
 
+  @Data @EqualsAndHashCode(callSuper = true)
   public static class Body extends BaseBodyWithApp implements Endless {
 
     private Integer apkId;
