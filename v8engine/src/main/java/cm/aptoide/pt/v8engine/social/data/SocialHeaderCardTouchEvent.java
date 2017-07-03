@@ -7,9 +7,9 @@ package cm.aptoide.pt.v8engine.social.data;
 public class SocialHeaderCardTouchEvent extends CardTouchEvent {
   private final String storeName;
   private final String storeTheme;
-  private final long userId;
+  private final Long userId;
 
-  public SocialHeaderCardTouchEvent(Post card, String storeName, String storeTheme, long userId,
+  public SocialHeaderCardTouchEvent(Post card, String storeName, String storeTheme, Long userId,
       Type actionType) {
     super(card, actionType);
     this.storeName = storeName;
@@ -25,7 +25,7 @@ public class SocialHeaderCardTouchEvent extends CardTouchEvent {
     return storeTheme;
   }
 
-  public long getUserId() {
+  public Long getUserId() {
     return userId;
   }
 }

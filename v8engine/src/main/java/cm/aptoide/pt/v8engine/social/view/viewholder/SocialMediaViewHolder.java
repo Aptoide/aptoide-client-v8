@@ -7,11 +7,13 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
+import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialMedia;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -34,6 +36,7 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
   private final ImageView mediaThumbnail;
   private final TextView relatedTo;
   private final ImageView playIcon;
+  private final RelativeLayout cardHeader;
 
   public SocialMediaViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -53,6 +56,7 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
     this.mediaThumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
     this.relatedTo = (TextView) itemView.findViewById(R.id.app_name);
     this.playIcon = (ImageView) itemView.findViewById(R.id.play_button);
+    this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
   }
 
   @Override public void setCard(SocialMedia card, int position) {
@@ -82,6 +86,14 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
         .getName()));
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new SocialHeaderCardTouchEvent(card, card.getPoster()
+            .getStore()
+            .getName(), card.getPoster()
+            .getStore()
+            .getStoreTheme(), card.getPoster()
+            .getUser()
+            .getId(), CardTouchEvent.Type.HEADER)));
   }
 
   private void showHeaderSecondaryName(SocialMedia card) {

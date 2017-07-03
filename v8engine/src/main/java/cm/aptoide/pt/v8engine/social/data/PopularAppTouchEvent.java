@@ -8,7 +8,7 @@ public class PopularAppTouchEvent extends CardTouchEvent {
   private final long userId;
   private final String storeTheme;
 
-  public PopularAppTouchEvent(PopularApp card, long userId, String storeTheme, Type actionType) {
+  public PopularAppTouchEvent(PopularApp card, Long userId, String storeTheme, Type actionType) {
     super(card, actionType);
     this.userId = userId;
     this.storeTheme = storeTheme;

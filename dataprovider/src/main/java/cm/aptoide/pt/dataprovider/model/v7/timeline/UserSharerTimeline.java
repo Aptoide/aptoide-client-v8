@@ -38,7 +38,7 @@ public class UserSharerTimeline {
   }
 
   public static class User {
-    private final long id;
+    private final Long id;
     private String name;
     private String avatar;
 
@@ -64,7 +64,7 @@ public class UserSharerTimeline {
       this.avatar = avatar;
     }
 
-    public long getId() {
+    public Long getId() {
       return id;
     }
   }

@@ -115,40 +115,54 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.HEADER))
         .doOnNext(cardTouchEvent -> {
-          if (isMediaCard(cardTouchEvent)) {
+          if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.VIDEO) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.ARTICLE)) {
             ((Media) cardTouchEvent.getCard()).getPublisherLink()
                 .launch();
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.STORE)) {
-            StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
-            timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-          } else if (cardTouchEvent.getCard()
+              .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.SOCIAL_STORE)) {
+              .equals(CardType.SOCIAL_VIDEO)) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
           } else {
             if (cardTouchEvent.getCard()
                 .getType()
-                .equals(CardType.UPDATE)) {
-              AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
+                .equals(CardType.STORE)) {
+              StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
               timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
             } else if (cardTouchEvent.getCard()
                 .getType()
-                .equals(CardType.POPULAR_APP)) {
-              PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
-              timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
-                  popularAppTouchEvent.getStoreTheme());
-            } else if (cardTouchEvent.getCard()
-                .getType()
-                .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
-                .getType()
-                .equals(CardType.SOCIAL_INSTALL)) {
+                .equals(CardType.SOCIAL_STORE)) {
               SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
-                  (SocialHeaderCardTouchEvent) cardTouchEvent;
+                  ((SocialHeaderCardTouchEvent) cardTouchEvent);
               navigateToStoreTimeline(socialHeaderCardTouchEvent);
+            } else {
+              if (cardTouchEvent.getCard()
+                  .getType()
+                  .equals(CardType.UPDATE)) {
+                AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
+                timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
+              } else if (cardTouchEvent.getCard()
+                  .getType()
+                  .equals(CardType.POPULAR_APP)) {
+                PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
+                timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
+                    popularAppTouchEvent.getStoreTheme());
+              } else if (cardTouchEvent.getCard()
+                  .getType()
+                  .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
+                  .getType()
+                  .equals(CardType.SOCIAL_INSTALL)) {
+                SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
+                    (SocialHeaderCardTouchEvent) cardTouchEvent;
+                navigateToStoreTimeline(socialHeaderCardTouchEvent);
+              }
             }
           }
         })
