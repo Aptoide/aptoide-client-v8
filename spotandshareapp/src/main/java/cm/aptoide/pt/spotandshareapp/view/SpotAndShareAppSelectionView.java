@@ -13,4 +13,10 @@ public interface SpotAndShareAppSelectionView extends View {
   void finish();
 
   void setupRecyclerView(List<AppModel> installedApps);
+
+  void setupAppSelection(AppSelectionListener appSelectionListener);
+
+  interface AppSelectionListener {
+    void onAppSelected(AppModel appModel);
+  }
 }

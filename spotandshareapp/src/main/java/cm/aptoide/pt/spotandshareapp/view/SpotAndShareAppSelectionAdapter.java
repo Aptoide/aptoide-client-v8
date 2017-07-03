@@ -26,6 +26,7 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
   private Context context;
   private Header header;
   private List<AppModel> installedApps;
+  private SpotAndShareAppSelectionView.AppSelectionListener appSelectionListener;
 
   public SpotAndShareAppSelectionAdapter(Context context, Header header,
       List<AppModel> installedApps) {
@@ -58,6 +59,16 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
           .getAppIcon());
       viewHolderItem.appName.setText(installedApps.get(position - 1)
           .getAppName());
+
+      viewHolderItem.frameLayout.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          if (appSelectionListener != null) {
+            appSelectionListener.onAppSelected(installedApps.get(position - 1));
+            System.out.println("Selected app : " + installedApps.get(position - 1)
+                .getAppName());
+          }
+        }
+      });
     }
   }
 
@@ -74,6 +85,10 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
 
   public boolean isPositionHeader(int position) {
     return position == 0;
+  }
+
+  public void setListener(SpotAndShareAppSelectionView.AppSelectionListener appSelectionListener) {
+    this.appSelectionListener = appSelectionListener;
   }
 
   class ViewHolderHeader extends ViewHolder {

@@ -52,6 +52,10 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
     recyclerView.setHasFixedSize(true);
   }
 
+  @Override public void setupAppSelection(AppSelectionListener appSelectionListener) {
+    adapter.setListener(appSelectionListener);
+  }
+
   private void setupLayoutManager() {
     GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
     gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
