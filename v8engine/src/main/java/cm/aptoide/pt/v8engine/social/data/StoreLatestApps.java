@@ -19,8 +19,9 @@ public class StoreLatestApps implements Post {
   private final String abUrl;
   private final CardType cardType;
 
-  public StoreLatestApps(String cardId, String storeName, String storeAvatar, int subscribers, int appsNumber,
-      Date latestUpdate, List<App> apps, String abUrl, CardType cardType) {
+  public StoreLatestApps(String cardId, String storeName, String storeAvatar, String storeTheme,
+      int subscribers, int appsNumber, Date latestUpdate, List<App> apps, String abUrl,
+      CardType cardType) {
     this.cardId = cardId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;

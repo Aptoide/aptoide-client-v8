@@ -15,10 +15,10 @@ public class AggregatedStore extends StoreLatestApps {
   private final List<MinimalCard> minimalCards;
 
   public AggregatedStore(String cardId, List<Poster> posters, List<MinimalCard> minimalCards,
-      String storeName, String storeAvatar, int subscribers, int appsNumber, Date latestUpdate,
-      List<App> apps, String abUrl, CardType cardType) {
-    super(cardId, storeName, storeAvatar, subscribers, appsNumber, latestUpdate, apps, abUrl,
-        cardType);
+      String storeName, String storeAvatar, String storeTheme, int subscribers, int appsNumber,
+      Date latestUpdate, List<App> apps, String abUrl, CardType cardType) {
+    super(cardId, storeName, storeAvatar, storeTheme, subscribers, appsNumber, latestUpdate, apps,
+        abUrl, cardType);
     this.posters = posters;
     this.minimalCards = minimalCards;
   }

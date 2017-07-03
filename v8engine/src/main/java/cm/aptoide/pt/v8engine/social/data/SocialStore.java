@@ -13,10 +13,10 @@ public class SocialStore extends StoreLatestApps {
   private final Poster poster;
 
   public SocialStore(String cardId, Poster poster, String storeName, String storeAvatar,
-      int subscribers, int appsNumber, Date latestUpdate, List<App> apps, String abUrl,
-      CardType cardType) {
-    super(cardId, storeName, storeAvatar, subscribers, appsNumber, latestUpdate, apps, abUrl,
-        cardType);
+      String socialStore, int subscribers, int appsNumber, Date latestUpdate, List<App> apps,
+      String abUrl, CardType cardType) {
+    super(cardId, storeName, storeAvatar, socialStore, subscribers, appsNumber, latestUpdate, apps,
+        abUrl, cardType);
     this.poster = poster;
   }
 
