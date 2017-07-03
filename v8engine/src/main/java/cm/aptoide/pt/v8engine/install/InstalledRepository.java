@@ -23,10 +23,6 @@ public class InstalledRepository {
     accessor.insert(installed);
   }
 
-  public Observable<Installed> get(String packageName) {
-    return accessor.get(packageName);
-  }
-
   public boolean contains(String packageName) {
     return accessor.isInstalled(packageName)
         .toBlocking()
@@ -76,12 +72,6 @@ public class InstalledRepository {
 
   public Observable<List<Installed>> getAllInstalledSorted() {
     return accessor.getAllInstalledSorted();
-  }
-
-  public boolean contains(String packageName, int vercode) {
-    Installed installed = get(packageName).toBlocking()
-        .first();
-    return installed != null && installed.getVersionCode() == vercode;
   }
 
   public Observable<Installed> get(String packageName, int versionCode) {

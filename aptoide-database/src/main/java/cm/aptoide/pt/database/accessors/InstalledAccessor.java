@@ -142,8 +142,4 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .flatMap(installeds -> database.copyFromRealm(installeds))
         .subscribeOn(RealmSchedulers.getScheduler());
   }
-
-  public Observable<Installed> get(String packageNameAndVersionCode) {
-    return database.get(Installed.class, "packageAndVersionCode", packageNameAndVersionCode);
-  }
 }
