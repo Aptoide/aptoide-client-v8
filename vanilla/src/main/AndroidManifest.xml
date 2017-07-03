@@ -42,6 +42,14 @@
 
     <activity android:name=".v8engine.view.MainActivity"/>
 
+    <receiver
+        android:name="com.appsflyer.SingleInstallBroadcastReceiver"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="com.android.vending.INSTALL_REFERRER"/>
+      </intent-filter>
+    </receiver>
+
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="${fabricApiKey}"/>
@@ -49,6 +57,10 @@
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
+
+    <meta-data
+        android:name="CHANNEL"
+        android:value="Aptoide"/>
 
     <service android:name=".v8engine.account.AccountAuthenticatorService">
       <intent-filter>
@@ -111,6 +123,10 @@
           android:name="cm.aptoide.pt.imageloader.GlideModifications"
           android:value="GlideModule"/>
     </service>
+
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version"/>
   </application>
 
 </manifest>

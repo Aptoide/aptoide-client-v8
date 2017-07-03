@@ -42,7 +42,8 @@
   <string name="error_IARG_5">Invalid hmac format</string>
   <string name="error_IARG_6">Invalid lang</string>
   <string name="error_IARG_100">The minimum number of characters allowed in a comment is 10</string>
-  <string name="error_IARG_101">The minimum number of characters allowed in a reply comment is 10</string>
+  <string name="error_IARG_101">The minimum number of characters allowed in a reply comment is 10
+  </string>
   <string name="error_IARG_102">Invalid argument</string>
   <string name="error_IARG_103">Invalid category</string>
   <string name="error_IARG_104">Invalid rating</string>
@@ -60,14 +61,21 @@
 
   <string name="error_AUTH_1">Invalid login credentials!</string>
   <string name="error_AUTH_2">Invalid credentials!</string>
-  <string name="error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support team.</string>
+  <string name="error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support
+    team.
+  </string>
   <string name="error_AUTH_4">HMAC Authentication failure</string>
-  <string name="error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address).</string>
+  <string name="error_AUTH_100">Could not login with Google. Please check your Google account (you
+    may need to validate your email address).
+  </string>
   <string name="error_AUTH_101">Could not login with Google. Please try again.</string>
-  <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address).</string>
+  <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account
+    (you may need to validate your email address).
+  </string>
   <string name="error_AUTH_103">Could not login with Facebook. Please try again.</string>
 
-  <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)</string>
+  <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)
+  </string>
   <string name="error_WOP_7">Comment error</string>
   <string name="error_WOP_8">Comment vote error</string>
   <string name="error_WOP_9">The email provided already exists in the system</string>
@@ -77,7 +85,9 @@
   <string name="error_REPO_1">The store does not exist.</string>
   <string name="error_REPO_2">The store was cancelled.</string>
   <string name="error_REPO_3">The store does not belong to this user.</string>
-  <string name="error_REPO_4_no_store">Your account has no store created. You need to create one to make a review.</string>
+  <string name="error_REPO_4_no_store">Your account has no store created. You need to create one to
+    make a review.
+  </string>
   <string name="error_REPO_7">This user already has a valid store.</string>
 
   <string name="error_APK_1">Can\'t open this app with the given info and version</string>

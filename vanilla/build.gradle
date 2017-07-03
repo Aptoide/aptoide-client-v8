@@ -38,7 +38,7 @@ android {
     multiDexEnabled true
     resValue "string", "authenticator_account_type", APPLICATION_ID
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.3.0.10"
+    versionName "8.3.0.11"
     resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
     buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
     // test default configs
@@ -46,6 +46,9 @@ android {
     //testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     //testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+
+    resValue "string", "APPS_FLYER_DEV_KEY", "\"" + project.APPS_FLYER_DEV_KEY + "\""
   }
 
   lintOptions {
@@ -207,6 +210,8 @@ dependencies {
   compile("com.android.support:multidex:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
+
+  compile "com.appsflyer:af-android-sdk:${APPS_FLYER_VERSION}"
 }
 
 String getDate() {
