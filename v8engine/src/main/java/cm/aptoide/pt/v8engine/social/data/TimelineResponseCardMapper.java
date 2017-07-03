@@ -120,8 +120,10 @@ public class TimelineResponseCardMapper {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.PopularApp popularApp =
             ((PopularAppTimelineItem) item).getData();
         List<Publisher> publishers = new ArrayList<>();
+        List<UserSharerTimeline.User> users = new ArrayList<>();
         for (Comment.User user : popularApp.getUsers()) {
           publishers.add(new MediaPublisher(user.getName(), new PublisherAvatar(user.getAvatar())));
+          users.add(new UserSharerTimeline.User(user.getId(), user.getName(), user.getAvatar()));
         }
         cards.add(new PopularApp(popularApp.getCardId(), popularApp.getPopularApplication()
             .getId(), popularApp.getPopularApplication()
@@ -130,7 +132,7 @@ public class TimelineResponseCardMapper {
             .getIcon(), popularApp.getPopularApplication()
             .getStats()
             .getRating()
-            .getAvg(), publishers, popularApp.getDate(), abUrl, CardType.POPULAR_APP));
+            .getAvg(), users, popularApp.getDate(), abUrl, CardType.POPULAR_APP));
       } else if (item instanceof SocialRecommendationTimelineItem) {
         final SocialRecommendation socialRecommendation =
             ((SocialRecommendationTimelineItem) item).getData();

@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
+import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
@@ -126,6 +127,12 @@ public class TimelinePresenter implements Presenter {
               .equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
             timelineNavigation.navigateToStore(card.getStoreName(), card.getStoreTheme());
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.POPULAR_APP)) {
+            PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
+            timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
+                popularAppTouchEvent.getStoreTheme());
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

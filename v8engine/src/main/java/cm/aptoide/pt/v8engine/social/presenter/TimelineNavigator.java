@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.social.presenter;
 
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 
 /**
  * Created by jdandrade on 30/06/2017.
@@ -30,5 +32,11 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override public void navigateToStore(String storeName, String storeTheme) {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newStoreFragment(storeName, storeTheme));
+  }
+
+  @Override public void navigateToStoreTimeline(long userId, String storeTheme) {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline,
+            StoreFragment.OpenType.GetHome));
   }
 }

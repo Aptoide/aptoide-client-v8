@@ -8,11 +8,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
-import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
+import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import rx.subjects.PublishSubject;
 
@@ -65,12 +66,15 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
     headerUsersContainer.removeAllViews();
     View friendView;
     ImageView friendAvatar;
-    for (Publisher friend : card.getPublishers()) {
+    for (UserSharerTimeline.User friend : card.getUsers()) {
       friendView = inflater.inflate(R.layout.social_timeline_friend, headerUsersContainer, false);
       friendAvatar = (ImageView) friendView.findViewById(R.id.social_timeline_friend_avatar);
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(friend.getPublisherAvatar()
-              .getAvatarUrl(), friendAvatar);
+          .loadWithShadowCircleTransform(friend.getAvatar(), friendAvatar);
+
+      friendView.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+          new PopularAppTouchEvent(card, friend.getId(), "DEFAULT", CardTouchEvent.Type.HEADER)));
+
       headerUsersContainer.addView(friendView);
     }
   }

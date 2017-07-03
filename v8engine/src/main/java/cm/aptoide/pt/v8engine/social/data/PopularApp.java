@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
-import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import java.util.Date;
 import java.util.List;
 
@@ -10,18 +10,18 @@ import java.util.List;
 
 public class PopularApp extends AppPost {
   private final float ratingAverage;
-  private final List<Publisher> publishers;
+  private final List<UserSharerTimeline.User> users;
 
-  public PopularApp(String cardId, long appId, String packageName, String appName,
-      String appIcon, float ratingAverage, List<Publisher> publishers, Date timestamp, String abUrl,
+  public PopularApp(String cardId, long appId, String packageName, String appName, String appIcon,
+      float ratingAverage, List<UserSharerTimeline.User> users, Date timestamp, String abUrl,
       CardType cardType) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
     this.ratingAverage = ratingAverage;
-    this.publishers = publishers;
+    this.users = users;
   }
 
-  public List<Publisher> getPublishers() {
-    return publishers;
+  public List<UserSharerTimeline.User> getUsers() {
+    return users;
   }
 
   public float getRatingAverage() {
