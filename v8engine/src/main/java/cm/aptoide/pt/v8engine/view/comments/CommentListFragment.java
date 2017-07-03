@@ -287,7 +287,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         for (CommentNode commentNode : comments) {
           displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
               createNewCommentFragment(elementIdAsString, commentNode.getComment()
-                  .getId()))));
+                  .getId())), getFragmentNavigator(),
+              ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
         }
 
         this.displayables = new ArrayList<>(displayables.size());
@@ -339,7 +340,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         for (CommentNode commentNode : comments) {
           displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
               createNewCommentFragment(storeId, commentNode.getComment()
-                  .getId(), storeName))));
+                  .getId(), storeName)), getFragmentNavigator(),
+              ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
         }
 
         this.displayables = new ArrayList<>(displayables.size());
@@ -515,7 +517,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
           .getBody(), previousCommentId, ((SetComment) response).getData()
           .getId());
 
-      CommentDisplayable commentDisplayable = new CommentDisplayable(complexComment);
+      CommentDisplayable commentDisplayable =
+          new CommentDisplayable(complexComment, getFragmentNavigator(),
+              ((V8Engine) getContext().getApplicationContext()).getFragmentProvider());
 
       if (complexComment.getParent() != null) {
         insertChildCommentInsideParent(complexComment);
@@ -534,11 +538,13 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     for (CommentNode commentNode : comments) {
       displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
           createNewCommentFragment(elementIdAsString, commentNode.getComment()
-              .getId()))));
+              .getId())), getFragmentNavigator(),
+          ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
       if (commentNode.getComment()
           .getId() == complexComment.getParent()
           .getId() && !added) {
-        displayables.add(new CommentDisplayable(complexComment));
+        displayables.add(new CommentDisplayable(complexComment, getFragmentNavigator(),
+            ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
         added = true;
       }
     }
