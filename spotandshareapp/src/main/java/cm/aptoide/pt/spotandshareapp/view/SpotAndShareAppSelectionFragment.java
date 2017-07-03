@@ -101,7 +101,6 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    finish();
     return super.onOptionsItemSelected(item);
   }
 }
