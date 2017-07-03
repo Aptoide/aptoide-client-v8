@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.spotandshare;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
+import java.util.Objects;
 import rx.Single;
 
 /**
@@ -30,7 +31,8 @@ public class AccountGroupNameProvider implements GroupNameProvider {
         .toSingle()
         .flatMap(account -> {
           String username;
-          if (account.isLoggedIn() && !TextUtils.isEmpty(username = account.getNickname())) {
+          if (account.isLoggedIn() && account.getNickname() != null && !Objects.equals(
+              username = account.getNickname(), "")) {
             if (username.length() > 17) {
               username = username.substring(0, 17);
             }
