@@ -69,10 +69,10 @@
         android:theme="@style/AppBaseTheme.NoTitle.Transparent.WhiteGreen"/>
 
     <activity
-        android:name=".billing.view.PayPalPaymentActivity"
+        android:name=".billing.view.PayPalActivity"
         android:theme="@style/AppBaseTheme.NoTitle"/>
 
-    <activity android:name=".billing.view.WebAuthorizationActivity"/>
+    <activity android:name=".billing.view.BoaCompraActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.view.SpotSharePreviewActivity"/>
 
@@ -231,6 +231,14 @@
         <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
       </intent-filter>
     </receiver>
+    <receiver android:name=".install.CheckRootOnBoot">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.REBOOT"/>
+        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+      </intent-filter>
+    </receiver>
+    <receiver android:name=".install.RootInstallNotificationEventReceiver"/>
 
     <service android:name=".InstallService"/>
 

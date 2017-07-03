@@ -8,12 +8,12 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.dataprovider.model.v7.Obb;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.Collections;
 import java.util.List;
@@ -200,10 +200,7 @@ public class UpdateRepository {
   }
 
   public Completable remove(Update update) {
-    return Completable.fromCallable(() -> {
-      updateAccessor.remove(update.getPackageName());
-      return null;
-    });
+    return Completable.fromAction(() -> updateAccessor.remove(update.getPackageName()));
   }
 
   public void remove(String packageName) {

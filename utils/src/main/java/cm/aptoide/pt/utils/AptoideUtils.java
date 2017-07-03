@@ -89,10 +89,7 @@ import static android.net.ConnectivityManager.TYPE_WIFI;
  */
 public class AptoideUtils {
 
-  private static final Random random = new Random();
-
   public static class Core {
-    private static final String TAG = "Core";
 
     public static String getDefaultVername(Context context) {
       String verString = "";
@@ -129,7 +126,7 @@ public class AptoideUtils {
       return buffer.toString();
     }
 
-    public static byte[] computeSha1(byte[] bytes) {
+    private static byte[] computeSha1(byte[] bytes) {
       MessageDigest md;
       try {
         md = MessageDigest.getInstance("SHA-1");
@@ -223,12 +220,13 @@ public class AptoideUtils {
       return md5hash;
     }
 
-    public static int randomBetween(int min, int max) {
+    // deprecated since no usage was found.
+    @Deprecated public static int randomBetween(int min, int max) {
       int skewedMax = max - min;
       if (skewedMax <= 0) {
         throw new IllegalStateException("Minimum < maximum");
       }
-      return random.nextInt(skewedMax + 1) + min;
+      return new Random().nextInt(skewedMax + 1) + min;
     }
   }
 
@@ -247,7 +245,7 @@ public class AptoideUtils {
      *
      * @return The least commong multiple between a and b.
      */
-    public static int leastCommonMultiple(int a, int b) {
+    private static int leastCommonMultiple(int a, int b) {
       //return a * (b / greatestCommonDivisor(a, b));
       if (a == 0 && b == 0) {
         return 0;
@@ -260,7 +258,7 @@ public class AptoideUtils {
      *
      * @return The greatest common divisor between a and b.
      */
-    public static int greatestCommonDivisor(int a, int b) {
+    private static int greatestCommonDivisor(int a, int b) {
       while (b > 0) {
         int temp = b;
         b = a % b; // % is remainder
@@ -358,11 +356,8 @@ public class AptoideUtils {
     }
 
     public static int getPixelsForDip(int dipValue, Resources resources) {
-      Resources r = resources;
-      int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue,
-          r.getDisplayMetrics());
-      Logger.d("getPixels", "" + px);
-      return px;
+      return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue,
+          resources.getDisplayMetrics());
     }
 
     public static int getNumericScreenSize(Resources resources) {
@@ -380,7 +375,6 @@ public class AptoideUtils {
     }
 
     public static int getDensityDpi(WindowManager windowManager) {
-
       DisplayMetrics metrics = new DisplayMetrics();
       windowManager.getDefaultDisplay()
           .getMetrics(metrics);
@@ -444,10 +438,9 @@ public class AptoideUtils {
      * on my droid 4, this is 360x640 or 540x960
      * depending on whether the app is in screen compatibility mode
      * (i.e. targetSdkVersion<=10 in the manifest) or not.
-     *
-     * @param resources
      */
-    public static String getScreenSizePixels(Resources resources) {
+    // method deprecated since no usage was found.
+    @Deprecated public static String getScreenSizePixels(Resources resources) {
       Configuration config = resources.getConfiguration();
       DisplayMetrics dm = resources.getDisplayMetrics();
       // Note, screenHeightDp isn't reliable
@@ -461,7 +454,8 @@ public class AptoideUtils {
       return (int) (screenWidthInPixels + .5) + "x" + (int) (screenHeightInPixels + .5);
     }
 
-    public enum Size {
+    // deprecated since no usage was found
+    @Deprecated public enum Size {
       notfound, small, normal, large, xlarge;
 
       private static final String TAG = Size.class.getSimpleName();
@@ -708,7 +702,14 @@ public class AptoideUtils {
       return null;
     }
 
-    public static List<PackageInfo> getUserInstalledApps(PackageManager packageManager) {
+    // method deprecated since no usage was found.
+
+    /**
+     * Use InstallManager or other entity such as the Installed repository in the engine to obtain
+     * the installed apps
+     */
+    @Deprecated public static List<PackageInfo> getUserInstalledApps(
+        PackageManager packageManager) {
       List<PackageInfo> tmp = new LinkedList<>();
 
       for (PackageInfo packageInfo : getAllInstalledApps(packageManager)) {
@@ -886,8 +887,10 @@ public class AptoideUtils {
 
     /**
      * from v7
+     *
+     * Use RootManager or other entity created for this effect in the engine
      */
-    public static boolean hasRoot() {
+    @Deprecated public static boolean hasRoot() {
       boolean retval;
       Process suProcess;
 
@@ -974,14 +977,6 @@ public class AptoideUtils {
       return Looper.getMainLooper()
           .getThread() == Thread.currentThread();
     }
-
-    public static void sleep(long l) {
-      try {
-        Thread.sleep(l);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
   }
 
   public static class HtmlU {
@@ -1034,7 +1029,7 @@ public class AptoideUtils {
 
     private final Context context;
 
-    public DateTimeU(Context context) {
+    private DateTimeU(Context context) {
       this.context = context;
     }
 
@@ -1140,7 +1135,6 @@ public class AptoideUtils {
      * Displays a user-friendly date difference string
      *
      * @param timedate Timestamp to format as date difference from now
-     * @param resources
      *
      * @return Friendly-formatted date diff string
      */
@@ -1307,7 +1301,8 @@ public class AptoideUtils {
       return densityMultiplier;
     }
 
-    public static String generateStringNotification(String url, Resources resources) {
+    // method deprecated since no usage was found.
+    @Deprecated public static String generateStringNotification(String url, Resources resources) {
       if (url == null) {
         return "";
       }
@@ -1417,8 +1412,6 @@ public class AptoideUtils {
      * filename ends with <b>_icon</b> it is an HD icon.
      *
      * @param iconUrl The String with the URL of the icon
-     * @param resources
-     * @param windowManager
      *
      * @return A String with
      */
@@ -1504,7 +1497,8 @@ public class AptoideUtils {
     }
   }
 
-  public static class Benchmarking {
+  // deprecated since no usage was found.
+  @Deprecated public static class Benchmarking {
 
     private static final String TAG = Benchmarking.class.getSimpleName();
 
@@ -1531,7 +1525,8 @@ public class AptoideUtils {
     }
   }
 
-  public static class ObservableU {
+  // deprecated since no usage was found.
+  @Deprecated public static class ObservableU {
 
     /**
      * code from <a href="http://blog.danlew.net/2015/03/02/dont-break-the-chain/">http://blog.danlew.net/2015/03/02/dont-break-the-chain/</a>
@@ -1561,7 +1556,8 @@ public class AptoideUtils {
     }
   }
 
-  public static final class LocaleU {
+  // deprecated since no usage was found.
+  @Deprecated public static final class LocaleU {
 
     public static final Locale DEFAULT = Locale.getDefault();
   }

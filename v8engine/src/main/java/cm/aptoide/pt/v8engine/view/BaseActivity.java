@@ -44,8 +44,7 @@ public abstract class BaseActivity extends PermissionServiceActivity {
   }
 
   private void setUpAnalytics() {
-    Analytics.Dimensions.setGmsPresent(
-        AdNetworkUtils.isGooglePlayServicesAvailable(this));
+    Analytics.Dimensions.setGmsPresent(AdNetworkUtils.isGooglePlayServicesAvailable(this));
   }
 
   @Override protected void onStart() {

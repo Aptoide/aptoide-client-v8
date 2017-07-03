@@ -19,18 +19,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.DrawerAnalytics;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.DrawerAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
@@ -71,6 +69,7 @@ public class HomeFragment extends StoreFragment {
   private TextView userEmail;
   private TextView userUsername;
   private ImageView userAvatarImage;
+  private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
 
@@ -156,6 +155,7 @@ public class HomeFragment extends StoreFragment {
     super.onCreate(savedInstanceState);
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   @Nullable @Override
@@ -176,7 +176,7 @@ public class HomeFragment extends StoreFragment {
     if (toolbar != null) {
       toolbar.setNavigationOnClickListener(null);
     }
-    unregisterBackClickHandler(backClickHandler);
+    unregisterClickHandler(backClickHandler);
     super.onDestroyView();
   }
 
@@ -253,7 +253,7 @@ public class HomeFragment extends StoreFragment {
         return false;
       }
     };
-    registerBackClickHandler(backClickHandler);
+    registerClickHandler(backClickHandler);
   }
 
   private void setupNavigationView() {
@@ -319,8 +319,9 @@ public class HomeFragment extends StoreFragment {
   }
 
   private void openFacebook() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(FACEBOOK_PACKAGE_NAME)
+
+    installedRepository.getInstalled(FACEBOOK_PACKAGE_NAME)
+        .first()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installedFacebook -> {
@@ -342,8 +343,9 @@ public class HomeFragment extends StoreFragment {
   }
 
   private void openBackupApps() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
+
+    installedRepository.getInstalled(BACKUP_APPS_PACKAGE_NAME)
+        .first()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(installed -> {
@@ -374,8 +376,9 @@ public class HomeFragment extends StoreFragment {
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,
       Uri uriToOpenApp) {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(packageName)
+
+    installedRepository.getInstalled(packageName)
+        .first()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {

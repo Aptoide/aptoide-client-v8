@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.presenter.DownloadsPresenter;
 import cm.aptoide.pt.v8engine.presenter.DownloadsView;
 import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewHolder;
@@ -37,7 +37,7 @@ public class ActiveDownloadViewHolder extends RecyclerViewHolder<DownloadsView.D
     // button to pause / resume download
     ImageView pauseCancelButton = (ImageView) itemView.findViewById(R.id.pause_cancel_button);
     addSubscription(RxView.clicks(pauseCancelButton)
-        .subscribe(click -> presenter.pauseInstall(itemView.getContext(), getViewModel()),
+        .subscribe(click -> presenter.pauseInstall(getViewModel()),
             throwable -> CrashReport.getInstance()
                 .log(throwable)));
   }

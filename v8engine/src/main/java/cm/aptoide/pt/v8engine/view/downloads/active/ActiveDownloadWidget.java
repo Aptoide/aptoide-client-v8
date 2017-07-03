@@ -5,11 +5,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -44,34 +44,34 @@ import rx.schedulers.Schedulers;
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     compositeSubscription.add(RxView.clicks(pauseCancelButton)
-        .subscribe(click -> displayable.pauseInstall(getContext()),
+        .subscribe(click -> displayable.pauseInstall(),
             throwable -> CrashReport.getInstance()
                 .log(throwable)));
 
-    compositeSubscription.add(displayable.getDownloadObservable()
+    compositeSubscription.add(displayable.getInstallationObservable()
         .observeOn(Schedulers.computation())
-        .distinctUntilChanged()
-        .map(download -> download)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe((download) -> updateUi(download), throwable -> CrashReport.getInstance()
+        .subscribe(installation -> updateUi(installation), throwable -> CrashReport.getInstance()
             .log(throwable)));
   }
 
-  private Void updateUi(Download download) {
-    appName.setText(download.getAppName());
-    if (!TextUtils.isEmpty(download.getIcon())) {
+  private Void updateUi(Install installation) {
+    appName.setText(installation.getAppName());
+    if (!TextUtils.isEmpty(installation.getIcon())) {
       ImageLoader.with(getContext())
-          .load(download.getIcon(), appIcon);
+          .load(installation.getIcon(), appIcon);
     }
-    if (download.getOverallDownloadStatus() == Download.IN_QUEUE) {
-      progressBar.setIndeterminate(true);
+
+    progressBar.setIndeterminate(installation.isIndeterminate());
+    progressBar.setProgress(installation.getProgress());
+    downloadProgressTv.setText(String.format("%d%%", installation.getProgress()));
+    if (installation.isIndeterminate()
+        || installation.getState() == Install.InstallationStatus.INSTALLED) {
+      downloadSpeedTv.setText("");
     } else {
-      progressBar.setIndeterminate(false);
-      progressBar.setProgress(download.getOverallProgress());
+      downloadSpeedTv.setText(String.valueOf(
+          AptoideUtils.StringU.formatBytesToBits((long) installation.getSpeed(), true)));
     }
-    downloadProgressTv.setText(String.format("%d%%", download.getOverallProgress()));
-    downloadSpeedTv.setText(String.valueOf(
-        AptoideUtils.StringU.formatBytesToBits((long) download.getDownloadSpeed(), true)));
     return null;
   }
 }
