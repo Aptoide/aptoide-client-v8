@@ -37,7 +37,7 @@ public class ActiveDownloadViewHolder extends RecyclerViewHolder<DownloadsView.D
     // button to pause / resume download
     ImageView pauseCancelButton = (ImageView) itemView.findViewById(R.id.pause_cancel_button);
     addSubscription(RxView.clicks(pauseCancelButton)
-        .subscribe(click -> presenter.pauseInstall(itemView.getContext(), getViewModel()),
+        .subscribe(click -> presenter.pauseInstall(getViewModel()),
             throwable -> CrashReport.getInstance()
                 .log(throwable)));
   }

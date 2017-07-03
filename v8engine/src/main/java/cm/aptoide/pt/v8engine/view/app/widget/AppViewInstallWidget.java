@@ -68,7 +68,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -258,19 +257,25 @@ import rx.android.schedulers.AndroidSchedulers;
         //App not installed
         updateUninstalledUi(displayable, getApp, isSetup, install.getType());
         break;
-      case FAILED:
-        updateFailedUi(isSetup, displayable, install, getApp);
+      case GENERIC_ERROR:
+        updateFailedUi(isSetup, displayable, install, getApp, "",
+            getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_SPACE_ERROR:
+        updateFailedUi(isSetup, displayable, install, getApp,
+            getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
         break;
     }
   }
 
   private void updateFailedUi(boolean isSetup, AppViewInstallDisplayable displayable,
-      Install install, GetApp getApp) {
+      Install install, GetApp getApp, String errorTitle, String errorMessage) {
     if (isSetup) {
       updateUninstalledUi(displayable, getApp, isSetup, install.getType());
     } else {
       updatePausedUi(install, getApp, isSetup);
-      showErrorMessage(install.getError());
+      showDialogError(errorTitle, errorMessage);
     }
   }
 
@@ -302,11 +307,10 @@ import rx.android.schedulers.AndroidSchedulers;
   private void updateInstalledUi(Install install) {
     setDownloadBarInvisible();
     setupActionButton(R.string.open, v -> AptoideUtils.SystemU.openApp(install.getPackageName(),
-            getContext().getPackageManager(), getContext()));
+        getContext().getPackageManager(), getContext()));
   }
 
-  private void updatePausedUi(Install install, GetApp app,
-      boolean isSetup) {
+  private void updatePausedUi(Install install, GetApp app, boolean isSetup) {
 
     showProgress(install.getProgress(), install.isIndeterminate());
     actionResume.setVisibility(View.VISIBLE);
@@ -316,8 +320,7 @@ import rx.android.schedulers.AndroidSchedulers;
         .getData(), isSetup, install.getType());
   }
 
-  private void updateInstallingUi(Install install, GetAppMeta.App app,
-      boolean isSetup) {
+  private void updateInstallingUi(Install install, GetAppMeta.App app, boolean isSetup) {
     showProgress(install.getProgress(), install.isIndeterminate());
     actionResume.setVisibility(View.GONE);
     actionPause.setVisibility(View.VISIBLE);
@@ -567,26 +570,12 @@ import rx.android.schedulers.AndroidSchedulers;
     };
   }
 
-  private Completable showErrorMessage(Install.Error error) {
-    Completable completable;
-    switch (error) {
-      case GENERIC_ERROR:
-        completable = GenericDialogs.createGenericOkMessage(getContext(), "",
-            getContext().getString(R.string.error_occured))
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .toCompletable();
-        break;
-      case NOT_ENOUGH_SPACE_ERROR:
-        completable = GenericDialogs.createGenericOkMessage(getContext(),
-            getContext().getString(R.string.out_of_space_dialog_title),
-            getContext().getString(R.string.out_of_space_dialog_message))
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .toCompletable();
-        break;
-      default:
-        completable = Completable.complete();
-    }
-    return completable;
+  private void showDialogError(String title, String message) {
+    GenericDialogs.createGenericOkMessage(getContext(), title, message)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(eResponse -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   private void setupDownloadControls(GetAppMeta.App app, boolean isSetup,

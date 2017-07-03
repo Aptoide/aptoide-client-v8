@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.presenter;
 
-import android.content.Context;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -85,12 +84,11 @@ public class DownloadsPresenter implements Presenter {
         || progress.getState() == Install.InstallationStatus.INSTALLING;
   }
 
-  private boolean isStandingBy(Install progress) {
-    return progress.getState() == Install.InstallationStatus.FAILED
-        || progress.getState() == Install.InstallationStatus.PAUSED;
+  private boolean isStandingBy(Install install) {
+    return install.isFailed() || install.getState() == Install.InstallationStatus.PAUSED;
   }
 
-  public void pauseInstall(Context context, DownloadsView.DownloadViewModel download) {
+  public void pauseInstall(DownloadsView.DownloadViewModel download) {
     installManager.stopInstallation(download.getAppMd5());
   }
 }

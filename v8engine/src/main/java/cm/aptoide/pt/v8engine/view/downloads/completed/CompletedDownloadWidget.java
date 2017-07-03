@@ -66,8 +66,9 @@ import rx.schedulers.Schedulers;
     updateStatus(installation, displayable);
 
     compositeSubscription.add(RxView.clicks(itemView)
-        .flatMap(click -> displayable.downloadStatus()
+        .flatMap(click -> displayable.getInstall()
             .first()
+            .map(install -> install.getState())
             .filter(status -> status == Install.InstallationStatus.UNINSTALLED
                 || status == Install.InstallationStatus.INSTALLED)
             .flatMap(
@@ -77,11 +78,11 @@ import rx.schedulers.Schedulers;
         }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(resumeDownloadButton)
-        .flatMap(click -> displayable.downloadStatus()
+        .flatMap(click -> displayable.getInstall()
             .first()
-            .filter(status -> status == Install.InstallationStatus.PAUSED
-                || status == Install.InstallationStatus.FAILED)
-            .flatMap(status -> displayable.resumeDownload(context, (PermissionService) context)))
+            .filter(install -> install.getState() == Install.InstallationStatus.PAUSED
+                || install.isFailed())
+            .flatMap(status -> displayable.resumeDownload((PermissionService) context)))
         .retry()
         .subscribe(success -> {
         }, throwable -> throwable.printStackTrace()));
@@ -92,14 +93,13 @@ import rx.schedulers.Schedulers;
               .log(err);
         }));
 
-    compositeSubscription.add(displayable.downloadStatus()
+    compositeSubscription.add(displayable.getInstall()
         .first()
         .observeOn(Schedulers.computation())
         .sample(1, TimeUnit.SECONDS)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(downloadStatus -> {
-          if (downloadStatus == Install.InstallationStatus.PAUSED
-              || downloadStatus == Install.InstallationStatus.FAILED) {
+        .subscribe(install -> {
+          if (install.getState() == Install.InstallationStatus.PAUSED || install.isFailed()) {
             resumeDownloadButton.setVisibility(View.VISIBLE);
           } else {
             resumeDownloadButton.setVisibility(View.GONE);
@@ -108,10 +108,9 @@ import rx.schedulers.Schedulers;
             .log(throwable)));
   }
 
-  private void updateStatus(Install installation,
-      CompletedDownloadDisplayable displayable) {
+  private void updateStatus(Install installation, CompletedDownloadDisplayable displayable) {
     final FragmentActivity context = getContext();
-    if (installation.getState() == Install.InstallationStatus.FAILED) {
+    if (installation.isFailed()) {
       int statusTextColor;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         statusTextColor = context.getColor(R.color.red_700);

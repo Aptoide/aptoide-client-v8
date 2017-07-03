@@ -19,11 +19,10 @@ public @ToString(of = { "state", "isIndeterminate" }) class Install {
   private final int versionCode;
   private final String appName;
   private final String icon;
-  private final Error error;
 
   public Install(int progress, InstallationStatus state, InstallationType type,
       boolean isIndeterminate, int speed, String md5, String packageName, int versionCode,
-      String appName, String icon, Error error) {
+      String appName, String icon) {
     this.progress = progress;
     this.state = state;
     this.type = type;
@@ -34,11 +33,6 @@ public @ToString(of = { "state", "isIndeterminate" }) class Install {
     this.versionCode = versionCode;
     this.appName = appName;
     this.icon = icon;
-    this.error = error;
-  }
-
-  public Error getError() {
-    return error;
   }
 
   public InstallationType getType() {
@@ -107,12 +101,14 @@ public @ToString(of = { "state", "isIndeterminate" }) class Install {
     return packageName.equals(that.packageName);
   }
 
-  public enum InstallationStatus {
-    INSTALLING, PAUSED, INSTALLED, UNINSTALLED, FAILED, INSTALLATION_TIMEOUT
+  public boolean isFailed() {
+    return state == Install.InstallationStatus.GENERIC_ERROR
+        || state == Install.InstallationStatus.INSTALLATION_TIMEOUT
+        || state == Install.InstallationStatus.NOT_ENOUGH_SPACE_ERROR;
   }
 
-  public enum Error {
-    GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR, NO_ERROR
+  public enum InstallationStatus {
+    INSTALLING, PAUSED, INSTALLED, UNINSTALLED, INSTALLATION_TIMEOUT, GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR,
   }
 
   public enum InstallationType {

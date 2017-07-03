@@ -261,22 +261,11 @@ public class AppUpdateDisplayable extends CardDisplayable {
             BLANK));
   }
 
-  public @StringRes int getErrorMessage(Install install) {
-    switch (install.getError()) {
-      case GENERIC_ERROR:
-        return getUpdateErrorText();
-      case NOT_ENOUGH_SPACE_ERROR:
-        return getUpdateNoSpaceErrorText();
-      default:
-        throw new RuntimeException("Unknown error");
-    }
-  }
-
   public @StringRes int getUpdateErrorText() {
     return R.string.displayable_social_timeline_app_update_error;
   }
 
-  private @StringRes int getUpdateNoSpaceErrorText() {
+  public @StringRes int getUpdateNoSpaceErrorText() {
     return R.string.out_of_space_error;
   }
 

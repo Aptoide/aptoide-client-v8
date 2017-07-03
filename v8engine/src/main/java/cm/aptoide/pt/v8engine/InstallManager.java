@@ -174,7 +174,7 @@ public class InstallManager {
         mapInstallationStatus(download, installationState), installationType,
         mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
         versioncode, getAppName(download, installationState),
-        getAppIcon(download, installationState), getError(download));
+        getAppIcon(download, installationState));
   }
 
   private String getAppIcon(Download download, InstallationState installationState) {
@@ -282,7 +282,14 @@ public class InstallManager {
           status = Install.InstallationStatus.PAUSED;
           break;
         case Download.ERROR:
-          status = Install.InstallationStatus.FAILED;
+          switch (download.getDownloadError()) {
+            case Download.GENERIC_ERROR:
+              status = Install.InstallationStatus.GENERIC_ERROR;
+              break;
+            case Download.NOT_ENOUGH_SPACE_ERROR:
+              status = Install.InstallationStatus.NOT_ENOUGH_SPACE_ERROR;
+              break;
+          }
           break;
         case Download.RETRY:
         case Download.STARTED:
@@ -450,24 +457,6 @@ public class InstallManager {
 
   public Completable onUpdateConfirmed(Installed installed) {
     return onAppInstalled(installed);
-  }
-
-  public Install.Error getError(Download download) {
-    Install.Error error = Install.Error.NO_ERROR;
-    if (download != null) {
-      switch (download.getDownloadError()) {
-        case Download.GENERIC_ERROR:
-          error = Install.Error.GENERIC_ERROR;
-          break;
-        case Download.NOT_ENOUGH_SPACE_ERROR:
-          error = Install.Error.NOT_ENOUGH_SPACE_ERROR;
-          break;
-        case Download.NO_ERROR:
-          error = Install.Error.NO_ERROR;
-          break;
-      }
-    }
-    return error;
   }
 
   /**

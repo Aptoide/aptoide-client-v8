@@ -129,7 +129,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
     switch (downloadProgress.getState()) {
       case INSTALLING:
-
+      case INSTALLATION_TIMEOUT:
         updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         updateButton.setText(displayable.getUpdatingText(getContext()));
         updateButton.setEnabled(false);
@@ -139,9 +139,13 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         updateButton.setText(displayable.getCompletedText(getContext()));
         updateButton.setEnabled(false);
         break;
-      case FAILED:
-        int errorMessage = displayable.getErrorMessage(downloadProgress);
-        showDownloadError(displayable.getUpdateAppText(getContext()), errorMessage);
+      case GENERIC_ERROR:
+        showDownloadError(displayable.getUpdateAppText(getContext()),
+            displayable.getUpdateErrorText());
+        break;
+      case NOT_ENOUGH_SPACE_ERROR:
+        showDownloadError(displayable.getUpdateAppText(getContext()),
+            displayable.getUpdateNoSpaceErrorText());
         break;
       case PAUSED:
       case UNINSTALLED:

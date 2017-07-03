@@ -37,8 +37,8 @@ public class CompletedDownloadDisplayable extends Displayable {
     this.installation = null;
   }
 
-  public CompletedDownloadDisplayable(Install installation,
-      InstallManager installManager, DownloadEventConverter converter, Analytics analytics,
+  public CompletedDownloadDisplayable(Install installation, InstallManager installManager,
+      DownloadEventConverter converter, Analytics analytics,
       InstallEventConverter installConverter) {
     this.installation = installation;
     this.installManager = installManager;
@@ -60,17 +60,15 @@ public class CompletedDownloadDisplayable extends Displayable {
         installation.getVersionCode());
   }
 
-  public Observable<Install.InstallationStatus> downloadStatus() {
-    return installManager.getInstall(installation.getMd5(),
-        installation.getPackageName(), installation.getVersionCode())
-        .map(installationProgress -> installationProgress.getState())
-        .onErrorReturn(throwable -> Install.InstallationStatus.UNINSTALLED);
+  public Observable<Install> getInstall() {
+    return installManager.getInstall(installation.getMd5(), installation.getPackageName(),
+        installation.getVersionCode());
   }
 
   public Observable<Install> installOrOpenDownload(Context context,
       PermissionService permissionRequest) {
-    return installManager.getInstall(installation.getMd5(),
-        installation.getPackageName(), installation.getVersionCode())
+    return installManager.getInstall(installation.getMd5(), installation.getPackageName(),
+        installation.getVersionCode())
         .first()
         .flatMap(installationProgress -> {
           if (installationProgress.getState() == Install.InstallationStatus.INSTALLED) {
@@ -78,13 +76,12 @@ public class CompletedDownloadDisplayable extends Displayable {
                 context);
             return Observable.empty();
           } else {
-            return resumeDownload(context, permissionRequest);
+            return resumeDownload(permissionRequest);
           }
         });
   }
 
-  public Observable<Install> resumeDownload(Context context,
-      PermissionService permissionRequest) {
+  public Observable<Install> resumeDownload(PermissionService permissionRequest) {
     PermissionManager permissionManager = new PermissionManager();
     return installManager.getDownload(installation.getMd5())
         .toObservable()
@@ -92,9 +89,8 @@ public class CompletedDownloadDisplayable extends Displayable {
             .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
             .flatMap(success -> installManager.install(download)
                 .toObservable()
-                .flatMap(downloadProgress -> installManager.getInstall(
-                    installation.getMd5(), installation.getPackageName(),
-                    installation.getVersionCode()))
+                .flatMap(downloadProgress -> installManager.getInstall(installation.getMd5(),
+                    installation.getPackageName(), installation.getVersionCode()))
                 .doOnSubscribe(() -> setupEvents(download))));
   }
 
@@ -115,6 +111,7 @@ public class CompletedDownloadDisplayable extends Displayable {
 
   public String getStatusName(Context context) {
     switch (installation.getState()) {
+      case INSTALLATION_TIMEOUT:
       case INSTALLING:
         return context.getString(cm.aptoide.pt.database.R.string.download_progress);
       case PAUSED:
@@ -123,15 +120,10 @@ public class CompletedDownloadDisplayable extends Displayable {
         return context.getString(cm.aptoide.pt.database.R.string.download_completed);
       case UNINSTALLED:
         return "";
-      case FAILED:
-        switch (installation.getError()) {
-          case GENERIC_ERROR:
-            return context.getString(R.string.simple_error_occured);
-          case NOT_ENOUGH_SPACE_ERROR:
-            return context.getString(cm.aptoide.pt.database.R.string.out_of_space_error);
-          default:
-            throw new RuntimeException("Unknown error");
-        }
+      case GENERIC_ERROR:
+        return context.getString(R.string.simple_error_occured);
+      case NOT_ENOUGH_SPACE_ERROR:
+        return context.getString(cm.aptoide.pt.database.R.string.out_of_space_error);
       default:
         throw new RuntimeException("Unknown status");
     }
