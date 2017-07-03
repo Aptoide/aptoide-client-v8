@@ -233,7 +233,7 @@ dependencies {
   compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
 
   compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
-
+  compile "com.appsflyer:af-android-sdk:${APPS_FLYER_VERSION}"
 
   leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 }

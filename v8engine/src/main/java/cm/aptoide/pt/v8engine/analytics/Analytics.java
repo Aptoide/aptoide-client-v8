@@ -15,11 +15,11 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.FirstLaunchAnalytics;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
+import com.appsflyer.AppsFlyerLib;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -243,6 +243,7 @@ public class Analytics {
       private static String utmCampaign = UNKNOWN;
       private static String utmContent = UNKNOWN;
       private static String entryPoint = UNKNOWN;
+      private static String APPS_FLYER_EVENT_NAME = "Aptoide_First_Launch";
 
       public static void onCreate(android.app.Application application) {
 
@@ -266,6 +267,9 @@ public class Analytics {
             .doOnCompleted(() -> {
               firstLaunchAnalytics.sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
                   utmContent, entryPoint);
+              AppsFlyerLib.getInstance()
+                  .trackEvent(application.getApplicationContext(), APPS_FLYER_EVENT_NAME,
+                      createAppsFlyerMap());
               UTMTrackingBuilder utmTrackingBuilder =
                   new UTMTrackingBuilder(getTracking(application), getUTM());
               BIUTMAnalyticsRequestBody body =
@@ -281,6 +285,15 @@ public class Analytics {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
             }, Throwable::printStackTrace);
+      }
+
+      private static Map<String, Object> createAppsFlyerMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(UTM_SOURCE, utmSource);
+        map.put(UTM_MEDIUM, utmMedium);
+        map.put(UTM_CAMPAIGN, utmCampaign);
+        map.put(UTM_CONTENT, utmContent);
+        return map;
       }
 
       private static UTM getUTM() {
