@@ -11,4 +11,6 @@ public interface TimelineNavigation {
   void navigateToAppView(long appId, String packageName, AppViewFragment.OpenType openType);
 
   void navigateToAppView(String packageName, AppViewFragment.OpenType openType);
+
+  void navigateToStore(String storeName, String storeTheme);
 }

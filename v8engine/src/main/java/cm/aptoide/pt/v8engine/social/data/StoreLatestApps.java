@@ -12,6 +12,7 @@ public class StoreLatestApps implements Post {
   private final String cardId;
   private final String storeName;
   private final String storeAvatar;
+  private final String storeTheme;
   private final int subscribers;
   private final int appsNumber;
   private final Date latestUpdate;
@@ -25,12 +26,17 @@ public class StoreLatestApps implements Post {
     this.cardId = cardId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;
+    this.storeTheme = storeTheme;
     this.subscribers = subscribers;
     this.appsNumber = appsNumber;
     this.latestUpdate = latestUpdate;
     this.apps = apps;
     this.abUrl = abUrl;
     this.cardType = cardType;
+  }
+
+  public String getStoreTheme() {
+    return storeTheme;
   }
 
   public String getStoreName() {

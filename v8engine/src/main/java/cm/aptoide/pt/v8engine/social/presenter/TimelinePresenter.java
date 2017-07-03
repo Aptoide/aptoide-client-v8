@@ -6,6 +6,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -21,6 +22,7 @@ import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import java.util.List;
@@ -115,6 +117,11 @@ public class TimelinePresenter implements Presenter {
           if (isMediaCard(cardTouchEvent)) {
             ((Media) cardTouchEvent.getCard()).getPublisherLink()
                 .launch();
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.STORE)) {
+            StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
+            timelineNavigation.navigateToStore(card.getStoreName(), card.getStoreTheme());
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
