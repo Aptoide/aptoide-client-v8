@@ -38,9 +38,13 @@ public class UserSharerTimeline {
   }
 
   public static class User {
-    private final Long id;
+    private Long id;
     private String name;
     private String avatar;
+
+    public User() {
+
+    }
 
     public User(long id, String name, String avatar) {
       this.id = id;
@@ -70,9 +74,13 @@ public class UserSharerTimeline {
   }
 
   public class Store {
-    private final String storeTheme;
+    private String storeTheme;
     private String name;
     private String avatar;
+
+    public Store() {
+
+    }
 
     public Store(String name, String avatar, String storeTheme) {
       this.name = name;

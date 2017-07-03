@@ -90,7 +90,10 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
-        }, throwable -> view.showGenericError());
+        }, throwable -> {
+          throwable.printStackTrace();
+          view.showGenericError();
+        });
   }
 
   private void showMoreCardsOnBottomReached() {
@@ -126,49 +129,41 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.SOCIAL_VIDEO)) {
+              .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_INSTALL)) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
-          } else {
-            if (cardTouchEvent.getCard()
-                .getType()
-                .equals(CardType.STORE)) {
-              StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
-              timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-            } else if (cardTouchEvent.getCard()
-                .getType()
-                .equals(CardType.SOCIAL_STORE)) {
-              SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
-                  ((SocialHeaderCardTouchEvent) cardTouchEvent);
-              navigateToStoreTimeline(socialHeaderCardTouchEvent);
-            } else {
-              if (cardTouchEvent.getCard()
-                  .getType()
-                  .equals(CardType.UPDATE)) {
-                AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
-                timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-              } else if (cardTouchEvent.getCard()
-                  .getType()
-                  .equals(CardType.POPULAR_APP)) {
-                PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
-                timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
-                    popularAppTouchEvent.getStoreTheme());
-              } else if (cardTouchEvent.getCard()
-                  .getType()
-                  .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
-                  .getType()
-                  .equals(CardType.SOCIAL_INSTALL)) {
-                SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
-                    (SocialHeaderCardTouchEvent) cardTouchEvent;
-                navigateToStoreTimeline(socialHeaderCardTouchEvent);
-              }
-            }
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.STORE)) {
+            StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
+            timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.UPDATE)) {
+            AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
+            timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.POPULAR_APP)) {
+            // TODO: 03/07/2017 need to check if userId exists
+            PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
+            timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
+                popularAppTouchEvent.getStoreTheme());
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articleUrl -> {
-        }, throwable -> crashReport.log(throwable));
+        }, throwable -> {
+          throwable.printStackTrace();
+          crashReport.log(throwable);
+        });
   }
 
   private void handleCardClickOnBodyEvents() {
@@ -239,7 +234,10 @@ public class TimelinePresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articleUrl -> {
-        }, throwable -> crashReport.log(throwable));
+        }, throwable -> {
+          throwable.printStackTrace();
+          crashReport.log(throwable);
+        });
   }
 
   private void refreshCardsOnPullToRefresh() {
@@ -251,7 +249,10 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showCardsAndHideRefresh(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
-        }, throwable -> view.showGenericError());
+        }, throwable -> {
+          throwable.printStackTrace();
+          view.showGenericError();
+        });
   }
 
   private void showCardsOnCreate() {
@@ -264,7 +265,10 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
-        }, throwable -> view.showGenericError());
+        }, throwable -> {
+          throwable.printStackTrace();
+          view.showGenericError();
+        });
   }
 
   private void showMoreCardsAndHideLoadMoreProgress(List<Post> cards) {

@@ -5,7 +5,7 @@ package cm.aptoide.pt.v8engine.social.data;
  */
 
 public class PopularAppTouchEvent extends CardTouchEvent {
-  private final long userId;
+  private final Long userId;
   private final String storeTheme;
 
   public PopularAppTouchEvent(PopularApp card, Long userId, String storeTheme, Type actionType) {
@@ -14,7 +14,7 @@ public class PopularAppTouchEvent extends CardTouchEvent {
     this.storeTheme = storeTheme;
   }
 
-  public long getUserId() {
+  public Long getUserId() {
     return userId;
   }
 
