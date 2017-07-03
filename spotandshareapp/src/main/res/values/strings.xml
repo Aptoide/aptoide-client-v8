@@ -13,4 +13,7 @@
   <string name="spotandshare_button_save_profile_edition">save</string>
   <string name="spotandshare_message_error_create_group">There was an error while creating the hotspot</string>
   <string name="spotandshare_title_toolbar"><![CDATA[Spot&Share]]></string>
+  <string name="spotandshare_message_leave_group_warning">Are you sure you want to leave this group?</string>
+  <string name="spotandshare_button_leave_group">Leave</string>
+  <string name="spotandshare_button_cancel_leave_group">cancel</string>
 </resources>
