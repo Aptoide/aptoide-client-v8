@@ -111,8 +111,12 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.articleClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.HEADER))
-        .map(cardTouchEvent -> ((Media) cardTouchEvent.getCard()).getPublisherLink())
-        .doOnNext(link -> link.launch())
+        .doOnNext(cardTouchEvent -> {
+          if (isMediaCard(cardTouchEvent)) {
+            ((Media) cardTouchEvent.getCard()).getPublisherLink()
+                .launch();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articleUrl -> {
         }, throwable -> crashReport.log(throwable));
@@ -125,19 +129,7 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.BODY))
         .doOnNext(cardTouchEvent -> {
-          if (cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.VIDEO) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.ARTICLE) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
+          if (isMediaCard(cardTouchEvent)) {
             ((Media) cardTouchEvent.getCard()).getMediaLink()
                 .launch();
           } else if (cardTouchEvent.getCard()
@@ -239,5 +231,21 @@ public class TimelinePresenter implements Presenter {
   private void showCardsAndHideRefresh(List<Post> cards) {
     view.hideRefresh();
     view.showCards(cards);
+  }
+
+  private boolean isMediaCard(CardTouchEvent cardTouchEvent) {
+    return cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.VIDEO) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.ARTICLE) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.AGGREGATED_SOCIAL_VIDEO);
   }
 }
