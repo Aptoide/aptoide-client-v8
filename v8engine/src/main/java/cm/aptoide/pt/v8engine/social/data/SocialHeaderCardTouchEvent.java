@@ -4,12 +4,12 @@ package cm.aptoide.pt.v8engine.social.data;
  * Created by jdandrade on 03/07/2017.
  */
 
-public class RecommendationCardTouchEvent extends CardTouchEvent {
+public class SocialHeaderCardTouchEvent extends CardTouchEvent {
   private final String storeName;
   private final String storeTheme;
   private final long userId;
 
-  public RecommendationCardTouchEvent(Post card, String storeName, String storeTheme, long userId,
+  public SocialHeaderCardTouchEvent(Post card, String storeName, String storeTheme, long userId,
       Type actionType) {
     super(card, actionType);
     this.storeName = storeName;

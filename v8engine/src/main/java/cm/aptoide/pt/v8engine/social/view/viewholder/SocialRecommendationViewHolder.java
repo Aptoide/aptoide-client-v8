@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
-import cm.aptoide.pt.v8engine.social.data.RecommendationCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -83,7 +83,7 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new RecommendationCardTouchEvent(card, card.getPoster()
+        new SocialHeaderCardTouchEvent(card, card.getPoster()
             .getStore()
             .getName(), card.getPoster()
             .getStore()

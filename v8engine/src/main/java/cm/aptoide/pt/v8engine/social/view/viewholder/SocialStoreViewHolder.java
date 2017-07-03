@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialStore;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
@@ -43,6 +45,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
   private final TextView storeNumberFollowers;
   private final TextView storeNumberApps;
   private final Button followStoreButton;
+  private final RelativeLayout cardHeader;
 
   public SocialStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -66,6 +69,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
     this.storeNumberFollowers = (TextView) view.findViewById(R.id.social_number_of_followers_text);
     this.storeNumberApps = (TextView) view.findViewById(R.id.social_number_of_apps_text);
     this.followStoreButton = (Button) view.findViewById(R.id.follow_btn);
+    this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
   }
 
   @Override public void setCard(SocialStore card, int position) {
@@ -86,6 +90,14 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
     this.storeNameFollow.setText(card.getStoreName());
     this.storeNumberFollowers.setText(String.valueOf(card.getSubscribers()));
     this.storeNumberApps.setText(String.valueOf(card.getAppsNumber()));
+    this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new SocialHeaderCardTouchEvent(card, card.getPoster()
+            .getStore()
+            .getName(), card.getPoster()
+            .getStore()
+            .getStoreTheme(), card.getPoster()
+            .getUser()
+            .getId(), CardTouchEvent.Type.HEADER)));
     showStoreLatestApps(card);
   }
 

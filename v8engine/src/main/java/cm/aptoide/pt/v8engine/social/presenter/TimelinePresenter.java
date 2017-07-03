@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
-import cm.aptoide.pt.v8engine.social.data.RecommendationCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
@@ -125,29 +125,30 @@ public class TimelinePresenter implements Presenter {
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.UPDATE)) {
-            AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
-            timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-          } else if (cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.POPULAR_APP)) {
-            PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
-            timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
-                popularAppTouchEvent.getStoreTheme());
-          } else if (cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_INSTALL)) {
-            RecommendationCardTouchEvent recommendationCardTouchEvent =
-                (RecommendationCardTouchEvent) cardTouchEvent;
-            if (recommendationCardTouchEvent.getStoreName() != null) {
-              timelineNavigation.navigateToStoreTimeline(
-                  recommendationCardTouchEvent.getStoreName(),
-                  recommendationCardTouchEvent.getStoreTheme());
-            } else {
-              timelineNavigation.navigateToStoreTimeline(recommendationCardTouchEvent.getUserId(),
-                  recommendationCardTouchEvent.getStoreTheme());
+              .equals(CardType.SOCIAL_STORE)) {
+            SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
+                ((SocialHeaderCardTouchEvent) cardTouchEvent);
+            navigateToStoreTimeline(socialHeaderCardTouchEvent);
+          } else {
+            if (cardTouchEvent.getCard()
+                .getType()
+                .equals(CardType.UPDATE)) {
+              AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
+              timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
+            } else if (cardTouchEvent.getCard()
+                .getType()
+                .equals(CardType.POPULAR_APP)) {
+              PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
+              timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
+                  popularAppTouchEvent.getStoreTheme());
+            } else if (cardTouchEvent.getCard()
+                .getType()
+                .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
+                .getType()
+                .equals(CardType.SOCIAL_INSTALL)) {
+              SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
+                  (SocialHeaderCardTouchEvent) cardTouchEvent;
+              navigateToStoreTimeline(socialHeaderCardTouchEvent);
             }
           }
         })
@@ -281,5 +282,15 @@ public class TimelinePresenter implements Presenter {
         .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || cardTouchEvent.getCard()
         .getType()
         .equals(CardType.AGGREGATED_SOCIAL_VIDEO);
+  }
+
+  private void navigateToStoreTimeline(SocialHeaderCardTouchEvent socialHeaderCardTouchEvent) {
+    if (socialHeaderCardTouchEvent.getStoreName() != null) {
+      timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getStoreName(),
+          socialHeaderCardTouchEvent.getStoreTheme());
+    } else {
+      timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getUserId(),
+          socialHeaderCardTouchEvent.getStoreTheme());
+    }
   }
 }
