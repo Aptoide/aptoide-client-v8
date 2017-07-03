@@ -8,11 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
+import cm.aptoide.pt.v8engine.social.data.RecommendationCardTouchEvent;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -35,6 +37,7 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
   private final Button getAppButton;
   private final SpannableFactory spannableFactory;
   private final int titleStringResourceId;
+  private final RelativeLayout cardHeader;
 
   public SocialRecommendationViewHolder(View view, int titleStringResourceId,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -57,6 +60,7 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
     this.appRating = (RatingBar) view.findViewById(R.id.rating_bar);
     this.getAppButton =
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
+    this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
   }
 
   @Override public void setCard(RatedRecommendation card, int position) {
@@ -78,6 +82,14 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new RecommendationCardTouchEvent(card, card.getPoster()
+            .getStore()
+            .getName(), card.getPoster()
+            .getStore()
+            .getStoreTheme(), card.getPoster()
+            .getUser()
+            .getId(), CardTouchEvent.Type.HEADER)));
   }
 
   private void showHeaderSecondaryName(RatedRecommendation card) {

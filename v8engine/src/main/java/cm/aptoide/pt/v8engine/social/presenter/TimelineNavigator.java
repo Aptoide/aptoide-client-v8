@@ -29,7 +29,7 @@ public class TimelineNavigator implements TimelineNavigation {
         AppViewFragment.newInstance(packageName, AppViewFragment.OpenType.OPEN_ONLY));
   }
 
-  @Override public void navigateToStore(String storeName, String storeTheme) {
+  @Override public void navigateToStoreHome(String storeName, String storeTheme) {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newStoreFragment(storeName, storeTheme));
   }
@@ -37,6 +37,12 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override public void navigateToStoreTimeline(long userId, String storeTheme) {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline,
+            StoreFragment.OpenType.GetHome));
+  }
+
+  @Override public void navigateToStoreTimeline(String storeName, String storeTheme) {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline,
             StoreFragment.OpenType.GetHome));
   }
 }

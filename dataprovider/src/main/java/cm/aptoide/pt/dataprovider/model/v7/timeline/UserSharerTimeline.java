@@ -17,7 +17,8 @@ public class UserSharerTimeline {
   public UserSharerTimeline(Comment.User user,
       cm.aptoide.pt.dataprovider.model.v7.store.Store store) {
     this.user = new User(user.getId(), user.getName(), user.getAvatar());
-    this.store = new Store(store.getName(), store.getAvatar());
+    this.store = new Store(store.getName(), store.getAvatar(), store.getAppearance()
+        .getTheme());
   }
 
   public User getUser() {
@@ -69,16 +70,14 @@ public class UserSharerTimeline {
   }
 
   public class Store {
+    private final String storeTheme;
     private String name;
     private String avatar;
 
-    public Store() {
-
-    }
-
-    public Store(String name, String avatar) {
+    public Store(String name, String avatar, String storeTheme) {
       this.name = name;
       this.avatar = avatar;
+      this.storeTheme = storeTheme;
     }
 
     public String getName() {
@@ -95,6 +94,10 @@ public class UserSharerTimeline {
 
     public void setAvatar(String avatar) {
       this.avatar = avatar;
+    }
+
+    public String getStoreTheme() {
+      return storeTheme;
     }
   }
 }

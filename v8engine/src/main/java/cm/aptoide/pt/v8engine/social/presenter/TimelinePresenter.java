@@ -20,6 +20,7 @@ import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
+import cm.aptoide.pt.v8engine.social.data.RecommendationCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
@@ -121,18 +122,33 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
-            timelineNavigation.navigateToStore(card.getStoreName(), card.getStoreTheme());
+            timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
-            timelineNavigation.navigateToStore(card.getStoreName(), card.getStoreTheme());
+            timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.POPULAR_APP)) {
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
                 popularAppTouchEvent.getStoreTheme());
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_INSTALL)) {
+            RecommendationCardTouchEvent recommendationCardTouchEvent =
+                (RecommendationCardTouchEvent) cardTouchEvent;
+            if (recommendationCardTouchEvent.getStoreName() != null) {
+              timelineNavigation.navigateToStoreTimeline(
+                  recommendationCardTouchEvent.getStoreName(),
+                  recommendationCardTouchEvent.getStoreTheme());
+            } else {
+              timelineNavigation.navigateToStoreTimeline(recommendationCardTouchEvent.getUserId(),
+                  recommendationCardTouchEvent.getStoreTheme());
+            }
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

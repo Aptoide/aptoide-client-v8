@@ -12,7 +12,9 @@ public interface TimelineNavigation {
 
   void navigateToAppView(String packageName, AppViewFragment.OpenType openType);
 
-  void navigateToStore(String storeName, String storeTheme);
+  void navigateToStoreHome(String storeName, String storeTheme);
 
   void navigateToStoreTimeline(long userId, String storeTheme);
+
+  void navigateToStoreTimeline(String storeName, String storeTheme);
 }

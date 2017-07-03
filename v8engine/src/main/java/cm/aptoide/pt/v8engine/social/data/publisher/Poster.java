@@ -43,6 +43,14 @@ public class Poster {
     }
   }
 
+  public UserSharerTimeline.User getUser() {
+    return user;
+  }
+
+  public UserSharerTimeline.Store getStore() {
+    return store;
+  }
+
   private boolean doesUserHasStore() {
     return store != null;
   }
