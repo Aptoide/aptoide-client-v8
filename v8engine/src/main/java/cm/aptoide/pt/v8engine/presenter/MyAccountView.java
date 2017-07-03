@@ -14,6 +14,10 @@ public interface MyAccountView extends View {
 
   Observable<Void> moreNotificationsClick();
 
+  Observable<Void> storeClick();
+
+  Observable<Void> userClick();
+
   Observable<AptoideNotification> notificationSelection();
 
   void showNotifications(List<AptoideNotification> notifications);

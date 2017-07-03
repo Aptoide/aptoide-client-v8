@@ -5,6 +5,7 @@ import cm.aptoide.pt.v8engine.notification.view.InboxFragment;
 import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
 import cm.aptoide.pt.v8engine.view.account.user.ManageUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 
 /**
  * Created by pedroribeiro on 16/05/17.
@@ -32,5 +33,15 @@ public class MyAccountNavigator {
 
   public void navigateToEditProfileView() {
     fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToEdit());
+  }
+
+  public void navigateToUserView(String userId) {
+    fragmentNavigator.navigateTo(
+        StoreFragment.newInstance(userId, "DEFAULT", StoreFragment.OpenType.GetHome));
+  }
+
+  public void navigateToStoreView(String storeName, String storeTheme) {
+    fragmentNavigator.navigateTo(
+        StoreFragment.newInstance(storeName, storeTheme, StoreFragment.OpenType.GetStore));
   }
 }

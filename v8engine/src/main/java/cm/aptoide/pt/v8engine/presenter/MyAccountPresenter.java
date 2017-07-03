@@ -107,6 +107,26 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.userClick())
+        .flatMap(click -> accountManager.accountStatus()
+            .first())
+        .doOnNext(account -> navigateToUser(account.getId()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(account -> {
+        }, throwable -> crashReport.log(throwable));
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.storeClick())
+        .flatMap(click -> accountManager.accountStatus()
+            .first())
+        .doOnNext(account -> navigateToStore(account.getStoreName(), "DEFAULT"))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(account -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @Override public void saveState(Bundle state) {
@@ -115,6 +135,14 @@ public class MyAccountPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void navigateToUser(String id) {
+    navigator.navigateToUserView(id);
+  }
+
+  private void navigateToStore(String storeName, String storeTheme) {
+    navigator.navigateToStoreView(storeName, storeTheme);
   }
 
   private Observable<Void> signOutClick() {

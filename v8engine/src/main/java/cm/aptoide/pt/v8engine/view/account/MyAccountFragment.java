@@ -70,6 +70,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private RelativeLayout header;
   private TextView headerText;
   private Button moreNotificationsButton;
+  private View userLayout;
 
   private PublishSubject<AptoideNotification> notificationSubject;
   private InboxAdapter adapter;
@@ -97,6 +98,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     header = null;
     headerText = null;
     moreNotificationsButton = null;
+    userLayout = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -138,6 +140,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
     usernameTextView = (TextView) view.findViewById(R.id.my_account_username);
     storeNameTextView = (TextView) view.findViewById(R.id.my_account_store_name);
+    userLayout = view.findViewById(R.id.my_account_user);
     userProfileEditButton = (Button) view.findViewById(R.id.my_account_edit_user_profile);
     userStoreEditButton = (Button) view.findViewById(R.id.my_account_edit_user_store);
     storeLayout = (RelativeLayout) view.findViewById(R.id.my_account_store);
@@ -197,6 +200,14 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public Observable<Void> moreNotificationsClick() {
     return RxView.clicks(moreNotificationsButton);
+  }
+
+  @Override public Observable<Void> storeClick() {
+    return RxView.clicks(storeLayout);
+  }
+
+  @Override public Observable<Void> userClick() {
+    return RxView.clicks(userLayout);
   }
 
   @Override public Observable<AptoideNotification> notificationSelection() {
