@@ -78,14 +78,14 @@ public class ManageStorePresenter implements Presenter {
     Completable saveDataCompletable =
         storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
             storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
-            storeModel.getStoreThemeName(), storeModel.storeExists())
-            .onErrorResumeNext(err -> Completable.fromAction(() -> view.dismissWaitProgressBar())
-                .andThen(handleStoreCreationErrors(err)));
+            storeModel.getStoreThemeName(), storeModel.storeExists());
 
     return Completable.fromAction(() -> view.showWaitProgressBar())
         .andThen(saveDataCompletable)
         .doOnCompleted(() -> view.dismissWaitProgressBar())
-        .doOnCompleted(() -> navigator.navigate());
+        .doOnCompleted(() -> navigator.navigate())
+        .onErrorResumeNext(err -> Completable.fromAction(() -> view.dismissWaitProgressBar())
+            .andThen(handleStoreCreationErrors(err)));
   }
 
   private Completable handleStoreCreationErrors(Throwable err) {
