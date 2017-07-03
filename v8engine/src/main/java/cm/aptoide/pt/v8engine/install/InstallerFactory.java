@@ -31,9 +31,11 @@ public class InstallerFactory {
   public static final int DEFAULT = 0;
   public static final int ROLLBACK = 1;
   private final MinimalAdMapper adMapper;
+  private final InstallerAnalytics installerAnalytics;
 
-  public InstallerFactory(MinimalAdMapper adMapper) {
+  public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics) {
     this.adMapper = adMapper;
+    this.installerAnalytics = installerAnalytics;
   }
 
   public Installer create(Context context, int type) {
@@ -54,7 +56,8 @@ public class InstallerFactory {
         ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences())
         || BuildConfig.DEBUG, RepositoryFactory.getInstalledRepository(), 180000,
         ((V8Engine) context.getApplicationContext()).getRootAvailabilityManager(),
-        ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());
+        ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences(),
+        installerAnalytics);
   }
 
   @NonNull private RollbackInstaller getRollbackInstaller(Context context) {

@@ -28,10 +28,12 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
+import cm.aptoide.pt.v8engine.install.InstallFabricEvents;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import com.crashlytics.android.answers.Answers;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -77,8 +79,10 @@ public class InstallService extends Service {
     Logger.d(TAG, "Install service is starting");
     downloadManager = ((V8Engine) getApplicationContext()).getDownloadManager();
     final MinimalAdMapper adMapper = new MinimalAdMapper();
-    defaultInstaller = new InstallerFactory(adMapper).create(this, InstallerFactory.DEFAULT);
-    rollbackInstaller = new InstallerFactory(adMapper).create(this, InstallerFactory.ROLLBACK);
+    InstallerFactory installerFactory = new InstallerFactory(adMapper,
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()));
+    defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
+    rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
