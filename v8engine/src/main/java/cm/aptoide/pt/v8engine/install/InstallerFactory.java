@@ -10,7 +10,9 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -48,7 +50,10 @@ public class InstallerFactory {
   @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
     return new DefaultInstaller(context.getPackageManager(),
         getInstallationProvider(((V8Engine) context.getApplicationContext()).getDownloadManager()),
-        new FileUtils(), Analytics.getInstance(),
+        new FileUtils(), Analytics.getInstance(), ToolboxManager.isDebug(
+        ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences())
+        || BuildConfig.DEBUG, RepositoryFactory.getInstalledRepository(), 180000,
+        ((V8Engine) context.getApplicationContext()).getRootAvailabilityManager(),
         ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());
   }
 
@@ -61,6 +66,7 @@ public class InstallerFactory {
   @NonNull private DownloadInstallationProvider getInstallationProvider(
       AptoideDownloadManager downloadManager) {
     return new DownloadInstallationProvider(downloadManager,
-        AccessorFactory.getAccessorFor(Download.class), adMapper);
+        AccessorFactory.getAccessorFor(Download.class), RepositoryFactory.getInstalledRepository(),
+        adMapper);
   }
 }

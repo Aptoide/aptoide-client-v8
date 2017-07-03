@@ -14,9 +14,9 @@ import lombok.ToString;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
   public static final int POPULAR = 3;
-  private final String appName;
-  private final String graphic;
-  private final long dismissed;
+  private String appName;
+  private String graphic;
+  private long dismissed;
   private String abTestingGroup;
   private String body;
   private int campaignId;
@@ -64,6 +64,14 @@ import lombok.ToString;
     this.campaignId = campaignId;
     this.lang = lang;
     this.urlTrack = urlTrack;
+  }
+
+  public AptoideNotification(String body, String img, String title, String url, String appName) {
+    this.body = body;
+    this.img = img;
+    this.title = title;
+    this.url = url;
+    this.appName = appName;
   }
 
   public long getDismissed() {

@@ -10,9 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
@@ -27,8 +24,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -61,7 +58,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   private IdsRepository idsRepository;
-  private InstalledRepository installedRepository;
   private DialogUtils dialogUtils;
 
   private long appId;
@@ -77,6 +73,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
+  private InstalledRepository installedRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
@@ -116,8 +113,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     inflater.inflate(R.menu.menu_install, menu);
     installMenuItem = menu.findItem(R.id.menu_install);
 
-    InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
-    accessor.get(packageName)
+    installedRepository.getInstalled(packageName)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installed -> {
           if (installed != null) {
             // app installed... update text
@@ -263,6 +260,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    installedRepository = RepositoryFactory.getInstalledRepository();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
   }

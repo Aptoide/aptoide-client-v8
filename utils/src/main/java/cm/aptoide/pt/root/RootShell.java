@@ -19,13 +19,13 @@
  * See each License for the specific language governing permissions and
  * limitations under that License.
  */
-package cm.aptoide.pt.v8engine.install.root;
+package cm.aptoide.pt.root;
 
 import android.util.Log;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.install.root.exceptions.RootDeniedException;
-import cm.aptoide.pt.v8engine.install.root.execution.Command;
-import cm.aptoide.pt.v8engine.install.root.execution.Shell;
+import cm.aptoide.pt.root.exceptions.RootDeniedException;
+import cm.aptoide.pt.root.execution.Command;
+import cm.aptoide.pt.root.execution.Shell;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +41,7 @@ public class RootShell {
   // # Public Variables #
   // --------------------
 
-  public static final String version = "RootShell v1.4";
+  public static final String version = "RootShell v1.4.1-aptoide";
   private static final String TAG = RootShell.class.getSimpleName();
   public static boolean debugMode = false;
   /**
@@ -159,6 +159,9 @@ public class RootShell {
           .add(command);
       commandWait(RootShell.getShell(true), command);
     } catch (Exception e) {
+      if (e instanceof RootDeniedException) {
+        return true;
+      }
       RootShell.log("Exception: " + e);
       return false;
     }

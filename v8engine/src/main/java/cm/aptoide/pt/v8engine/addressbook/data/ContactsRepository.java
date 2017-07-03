@@ -32,7 +32,6 @@ public class ContactsRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
-  private final IdsRepository idsRepository;
   private final ContactUtils contactUtils;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
@@ -43,7 +42,6 @@ public class ContactsRepository {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    this.idsRepository = idsRepository;
     this.contactUtils = contactUtils;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
