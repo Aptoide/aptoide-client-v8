@@ -210,8 +210,6 @@ dependencies {
   compile("com.android.support:multidex:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
-
-  compile "com.appsflyer:af-android-sdk:${APPS_FLYER_VERSION}"
 }
 
 String getDate() {
