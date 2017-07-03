@@ -21,7 +21,6 @@ import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import com.crashlytics.android.answers.Answers;
 
 /**
  * Created by marcelobenites on 9/29/16.
@@ -32,13 +31,11 @@ public class InstallerFactory {
   public static final int DEFAULT = 0;
   public static final int ROLLBACK = 1;
   private final MinimalAdMapper adMapper;
-  private Answers fabric;
-  private Analytics analytics;
+  private final InstallerAnalytics installerAnalytics;
 
-  public InstallerFactory(MinimalAdMapper adMapper, Answers fabric, Analytics analytics) {
+  public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics) {
     this.adMapper = adMapper;
-    this.fabric = fabric;
-    this.analytics = analytics;
+    this.installerAnalytics = installerAnalytics;
   }
 
   public Installer create(Context context, int type) {
@@ -60,7 +57,7 @@ public class InstallerFactory {
         || BuildConfig.DEBUG, RepositoryFactory.getInstalledRepository(), 180000,
         ((V8Engine) context.getApplicationContext()).getRootAvailabilityManager(),
         ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences(),
-        new InstallFabricEvents(analytics, fabric));
+        installerAnalytics);
   }
 
   @NonNull private RollbackInstaller getRollbackInstaller(Context context) {

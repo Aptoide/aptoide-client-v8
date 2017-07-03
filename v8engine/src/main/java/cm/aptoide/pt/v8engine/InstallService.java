@@ -28,6 +28,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
+import cm.aptoide.pt.v8engine.install.InstallFabricEvents;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -78,8 +79,8 @@ public class InstallService extends Service {
     Logger.d(TAG, "Install service is starting");
     downloadManager = ((V8Engine) getApplicationContext()).getDownloadManager();
     final MinimalAdMapper adMapper = new MinimalAdMapper();
-    InstallerFactory installerFactory =
-        new InstallerFactory(adMapper, Answers.getInstance(), Analytics.getInstance());
+    InstallerFactory installerFactory = new InstallerFactory(adMapper,
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()));
     defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);
     installManager =

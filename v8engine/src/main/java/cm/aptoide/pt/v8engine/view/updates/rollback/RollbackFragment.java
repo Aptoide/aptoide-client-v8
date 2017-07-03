@@ -18,6 +18,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.install.InstallFabricEvents;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
@@ -95,9 +96,9 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
 
-    installManager =
-        new InstallerFactory(new MinimalAdMapper(), Answers.getInstance(), analytics).create(
-            getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallerFactory(new MinimalAdMapper(),
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance())).create(
+        getContext(), InstallerFactory.ROLLBACK);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
