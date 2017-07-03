@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -34,6 +35,7 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
   private final Button appUpdate;
   private final SpannableFactory spannableFactory;
   private final TextView errorText;
+  private final RelativeLayout cardHeader;
 
   public AppUpdateViewHolder(View view, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
@@ -52,7 +54,9 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
     this.appUpdate =
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
     this.errorText =
-        (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_error);
+        (TextView) view.findViewById(R.id.displayable_social_timeline_app_update_error);
+    this.cardHeader =
+        (RelativeLayout) view.findViewById(R.id.displayable_social_timeline_app_update_header);
   }
 
   @Override public void setCard(AppUpdate card, int position) {
@@ -68,6 +72,8 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
     this.errorText.setVisibility(View.GONE);
     this.appUpdate.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new AppUpdateCardTouchEvent(card, CardTouchEvent.Type.BODY, position)));
+    this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.HEADER)));
   }
 
   private void setAppUpdateButtonText(AppUpdate card) {

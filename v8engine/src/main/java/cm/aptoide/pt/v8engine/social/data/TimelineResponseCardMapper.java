@@ -110,10 +110,12 @@ public class TimelineResponseCardMapper {
             ((AppUpdateTimelineItem) item).getData();
         cards.add(new AppUpdate(appUpdate.getCardId(), appUpdate.getStore()
             .getName(), appUpdate.getStore()
-            .getAvatar(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getPackageName(),
-            appUpdate.getAdded(), abUrl, CardType.UPDATE, appUpdate.getFile(), appUpdate.getObb(),
+            .getAvatar(), appUpdate.getStore()
+            .getAppearance()
+            .getTheme(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getPackageName(),
+            appUpdate.getAdded(), abUrl, CardType.UPDATE, appUpdate.getFile(),
             // TODO: 26/06/2017 probably should get progress state someway because the download might be happening already.
-            Progress.INACTIVE));
+            appUpdate.getObb(), Progress.INACTIVE));
       } else if (item instanceof PopularAppTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.PopularApp popularApp =
             ((PopularAppTimelineItem) item).getData();

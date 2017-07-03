@@ -6,7 +6,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -121,6 +120,11 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
+            timelineNavigation.navigateToStore(card.getStoreName(), card.getStoreTheme());
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.UPDATE)) {
+            AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
             timelineNavigation.navigateToStore(card.getStoreName(), card.getStoreTheme());
           }
         })

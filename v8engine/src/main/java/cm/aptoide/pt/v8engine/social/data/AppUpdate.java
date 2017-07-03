@@ -13,6 +13,7 @@ public class AppUpdate implements Post {
   private final String cardId;
   private final String storeName;
   private final String storeAvatar;
+  private final String storeTheme;
   private final String appUpdateIcon;
   private final String appUpdateName;
   private final String packageName;
@@ -23,12 +24,13 @@ public class AppUpdate implements Post {
   private final Obb obb;
   private int progress;
 
-  public AppUpdate(String cardId, String storeName, String storeAvatar, String appUpdateIcon,
-      String appUpdateName, String packageName, Date updateAddedDate, String abUrl,
-      CardType cardType, File file, Obb obb, int progress) {
+  public AppUpdate(String cardId, String storeName, String storeAvatar, String storeTheme,
+      String appUpdateIcon, String appUpdateName, String packageName, Date updateAddedDate,
+      String abUrl, CardType cardType, File file, Obb obb, int progress) {
     this.cardId = cardId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;
+    this.storeTheme = storeTheme;
     this.appUpdateIcon = appUpdateIcon;
     this.appUpdateName = appUpdateName;
     this.packageName = packageName;
@@ -38,6 +40,10 @@ public class AppUpdate implements Post {
     this.file = file;
     this.obb = obb;
     this.progress = progress;
+  }
+
+  public String getStoreTheme() {
+    return storeTheme;
   }
 
   public int getProgress() {
