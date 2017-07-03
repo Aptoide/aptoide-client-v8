@@ -75,5 +75,4 @@ public class SpotAndShare {
   public interface AcceptReception {
     boolean accept(AndroidAppInfo androidAppInfo);
   }
-
 }
