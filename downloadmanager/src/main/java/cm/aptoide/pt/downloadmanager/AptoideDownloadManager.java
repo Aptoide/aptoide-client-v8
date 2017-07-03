@@ -21,18 +21,9 @@ import rx.schedulers.Schedulers;
 public class AptoideDownloadManager {
 
   public static final String FILE_MD5_EXTRA = "APTOIDE_APPID_EXTRA";
-  public static final String DOWNLOADMANAGER_ACTION_PAUSE =
-      "cm.aptoide.downloadmanager.action.pause"; // click on pause button
 
-  public static final String DOWNLOADMANAGER_ACTION_OPEN = "cm.aptoide.downloadmanager.action.open";
-  // open downloads tabs
-  public static final String DOWNLOADMANAGER_ACTION_START_DOWNLOAD =
-      "cm.aptoide.downloadmanager.action.start.download";
-  public static final String DOWNLOADMANAGER_ACTION_NOTIFICATION =
-      "cm.aptoide.downloadmanager.action.notification"; //open app view
   static public final int PROGRESS_MAX_VALUE = 100;
   private static final String TAG = AptoideDownloadManager.class.getSimpleName();
-  private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
 
   private final String downloadsStoragePath;
   private final String apkPath;
