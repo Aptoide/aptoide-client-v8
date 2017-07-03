@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -150,11 +149,16 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           permissionManager.requestDownloadAccess(activity)
               .flatMap(
                   permissionGranted -> permissionManager.requestExternalStoragePermission(activity))
-              .flatMap(success -> installManager.install(downloadFactory.create(autoUpdateInfo)))
-              .filter(progress -> !isDownloading(progress))
+              .flatMap(success -> installManager.install(downloadFactory.create(autoUpdateInfo))
+                  .toObservable())
               .first()
-              .subscribe(progress -> {
-                if (progress.getState() == Progress.ERROR) {
+              .flatMap(downloadProgress -> installManager.getInstall(autoUpdateInfo.md5,
+                  autoUpdateInfo.packageName, autoUpdateInfo.vercode))
+              .skipWhile(installationProgress -> installationProgress.getState()
+                  != Install.InstallationStatus.INSTALLING)
+              .first(progress -> progress.getState() != Install.InstallationStatus.INSTALLING)
+              .subscribe(install -> {
+                if (install.isFailed()) {
                   ShowMessage.asSnack(activity, R.string.error_SYS_1);
                 }
                 dismissDialog();
@@ -174,17 +178,6 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     if (activity.is_resumed()) {
       updateSelfDialog.show();
     }
-  }
-
-  private boolean isDownloading(Progress<Download> progress) {
-    return progress.getRequest()
-        .getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest()
-        .getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest()
-        .getOverallDownloadStatus() == Download.INVALID_STATUS
-        || progress.getRequest()
-        .getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   private void dismissDialog() {

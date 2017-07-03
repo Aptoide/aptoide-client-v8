@@ -10,6 +10,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackFactory;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -31,52 +32,53 @@ public class RollbackInstaller implements Installer {
     this.installationProvider = installationProvider;
   }
 
-  @Override public Observable<Boolean> isInstalled(String md5) {
-    return defaultInstaller.isInstalled(md5);
-  }
-
-  @Override public Observable<Void> install(Context context, String md5) {
+  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
-        .flatMap(installation -> saveRollback(installation, Rollback.Action.INSTALL))
-        .flatMap(success -> defaultInstaller.install(context, md5));
+        .first()
+        .toSingle()
+        .flatMapCompletable(installation -> saveRollback(installation, Rollback.Action.INSTALL))
+        .andThen(defaultInstaller.install(context, md5, forceDefaultInstall));
   }
 
-  @Override public Observable<Void> update(Context context, String md5) {
+  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
-        .flatMap(installation -> saveRollback(context, installation.getPackageName(),
+        .first()
+        .toSingle()
+        .flatMapCompletable(installation -> saveRollback(context, installation.getPackageName(),
             Rollback.Action.UPDATE, installation.getIcon(), installation.getVersionName()))
-        .flatMap(success -> defaultInstaller.update(context, md5));
+        .andThen(defaultInstaller.update(context, md5, forceDefaultInstall));
   }
 
-  @Override public Observable<Void> downgrade(Context context, String md5) {
+  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
-        .flatMap(installation -> saveRollback(context, installation.getPackageName(),
+        .first()
+        .toSingle()
+        .flatMapCompletable(installation -> saveRollback(context, installation.getPackageName(),
             Rollback.Action.DOWNGRADE, installation.getIcon(), installation.getVersionName()))
-        .flatMap(success -> defaultInstaller.downgrade(context, md5));
+        .andThen(defaultInstaller.downgrade(context, md5, forceDefaultInstall));
   }
 
-  @Override
-  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
-    return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null, versionName).flatMap(
-        rollback -> defaultInstaller.uninstall(context, packageName, versionName));
+  @Override public Completable uninstall(Context context, String packageName, String versionName) {
+    return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null, versionName).andThen(
+        defaultInstaller.uninstall(context, packageName, versionName));
   }
 
-  private Observable<Void> saveRollback(Context context, String packageName, Rollback.Action action,
+  @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
+    return defaultInstaller.getState(packageName, versionCode);
+  }
+
+  private Completable saveRollback(Context context, String packageName, Rollback.Action action,
       String icon, String versionName) {
     return rollbackFactory.createRollback(context, packageName, action, icon, versionName)
-        .map(rollback -> {
-          repository.save(rollback);
-          return null;
-        });
+        .doOnNext(rollback -> repository.save(rollback))
+        .toCompletable();
   }
 
-  private Observable<Void> saveRollback(RollbackInstallation installation, Rollback.Action action) {
-    return Observable.fromCallable(() -> {
-      repository.save(rollbackFactory.createRollback(installation, action));
-      return null;
-    });
+  private Completable saveRollback(RollbackInstallation installation, Rollback.Action action) {
+    return Completable.fromAction(
+        () -> repository.save(rollbackFactory.createRollback(installation, action)));
   }
 }

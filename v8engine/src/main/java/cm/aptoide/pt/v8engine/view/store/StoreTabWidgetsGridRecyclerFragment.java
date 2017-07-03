@@ -24,7 +24,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
@@ -47,6 +49,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   private StoreUtilsProxy storeUtilsProxy;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private InstalledRepository installedRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
@@ -68,6 +71,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
         tokenInvalidator,
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
@@ -95,7 +99,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
           return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
               getContext(), accountManager, storeUtilsProxy,
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-              getContext().getResources());
+              getContext().getResources(), installedRepository);
         })
         .toList()
         .first();

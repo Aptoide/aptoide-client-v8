@@ -26,8 +26,8 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
@@ -189,7 +189,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       for (Update update : updateList) {
         updatesDisplayablesList.add(
             UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
-                downloadInstallEventConverter, installConverter, new PermissionManager()));
+                downloadInstallEventConverter, installConverter, installedRepository,
+                new PermissionManager()));
       }
     }
     addDisplayables(updatesDisplayablesList, false);
@@ -222,7 +223,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    * @return {@link Observable} to a {@link List} of {@link Installed} apps
    */
   private Observable<List<Installed>> fetchInstalled() {
-    return installedRepository.getAllSorted()
+    return installedRepository.getAllInstalledSorted()
         .first()
         .flatMapIterable(list -> list)
         .filter(item -> !item.isSystemApp())

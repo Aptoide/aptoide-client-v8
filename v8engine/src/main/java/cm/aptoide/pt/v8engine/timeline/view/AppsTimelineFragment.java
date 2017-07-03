@@ -21,8 +21,6 @@ import android.view.View;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Datalist;
@@ -42,8 +40,10 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
@@ -259,6 +259,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     packageRepository = ((V8Engine) getContext().getApplicationContext()).getPackageRepository();
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
+    InstalledRepository installedRepository = RepositoryFactory.getInstalledRepository();
 
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
@@ -271,8 +272,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences);
+            installedRepository), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences);
 
     final ConnectivityManager connectivityManager =
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -290,6 +291,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory,
                 tokenInvalidator, V8Engine.getConfiguration()
                 .getAppId(), sharedPreferences, connectivityManager, telephonyManager),
+            installedRepository,
             new TimelineNavigator(getFragmentNavigator(), getContext().getString(R.string.likes)),
             getContext().getResources(), Application.getConfiguration()
             .getMarketName(), windowManager);

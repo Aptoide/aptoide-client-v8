@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.download.ScheduledDownloadRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -66,9 +67,8 @@ public final class RepositoryFactory {
     return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 
-  public static cm.aptoide.pt.v8engine.repository.InstalledRepository getInstalledRepository() {
-    return new cm.aptoide.pt.v8engine.repository.InstalledRepository(
-        AccessorFactory.getAccessorFor(Installed.class));
+  public static InstalledRepository getInstalledRepository() {
+    return new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
   }
 
   public static cm.aptoide.pt.v8engine.repository.StoreRepository getStoreRepository() {

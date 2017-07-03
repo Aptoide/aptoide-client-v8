@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 08/03/17.
@@ -45,5 +46,9 @@ public class SecurePreferences extends Preferences {
 
   @Override public Completable remove(String key) {
     return super.remove(decoder.encrypt(key));
+  }
+
+  @Override public Single<Boolean> contains(String key) {
+    return super.contains(decoder.encrypt(key));
   }
 }

@@ -90,7 +90,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
                 ShowMessage.asSnack(context, R.string.uninstall);
                 compositeSubscription.add(
                     displayable.uninstall(context, displayable.getDownloadFromPojo())
-                        .subscribe(uninstalled -> {
+                        .subscribe(() -> {
                         }, throwable -> throwable.printStackTrace()));
                 break;
 

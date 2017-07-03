@@ -19,11 +19,11 @@
  * See each License for the specific language governing permissions and
  * limitations under that License.
  */
-package cm.aptoide.pt.v8engine.install.root.execution;
+package cm.aptoide.pt.root.execution;
 
 import android.content.Context;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
-import cm.aptoide.pt.v8engine.install.root.exceptions.RootDeniedException;
+import cm.aptoide.pt.root.RootShell;
+import cm.aptoide.pt.root.exceptions.RootDeniedException;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
@@ -534,10 +534,7 @@ public class Shell {
             throw e;
           }
         } catch (RootDeniedException e) {
-          if (retries++ >= retry) {
-            RootShell.log("RootDeniedException, could not start shell");
-            throw e;
-          }
+          throw e;
         } catch (TimeoutException e) {
           if (retries++ >= retry) {
             RootShell.log("TimeoutException, could not start shell");
@@ -898,7 +895,7 @@ public class Shell {
 
       //create new root shell with new context...
 
-      return Shell.startRootShell(this.shellTimeout, shellContext, 3);
+      return Shell.startRootShell(this.shellTimeout, shellContext, 0);
     } else {
       //can only switch context on a root shell...
       RootShell.log("Can only switch context on a root shell!");
