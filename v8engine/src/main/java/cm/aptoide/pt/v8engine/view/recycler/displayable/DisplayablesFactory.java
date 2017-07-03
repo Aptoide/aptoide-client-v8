@@ -29,6 +29,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
@@ -63,7 +64,7 @@ public class DisplayablesFactory {
   public static Observable<Displayable> parse(GetStoreWidgets.WSWidget widget, String storeTheme,
       StoreRepository storeRepository, StoreContext storeContext, Context context,
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
-      WindowManager windowManager, Resources resources) {
+      WindowManager windowManager, Resources resources, InstalledRepository installedRepository) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -86,7 +87,8 @@ public class DisplayablesFactory {
 
         case DISPLAYS:
           return Observable.just(
-              getDisplays(widget, storeTheme, storeContext, windowManager, resources));
+              getDisplays(widget, storeTheme, storeContext, windowManager, resources,
+                  installedRepository));
 
         case ADS:
           List<Displayable> adsList = getAds(widget, new MinimalAdMapper());
@@ -262,7 +264,8 @@ public class DisplayablesFactory {
   }
 
   private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      StoreContext storeContext, WindowManager windowManager, Resources resources) {
+      StoreContext storeContext, WindowManager windowManager, Resources resources,
+      InstalledRepository installedRepository) {
     GetStoreDisplays getStoreDisplays = (GetStoreDisplays) wsWidget.getViewObject();
     if (getStoreDisplays == null) {
       return new EmptyDisplayable();
@@ -272,7 +275,8 @@ public class DisplayablesFactory {
 
     for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
       DisplayablePojo<GetStoreDisplays.EventImage> displayablePojo =
-          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag(), storeContext);
+          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag(), storeContext,
+              installedRepository);
 
       Event.Name name = displayablePojo.getPojo()
           .getEvent()

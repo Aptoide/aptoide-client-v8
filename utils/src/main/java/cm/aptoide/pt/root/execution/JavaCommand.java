@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.install.root.execution;
+package cm.aptoide.pt.root.execution;
 
 import android.content.Context;
 

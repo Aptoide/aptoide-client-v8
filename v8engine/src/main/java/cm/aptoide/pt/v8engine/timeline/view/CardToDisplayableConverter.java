@@ -27,6 +27,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
@@ -69,13 +70,15 @@ public class CardToDisplayableConverter implements CardToDisplayable {
   private final Resources resources;
   private final String marketName;
   private final WindowManager windowManager;
+  private InstalledRepository installedRepository;
 
   public CardToDisplayableConverter(SocialRepository socialRepository,
       TimelineAnalytics timelineAnalytics, InstallManager installManager,
       PermissionManager permissionManager, StoreCredentialsProvider storeCredentialsProvider,
       InstallEventConverter installEventConverter, Analytics analytics,
-      DownloadEventConverter downloadEventConverter, TimelineNavigator timelineNavigator,
-      Resources resources, String marketName, WindowManager windowManager) {
+      DownloadEventConverter downloadEventConverter, InstalledRepository installedRepository,
+      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      WindowManager windowManager) {
     this.socialRepository = socialRepository;
     this.timelineAnalytics = timelineAnalytics;
     this.installManager = installManager;
@@ -84,6 +87,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     this.installEventConverter = installEventConverter;
     this.analytics = analytics;
     this.downloadEventConverter = downloadEventConverter;
+    this.installedRepository = installedRepository;
     this.converters = new HashMap<>();
     this.timelineNavigator = timelineNavigator;
     this.resources = resources;
@@ -197,8 +201,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           LinksHandlerFactory linksHandlerFactory) {
 
         return SocialVideoDisplayable.from(((SocialVideo) card), dateCalculator, spannableFactory,
-            linksHandlerFactory, timelineAnalytics, socialRepository, timelineNavigator,
-            windowManager);
+            linksHandlerFactory, timelineAnalytics, socialRepository, installedRepository,
+            timelineNavigator, windowManager);
       }
     });
 
@@ -212,7 +216,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
 
         return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator,
             spannableFactory, linksHandlerFactory, timelineAnalytics, socialRepository,
-            timelineNavigator, windowManager);
+            installedRepository, timelineNavigator, windowManager);
       }
     });
 
@@ -225,7 +229,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           LinksHandlerFactory linksHandlerFactory) {
 
         return VideoDisplayable.from((Video) card, dateCalculator, spannableFactory,
-            linksHandlerFactory, timelineAnalytics, socialRepository, windowManager);
+            linksHandlerFactory, timelineAnalytics, socialRepository, installedRepository,
+            windowManager);
       }
     });
 
@@ -238,7 +243,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           LinksHandlerFactory linksHandlerFactory) {
 
         return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory,
-            linksHandlerFactory, timelineAnalytics, socialRepository, windowManager);
+            linksHandlerFactory, timelineAnalytics, socialRepository, installedRepository,
+            windowManager);
       }
     });
 

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.downloads.active;
 
-import android.content.Context;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -14,17 +13,17 @@ import rx.functions.Action0;
 public class ActiveDownloadDisplayable extends Displayable {
 
   private final InstallManager installManager;
-  private final Download download;
+  private final Install installation;
   private Action0 onResumeAction;
   private Action0 onPauseAction;
 
   public ActiveDownloadDisplayable() {
     this.installManager = null;
-    this.download = null;
+    this.installation = null;
   }
 
-  public ActiveDownloadDisplayable(Download download, InstallManager installManager) {
-    this.download = download;
+  public ActiveDownloadDisplayable(Install installation, InstallManager installManager) {
+    this.installation = installation;
     this.installManager = installManager;
   }
 
@@ -50,13 +49,13 @@ public class ActiveDownloadDisplayable extends Displayable {
     super.onPause();
   }
 
-  public void pauseInstall(Context context) {
-    installManager.stopInstallation(download.getMd5());
+  public void pauseInstall() {
+    installManager.stopInstallation(installation.getMd5());
   }
 
-  public Observable<Download> getDownloadObservable() {
-    return installManager.getInstallation(download.getMd5())
-        .map(downloadProgress -> downloadProgress.getRequest());
+  public Observable<Install> getInstallationObservable() {
+    return installManager.getInstall(installation.getMd5(),
+        installation.getPackageName(), installation.getVersionCode());
   }
 
   public void setOnPauseAction(Action0 onPauseAction) {

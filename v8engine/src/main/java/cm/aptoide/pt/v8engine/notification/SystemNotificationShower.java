@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.installer.RootInstallErrorNotification;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
@@ -125,5 +126,31 @@ public class SystemNotificationShower {
 
     return PendingIntent.getBroadcast(context, notificationId, resultIntent,
         PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
+  public void showNotification(Context context,
+      RootInstallErrorNotification installErrorNotification) {
+    android.app.Notification notification =
+        mapToAndroidNotification(context, installErrorNotification);
+    notificationManager.notify(installErrorNotification.getNotificationId(), notification);
+  }
+
+  private Notification mapToAndroidNotification(Context context,
+      RootInstallErrorNotification installErrorNotification) {
+    Notification notification = new NotificationCompat.Builder(context).setContentTitle(
+        installErrorNotification.getMessage())
+        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+        .setLargeIcon(installErrorNotification.getIcon())
+        .setAutoCancel(true)
+        .addAction(installErrorNotification.getAction())
+        .setDeleteIntent(installErrorNotification.getDeleteAction())
+        .build();
+
+    notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+    return notification;
+  }
+
+  public void dismissNotification(int notificationId) {
+    notificationManager.cancel(notificationId);
   }
 }

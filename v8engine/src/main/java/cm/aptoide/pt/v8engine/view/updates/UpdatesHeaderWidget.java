@@ -71,7 +71,9 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 
               ArrayList<Download> downloadList = new ArrayList<>(updates.size());
               for (Update update : updates) {
-                downloadList.add(new DownloadFactory().create(update));
+                Download download = new DownloadFactory().create(update);
+                displayable.setupDownloadEvent(download);
+                downloadList.add(download);
               }
               return downloadList;
             })

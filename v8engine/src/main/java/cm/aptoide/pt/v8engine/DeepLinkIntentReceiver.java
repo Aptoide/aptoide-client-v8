@@ -16,9 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -26,6 +23,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
@@ -72,10 +71,12 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   private Class startClass = V8Engine.getActivityProvider()
       .getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
+  private InstalledRepository installedRepository;
   private MinimalAdMapper adMapper;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    installedRepository = RepositoryFactory.getInstalledRepository();
 
     adMapper = new MinimalAdMapper();
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
@@ -307,8 +308,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   }
 
   public void startFromPackageName(String packageName) {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(packageName)
+    installedRepository.getInstalled(packageName)
+        .first()
         .subscribe(installed -> {
           if (installed != null) {
             startFromAppView(packageName);
