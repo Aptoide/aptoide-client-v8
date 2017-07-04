@@ -161,9 +161,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private List<MinimalAd> suggestedAds;
   // buy app vars
   private String storeName;
-  private float priceValue;
-  private String currency;
-  private double taxRate;
   private AppViewInstallDisplayable installDisplayable;
   private String md5;
   private String uname;
@@ -174,7 +171,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
-  private GetApp getApp;
   private AptoideAccountManager accountManager;
   private StoreCredentialsProvider storeCredentialsProvider;
   private BodyInterceptor<BaseBody> bodyInterceptor;
@@ -364,7 +360,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
       subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
-          .map(getApp -> this.getApp = getApp)
+          .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
@@ -374,7 +370,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           }, throwable -> finishLoading(throwable));
     } else if (!TextUtils.isEmpty(md5)) {
       subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .map(getApp -> this.getApp = getApp)
+          .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
@@ -386,7 +382,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           });
     } else if (!TextUtils.isEmpty(uname)) {
       subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
-          .map(getApp -> this.getApp = getApp)
+          .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
@@ -405,7 +401,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     } else {
       Logger.d(TAG, "loading app info using app package name");
       subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .map(getApp -> this.getApp = getApp)
+          .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -479,17 +475,25 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
-
     if (i == R.id.menu_share) {
+
+      final boolean appRatingExists = app != null
+          && app.getStats() != null
+          && app.getStats()
+          .getRating() != null;
+
+      final float averageRating = appRatingExists ? app.getStats()
+          .getRating()
+          .getAvg() : 0f;
+
+      final boolean appHasStore = app != null && app.getStore() != null;
+
+      final Long storeId = appHasStore ? app.getStore()
+          .getId() : null;
+
       shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-          (app != null
-              && app.getStats() != null
-              && app.getStats()
-              .getRating() != null ? app.getStats()
-              .getRating()
-              .getAvg() : 0f), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW,
-          app != null ? app.getStore()
-              .getId() : null);
+          averageRating, SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
+
       appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {
