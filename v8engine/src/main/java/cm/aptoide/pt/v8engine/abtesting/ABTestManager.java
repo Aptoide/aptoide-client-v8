@@ -13,7 +13,6 @@ import com.seatgeek.sixpack.SixpackBuilder;
 import com.seatgeek.sixpack.log.LogLevel;
 import java.util.HashSet;
 import java.util.Set;
-import okhttp3.Credentials;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import rx.Observable;
@@ -23,33 +22,20 @@ public class ABTestManager {
 
   public static final String SEARCH_TAB_TEST = "search-result";
   private static final String TAG = ABTestManager.class.getSimpleName();
-  private static ABTestManager instance;
   private final OkHttpClient httpClient;
   private final String sixpackUrl;
   private final Set<ABTest<?>> tests;
   private final Set<ABTest<?>> controlTests;
-  private SixpackBuilder sixpackBuilder;
+  private final SixpackBuilder sixpackBuilder;
+
   private Sixpack sixpack;
 
-  private ABTestManager(SixpackBuilder sixpackBuilder, OkHttpClient httpClient, String sixpackUrl) {
+  public ABTestManager(SixpackBuilder sixpackBuilder, OkHttpClient httpClient, String sixpackUrl) {
     this.sixpackBuilder = sixpackBuilder;
     this.httpClient = httpClient;
     this.sixpackUrl = sixpackUrl;
     this.tests = new HashSet<>();
     this.controlTests = new HashSet<>();
-  }
-
-  public static ABTestManager getInstance() {
-    if (instance == null) {
-      instance = new ABTestManager(new SixpackBuilder(), new OkHttpClient.Builder().authenticator(
-          (route, response) -> response.request()
-              .newBuilder()
-              .header("Authorization",
-                  Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD))
-              .build())
-          .build(), BuildConfig.SIXPACK_URL);
-    }
-    return instance;
   }
 
   public Observable<Void> initialize(String clientId) {
