@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.view.comments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,17 +19,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.SetComment;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.model.v7.SetComment;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -62,7 +66,7 @@ import rx.functions.Action1;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
-// TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
+// TODO: 21/12/2016 refactor and split in multiple classes to list comments
 // for each type: store and timeline card
 public class CommentListFragment extends GridRecyclerSwipeFragment
     implements CommentDialogCallbackContract {
@@ -103,6 +107,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private boolean showCommentInputDialogOnFirstRun;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private TimelineAnalytics timelineAnalytics;
+  private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -139,13 +145,18 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory);
+        httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     super.onCreate(savedInstanceState);
   }
 
@@ -260,7 +271,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   void caseListSocialTimelineComments(boolean refresh) {
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
-            converterFactory);
+            converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -279,7 +291,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         }
 
         this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new DisplayableGroup(displayables));
+        this.displayables.add(new DisplayableGroup(displayables,
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+            getContext().getResources()));
 
         addDisplayables(this.displayables);
       }
@@ -298,7 +312,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator, httpClient,
-            converterFactory);
+            converterFactory, tokenInvalidator,
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
@@ -328,7 +343,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         }
 
         this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new DisplayableGroup(displayables));
+        this.displayables.add(new DisplayableGroup(displayables,
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+            getContext().getResources()));
 
         addDisplayables(this.displayables);
       }
@@ -394,7 +411,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   }
 
   //
-  // Re-Do: 6/1/2017 sithengineer create new comment different fragment constructions
+  // Re-Do: 6/1/2017 create new comment different fragment constructions
   //
 
   //
@@ -403,15 +420,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   private Observable<Void> showSignInMessage() {
     return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
-        R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.COMMENT_LIST);
-        })
-        .flatMap(a -> Observable.empty());
+        R.string.login, snackView -> accountNavigator.navigateToAccountView(
+            Analytics.Account.AccountOrigins.COMMENT_LIST))
+        .toObservable();
   }
 
   private Observable<Void> reloadComments() {
     return Observable.fromCallable(() -> {
-      ManagerPreferences.setForceServerRefreshFlag(true);
+      ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
       super.reload();
       return null;
     });
@@ -506,7 +522,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       } else {
         addDisplayable(0, commentDisplayable, true);
       }
-      ManagerPreferences.setForceServerRefreshFlag(true);
+      ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
       ShowMessage.asSnack(this.getActivity(), R.string.comment_submitted);
     }
   }
@@ -527,7 +543,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       }
     }
     this.displayables = new ArrayList<>(displayables.size());
-    this.displayables.add(new DisplayableGroup(displayables));
+    this.displayables.add(new DisplayableGroup(displayables,
+        (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+        getContext().getResources()));
     clearDisplayables();
     addDisplayables(this.displayables);
   }

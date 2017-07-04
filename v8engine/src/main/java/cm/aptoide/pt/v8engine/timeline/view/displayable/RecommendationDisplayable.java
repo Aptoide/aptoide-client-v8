@@ -6,19 +6,21 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.Recommendation;
+import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,8 +60,9 @@ public class RecommendationDisplayable extends CardDisplayable {
       int titleResource, long appId, String packageName, String appName, String appIcon,
       String abUrl, List<String> similarAppsNames, List<String> similarPackageNames, Date date,
       Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(recommendation, timelineAnalytics);
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      WindowManager windowManager) {
+    super(recommendation, timelineAnalytics, windowManager);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.appId = appId;
@@ -86,7 +89,7 @@ public class RecommendationDisplayable extends CardDisplayable {
 
   public static Displayable from(Recommendation recommendation, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository) {
+      SocialRepository socialRepository, WindowManager windowManager) {
     final List<String> similarAppsNames = new ArrayList<>();
     final List<String> similarPackageNames = new ArrayList<>();
 
@@ -117,19 +120,20 @@ public class RecommendationDisplayable extends CardDisplayable {
         .getIcon(), abTestingURL, similarAppsNames, similarPackageNames,
         recommendation.getRecommendedApp()
             .getUpdated(), recommendation.getTimestamp(), dateCalculator, spannableFactory,
-        timelineAnalytics, socialRepository);
+        timelineAnalytics, socialRepository, windowManager);
   }
 
   public Spannable getStyledTitle(Context context) {
     String aptoide = Application.getConfiguration()
         .getMarketName();
-    return spannableFactory.createColorSpan(getTitle(),
+    return spannableFactory.createColorSpan(getTitle(context.getResources()),
         ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
   }
 
-  public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource, Application.getConfiguration()
-        .getMarketName());
+  public String getTitle(Resources resources) {
+    return AptoideUtils.StringU.getFormattedString(titleResource, resources,
+        Application.getConfiguration()
+            .getMarketName());
   }
 
   public Spannable getAppText(Context context) {
@@ -162,9 +166,10 @@ public class RecommendationDisplayable extends CardDisplayable {
     return "";
   }
 
-  public void sendRecommendationCardClickEvent(String action, String socialAction) {
+  public void sendRecommendationCardClickEvent(String action, String socialAction,
+      Resources resources) {
     timelineAnalytics.sendRecommendationCardClickEvent(CARD_TYPE_NAME, action, socialAction,
-        getPackageName(), getTitle());
+        getPackageName(), getTitle(resources));
   }
 
   public String getSimilarAppName() {
@@ -175,26 +180,29 @@ public class RecommendationDisplayable extends CardDisplayable {
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), privacyResult,
-        shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
-            BLANK));
+        shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(),
+            getTitle(resources), BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback,getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
-        BLANK));
+  @Override
+  public void share(String cardId, ShareCardCallback shareCardCallback, Resources resources) {
+    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(),
+            getTitle(resources), BLANK));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
-        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getTitle(),
-            BLANK));
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
+    like(null, getTimelineCard().getCardId(), cardType, rating, resources);
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
-        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getTitle(),
-            BLANK));
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(),
+            getTitle(resources), BLANK));
   }
 }

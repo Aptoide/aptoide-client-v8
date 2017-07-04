@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.install.installer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,22 +17,28 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.root.RootAvailabilityManager;
+import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.InstallerAnalytics;
+import cm.aptoide.pt.v8engine.install.RootCommandTimeoutException;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
 import java.io.File;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -42,61 +49,84 @@ public class DefaultInstaller implements Installer {
 
   public static final String OBB_FOLDER = Environment.getExternalStorageDirectory()
       .getAbsolutePath() + "/Android/obb/";
+  public static final String ROOT_INSTALL_COMMAND = "pm install -r ";
   private static final String TAG = DefaultInstaller.class.getSimpleName();
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
+  private final SharedPreferences sharedPreferences;
   private FileUtils fileUtils;
   private Analytics analytics;
+  private RootAvailabilityManager rootAvailabilityManager;
+  private InstalledRepository installedRepository;
+  private InstallerAnalytics installerAnalytics;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, Analytics analytics) {
+      FileUtils fileUtils, Analytics analytics, boolean debug,
+      InstalledRepository installedRepository, int rootTimeout,
+      RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
+      InstallerAnalytics installerAnalytics) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
     this.analytics = analytics;
+    this.installedRepository = installedRepository;
+    this.installerAnalytics = installerAnalytics;
+    RootShell.debugMode = debug;
+    RootShell.defaultCommandTimeout = rootTimeout;
+    this.rootAvailabilityManager = rootAvailabilityManager;
+    this.sharedPreferences = sharedPreferences;
   }
 
-  @Override public Observable<Boolean> isInstalled(String md5) {
+  public Observable<Boolean> isInstalled(String md5) {
     return installationProvider.getInstallation(md5)
         .map(installation -> isInstalled(installation.getPackageName(),
             installation.getVersionCode()))
         .onErrorReturn(throwable -> false);
   }
 
-  @Override public Observable<Void> install(Context context, String md5) {
-    Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
-        RootShell.isRootAvailable());
-    return installationProvider.getInstallation(md5)
+  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
+    return rootAvailabilityManager.isRootAvailable()
+        .doOnSuccess(isRoot -> Analytics.RootInstall.installationType(
+            ManagerPreferences.allowRootInstallation(sharedPreferences), isRoot))
+        .flatMapObservable(isRoot -> installationProvider.getInstallation(md5)
+            .first())
         .observeOn(Schedulers.computation())
-        .doOnNext(installation -> moveInstallationFiles(installation))
-        .flatMap(installation -> {
-          if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
-            return Observable.just(null);
-          } else {
-            return systemInstall(context, installation.getFile()).onErrorResumeNext(
-                defaultInstall(context, installation.getFile(), installation.getPackageName()));
-          }
+        .doOnNext(installation -> {
+          installation.setStatus(Installed.STATUS_INSTALLING);
+          installation.setType(Installed.TYPE_UNKNOWN);
+          moveInstallationFiles(installation);
         })
-        .doOnError((throwable) -> {
-          CrashReport.getInstance()
-              .log(throwable);
-        });
+        .flatMap(installation -> isInstalled(md5).first()
+            .flatMap(isInstalled -> {
+              if (isInstalled) {
+                return Observable.just(null);
+              } else {
+                if (forceDefaultInstall) {
+                  return startDefaultInstallation(context, installation);
+                } else {
+                  return startInstallation(context, installation);
+                }
+              }
+            }))
+        .doOnError((throwable) -> CrashReport.getInstance()
+            .log(throwable))
+        .toCompletable();
   }
 
-  @Override public Observable<Void> update(Context context, String md5) {
-    return install(context, md5);
+  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall) {
+    return install(context, md5, forceDefaultInstall);
   }
 
-  @Override public Observable<Void> downgrade(Context context, String md5) {
+  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall) {
     return installationProvider.getInstallation(md5)
         .first()
-        .flatMap(installation -> uninstall(context, installation.getPackageName(),
+        .flatMapCompletable(installation -> uninstall(context, installation.getPackageName(),
             installation.getVersionName()))
-        .flatMap(success -> install(context, md5));
+        .toCompletable()
+        .andThen(install(context, md5, forceDefaultInstall));
   }
 
-  @Override
-  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
+  @Override public Completable uninstall(Context context, String packageName, String versionName) {
     final Uri uri = Uri.fromParts("package", packageName, null);
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
@@ -104,7 +134,58 @@ public class DefaultInstaller implements Installer {
     return Observable.<Void>fromCallable(() -> {
       startUninstallIntent(context, packageName, uri);
       return null;
-    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
+    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName))
+        .toCompletable();
+  }
+
+  @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
+    return installedRepository.getAsList(packageName, versionCode)
+        .map(installed -> {
+          if (installed != null) {
+            return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+                installed.getStatus(), installed.getType(), installed.getName(),
+                installed.getIcon());
+          } else {
+            return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
+                Installed.TYPE_UNKNOWN);
+          }
+        });
+  }
+
+  private Observable<Installation> startDefaultInstallation(Context context,
+      RollbackInstallation installation) {
+    return defaultInstall(context, installation).doOnNext(installation1 -> installation1.save());
+  }
+
+  @NonNull
+  private Observable<Installation> startInstallation(Context context, Installation installation) {
+    return systemInstall(context, installation).onErrorResumeNext(
+        throwable -> rootInstall(installation))
+        .onErrorResumeNext(throwable -> defaultInstall(context, installation))
+        .doOnNext(installation1 -> installation1.save());
+  }
+
+  private Observable<Installation> rootInstall(Installation installation) {
+    if (ManagerPreferences.allowRootInstallation(sharedPreferences)) {
+      return Observable.create(new RootCommandOnSubscribe(installation.getId()
+          .hashCode(), ROOT_INSTALL_COMMAND + installation.getFile()
+          .getAbsolutePath(), installerAnalytics))
+          .subscribeOn(Schedulers.computation())
+          .map(success -> installation)
+          .startWith(
+              updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_INSTALLING))
+          .onErrorResumeNext(throwable -> {
+            if (throwable instanceof RootCommandTimeoutException) {
+              updateInstallation(installation, Installed.TYPE_ROOT,
+                  Installed.STATUS_ROOT_TIMEOUT).save();
+              return Observable.empty();
+            } else {
+              return Observable.error(throwable);
+            }
+          });
+    } else {
+      return Observable.error(new InstallationException("User doesn't allow root installation"));
+    }
   }
 
   private void startUninstallIntent(Context context, String packageName, Uri uri)
@@ -133,30 +214,46 @@ public class DefaultInstaller implements Installer {
         file.setPath(newPath);
       }
     }
-    installation.save();
+    installation.saveFileChanges();
   }
 
-  private Observable<Void> systemInstall(Context context, File file) {
+  private Observable<Installation> systemInstall(Context context, Installation installation) {
     return Observable.create(
-        new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(file)));
+        new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(installation.getFile())))
+        .subscribeOn(Schedulers.computation())
+        .map(success -> installation)
+        .startWith(
+            updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
   }
 
-  private Observable<Void> defaultInstall(Context context, File file, String packageName) {
+  @NonNull
+  private Installation updateInstallation(Installation installation, int type, int status) {
+    installation.setType(type);
+    installation.setStatus(status);
+    return installation;
+  }
+
+  private Observable<Installation> defaultInstall(Context context, Installation installation) {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
-      startInstallIntent(context, file);
+      startInstallIntent(context, installation.getFile());
       return null;
-    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));
+    }).subscribeOn(Schedulers.computation())
+        .flatMap(installStarted -> waitPackageIntent(context, intentFilter,
+            installation.getPackageName()))
+        .map(success -> installation)
+        .startWith(
+            updateInstallation(installation, Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
   }
 
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {
     InstallEvent report =
         (InstallEvent) analytics.get(packageName + versionCode, InstallEvent.class);
     if (report != null) {
-      report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.FAIL);
+      report.setResultStatus(Result.ResultStatus.FAIL);
       report.setError(e);
       analytics.sendEvent(report);
     }

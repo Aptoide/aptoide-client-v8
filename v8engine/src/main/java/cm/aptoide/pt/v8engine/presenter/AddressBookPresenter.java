@@ -1,7 +1,8 @@
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.pt.model.v7.FacebookModel;
-import cm.aptoide.pt.model.v7.TwitterModel;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.model.v7.FacebookModel;
+import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
@@ -17,14 +18,16 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   private final ContactsRepository contactsRepository;
   private final AddressBookAnalytics analytics;
   private final AddressBookNavigation navigationManager;
+  private final SharedPreferences sharedPreferences;
 
   public AddressBookPresenter(AddressBookContract.View addressBookView,
       ContactsRepository contactsRepository, AddressBookAnalytics addressBookAnalytics,
-      AddressBookNavigation addressBookNavigationManager) {
+      AddressBookNavigation addressBookNavigationManager, SharedPreferences sharedPreferences) {
     this.view = addressBookView;
     this.contactsRepository = contactsRepository;
     this.navigationManager = addressBookNavigationManager;
     this.analytics = addressBookAnalytics;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public void syncAddressBook() {
@@ -38,7 +41,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
             view.setGenericPleaseWaitDialog(false);
           } else {
             view.changeAddressBookState(true);
-            ManagerPreferences.setAddressBookAsSynced();
+            ManagerPreferences.setAddressBookAsSynced(sharedPreferences);
             if (!contacts.isEmpty()) {
               navigationManager.showSuccessFragment(contacts);
               view.setGenericPleaseWaitDialog(false);
@@ -63,7 +66,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
                 view.setGenericPleaseWaitDialog(false);
               } else {
                 view.changeTwitterState(true);
-                ManagerPreferences.setTwitterAsSynced();
+                ManagerPreferences.setTwitterAsSynced(sharedPreferences);
                 if (!contacts.isEmpty()) {
                   navigationManager.showSuccessFragment(contacts);
                 } else {
@@ -86,7 +89,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
                 view.setGenericPleaseWaitDialog(false);
               } else {
                 view.changeFacebookState(true);
-                ManagerPreferences.setFacebookAsSynced();
+                ManagerPreferences.setFacebookAsSynced(sharedPreferences);
                 if (!contacts.isEmpty()) {
                   navigationManager.showSuccessFragment(contacts);
                 } else {
@@ -98,9 +101,9 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   }
 
   @Override public void getButtonsState() {
-    view.changeAddressBookState(ManagerPreferences.getAddressBookSyncState());
-    view.changeTwitterState(ManagerPreferences.getTwitterSyncState());
-    view.changeFacebookState(ManagerPreferences.getFacebookSyncState());
+    view.changeAddressBookState(ManagerPreferences.getAddressBookSyncState(sharedPreferences));
+    view.changeTwitterState(ManagerPreferences.getTwitterSyncState(sharedPreferences));
+    view.changeFacebookState(ManagerPreferences.getFacebookSyncState(sharedPreferences));
   }
 
   @Override public void finishViewClick() {

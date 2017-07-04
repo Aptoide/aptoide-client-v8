@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -89,7 +89,7 @@ public class IdsRepository {
       throw new IllegalStateException("You cannot run this method from the main thread");
     }
 
-    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
+    if (AdNetworkUtils.isGooglePlayServicesAvailable(context)) {
       try {
         googleAdvertisingId = AdvertisingIdClient.getAdvertisingIdInfo(context)
             .getId();

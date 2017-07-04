@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.notification;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -12,8 +13,8 @@ import rx.subscriptions.CompositeSubscription;
 
 public class NotificationCenter {
 
+  public static final int MAX_NUMBER_NOTIFICATIONS_SAVED = 50;
   private final CrashReport crashReport;
-  private final NotificationIdsMapper notificationIdsMapper;
   private NotificationHandler notificationHandler;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
@@ -23,13 +24,12 @@ public class NotificationCenter {
   private NotificationProvider notificationProvider;
   private AptoideAccountManager accountManager;
 
-  public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
-      NotificationHandler notificationHandler, NotificationProvider notificationProvider,
+  public NotificationCenter(NotificationHandler notificationHandler,
+      NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
       NotificationPolicyFactory notificationPolicyFactory,
       NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager) {
-    this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
@@ -41,18 +41,25 @@ public class NotificationCenter {
     subscriptions = new CompositeSubscription();
   }
 
-  public void start() {
+  public void setup() {
     notificationSyncScheduler.schedule();
     subscriptions.add(getNewNotifications().flatMapCompletable(
-        aptoideNotification -> notificationShower.showNotification(aptoideNotification,
-            notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
+        aptoideNotification -> notificationShower.showNotification(aptoideNotification))
         .subscribe(aptoideNotification -> {
         }, throwable -> crashReport.log(throwable)));
 
     subscriptions.add(accountManager.accountStatus()
         .filter(account -> account.isLoggedIn())
-        .flatMapCompletable(account -> notificationsCleaner.cleanNotifications(account.getId()))
+        .flatMapCompletable(
+            account -> notificationsCleaner.cleanOtherUsersNotifications(account.getId()))
         .subscribe(notificationsCleaned -> {
+        }, throwable -> crashReport.log(throwable)));
+
+    subscriptions.add(notificationProvider.getNotifications(1)
+        .flatMapCompletable(
+            aptoideNotifications -> notificationsCleaner.cleanLimitExceededNotifications(
+                MAX_NUMBER_NOTIFICATIONS_SAVED))
+        .subscribe(aptoideNotifications -> {
         }, throwable -> crashReport.log(throwable)));
   }
 
@@ -73,13 +80,6 @@ public class NotificationCenter {
         });
   }
 
-  public void stop() {
-    if (!subscriptions.isUnsubscribed()) {
-      subscriptions.clear();
-    }
-    notificationSyncScheduler.stop();
-  }
-
   public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {
     return notificationProvider.getNotifications(entries);
   }
@@ -87,5 +87,14 @@ public class NotificationCenter {
   public Observable<Boolean> haveNotifications() {
     return notificationProvider.getNotifications(1)
         .map(list -> !list.isEmpty());
+  }
+
+  public Completable notificationDismissed(
+      @AptoideNotification.NotificationType Integer[] notificationType) {
+    return notificationProvider.getLastShowed(notificationType)
+        .flatMapCompletable(notification -> {
+          notification.setDismissed(System.currentTimeMillis());
+          return notificationProvider.save(notification);
+        });
   }
 }

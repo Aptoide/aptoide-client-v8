@@ -7,7 +7,9 @@ package cm.aptoide.pt.v8engine.view.permission;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -49,8 +51,13 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
   @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
   @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
 
+  private SharedPreferences sharedPreferences;
+  private ConnectivityManager connectivityManager;
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
     if (!FacebookSdk.isInitialized()) {
       FacebookSdk.sdkInitialize(getApplicationContext());
     }
@@ -151,21 +158,22 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
       @Nullable Action0 toRunWhenAccessIsDenied) {
     int message = R.string.general_downloads_dialog_no_download_rule_message;
 
-    if ((AptoideUtils.SystemU.getConnectionType()
-        .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile())
-        || (AptoideUtils.SystemU.getConnectionType()
-        .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi())) {
-      if ((AptoideUtils.SystemU.getConnectionType()
-          .equals("wifi") || AptoideUtils.SystemU.getConnectionType()
+    if ((AptoideUtils.SystemU.getConnectionType(connectivityManager)
+        .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) || (
+        AptoideUtils.SystemU.getConnectionType(connectivityManager)
+            .equals("wifi")
+            && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences))) {
+      if ((AptoideUtils.SystemU.getConnectionType(connectivityManager)
+          .equals("wifi") || AptoideUtils.SystemU.getConnectionType(connectivityManager)
           .equals("mobile"))
-          && !ManagerPreferences.getGeneralDownloadsWifi()
-          && !ManagerPreferences.getGeneralDownloadsMobile()) {
+          && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences)
+          && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) {
         message = R.string.general_downloads_dialog_no_download_rule_message;
-      } else if (AptoideUtils.SystemU.getConnectionType()
-          .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi()) {
+      } else if (AptoideUtils.SystemU.getConnectionType(connectivityManager)
+          .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences)) {
         message = R.string.general_downloads_dialog_only_mobile_message;
-      } else if (AptoideUtils.SystemU.getConnectionType()
-          .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile()) {
+      } else if (AptoideUtils.SystemU.getConnectionType(connectivityManager)
+          .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) {
         message = R.string.general_downloads_dialog_only_wifi_message;
       }
 
@@ -260,7 +268,7 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
           Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
         Logger.v(TAG, "showing rationale and requesting permission to access external storage");
 
-        // TODO: 19/07/16 sithengineer improve this rationale messages
+        // TODO: 19/07/16 improve this rationale messages
         showMessageOKCancel(rationaleMessage, new SimpleSubscriber<GenericDialogs.EResponse>() {
 
           @Override public void onNext(GenericDialogs.EResponse eResponse) {

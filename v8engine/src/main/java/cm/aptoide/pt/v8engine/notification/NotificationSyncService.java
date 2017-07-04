@@ -8,39 +8,39 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.v8engine.V8Engine;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 09/05/2017.
  */
 
 public class NotificationSyncService extends Service {
-  public static final String PUSH_NOTIFICATIONS_SOCIAL_ACTION = "PUSH_NOTIFICATIONS_SOCIAL_ACTION";
-  public static final String PUSH_NOTIFICATIONS_CAMPAIGN_ACTION =
-      "PUSH_NOTIFICATIONS_CAMPAIGN_ACTION";
+  public static final String NOTIFICATIONS_SOCIAL_ACTION = "PUSH_NOTIFICATIONS_SOCIAL_ACTION";
+  public static final String NOTIFICATIONS_CAMPAIGN_ACTION = "PUSH_NOTIFICATIONS_CAMPAIGN_ACTION";
   private NotificationSync notificationSync;
 
   @Override public void onCreate() {
     super.onCreate();
 
     NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
-    NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
-    final NotificationHandler notificationHandler =
-        ((V8Engine) getApplicationContext()).getNotificationHandler();
+    NotificationProvider notificationProvider =
+        new NotificationProvider(notificationAccessor, Schedulers.io());
+    final NotificationNetworkService notificationHandler =
+        ((V8Engine) getApplicationContext()).getNotificationNetworkService();
     notificationSync = new NotificationSync(notificationProvider, notificationHandler);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
 
     if (intent != null && intent.getAction() != null) {
-
       switch (intent.getAction()) {
-        case PUSH_NOTIFICATIONS_CAMPAIGN_ACTION:
+        case NOTIFICATIONS_CAMPAIGN_ACTION:
           notificationSync.syncCampaigns()
               .doOnTerminate(() -> stopSelf(startId))
               .subscribe(() -> {
               }, throwable -> throwable.printStackTrace());
           break;
-        case PUSH_NOTIFICATIONS_SOCIAL_ACTION:
+        case NOTIFICATIONS_SOCIAL_ACTION:
           notificationSync.syncSocial()
               .doOnTerminate(() -> stopSelf(startId))
               .subscribe(() -> {

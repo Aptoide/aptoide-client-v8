@@ -24,4 +24,14 @@ public interface Installation {
   String getVersionName();
 
   File getFile();
+
+  void save();
+
+  int getStatus();
+
+  void setStatus(int status);
+
+  int getType();
+
+  void setType(int type);
 }

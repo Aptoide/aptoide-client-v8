@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -29,7 +31,7 @@ public class EmptyDisplayable extends Displayable {
     return R.layout.displayable_empty;
   }
 
-  @Override public int getSpanSize() {
+  @Override public int getSpanSize(WindowManager windowManager, Resources resources) {
     return spanSize;
   }
 

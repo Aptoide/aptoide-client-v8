@@ -1,12 +1,39 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.accounts.NetworkErrorException;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
+import cm.aptoide.pt.dataprovider.model.v7.GetMySubscribedStoresResponse;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.GetUserInfo;
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
+import cm.aptoide.pt.dataprovider.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
+import cm.aptoide.pt.dataprovider.model.v7.ListReviews;
+import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.model.v7.SetComment;
+import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppsUpdates;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetHome;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
@@ -21,37 +48,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.GetFollowers;
-import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.ListApps;
-import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.model.v7.ListReviews;
-import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.model.v7.SetComment;
-import cm.aptoide.pt.model.v7.TimelineStats;
-import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
-import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
-import cm.aptoide.pt.model.v7.store.GetHome;
-import cm.aptoide.pt.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
-import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -67,21 +72,27 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
-  public static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-      + "/api/7/";
-  @Getter protected final B body;
+  protected final B body;
   private final BodyInterceptor bodyInterceptor;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private final int MAX_RETRY_COUNT = 3;
+  private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
 
   protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor bodyInterceptor, TokenInvalidator tokenInvalidator) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
     this.bodyInterceptor = bodyInterceptor;
+    this.tokenInvalidator = tokenInvalidator;
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7/";
   }
 
   @NonNull public static String getErrorMessage(BaseV7Response response) {
@@ -98,6 +109,10 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
       builder.append("Server returned null response.");
     }
     return builder.toString();
+  }
+
+  public B getBody() {
+    return body;
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {
@@ -130,11 +145,13 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
                 } else {
                   if (throwable instanceof HttpException) {
                     try {
-                      throw new AptoideWsV7Exception(throwable).setBaseResponse(
+                      AptoideWsV7Exception exception = new AptoideWsV7Exception(throwable);
+                      exception.setBaseResponse(
                           (BaseV7Response) converterFactory.responseBodyConverter(
                               BaseV7Response.class, null, null)
                               .convert(((HttpException) throwable).response()
                                   .errorBody()));
+                      throw exception;
                     } catch (IOException exception) {
                       throw new RuntimeException(exception);
                     }
@@ -155,10 +172,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
           if (!accessTokenRetry) {
             accessTokenRetry = true;
-            return DataProvider.invalidateAccessToken()
-                .flatMapObservable(s -> {
-                  return V7.this.observe(bypassCache);
-                });
+            return tokenInvalidator.invalidateAccessToken()
+                .andThen(V7.this.observe(bypassCache));
           } else {
             return Observable.error(new NetworkErrorException());
           }
@@ -334,7 +349,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
-        @Part MultipartBody.Part store_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
+        @Part MultipartBody.Part multipartBody, @PartMap HashMapNotNull<String, RequestBody> body);
 
     @POST("user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
         @retrofit2.http.Body GetTimelineStatsRequest.Body body,
@@ -358,6 +373,9 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("user/set") Observable<BaseV7Response> setUser(
         @retrofit2.http.Body SetUserRequest.Body body);
 
+    @Multipart @POST("user/set") Observable<BaseV7Response> editUser(
+        @Part MultipartBody.Part user_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
+
     @POST("user/connections/add") Observable<GetFollowers> setConnections(
         @retrofit2.http.Body SyncAddressBookRequest.Body body);
 
@@ -373,6 +391,16 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     Observable<GetMySubscribedStoresResponse> getMySubscribedStores(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @retrofit2.http.Body GetMySubscribedStoresRequest.Body body);
+
+    @POST("user/get") Observable<GetUserInfo> getUserInfo(@Body GetUserInfoRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("getAppMeta{url}") Observable<GetAppMeta> getAppMeta(
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
+        @Path(value = "url", encoded = true) String url);
+
+    @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
+        @Body SetUserSettings.Body body);
   }
 }
 

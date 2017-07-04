@@ -7,14 +7,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -77,10 +77,14 @@ import retrofit2.Converter;
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, displayable.getInstalledRepository(),
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        getContext().getResources());
     shareAppHelper = new ShareAppHelper(RepositoryFactory.getInstalledRepository(), accountManager,
         accountNavigator, getContext(), new SpotAndShareAnalytics(Analytics.getInstance()),
-        displayable.getTimelineAnalytics());
+        displayable.getTimelineAnalytics(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

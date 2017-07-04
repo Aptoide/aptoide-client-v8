@@ -16,14 +16,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -62,8 +61,9 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
   @Override public void bindView(OfficialAppDisplayable displayable) {
 
     final FragmentActivity context = getContext();
-    final Pair<String, GetApp> messageAndApp = displayable.getMessageGetApp();
-    final boolean isAppInstalled = isAppInstalled(messageAndApp.second);
+    final Pair<String, GetAppMeta> appMeta = displayable.getMessageGetApp();
+    final boolean isAppInstalled = isAppInstalled(appMeta.second.getData()
+        .getPackageName());
 
     int color;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -74,15 +74,14 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
           .getColor(R.color.default_color);
     }
 
-    final GetAppMeta.App appData = messageAndApp.second.getNodes()
-        .getMeta()
-        .getData();
+    final GetAppMeta.App appData = appMeta.second.getData();
     final String appName = appData.getName();
 
-    if (!TextUtils.isEmpty(messageAndApp.first)) {
+    if (!TextUtils.isEmpty(appMeta.first)) {
 
       // get multi part message
-      final String[] parts = Translator.translateToMultiple(messageAndApp.first);
+      final String[] parts =
+          Translator.translateToMultiple(appMeta.first, getContext().getApplicationContext());
       if (parts != null && parts.length == 4) {
         SpannableString middle =
             new SpannableString(String.format(isAppInstalled ? parts[3] : parts[2], appName));
@@ -94,7 +93,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         text.append(parts[1]);
         installMessage.setText(text);
       } else {
-        installMessage.setText(messageAndApp.first);
+        installMessage.setText(appMeta.first);
       }
     } else {
       hideOfficialAppMessage();
@@ -139,7 +138,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     compositeSubscription.add(RxView.clicks(installButton)
         .subscribe(a -> {
           if (isAppInstalled) {
-            AptoideUtils.SystemU.openApp(appData.getPackageName());
+            AptoideUtils.SystemU.openApp(appData.getPackageName(), getContext().getPackageManager(),
+                getContext());
           } else {
             // show app view to install app
             Fragment appView = V8Engine.getFragmentProvider()
@@ -153,12 +153,11 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         }));
   }
 
-  private boolean isAppInstalled(GetApp app) {
+  private boolean isAppInstalled(String packageName) {
     InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
-    return installedRepo.contains(app.getNodes()
-        .getMeta()
-        .getData()
-        .getPackageName());
+    return installedRepo.isInstalled(packageName)
+        .toBlocking()
+        .first();
   }
 
   private void hideOfficialAppMessage() {

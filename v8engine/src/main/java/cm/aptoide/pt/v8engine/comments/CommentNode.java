@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.comments;
 
-import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import java.util.ArrayList;
 import java.util.List;
 

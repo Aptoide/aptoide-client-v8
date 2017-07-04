@@ -1,11 +1,13 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.view.WindowManager;
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.view.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
@@ -39,8 +41,9 @@ import rx.subscriptions.CompositeSubscription;
 
   @Partners @LayoutRes public abstract int getViewLayout();
 
-  public int getSpanSize() {
-    return WidgetFactory.getColumnSize() / getPerLineCount();
+  public int getSpanSize(WindowManager windowManager, Resources resources) {
+    return WidgetFactory.getColumnSize(resources, windowManager) / getPerLineCount(windowManager,
+        resources);
   }
 
   //
@@ -49,15 +52,18 @@ import rx.subscriptions.CompositeSubscription;
 
   /**
    * Same code as in {@link Type#getPerLineCount()} todo: terminar este doc
+   *
+   * @param windowManager
+   * @param resources
    */
-  public int getPerLineCount() {
+  public int getPerLineCount(WindowManager windowManager, Resources resources) {
 
     int tmp;
 
     if (isFixedPerLineCount()) {
       tmp = getDefaultPerLineCount();
     } else {
-      tmp = (int) (AptoideUtils.ScreenU.getScreenWidthInDip()
+      tmp = (int) (AptoideUtils.ScreenU.getScreenWidthInDip(windowManager, resources)
           / AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
     }
 

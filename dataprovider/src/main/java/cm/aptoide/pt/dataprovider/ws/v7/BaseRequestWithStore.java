@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import lombok.Getter;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -15,15 +17,17 @@ import retrofit2.Converter;
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
   public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static class StoreCredentials {
-    @Getter private final Long id;
-    @Getter private final String name;
-    @Getter private final String username;
-    @Getter private final String passwordSha1;
+    private final Long id;
+    private final String name;
+    private final String username;
+    private final String passwordSha1;
 
     public StoreCredentials() {
       this.name = null;
@@ -51,6 +55,22 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
       this.name = name;
       this.username = username;
       this.passwordSha1 = passwordSha1;
+    }
+
+    public Long getId() {
+      return id;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getUsername() {
+      return username;
+    }
+
+    public String getPasswordSha1() {
+      return passwordSha1;
     }
   }
 }

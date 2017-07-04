@@ -2,52 +2,61 @@ package cm.aptoide.pt.v8engine.install;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.subscriptions.CompositeSubscription;
 
 public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
+  private SharedPreferences sharedPreferences;
 
   private AdsRepository adsRepository;
   private RollbackRepository repository;
-  private InstalledRepository installedRepository;
   private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
   private Analytics analytics;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private InstallManager installManager;
+  private RootAvailabilityManager rootAvailabilityManager;
+  private QManager qManager;
+  private MinimalAdMapper adMapper;
+  private InstallAnalytics installAnalytics;
+  private PackageManager packageManager;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -55,19 +64,25 @@ public class InstalledIntentService extends IntentService {
 
   @Override public void onCreate() {
     super.onCreate();
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getApplicationContext()).getAccountManager();
+    adMapper = new MinimalAdMapper();
+    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    qManager = ((V8Engine) getApplicationContext()).getQManager();
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    adsRepository =
-        new AdsRepository(((V8Engine) getApplicationContext()).getIdsRepository(), accountManager,
-            httpClient, converterFactory, V8Engine.getQManager());
+    final SharedPreferences sharedPreferences =
+        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    adsRepository = ((V8Engine) getApplicationContext()).getAdsRepository();
     repository = RepositoryFactory.getRollbackRepository();
-    installedRepository = RepositoryFactory.getInstalledRepository();
-    updatesRepository = RepositoryFactory.getUpdateRepository(this);
+    updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
+    installManager =
+        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    rootAvailabilityManager = ((V8Engine) getApplicationContext()).getRootAvailabilityManager();
+    installAnalytics =
+        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()));
+    packageManager = getPackageManager();
   }
 
   @Override protected void onHandleIntent(Intent intent) {
@@ -140,12 +155,16 @@ public class InstalledIntentService extends IntentService {
   }
 
   private PackageInfo databaseOnPackageAdded(String packageName) {
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
-    installedRepository.save(new Installed(packageInfo));
+    Installed installed = new Installed(packageInfo, packageManager);
+    installManager.onAppInstalled(installed)
+        .subscribe(() -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
     return packageInfo;
   }
 
@@ -173,8 +192,10 @@ public class InstalledIntentService extends IntentService {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
-        event.setPhoneRooted(RootShell.isRootAvailable());
-        event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
+        event.setPhoneRooted(rootAvailabilityManager.isRootAvailable()
+            .toBlocking()
+            .value());
+        event.setResultStatus(Result.ResultStatus.SUCC);
         analytics.sendEvent(event);
         return;
       }
@@ -191,6 +212,7 @@ public class InstalledIntentService extends IntentService {
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
     final Update update = updatesRepository.get(packageName)
+        .first()
         .doOnError(throwable -> {
           CrashReport.getInstance()
               .log(throwable);
@@ -200,35 +222,29 @@ public class InstalledIntentService extends IntentService {
         .first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
+      installAnalytics.sendRepalcedEvent(packageName);
     }
 
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
 
-    Action0 insertApp = () -> installedRepository.save(new Installed(packageInfo));
-
-    if (update != null) {
-      if (packageInfo.versionCode >= update.getVersionCode()) {
-        // remove old update and on complete insert new app.
-        updatesRepository.remove(update)
-            .subscribe(insertApp, throwable -> CrashReport.getInstance()
+    installManager.onUpdateConfirmed(new Installed(packageInfo, packageManager))
+        .andThen(updatesRepository.remove(update))
+        .subscribe(() -> Logger.d(TAG, "databaseOnPackageReplaced: " + packageName),
+            throwable -> CrashReport.getInstance()
                 .log(throwable));
-      }
-    } else {
-      // sync call to insert
-      insertApp.call();
-    }
-
     return packageInfo;
   }
 
   private void databaseOnPackageRemoved(String packageName) {
-    installedRepository.remove(packageName);
-    updatesRepository.remove(packageName);
+    installManager.onAppRemoved(packageName)
+        .andThen(Completable.fromAction(() -> updatesRepository.remove(packageName)))
+        .subscribe(() -> Logger.d(TAG, "databaseOnPackageRemoved: " + packageName),
+            throwable -> CrashReport.getInstance()
+                .log(throwable));
   }
 
   /**
@@ -249,8 +265,9 @@ public class InstalledIntentService extends IntentService {
   private Completable knockCpi(String packageName, StoredMinimalAdAccessor storedMinimalAdAccessor,
       StoredMinimalAd storeMinimalAd) {
     return Completable.fromCallable(() -> {
-      ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
-      DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+      ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer(),
+          getApplicationContext());
+      AdNetworkUtils.knockCpi(adMapper.map(storeMinimalAd));
       storedMinimalAdAccessor.remove(storeMinimalAd);
       return null;
     });
@@ -260,7 +277,8 @@ public class InstalledIntentService extends IntentService {
     return adsRepository.getAdsFromSecondInstall(packageName)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
-            adsRepository, httpClient, converterFactory))
+            adsRepository, httpClient, converterFactory, qManager, getApplicationContext(),
+            sharedPreferences, new MinimalAdMapper()))
         .toCompletable();
   }
 }

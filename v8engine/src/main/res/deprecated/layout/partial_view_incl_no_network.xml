@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 22/06/2016.
+  ~ Modified on 22/06/2016.
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -85,7 +85,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
-            android:src="@drawable/ic_action_spotshare_orange"
+            android:src="@drawable/spot_and_share_ic_action_spotshare_orange"
             />
         <TextView
             android:id="@+id/call_to_spot_and_share"

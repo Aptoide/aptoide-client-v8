@@ -1,15 +1,16 @@
 package cm.aptoide.pt.v8engine.addressbook.data;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.FacebookModel;
+import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
+import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.FacebookModel;
-import cm.aptoide.pt.model.v7.GetFollowers;
-import cm.aptoide.pt.model.v7.TwitterModel;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.addressbook.utils.StringEncryption;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
@@ -31,16 +32,19 @@ public class ContactsRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
-  private final IdsRepository idsRepository;
   private final ContactUtils contactUtils;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public ContactsRepository(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, IdsRepository idsRepository, ContactUtils contactUtils) {
+      Converter.Factory converterFactory, IdsRepository idsRepository, ContactUtils contactUtils,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    this.idsRepository = idsRepository;
     this.contactUtils = contactUtils;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public void getContacts(@NonNull LoadContactsCallback callback1) {
@@ -48,12 +52,13 @@ public class ContactsRepository {
         .observeOn(Schedulers.computation())
         .subscribe(callback -> {
 
-          ContactsModel contacts = contactUtils.getContacts(V8Engine.getContext());
+          ContactsModel contacts = contactUtils.getContacts();
 
           List<String> numbers = contacts.getMobileNumbers();
           List<String> emails = contacts.getEmails();
 
-          SyncAddressBookRequest.of(numbers, emails, bodyInterceptor, httpClient, converterFactory)
+          SyncAddressBookRequest.of(numbers, emails, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences)
               .observe()
               .subscribe(getFollowers -> {
                 List<Contact> contactList = new ArrayList<>();
@@ -78,7 +83,8 @@ public class ContactsRepository {
   public void getTwitterContacts(@NonNull TwitterModel twitterModel,
       @NonNull LoadContactsCallback callback) {
     SyncAddressBookRequest.of(twitterModel.getId(), twitterModel.getToken(),
-        twitterModel.getSecret(), bodyInterceptor, httpClient, converterFactory)
+        twitterModel.getSecret(), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences)
         .observe()
         .subscribe(getFollowers -> {
           List<Contact> contactList = new ArrayList<>();
@@ -102,7 +108,7 @@ public class ContactsRepository {
   public void getFacebookContacts(@NonNull FacebookModel facebookModel,
       @NonNull LoadContactsCallback callback) {
     SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(),
-        bodyInterceptor, httpClient, converterFactory)
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .subscribe(getFriends -> {
           List<Contact> contactList = new ArrayList<>();
@@ -138,7 +144,8 @@ public class ContactsRepository {
     }
 
     if (hashedPhoneNumber != null && !hashedPhoneNumber.isEmpty()) {
-      SetConnectionRequest.of(hashedPhoneNumber, bodyInterceptor, httpClient, converterFactory)
+      SetConnectionRequest.of(hashedPhoneNumber, bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator, sharedPreferences)
           .observe()
           .subscribe(response -> {
             if (response.isOk()) {

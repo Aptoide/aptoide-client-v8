@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -11,14 +12,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequestBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.FirstLaunchAnalytics;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -62,14 +64,8 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
-  private static final IdsRepository idsRepository;
-  private static Analytics instance;
-  private static boolean isFirstSession;
 
-  static {
-    idsRepository = ((V8Engine) DataProvider.getContext()
-        .getApplicationContext()).getIdsRepository();
-  }
+  private static Analytics instance;
 
   private final AnalyticsDataSaver saver;
 
@@ -257,7 +253,8 @@ public class Analytics {
         final BodyInterceptor<BaseBody> bodyInterceptor =
             ((V8Engine) application.getApplicationContext()).getBaseBodyInterceptorV7();
         Observable.fromCallable(() -> {
-          AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
+          AppEventsLogger.setUserID(((V8Engine) application).getIdsRepository()
+              .getUniqueIdentifier());
           return null;
         })
             .filter(__ -> SecurePreferences.isFirstRun())
@@ -632,50 +629,6 @@ public class Analytics {
 
     public static void unlock() {
       track(EVENT_NAME, ACTION, UNLOCK, FLURRY);
-    }
-  }
-
-  public static class ApplicationInstall {
-
-    public static final String EVENT_NAME = "Application Install";
-    //this will be the one remaining after localytics is killed
-
-    private static final String TYPE = "Type";
-    private static final String PACKAGE_NAME = "Package Name";
-    private static final String REFERRED = "Referred";
-    private static final String TRUSTED_BADGE = "Trusted Badge";
-
-    private static final String REPLACED = "Replaced";
-    private static final String INSTALLED = "Installed";
-    private static final String DOWNGRADED_ROLLBACK = "Downgraded Rollback";
-
-    public static void installed(String packageName, String trustedBadge) {
-      innerTrack(packageName, INSTALLED, trustedBadge, ALL);
-    }
-
-    private static void innerTrack(String packageName, String type, String trustedBadge,
-        int flags) {
-      try {
-        HashMap<String, String> stringObjectHashMap = new HashMap<>();
-
-        stringObjectHashMap.put(TRUSTED_BADGE, trustedBadge);
-        stringObjectHashMap.put(TYPE, type);
-        stringObjectHashMap.put(PACKAGE_NAME, packageName);
-
-        track(EVENT_NAME, stringObjectHashMap, flags);
-
-        Bundle parameters = new Bundle();
-        parameters.putString(PACKAGE_NAME, packageName);
-        parameters.putString(TRUSTED_BADGE, trustedBadge);
-        parameters.putString(TYPE, type);
-        logFacebookEvents(EVENT_NAME, parameters);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-    public static void replaced(String packageName, String trustedBadge) {
-      innerTrack(packageName, REPLACED, trustedBadge, ALL);
     }
   }
 

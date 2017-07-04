@@ -13,17 +13,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialCardDisplayable;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -237,9 +237,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator()),
-            err -> CrashReport.getInstance()
-                .log(err)));
+        .subscribe(click -> displayable.likesPreviewClick(), err -> CrashReport.getInstance()
+            .log(err)));
 
     compositeSubscription.add(
         Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar))
@@ -300,7 +299,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
           });
       return false;
     }
-    displayable.like(getContext(), getCardTypeName().toUpperCase(), rating);
+    displayable.like(getContext(), getCardTypeName().toUpperCase(), rating,
+        getContext().getResources());
     return true;
   }
 

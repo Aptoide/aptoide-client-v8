@@ -1,47 +1,10 @@
 package cm.aptoide.pt.v8engine.view.account.user;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
-import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
-import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import com.jakewharton.rxbinding.view.RxView;
-import java.net.SocketTimeoutException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import rx.Completable;
-import rx.Observable;
-import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
-
 // TODO
 // create presenter and separate logic code from view
-public class CreateUserFragment extends PictureLoaderFragment implements ManageUserView {
+public class CreateUserFragment {
+/*
+public class CreateUserFragment extends ImageLoaderFragment implements ManageUserView {
 
   public static final String FROM_MY_ACCOUNT = "My Account";
   public static final String USER_NAME = "userName";
@@ -87,7 +50,8 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
 
     final Context context = getActivity();
 
-    errorMapper = new CreateUserErrorMapper(context, new AccountErrorMapper(context));
+    errorMapper = new CreateUserErrorMapper(context, new AccountErrorMapper(context),
+        getContext().getResources());
 
     final Context applicationContext = context.getApplicationContext();
     accountManager = ((V8Engine) applicationContext).getAccountManager();
@@ -186,10 +150,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
       hideKeyboardAndShowProgressDialog();
       validateUserAvatar();
     })
-        .flatMap(__ -> accountManager.updateAccount(userName.getText()
-            .toString()
-            .trim(), userPicturePath)
-            .timeout(90, TimeUnit.SECONDS)
+        .flatMap(__ -> chooseUpdateMethod().timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .andThen(Completable.merge(dismissProgressDialogCompletable, sendAnalytics))
             .andThen(showLoggedInOrMyAccount())
@@ -231,7 +192,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
 
   private void validateUserAvatar() {
     if (userPicturePath != null) {
-      userPicturePath = userPicturePath.contains("http") ? "" : userPicturePath;
+      userPicturePath = userPicturePath.contains("http") ? null : userPicturePath;
     }
   }
 
@@ -363,4 +324,17 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
       Logger.w(TAG, "URI for content is null or empty");
     }
   }
+
+  private Completable chooseUpdateMethod() {
+    if (userPicturePath != null) {
+      return accountManager.updateAccount(userName.getText()
+          .toString()
+          .trim(), userPicturePath);
+    } else {
+      return accountManager.updateAccount(userName.getText()
+          .toString()
+          .trim());
+    }
+  }
+  */
 }

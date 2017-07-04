@@ -1,6 +1,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import lombok.EqualsAndHashCode;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -12,20 +14,26 @@ import rx.Observable;
 public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Body> {
 
   protected ShareCardRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static ShareCardRequest of(String cardId, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final ShareCardRequest.Body body = new ShareCardRequest.Body(cardId);
-    return new ShareCardRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ShareCardRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   public static ShareCardRequest of(String cardId, long storeId, OkHttpClient httpClient,
-      Converter.Factory converterFactory, BodyInterceptor<BaseBody> bodyInterceptor) {
+      Converter.Factory converterFactory, BodyInterceptor<BaseBody> bodyInterceptor,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final ShareCardRequest.Body body = new ShareCardRequest.Body(cardId, storeId);
-    return new ShareCardRequest(body, bodyInterceptor, httpClient, converterFactory);
+    return new ShareCardRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<ShareCardResponse> loadDataFromNetwork(V7.Interfaces interfaces,
@@ -33,7 +41,7 @@ public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Bod
     return interfaces.shareCard(body, body.getAccessToken());
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  public static class Body extends BaseBody {
 
     private final String cardUid;
     private final Long storeId;

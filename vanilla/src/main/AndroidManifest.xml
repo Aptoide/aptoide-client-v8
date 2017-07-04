@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 27/06/2016.
+  ~ Modified on 27/06/2016.
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -108,7 +108,7 @@
           android:name="android.content.SyncAdapter"
           android:resource="@xml/sync"/>
       <meta-data
-          android:name="cm.aptoide.pt.imageloader.GlideModifications"
+          android:name="cm.aptoide.pt.v8engine.networking.image.GlideModifications"
           android:value="GlideModule"/>
     </service>
   </application>

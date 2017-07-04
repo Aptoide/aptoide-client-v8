@@ -19,15 +19,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
@@ -49,6 +48,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   private EditText messageBodyEdit;
   private EditText subgectEdit;
   private Subscription unManagedSubscription;
+  private InstalledRepository installedRepository;
 
   public static SendFeedbackFragment newInstance(String screenshotFilePath) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
@@ -67,8 +67,23 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     super.onAttach(activity);
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(KEY_SCREENSHOT_PATH, screenShotPath);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -105,20 +120,6 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     messageBodyEdit = (EditText) view.findViewById(R.id.FeedBacktext);
     sendFeedbackBtn = (Button) view.findViewById(R.id.FeedBackSendButton);
     logsAndScreenshotsCb = (CheckBox) view.findViewById(R.id.FeedBackCheckBox);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(KEY_SCREENSHOT_PATH, screenShotPath);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   private void sendFeedback() {
@@ -163,10 +164,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       //  ShowMessage.asSnack(getView(), R.string.feedback_no_email);
       //}
 
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       //attach screenshots and logs
       //				Analytics.SendFeedback.sendFeedback();
-      unManagedSubscription = installedAccessor.get(getContext().getPackageName())
+      unManagedSubscription = installedRepository.getInstalled(getContext().getPackageName())
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installed1 -> {

@@ -19,7 +19,12 @@
       android:orientation="vertical"
       >
 
-    <include layout="@layout/apps_timeline_card_header"/>
+    <include layout="@layout/apps_timeline_multiple_heads_card_header"/>
+
+    <include layout="@layout/social_last_comment_bar"/>
+
+    <include layout="@layout/social_info_bar_timeline"/>
+
 
     <View
         android:id="@+id/card_custom_view_line_separator"

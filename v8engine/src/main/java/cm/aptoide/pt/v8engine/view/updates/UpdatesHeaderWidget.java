@@ -17,9 +17,9 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.updates.UpdatesAnalytics;
 import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
-import cm.aptoide.pt.v8engine.updates.UpdatesAnalytics;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
@@ -71,12 +71,14 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 
               ArrayList<Download> downloadList = new ArrayList<>(updates.size());
               for (Update update : updates) {
-                downloadList.add(new DownloadFactory().create(update));
+                Download download = new DownloadFactory().create(update);
+                displayable.setupDownloadEvent(download);
+                downloadList.add(download);
               }
               return downloadList;
             })
             .flatMap(downloads -> displayable.getInstallManager()
-                .startInstalls(downloads, getContext()))
+                .startInstalls(downloads))
             .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
                 throwable -> throwable.printStackTrace()));
       }, () -> {

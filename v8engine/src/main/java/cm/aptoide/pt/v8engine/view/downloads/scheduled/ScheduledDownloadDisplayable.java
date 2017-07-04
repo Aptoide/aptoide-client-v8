@@ -8,10 +8,12 @@ package cm.aptoide.pt.v8engine.view.downloads.scheduled;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SelectableDisplayablePojo;
 import lombok.Getter;
+import rx.Observable;
 
 /**
  * Created
@@ -40,5 +42,12 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
   public void removeFromDatabase() {
     ((ScheduledAccessor) AccessorFactory.getAccessorFor(Scheduled.class)).delete(
         getPojo().getMd5());
+  }
+
+  public Observable<Boolean> isDownloading() {
+    return installManager.getInstall(getPojo().getMd5(), getPojo().getPackageName(),
+        getPojo().getVerCode())
+        .map(installationProgress -> installationProgress.getState()
+            == Install.InstallationStatus.INSTALLING);
   }
 }

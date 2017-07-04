@@ -11,21 +11,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
 @Displayables({ GridAppDisplayable.class }) public class GridAppWidget
     extends Widget<GridAppDisplayable> {
-
-  private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 
   private TextView name;
   private ImageView icon;
@@ -67,8 +65,9 @@ import com.jakewharton.rxbinding.view.RxView;
         .getAvg());
     tvStoreName.setText(pojo.getStore()
         .getName());
-    tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(context, pojo.getAdded()
-        .getTime()));
+    tvAddedTime.setText(AptoideUtils.DateTimeU.getInstance(getContext())
+        .getTimeDiffString(context, pojo.getAdded()
+            .getTime(), getContext().getResources()));
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
           // FIXME

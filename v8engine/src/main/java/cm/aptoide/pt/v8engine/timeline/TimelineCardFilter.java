@@ -1,22 +1,22 @@
 package cm.aptoide.pt.v8engine.timeline;
 
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.model.v7.timeline.AppUpdate;
-import cm.aptoide.pt.model.v7.timeline.Recommendation;
-import cm.aptoide.pt.model.v7.timeline.TimelineCard;
-import cm.aptoide.pt.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import java.util.Set;
 import rx.Observable;
 import rx.functions.Func1;
 
 public class TimelineCardFilter {
   private final TimelineCardDuplicateFilter duplicateFilter;
-  private final InstalledAccessor installedAccessor;
+  private final InstalledRepository installedRepository;
 
   public TimelineCardFilter(TimelineCardDuplicateFilter duplicateFilter,
-      InstalledAccessor installedAccessor) {
+      InstalledRepository installedRepository) {
     this.duplicateFilter = duplicateFilter;
-    this.installedAccessor = installedAccessor;
+    this.installedRepository = installedRepository;
   }
 
   public void clear() {
@@ -34,7 +34,7 @@ public class TimelineCardFilter {
   private Observable<? extends TimelineCard> filterInstalledRecommendation(
       TimelineCard timelineItem) {
     if (timelineItem instanceof Recommendation) {
-      return installedAccessor.isInstalled(((Recommendation) timelineItem).getRecommendedApp()
+      return installedRepository.isInstalled(((Recommendation) timelineItem).getRecommendedApp()
           .getPackageName())
           .firstOrDefault(false)
           .flatMap(installed -> {
@@ -49,7 +49,7 @@ public class TimelineCardFilter {
 
   private Observable<? extends TimelineCard> filterAlreadyDoneUpdates(TimelineCard timelineCard) {
     if (timelineCard instanceof AppUpdate) {
-      return installedAccessor.get(((AppUpdate) timelineCard).getPackageName())
+      return installedRepository.getInstalled(((AppUpdate) timelineCard).getPackageName())
           .firstOrDefault(null)
           .flatMap(installed -> {
             if (installed != null

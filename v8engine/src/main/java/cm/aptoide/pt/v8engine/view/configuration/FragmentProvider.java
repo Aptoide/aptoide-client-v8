@@ -2,9 +2,9 @@ package cm.aptoide.pt.v8engine.view.configuration;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
@@ -134,18 +134,16 @@ public interface FragmentProvider {
 
   Fragment newSettingsFragment();
 
-  Fragment newTimeLineFollowersUsingUserIdFragment(Long id, long followerNumber, String storeTheme);
+  Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme, String title);
 
-  Fragment newTimeLineFollowingFragmentUsingUserId(Long id, long followingNumber,
-      String storeTheme);
+  Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme, String title);
 
-  Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, long followerNumber,
-      String storeTheme);
+  Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme, String title);
 
-  Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, long followerNumber,
-      String storeTheme);
+  Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title);
 
-  Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme);
+  Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
+      String title);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
@@ -166,7 +164,7 @@ public interface FragmentProvider {
 
   Fragment newThankYouConnectingFragment(String tag);
 
-  Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme);
+  Fragment newTimeLineFollowersFragment(String storeTheme, String title);
 
   Fragment newRecommendedStoresFragment();
 }

@@ -7,11 +7,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialInstallDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -99,14 +99,15 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         .subscribe(view -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
 
-      Analytics.AppsTimeline.clickOnCard(SocialInstallDisplayable.CARD_TYPE_NAME,
-          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
-          Analytics.AppsTimeline.OPEN_APP_VIEW);
-      displayable.sendOpenAppEvent();
-      displayable.sendSocialInstallClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW, socialAction);
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
-    }, throwable -> CrashReport.getInstance()
+          Analytics.AppsTimeline.clickOnCard(SocialInstallDisplayable.CARD_TYPE_NAME,
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
+              Analytics.AppsTimeline.OPEN_APP_VIEW);
+          displayable.sendOpenAppEvent();
+          displayable.sendSocialInstallClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
+              socialAction);
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
+        }, throwable -> CrashReport.getInstance()
             .log(throwable));
   }
 

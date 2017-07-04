@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -51,11 +51,11 @@ import rx.schedulers.Schedulers;
 
   @Override public void bindView(CompletedDownloadDisplayable displayable) {
     final FragmentActivity context = getContext();
-    Download download = displayable.getDownload();
-    appName.setText(download.getAppName());
-    if (!TextUtils.isEmpty(download.getIcon())) {
+    Install installation = displayable.getInstallation();
+    appName.setText(installation.getAppName());
+    if (!TextUtils.isEmpty(installation.getIcon())) {
       ImageLoader.with(context)
-          .load(download.getIcon(), appIcon);
+          .load(installation.getIcon(), appIcon);
     }
 
     //save original colors
@@ -63,11 +63,14 @@ import rx.schedulers.Schedulers;
       defaultTextViewColor = status.getTextColors();
     }
 
-    updateStatus(download);
+    updateStatus(installation, displayable);
 
     compositeSubscription.add(RxView.clicks(itemView)
-        .flatMap(click -> displayable.downloadStatus()
-            .filter(status -> status == Download.COMPLETED)
+        .flatMap(click -> displayable.getInstall()
+            .first()
+            .map(install -> install.getState())
+            .filter(status -> status == Install.InstallationStatus.UNINSTALLED
+                || status == Install.InstallationStatus.INSTALLED)
             .flatMap(
                 status -> displayable.installOrOpenDownload(context, (PermissionService) context)))
         .retry()
@@ -75,25 +78,28 @@ import rx.schedulers.Schedulers;
         }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(resumeDownloadButton)
-        .flatMap(click -> displayable.downloadStatus()
-            .filter(status -> status == Download.PAUSED || status == Download.ERROR)
-            .flatMap(status -> displayable.resumeDownload(context, (PermissionService) context)))
+        .flatMap(click -> displayable.getInstall()
+            .first()
+            .filter(install -> install.getState() == Install.InstallationStatus.PAUSED
+                || install.isFailed())
+            .flatMap(status -> displayable.resumeDownload((PermissionService) context)))
         .retry()
         .subscribe(success -> {
         }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(cancelDownloadButton)
-        .subscribe(click -> displayable.removeDownload(context), err -> {
+        .subscribe(click -> displayable.removeDownload(), err -> {
           CrashReport.getInstance()
               .log(err);
         }));
 
-    compositeSubscription.add(displayable.downloadStatus()
+    compositeSubscription.add(displayable.getInstall()
+        .first()
         .observeOn(Schedulers.computation())
         .sample(1, TimeUnit.SECONDS)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(downloadStatus -> {
-          if (downloadStatus == Download.PAUSED || downloadStatus == Download.ERROR) {
+        .subscribe(install -> {
+          if (install.getState() == Install.InstallationStatus.PAUSED || install.isFailed()) {
             resumeDownloadButton.setVisibility(View.VISIBLE);
           } else {
             resumeDownloadButton.setVisibility(View.GONE);
@@ -102,9 +108,9 @@ import rx.schedulers.Schedulers;
             .log(throwable)));
   }
 
-  private void updateStatus(Download download) {
+  private void updateStatus(Install installation, CompletedDownloadDisplayable displayable) {
     final FragmentActivity context = getContext();
-    if (download.getOverallDownloadStatus() == Download.ERROR) {
+    if (installation.isFailed()) {
       int statusTextColor;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         statusTextColor = context.getColor(R.color.red_700);
@@ -116,6 +122,6 @@ import rx.schedulers.Schedulers;
     } else {
       status.setTextColor(defaultTextViewColor);
     }
-    status.setText(download.getStatusName(context));
+    status.setText(displayable.getStatusName(getContext()));
   }
 }

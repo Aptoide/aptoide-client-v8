@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 21/07/2016.
+  ~ Modified on 21/07/2016.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialog_permissions"

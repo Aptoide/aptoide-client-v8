@@ -1,16 +1,18 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
+import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,8 +44,8 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
   public StoreLatestAppsDisplayable(StoreLatestApps storeLatestApps, String storeName,
       String avatarUrl, List<LatestApp> latestApps, String abUrl, SpannableFactory spannableFactory,
       DateCalculator dateCalculator, Date date, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository, String storeTheme) {
-    super(storeLatestApps, timelineAnalytics);
+      SocialRepository socialRepository, String storeTheme, WindowManager windowManager) {
+    super(storeLatestApps, timelineAnalytics, windowManager);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;
     this.latestApps = latestApps;
@@ -58,7 +60,8 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
 
   public static StoreLatestAppsDisplayable from(StoreLatestApps storeLatestApps,
       SpannableFactory spannableFactory, DateCalculator dateCalculator,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      WindowManager windowManager) {
     final List<LatestApp> latestApps = new ArrayList<>();
     for (App app : storeLatestApps.getApps()) {
       latestApps.add(
@@ -82,7 +85,7 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
         storeLatestApps.getLatestUpdate(), timelineAnalytics, socialRepository,
         storeLatestApps.getStore()
             .getAppearance()
-            .getTheme());
+            .getTheme(), windowManager);
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -110,20 +113,25 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getStoreName(), BLANK));
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
+    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getStoreName(), BLANK));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getStoreName(), BLANK));
+  @Override
+  public void share(String cardId, ShareCardCallback shareCardCallback, Resources resources) {
+    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getStoreName(), BLANK));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getStoreName(), BLANK));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getStoreName(), BLANK));
   }

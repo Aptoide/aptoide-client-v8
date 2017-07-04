@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.view.store;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 

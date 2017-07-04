@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,18 +14,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
@@ -50,6 +51,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private SharedPreferences sharedPreferences;
 
   /**
    * @param appName
@@ -71,6 +73,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -100,7 +104,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    header = new ViewHeader(view);
+    header = new ViewHeader(view, sharedPreferences);
     collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
     setHasOptionsMenu(true);
     super.onViewCreated(view, savedInstanceState);
@@ -132,7 +136,10 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(),
-            baseBodyInterceptor, httpClient, converterFactory), otherVersionsSuccessRequestListener,
+            baseBodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            getContext().getResources()), otherVersionsSuccessRequestListener,
         err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
@@ -186,10 +193,10 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     private final ImageView appIcon;
 
     // ctor
-    ViewHeader(@NonNull View view) {
+    ViewHeader(@NonNull View view, SharedPreferences sharedPreferences) {
       this.view = view;
 
-      animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+      animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus(sharedPreferences);
 
       otherVersionsTitle = (TextView) view.findViewById(R.id.other_versions_title);
       appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);

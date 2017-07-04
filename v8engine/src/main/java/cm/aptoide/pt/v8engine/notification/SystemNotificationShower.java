@@ -10,8 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.installer.RootInstallErrorNotification;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
 import rx.Single;
@@ -23,16 +24,19 @@ import rx.schedulers.Schedulers;
  */
 
 public class SystemNotificationShower {
-  private static final String TAG = SystemNotificationShower.class.getSimpleName();
   private Context context;
   private NotificationManager notificationManager;
+  private NotificationIdsMapper notificationIdsMapper;
 
-  public SystemNotificationShower(Context context, NotificationManager notificationManager) {
+  public SystemNotificationShower(Context context, NotificationManager notificationManager,
+      NotificationIdsMapper notificationIdsMapper) {
     this.context = context;
     this.notificationManager = notificationManager;
+    this.notificationIdsMapper = notificationIdsMapper;
   }
 
-  public Completable showNotification(AptoideNotification aptoideNotification, int notificationId) {
+  public Completable showNotification(AptoideNotification aptoideNotification) {
+    int notificationId = notificationIdsMapper.getNotificationId(aptoideNotification.getType());
     return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
         notification -> notificationManager.notify(notificationId, notification))
         .toCompletable();
@@ -51,17 +55,16 @@ public class SystemNotificationShower {
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
       int notificationId, Context context) {
     return Single.fromCallable(() -> {
-      Intent resultIntent = new Intent(context, PullingContentReceiver.class);
-      resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
+      Intent resultIntent = new Intent(context, NotificationReceiver.class);
+      resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
 
-      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_NOTIFICATION_ID,
-          notificationId);
+      resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
 
       if (!TextUtils.isEmpty(trackUrl)) {
-        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL, trackUrl);
+        resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);
       }
       if (!TextUtils.isEmpty(url)) {
-        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL, url);
+        resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TARGET_URL, url);
       }
 
       return PendingIntent.getBroadcast(context, notificationId, resultIntent,
@@ -117,11 +120,37 @@ public class SystemNotificationShower {
   }
 
   public PendingIntent getOnDismissAction(int notificationId) {
-    Intent resultIntent = new Intent(context, PullingContentReceiver.class);
-    resultIntent.setAction(PullingContentReceiver.PUSH_NOTIFICATION_DISMISSED);
-    resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_NOTIFICATION_ID, notificationId);
+    Intent resultIntent = new Intent(context, NotificationReceiver.class);
+    resultIntent.setAction(NotificationReceiver.NOTIFICATION_DISMISSED_ACTION);
+    resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
 
     return PendingIntent.getBroadcast(context, notificationId, resultIntent,
         PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
+  public void showNotification(Context context,
+      RootInstallErrorNotification installErrorNotification) {
+    android.app.Notification notification =
+        mapToAndroidNotification(context, installErrorNotification);
+    notificationManager.notify(installErrorNotification.getNotificationId(), notification);
+  }
+
+  private Notification mapToAndroidNotification(Context context,
+      RootInstallErrorNotification installErrorNotification) {
+    Notification notification = new NotificationCompat.Builder(context).setContentTitle(
+        installErrorNotification.getMessage())
+        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+        .setLargeIcon(installErrorNotification.getIcon())
+        .setAutoCancel(true)
+        .addAction(installErrorNotification.getAction())
+        .setDeleteIntent(installErrorNotification.getDeleteAction())
+        .build();
+
+    notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+    return notification;
+  }
+
+  public void dismissNotification(int notificationId) {
+    notificationManager.cancel(notificationId);
   }
 }

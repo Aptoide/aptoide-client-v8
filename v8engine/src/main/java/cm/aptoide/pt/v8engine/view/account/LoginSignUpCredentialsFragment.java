@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -29,12 +27,11 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
-import cm.aptoide.pt.v8engine.view.account.user.CreateUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -84,7 +81,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private ThrowableToStringMapper errorMapper;
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
-  private FragmentNavigator fragmentNavigator;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -102,12 +98,12 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     super.onCreate(savedInstanceState);
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
-    fragmentNavigator = getFragmentNavigator();
+    final FragmentNavigator fragmentNavigator = getFragmentNavigator();
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
         new LoginPreferences(getContext(), V8Engine.getConfiguration(),
-            GoogleApiAvailability.getInstance()),
+            GoogleApiAvailability.getInstance()), fragmentNavigator, CrashReport.getInstance(),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK));
   }
@@ -118,6 +114,16 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         .toString());
     outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
         .toString());
+  }
+
+  @Override public void hideKeyboard() {
+    AptoideUtils.SystemU.hideKeyboard(getActivity());
+  }
+
+  @Override public void onDestroyView() {
+    unregisterClickHandler(presenter);
+    unlockScreenRotation();
+    super.onDestroyView();
   }
 
   @Nullable @Override
@@ -169,7 +175,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showError(Throwable throwable) {
-    // FIXME: 23/2/2017 sithengineer find a better solution than this.
     ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
@@ -204,7 +209,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     facebookLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public void navigateToForgotPasswordView() {
+  @Override public void showForgotPasswordView() {
     // FIXME remove hardcoded links
     Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
     startActivity(new Intent(Intent.ACTION_VIEW, mobilePageUri));
@@ -230,24 +235,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     return RxView.clicks(forgotPasswordButton);
   }
 
-  @Override public void navigateToMainView() {
-    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
-        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
-        .getDefaultTheme());
-    fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(home);
-  }
-
-  @Override public void goBack() {
-    fragmentNavigator.popBackStack();
-  }
-
   @Override public void dismiss() {
     getActivity().finish();
-  }
-
-  @Override public void hideKeyboard() {
-    AptoideUtils.SystemU.hideKeyboard(getActivity());
   }
 
   @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
@@ -289,18 +278,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         .toString());
   }
 
-  @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
-    aptoideEmailEditText.setText(model.getUsername());
-    aptoidePasswordEditText.setText(model.getPassword());
-  }
-
   @Override public boolean isPasswordVisible() {
     return isPasswordVisible;
-  }
-
-  @Override public void navigateToCreateProfile() {
-    getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(CreateUserFragment.newInstance());
   }
 
   @Override public Context getApplicationContext() {
@@ -375,7 +354,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
     attachPresenter(presenter, savedInstanceState);
-    registerBackClickHandler(presenter);
+    registerClickHandler(presenter);
   }
 
   @Override protected void showGoogleLoginError() {
@@ -438,14 +417,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     }
   }
 
-  public String getCompanyName() {
+  private String getCompanyName() {
     return ((V8Engine) getActivity().getApplication()).createConfiguration()
         .getMarketName();
-  }
-
-  @Override public void onDestroyView() {
-    unregisterBackClickHandler(presenter);
-    unlockScreenRotation();
-    super.onDestroyView();
   }
 }

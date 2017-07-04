@@ -10,12 +10,12 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Date;
@@ -48,7 +48,8 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     Date modified = app.getUpdated();
     if (modified != null) {
       tvTimeSinceModified.setText(AptoideUtils.DateTimeU.getInstance(itemView.getContext())
-          .getTimeDiffString(itemView.getContext(), modified.getTime()));
+          .getTimeDiffString(itemView.getContext(), modified.getTime(),
+              getContext().getResources()));
     }
 
     name.setText(app.getName());

@@ -5,9 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -19,21 +21,23 @@ import rx.Observable;
 public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResponse> {
 
   public InAppBillingSkuDetailsRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, NetworkOperatorManager operatorManager, String type, String accessToken,
+      List<String> skuList, NetworkOperatorManager operatorManager, String type,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabskudetails");
     args.put("purchasetype", type);
-    args.put("access_token", accessToken);
 
     if (!skuList.isEmpty()) {
       final StringBuilder stringBuilder = new StringBuilder();
@@ -45,14 +49,15 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
       args.put("skulist", stringBuilder.toString());
     }
 
-    addNetworkInformation(operatorManager, args);
+    addNetworkInformation(operatorManager, args, sharedPreferences);
 
-    return new InAppBillingSkuDetailsRequest(args, bodyInterceptor, httpClient, converterFactory);
+    return new InAppBillingSkuDetailsRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override
-  protected Observable<InAppBillingSkuDetailsResponse> loadDataFromNetwork(V3.Interfaces interfaces,
+  protected Observable<InAppBillingSkuDetailsResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
-    return interfaces.getInAppBillingSkuDetails(map);
+    return service.getInAppBillingSkuDetails(map);
   }
 }
