@@ -34,9 +34,9 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
-import cm.aptoide.pt.v8engine.social.data.SocialService;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
+import cm.aptoide.pt.v8engine.social.data.TimelineService;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -103,7 +103,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getResources());
     adapter = new CardAdapter(Collections.emptyList(),
         new CardViewHolderFactory(cardTouchEventPublishSubject, dateCalculator,
-            new SpannableFactory(), new MinimalCardViewFactory(dateCalculator)),
+            new SpannableFactory(),
+            new MinimalCardViewFactory(dateCalculator, cardTouchEventPublishSubject)),
         new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
@@ -129,7 +130,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     attachPresenter(new TimelinePresenter(this, new Timeline(
-        new SocialService(getArguments().getString(ACTION_KEY),
+        new TimelineService(getArguments().getString(ACTION_KEY),
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),

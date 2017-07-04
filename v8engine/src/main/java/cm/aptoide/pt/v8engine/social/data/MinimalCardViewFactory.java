@@ -12,8 +12,10 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import java.util.List;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by jdandrade on 28/06/2017.
@@ -23,14 +25,19 @@ public class MinimalCardViewFactory {
 
   public static final int MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS = 2;
   private final DateCalculator dateCalculator;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private TextView minimalCardHeaderMainName;
   private ImageView minimalCardHeaderMainAvatar;
   private ImageView minimalCardHeaderMainAvatar2;
   private TextView cardHeaderTimestamp;
   private TextView morePostersLabel;
+  private LikeButtonView likeButton;
+  private LinearLayout like;
 
-  public MinimalCardViewFactory(DateCalculator dateCalculator) {
+  public MinimalCardViewFactory(DateCalculator dateCalculator,
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
     this.dateCalculator = dateCalculator;
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   private View getMinimalCardView(MinimalCard minimalCard, LayoutInflater inflater, Context context,
@@ -43,7 +50,8 @@ public class MinimalCardViewFactory {
     cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
     morePostersLabel = (TextView) subCardView.findViewById(
         R.id.timeline_header_aditional_number_of_shares_circular);
-
+    this.likeButton = (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
+    this.like = (LinearLayout) subCardView.findViewById(R.id.social_like_layout);
     Poster poster1 = new Poster(minimalCard.getSharers()
         .get(0)
         .getUser(), minimalCard.getSharers()
@@ -71,6 +79,19 @@ public class MinimalCardViewFactory {
     minimalCardHeaderMainName.setText(getCardHeaderNames(minimalCard.getSharers()));
 
     cardHeaderTimestamp.setText(dateCalculator.getTimeSinceDate(context, minimalCard.getDate()));
+
+    this.like.setOnClickListener(click -> {
+      this.likeButton.performClick();
+      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(new Post() {
+        @Override public String getCardId() {
+          return minimalCard.getCardId();
+        }
+
+        @Override public CardType getType() {
+          return CardType.MINIMAL_CARD;
+        }
+      }, CardTouchEvent.Type.LIKE));
+    });
 
     return subCardView;
   }

@@ -78,6 +78,8 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnBodyEvents();
 
+    handleCardClickOnLikeEvents();
+
     showMoreCardsOnBottomReached();
 
     showCardsOnRetry();
@@ -89,6 +91,20 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handleCardClickOnLikeEvents() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.articleClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.LIKE))
+            .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard())
+                .retry()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
+        });
   }
 
   private void showCardsOnRetry() {

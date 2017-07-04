@@ -30,8 +30,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 28/06/2017.
  */
 
-public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
-  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+public class SocialStoreViewHolder extends SocialEventsViewHolder<SocialStore> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final LayoutInflater inflater;
@@ -52,9 +51,8 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
   public SocialStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.inflater = LayoutInflater.from(itemView.getContext());
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
 
@@ -75,6 +73,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
   }
 
   @Override public void setCard(SocialStore card, int position) {
+    super.setCard(card, position);
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPoster()
             .getPrimaryAvatar(), this.headerPrimaryAvatar);

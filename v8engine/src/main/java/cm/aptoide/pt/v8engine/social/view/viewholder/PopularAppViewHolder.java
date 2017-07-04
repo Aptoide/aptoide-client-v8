@@ -21,9 +21,8 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 26/06/2017.
  */
 
-public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
+public class PopularAppViewHolder extends SocialEventsViewHolder<PopularApp> {
   private final LayoutInflater inflater;
-  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
   private final TextView headerSubTitle;
   private final ViewGroup headerUsersContainer;
@@ -34,9 +33,8 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
 
   public PopularAppViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.inflater = LayoutInflater.from(itemView.getContext());
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.headerSubTitle =
         (TextView) view.findViewById(R.id.displayable_social_timeline_popular_app_card_timestamp);
@@ -51,6 +49,7 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
   }
 
   @Override public void setCard(PopularApp card, int position) {
+    super.setCard(card, position);
     this.headerSubTitle.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
     ImageLoader.with(itemView.getContext())

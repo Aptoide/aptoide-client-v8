@@ -167,6 +167,5 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         />
-
   </LinearLayout>
 </android.support.v7.widget.CardView>

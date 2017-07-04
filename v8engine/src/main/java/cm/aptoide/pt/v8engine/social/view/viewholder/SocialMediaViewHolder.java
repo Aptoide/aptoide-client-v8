@@ -23,8 +23,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 27/06/2017.
  */
 
-public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
-  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+public class SocialMediaViewHolder extends SocialEventsViewHolder<SocialMedia> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final ImageView headerPrimaryAvatar;
@@ -41,8 +40,7 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
   public SocialMediaViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view);
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+    super(view, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
 
@@ -60,6 +58,7 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
   }
 
   @Override public void setCard(SocialMedia card, int position) {
+    super.setCard(card, position);
     if (card.getType()
         .equals(CardType.SOCIAL_ARTICLE)) {
       this.playIcon.setVisibility(View.GONE);

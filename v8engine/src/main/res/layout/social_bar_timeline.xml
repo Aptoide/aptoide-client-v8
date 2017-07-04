@@ -28,7 +28,6 @@
         android:clipChildren="false"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="invisible"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:visibility="visible"

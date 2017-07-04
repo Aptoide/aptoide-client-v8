@@ -19,9 +19,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 31/05/2017.
  */
 
-public class MediaViewHolder extends CardViewHolder<Media> {
-
-  private final PublishSubject<CardTouchEvent> articleSubject;
+public class MediaViewHolder extends SocialEventsViewHolder<Media> {
   private final TextView publisherName;
   private final TextView date;
   private final ImageView publisherAvatar;
@@ -34,10 +32,9 @@ public class MediaViewHolder extends CardViewHolder<Media> {
   private final ImageView cardIcon;
   private final ImageView playIcon;
 
-  public MediaViewHolder(View itemView, PublishSubject<CardTouchEvent> articleSubject,
+  public MediaViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
-    super(itemView);
-    this.articleSubject = articleSubject;
+    super(itemView, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
 
@@ -53,6 +50,7 @@ public class MediaViewHolder extends CardViewHolder<Media> {
   }
 
   @Override public void setCard(Media media, int position) {
+    super.setCard(media, position);
     if (media.getType()
         .equals(CardType.ARTICLE)) {
       setIcon(R.drawable.appstimeline_article_icon);
@@ -77,10 +75,10 @@ public class MediaViewHolder extends CardViewHolder<Media> {
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(media.getMediaThumbnailUrl(), articleThumbnail);
 
-    articleThumbnail.setOnClickListener(
-        click -> articleSubject.onNext(new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
-    articleHeader.setOnClickListener(
-        click -> articleSubject.onNext(new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
+    articleThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
+    articleHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
   }
 
   private void setIcon(int drawableId) {

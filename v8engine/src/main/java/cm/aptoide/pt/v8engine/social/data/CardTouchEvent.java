@@ -22,5 +22,5 @@ public class CardTouchEvent {
     return actionType;
   }
 
-  public enum Type {HEADER, BODY}
+  public enum Type {HEADER, LIKE, BODY}
 }

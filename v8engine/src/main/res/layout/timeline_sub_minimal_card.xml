@@ -39,10 +39,10 @@
         android:background="@color/timeline_separator"
         />
 
-    <!--<include-->
-    <!--layout="@layout/social_bar_timeline"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="65dp"-->
-    <!--/>-->
+    <include
+        layout="@layout/social_bar_timeline"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        />
   </LinearLayout>
 </LinearLayout>

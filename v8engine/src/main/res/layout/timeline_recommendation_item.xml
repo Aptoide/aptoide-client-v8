@@ -2,8 +2,8 @@
 
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -185,6 +185,8 @@
         android:background="@color/timeline_separator"
         android:visibility="visible"
         />
+
+    <include layout="@layout/social_bar_timeline"/>
   </LinearLayout>
 </android.support.v7.widget.CardView>
 

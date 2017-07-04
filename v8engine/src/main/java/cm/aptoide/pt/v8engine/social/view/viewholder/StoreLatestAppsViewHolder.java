@@ -26,8 +26,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 21/06/2017.
  */
 
-public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
-  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+public class StoreLatestAppsViewHolder extends SocialEventsViewHolder<StoreLatestApps> {
   private final DateCalculator dateCalculator;
   private final ImageView headerIcon;
   private final TextView headerTitle;
@@ -39,10 +38,9 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
   public StoreLatestAppsViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.spannableFactory = spannableFactory;
     this.inflater = LayoutInflater.from(itemView.getContext());
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
 
     this.headerIcon = (ImageView) view.findViewById(
@@ -56,6 +54,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
   }
 
   @Override public void setCard(StoreLatestApps card, int position) {
+    super.setCard(card, position);
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
 

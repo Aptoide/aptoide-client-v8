@@ -5,6 +5,7 @@ import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -13,11 +14,11 @@ import rx.Single;
  */
 
 public class Timeline {
-  private final SocialService service;
+  private final TimelineService service;
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
 
-  public Timeline(SocialService service, InstallManager installManager,
+  public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory) {
     this.service = service;
     this.installManager = installManager;
@@ -40,5 +41,9 @@ public class Timeline {
         .andThen(installManager.getInstall(card.getFile()
             .getMd5sum(), card.getPackageName(), card.getFile()
             .getVercode()));
+  }
+
+  public Completable like(Post post) {
+    return service.like(post.getCardId());
   }
 }

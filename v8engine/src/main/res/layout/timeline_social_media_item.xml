@@ -144,7 +144,7 @@
 
     <!--<include layout="@layout/social_last_comment_bar"/>-->
 
-    <!--<include layout="@layout/social_bar_timeline"/>-->
+    <include layout="@layout/social_bar_timeline"/>
 
   </LinearLayout>
 </android.support.v7.widget.CardView>

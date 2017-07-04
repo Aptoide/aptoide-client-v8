@@ -23,8 +23,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 26/06/2017.
  */
 
-public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommendation> {
-  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+public class SocialRecommendationViewHolder extends SocialEventsViewHolder<RatedRecommendation> {
   private final DateCalculator dateCalculator;
   private final ImageView headerPrimaryAvatar;
   private final ImageView headerSecondaryAvatar;
@@ -42,9 +41,8 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
   public SocialRecommendationViewHolder(View view, int titleStringResourceId,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.titleStringResourceId = titleStringResourceId;
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
 
@@ -64,6 +62,7 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
   }
 
   @Override public void setCard(RatedRecommendation card, int position) {
+    super.setCard(card, position);
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPoster()
             .getPrimaryAvatar(), headerPrimaryAvatar);

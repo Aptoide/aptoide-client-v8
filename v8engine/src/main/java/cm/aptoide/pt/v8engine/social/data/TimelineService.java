@@ -6,12 +6,15 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -19,7 +22,7 @@ import rx.Single;
  * Created by jdandrade on 31/05/2017.
  */
 
-public class SocialService {
+public class TimelineService {
   private final String url;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient okhttp;
@@ -37,7 +40,7 @@ public class SocialService {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
 
-  public SocialService(String url, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
+  public TimelineService(String url, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
       Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
@@ -94,5 +97,19 @@ public class SocialService {
 
   public Single<List<Post>> getCards() {
     return getCards(limit, initialOffset);
+  }
+
+  public Completable like(String postId) {
+    return LikeCardRequest.of(postId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
+        sharedPreferences)
+        .observe()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new IllegalStateException(V7.getErrorMessage(response)));
+          }
+        })
+        .toCompletable();
   }
 }
