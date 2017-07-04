@@ -54,8 +54,8 @@ public class ActiveDownloadDisplayable extends Displayable {
   }
 
   public Observable<Install> getInstallationObservable() {
-    return installManager.getInstall(installation.getMd5(),
-        installation.getPackageName(), installation.getVersionCode());
+    return installManager.getInstall(installation.getMd5(), installation.getPackageName(),
+        installation.getVersionCode());
   }
 
   public void setOnPauseAction(Action0 onPauseAction) {

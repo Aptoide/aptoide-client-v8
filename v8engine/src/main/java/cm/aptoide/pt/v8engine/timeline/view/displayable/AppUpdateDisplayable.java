@@ -157,7 +157,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
     }
     return installManager.install(download)
         .andThen(installManager.getInstall(download.getMd5(), download.getPackageName(),
-                download.getVersionCode()))
+            download.getVersionCode()))
         .doOnSubscribe(() -> setupEvents());
   }
 

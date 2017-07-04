@@ -44,9 +44,8 @@ import rx.schedulers.Schedulers;
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     compositeSubscription.add(RxView.clicks(pauseCancelButton)
-        .subscribe(click -> displayable.pauseInstall(),
-            throwable -> CrashReport.getInstance()
-                .log(throwable)));
+        .subscribe(click -> displayable.pauseInstall(), throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
     compositeSubscription.add(displayable.getInstallationObservable()
         .observeOn(Schedulers.computation())
