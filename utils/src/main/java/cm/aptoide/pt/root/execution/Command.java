@@ -20,14 +20,14 @@
  * limitations under that License.
  */
 
-package cm.aptoide.pt.v8engine.install.root.execution;
+package cm.aptoide.pt.root.execution;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
+import cm.aptoide.pt.root.RootShell;
 import java.io.IOException;
 
 public class Command {

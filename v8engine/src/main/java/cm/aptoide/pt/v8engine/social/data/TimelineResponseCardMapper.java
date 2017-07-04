@@ -31,7 +31,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Video;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.VideoTimelineItem;
-import cm.aptoide.pt.v8engine.Progress;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.MediaPublisher;
@@ -116,7 +116,7 @@ public class TimelineResponseCardMapper {
             .getTheme(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getPackageName(),
             appUpdate.getAdded(), abUrl, CardType.UPDATE, appUpdate.getFile(),
             // TODO: 26/06/2017 probably should get progress state someway because the download might be happening already.
-            appUpdate.getObb(), Progress.INACTIVE));
+            appUpdate.getObb(), Install.InstallationStatus.UNINSTALLED));
       } else if (item instanceof PopularAppTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.PopularApp popularApp =
             ((PopularAppTimelineItem) item).getData();

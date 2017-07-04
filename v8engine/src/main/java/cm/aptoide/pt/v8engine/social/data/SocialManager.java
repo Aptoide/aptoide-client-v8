@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import java.util.List;
 import rx.Observable;
@@ -32,9 +32,13 @@ public class SocialManager {
     return service.getNextCards();
   }
 
-  public Observable<? extends Progress<Download>> updateApp(CardTouchEvent cardTouchEvent) {
+  public Observable<Install> updateApp(CardTouchEvent cardTouchEvent) {
+    AppUpdate card = (AppUpdate) cardTouchEvent.getCard();
     return installManager.install(downloadFactory.create(
         (cm.aptoide.pt.v8engine.social.data.AppUpdate) cardTouchEvent.getCard(),
-        Download.ACTION_UPDATE));
+        Download.ACTION_UPDATE))
+        .andThen(installManager.getInstall(card.getFile()
+            .getMd5sum(), card.getPackageName(), card.getFile()
+            .getVercode()));
   }
 }

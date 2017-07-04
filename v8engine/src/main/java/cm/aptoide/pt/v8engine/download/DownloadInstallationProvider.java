@@ -10,10 +10,12 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.installer.InstallationProvider;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstallation;
@@ -30,14 +32,17 @@ public class DownloadInstallationProvider implements InstallationProvider {
   private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
   private final MinimalAdMapper adMapper;
-  private StoredMinimalAdAccessor storedMinimalAdAccessor;
+  private final InstalledRepository installedRepository;
+  private final StoredMinimalAdAccessor storedMinimalAdAccessor;
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
-      DownloadAccessor downloadAccessor, MinimalAdMapper adMapper) {
+      DownloadAccessor downloadAccessor, InstalledRepository installedRepository,
+      MinimalAdMapper adMapper) {
     this.downloadManager = downloadManager;
     this.downloadAccessor = downloadAccessor;
     this.adMapper = adMapper;
     this.storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    this.installedRepository = installedRepository;
   }
 
   @Override public Observable<RollbackInstallation> getInstallation(String md5) {
@@ -45,9 +50,16 @@ public class DownloadInstallationProvider implements InstallationProvider {
         .first()
         .flatMap(download -> {
           if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-            return Observable.just(new DownloadInstallationAdapter(download, downloadAccessor))
+            return installedRepository.get(download.getPackageName(), download.getVersionCode())
+                .map(installed -> {
+                  if (installed == null) {
+                    installed = convertDownloadToInstalled(download);
+                  }
+                  return new DownloadInstallationAdapter(download, downloadAccessor,
+                      installedRepository, installed);
+                })
                 .doOnNext(downloadInstallationAdapter -> {
-                  storedMinimalAdAccessor.get(download.getPackageName())
+                  storedMinimalAdAccessor.get(downloadInstallationAdapter.getPackageName())
                       .doOnNext(handleCpd())
                       .subscribeOn(Schedulers.io())
                       .subscribe(storedMinimalAd -> {
@@ -56,6 +68,17 @@ public class DownloadInstallationProvider implements InstallationProvider {
           }
           return Observable.error(new InstallationException("Installation file not available."));
         });
+  }
+
+  @NonNull private Installed convertDownloadToInstalled(Download download) {
+    Installed installed = new Installed();
+    installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
+    installed.setVersionCode(download.getVersionCode());
+    installed.setVersionName(download.getVersionName());
+    installed.setStatus(Installed.STATUS_UNINSTALLED);
+    installed.setType(Installed.TYPE_UNKNOWN);
+    installed.setPackageName(download.getPackageName());
+    return installed;
   }
 
   @NonNull private Action1<StoredMinimalAd> handleCpd() {

@@ -5,9 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -32,9 +32,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final Analytics analytics;
   private final InstallEventConverter installConverter;
   private final DownloadEventConverter downloadConverter;
-  private final List<Download> activeDownloads;
-  private final List<Download> standByDownloads;
-  private final List<Download> completedDownloads;
+  private final List<Install> activeDownloads;
+  private final List<Install> standByDownloads;
+  private final List<Install> completedDownloads;
   private final Resources resources;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
@@ -50,19 +50,19 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     this.resources = resources;
   }
 
-  public void setActiveDownloads(List<Download> downloads) {
+  public void setActiveDownloads(List<Install> downloads) {
     this.activeDownloads.clear();
     this.activeDownloads.addAll(downloads);
     this.notifyDataSetChanged();
   }
 
-  public void setStandByDownloads(List<Download> downloads) {
+  public void setStandByDownloads(List<Install> downloads) {
     this.standByDownloads.clear();
     this.standByDownloads.addAll(downloads);
     this.notifyDataSetChanged();
   }
 
-  public void setCompletedDownloads(List<Download> downloads) {
+  public void setCompletedDownloads(List<Install> downloads) {
     this.completedDownloads.clear();
     this.completedDownloads.addAll(downloads);
     this.notifyDataSetChanged();
@@ -222,19 +222,19 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
         AptoideUtils.StringU.getResString(R.string.active, resources), installManager));
   }
 
-  private void bindActiveDownload(Widget holder, Download download) {
-    holder.internalBindView(new ActiveDownloadDisplayable(download, installManager));
+  private void bindActiveDownload(Widget holder, Install installation) {
+    holder.internalBindView(new ActiveDownloadDisplayable(installation, installManager));
   }
 
-  private void bindStandByDownload(Widget holder, Download download) {
+  private void bindStandByDownload(Widget holder, Install installation) {
     holder.internalBindView(
-        new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
+        new CompletedDownloadDisplayable(installation, installManager, downloadConverter, analytics,
             installConverter));
   }
 
-  private void bindCompletedDownload(Widget holder, Download download) {
+  private void bindCompletedDownload(Widget holder, Install installation) {
     holder.internalBindView(
-        new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
+        new CompletedDownloadDisplayable(installation, installManager, downloadConverter, analytics,
             installConverter));
   }
 
@@ -242,6 +242,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     activeDownloads.clear();
     standByDownloads.clear();
     completedDownloads.clear();
+    notifyDataSetChanged();
   }
 
   private enum ItemViewType {

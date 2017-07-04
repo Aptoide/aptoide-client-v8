@@ -8,9 +8,9 @@ package cm.aptoide.pt.v8engine.timeline.view.displayable;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import android.text.TextUtils;
 import android.view.WindowManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -18,8 +18,8 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -140,7 +140,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
         .getTheme(), resources, windowManager);
   }
 
-  public Observable<Progress<Download>> update(Context context) {
+  public Observable<Install> update(Context context) {
     if (installManager.showWarning()) {
       GenericDialogs.createGenericYesNoCancelMessage(context, null,
           AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, resources))
@@ -156,6 +156,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
           });
     }
     return installManager.install(download)
+        .andThen(installManager.getInstall(download.getMd5(), download.getPackageName(),
+            download.getVersionCode()))
         .doOnSubscribe(() -> setupEvents());
   }
 
@@ -168,14 +170,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
         installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
             DownloadInstallBaseEvent.AppContext.TIMELINE);
     analytics.save(packageName + download.getVersionCode(), installEvent);
-  }
-
-  public Observable<Progress<Download>> updateProgress() {
-    return installManager.getInstallations()
-        .filter(downloadProgress -> (!TextUtils.isEmpty(downloadProgress.getRequest()
-            .getMd5()) && downloadProgress.getRequest()
-            .getMd5()
-            .equals(download.getMd5())));
   }
 
   public String getAppName() {
@@ -216,14 +210,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
 
   public Observable<Void> requestPermission(Context context) {
     return permissionManager.requestExternalStoragePermission(((PermissionService) context));
-  }
-
-  public boolean isInstalling(Progress<Download> downloadProgress) {
-    return installManager.isInstalling(downloadProgress);
-  }
-
-  public boolean isDownloading(Progress<Download> downloadProgress) {
-    return installManager.isDownloading(downloadProgress);
   }
 
   public void sendOpenAppEvent() {
@@ -275,25 +261,12 @@ public class AppUpdateDisplayable extends CardDisplayable {
             BLANK));
   }
 
-  public String getErrorMessage(Context context, int error) {
-    String toReturn = null;
-    switch (error) {
-      case Download.GENERIC_ERROR:
-        toReturn = getUpdateErrorText(context);
-        break;
-      case Download.NOT_ENOUGH_SPACE_ERROR:
-        toReturn = getUpdateNoSpaceErrorText(context);
-        break;
-    }
-    return toReturn;
+  public @StringRes int getUpdateErrorText() {
+    return R.string.displayable_social_timeline_app_update_error;
   }
 
-  public String getUpdateErrorText(Context context) {
-    return context.getString(R.string.displayable_social_timeline_app_update_error);
-  }
-
-  private String getUpdateNoSpaceErrorText(Context context) {
-    return context.getString(R.string.out_of_space_error);
+  public @StringRes int getUpdateNoSpaceErrorText() {
+    return R.string.out_of_space_error;
   }
 
   public Spannable getStyledTitle(Context context) {

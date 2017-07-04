@@ -116,7 +116,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
-      return installedAccessor.get(packageNames)
+      return installedAccessor.getInstalled(packageNames)
           .observeOn(Schedulers.computation());
     }
     return Observable.just(null);

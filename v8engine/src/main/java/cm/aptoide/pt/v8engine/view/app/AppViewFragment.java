@@ -34,12 +34,10 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
@@ -77,9 +75,10 @@ import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
@@ -188,6 +187,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private PurchaseIntentMapper purchaseIntentMapper;
   private ShareAppHelper shareAppHelper;
   private QManager qManager;
+  private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
   private MinimalAdMapper adMapper;
@@ -301,6 +301,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics,
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    downloadFactory = new DownloadFactory();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
@@ -480,7 +481,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               && app.getStats()
               .getRating() != null ? app.getStats()
               .getRating()
-              .getAvg() : 0f), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+              .getAvg() : 0f), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW,
+          app != null ? app.getStore()
+              .getId() : null);
       appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {
@@ -617,7 +620,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
 
     // useful data for the syncAuthorization updates menu option
-    installAction().observeOn(AndroidSchedulers.mainThread())
+    installAction(packageName, app.getFile()
+        .getVercode()).observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appAction -> {
           AppViewFragment.this.appAction = appAction;
@@ -629,7 +633,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
                 (PermissionService) getContext())
                 .flatMap(success -> installManager.uninstall(packageName, app.getFile()
-                    .getVername()))
+                    .getVername())
+                    .toObservable())
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
                 .subscribe(aVoid -> {
                 }, throwable -> throwable.printStackTrace()));
@@ -689,28 +694,28 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appName = app.getName();
   }
 
-  public Observable<AppAction> installAction() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    return installedAccessor.getAsList(packageName)
-        .map(installedList -> {
-          if (installedList != null && installedList.size() > 0) {
-            Installed installed = installedList.get(0);
-            if (app.getFile()
-                .getVercode() == installed.getVersionCode()) {
-              //current installed version
-              return AppAction.OPEN;
-            } else if (app.getFile()
-                .getVercode() > installed.getVersionCode()) {
-              //update
-              return AppAction.UPDATE;
-            } else {
-              //downgrade
-              return AppAction.DOWNGRADE;
-            }
-          } else {
-            //app not installed
-            return AppAction.INSTALL;
+  public Observable<AppAction> installAction(String packageName, int versionCode) {
+    return installManager.getInstall(md5, packageName, versionCode)
+        .map(installationProgress -> installationProgress.getType())
+        .map(installationType -> {
+          AppAction action;
+          switch (installationType) {
+            case INSTALLED:
+              action = AppAction.OPEN;
+              break;
+            case INSTALL:
+              action = AppAction.INSTALL;
+              break;
+            case UPDATE:
+              action = AppAction.UPDATE;
+              break;
+            case DOWNGRADE:
+              action = AppAction.DOWNGRADE;
+              break;
+            default:
+              action = AppAction.INSTALL;
           }
+          return action;
         });
   }
 
@@ -739,7 +744,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
-            installedRepository, timelineAnalytics, appViewAnalytics);
+            installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(

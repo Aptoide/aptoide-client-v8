@@ -177,8 +177,6 @@ dependencies {
   compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
   compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
 
-  compile "eu.chainfire:libsuperuser:${SUPER_USER_LIB_VERSION}"
-
   //    Apagar
   compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
   compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"

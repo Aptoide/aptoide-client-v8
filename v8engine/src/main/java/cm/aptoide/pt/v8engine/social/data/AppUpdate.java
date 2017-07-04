@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
+import cm.aptoide.pt.v8engine.Install;
 import java.util.Date;
 
 /**
@@ -22,11 +23,12 @@ public class AppUpdate implements Post {
   private final CardType cardType;
   private final File file;
   private final Obb obb;
-  private int progress;
+  private Install.InstallationStatus installationStatus;
 
   public AppUpdate(String cardId, String storeName, String storeAvatar, String storeTheme,
       String appUpdateIcon, String appUpdateName, String packageName, Date updateAddedDate,
-      String abUrl, CardType cardType, File file, Obb obb, int progress) {
+      String abUrl, CardType cardType, File file, Obb obb,
+      Install.InstallationStatus installationStatus) {
     this.cardId = cardId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;
@@ -39,19 +41,19 @@ public class AppUpdate implements Post {
     this.cardType = cardType;
     this.file = file;
     this.obb = obb;
-    this.progress = progress;
+    this.installationStatus = installationStatus;
   }
 
   public String getStoreTheme() {
     return storeTheme;
   }
 
-  public int getProgress() {
-    return progress;
+  public Install.InstallationStatus getInstallationStatus() {
+    return installationStatus;
   }
 
-  public void setProgress(int progress) {
-    this.progress = progress;
+  public void setInstallationStatus(Install.InstallationStatus installationStatus) {
+    this.installationStatus = installationStatus;
   }
 
   public Obb getObb() {

@@ -214,11 +214,15 @@ public class TimelinePresenter implements Presenter {
                   }
                   return socialManager.updateApp(cardTouchEvent);
                 })
-                .subscribe(downloadProgress -> {
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(install -> {
                   // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
-                  ((AppUpdate) cardTouchEvent.getCard()).setProgress(downloadProgress.getState());
+                  ((AppUpdate) cardTouchEvent.getCard()).setInstallationStatus(
+                      install.getState());
                   view.updateInstallProgress(cardTouchEvent.getCard(),
                       ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
+                })
+                .subscribe(downloadProgress -> {
                 }, throwable -> Logger.d(this.getClass()
                     // TODO: 26/06/2017 error handling
                     .getName(), "error"));

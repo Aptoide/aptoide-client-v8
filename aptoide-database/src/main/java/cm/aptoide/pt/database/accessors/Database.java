@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
  */
 public final class Database {
 
-  private static final int SCHEMA_VERSION = 8085; // if you bump this value, also add changes to the
+  private static final int SCHEMA_VERSION = 8086; // if you bump this value, also add changes to the
   private static final String DB_NAME = "aptoide.realm.db";
 
   private static boolean isInitialized = false;
@@ -258,7 +258,7 @@ public final class Database {
     deleteObject(realm, obj);
   }
 
-  private <E extends RealmObject> void deleteObject(Realm realm, E obj) {
+  <E extends RealmObject> void deleteObject(Realm realm, E obj) {
     realm.beginTransaction();
     try {
       if (obj != null && obj.isValid()) {

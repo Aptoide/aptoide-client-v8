@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.v8engine.Progress;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
@@ -77,12 +77,15 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
   }
 
   private void setAppUpdateButtonText(AppUpdate card) {
-    if (card.getProgress() == Progress.INACTIVE) {
+    if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.UNINSTALLED)) {
       this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
           .toUpperCase());
-    } else if (card.getProgress() == Progress.ACTIVE) {
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.INSTALLING)) {
       this.appUpdate.setText("UPDATING...");
-    } else if (card.getProgress() == Progress.DONE) {
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.INSTALLED)) {
       this.appUpdate.setText("UPDATED");
     }
   }
