@@ -6,7 +6,7 @@ import android.net.wifi.WifiManager;
  * Created by filipe on 26-06-2017.
  */
 
-public class NetworkStateManager {
+class NetworkStateManager {
 
   private final WifiManager wifimanager;
 
