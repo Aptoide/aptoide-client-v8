@@ -19,11 +19,13 @@ public class StoreLatestApps implements Post {
   private final List<App> apps;
   private final String abUrl;
   private final CardType cardType;
+  private final Long storeId;
 
-  public StoreLatestApps(String cardId, String storeName, String storeAvatar, String storeTheme,
-      int subscribers, int appsNumber, Date latestUpdate, List<App> apps, String abUrl,
-      CardType cardType) {
+  public StoreLatestApps(String cardId, Long storeId, String storeName, String storeAvatar,
+      String storeTheme, int subscribers, int appsNumber, Date latestUpdate, List<App> apps,
+      String abUrl, CardType cardType) {
     this.cardId = cardId;
+    this.storeId = storeId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;
     this.storeTheme = storeTheme;
@@ -73,5 +75,9 @@ public class StoreLatestApps implements Post {
 
   @Override public CardType getType() {
     return this.cardType;
+  }
+
+  public Long getStoreId() {
+    return storeId;
   }
 }

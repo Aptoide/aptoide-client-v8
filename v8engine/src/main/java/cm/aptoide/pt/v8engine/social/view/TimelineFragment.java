@@ -13,11 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.R;
@@ -26,6 +29,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
@@ -35,6 +39,8 @@ import cm.aptoide.pt.v8engine.social.data.SocialService;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
@@ -132,7 +138,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             Integer.MAX_VALUE, tokenInvalidator, sharedPreferences), installManager,
         new DownloadFactory()), CrashReport.getInstance(),
         new TimelineNavigator(getFragmentNavigator()), new PermissionManager(),
-        (PermissionService) getContext(), installManager), savedInstanceState);
+        (PermissionService) getContext(), installManager, RepositoryFactory.getStoreRepository(),
+        new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
+            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+        new StoreCredentialsProviderImpl()), savedInstanceState);
   }
 
   @Override public void showCards(List<Post> cards) {
@@ -228,5 +242,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void updateInstallProgress(Post card, int cardPosition) {
     adapter.updateCard(card, cardPosition);
+  }
+
+  @Override public void showStoreSubscribedMessage(String storeName) {
+    ShowMessage.asSnack(getView(), AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+        getContext().getResources(), storeName));
+  }
+
+  @Override public void showStoreUnsubscribedMessage(String storeName) {
+    ShowMessage.asSnack(getView(),
+        AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+            getContext().getResources(), storeName));
   }
 }

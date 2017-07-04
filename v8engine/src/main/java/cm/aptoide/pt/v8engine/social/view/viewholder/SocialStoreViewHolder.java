@@ -102,7 +102,8 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
             .getId(), CardTouchEvent.Type.HEADER)));
     showStoreLatestApps(card);
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new FollowStoreCardTouchEvent(card, card.getStoreName(), CardTouchEvent.Type.BODY)));
+        new FollowStoreCardTouchEvent(card, card.getStoreId(), card.getStoreName(),
+            CardTouchEvent.Type.BODY)));
     this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new StoreCardTouchEvent(card, card.getStoreName(), card.getStoreTheme(),
             CardTouchEvent.Type.BODY)));

@@ -97,6 +97,7 @@ public class TimelineResponseCardMapper {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestApps store =
             ((StoreLatestAppsTimelineItem) item).getData();
         cards.add(new StoreLatestApps(store.getCardId(), store.getStore()
+            .getId(), store.getStore()
             .getName(), store.getStore()
             .getAvatar(), store.getStore()
             .getAppearance()
@@ -198,6 +199,7 @@ public class TimelineResponseCardMapper {
             socialStoreLatestApps.getOwnerStore());
         cards.add(new SocialStore(socialStoreLatestApps.getCardId(),
             new Poster(user.getUser(), user.getStore()), socialStoreLatestApps.getSharedStore()
+            .getId(), socialStoreLatestApps.getSharedStore()
             .getName(), socialStoreLatestApps.getSharedStore()
             .getAvatar(), socialStoreLatestApps.getSharedStore()
             .getAppearance()
@@ -268,7 +270,8 @@ public class TimelineResponseCardMapper {
         cards.add(new AggregatedStore("n/a", posters,
             aggregatedSocialStoreLatestApps.getMinimalCardList(),
             aggregatedSocialStoreLatestApps.getSharedStore()
-                .getName(), aggregatedSocialStoreLatestApps.getSharedStore()
+                .getId(), aggregatedSocialStoreLatestApps.getSharedStore()
+            .getName(), aggregatedSocialStoreLatestApps.getSharedStore()
             .getAvatar(), aggregatedSocialStoreLatestApps.getSharedStore()
             .getAppearance()
             .getTheme(), aggregatedSocialStoreLatestApps.getSharedStore()

@@ -12,11 +12,11 @@ import java.util.List;
 public class SocialStore extends StoreLatestApps {
   private final Poster poster;
 
-  public SocialStore(String cardId, Poster poster, String storeName, String storeAvatar,
-      String socialStore, int subscribers, int appsNumber, Date latestUpdate, List<App> apps,
-      String abUrl, CardType cardType) {
-    super(cardId, storeName, storeAvatar, socialStore, subscribers, appsNumber, latestUpdate, apps,
-        abUrl, cardType);
+  public SocialStore(String cardId, Poster poster, Long storeId, String storeName,
+      String storeAvatar, String socialStore, int subscribers, int appsNumber, Date latestUpdate,
+      List<App> apps, String abUrl, CardType cardType) {
+    super(cardId, storeId, storeName, storeAvatar, socialStore, subscribers, appsNumber,
+        latestUpdate, apps, abUrl, cardType);
     this.poster = poster;
   }
 

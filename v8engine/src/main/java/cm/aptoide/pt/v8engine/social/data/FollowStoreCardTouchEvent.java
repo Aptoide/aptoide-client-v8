@@ -6,13 +6,19 @@ package cm.aptoide.pt.v8engine.social.data;
 
 public class FollowStoreCardTouchEvent extends CardTouchEvent {
   private final String storeName;
+  private final Long storeId;
 
-  public FollowStoreCardTouchEvent(Post card, String storeName, Type actionType) {
+  public FollowStoreCardTouchEvent(Post card, Long storeId, String storeName, Type actionType) {
     super(card, actionType);
     this.storeName = storeName;
+    this.storeId = storeId;
   }
 
   public String getStoreName() {
     return storeName;
+  }
+
+  public Long getStoreId() {
+    return storeId;
   }
 }

@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.social.data.AggregatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
@@ -27,6 +28,8 @@ import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -45,11 +48,15 @@ public class TimelinePresenter implements Presenter {
   private final PermissionManager permissionManager;
   private final PermissionService permissionRequest;
   private final InstallManager installManager;
+  private final StoreRepository storeRepository;
+  private final StoreUtilsProxy storeUtilsProxy;
+  private final StoreCredentialsProviderImpl storeCredentialsProvider;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull SocialManager socialManager,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
       PermissionManager permissionManager, PermissionService permissionRequest,
-      InstallManager installManager) {
+      InstallManager installManager, StoreRepository storeRepository,
+      StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider) {
     this.view = cardsView;
     this.socialManager = socialManager;
     this.crashReport = crashReport;
@@ -57,6 +64,9 @@ public class TimelinePresenter implements Presenter {
     this.permissionManager = permissionManager;
     this.permissionRequest = permissionRequest;
     this.installManager = installManager;
+    this.storeRepository = storeRepository;
+    this.storeUtilsProxy = storeUtilsProxy;
+    this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   @Override public void present() {
@@ -187,6 +197,8 @@ public class TimelinePresenter implements Presenter {
             } else if (cardTouchEvent instanceof FollowStoreCardTouchEvent) {
               FollowStoreCardTouchEvent followStoreCardTouchEvent =
                   ((FollowStoreCardTouchEvent) cardTouchEvent);
+              followStore(followStoreCardTouchEvent.getStoreId(),
+                  followStoreCardTouchEvent.getStoreName());
             } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
               StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
               timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
@@ -330,5 +342,21 @@ public class TimelinePresenter implements Presenter {
       timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getUserId(),
           socialHeaderCardTouchEvent.getStoreTheme());
     }
+  }
+
+  private void followStore(long storeId, String storeName) {
+    storeRepository.isSubscribed(storeId)
+        .first()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
+        .subscribe(isSubscribed -> {
+          if (isSubscribed) {
+            storeUtilsProxy.unSubscribeStore(storeName, storeCredentialsProvider);
+            view.showStoreUnsubscribedMessage(storeName);
+          } else {
+            storeUtilsProxy.subscribeStore(storeName);
+            view.showStoreSubscribedMessage(storeName);
+          }
+        }, (throwable) -> throwable.printStackTrace());
   }
 }
