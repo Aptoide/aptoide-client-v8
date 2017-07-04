@@ -74,8 +74,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      AppViewAnalytics appViewAnalytics,
-      PublishRelay installAppRelay) {
+      AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
         installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory);
   }
@@ -113,5 +112,4 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   public Observable<Void> getInstallAppRelay() {
     return installAppRelay;
   }
-
 }
