@@ -20,6 +20,7 @@ public class AppUpdate implements Post {
   private final String packageName;
   private final Date updateAddedDate;
   private final String abUrl;
+  private final boolean isLiked;
   private final CardType cardType;
   private final File file;
   private final Obb obb;
@@ -27,7 +28,7 @@ public class AppUpdate implements Post {
 
   public AppUpdate(String cardId, String storeName, String storeAvatar, String storeTheme,
       String appUpdateIcon, String appUpdateName, String packageName, Date updateAddedDate,
-      String abUrl, CardType cardType, File file, Obb obb,
+      String abUrl, boolean isLiked, CardType cardType, File file, Obb obb,
       Install.InstallationStatus installationStatus) {
     this.cardId = cardId;
     this.storeName = storeName;
@@ -38,6 +39,7 @@ public class AppUpdate implements Post {
     this.packageName = packageName;
     this.updateAddedDate = updateAddedDate;
     this.abUrl = abUrl;
+    this.isLiked = isLiked;
     this.cardType = cardType;
     this.file = file;
     this.obb = obb;
@@ -98,5 +100,9 @@ public class AppUpdate implements Post {
 
   @Override public CardType getType() {
     return this.cardType;
+  }
+
+  public boolean isLiked() {
+    return isLiked;
   }
 }

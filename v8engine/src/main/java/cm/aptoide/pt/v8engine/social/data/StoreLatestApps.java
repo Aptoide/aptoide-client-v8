@@ -18,12 +18,13 @@ public class StoreLatestApps implements Post {
   private final Date latestUpdate;
   private final List<App> apps;
   private final String abUrl;
+  private final boolean isLiked;
   private final CardType cardType;
   private final Long storeId;
 
   public StoreLatestApps(String cardId, Long storeId, String storeName, String storeAvatar,
       String storeTheme, int subscribers, int appsNumber, Date latestUpdate, List<App> apps,
-      String abUrl, CardType cardType) {
+      String abUrl, boolean isLiked, CardType cardType) {
     this.cardId = cardId;
     this.storeId = storeId;
     this.storeName = storeName;
@@ -34,7 +35,12 @@ public class StoreLatestApps implements Post {
     this.latestUpdate = latestUpdate;
     this.apps = apps;
     this.abUrl = abUrl;
+    this.isLiked = isLiked;
     this.cardType = cardType;
+  }
+
+  public boolean isLiked() {
+    return isLiked;
   }
 
   public String getStoreTheme() {

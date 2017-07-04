@@ -12,13 +12,15 @@ import java.util.Date;
 public class RatedRecommendation extends AppPost {
   private final Poster poster;
   private final float ratingAverage;
+  private final boolean isLiked;
 
   public RatedRecommendation(String cardId, Poster poster, long appId, String packageName,
       String appName, String appIcon, float ratingAverage, Date timestamp, String abUrl,
-      CardType cardType) {
+      boolean isLiked, CardType cardType) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
     this.poster = poster;
     this.ratingAverage = ratingAverage;
+    this.isLiked = isLiked;
   }
 
   public Poster getPoster() {
@@ -27,5 +29,9 @@ public class RatedRecommendation extends AppPost {
 
   public float getRatingAverage() {
     return ratingAverage;
+  }
+
+  public boolean isLiked() {
+    return isLiked;
   }
 }

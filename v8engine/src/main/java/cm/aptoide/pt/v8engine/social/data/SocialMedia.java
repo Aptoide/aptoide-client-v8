@@ -12,16 +12,22 @@ import java.util.Date;
 
 public class SocialMedia extends Media {
   private final Poster poster;
+  private final boolean isLiked;
 
   public SocialMedia(String cardId, Poster poster, String mediaTitle, String mediaThumbnailUrl,
       Date date, App app, String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink,
-      CardType cardType) {
+      boolean isLiked, CardType cardType) {
     super(cardId, mediaTitle, mediaThumbnailUrl, date, app, abTestURL, publisher, publisherLink,
-        mediaLink, cardType);
+        mediaLink, false, cardType);
     this.poster = poster;
+    this.isLiked = isLiked;
   }
 
   public Poster getPoster() {
     return poster;
+  }
+
+  @Override public boolean isLiked() {
+    return isLiked;
   }
 }

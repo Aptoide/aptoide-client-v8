@@ -18,7 +18,7 @@ public class AggregatedStore extends StoreLatestApps {
       Long storeId, String storeName, String storeAvatar, String storeTheme, int subscribers,
       int appsNumber, Date latestUpdate, List<App> apps, String abUrl, CardType cardType) {
     super(cardId, storeId, storeName, storeAvatar, storeTheme, subscribers, appsNumber,
-        latestUpdate, apps, abUrl, cardType);
+        latestUpdate, apps, abUrl, false, cardType);
     this.posters = posters;
     this.minimalCards = minimalCards;
   }

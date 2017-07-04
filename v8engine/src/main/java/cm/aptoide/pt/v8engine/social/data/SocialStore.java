@@ -11,16 +11,22 @@ import java.util.List;
 
 public class SocialStore extends StoreLatestApps {
   private final Poster poster;
+  private final boolean isLiked;
 
   public SocialStore(String cardId, Poster poster, Long storeId, String storeName,
       String storeAvatar, String socialStore, int subscribers, int appsNumber, Date latestUpdate,
-      List<App> apps, String abUrl, CardType cardType) {
+      List<App> apps, String abUrl, boolean isLiked, CardType cardType) {
     super(cardId, storeId, storeName, storeAvatar, socialStore, subscribers, appsNumber,
-        latestUpdate, apps, abUrl, cardType);
+        latestUpdate, apps, abUrl, false, cardType);
     this.poster = poster;
+    this.isLiked = isLiked;
   }
 
   public Poster getPoster() {
     return poster;
+  }
+
+  public boolean isLiked() {
+    return isLiked;
   }
 }

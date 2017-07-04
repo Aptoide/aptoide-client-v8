@@ -36,7 +36,6 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.MediaPublisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
-import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.PublisherAvatar;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,7 @@ public class TimelineResponseCardMapper {
             .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher()
                 .getBaseUrl()),
-            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
+            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()), false,
             CardType.ARTICLE));
       } else if (item instanceof VideoTimelineItem) {
         final Video video = ((VideoTimelineItem) item).getData();
@@ -80,7 +79,7 @@ public class TimelineResponseCardMapper {
                 .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
                 video.getPublisher()
                     .getBaseUrl()),
-                linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
+                linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()), false,
                 CardType.VIDEO));
       } else if (item instanceof RecommendationTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation recommendation =
@@ -91,7 +90,7 @@ public class TimelineResponseCardMapper {
             .getName(), recommendation.getRecommendedApp()
             .getIcon(), recommendation.getSimilarApps()
             .get(0)
-            .getName(), new AptoidePublisher(), recommendation.getTimestamp(), abUrl,
+            .getName(), new AptoidePublisher(), recommendation.getTimestamp(), abUrl, false,
             CardType.RECOMMENDATION));
       } else if (item instanceof StoreLatestAppsTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestApps store =
@@ -105,7 +104,7 @@ public class TimelineResponseCardMapper {
             .getStats()
             .getSubscribers(), store.getStore()
             .getStats()
-            .getApps(), store.getLatestUpdate(), store.getApps(), abUrl, CardType.STORE));
+            .getApps(), store.getLatestUpdate(), store.getApps(), abUrl, false, CardType.STORE));
       } else if (item instanceof AppUpdateTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate appUpdate =
             ((AppUpdateTimelineItem) item).getData();
@@ -114,16 +113,14 @@ public class TimelineResponseCardMapper {
             .getAvatar(), appUpdate.getStore()
             .getAppearance()
             .getTheme(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getPackageName(),
-            appUpdate.getAdded(), abUrl, CardType.UPDATE, appUpdate.getFile(),
+            appUpdate.getAdded(), abUrl, false, CardType.UPDATE, appUpdate.getFile(),
             // TODO: 26/06/2017 probably should get progress state someway because the download might be happening already.
             appUpdate.getObb(), Install.InstallationStatus.UNINSTALLED));
       } else if (item instanceof PopularAppTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.PopularApp popularApp =
             ((PopularAppTimelineItem) item).getData();
-        List<Publisher> publishers = new ArrayList<>();
         List<UserSharerTimeline.User> users = new ArrayList<>();
         for (Comment.User user : popularApp.getUsers()) {
-          publishers.add(new MediaPublisher(user.getName(), new PublisherAvatar(user.getAvatar())));
           users.add(new UserSharerTimeline.User(user.getId(), user.getName(), user.getAvatar()));
         }
         cards.add(new PopularApp(popularApp.getCardId(), popularApp.getPopularApplication()
@@ -133,7 +130,7 @@ public class TimelineResponseCardMapper {
             .getIcon(), popularApp.getPopularApplication()
             .getStats()
             .getRating()
-            .getAvg(), users, popularApp.getDate(), abUrl, CardType.POPULAR_APP));
+            .getAvg(), users, popularApp.getDate(), abUrl, false, CardType.POPULAR_APP));
       } else if (item instanceof SocialRecommendationTimelineItem) {
         final SocialRecommendation socialRecommendation =
             ((SocialRecommendationTimelineItem) item).getData();
@@ -148,7 +145,8 @@ public class TimelineResponseCardMapper {
             .getIcon(), socialRecommendation.getApp()
             .getStats()
             .getRating()
-            .getAvg(), socialRecommendation.getDate(), abUrl, CardType.SOCIAL_RECOMMENDATION));
+            .getAvg(), socialRecommendation.getDate(), abUrl, false,
+            CardType.SOCIAL_RECOMMENDATION));
       } else if (item instanceof SocialInstallTimelineItem) {
         final SocialInstall socialInstall = ((SocialInstallTimelineItem) item).getData();
         UserSharerTimeline user =
@@ -161,7 +159,7 @@ public class TimelineResponseCardMapper {
             .getIcon(), socialInstall.getApp()
             .getStats()
             .getRating()
-            .getAvg(), socialInstall.getDate(), abUrl, CardType.SOCIAL_INSTALL));
+            .getAvg(), socialInstall.getDate(), abUrl, false, CardType.SOCIAL_INSTALL));
       } else if (item instanceof SocialArticleTimelineItem) {
         final SocialArticle socialArticle = ((SocialArticleTimelineItem) item).getData();
         UserSharerTimeline user =
@@ -176,7 +174,8 @@ public class TimelineResponseCardMapper {
                 socialArticle.getPublisher()
                     .getBaseUrl()),
                 linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
-                CardType.SOCIAL_ARTICLE));
+                socialArticle.getMy()
+                    .isLiked(), CardType.SOCIAL_ARTICLE));
       } else if (item instanceof SocialVideoTimelineItem) {
         final SocialVideo socialVideo = ((SocialVideoTimelineItem) item).getData();
         UserSharerTimeline user =
@@ -191,7 +190,8 @@ public class TimelineResponseCardMapper {
                 socialVideo.getPublisher()
                     .getBaseUrl()),
                 linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialVideo.getUrl()),
-                CardType.SOCIAL_VIDEO));
+                socialVideo.getMy()
+                    .isLiked(), CardType.SOCIAL_VIDEO));
       } else if (item instanceof SocialStoreLatestAppsTimelineItem) {
         final SocialStoreLatestApps socialStoreLatestApps =
             ((SocialStoreLatestAppsTimelineItem) item).getData();
@@ -208,7 +208,8 @@ public class TimelineResponseCardMapper {
             .getSubscribers(), socialStoreLatestApps.getSharedStore()
             .getStats()
             .getApps(), socialStoreLatestApps.getDate(), socialStoreLatestApps.getApps(), abUrl,
-            CardType.SOCIAL_STORE));
+            socialStoreLatestApps.getMy()
+                .isLiked(), CardType.SOCIAL_STORE));
       } else if (item instanceof AggregatedSocialArticleTimelineItem) {
         final AggregatedSocialArticle aggregatedSocialArticle =
             ((AggregatedSocialArticleTimelineItem) item).getData();

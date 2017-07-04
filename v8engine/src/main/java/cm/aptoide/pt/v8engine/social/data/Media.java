@@ -20,10 +20,11 @@ public class Media implements Post {
   private final String publisherName;
   private final Link publisherLink;
   private final Link mediaLink;
+  private final boolean isLiked;
   private final CardType cardType;
 
   public Media(String cardId, String mediaTitle, String mediaThumbnailUrl, Date date, App app,
-      String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink,
+      String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink, boolean isLiked,
       CardType cardType) {
     this.cardId = cardId;
     this.mediaTitle = mediaTitle;
@@ -36,6 +37,7 @@ public class Media implements Post {
         .getAvatarUrl();
     this.publisherName = publisher.getPublisherName();
     this.mediaLink = mediaLink;
+    this.isLiked = isLiked;
     this.cardType = cardType;
   }
 
@@ -81,5 +83,9 @@ public class Media implements Post {
 
   public Link getMediaLink() {
     return mediaLink;
+  }
+
+  public boolean isLiked() {
+    return isLiked;
   }
 }
