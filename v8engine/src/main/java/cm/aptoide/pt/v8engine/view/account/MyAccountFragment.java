@@ -176,13 +176,15 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
       userAvatarUrl = account.getAvatar();
       userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(userAvatarUrl, userAvatar, STROKE_SIZE);
+          .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar, STROKE_SIZE,
+              R.drawable.my_account_placeholder);
     }
 
     if (!TextUtils.isEmpty(account.getStoreName())) {
       storeNameTextView.setText(account.getStoreName());
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(account.getStoreAvatar(), storeAvatar, STROKE_SIZE);
+          .loadWithShadowCircleTransformWithPlaceholder(account.getStoreAvatar(), storeAvatar,
+              STROKE_SIZE, R.drawable.my_account_placeholder);
     } else {
       separator.setVisibility(View.GONE);
       storeLayout.setVisibility(View.GONE);
