@@ -46,6 +46,7 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
 
   @Override public void onDestroyView() {
     refreshButton = null;
+    toolbar = null;
     super.onDestroyView();
   }
 
@@ -77,7 +78,6 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    finish();
     return super.onOptionsItemSelected(item);
   }
 }

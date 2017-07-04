@@ -11,24 +11,31 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.BackButtonFragment;
+import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
+import rx.Observable;
 
 /**
  * Created by filipe on 12-06-2017.
  */
 
-public class SpotAndShareAppSelectionFragment extends FragmentView
+public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     implements SpotAndShareAppSelectionView {
 
   private RecyclerView recyclerView;
   private SpotAndShareAppSelectionAdapter adapter;
   private Toolbar toolbar;
+  private PublishRelay<Void> backRelay;
+  private ClickHandler clickHandler;
+  private RxAlertDialog warningDialog;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareAppSelectionFragment();
@@ -37,6 +44,7 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    backRelay = PublishRelay.create();
   }
 
   @Override public void finish() {
@@ -44,12 +52,29 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
   }
 
   @Override public void setupRecyclerView(List<AppModel> installedApps) {
-    adapter = new SpotAndShareAppSelectionAdapter(
+    adapter = new SpotAndShareAppSelectionAdapter(getContext().getApplicationContext(),
         new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
         installedApps);
     recyclerView.setAdapter(adapter);
     setupLayoutManager();
     recyclerView.setHasFixedSize(true);
+  }
+
+  @Override public void setupAppSelection(AppSelectionListener appSelectionListener) {
+    adapter.setListener(appSelectionListener);
+  }
+
+  @Override public Observable<Void> backButtonEvent() {
+    return backRelay;
+  }
+
+  @Override public void showExitWarning() {
+    warningDialog.show();
+  }
+
+  @Override public Observable<Void> exitEvent() {
+    return warningDialog.positiveClicks()
+        .map(dialogInterface -> null);
   }
 
   private void setupLayoutManager() {
@@ -70,8 +95,19 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
     recyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
+    clickHandler = () -> {
+      backRelay.call(null);
+      return true;
+    };
+    registerClickHandler(clickHandler);
+    warningDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+        R.string.spotandshare_message_leave_group_warning)
+        .setPositiveButton(R.string.spotandshare_button_leave_group)
+        .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
+        .build();
     attachPresenter(new SpotAndShareAppSelectionPresenter(this,
-        new InstalledRepositoryDummy(getContext().getPackageManager())), savedInstanceState);
+        new InstalledRepositoryDummy(getContext().getPackageManager()),
+        new SpotAndShare(getContext())), savedInstanceState);
   }
 
   private void setupToolbar() {
@@ -86,6 +122,8 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
     adapter = null;
     recyclerView = null;
     toolbar = null;
+    unregisterClickHandler(clickHandler);
+    clickHandler = null;
     super.onDestroyView();
   }
 
@@ -97,7 +135,6 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    finish();
     return super.onOptionsItemSelected(item);
   }
 }

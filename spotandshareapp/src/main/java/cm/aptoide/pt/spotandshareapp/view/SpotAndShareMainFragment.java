@@ -19,7 +19,6 @@ import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.R;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareImpl;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
@@ -52,7 +51,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    spotAndShare = new SpotAndShareImpl(getContext());
+    spotAndShare = new SpotAndShare(getContext());
   }
 
   @Override public void finish() {

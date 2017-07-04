@@ -19,16 +19,28 @@ public class Installed extends RealmObject {
   public static final String VERSION_NAME = "versionName";
   public static final String SIGNATURE = "signature";
   public static final String STORE_NAME = "storeName";
+  public static final int STATUS_UNINSTALLED = 1;
+  public static final int STATUS_WAITING = 2;
+  public static final int STATUS_INSTALLING = 3;
+  public static final int STATUS_COMPLETED = 4;
+  public static final int STATUS_ROOT_TIMEOUT = 5;
+  public static final int TYPE_DEFAULT = 0;
+  public static final int TYPE_ROOT = 1;
+  public static final int TYPE_SYSTEM = 2;
+  public static final int TYPE_UNKNOWN = -1;
 
   //	@PrimaryKey private int id = -1;
+  @PrimaryKey private String packageAndVersionCode;
   private String icon;
-  @PrimaryKey private String packageName;
+  private String packageName;
   private String name;
   private int versionCode;
   private String versionName;
   private String signature;
   private boolean systemApp;
   private String storeName;
+  private int status;
+  private int type;
 
   public Installed() {
   }
@@ -45,16 +57,53 @@ public class Installed extends RealmObject {
     setVersionCode(packageInfo.versionCode);
     setVersionName(packageInfo.versionName);
     setStoreName(storeName);
+    this.packageAndVersionCode = packageInfo.packageName + packageInfo.versionCode;
     setSystemApp((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
     if (packageInfo.signatures != null && packageInfo.signatures.length > 0) {
       setSignature(
           AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()));
     }
+    setStatus(STATUS_COMPLETED);
+    setType(TYPE_UNKNOWN);
   }
 
-  //	public int getId() {
-  //		return id;
-  //	}
+  @Override public int hashCode() {
+    int result = packageAndVersionCode.hashCode();
+    result = 31 * result + packageName.hashCode();
+    result = 31 * result + versionCode;
+    return result;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Installed installed = (Installed) o;
+
+    if (versionCode != installed.versionCode) return false;
+    if (!packageAndVersionCode.equals(installed.packageAndVersionCode)) return false;
+    return packageName.equals(installed.packageName);
+  }
+
+  public void setPackageAndVersionCode(String packageAndVersionCode) {
+    this.packageAndVersionCode = packageAndVersionCode;
+  }
+
+  public int getStatus() {
+    return status;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+  public int getType() {
+    return type;
+  }
+
+  public void setType(int type) {
+    this.type = type;
+  }
 
   public String getIcon() {
     return icon;
@@ -103,18 +152,6 @@ public class Installed extends RealmObject {
   public void setSignature(String signature) {
     this.signature = signature;
   }
-
-  //	public void computeId() {
-  //		@Cleanup Realm realm = Database.get(Application.getContext());
-  //		int n;
-  //		Number max = realm.where(Installed.class).max(Installed.ID);
-  //		if (max != null) {
-  //			n = max.intValue() + 1;
-  //		} else {
-  //			n = 0;
-  //		}
-  //		id = n;
-  //	}
 
   public boolean isSystemApp() {
     return systemApp;

@@ -16,6 +16,7 @@ public class AppModel {
   private String filePath;
   private Drawable appIcon;
   private String obbsFilePath;
+  private boolean isSelected;
 
   public AppModel(String appName, String packageName, String filePath, String obbsFilePath,
       Drawable appIcon) {
@@ -44,5 +45,13 @@ public class AppModel {
 
   public Drawable getAppIcon() {
     return appIcon;
+  }
+
+  public boolean isSelected() {
+    return isSelected;
+  }
+
+  public void setSelected(boolean selected) {
+    isSelected = selected;
   }
 }
