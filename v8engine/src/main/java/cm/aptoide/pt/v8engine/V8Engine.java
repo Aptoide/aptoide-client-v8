@@ -129,6 +129,7 @@ import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
+import cm.aptoide.pt.v8engine.networking.BasicAuthenticator;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
@@ -173,6 +174,7 @@ import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import com.seatgeek.sixpack.SixpackBuilder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -182,6 +184,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.Authenticator;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -255,6 +258,8 @@ public abstract class V8Engine extends Application {
   private PackageRepository packageRepository;
   private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   private AdsRepository adsRepository;
+  private ABTestManager abTestManager;
+  private Authenticator webServiceAuthenticator;
 
   /**
    * call after this instance onCreate()
@@ -683,6 +688,16 @@ public abstract class V8Engine extends Application {
     return preferences;
   }
 
+  public ABTestManager getABTestManager() {
+    if (abTestManager == null) {
+      abTestManager = new ABTestManager(new SixpackBuilder(),
+          new OkHttpClient.Builder().authenticator(
+              new BasicAuthenticator(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD))
+              .build(), BuildConfig.SIXPACK_URL);
+    }
+    return abTestManager;
+  }
+
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
     if (securePreferences == null) {
       securePreferences =
@@ -914,9 +929,9 @@ public abstract class V8Engine extends Application {
   }
 
   private Completable initAbTestManager() {
-    return Completable.defer(() -> ABTestManager.getInstance()
-        .initialize(getIdsRepository().getUniqueIdentifier())
-        .toCompletable());
+    return Completable.defer(
+        () -> getABTestManager().initialize(getIdsRepository().getUniqueIdentifier())
+            .toCompletable());
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
