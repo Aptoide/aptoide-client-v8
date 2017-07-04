@@ -14,7 +14,10 @@ class CreateHotspotManager {
 
   private static final int SUCCESS_HOTSPOT_CREATION = 6;
   private static final int FAILED_TO_CREATE_HOTSPOT = 7;
-  private WifiManager wifimanager;
+
+  private final WifiManager wifimanager;
+  private final WifiConfigurationHelper wifiConfigurationHelper;
+
   private WifiConfiguration wifiConfiguration;
 
   // TODO: 22-06-2017 neuro busy not implemented.. hmmm...
@@ -22,24 +25,25 @@ class CreateHotspotManager {
 
   public CreateHotspotManager(WifiManager wifimanager) {
     this.wifimanager = wifimanager;
+    wifiConfigurationHelper = new WifiConfigurationHelper();
   }
 
   public Single<Void> enablePrivateHotspot(String SSID, String password_aptoide) {
-    return enableHotspot(
-        new WifiConfigurationHelper().newPrivateWifi(SSID, password_aptoide)).flatMap(integer -> {
-      if (integer == SUCCESS_HOTSPOT_CREATION) {
-        return Single.just(null);
-      } else {
-        return Single.error(new Exception("Failed to create hotspot"));
-      }
-    });
+    return enableHotspot(wifiConfigurationHelper.newPrivateWifi(SSID, password_aptoide)).flatMap(
+        integer -> {
+          if (integer == SUCCESS_HOTSPOT_CREATION) {
+            return Single.just(null);
+          } else {
+            return Single.error(new Exception("Failed to create hotspot"));
+          }
+        });
 
     //return enableHotspot(new WifiConfigurationHelper().newPrivateWifi(SSID, password_aptoide)).map(
     //    integer -> integer == SUCCESS_HOTSPOT_CREATION);
   }
 
   public Single<Boolean> enableOpenHotspot(String SSID) {
-    return enableHotspot(new WifiConfigurationHelper().newPublicWifi(SSID)).map(
+    return enableHotspot(wifiConfigurationHelper.newPublicWifi(SSID)).map(
         integer -> integer == SUCCESS_HOTSPOT_CREATION);
   }
 
