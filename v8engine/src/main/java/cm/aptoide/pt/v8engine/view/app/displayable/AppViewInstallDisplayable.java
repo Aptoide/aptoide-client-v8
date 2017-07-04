@@ -77,7 +77,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       AppViewAnalytics appViewAnalytics,
       PublishRelay installAppRelay) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay);
+        installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory);
   }
 
   public void startInstallationProcess() {
