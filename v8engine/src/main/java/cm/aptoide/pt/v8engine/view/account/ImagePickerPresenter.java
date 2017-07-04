@@ -9,7 +9,6 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import cm.aptoide.pt.v8engine.view.permission.AccountPermissionProvider;
 import rx.Completable;
-import rx.Observable;
 import rx.Scheduler;
 
 public class ImagePickerPresenter implements Presenter {
@@ -57,9 +56,11 @@ public class ImagePickerPresenter implements Presenter {
         .doOnCompleted(() -> view.loadImage(createdUri));
   }
 
-  @NonNull private Observable<Void> getFileFromCameraWithUri(String createdUri) {
+  @NonNull private Completable getFileFromCameraWithUri(String createdUri) {
     final Uri fileUri = Uri.parse(createdUri);
-    return navigator.navigateToCameraWithImageUri(CAMERA_PICK, fileUri);
+    return navigator.navigateToCameraWithImageUri(CAMERA_PICK, fileUri)
+        .first()
+        .toCompletable();
   }
 
   private void handleCameraSelection() {
@@ -115,8 +116,8 @@ public class ImagePickerPresenter implements Presenter {
             .filter(success -> success)
             .doOnNext(__2 -> view.dismissLoadImageDialog())
             .flatMapSingle(__2 -> photoFileGenerator.generateNewImageFileUriAsString())
-            .flatMap(createdUri -> getFileFromCameraWithUri(createdUri).flatMapCompletable(
-                createdPictureFile -> loadValidImageOrThrow(createdUri)))
+            .flatMapCompletable(createdUri -> getFileFromCameraWithUri(createdUri).andThen(
+                loadValidImageOrThrow(createdUri)))
             .doOnError(err -> {
               if (err instanceof InvalidImageException) {
                 view.showIconPropertiesError((InvalidImageException) err);
