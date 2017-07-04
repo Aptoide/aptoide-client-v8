@@ -27,11 +27,10 @@ public class SpotAndShare {
 
     isGroupCreated(created -> {
       if (!created) {
-        if (hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE)) {
-          onSuccess.onSuccess(DUMMY_UUID);
-        }
-      } else {
-        //// TODO: 27-06-2017 filipe join the group that is already created
+        hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE)
+            .subscribe(aVoid -> onSuccess.onSuccess(DUMMY_UUID), throwable -> {
+              //// TODO: 27-06-2017 filipe join the group that is already created
+            });
       }
     });
   }
