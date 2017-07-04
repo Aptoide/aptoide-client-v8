@@ -15,9 +15,11 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialStore;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.HashMap;
@@ -99,6 +101,11 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
             .getUser()
             .getId(), CardTouchEvent.Type.HEADER)));
     showStoreLatestApps(card);
+    this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new FollowStoreCardTouchEvent(card, card.getStoreName(), CardTouchEvent.Type.BODY)));
+    this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new StoreCardTouchEvent(card, card.getStoreName(), card.getStoreTheme(),
+            CardTouchEvent.Type.BODY)));
   }
 
   @NonNull private Spannable getStyledStoreName(SocialStore card) {

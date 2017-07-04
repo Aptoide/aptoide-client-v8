@@ -14,6 +14,7 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
+import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
@@ -175,12 +177,21 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.STORE) || cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
-              .getType()
               .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
-            StoreAppCardTouchEvent storeCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
-            timelineNavigation.navigateToAppView(storeCardTouchEvent.getPackageName(),
-                AppViewFragment.OpenType.OPEN_ONLY);
+            navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_STORE)) {
+            if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
+              navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
+            } else if (cardTouchEvent instanceof FollowStoreCardTouchEvent) {
+              FollowStoreCardTouchEvent followStoreCardTouchEvent =
+                  ((FollowStoreCardTouchEvent) cardTouchEvent);
+            } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
+              StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
+              timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
+                  storeCardTouchEvent.getStoreTheme());
+            }
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.UPDATE)) {
@@ -227,6 +238,12 @@ public class TimelinePresenter implements Presenter {
           throwable.printStackTrace();
           crashReport.log(throwable);
         });
+  }
+
+  private void navigateToAppView(StoreAppCardTouchEvent cardTouchEvent) {
+    StoreAppCardTouchEvent storeCardTouchEvent = cardTouchEvent;
+    timelineNavigation.navigateToAppView(storeCardTouchEvent.getPackageName(),
+        AppViewFragment.OpenType.OPEN_ONLY);
   }
 
   private void refreshCardsOnPullToRefresh() {
