@@ -23,10 +23,10 @@ import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
+import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -42,7 +42,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class TimelinePresenter implements Presenter {
 
   private final TimelineView view;
-  private final SocialManager socialManager;
+  private final Timeline timeline;
   private final CrashReport crashReport;
   private final TimelineNavigation timelineNavigation;
   private final PermissionManager permissionManager;
@@ -52,13 +52,13 @@ public class TimelinePresenter implements Presenter {
   private final StoreUtilsProxy storeUtilsProxy;
   private final StoreCredentialsProviderImpl storeCredentialsProvider;
 
-  public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull SocialManager socialManager,
+  public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
       PermissionManager permissionManager, PermissionService permissionRequest,
       InstallManager installManager, StoreRepository storeRepository,
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider) {
     this.view = cardsView;
-    this.socialManager = socialManager;
+    this.timeline = timeline;
     this.crashReport = crashReport;
     this.timelineNavigation = timelineNavigation;
     this.permissionManager = permissionManager;
@@ -97,7 +97,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.retry())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(created -> view.showProgressIndicator())
-        .flatMapSingle(retryClicked -> socialManager.getCards())
+        .flatMapSingle(retryClicked -> timeline.getCards())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -115,7 +115,7 @@ public class TimelinePresenter implements Presenter {
             .debounce(300, TimeUnit.MILLISECONDS))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(create -> view.showLoadMoreProgressIndicator())
-        .flatMapSingle(bottomReached -> socialManager.getNextCards())
+        .flatMapSingle(bottomReached -> timeline.getNextCards())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -212,7 +212,7 @@ public class TimelinePresenter implements Presenter {
                   if (installManager.showWarning()) {
                     view.showRootAccessDialog();
                   }
-                  return socialManager.updateApp(cardTouchEvent);
+                  return timeline.updateApp(cardTouchEvent);
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .distinctUntilChanged(install -> install.getState())
@@ -266,7 +266,7 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes())
-        .flatMapSingle(refresh -> socialManager.getCards())
+        .flatMapSingle(refresh -> timeline.getCards())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideRefresh(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -282,7 +282,7 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .filter(__ -> view.isNewRefresh())
         .doOnNext(created -> view.showProgressIndicator())
-        .flatMapSingle(created -> socialManager.getCards())
+        .flatMapSingle(created -> timeline.getCards())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

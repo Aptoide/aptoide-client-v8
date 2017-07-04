@@ -12,12 +12,12 @@ import rx.Single;
  * Created by jdandrade on 31/05/2017.
  */
 
-public class SocialManager {
+public class Timeline {
   private final SocialService service;
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
 
-  public SocialManager(SocialService service, InstallManager installManager,
+  public Timeline(SocialService service, InstallManager installManager,
       DownloadFactory downloadFactory) {
     this.service = service;
     this.installManager = installManager;
