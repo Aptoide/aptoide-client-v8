@@ -125,17 +125,7 @@ public class TimelinePresenter implements Presenter {
               .equals(CardType.ARTICLE)) {
             ((Media) cardTouchEvent.getCard()).getPublisherLink()
                 .launch();
-          } else if (cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
-              .getType()
-              .equals(CardType.SOCIAL_INSTALL)) {
+          } else if (isSocialPost(cardTouchEvent)) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
@@ -152,7 +142,6 @@ public class TimelinePresenter implements Presenter {
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.POPULAR_APP)) {
-            // TODO: 03/07/2017 need to check if userId exists
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
                 popularAppTouchEvent.getStoreTheme());
@@ -173,7 +162,7 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.BODY))
         .doOnNext(cardTouchEvent -> {
-          if (isMediaCard(cardTouchEvent)) {
+          if (isMediaPost(cardTouchEvent)) {
             ((Media) cardTouchEvent.getCard()).getMediaLink()
                 .launch();
           } else if (cardTouchEvent.getCard()
@@ -286,7 +275,7 @@ public class TimelinePresenter implements Presenter {
     view.showCards(cards);
   }
 
-  private boolean isMediaCard(CardTouchEvent cardTouchEvent) {
+  private boolean isMediaPost(CardTouchEvent cardTouchEvent) {
     return cardTouchEvent.getCard()
         .getType()
         .equals(CardType.VIDEO) || cardTouchEvent.getCard()
@@ -300,6 +289,20 @@ public class TimelinePresenter implements Presenter {
         .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || cardTouchEvent.getCard()
         .getType()
         .equals(CardType.AGGREGATED_SOCIAL_VIDEO);
+  }
+
+  private boolean isSocialPost(CardTouchEvent cardTouchEvent) {
+    return cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
+        .getType()
+        .equals(CardType.SOCIAL_INSTALL);
   }
 
   private void navigateToStoreTimeline(SocialHeaderCardTouchEvent socialHeaderCardTouchEvent) {
