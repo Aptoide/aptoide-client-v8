@@ -37,8 +37,6 @@ class JoinHotspotManager {
   private final Executor executor;
   private ScheduledFuture<?> timeoutFuture;
 
-  private boolean retried;
-
   public JoinHotspotManager(Context context, WifiManager wifimanager) {
     this.context = context;
     this.wifimanager = wifimanager;
@@ -50,7 +48,6 @@ class JoinHotspotManager {
   }
 
   public boolean joinHotspot(String ssid, WifiStateListener wifiStateListener) {
-    reset();
     return joinHotspot(ssid, true, wifiStateListener) == SUCCESSFUL_JOIN;
   }
 
@@ -108,10 +105,6 @@ class JoinHotspotManager {
     return HotspotManager.ERROR_UNKNOWN;
   }
 
-  private void reset() {
-    retried = false;
-  }
-
   private int requestToJoinHotspot(String ssid, WifiStateListener wifiStateListener) {
     registerStateChangeReceiver(ssid, wifiStateListener);
     return SUCCESSFUL_JOIN;
@@ -134,6 +127,8 @@ class JoinHotspotManager {
     private final WifiStateListener wifiStateListener;
     private final WifiManager wifimanager;
     private final String ssid;
+
+    private boolean retried = false;
 
     public JoinNetworkBroadcastReceiver(WifiStateListener wifiStateListener,
         WifiManager wifimanager, String ssid) {
@@ -176,16 +171,16 @@ class JoinHotspotManager {
       if (wifiInfo.getSSID()
           .contains(ssid)) {
         wifiStateListener.onStateChanged(true);
+        context.unregisterReceiver(this);
         timeoutFuture.cancel(false);
       } else {//connected to the wrong network
         if (!retried && !TextUtils.isEmpty(ssid)) {
           retried = true;
           executor.execute(() -> joinHotspot(ssid, false, wifiStateListener));
         } else {
+          retried = false;
           joinHotspot(ssid, wifiStateListener);
         }
-
-        context.unregisterReceiver(this);
       }
     }
   }
