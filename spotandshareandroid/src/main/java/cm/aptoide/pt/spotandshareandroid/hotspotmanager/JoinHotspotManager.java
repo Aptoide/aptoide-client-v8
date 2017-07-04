@@ -11,6 +11,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -47,20 +48,24 @@ class JoinHotspotManager {
     return Executors.newSingleThreadScheduledExecutor();
   }
 
-  public boolean joinHotspot(String ssid, WifiStateListener wifiStateListener) {
-    return joinHotspot(ssid, true, wifiStateListener) == SUCCESSFUL_JOIN;
+  public boolean joinHotspot(String ssid, WifiStateListener wifiStateListener, long timeout) {
+    return joinHotspot(ssid, wifiStateListener, timeout,
+        new JoinNetworkBroadcastReceiver(wifiStateListener, wifimanager, ssid));
   }
 
-  public boolean joinHotspot(String ssid, WifiStateListener wifiStateListener, long timeout) {
-    timeoutFuture =
-        getScheduledExecutorService().schedule(() -> wifiStateListener.onStateChanged(false),
-            timeout, TimeUnit.MILLISECONDS);
+  private boolean joinHotspot(String ssid, WifiStateListener wifiStateListener, long timeout,
+      JoinNetworkBroadcastReceiver joinNetworkBroadcastReceiver) {
 
-    return joinHotspot(ssid, true, wifiStateListener) == SUCCESSFUL_JOIN;
+    timeoutFuture = getScheduledExecutorService().schedule(() -> {
+      context.unregisterReceiver(joinNetworkBroadcastReceiver);
+      wifiStateListener.onStateChanged(false);
+    }, timeout, TimeUnit.MILLISECONDS);
+
+    return joinHotspot(ssid, true, joinNetworkBroadcastReceiver) == SUCCESSFUL_JOIN;
   }
 
   private int joinHotspot(String ssid, boolean shouldReconnect,
-      WifiStateListener wifiStateListener) {
+      @Nullable JoinNetworkBroadcastReceiver joinNetworkBroadcastReceiver) {
     // TODO: 22-06-2017 neuro ligar wifi when needed
     WifiConfiguration conf = new WifiConfiguration();
     //Logger.d(TAG, "chosen hotspot is : " + ssid);
@@ -89,12 +94,18 @@ class JoinHotspotManager {
               boolean reconnect = wifimanager.reconnect();
 
               if (reconnect) {
-                return requestToJoinHotspot(ssid, wifiStateListener);
+                if (joinNetworkBroadcastReceiver != null) {
+                  registerStateChangeReceiver(joinNetworkBroadcastReceiver);
+                }
+                return SUCCESSFUL_JOIN;
               } else {
                 return ERROR_ON_RECONNECT;
               }
             } else {
-              return requestToJoinHotspot(ssid, wifiStateListener);
+              if (joinNetworkBroadcastReceiver != null) {
+                registerStateChangeReceiver(joinNetworkBroadcastReceiver);
+              }
+              return SUCCESSFUL_JOIN;
             }
           } catch (Exception e) {
             e.printStackTrace();
@@ -105,16 +116,9 @@ class JoinHotspotManager {
     return HotspotManager.ERROR_UNKNOWN;
   }
 
-  private int requestToJoinHotspot(String ssid, WifiStateListener wifiStateListener) {
-    registerStateChangeReceiver(ssid, wifiStateListener);
-    return SUCCESSFUL_JOIN;
-  }
-
-  private void registerStateChangeReceiver(String ssid, WifiStateListener wifiStateListener) {
-    JoinNetworkBroadcastReceiver connectingWifi =
-        new JoinNetworkBroadcastReceiver(wifiStateListener, wifimanager, ssid);
-
-    context.registerReceiver(connectingWifi,
+  private void registerStateChangeReceiver(
+      JoinNetworkBroadcastReceiver joinNetworkBroadcastReceiver) {
+    context.registerReceiver(joinNetworkBroadcastReceiver,
         new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
   }
 
@@ -149,7 +153,7 @@ class JoinHotspotManager {
             NetworkInfo networkInfo = conMgr.getNetworkInfo(network);
             if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
               if (networkInfo.isAvailable() && networkInfo.isConnected()) {
-                checkNetworkAndCallback();
+                checkCorrectNetworkConnected();
               }
             }
           }
@@ -159,13 +163,13 @@ class JoinHotspotManager {
         for (NetworkInfo networkInfo : networkInfoArray) {
           if (networkInfo.getState() == NetworkInfo.State.CONNECTED
               && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-            checkNetworkAndCallback();
+            checkCorrectNetworkConnected();
           }
         }
       }
     }
 
-    private void checkNetworkAndCallback() {
+    private void checkCorrectNetworkConnected() {
 
       WifiInfo wifiInfo = wifimanager.getConnectionInfo();
       if (wifiInfo.getSSID()
@@ -176,10 +180,10 @@ class JoinHotspotManager {
       } else {//connected to the wrong network
         if (!retried && !TextUtils.isEmpty(ssid)) {
           retried = true;
-          executor.execute(() -> joinHotspot(ssid, false, wifiStateListener));
+          executor.execute(() -> joinHotspot(ssid, false, null));
         } else {
           retried = false;
-          joinHotspot(ssid, wifiStateListener);
+          joinHotspot(ssid, true, null);
         }
       }
     }
