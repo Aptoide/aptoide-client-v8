@@ -2,12 +2,11 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.store.ListStores;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -43,8 +42,7 @@ public class GetRecommendedStoresRequest
     return interfaces.getRecommendedStore(url, body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class EndlessBody extends BaseBody
-      implements Endless {
+  public static class EndlessBody extends BaseBody implements Endless {
 
     private int limit = 25;
     private int offset;

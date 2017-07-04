@@ -9,8 +9,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -67,7 +67,7 @@ public class GetApkInfoRequest extends V3<PaidApp> {
   }
 
   @Override
-  protected Observable<PaidApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getApkInfo(map, bypassCache);
+  protected Observable<PaidApp> loadDataFromNetwork(Service service, boolean bypassCache) {
+    return service.getApkInfo(map, bypassCache);
   }
 }

@@ -5,18 +5,15 @@
 
 package cm.aptoide.pt.v8engine.view.search;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
-import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
@@ -58,7 +55,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         LinkedList<Displayable> displayables = new LinkedList<>();
 
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            .getList();
         Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
 
         if (addSubscribedStores) {
@@ -104,20 +102,12 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
+    searchAbTest = ((V8Engine) getContext().getApplicationContext()).getABTestManager()
+        .get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    adsRepository =
-        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getQManager(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getApplicationContext(),
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            getContext().getResources(), getContext().getPackageManager());
+    adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
     super.onCreate(savedInstanceState);
   }
 

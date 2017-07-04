@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.pt.model.v7.FacebookModel;
-import cm.aptoide.pt.model.v7.TwitterModel;
+import cm.aptoide.pt.dataprovider.model.v7.FacebookModel;
+import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
 
 /**
  * Created by jdandrade on 10/02/2017.

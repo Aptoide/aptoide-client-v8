@@ -5,12 +5,12 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -85,10 +85,10 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
           } else {
             message = R.string.unfollowing_store_message;
           }
-          ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(message,
-              getContext().getResources(),
-              displayable.getPojo()
-                  .getName()));
+          ShowMessage.asSnack(itemView,
+              AptoideUtils.StringU.getFormattedString(message, getContext().getResources(),
+                  displayable.getPojo()
+                      .getName()));
         }, throwable -> {
           CrashReport.getInstance()
               .log(throwable);
@@ -107,10 +107,10 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
           } else {
             message = R.string.follow;
           }
-          followButton.setText(AptoideUtils.StringU.getFormattedString(message,
-              getContext().getResources(),
-              displayable.getPojo()
-                  .getName()));
+          followButton.setText(
+              AptoideUtils.StringU.getFormattedString(message, getContext().getResources(),
+                  displayable.getPojo()
+                      .getName()));
           followButton.setVisibility(View.VISIBLE);
         }));
   }

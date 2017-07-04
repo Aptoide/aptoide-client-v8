@@ -3,8 +3,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -14,14 +14,6 @@ import rx.Observable;
  * Created by jdandrade on 06/12/2016.
  */
 public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
-
-  public static String getHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-        + "/api/7/";
-  }
 
   private final String cardId;
   private final int rating;
@@ -34,6 +26,14 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
         tokenInvalidator);
     this.cardId = cardId;
     this.rating = rating;
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
   }
 
   public static LikeCardRequest of(String timelineCardId, String cardType, String ownerHash,

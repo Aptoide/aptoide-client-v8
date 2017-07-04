@@ -86,11 +86,11 @@ android:fitsSystemWindows="true"
   <FrameLayout
       android:id="@+id/login_signup_layout"
       android:layout_width="match_parent"
-      android:layout_height="380dp"
+      android:layout_height="360dp"
       android:elevation="16dp"
       android:visibility="visible"
       app:behavior_hideable="false"
-      app:behavior_peekHeight="290dp"
+      app:behavior_peekHeight="270dp"
       app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
       />
 

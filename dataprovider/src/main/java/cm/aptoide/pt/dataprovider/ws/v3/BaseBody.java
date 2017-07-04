@@ -5,9 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 
 public class BaseBody extends HashMapNotNull<String, Object> {
+
+  public void setAndroidVersion(int version) {
+    put("android_version", version);
+  }
 
   public void setAptoideMd5sum(String aptoideMd5sum) {
     put("aptoide_md5sum", aptoideMd5sum);

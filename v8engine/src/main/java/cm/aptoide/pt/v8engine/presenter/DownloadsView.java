@@ -1,15 +1,15 @@
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.v8engine.Install;
 import java.util.List;
 
 public interface DownloadsView extends View {
 
-  void showActiveDownloads(List<Download> downloads);
+  void showActiveDownloads(List<Install> downloads);
 
-  void showStandByDownloads(List<Download> downloads);
+  void showStandByDownloads(List<Install> downloads);
 
-  void showCompletedDownloads(List<Download> downloads);
+  void showCompletedDownloads(List<Install> downloads);
 
   void showEmptyDownloadList();
 

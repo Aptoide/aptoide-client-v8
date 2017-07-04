@@ -16,13 +16,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -155,7 +155,9 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
   private boolean isAppInstalled(String packageName) {
     InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
-    return installedRepo.contains(packageName);
+    return installedRepo.isInstalled(packageName)
+        .toBlocking()
+        .first();
   }
 
   private void hideOfficialAppMessage() {

@@ -219,8 +219,8 @@
                 android:id="@+id/theme_selector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_very_small"
                 android:layout_marginBottom="@dimen/padding_very_small"
+                android:layout_marginTop="@dimen/padding_very_small"
                 />
 
             <View

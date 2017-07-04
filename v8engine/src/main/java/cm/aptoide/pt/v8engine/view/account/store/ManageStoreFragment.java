@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -27,6 +26,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
@@ -82,10 +82,32 @@ public class ManageStoreFragment extends ImageLoaderFragment
     goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(currentModel));
+    outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
+  }
+
+  @Override public void hideKeyboard() {
+    super.hideKeyboard();
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_manage_store, container, false);
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    if (savedInstanceState != null) {
+      try {
+        currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_STORE_MODEL));
+      } catch (NullPointerException ex) {
+        currentModel = new ViewModel();
+      }
+      goToHome = savedInstanceState.getBoolean(EXTRA_GO_TO_HOME, true);
+    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -142,6 +164,11 @@ public class ManageStoreFragment extends ImageLoaderFragment
     super.onViewCreated(view, savedInstanceState);
   }
 
+  @Override public void onDestroyView() {
+    dismissWaitProgressBar();
+    super.onDestroyView();
+  }
+
   @Override public Observable<Void> selectStoreImageClick() {
     return RxView.clicks(selectStoreImageButton);
   }
@@ -179,15 +206,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
     if (waitDialog != null && waitDialog.isShowing()) {
       waitDialog.dismiss();
     }
-  }
-
-  @Override public void hideKeyboard() {
-    super.hideKeyboard();
-  }
-
-  @Override public void onDestroyView() {
-    dismissWaitProgressBar();
-    super.onDestroyView();
   }
 
   private ViewModel updateAndGetStoreModel() {
@@ -232,24 +250,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(currentModel));
-    outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
-  }
-
-  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-    super.onViewStateRestored(savedInstanceState);
-    if (savedInstanceState != null) {
-      try {
-        currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_STORE_MODEL));
-      } catch (NullPointerException ex) {
-        currentModel = new ViewModel();
-      }
-      goToHome = savedInstanceState.getBoolean(EXTRA_GO_TO_HOME, true);
-    }
-  }
-
   private void loadImageFromCamera() {
     requestAccessToCamera(() -> {
       dispatchTakePictureIntent();
@@ -272,8 +272,8 @@ public class ManageStoreFragment extends ImageLoaderFragment
             .log(err));
   }
 
-  @Override protected void setImageRealPath(String filePath) {
-    currentModel.setStoreImagePath(filePath);
+  @Override protected void setImagePath(Uri pathToView, String pathToUpload) {
+    currentModel.setStoreImagePath(pathToUpload);
   }
 
   private void loadImageFromGallery() {

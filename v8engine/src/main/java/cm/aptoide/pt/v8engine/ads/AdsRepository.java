@@ -7,17 +7,15 @@ package cm.aptoide.pt.v8engine.ads;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,18 +39,21 @@ public class AdsRepository {
   private final Context context;
   private final ConnectivityManager connectivityManager;
   private final Resources resources;
-  private final PackageManager packageManager;
+  private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final MinimalAdMapper adMapper;
 
   public AdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory, QManager qManager,
       SharedPreferences sharedPreferences, Context applicationContext,
-      ConnectivityManager connectivityManager, Resources resources, PackageManager packageManager) {
+      ConnectivityManager connectivityManager, Resources resources,
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker,
+      PartnerIdProvider partnerIdProvider, MinimalAdMapper adMapper) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
-    this.googlePlayServicesAvailabilityChecker =
-        (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context);
-    this.partnerIdProvider = () -> V8Engine.getConfiguration()
-        .getPartnerId();
+    this.versionCodeProvider = versionCodeProvider;
+    this.googlePlayServicesAvailabilityChecker = googlePlayServicesAvailabilityChecker;
+    this.partnerIdProvider = partnerIdProvider;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.qManager = qManager;
@@ -60,7 +61,7 @@ public class AdsRepository {
     this.context = applicationContext;
     this.connectivityManager = connectivityManager;
     this.resources = resources;
-    this.packageManager = packageManager;
+    this.adMapper = adMapper;
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
@@ -85,7 +86,7 @@ public class AdsRepository {
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
             converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences, connectivityManager, resources, packageManager)
+            sharedPreferences, connectivityManager, resources, versionCodeProvider)
             .observe());
   }
 
@@ -98,7 +99,7 @@ public class AdsRepository {
           }
           return Observable.just(ads.get(0));
         })
-        .map((ad) -> MinimalAd.from(ad));
+        .map((ad) -> adMapper.map(ad));
   }
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
@@ -107,7 +108,7 @@ public class AdsRepository {
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
         converterFactory,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-        sharedPreferences, connectivityManager, resources, packageManager)
+        sharedPreferences, connectivityManager, resources, versionCodeProvider)
         .observe(refresh));
   }
 
@@ -123,7 +124,7 @@ public class AdsRepository {
         .map(ads -> {
           List<MinimalAd> minimalAds = new LinkedList<>();
           for (GetAdsResponse.Ad ad : ads) {
-            minimalAds.add(MinimalAd.from(ad));
+            minimalAds.add(adMapper.map(ad));
           }
           return minimalAds;
         });
@@ -137,7 +138,7 @@ public class AdsRepository {
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
             converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences, connectivityManager, resources, packageManager)
+            sharedPreferences, connectivityManager, resources, versionCodeProvider)
             .observe());
   }
 
@@ -147,7 +148,7 @@ public class AdsRepository {
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
         converterFactory,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-        sharedPreferences, connectivityManager, resources, packageManager)
+        sharedPreferences, connectivityManager, resources, versionCodeProvider)
         .observe());
   }
 
@@ -161,7 +162,7 @@ public class AdsRepository {
                 partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
                 converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-                sharedPreferences, connectivityManager, resources, packageManager)
+                sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()));
   }
 
@@ -172,7 +173,7 @@ public class AdsRepository {
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
             converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences, connectivityManager, resources, packageManager)
+            sharedPreferences, connectivityManager, resources, versionCodeProvider)
             .observe());
   }
 }

@@ -9,10 +9,10 @@ import android.view.WindowManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.AggregatedSocialArticle;
-import cm.aptoide.pt.model.v7.timeline.MinimalCard;
-import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
@@ -116,7 +116,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
-      return installedAccessor.get(packageNames)
+      return installedAccessor.getInstalled(packageNames)
           .observeOn(Schedulers.computation());
     }
     return Observable.just(null);

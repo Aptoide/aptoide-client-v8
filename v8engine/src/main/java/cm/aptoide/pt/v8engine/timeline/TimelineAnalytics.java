@@ -7,7 +7,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.analytics.events.AptoideEvent;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
 import com.facebook.appevents.AppEventsLogger;
@@ -19,7 +18,7 @@ import retrofit2.Converter;
 /**
  * Created by jdandrade on 27/10/2016.
  */
-public class TimelineAnalytics extends AptoideAnalytics {
+public class TimelineAnalytics {
 
   public static final String SOURCE_APTOIDE = "APTOIDE";
 
@@ -373,5 +372,11 @@ public class TimelineAnalytics extends AptoideAnalytics {
   public void sendOpenChannelEvent(String cardType, String source, String url, String packageName) {
     analytics.sendEvent(
         createEvent(OPEN_CHANNEL, createVideoAppData(cardType, source, url, packageName)));
+  }
+
+  private Bundle createBundleData(String key, String value) {
+    final Bundle data = new Bundle();
+    data.putString(key, value);
+    return data;
   }
 }

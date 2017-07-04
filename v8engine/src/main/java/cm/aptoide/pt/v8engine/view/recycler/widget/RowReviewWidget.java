@@ -4,12 +4,12 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.FullReview;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.FullReview;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.reviews.RowReviewDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -57,7 +57,7 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
     reviewer.setText(
         AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, getContext().getResources(),
             review.getUser()
-        .getName()));
+                .getName()));
 
     rating.setText(String.format(Locale.getDefault(), "%d", (long) review.getStats()
         .getRating()));

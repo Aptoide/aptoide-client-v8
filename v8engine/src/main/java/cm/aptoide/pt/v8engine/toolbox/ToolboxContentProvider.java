@@ -174,8 +174,7 @@ public class ToolboxContentProvider extends ContentProvider {
       if (result == PackageManager.SIGNATURE_MATCH) {
         switch (uriMatcher.match(uri)) {
           case CHANGE_PREFERENCE:
-            SharedPreferences.Editor edit = sharedPreferences
-                .edit();
+            SharedPreferences.Editor edit = sharedPreferences.edit();
             for (final Map.Entry<String, Object> entry : values.valueSet()) {
               Object value = entry.getValue();
               if (value instanceof String) {

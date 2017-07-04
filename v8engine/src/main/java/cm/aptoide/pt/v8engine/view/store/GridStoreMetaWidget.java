@@ -16,17 +16,17 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
+import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.model.v7.store.HomeUser;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -96,7 +96,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final GetHomeMeta getHomeMeta = displayable.getPojo();
-    final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData()
+    final cm.aptoide.pt.dataprovider.model.v7.store.Store store = getHomeMeta.getData()
         .getStore();
     HomeUser user = getHomeMeta.getData()
         .getUser();
@@ -128,7 +128,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                     .log(err);
               }));
 
-      List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
+      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels =
           displayable.getSocialLinks();
       setupSocialLinks(displayable.getSocialLinks(), socialChannelsLayout);
 
@@ -270,8 +270,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .getId());
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                getContext().getResources(),
-                storeWrapper.getStore()
+                getContext().getResources(), storeWrapper.getStore()
                     .getName()));
       } else {
         storeWrapper.setStoreSubscribed(true);
@@ -279,8 +278,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .getName(), subscribedStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  getContext().getResources(),
-                  subscribedStoreMeta.getData()
+                  getContext().getResources(), subscribedStoreMeta.getData()
                       .getName()));
         }, err -> {
           CrashReport.getInstance()
@@ -344,10 +342,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private static class StoreWrapper {
-    @Getter private final cm.aptoide.pt.model.v7.store.Store store;
+    @Getter private final cm.aptoide.pt.dataprovider.model.v7.store.Store store;
     @Getter @Setter private boolean storeSubscribed;
 
-    StoreWrapper(cm.aptoide.pt.model.v7.store.Store store, boolean isStoreSubscribed) {
+    StoreWrapper(cm.aptoide.pt.dataprovider.model.v7.store.Store store, boolean isStoreSubscribed) {
       this.store = store;
       this.storeSubscribed = isStoreSubscribed;
     }

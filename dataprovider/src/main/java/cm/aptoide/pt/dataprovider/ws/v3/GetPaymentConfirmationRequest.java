@@ -8,8 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -60,9 +60,8 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override
-  protected Observable<PaymentConfirmationResponse> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<PaymentConfirmationResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
-    return interfaces.getPaymentConfirmation(map);
+    return service.getPaymentConfirmation(map);
   }
 }

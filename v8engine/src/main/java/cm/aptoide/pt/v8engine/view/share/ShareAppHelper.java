@@ -16,7 +16,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.view.RadarActivity;
@@ -61,7 +61,7 @@ public class ShareAppHelper {
   }
 
   public void shareApp(String appName, String packageName, String wUrl, String iconPath,
-      float averageRating, String origin) {
+      float averageRating, String origin, Long storeId) {
 
     String title = activity.getString(R.string.share);
 
@@ -72,7 +72,7 @@ public class ShareAppHelper {
       if (ShareDialogs.ShareResponse.SHARE_EXTERNAL == eResponse) {
         caseDefaultShare(appName, wUrl);
       } else if (ShareDialogs.ShareResponse.SHARE_TIMELINE == eResponse) {
-        caseAppsTimelineShare(appName, packageName, iconPath, averageRating);
+        caseAppsTimelineShare(appName, packageName, iconPath, averageRating, storeId);
       } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
         if (isInstalled(packageName)) {
           caseSpotAndShareShare(appName, packageName, origin);
@@ -97,7 +97,7 @@ public class ShareAppHelper {
         activity.getString(R.string.share))
         .subscribe(shareResponse -> {
           if (ShareDialogs.ShareResponse.SHARE_TIMELINE == shareResponse) {
-            caseAppsTimelineShare(appName, packageName, iconPath, 0);
+            caseAppsTimelineShare(appName, packageName, iconPath, 0, null);
           } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == shareResponse) {
             caseSpotAndShareShare(appName, packageName, origin);
           }
@@ -117,7 +117,7 @@ public class ShareAppHelper {
   }
 
   private void caseAppsTimelineShare(String appName, String packageName, String iconPath,
-      float averageRating) {
+      float averageRating, Long storeId) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView(
@@ -134,7 +134,7 @@ public class ShareAppHelper {
       SocialRepository socialRepository =
           RepositoryFactory.getSocialRepository(activity, timelineAnalytics, sharedPreferences);
 
-      sharePreviewDialog.showShareCardPreviewDialog(packageName, null, "app", activity,
+      sharePreviewDialog.showShareCardPreviewDialog(packageName, storeId, "app", activity,
           sharePreviewDialog, alertDialog, socialRepository);
     }
   }

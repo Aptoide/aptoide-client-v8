@@ -8,11 +8,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -22,19 +20,19 @@ import rx.Observable;
  */
 public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body> {
 
+  protected PostReviewRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+  }
+
   public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
         + "/api/7/";
-  }
-
-  protected PostReviewRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
-        tokenInvalidator);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
@@ -60,14 +58,14 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     return interfaces.postReview(body, true);
   }
 
-  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  public static class Body extends BaseBody {
 
+    private final boolean appInstalled;
     private String storeName;
     private String packageName;
     private String title;
     private String body;
     private Integer rating;
-    private final boolean appInstalled;
 
     public Body(String packageName, String title, String body, Integer rating,
         boolean appInstalled) {
@@ -86,6 +84,50 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
       this.body = body;
       this.rating = rating;
       this.appInstalled = appInstalled;
+    }
+
+    public String getStoreName() {
+      return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+      this.storeName = storeName;
+    }
+
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+      this.packageName = packageName;
+    }
+
+    public String getTitle() {
+      return title;
+    }
+
+    public void setTitle(String title) {
+      this.title = title;
+    }
+
+    public String getBody() {
+      return body;
+    }
+
+    public void setBody(String body) {
+      this.body = body;
+    }
+
+    public Integer getRating() {
+      return rating;
+    }
+
+    public void setRating(Integer rating) {
+      this.rating = rating;
+    }
+
+    public boolean isAppInstalled() {
+      return appInstalled;
     }
   }
 }

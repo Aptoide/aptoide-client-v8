@@ -108,18 +108,22 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         getArguments().getBoolean(CLEAN_BACK_STACK));
   }
 
-  @Override public void onDestroyView() {
-    unregisterBackClickHandler(presenter);
-    unlockScreenRotation();
-    super.onDestroyView();
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
         .toString());
     outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
         .toString());
+  }
+
+  @Override public void hideKeyboard() {
+    AptoideUtils.SystemU.hideKeyboard(getActivity());
+  }
+
+  @Override public void onDestroyView() {
+    unregisterClickHandler(presenter);
+    unlockScreenRotation();
+    super.onDestroyView();
   }
 
   @Nullable @Override
@@ -233,10 +237,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void dismiss() {
     getActivity().finish();
-  }
-
-  @Override public void hideKeyboard() {
-    AptoideUtils.SystemU.hideKeyboard(getActivity());
   }
 
   @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
@@ -354,7 +354,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
     attachPresenter(presenter, savedInstanceState);
-    registerBackClickHandler(presenter);
+    registerClickHandler(presenter);
   }
 
   @Override protected void showGoogleLoginError() {

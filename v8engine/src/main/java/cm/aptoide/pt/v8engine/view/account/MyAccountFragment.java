@@ -24,18 +24,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.notification.AptoideNotification;
 import cm.aptoide.pt.v8engine.notification.view.InboxAdapter;
 import cm.aptoide.pt.v8engine.presenter.MyAccountNavigator;
@@ -81,6 +81,22 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    logoutButton = null;
+    usernameTextView = null;
+    storeNameTextView = null;
+    userProfileEditButton = null;
+    userStoreEditButton = null;
+    storeLayout = null;
+    userAvatar = null;
+    storeAvatar = null;
+    separator = null;
+    header = null;
+    headerText = null;
+    moreNotificationsButton = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -144,22 +160,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         savedInstanceState);
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-    logoutButton = null;
-    usernameTextView = null;
-    storeNameTextView = null;
-    userProfileEditButton = null;
-    userStoreEditButton = null;
-    storeLayout = null;
-    userAvatar = null;
-    storeAvatar = null;
-    separator = null;
-    header = null;
-    headerText = null;
-    moreNotificationsButton = null;
-  }
-
   @Override public int getContentViewId() {
     return R.layout.my_account_activity;
   }
@@ -176,13 +176,15 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
       userAvatarUrl = account.getAvatar();
       userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(userAvatarUrl, userAvatar, STROKE_SIZE);
+          .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar, STROKE_SIZE,
+              R.drawable.my_account_placeholder);
     }
 
     if (!TextUtils.isEmpty(account.getStoreName())) {
       storeNameTextView.setText(account.getStoreName());
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(account.getStoreAvatar(), storeAvatar, STROKE_SIZE);
+          .loadWithShadowCircleTransformWithPlaceholder(account.getStoreAvatar(), storeAvatar,
+              STROKE_SIZE, R.drawable.my_account_placeholder);
     } else {
       separator.setVisibility(View.GONE);
       storeLayout.setVisibility(View.GONE);

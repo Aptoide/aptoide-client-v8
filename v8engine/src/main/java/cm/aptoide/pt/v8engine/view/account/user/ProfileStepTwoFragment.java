@@ -38,17 +38,17 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
         getContext().getString(R.string.please_wait));
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (waitDialog != null && waitDialog.isShowing()) {
-      waitDialog.dismiss();
-    }
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     if (args != null) {
       externalLogin = args.getBoolean(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false);
+    }
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (waitDialog != null && waitDialog.isShowing()) {
+      waitDialog.dismiss();
     }
   }
 

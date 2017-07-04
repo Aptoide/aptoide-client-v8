@@ -7,10 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -61,14 +63,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     }
   }
 
-  @Override public void onDestroy() {
-    if (viewPager != null) {
-      viewPager.removeOnPageChangeListener(null);
-      viewPager = null;
-    }
-    super.onDestroy();
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
 
@@ -97,6 +91,14 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
         new WizardPresenter(this, accountManager, CrashReport.getInstance());
     attachPresenter(presenter, null);
     viewPager.addOnPageChangeListener(presenter);
+  }
+
+  @Override public void onDestroy() {
+    if (viewPager != null) {
+      viewPager.removeOnPageChangeListener(null);
+      viewPager = null;
+    }
+    super.onDestroy();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -178,19 +180,26 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   }
 
   private void createRadioButtons() {
-    RadioGroup.LayoutParams layoutParams =
-        new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
-            RadioGroup.LayoutParams.WRAP_CONTENT);
+    // set button dimension
+    int buttonSize = AptoideUtils.ScreenU.getPixelsForDip(10, getResources());
+    ViewGroup.LayoutParams buttonLayoutParams = new RadioGroup.LayoutParams(buttonSize, buttonSize);
+
+    // set button margin
+    int buttonMargin = AptoideUtils.ScreenU.getPixelsForDip(2, getResources());
+    ViewGroup.MarginLayoutParams marginLayoutParams =
+        (ViewGroup.MarginLayoutParams) buttonLayoutParams;
+    marginLayoutParams.setMargins(buttonMargin, buttonMargin, buttonMargin, buttonMargin);
 
     final int pages = viewPagerAdapter.getCount();
     wizardButtons = new ArrayList<>(pages);
     Context context = getContext();
     for (int i = 0; i < pages; i++) {
       RadioButton radioButton = new RadioButton(context);
-      radioButton.setBackgroundResource(R.drawable.wizard_custom_indicator);
+      radioButton.setLayoutParams(buttonLayoutParams);
       radioButton.setButtonDrawable(android.R.color.transparent);
+      radioButton.setBackgroundResource(R.drawable.wizard_custom_indicator);
       radioButton.setClickable(false);
-      radioGroup.addView(radioButton, layoutParams);
+      radioGroup.addView(radioButton);
       wizardButtons.add(radioButton);
     }
   }

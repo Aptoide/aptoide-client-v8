@@ -34,27 +34,25 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Malware;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -66,6 +64,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
@@ -76,8 +75,10 @@ import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
@@ -187,8 +188,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private PurchaseIntentMapper purchaseIntentMapper;
   private ShareAppHelper shareAppHelper;
   private QManager qManager;
+  private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
 
   public static AppViewFragment newInstanceUname(String uname) {
@@ -263,6 +266,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    adMapper = new MinimalAdMapper();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
     purchaseIntentMapper =
         ((V8Engine) getContext().getApplicationContext()).getPurchaseIntentMapper();
@@ -289,13 +293,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    adsRepository =
-        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory, qManager,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getApplicationContext(),
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            getContext().getResources(), getContext().getPackageManager());
+    adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
@@ -309,6 +307,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics, installAppRelay,
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    downloadFactory = new DownloadFactory();
+    appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -486,12 +487,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               && app.getStats()
               .getRating() != null ? app.getStats()
               .getRating()
-              .getAvg() : 0f), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+              .getAvg() : 0f), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW,
+          app != null ? app.getStore()
+              .getId() : null);
       appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {
       appViewAnalytics.sendScheduleDownloadEvent();
-      scheduled = Scheduled.from(app, appAction);
+      scheduled = createScheduled(app, appAction);
 
       ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
       scheduledAccessor.insert(scheduled);
@@ -523,6 +526,44 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return super.onOptionsItemSelected(item);
   }
 
+  private Scheduled createScheduled(GetAppMeta.App app, AppAction appAction) {
+
+    String mainObbName = null;
+    String mainObbPath = null;
+    String mainObbMd5 = null;
+
+    String patchObbName = null;
+    String patchObbPath = null;
+    String patchObbMd5 = null;
+
+    Obb obb = app.getObb();
+    if (obb != null) {
+      Obb.ObbItem obbMain = obb.getMain();
+      Obb.ObbItem obbPatch = obb.getPatch();
+
+      if (obbMain != null) {
+        mainObbName = obbMain.getFilename();
+        mainObbPath = obbMain.getPath();
+        mainObbMd5 = obbMain.getMd5sum();
+      }
+
+      if (obbPatch != null) {
+        patchObbName = obbPatch.getFilename();
+        patchObbPath = obbPatch.getPath();
+        patchObbMd5 = obbPatch.getMd5sum();
+      }
+    }
+
+    return new Scheduled(app.getName(), app.getFile()
+        .getVername(), app.getIcon(), app.getFile()
+        .getPath(), app.getFile()
+        .getMd5sum(), app.getFile()
+        .getVercode(), app.getPackageName(), app.getStore()
+        .getName(), app.getFile()
+        .getPathAlt(), mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath,
+        patchObbMd5, false, appAction.name());
+  }
+
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
     String packageName = getApp.getNodes()
         .getMeta()
@@ -549,7 +590,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   private void storeMinimalAdd(MinimalAd minimalAd) {
-    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
+    storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
   }
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
@@ -585,7 +626,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
 
     // useful data for the syncAuthorization updates menu option
-    installAction().observeOn(AndroidSchedulers.mainThread())
+    installAction(packageName, app.getFile()
+        .getVercode()).observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appAction -> {
           AppViewFragment.this.appAction = appAction;
@@ -596,9 +638,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           if (appAction != AppAction.INSTALL) {
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
                 (PermissionService) getContext())
-                .flatMap(success -> installManager.uninstall(getContext(), packageName,
-                    app.getFile()
-                        .getVername()))
+                .flatMap(success -> installManager.uninstall(packageName, app.getFile()
+                    .getVername())
+                    .toObservable())
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
                 .subscribe(aVoid -> {
                 }, throwable -> throwable.printStackTrace()));
@@ -638,11 +680,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private void handleAdsLogic(MinimalAd minimalAd) {
     storeMinimalAdd(minimalAd);
-    DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
+    AdNetworkUtils.knockCpc(adMapper.map(minimalAd));
     AptoideUtils.ThreadU.runOnUiThread(
         () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
             httpClient, converterFactory, qManager, getContext().getApplicationContext(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()));
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            new MinimalAdMapper()));
   }
 
   private void updateLocalVars(GetAppMeta.App app) {
@@ -657,28 +700,28 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appName = app.getName();
   }
 
-  public Observable<AppAction> installAction() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    return installedAccessor.getAsList(packageName)
-        .map(installedList -> {
-          if (installedList != null && installedList.size() > 0) {
-            Installed installed = installedList.get(0);
-            if (app.getFile()
-                .getVercode() == installed.getVersionCode()) {
-              //current installed version
-              return AppAction.OPEN;
-            } else if (app.getFile()
-                .getVercode() > installed.getVersionCode()) {
-              //update
-              return AppAction.UPDATE;
-            } else {
-              //downgrade
-              return AppAction.DOWNGRADE;
-            }
-          } else {
-            //app not installed
-            return AppAction.INSTALL;
+  public Observable<AppAction> installAction(String packageName, int versionCode) {
+    return installManager.getInstall(md5, packageName, versionCode)
+        .map(installationProgress -> installationProgress.getType())
+        .map(installationType -> {
+          AppAction action;
+          switch (installationType) {
+            case INSTALLED:
+              action = AppAction.OPEN;
+              break;
+            case INSTALL:
+              action = AppAction.INSTALL;
+              break;
+            case UPDATE:
+              action = AppAction.UPDATE;
+              break;
+            case DOWNGRADE:
+              action = AppAction.DOWNGRADE;
+              break;
+            default:
+              action = AppAction.INSTALL;
           }
+          return action;
         });
   }
 
@@ -707,6 +750,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
+            installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics);
             installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));

@@ -7,14 +7,11 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.Collections;
 import java.util.List;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -98,16 +95,15 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     return interfaces.listSearchApps(body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey
-      implements Endless {
+  public static class Body extends BaseBodyWithAlphaBetaKey implements Endless {
 
-    @Getter private Integer limit;
-    @Getter @Setter private int offset;
-    @Getter private String query;
-    @Getter private List<Long> storeIds;
-    @Getter private List<String> storeNames;
-    @Getter private HashMapNotNull<String, List<String>> storesAuthMap;
-    @Getter private Boolean trusted;
+    private int offset;
+    private Integer limit;
+    private String query;
+    private List<Long> storeIds;
+    private List<String> storeNames;
+    private HashMapNotNull<String, List<String>> storesAuthMap;
+    private Boolean trusted;
 
     public Body(Integer limit, String query, List<Long> storeIds,
         HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
@@ -144,6 +140,38 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       this.limit = limit;
       this.query = query;
       this.trusted = trusted;
+    }
+
+    public String getQuery() {
+      return query;
+    }
+
+    public List<Long> getStoreIds() {
+      return storeIds;
+    }
+
+    public List<String> getStoreNames() {
+      return storeNames;
+    }
+
+    public HashMapNotNull<String, List<String>> getStoresAuthMap() {
+      return storesAuthMap;
+    }
+
+    public Boolean getTrusted() {
+      return trusted;
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
     }
   }
 }

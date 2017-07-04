@@ -10,7 +10,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
-import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.purchase.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
@@ -58,12 +58,11 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
   private final Context context;
   private final InAppBillingSerializer serializer;
   private final PaymentThrowableCodeMapper errorCodeFactory;
-  private final AptoideBilling billing;
+  private final Billing billing;
   private final CrashReport crashReport;
 
   public InAppBillingBinder(Context context, InAppBillingSerializer serializer,
-      PaymentThrowableCodeMapper errorCodeFactory, AptoideBilling billing,
-      CrashReport crashReport) {
+      PaymentThrowableCodeMapper errorCodeFactory, Billing billing, CrashReport crashReport) {
     this.context = context;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
@@ -74,7 +73,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
       throws RemoteException {
     try {
-      return billing.isBillingSupported(packageName, apiVersion, type)
+      return billing.isSupported(packageName, apiVersion, type)
           .map(available -> available ? RESULT_OK : RESULT_BILLING_UNAVAILABLE)
           .toBlocking()
           .value();
@@ -104,13 +103,16 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       final List<String> serializedProducts =
-          billing.getInAppProducts(apiVersion, packageName, itemIdList, type).flatMap(products -> {
-            try {
-              return Single.just(serializer.serializeProducts(products));
-            } catch (IOException e) {
-              return Single.error(e);
-            }
-          }).toBlocking().value();
+          billing.getInAppProducts(apiVersion, packageName, itemIdList, type)
+              .flatMap(products -> {
+                try {
+                  return Single.just(serializer.serializeProducts(products));
+                } catch (IOException e) {
+                  return Single.error(e);
+                }
+              })
+              .toBlocking()
+              .value();
 
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
@@ -145,8 +147,9 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
     final Bundle result = new Bundle();
     try {
 
-      final List<Purchase> purchases =
-          billing.getInAppPurchases(apiVersion, packageName, type).toBlocking().value();
+      final List<Purchase> purchases = billing.getInAppPurchases(apiVersion, packageName, type)
+          .toBlocking()
+          .value();
 
       final List<String> dataList = new ArrayList<>();
       final List<String> signatureList = new ArrayList<>();

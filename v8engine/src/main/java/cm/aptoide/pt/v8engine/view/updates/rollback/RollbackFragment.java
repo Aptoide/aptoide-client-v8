@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.updates.rollback;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -15,17 +16,22 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.install.InstallFabricEvents;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.FooterRowDisplayable;
+import com.crashlytics.android.answers.Answers;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -33,9 +39,10 @@ import rx.schedulers.Schedulers;
 public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final SimpleDateFormat dateFormat =
-      new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT);
+      new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
   private TextView emptyData;
   private Installer installManager;
+  private Analytics analytics;
 
   public RollbackFragment() {
   }
@@ -75,6 +82,11 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    analytics = Analytics.getInstance();
+  }
+
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
   }
@@ -84,7 +96,9 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
 
-    installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallerFactory(new MinimalAdMapper(),
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance())).create(
+        getContext(), InstallerFactory.ROLLBACK);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -102,8 +116,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
         .subscribe(rollbacks -> {
           if (rollbacks == null || rollbacks.isEmpty()) {
             emptyData.setText(AptoideUtils.StringU.getFormattedString(R.string.no_rollbacks_msg,
-                getContext().getResources(),
-                Application.getConfiguration()
+                getContext().getResources(), Application.getConfiguration()
                     .getMarketName()));
             emptyData.setVisibility(View.VISIBLE);
           } else {
@@ -127,7 +140,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       displayables.add(new RollbackDisplayable(installManager, rollback));
     }
 
-    Calendar.getInstance(AptoideUtils.LocaleU.DEFAULT);
+    Calendar.getInstance(Locale.getDefault());
     return displayables;
   }
 }

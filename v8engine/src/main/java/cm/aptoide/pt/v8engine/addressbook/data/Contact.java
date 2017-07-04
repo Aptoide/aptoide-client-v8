@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.addressbook.data;
 
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import lombok.Data;
 
 /**

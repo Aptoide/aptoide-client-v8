@@ -8,14 +8,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -80,18 +75,15 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
     }
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBodyWithStore implements Endless {
+  public static class Body extends BaseBodyWithStore implements Endless {
 
-    @Getter private Integer limit;
-    @Getter @Setter private int offset;
+    private int offset;
+    private Integer limit;
+    private boolean refresh;
     private String lang;
     private boolean mature;
-    @Getter private boolean refresh;
-
     private Order order;
     private Sort sort;
-
     private Long storeId;
     private Long reviewId;
     private String packageName;
@@ -119,6 +111,22 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
       this.limit = limit;
       this.subLimit = subLimit;
       this.refresh = refresh;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
     }
 
     public enum Sort {

@@ -1,9 +1,9 @@
 package cm.aptoide.pt.v8engine.view.store;
 
+import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.LinkedList;
 import java.util.List;

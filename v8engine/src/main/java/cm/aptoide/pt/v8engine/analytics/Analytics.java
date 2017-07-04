@@ -3,10 +3,13 @@ package cm.aptoide.pt.v8engine.analytics;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import com.crashlytics.android.answers.Answers;
@@ -125,6 +128,18 @@ public class Analytics {
     facebookLogger.logEvent(eventName, bundle);
   }
 
+  private static void track(String event, int flags) {
+
+    try {
+      if (checkAcceptability(flags, FLURRY)) {
+        FlurryAgent.logEvent(event);
+        Logger.d(TAG, "Flurry Event: " + event);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -148,18 +163,6 @@ public class Analytics {
       }
     }
     logFacebookEvents(eventName, parameters);
-  }
-
-  private static void track(String event, int flags) {
-
-    try {
-      if (checkAcceptability(flags, FLURRY)) {
-        FlurryAgent.logEvent(event);
-        Logger.d(TAG, "Flurry Event: " + event);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   private static void logFacebookEvents(String eventName, Bundle parameters) {
@@ -213,10 +216,82 @@ public class Analytics {
               .getUniqueIdentifier());
           return null;
         })
+            .filter(__ -> SecurePreferences.isFirstRun(
+                SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
+                    PreferenceManager.getDefaultSharedPreferences(application))))
+            .doOnNext(__ -> setupDimensions(application))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
             }, Throwable::printStackTrace);
+      }
+
+      private static void setupDimensions(android.app.Application application) {
+        if (!checkForUTMFileInMetaINF(application)) {
+          Dimensions.setUTMDimensionsToUnknown();
+        }
+      }
+
+      private static boolean checkForUTMFileInMetaINF(android.app.Application application) {
+        ZipFile myZipFile = null;
+        try {
+          final String sourceDir = application.getApplicationContext()
+              .getPackageManager()
+              .getPackageInfo(application.getApplicationContext()
+                  .getPackageName(), 0).applicationInfo.sourceDir;
+          myZipFile = new ZipFile(sourceDir);
+          final InputStream utmInputStream =
+              myZipFile.getInputStream(myZipFile.getEntry("META-INF/utm"));
+
+          UTMFileParser utmFileParser = new UTMFileParser(utmInputStream);
+          myZipFile.close();
+
+          String utmSource = utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE);
+          String utmMedium = utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM);
+          String utmCampaign = utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN);
+          String utmContent = utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT);
+          String entryPoint = utmFileParser.valueExtracter(UTMFileParser.ENTRY_POINT);
+
+          if (!utmSource.isEmpty()) {
+            Analytics.Dimensions.setUTMSource(utmSource);
+          }
+
+          if (!utmMedium.isEmpty()) {
+            Analytics.Dimensions.setUTMMedium(utmMedium);
+          }
+
+          if (!utmCampaign.isEmpty()) {
+            Analytics.Dimensions.setUTMCampaign(utmCampaign);
+          }
+
+          if (!utmContent.isEmpty()) {
+            Analytics.Dimensions.setUTMContent(utmContent);
+          }
+
+          if (!entryPoint.isEmpty()) {
+            Analytics.Dimensions.setEntryPointDimension(entryPoint);
+          }
+
+          utmInputStream.close();
+        } catch (IOException e) {
+          Logger.d(TAG, "problem parsing utm/no utm file");
+          return false;
+        } catch (PackageManager.NameNotFoundException e) {
+          Logger.d(TAG, "No package name utm file.");
+          return false;
+        } catch (NullPointerException e) {
+          if (myZipFile != null) {
+            try {
+              myZipFile.close();
+            } catch (IOException e1) {
+              e1.printStackTrace();
+              return false;
+            }
+            return false;
+          }
+          Logger.d(TAG, "No utm file.");
+        }
+        return true;
       }
     }
 
@@ -484,50 +559,6 @@ public class Analytics {
     }
   }
 
-  public static class ApplicationInstall {
-
-    public static final String EVENT_NAME = "Application Install";
-    //this will be the one remaining after localytics is killed
-
-    private static final String TYPE = "Type";
-    private static final String PACKAGE_NAME = "Package Name";
-    private static final String REFERRED = "Referred";
-    private static final String TRUSTED_BADGE = "Trusted Badge";
-
-    private static final String REPLACED = "Replaced";
-    private static final String INSTALLED = "Installed";
-    private static final String DOWNGRADED_ROLLBACK = "Downgraded Rollback";
-
-    public static void installed(String packageName, String trustedBadge) {
-      innerTrack(packageName, INSTALLED, trustedBadge, ALL);
-    }
-
-    private static void innerTrack(String packageName, String type, String trustedBadge,
-        int flags) {
-      try {
-        HashMap<String, String> stringObjectHashMap = new HashMap<>();
-
-        stringObjectHashMap.put(TRUSTED_BADGE, trustedBadge);
-        stringObjectHashMap.put(TYPE, type);
-        stringObjectHashMap.put(PACKAGE_NAME, packageName);
-
-        track(EVENT_NAME, stringObjectHashMap, flags);
-
-        Bundle parameters = new Bundle();
-        parameters.putString(PACKAGE_NAME, packageName);
-        parameters.putString(TRUSTED_BADGE, trustedBadge);
-        parameters.putString(TYPE, type);
-        logFacebookEvents(EVENT_NAME, parameters);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-    public static void replaced(String packageName, String trustedBadge) {
-      innerTrack(packageName, REPLACED, trustedBadge, ALL);
-    }
-  }
-
   public static class ApplicationLaunch {
 
     public static final String EVENT_NAME = "Application Launch";
@@ -753,6 +784,13 @@ public class Analytics {
 
     public static void setUTMContent(String utmContent) {
       setUserProperties(UTM_CONTENT, utmContent);
+    }
+
+    public static void setUTMDimensionsToUnknown() {
+      setUserProperties(UTM_SOURCE, UNKNOWN);
+      setUserProperties(UTM_MEDIUM, UNKNOWN);
+      setUserProperties(UTM_CAMPAIGN, UNKNOWN);
+      setUserProperties(UTM_CONTENT, UNKNOWN);
     }
 
     public static void setEntryPointDimension(String entryPoint) {

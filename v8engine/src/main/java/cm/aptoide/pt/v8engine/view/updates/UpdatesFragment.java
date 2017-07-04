@@ -10,12 +10,12 @@ import android.view.View;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -26,8 +26,8 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
@@ -184,13 +184,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     if (updateList.size() > 0) {
       updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
           AptoideUtils.StringU.getResString(R.string.updates, getContext().getResources()),
-          analytics,
-          downloadInstallEventConverter, installConverter));
+          analytics, downloadInstallEventConverter, installConverter));
 
       for (Update update : updateList) {
         updatesDisplayablesList.add(
             UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
-                downloadInstallEventConverter, installConverter, new PermissionManager()));
+                downloadInstallEventConverter, installConverter, installedRepository,
+                new PermissionManager()));
       }
     }
     addDisplayables(updatesDisplayablesList, false);
@@ -223,7 +223,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    * @return {@link Observable} to a {@link List} of {@link Installed} apps
    */
   private Observable<List<Installed>> fetchInstalled() {
-    return installedRepository.getAllSorted()
+    return installedRepository.getAllInstalledSorted()
         .first()
         .flatMapIterable(list -> list)
         .filter(item -> !item.isSystemApp())

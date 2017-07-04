@@ -1,13 +1,12 @@
 package cm.aptoide.pt.v8engine.view.store.ads;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -36,26 +35,20 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
     final OkHttpClient httpClient =
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    adsRepository =
-        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getQManager(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getApplicationContext(),
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            getContext().getResources(), getContext().getPackageManager());
+    adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    return adsRepository.getAdsFromHomepageMore(refresh).map(minimalAds -> {
-      List<Displayable> displayables = new LinkedList<>();
-      for (MinimalAd minimalAd : minimalAds) {
-        displayables.add(new GridAdDisplayable(minimalAd, tag));
-      }
+    return adsRepository.getAdsFromHomepageMore(refresh)
+        .map(minimalAds -> {
+          List<Displayable> displayables = new LinkedList<>();
+          for (MinimalAd minimalAd : minimalAds) {
+            displayables.add(new GridAdDisplayable(minimalAd, tag));
+          }
 
-      return Collections.singletonList(new DisplayableGroup(displayables,
-          (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-          getContext().getResources()));
-    });
+          return Collections.singletonList(new DisplayableGroup(displayables,
+              (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+              getContext().getResources()));
+        });
   }
 }

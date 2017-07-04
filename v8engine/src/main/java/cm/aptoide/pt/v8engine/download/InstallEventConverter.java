@@ -6,7 +6,8 @@ import android.telephony.TelephonyManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Data;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Root;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -35,10 +36,8 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override
-  protected DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(InstallEvent report,
-      DownloadInstallAnalyticsBaseBody.Data data) {
-    DownloadInstallAnalyticsBaseBody.Root root = new DownloadInstallAnalyticsBaseBody.Root();
+  @Override protected Data convertSpecificFields(InstallEvent report, Data data) {
+    Root root = new Root();
     root.setAptoideSettings(report.getAptoideSettings());
     root.setPhone(report.getIsPhoneRooted());
     data.setRoot(root);

@@ -8,8 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v3.BaseV3Response;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -31,19 +31,22 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
       NetworkOperatorManager operatorManager, String developerPayload,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    final BaseBody args = getBaseBody(productId, paymentId, operatorManager, sharedPreferences);
+      SharedPreferences sharedPreferences, int versionCode) {
+    final BaseBody args =
+        getBaseBody(productId, paymentId, operatorManager, sharedPreferences, versionCode);
     args.put("developerPayload", developerPayload);
     return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
   private static BaseBody getBaseBody(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, SharedPreferences sharedPreferences) {
+      NetworkOperatorManager operatorManager, SharedPreferences sharedPreferences,
+      int versionCode) {
     BaseBody body = new BaseBody();
     body.put("productid", String.valueOf(productId));
     body.put("payType", String.valueOf(paymentId));
     body.put("reqType", "rest");
+    body.put("app_vercode", versionCode);
 
     addNetworkInformation(operatorManager, body, sharedPreferences);
 
@@ -54,8 +57,9 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
       NetworkOperatorManager operatorManager, String developerPayload, String paymentConfirmationId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    final BaseBody args = getBaseBody(productId, paymentId, operatorManager, sharedPreferences);
+      SharedPreferences sharedPreferences, int versionCode) {
+    final BaseBody args =
+        getBaseBody(productId, paymentId, operatorManager, sharedPreferences, versionCode);
     args.put("paykey", paymentConfirmationId);
     args.put("developerPayload", developerPayload);
     return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
@@ -66,8 +70,9 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
       NetworkOperatorManager operatorManager, String store,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    final BaseBody args = getBaseBody(productId, paymentId, operatorManager, sharedPreferences);
+      SharedPreferences sharedPreferences, int versionCode) {
+    final BaseBody args =
+        getBaseBody(productId, paymentId, operatorManager, sharedPreferences, versionCode);
     args.put("repo", store);
     return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
@@ -77,16 +82,17 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
       NetworkOperatorManager operatorManager, String store, String paymentConfirmationId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    final BaseBody args = getBaseBody(productId, paymentId, operatorManager, sharedPreferences);
+      SharedPreferences sharedPreferences, int versionCode) {
+    final BaseBody args =
+        getBaseBody(productId, paymentId, operatorManager, sharedPreferences, versionCode);
     args.put("paykey", paymentConfirmationId);
     args.put("repo", store);
     return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
-    return interfaces.createPaymentConfirmation(map);
+  @Override
+  protected Observable<BaseV3Response> loadDataFromNetwork(Service service, boolean bypassCache) {
+    return service.createPaymentConfirmation(map);
   }
 }
