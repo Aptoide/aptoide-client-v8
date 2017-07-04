@@ -78,15 +78,24 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
 
   private void setAppUpdateButtonText(AppUpdate card) {
     if (card.getInstallationStatus()
-        .equals(Install.InstallationStatus.UNINSTALLED)) {
+        .equals(Install.InstallationStatus.UNINSTALLED) || card.getInstallationStatus()
+        .equals(Install.InstallationStatus.PAUSED)) {
       this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
           .toUpperCase());
     } else if (card.getInstallationStatus()
         .equals(Install.InstallationStatus.INSTALLING)) {
-      this.appUpdate.setText("UPDATING...");
+      this.appUpdate.setText(itemView.getContext()
+          .getString(R.string.displayable_social_timeline_app_update_updating));
     } else if (card.getInstallationStatus()
         .equals(Install.InstallationStatus.INSTALLED)) {
-      this.appUpdate.setText("UPDATED");
+      this.appUpdate.setText(itemView.getContext()
+          .getString(R.string.displayable_social_timeline_app_update_updated));
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.GENERIC_ERROR)) {
+      this.errorText.setText(R.string.displayable_social_timeline_app_update_error);
+      this.errorText.setVisibility(View.VISIBLE);
+      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
+          .toUpperCase());
     }
   }
 

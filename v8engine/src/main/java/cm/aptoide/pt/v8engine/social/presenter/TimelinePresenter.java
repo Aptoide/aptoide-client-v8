@@ -215,10 +215,10 @@ public class TimelinePresenter implements Presenter {
                   return socialManager.updateApp(cardTouchEvent);
                 })
                 .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged(install -> install.getState())
                 .doOnNext(install -> {
                   // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
-                  ((AppUpdate) cardTouchEvent.getCard()).setInstallationStatus(
-                      install.getState());
+                  ((AppUpdate) cardTouchEvent.getCard()).setInstallationStatus(install.getState());
                   view.updateInstallProgress(cardTouchEvent.getCard(),
                       ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
                 })
