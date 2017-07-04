@@ -33,7 +33,7 @@ class CreateHotspotManager {
         == SUCCESS_HOTSPOT_CREATION;
   }
 
-  public int enableHotspot(WifiConfiguration netConfig) {
+  private int enableHotspot(WifiConfiguration netConfig) {
 
     if (wifimanager.isWifiEnabled()) {
       wifimanager.setWifiEnabled(false);
