@@ -176,7 +176,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .flatMap(downloadItem -> installManager.install(downloadItem)
             .toObservable()
             .flatMap(downloadProgress -> installManager.getInstall(downloadItem.getMd5(),
-                    downloadItem.getPackageName(), downloadItem.getVersionCode()))
+                downloadItem.getPackageName(), downloadItem.getVersionCode()))
             .doOnSubscribe(() -> setupEvents(downloadItem,
                 isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
             .filter(installationProgress -> installationProgress.getState()

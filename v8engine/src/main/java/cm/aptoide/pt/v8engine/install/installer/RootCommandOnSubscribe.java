@@ -5,6 +5,7 @@ import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.root.exceptions.RootDeniedException;
 import cm.aptoide.pt.root.execution.Command;
 import cm.aptoide.pt.root.execution.Shell;
+import cm.aptoide.pt.v8engine.install.InstallerAnalytics;
 import cm.aptoide.pt.v8engine.install.RootCommandTimeoutException;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import java.io.IOException;
@@ -24,10 +25,12 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
   private final int installId;
   private boolean success;
   private String command;
+  private InstallerAnalytics analytics;
 
-  public RootCommandOnSubscribe(int installId, String command) {
+  public RootCommandOnSubscribe(int installId, String command, InstallerAnalytics analytics) {
     this.installId = installId;
     this.command = command;
+    this.analytics = analytics;
     success = false;
   }
 
@@ -57,9 +60,12 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
           super.commandTerminated(id, reason);
           if (installId == id) {
             if (reason.equals(TIMEOUT_EXCEPTION)) {
+              analytics.rootInstallTimeout();
               subscriber.onError(new RootCommandTimeoutException());
             } else if (!subscriber.isUnsubscribed()) {
-              subscriber.onError(new IllegalStateException(reason));
+              IllegalStateException e = new IllegalStateException(reason);
+              analytics.rootInstallFail(e);
+              subscriber.onError(e);
             }
           }
         }
@@ -69,8 +75,12 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
           if (!subscriber.isUnsubscribed() && installId == id) {
             if (success || exitcode == 0) {
               subscriber.onCompleted();
+              analytics.rootInstallCompleted(exitcode);
             } else {
-              subscriber.onError(new IllegalStateException("success message wasn't received"));
+              IllegalStateException e = new IllegalStateException(
+                  "success message wasn't received. Exit code: " + exitcode);
+              analytics.rootInstallFail(e);
+              subscriber.onError(e);
             }
           }
           super.commandCompleted(id, exitcode);
@@ -86,13 +96,15 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
       }));
       shell.add(installCommand);
     } catch (IOException | TimeoutException | RootDeniedException e) {
-
       if (e instanceof RootDeniedException) {
+        analytics.rootInstallFail(e);
         subscriber.onError(new InstallationException("User didn't accept root permissions"));
       } else if (e instanceof TimeoutException) {
         subscriber.onError(new RootCommandTimeoutException());
+        analytics.rootInstallTimeout();
         Logger.d(TAG, "call: timeout reached");
       } else {
+        analytics.rootInstallFail(e);
         subscriber.onError(e);
       }
     }

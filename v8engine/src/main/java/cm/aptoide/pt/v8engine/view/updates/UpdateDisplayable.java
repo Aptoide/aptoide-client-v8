@@ -155,11 +155,9 @@ public class UpdateDisplayable extends Displayable {
   }
 
   public Observable<Boolean> shouldShowProgress() {
-    return installManager.getInstall(getMd5(), getPackageName(),
-        getUpdateVersionCode())
+    return installManager.getInstall(getMd5(), getPackageName(), getUpdateVersionCode())
         .map(installationProgress -> installationProgress.getState()
-            == Install.InstallationStatus.INSTALLING
-            || installationProgress.isIndeterminate());
+            == Install.InstallationStatus.INSTALLING || installationProgress.isIndeterminate());
   }
 
   public InstalledRepository getInstalledRepository() {
