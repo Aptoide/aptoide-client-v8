@@ -212,7 +212,7 @@ public class ShowMessage {
 
   public static void asSnack(Activity activity, int msg, int actionMsg, View.OnClickListener action,
       int duration) {
-    Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action, Snackbar.LENGTH_SHORT);
+    Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action, duration);
     if (snackbar != null) {
       snackbar.show();
     }
