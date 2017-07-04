@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
 import java.util.Date;
 import java.util.List;
@@ -12,19 +11,19 @@ import java.util.List;
 
 public class AggregatedStore extends StoreLatestApps {
   private final List<Poster> posters;
-  private final List<MinimalCard> minimalCards;
+  private final List<Post> minimalPosts;
 
-  public AggregatedStore(String cardId, List<Poster> posters, List<MinimalCard> minimalCards,
-      Long storeId, String storeName, String storeAvatar, String storeTheme, int subscribers,
-      int appsNumber, Date latestUpdate, List<App> apps, String abUrl, CardType cardType) {
+  public AggregatedStore(String cardId, List<Poster> posters, List<Post> minimalPosts, Long storeId,
+      String storeName, String storeAvatar, String storeTheme, int subscribers, int appsNumber,
+      Date latestUpdate, List<App> apps, String abUrl, CardType cardType) {
     super(cardId, storeId, storeName, storeAvatar, storeTheme, subscribers, appsNumber,
         latestUpdate, apps, abUrl, false, cardType);
     this.posters = posters;
-    this.minimalCards = minimalCards;
+    this.minimalPosts = minimalPosts;
   }
 
-  public List<MinimalCard> getMinimalCards() {
-    return minimalCards;
+  public List<Post> getMinimalPosts() {
+    return minimalPosts;
   }
 
   public List<Poster> getPosters() {

@@ -14,18 +14,18 @@ import java.util.List;
 
 public class AggregatedMedia extends Media {
   private final List<Poster> posters;
-  private final List<MinimalCard> minimalCards;
+  private final List<Post> minimalCards;
 
   public AggregatedMedia(String cardId, List<Poster> posters, String mediaTitle,
       String mediaThumbnailUrl, Date date, App app, String abTestURL, Publisher publisher,
-      Link publisherLink, Link mediaLink, List<MinimalCard> minimalCards, CardType cardType) {
+      Link publisherLink, Link mediaLink, List<Post> minimalPosts, CardType cardType) {
     super(cardId, mediaTitle, mediaThumbnailUrl, date, app, abTestURL, publisher, publisherLink,
         mediaLink, false, cardType);
     this.posters = posters;
-    this.minimalCards = minimalCards;
+    this.minimalCards = minimalPosts;
   }
 
-  public List<MinimalCard> getMinimalCards() {
+  public List<Post> getMinimalCards() {
     return minimalCards;
   }
 

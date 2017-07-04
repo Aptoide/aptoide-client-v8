@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.social.data;
 
-import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
 import java.util.Date;
 import java.util.List;
@@ -11,20 +10,20 @@ import java.util.List;
 
 public class AggregatedRecommendation extends AppPost {
   private final List<Poster> posters;
-  private final List<MinimalCard> minimalCards;
+  private final List<Post> minimalPosts;
   private final float appAverageRating;
 
-  AggregatedRecommendation(String cardId, List<Poster> posters, List<MinimalCard> minimalCards,
+  AggregatedRecommendation(String cardId, List<Poster> posters, List<Post> minimalPosts,
       String appIcon, String appName, long appId, float appAverageRating, String packageName,
       Date timestamp, String abUrl, CardType cardType) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
     this.posters = posters;
-    this.minimalCards = minimalCards;
+    this.minimalPosts = minimalPosts;
     this.appAverageRating = appAverageRating;
   }
 
-  public List<MinimalCard> getMinimalCards() {
-    return minimalCards;
+  public List<Post> getMinimalPosts() {
+    return minimalPosts;
   }
 
   public List<Poster> getPosters() {

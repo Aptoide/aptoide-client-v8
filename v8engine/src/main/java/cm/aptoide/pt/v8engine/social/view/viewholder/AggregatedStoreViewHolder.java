@@ -95,7 +95,7 @@ public class AggregatedStoreViewHolder extends CardViewHolder<AggregatedStore> {
     showStoreLatestApps(card);
     showMorePostersLabel(card);
     minimalCardContainer.removeAllViews();
-    minimalCardContainer.addView(minimalCardViewFactory.getView(card.getMinimalCards(),
+    minimalCardContainer.addView(minimalCardViewFactory.getView(card.getMinimalPosts(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
         itemView.getContext()));
   }
