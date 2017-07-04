@@ -1,23 +1,21 @@
 package cm.aptoide.pt.v8engine.analytics;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequestBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.FirstLaunchAnalytics;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -239,7 +237,8 @@ public class Analytics {
       private static String utmContent = UNKNOWN;
       private static String entryPoint = UNKNOWN;
 
-      public static void onCreate(android.app.Application application) {
+      public static void onCreate(android.app.Application application,
+          SharedPreferences sharedPreferences) {
 
         //Integrate FacebookSDK
         FacebookSdk.sdkInitialize(application);
@@ -247,17 +246,20 @@ public class Analytics {
         facebookLogger = AppEventsLogger.newLogger(application);
         FirstLaunchAnalytics firstLaunchAnalytics =
             new FirstLaunchAnalytics(facebookLogger, Analytics.getInstance());
+
         final Converter.Factory converterFactory = WebService.getDefaultConverter();
         final OkHttpClient okHttpClient =
             ((V8Engine) application.getApplicationContext()).getDefaultClient();
         final BodyInterceptor<BaseBody> bodyInterceptor =
             ((V8Engine) application.getApplicationContext()).getBaseBodyInterceptorV7();
+        final TokenInvalidator tokenInvalidator =
+            ((V8Engine) application.getApplicationContext()).getTokenInvalidator();
         Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(((V8Engine) application).getIdsRepository()
               .getUniqueIdentifier());
           return null;
         })
-            .filter(__ -> SecurePreferences.isFirstRun())
+            .filter(__ -> SecurePreferences.isFirstRun(sharedPreferences))
             .doOnNext(__ -> setupDimensions(application))
             .doOnCompleted(() -> {
               firstLaunchAnalytics.sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
@@ -267,7 +269,7 @@ public class Analytics {
               BIUTMAnalyticsRequestBody body =
                   new BIUTMAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
               BIUTMAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
-                  okHttpClient, converterFactory)
+                  okHttpClient, converterFactory, sharedPreferences, tokenInvalidator)
                   .observe()
                   .observeOn(Schedulers.io())
                   .subscribe(baseV7Response -> {

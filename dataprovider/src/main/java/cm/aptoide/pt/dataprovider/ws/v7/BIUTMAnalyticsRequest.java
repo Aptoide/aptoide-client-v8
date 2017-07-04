@@ -1,6 +1,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -17,8 +20,10 @@ public class BIUTMAnalyticsRequest extends V7<BaseV7Response, BIUTMAnalyticsRequ
 
   protected BIUTMAnalyticsRequest(String action, String name, String context,
       BIUTMAnalyticsRequestBody body, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      BodyInterceptor bodyInterceptor, SharedPreferences sharedPreferences,
+      TokenInvalidator tokenInvalidator) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.action = action;
     this.name = name;
     this.context = context;
@@ -26,9 +31,10 @@ public class BIUTMAnalyticsRequest extends V7<BaseV7Response, BIUTMAnalyticsRequ
 
   public static BIUTMAnalyticsRequest of(String action, String eventName, String context,
       BIUTMAnalyticsRequestBody body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator) {
     return new BIUTMAnalyticsRequest(action, eventName, context, body, httpClient, converterFactory,
-        bodyInterceptor);
+        bodyInterceptor, sharedPreferences, tokenInvalidator);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
