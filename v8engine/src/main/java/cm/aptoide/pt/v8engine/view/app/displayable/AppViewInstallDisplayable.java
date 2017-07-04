@@ -16,9 +16,6 @@ import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -76,10 +73,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
-      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
+      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
+      AppViewAnalytics appViewAnalytics,
       PublishRelay installAppRelay) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedRepository,downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay);
+        installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay);
   }
 
   public void startInstallationProcess() {

@@ -21,7 +21,7 @@ public interface PayPalView extends View {
 
   void dismiss();
 
-  public static class PayPalResult {
+  class PayPalResult {
 
     public static final int SUCCESS = 0;
     public static final int ERROR = 1;

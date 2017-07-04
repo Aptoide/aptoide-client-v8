@@ -751,7 +751,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics);
-            installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay);
+    installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay)
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(

@@ -73,8 +73,8 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
     return interfaces.listAppVersions(body, bypassCache);
   }
 
-  @Data @EqualsAndHashCode(callSuper = true)
-  public static class Body extends BaseBodyWithApp implements Endless {
+  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithApp
+      implements Endless {
 
     private Integer apkId;
     private String apkMd5sum;
