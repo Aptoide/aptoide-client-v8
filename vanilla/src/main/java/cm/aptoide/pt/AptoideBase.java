@@ -23,10 +23,7 @@ public class AptoideBase extends V8Engine {
 
     /*
      * AppsFlyer
-     */
-    AppsFlyerLib.getInstance()
-        .setAndroidIdData(((V8Engine) getApplicationContext()).getIdsRepository()
-            .getUniqueIdentifier());
+    // */
     AppsFlyerLib.getInstance()
         .startTracking(this, getString(R.string.APPS_FLYER_DEV_KEY));
     AppsFlyerLib.getInstance()
