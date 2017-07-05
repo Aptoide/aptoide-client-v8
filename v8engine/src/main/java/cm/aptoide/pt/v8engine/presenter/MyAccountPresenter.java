@@ -123,7 +123,9 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(__ -> view.storeClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(account -> navigateToStore(account.getStoreName(), "DEFAULT"))
+        .doOnNext(account -> navigateToStore(account.getStore()
+            .getName(), account.getStore()
+            .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));

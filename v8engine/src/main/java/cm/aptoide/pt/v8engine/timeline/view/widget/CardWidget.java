@@ -167,8 +167,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
-        account.getAccess())) {
+    if (TextUtils.isEmpty(account.getStore()
+        .getName()) && !Account.Access.PUBLIC.equals(account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
@@ -233,8 +233,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return false;
     }
 
-    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
-        account.getAccess())) {
+    if (TextUtils.isEmpty(account.getStore()
+        .getName()) && !Account.Access.PUBLIC.equals(account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(

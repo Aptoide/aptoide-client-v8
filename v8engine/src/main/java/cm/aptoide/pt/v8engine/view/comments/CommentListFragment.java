@@ -566,9 +566,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
           .getAvatar());
     } else {
       if (!TextUtils.isEmpty(accountManager.getAccount()
-          .getStoreAvatar())) {
+          .getStore()
+          .getAvatar())) {
         user.setAvatar(accountManager.getAccount()
-            .getStoreAvatar());
+            .getStore()
+            .getAvatar());
       }
     }
     user.setName(accountManager.getAccount()

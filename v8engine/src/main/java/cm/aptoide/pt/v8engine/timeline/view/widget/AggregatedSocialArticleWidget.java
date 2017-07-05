@@ -371,7 +371,8 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
                     .isLiked()) {
                   UserTimeline user = new UserTimeline();
                   Store store = new Store();
-                  store.setAvatar(account.getStoreAvatar());
+                  store.setAvatar(account.getStore()
+                      .getAvatar());
                   user.setAvatar(account.getAvatar());
                   user.setStore(store);
                   addUserToPreview(marginOfTheNextLikePreview, user, likePreviewContainer,

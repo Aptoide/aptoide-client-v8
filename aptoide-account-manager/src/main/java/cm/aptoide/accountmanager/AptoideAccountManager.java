@@ -45,7 +45,7 @@ public class AptoideAccountManager {
   }
 
   private Account createLocalAccount() {
-    return new LocalAccount();
+    return new LocalAccount(Store.emptyStore());
   }
 
   /**

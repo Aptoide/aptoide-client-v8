@@ -183,11 +183,13 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
               R.drawable.my_account_placeholder);
     }
 
-    if (!TextUtils.isEmpty(account.getStoreName())) {
-      storeNameTextView.setText(account.getStoreName());
+    if (!TextUtils.isEmpty(account.getStore()
+        .getName())) {
+      storeNameTextView.setText(account.getStore()
+          .getName());
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransformWithPlaceholder(account.getStoreAvatar(), storeAvatar,
-              STROKE_SIZE, R.drawable.my_account_placeholder);
+          .loadWithShadowCircleTransformWithPlaceholder(account.getStore()
+              .getAvatar(), storeAvatar, STROKE_SIZE, R.drawable.my_account_placeholder);
     } else {
       separator.setVisibility(View.GONE);
       storeLayout.setVisibility(View.GONE);
@@ -225,9 +227,10 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   @Override public Observable<GetStore> getStore() {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> GetStoreRequest.of(
-            new BaseRequestWithStore.StoreCredentials(account.getStoreName(), null, null),
-            StoreContext.meta, bodyInterceptor, httpClient, converterFactory,
+        .flatMap(account -> GetStoreRequest.of(new BaseRequestWithStore.StoreCredentials(
+                account.getStore()
+                    .getName(), null, null), StoreContext.meta, bodyInterceptor, httpClient,
+            converterFactory,
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
