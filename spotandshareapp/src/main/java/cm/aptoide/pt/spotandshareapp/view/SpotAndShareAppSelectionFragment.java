@@ -11,11 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -111,7 +111,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         .build();
     attachPresenter(new SpotAndShareAppSelectionPresenter(this,
         new InstalledRepositoryDummy(getContext().getPackageManager()),
-        new SpotAndShare(getContext())), savedInstanceState);
+        SpotAndShare.getInstance(getContext())), savedInstanceState);
   }
 
   private void setupToolbar() {
