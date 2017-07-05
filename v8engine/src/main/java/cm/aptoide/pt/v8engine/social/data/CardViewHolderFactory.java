@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.SocialMediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialRecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialStoreViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.StoreLatestAppsViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.TimelineLoginPostViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.TimelineStatsViewHolder;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -105,6 +106,9 @@ public class CardViewHolderFactory {
         return new TimelineStatsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_stats_item, parent, false), spannableFactory,
             cardTouchEventPublishSubject);
+      case LOGIN:
+        return new TimelineLoginPostViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }

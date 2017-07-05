@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -82,6 +83,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private InstallManager installManager;
   private boolean newRefresh;
   private Long userId;
+  private AptoideAccountManager accountManager;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -98,6 +100,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     newRefresh = true;
+    userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
+    accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     sharedPreferences =
@@ -135,8 +139,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     attachPresenter(new TimelinePresenter(this, new Timeline(
-        new TimelineService(getArguments().getString(ACTION_KEY),
-            getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null,
+        new TimelineService(getArguments().getString(ACTION_KEY), userId,
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
@@ -144,7 +147,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
             Integer.MAX_VALUE, tokenInvalidator, sharedPreferences), installManager,
         new DownloadFactory()), CrashReport.getInstance(),
-        new TimelineNavigator(getFragmentNavigator()), new PermissionManager(),
+        new TimelineNavigator(getFragmentNavigator(), accountManager), new PermissionManager(),
         (PermissionService) getContext(), installManager, RepositoryFactory.getStoreRepository(),
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
@@ -153,7 +156,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             WebService.getDefaultConverter(),
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-        new StoreCredentialsProviderImpl()), savedInstanceState);
+        new StoreCredentialsProviderImpl(), accountManager, userId), savedInstanceState);
   }
 
   @Override public void showCards(List<Post> cards) {

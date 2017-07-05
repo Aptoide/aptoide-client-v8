@@ -19,4 +19,6 @@ public interface TimelineNavigation {
   void navigateToStoreTimeline(String storeName, String storeTheme);
 
   void navigateToAddressBook();
+
+  void navigateToAccountView();
 }

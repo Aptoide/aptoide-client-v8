@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.social.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
@@ -54,12 +55,15 @@ public class TimelinePresenter implements Presenter {
   private final StoreRepository storeRepository;
   private final StoreUtilsProxy storeUtilsProxy;
   private final StoreCredentialsProviderImpl storeCredentialsProvider;
+  private final AptoideAccountManager accountManager;
+  private final Long userId;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
       PermissionManager permissionManager, PermissionService permissionRequest,
       InstallManager installManager, StoreRepository storeRepository,
-      StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider) {
+      StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
+      AptoideAccountManager accountManager, Long userId) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -70,6 +74,8 @@ public class TimelinePresenter implements Presenter {
     this.storeRepository = storeRepository;
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeCredentialsProvider = storeCredentialsProvider;
+    this.accountManager = accountManager;
+    this.userId = userId;
   }
 
   @Override public void present() {
@@ -85,6 +91,8 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnStatsEvents();
 
+    handleCardClickOnLoginEvent();
+
     showMoreCardsOnBottomReached();
 
     showCardsOnRetry();
@@ -96,6 +104,19 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handleCardClickOnLoginEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.LOGIN))
+        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToAccountView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
+        });
   }
 
   private void handleCardClickOnStatsEvents() {
@@ -307,7 +328,9 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes())
-        .flatMapSingle(created -> Single.zip(timeline.getTimelineStats(), timeline.getCards(),
+        .flatMapSingle(created -> Single.zip(
+            accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+                : timeline.getTimelineLoginPost(), timeline.getCards(),
             (post, posts) -> mergeStatsPostWithPosts(post, posts)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideRefresh(cards))
@@ -324,7 +347,9 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .filter(__ -> view.isNewRefresh())
         .doOnNext(created -> view.showProgressIndicator())
-        .flatMapSingle(created -> Single.zip(timeline.getTimelineStats(), timeline.getCards(),
+        .flatMapSingle(created -> Single.zip(
+            accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+                : timeline.getTimelineLoginPost(), timeline.getCards(),
             (post, posts) -> mergeStatsPostWithPosts(post, posts)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideProgress(cards))

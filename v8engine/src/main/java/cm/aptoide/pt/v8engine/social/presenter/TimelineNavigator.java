@@ -1,7 +1,10 @@
 package cm.aptoide.pt.v8engine.social.presenter;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.view.account.LoginSignUpFragment;
+import cm.aptoide.pt.v8engine.view.account.MyAccountFragment;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
@@ -13,9 +16,12 @@ import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 public class TimelineNavigator implements TimelineNavigation {
 
   private final FragmentNavigator fragmentNavigator;
+  private AptoideAccountManager accountManager;
 
-  public TimelineNavigator(FragmentNavigator fragmentNavigator) {
+  public TimelineNavigator(FragmentNavigator fragmentNavigator,
+      AptoideAccountManager accountManager) {
     this.fragmentNavigator = fragmentNavigator;
+    this.accountManager = accountManager;
   }
 
   @Override
@@ -49,5 +55,13 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override public void navigateToAddressBook() {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newAddressBookFragment());
+  }
+
+  @Override public void navigateToAccountView() {
+    if (accountManager.isLoggedIn()) {
+      fragmentNavigator.navigateTo(MyAccountFragment.newInstance());
+    } else {
+      fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false));
+    }
   }
 }

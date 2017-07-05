@@ -50,4 +50,8 @@ public class Timeline {
   public Single<Post> getTimelineStats() {
     return service.getTimelineStats();
   }
+
+  public Single<Post> getTimelineLoginPost() {
+    return Single.just(new TimelineLoginPost());
+  }
 }
