@@ -231,10 +231,9 @@ public class Analytics {
             .filter(__ -> SecurePreferences.isFirstRun(
                 SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
                     PreferenceManager.getDefaultSharedPreferences(application))))
-            .doOnNext(__ -> setupDimensions(application))
-            .doOnCompleted(
-                () -> firstLaunchAnalytics.sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
-                    utmContent, entryPoint))
+            .doOnNext(dimensions -> setupDimensions(application))
+            .doOnNext(facebookFirstLaunch -> firstLaunchAnalytics.sendFirstLaunchEvent(utmSource,
+                utmMedium, utmCampaign, utmContent, entryPoint))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
