@@ -263,7 +263,7 @@ public class Analytics {
                 utmMedium, utmCampaign, utmContent, entryPoint))
             .doOnNext(appsFlyerFirstLaunch -> AppsFlyerLib.getInstance()
                 .trackEvent(application.getApplicationContext(), APPS_FLYER_EVENT_NAME,
-                    createAppsFlyerMap())
+                    createAppsFlyerMap()))
             .flatMap(facebookFirstLaunch -> {
               UTMTrackingBuilder utmTrackingBuilder =
                   new UTMTrackingBuilder(getTracking(application), getUTM());
