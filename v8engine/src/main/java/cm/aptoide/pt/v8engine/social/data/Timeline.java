@@ -46,4 +46,8 @@ public class Timeline {
   public Completable like(Post post) {
     return service.like(post.getCardId());
   }
+
+  public Single<Post> getTimelineStats() {
+    return service.getTimelineStats();
+  }
 }

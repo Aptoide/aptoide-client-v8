@@ -63,6 +63,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   public static final int RANDOM_PACKAGES_COUNT = 10;
   public static final String NEW = "NEW";
   private static final String ACTION_KEY = "action";
+  private static final String USER_ID_KEY = "USER_ID_KEY";
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -80,10 +81,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private SharedPreferences sharedPreferences;
   private InstallManager installManager;
   private boolean newRefresh;
+  private Long userId;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
     final Bundle args = new Bundle();
+    if (userId != null) {
+      args.putLong(USER_ID_KEY, userId);
+    }
     Fragment fragment = new TimelineFragment();
     args.putString(ACTION_KEY, action);
     fragment.setArguments(args);
@@ -131,6 +136,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     attachPresenter(new TimelinePresenter(this, new Timeline(
         new TimelineService(getArguments().getString(ACTION_KEY),
+            getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null,
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
@@ -203,7 +209,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .cast(Void.class);
   }
 
-  @Override public Observable<CardTouchEvent> articleClicked() {
+  @Override public Observable<CardTouchEvent> postClicked() {
     return cardTouchEventPublishSubject;
   }
 

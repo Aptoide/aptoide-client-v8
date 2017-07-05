@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -24,6 +25,7 @@ import rx.Single;
 
 public class TimelineService {
   private final String url;
+  private final Long userId;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient okhttp;
   private final Converter.Factory converterFactory;
@@ -40,12 +42,13 @@ public class TimelineService {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
 
-  public TimelineService(String url, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
-      Converter.Factory converterFactory, PackageRepository packageRepository,
+  public TimelineService(String url, Long userId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient okhttp, Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.url = url;
+    this.userId = userId;
     this.bodyInterceptor = bodyInterceptor;
     this.okhttp = okhttp;
     this.converterFactory = converterFactory;
@@ -111,5 +114,20 @@ public class TimelineService {
           }
         })
         .toCompletable();
+  }
+
+  public Single<Post> getTimelineStats() {
+    return GetTimelineStatsRequest.of(bodyInterceptor, userId, okhttp, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe()
+        .toSingle()
+        .flatMap(timelineResponse -> {
+          if (timelineResponse.isOk()) {
+            return Single.just(timelineResponse);
+          }
+          return Single.error(
+              new IllegalStateException("Could not obtain timeline stats from server."));
+        })
+        .map(timelineStats -> mapper.map(timelineStats));
   }
 }

@@ -27,12 +27,15 @@ import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
+import cm.aptoide.pt.v8engine.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -80,6 +83,8 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnLikeEvents();
 
+    handleCardClickOnStatsEvents();
+
     showMoreCardsOnBottomReached();
 
     showCardsOnRetry();
@@ -93,10 +98,30 @@ public class TimelinePresenter implements Presenter {
 
   }
 
+  private void handleCardClickOnStatsEvents() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.TIMELINE_STATS))
+        .doOnNext(cardTouchEvent -> {
+          TimelineStatsTouchEvent timelineStatsTouchEvent =
+              (TimelineStatsTouchEvent) cardTouchEvent;
+          if (timelineStatsTouchEvent.getButtonClicked()
+              .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWFRIENDS)) {
+            timelineNavigation.navigateToAddressBook();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
+        });
+  }
+
   private void handleCardClickOnLikeEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.articleClicked()
+        .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.LIKE))
             .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard())
@@ -142,7 +167,7 @@ public class TimelinePresenter implements Presenter {
   private void handleCardClickOnHeaderEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.articleClicked())
+        .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.HEADER))
         .doOnNext(cardTouchEvent -> {
@@ -186,7 +211,7 @@ public class TimelinePresenter implements Presenter {
   private void handleCardClickOnBodyEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.articleClicked())
+        .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.BODY))
         .doOnNext(cardTouchEvent -> {
@@ -282,7 +307,8 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes())
-        .flatMapSingle(refresh -> timeline.getCards())
+        .flatMapSingle(created -> Single.zip(timeline.getTimelineStats(), timeline.getCards(),
+            (post, posts) -> mergeStatsPostWithPosts(post, posts)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideRefresh(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -298,7 +324,8 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .filter(__ -> view.isNewRefresh())
         .doOnNext(created -> view.showProgressIndicator())
-        .flatMapSingle(created -> timeline.getCards())
+        .flatMapSingle(created -> Single.zip(timeline.getTimelineStats(), timeline.getCards(),
+            (post, posts) -> mergeStatsPostWithPosts(post, posts)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -307,6 +334,13 @@ public class TimelinePresenter implements Presenter {
           throwable.printStackTrace();
           view.showGenericError();
         });
+  }
+
+  @NonNull private List<Post> mergeStatsPostWithPosts(Post post, List<Post> posts) {
+    List<Post> postsWithStatsPost = new ArrayList<>();
+    postsWithStatsPost.add(post);
+    postsWithStatsPost.addAll(posts);
+    return postsWithStatsPost;
   }
 
   private void showMoreCardsAndHideLoadMoreProgress(List<Post> cards) {

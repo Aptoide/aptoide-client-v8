@@ -45,4 +45,9 @@ public class TimelineNavigator implements TimelineNavigation {
         .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline,
             StoreFragment.OpenType.GetHome));
   }
+
+  @Override public void navigateToAddressBook() {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAddressBookFragment());
+  }
 }

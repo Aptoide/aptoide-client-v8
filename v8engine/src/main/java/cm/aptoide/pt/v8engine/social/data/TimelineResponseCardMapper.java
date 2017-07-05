@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstall;
@@ -333,5 +334,11 @@ public class TimelineResponseCardMapper {
     }
 
     return cards;
+  }
+
+  public Post map(TimelineStats timelineStats) {
+    return new TimelineStatsPost("n/a", timelineStats.getData()
+        .getFollowers(), timelineStats.getData()
+        .getFollowing(), CardType.TIMELINE_STATS);
   }
 }

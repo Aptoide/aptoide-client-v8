@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.SocialMediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialRecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialStoreViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.StoreLatestAppsViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.TimelineStatsViewHolder;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -100,6 +101,10 @@ public class CardViewHolderFactory {
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));
+      case TIMELINE_STATS:
+        return new TimelineStatsViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_stats_item, parent, false), spannableFactory,
+            cardTouchEventPublishSubject);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }

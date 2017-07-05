@@ -17,4 +17,6 @@ public interface TimelineNavigation {
   void navigateToStoreTimeline(long userId, String storeTheme);
 
   void navigateToStoreTimeline(String storeName, String storeTheme);
+
+  void navigateToAddressBook();
 }
