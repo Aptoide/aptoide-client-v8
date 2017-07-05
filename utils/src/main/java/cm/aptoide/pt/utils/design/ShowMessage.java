@@ -210,9 +210,9 @@ public class ShowMessage {
     return asSnackObservableInternal(asSnackInternal(fragment, msg));
   }
 
-  public static void asSnack(Activity activity, int msg, int actionMsg,
-      View.OnClickListener action) {
-    Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action, Snackbar.LENGTH_SHORT);
+  public static void asSnack(Activity activity, int msg, int actionMsg, View.OnClickListener action,
+      int duration) {
+    Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action, duration);
     if (snackbar != null) {
       snackbar.show();
     }

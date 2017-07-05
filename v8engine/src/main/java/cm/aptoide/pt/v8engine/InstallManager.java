@@ -315,11 +315,7 @@ public class InstallManager {
         break;
       case Installed.STATUS_INSTALLING:
       case Installed.STATUS_ROOT_TIMEOUT:
-        if (type == Installed.TYPE_DEFAULT) {
-          isIndeterminate = false;
-        } else {
-          isIndeterminate = true;
-        }
+        isIndeterminate = type != Installed.TYPE_DEFAULT;
         break;
       case Installed.STATUS_WAITING:
         isIndeterminate =

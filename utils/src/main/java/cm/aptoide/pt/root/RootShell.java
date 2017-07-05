@@ -613,7 +613,7 @@ public class RootShell {
   // # Public Methods #
   // --------------------
 
-  public static enum LogLevel {
+  public enum LogLevel {
     VERBOSE, ERROR, DEBUG, WARN
   }
 }

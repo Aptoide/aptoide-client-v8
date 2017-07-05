@@ -158,7 +158,8 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
     attachPresenter(new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
         ((V8Engine) getActivity().getApplicationContext()).getStoreManager(),
-        getFragmentNavigator(), ((V8Engine) getActivity().getApplicationContext()).getPackageName(),
+        getFragmentNavigator(), getActivity().getApplicationContext()
+        .getPackageName(),
         getResources()), null);
 
     super.onViewCreated(view, savedInstanceState);
