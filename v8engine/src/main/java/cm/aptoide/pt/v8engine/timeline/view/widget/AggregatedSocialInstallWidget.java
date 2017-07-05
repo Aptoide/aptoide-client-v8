@@ -89,16 +89,27 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
   @Override public void bindView(AggregatedSocialInstallDisplayable displayable) {
     super.bindView(displayable);
 
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(0)
-            .getUser()
-            .getAvatar(), headerAvatar1);
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(1)
-            .getUser()
-            .getAvatar(), headerAvatar2);
+    if (displayable.getSharers()
+        .get(0)
+        .getUser() != null) {
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(displayable.getSharers()
+              .get(0)
+              .getUser()
+              .getAvatar(), headerAvatar1);
+    }
+    if (displayable.getSharers()
+        .size() > 1) {
+      if (displayable.getSharers()
+          .get(1)
+          .getUser() != null) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(displayable.getSharers()
+                .get(1)
+                .getUser()
+                .getAvatar(), headerAvatar2);
+      }
+    }
     headerNames.setText(displayable.getCardHeaderNames());
     headerTime.setText(displayable.getTimeSinceLastUpdate(getContext()));
     ImageLoader.with(getContext())
@@ -192,19 +203,27 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
       ImageView additionalNumberOfSharesCircularMask =
           (ImageView) subCardView.findViewById(R.id.card_header_avatar_plus);
 
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(minimalCard.getSharers()
-              .get(0)
-              .getUser()
-              .getAvatar(), minimalCardHeaderMainAvatar);
-
       if (minimalCard.getSharers()
-          .size() > 1) {
+          .get(0)
+          .getUser() != null) {
         ImageLoader.with(getContext())
             .loadWithShadowCircleTransform(minimalCard.getSharers()
-                .get(1)
+                .get(0)
                 .getUser()
-                .getAvatar(), minimalCardHeaderMainAvatar2);
+                .getAvatar(), minimalCardHeaderMainAvatar);
+      }
+
+      if (displayable.getSharers()
+          .size() > 1) {
+        if (displayable.getSharers()
+            .get(1)
+            .getUser() != null) {
+          ImageLoader.with(getContext())
+              .loadWithShadowCircleTransform(minimalCard.getSharers()
+                  .get(1)
+                  .getUser()
+                  .getAvatar(), minimalCardHeaderMainAvatar2);
+        }
       } else {
         plusFrame.setVisibility(View.GONE);
         minimalCardHeaderMainAvatar2.setVisibility(View.GONE);
