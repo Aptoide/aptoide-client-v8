@@ -23,6 +23,8 @@ public interface SpotAndShareAppSelectionView extends View {
 
   Observable<Void> exitEvent();
 
+  void navigateBack();
+
   interface AppSelectionListener {
     void onAppSelected(AppModel appModel);
   }

@@ -77,6 +77,10 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         .map(dialogInterface -> null);
   }
 
+  @Override public void navigateBack() {
+    getFragmentNavigator().popBackStack();
+  }
+
   private void setupLayoutManager() {
     GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
     gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -135,6 +139,9 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    return super.onOptionsItemSelected(item);
+    if (item.getItemId() == android.R.id.home) {
+      backRelay.call(null);
+    }
+    return false;
   }
 }
