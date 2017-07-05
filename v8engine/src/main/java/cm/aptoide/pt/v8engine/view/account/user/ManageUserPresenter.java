@@ -115,7 +115,7 @@ public class ManageUserPresenter implements Presenter {
         .doOnCompleted(() -> view.dismissProgressDialog())
         .doOnCompleted(() -> sendAnalytics(userData))
         .doOnCompleted(() -> navigateAway())
-        .onErrorResumeNext(err -> handleSaveUserDataError(err, isEditProfile))
+        .onErrorResumeNext(err -> handleSaveUserDataError(err))
         .toObservable();
   }
 
@@ -129,7 +129,7 @@ public class ManageUserPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private Completable handleSaveUserDataError(Throwable throwable, boolean isEditProfile) {
+  private Completable handleSaveUserDataError(Throwable throwable) {
     final String message = errorMapper.map(throwable);
     Completable errorHandler;
     if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {

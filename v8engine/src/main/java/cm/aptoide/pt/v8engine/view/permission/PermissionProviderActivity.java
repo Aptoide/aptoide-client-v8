@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -32,7 +33,21 @@ public class PermissionProviderActivity extends PermissionServiceActivity
   }
 
   @Override public void providePermissions(@NonNull String[] permissions, int requestCode) {
-    ActivityCompat.requestPermissions(this, permissions, requestCode);
+    ArrayList<String> remainingPermissions = new ArrayList<>();
+    ArrayList<Permission> grantedPermissions = new ArrayList<>();
+
+    for (String permission : permissions) {
+      if (ActivityCompat.checkSelfPermission(this, permission)
+          == PackageManager.PERMISSION_GRANTED) {
+        grantedPermissions.add(new Permission(requestCode, permission, true));
+      } else {
+        remainingPermissions.add(permission);
+      }
+    }
+
+    permissionRelay.call(grantedPermissions);
+    ActivityCompat.requestPermissions(this, remainingPermissions.toArray(new String[0]),
+        requestCode);
   }
 
   @Override public Observable<List<Permission>> permissionResults(int requestCode) {
