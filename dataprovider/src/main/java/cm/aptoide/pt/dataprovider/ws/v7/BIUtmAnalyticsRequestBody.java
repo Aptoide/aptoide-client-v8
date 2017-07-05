@@ -7,11 +7,11 @@ import lombok.Data;
  * Created by pedroribeiro on 28/06/17.
  */
 
-@Data public class BIUTMAnalyticsRequestBody extends BaseBody {
+@Data public class BIUtmAnalyticsRequestBody extends BaseBody {
 
   private final Data data;
 
-  public BIUTMAnalyticsRequestBody(Data data) {
+  public BIUtmAnalyticsRequestBody(Data data) {
     this.data = data;
   }
 

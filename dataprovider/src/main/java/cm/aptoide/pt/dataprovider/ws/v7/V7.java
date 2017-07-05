@@ -312,7 +312,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
         @Path(value = "action") String action, @Path(value = "context") String context,
-        @retrofit2.http.Body BIUTMAnalyticsRequestBody body);
+        @retrofit2.http.Body BIUtmAnalyticsRequestBody body);
 
     @POST("user/shareTimeline/access_token={accessToken}") Observable<ShareCardResponse> shareCard(
         @retrofit2.http.Body ShareCardRequest.Body body,

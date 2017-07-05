@@ -10,8 +10,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequestBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BIUtmAnalyticsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BIUtmAnalyticsRequestBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
@@ -33,7 +33,6 @@ import java.util.zip.ZipFile;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
@@ -258,15 +257,13 @@ public class Analytics {
             .flatMap(facebookFirstLaunch -> {
               UTMTrackingBuilder utmTrackingBuilder =
                   new UTMTrackingBuilder(getTracking(application), getUTM());
-              BIUTMAnalyticsRequestBody body =
-                  new BIUTMAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
-              return BIUTMAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
+              BIUtmAnalyticsRequestBody body =
+                  new BIUtmAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
+              return BIUtmAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
                   okHttpClient, converterFactory, sharedPreferences, tokenInvalidator)
-                  .observe()
-                  .observeOn(Schedulers.io());
+                  .observe();
             })
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
             }, throwable -> Logger.e(TAG, throwable.getMessage()));
       }
