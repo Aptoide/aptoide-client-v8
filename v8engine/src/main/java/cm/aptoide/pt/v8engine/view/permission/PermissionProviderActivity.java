@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.util.SparseArray;
+import android.util.SparseIntArray;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +14,12 @@ import rx.Observable;
 public class PermissionProviderActivity extends PermissionServiceActivity
     implements PermissionProvider {
 
-  private SparseArray<Integer> permissionRequests;
+  private SparseIntArray permissionRequests;
   private PublishRelay<Permission> permissionRelay;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    permissionRequests = new SparseArray<>();
+    permissionRequests = new SparseIntArray();
     this.permissionRelay = PublishRelay.create();
   }
 
