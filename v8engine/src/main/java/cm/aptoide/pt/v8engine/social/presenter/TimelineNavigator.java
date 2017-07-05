@@ -62,7 +62,7 @@ public class TimelineNavigator implements TimelineNavigation {
     if (accountManager.isLoggedIn()) {
       fragmentNavigator.navigateTo(MyAccountFragment.newInstance());
     } else {
-      fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false));
+      fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, true));
     }
   }
 
