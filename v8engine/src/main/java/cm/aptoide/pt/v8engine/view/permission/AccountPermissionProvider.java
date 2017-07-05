@@ -25,7 +25,7 @@ public class AccountPermissionProvider {
     }, requestCode);
   }
 
-  public Observable<List<PermissionProvider.Permission>> permissionResult(int requestCode) {
+  public Observable<List<PermissionProvider.Permission>> permissionResultCamera(int requestCode) {
     return permissionProvider.permissionResults(requestCode);
   }
 }

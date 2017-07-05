@@ -102,7 +102,7 @@ public class ImagePickerPresenter implements Presenter {
   private void handleGalleryImageResult() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> accountPermissionProvider.permissionResult(GALLERY_PICK).first()
+        .flatMap(__ -> accountPermissionProvider.permissionResultCamera(GALLERY_PICK).first()
             .filter(permissions -> permissions.get(0).isGranted())
             .doOnNext(__2 -> view.dismissLoadImageDialog())
             .flatMap(__2 -> navigator.navigateToGalleryForImageUri(GALLERY_PICK))
@@ -138,10 +138,12 @@ public class ImagePickerPresenter implements Presenter {
   private void handleCameraImageResult() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> accountPermissionProvider.permissionResult(CAMERA_PICK)
+        .flatMap(__ -> accountPermissionProvider.permissionResultCamera(CAMERA_PICK)
             .filter(permissions -> {
               for (PermissionProvider.Permission permission : permissions) {
-                if(!permission.isGranted())return false;
+                if(!permission.isGranted()){
+                  return false;
+                }
               }
               return true;
             })
