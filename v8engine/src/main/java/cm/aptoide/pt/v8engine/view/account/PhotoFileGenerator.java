@@ -23,16 +23,6 @@ public class PhotoFileGenerator {
     this.fileProviderAuthority = fileProviderAuthority;
   }
 
-  //public Single<String> generateNewImageFileUriAsString() {
-  //  return Single.fromCallable(() -> {
-  //    String timeStamp = DATE_FORMATTER.format(new Date());
-  //    String imageFileName = "JPEG_" + timeStamp + "_";
-  //    File file = File.createTempFile(imageFileName, ".jpg", storageDirectory);
-  //    return FileProvider.getUriForFile(context, fileProviderAuthority, file)
-  //        .toString();
-  //  });
-  //}
-
   public Single<String> generateNewImageFileUriAsString() {
     return Single.fromCallable(() -> {
       String timeStamp = DATE_FORMATTER.format(new Date());

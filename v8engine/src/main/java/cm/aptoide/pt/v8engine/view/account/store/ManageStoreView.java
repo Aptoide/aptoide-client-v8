@@ -7,6 +7,8 @@ import rx.Observable;
 
 public interface ManageStoreView extends ImagePickerView {
 
+  void loadImageStateless(String pictureUri);
+
   Observable<ManageStoreFragment.ViewModel> saveDataClick();
 
   Observable<Void> cancelClick();
@@ -19,5 +21,4 @@ public interface ManageStoreView extends ImagePickerView {
 
   void dismissWaitProgressBar();
 
-  void hideKeyboard();
 }

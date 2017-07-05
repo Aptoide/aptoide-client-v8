@@ -31,11 +31,11 @@ import cm.aptoide.pt.v8engine.presenter.CompositePresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
 import cm.aptoide.pt.v8engine.view.account.ImagePickerErrorHandler;
+import cm.aptoide.pt.v8engine.view.account.ImagePickerNavigator;
 import cm.aptoide.pt.v8engine.view.account.ImagePickerPresenter;
 import cm.aptoide.pt.v8engine.view.account.ImageValidator;
 import cm.aptoide.pt.v8engine.view.account.PhotoFileGenerator;
 import cm.aptoide.pt.v8engine.view.account.UriToPathResolver;
-import cm.aptoide.pt.v8engine.view.account.ImagePickerNavigator;
 import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import cm.aptoide.pt.v8engine.view.dialog.ImagePickerDialog;
 import cm.aptoide.pt.v8engine.view.permission.AccountPermissionProvider;
@@ -67,6 +67,16 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
+  private ManageUserNavigator navigator;
+  private String fileProviderAuthority;
+  private PhotoFileGenerator photoFileGenerator;
+  private CrashReport crashReport;
+  private UriToPathResolver uriToPathResolver;
+  private AccountPermissionProvider accountPermissionProvider;
+  private ImageValidator imageValidator;
+  private ImagePickerNavigator imagePickerNavigator;
+  private AptoideAccountManager accountManager;
+  private CreateUserErrorMapper errorMapper;
 
   public static ManageUserFragment newInstanceToEdit() {
     return newInstance(true);
@@ -90,14 +100,51 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(currentModel));
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    Context context = getContext();
+    if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
+      currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
+    } else {
+      currentModel = new ViewModel();
+    }
+
+    Bundle args = getArguments();
+    isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
+
+    navigator = new ManageUserNavigator(getFragmentNavigator());
+    fileProviderAuthority = Application.getConfiguration()
+        .getAppId() + ".provider";
+    photoFileGenerator = new PhotoFileGenerator(getActivity(),
+        getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
+    crashReport = CrashReport.getInstance();
+    uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver(), crashReport);
+    accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
+    imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
+    imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
+    accountManager = ((V8Engine) getActivity().getApplication()).getAccountManager();
+    errorMapper =
+        new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
+
+    imagePickerErrorHandler = new ImagePickerErrorHandler(context);
+
+    dialogFragment =
+        new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
+            .setTitle(R.string.upload_dialog_title)
+            .setNegativeButton(R.string.cancel)
+            .setCameraButton(R.id.button_camera)
+            .setGalleryButton(R.id.button_gallery)
+            .build();
+
+    uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
+        context.getString(R.string.please_wait_upload));
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_manage_user, container, false);
-  }
-
-  private void loadArgs(Bundle args) {
-    isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
   }
 
   private void bindViews(View view) {
@@ -110,76 +157,22 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     header = (TextView) view.findViewById(R.id.create_user_header_textview);
   }
 
-  private void setupViews(Bundle savedInstanceState) {
-    dialogFragment =
-        new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
-            .setTitle(R.string.upload_dialog_title)
-            .setNegativeButton(R.string.cancel)
-            .setCameraButton(R.id.button_camera)
-            .setGalleryButton(R.id.button_gallery)
-            .build();
-
-    final Context context = getContext();
-
-    imagePickerErrorHandler = new ImagePickerErrorHandler(context);
-
-    uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
-        context.getString(R.string.please_wait_upload));
+  private void setupToolbar() {
     if (isEditProfile) {
       toolbar.setTitle(getString(R.string.edit_profile_title));
     } else {
       toolbar.setTitle(R.string.create_user_title);
     }
-
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(false);
     actionBar.setTitle(toolbar.getTitle());
+  }
 
-    if (isEditProfile) {
-      createUserButton.setText(getString(R.string.edit_profile_save_button));
-      cancelUserProfile.setVisibility(View.VISIBLE);
-      header.setText(getString(R.string.edit_profile_header_message));
-    }
-
-    if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
-      currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
-    } else {
-      currentModel = new ViewModel();
-    }
-
-    final ManageUserNavigator navigator = new ManageUserNavigator(getFragmentNavigator());
-
-    final String fileProviderAuthority = Application.getConfiguration()
-        .getAppId() + ".provider";
-
-    final PhotoFileGenerator photoFileGenerator = new PhotoFileGenerator(getActivity(),
-        getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
-
-    final CrashReport crashReport = CrashReport.getInstance();
-
-    final UriToPathResolver uriToPathResolver =
-        new UriToPathResolver(getActivity().getContentResolver(), crashReport);
-
-    final AccountPermissionProvider accountPermissionProvider =
-        new AccountPermissionProvider(((PermissionProvider) getActivity()));
-
-    final ImageValidator imageValidator =
-        new ImageValidator(ImageLoader.with(context), Schedulers.computation());
-
-    final ImagePickerNavigator imagePickerNavigator =
-        new ImagePickerNavigator(getActivityNavigator());
-
+  private void attachPresenters() {
     final ImagePickerPresenter imagePickerPresenter =
         new ImagePickerPresenter(this, crashReport, accountPermissionProvider, photoFileGenerator,
-            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver,
-            imagePickerNavigator);
-
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getActivity().getApplication()).getAccountManager();
-
-    final CreateUserErrorMapper errorMapper =
-        new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
+            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator);
 
     final ManageUserPresenter manageUserPresenter =
         new ManageUserPresenter(this, crashReport, accountManager, errorMapper, navigator,
@@ -190,10 +183,15 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    loadArgs(getArguments());
-    bindViews(view);
-    setupViews(savedInstanceState);
     super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    setupToolbar();
+    if (isEditProfile) {
+      createUserButton.setText(getString(R.string.edit_profile_save_button));
+      cancelUserProfile.setVisibility(View.VISIBLE);
+      header.setText(getString(R.string.edit_profile_header_message));
+    }
+    attachPresenters();
   }
 
   @Override public void onDestroyView() {
@@ -206,14 +204,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   @Override public void setUserName(String name) {
     currentModel.setName(name);
     userName.setText(name);
-  }
-
-  /**
-   * Loads picture into UI without changing model.
-   */
-  @Override public void loadImageStateless(String pictureUri) {
-    ImageLoader.with(getActivity())
-        .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
   }
 
   @Override public Observable<ViewModel> saveUserDataButtonClick() {
@@ -242,8 +232,14 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
    * @param pictureUri Load image to UI and save image in model to handle configuration changes.
    */
   @Override public void loadImage(String pictureUri) {
-    currentModel.setPictureUri(pictureUri);
     loadImageStateless(pictureUri);
+    currentModel.setNewPicture(true);
+  }
+
+  @Override public void loadImageStateless(String pictureUri) {
+    currentModel.setPictureUri(pictureUri);
+    ImageLoader.with(getActivity())
+        .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
   }
 
   @Override public Observable<DialogInterface> dialogCameraSelected() {
@@ -252,10 +248,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
   @Override public Observable<DialogInterface> dialogGallerySelected() {
     return dialogFragment.gallerySelected();
-  }
-
-  @Override public Observable<DialogInterface> dialogCancelsSelected() {
-    return dialogFragment.cancelsSelected();
   }
 
   @Override public void showImagePickerDialog() {
@@ -319,15 +311,18 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     public void setPictureUri(String pictureUri) {
       this.pictureUri = pictureUri;
-      hasNewPicture = true;
-    }
-
-    public boolean hasNewPicture() {
-      return hasNewPicture;
     }
 
     public boolean hasData() {
       return !TextUtils.isEmpty(getName()) || !TextUtils.isEmpty(getPictureUri());
+    }
+
+    public void setNewPicture(boolean hasNewPicture) {
+      this.hasNewPicture = hasNewPicture;
+    }
+
+    public boolean hasNewPicture() {
+      return hasNewPicture;
     }
   }
 }

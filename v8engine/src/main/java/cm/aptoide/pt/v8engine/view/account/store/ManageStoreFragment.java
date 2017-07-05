@@ -1,9 +1,7 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -79,6 +77,16 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
+  private ManageStoreNavigator manageStoreNavigator;
+  private ImageValidator imageValidator;
+  private ImagePickerNavigator imagePickerNavigator;
+  private UriToPathResolver uriToPathResolver;
+  private CrashReport crashReport;
+  private AccountPermissionProvider accountPermissionProvider;
+  private StoreManager storeManager;
+  private String packageName;
+  private String fileProviderAuthority;
+  private PhotoFileGenerator photoFileGenerator;
 
   public static ManageStoreFragment newInstance(ViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -94,6 +102,28 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     super.onCreate(savedInstanceState);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
     goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
+
+    dialogFragment =
+        new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
+            .setTitle(R.string.upload_dialog_title)
+            .setNegativeButton(R.string.cancel)
+            .setCameraButton(R.id.button_camera)
+            .setGalleryButton(R.id.button_gallery)
+            .build();
+
+    imagePickerErrorHandler = new ImagePickerErrorHandler(getContext());
+    accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
+    storeManager = ((V8Engine) getActivity().getApplicationContext()).getStoreManager();
+    packageName = (getActivity().getApplicationContext()).getPackageName();
+    fileProviderAuthority = Application.getConfiguration()
+        .getAppId() + ".provider";
+    photoFileGenerator = new PhotoFileGenerator(getActivity(),
+        getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
+    crashReport = CrashReport.getInstance();
+    uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver(), crashReport);
+    imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
+    imageValidator = new ImageValidator(ImageLoader.with(getActivity()), Schedulers.computation());
+    manageStoreNavigator = new ManageStoreNavigator(getFragmentNavigator());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -102,17 +132,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
   }
 
-  @Override public void hideKeyboard() {
-    super.hideKeyboard();
-  }
-
   /**
    * @param pictureUri Load image to UI and save image in model to handle configuration changes.
    */
   @Override public void loadImage(String pictureUri) {
-    ImageLoader.with(getActivity())
-        .loadUsingCircleTransform(pictureUri, storeImage);
-    currentModel.setPictureUri(pictureUri);
+    loadImageStateless(pictureUri);
+    currentModel.setNewAvatar(true);
   }
 
   @Override public Observable<DialogInterface> dialogCameraSelected() {
@@ -121,10 +146,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public Observable<DialogInterface> dialogGallerySelected() {
     return dialogFragment.gallerySelected();
-  }
-
-  @Override public Observable<DialogInterface> dialogCancelsSelected() {
-    return dialogFragment.cancelsSelected();
   }
 
   @Override public void showImagePickerDialog() {
@@ -145,6 +166,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void dismissLoadImageDialog() {
     dialogFragment.dismiss();
+  }
+
+  @Override public void loadImageStateless(String pictureUri) {
+    ImageLoader.with(getActivity())
+        .loadUsingCircleTransform(pictureUri, storeImage);
+    currentModel.setPictureUri(pictureUri);
   }
 
   @Override public Observable<ViewModel> saveDataClick() {
@@ -196,47 +223,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     bindViews(view);
-    setupViews();
-
-    final AccountPermissionProvider accountPermissionProvider =
-        new AccountPermissionProvider(((PermissionProvider) getActivity()));
-
-    final StoreManager storeManager =
-        ((V8Engine) getActivity().getApplicationContext()).getStoreManager();
-
-    final String packageName = (getActivity().getApplicationContext()).getPackageName();
-
-    final String fileProviderAuthority = Application.getConfiguration()
-        .getAppId() + ".provider";
-
-    final PhotoFileGenerator photoFileGenerator = new PhotoFileGenerator(getActivity(),
-        getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
-
-    final CrashReport crashReport = CrashReport.getInstance();
-    final UriToPathResolver uriToPathResolver =
-        new UriToPathResolver(getActivity().getContentResolver(), crashReport);
-
-    final ImagePickerNavigator imagePickerNavigator =
-        new ImagePickerNavigator(getActivityNavigator());
-
-    final ImageValidator imageValidator =
-        new ImageValidator(ImageLoader.with(getActivity()), Schedulers.computation());
-
-    final ImagePickerPresenter imagePickerPresenter =
-        new ImagePickerPresenter(this, crashReport, accountPermissionProvider, photoFileGenerator,
-            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver,
-            imagePickerNavigator);
-
-    final ManageStoreNavigator manageStoreNavigator =
-        new ManageStoreNavigator(getFragmentNavigator(), goToHome);
-
-    final ManageStorePresenter presenter =
-        new ManageStorePresenter(this, crashReport, storeManager, getResources(), uriToPathResolver,
-            packageName, manageStoreNavigator);
-
-    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)), null);
+    setupToolbarTitle();
+    setupThemeSelector();
+    setupViewsDefaultDataUsingCurrentModel();
+    attachPresenters();
   }
 
   @Override public void onDestroyView() {
@@ -248,27 +239,20 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     super.onDestroyView();
   }
 
-  public void setupViews() {
-    final Context context = getContext();
+  private void attachPresenters() {
+    final ImagePickerPresenter imagePickerPresenter =
+        new ImagePickerPresenter(this, crashReport, accountPermissionProvider, photoFileGenerator,
+            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver,
+            imagePickerNavigator);
 
-    dialogFragment = new ImagePickerDialog.Builder(context).setViewRes(ImagePickerDialog.LAYOUT)
-        .setTitle(R.string.upload_dialog_title)
-        .setNegativeButton(R.string.cancel)
-        .setCameraButton(R.id.button_camera)
-        .setGalleryButton(R.id.button_gallery)
-        .build();
+    final ManageStorePresenter presenter =
+        new ManageStorePresenter(this, crashReport, storeManager, getResources(), uriToPathResolver,
+            packageName, manageStoreNavigator, goToHome);
 
-    imagePickerErrorHandler = new ImagePickerErrorHandler(context);
+    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)), null);
+  }
 
-    toolbar.setTitle(getViewTitle(currentModel));
-
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(false);
-    actionBar.setTitle(toolbar.getTitle());
-
-    storeName.setText(currentModel.getStoreName());
-    storeDescription.setText(currentModel.getStoreDescription());
+  public void setupThemeSelector() {
 
     themeSelectorView.setLayoutManager(
         new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -286,8 +270,15 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         DividerItemDecoration.LEFT | DividerItemDecoration.RIGHT));
 
     themeSelectorAdapter.selectTheme(currentModel.getStoreThemeName());
+  }
 
-    setupViewsDefaultDataUsingStore(currentModel);
+  public void setupToolbarTitle() {
+    toolbar.setTitle(getViewTitle(currentModel));
+
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(false);
+    actionBar.setTitle(toolbar.getTitle());
   }
 
   public void bindViews(View view) {
@@ -307,15 +298,19 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private ViewModel updateAndGetStoreModel() {
-    currentModel = ViewModel.from(currentModel, storeName.getText()
+    currentModel = ViewModel.update(currentModel, storeName.getText()
         .toString(), storeDescription.getText()
         .toString());
     currentModel.setStoreThemeName(themeSelectorAdapter.getSelectedThemeName());
     return currentModel;
   }
 
-  private void setupViewsDefaultDataUsingStore(ViewModel storeModel) {
-    if (!storeModel.storeExists()) {
+  private void setupViewsDefaultDataUsingCurrentModel() {
+
+    storeName.setText(currentModel.getStoreName());
+    storeDescription.setText(currentModel.getStoreDescription());
+
+    if (!currentModel.storeExists()) {
       String appName = getString(R.string.app_name);
       header.setText(
           AptoideUtils.StringU.getFormattedString(R.string.create_store_header, getResources(),
@@ -330,13 +325,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
               getResources()));
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
-      storeDescription.setText(storeModel.getStoreDescription());
-      final String storeImagePath = storeModel.getPictureUri();
-      if (!TextUtils.isEmpty(storeImagePath)) {
-        Uri picturePath = Uri.parse(storeImagePath);
-        ImageLoader.with(getActivity())
-            .loadUsingCircleTransform(picturePath, storeImage);
-      }
+      loadImageStateless(currentModel.getPictureUri());
+
       saveDataButton.setText(R.string.save_edit_store);
       cancelChangesButton.setText(R.string.cancel);
     }
@@ -377,29 +367,23 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       this.newAvatar = false;
     }
 
-    public static ViewModel from(ViewModel otherStoreModel, String storeName,
-        String storeDescription) {
+    public static ViewModel update(ViewModel model, String storeName, String storeDescription) {
 
       // if current store name is empty we use the old one
-      if (TextUtils.isEmpty(storeName)) {
-        storeName = otherStoreModel.getStoreName();
+      if (!TextUtils.isEmpty(storeName)) {
+        model.setStoreName(storeName);
       }
 
       // if current store description is empty we use the old one
-      if (TextUtils.isEmpty(storeDescription)) {
-        storeDescription = otherStoreModel.getStoreDescription();
+      if (!TextUtils.isEmpty(storeDescription)) {
+        model.setStoreDescription(storeDescription);
       }
 
-      ViewModel newModel =
-          new ViewModel(otherStoreModel.getStoreId(), otherStoreModel.getStoreThemeName(),
-              storeName, storeDescription, otherStoreModel.getPictureUri());
+      return model;
+    }
 
-      // if previous model had a new image, set it in new model
-      if (otherStoreModel.hasNewAvatar()) {
-        newModel.setPictureUri(otherStoreModel.getPictureUri());
-      }
-
-      return newModel;
+    public void setNewAvatar(boolean newAvatar) {
+      this.newAvatar = newAvatar;
     }
 
     public String getStoreName() {
@@ -424,7 +408,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
     public void setPictureUri(String pictureUri) {
       this.pictureUri = pictureUri;
-      this.newAvatar = true;
     }
 
     public boolean hasNewAvatar() {

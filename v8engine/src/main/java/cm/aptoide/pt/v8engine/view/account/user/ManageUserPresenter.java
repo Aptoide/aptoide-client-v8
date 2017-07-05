@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -86,6 +87,18 @@ public class ManageUserPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
+  private void navigateAway() {
+    final boolean showPrivacyConfigs = Application.getConfiguration()
+        .isCreateStoreAndSetUserPrivacyAvailable();
+    if (isEditProfile) {
+      navigator.goBack();
+    } else if (showPrivacyConfigs) {
+      navigator.toProfileStepOne();
+    } else {
+      navigator.goToHome();
+    }
+  }
+
   private void handleSaveDataClick() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
@@ -101,7 +114,7 @@ public class ManageUserPresenter implements Presenter {
     return updateUserAccount(userData).observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> view.dismissProgressDialog())
         .doOnCompleted(() -> sendAnalytics(userData))
-        .doOnCompleted(() -> navigator.navigateAway(isEditProfile))
+        .doOnCompleted(() -> navigateAway())
         .onErrorResumeNext(err -> handleSaveUserDataError(err, isEditProfile))
         .toObservable();
   }
@@ -110,7 +123,7 @@ public class ManageUserPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonClick()
-            .doOnNext(__2 -> navigator.back()))
+            .doOnNext(__2 -> navigator.goBack()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -122,7 +135,7 @@ public class ManageUserPresenter implements Presenter {
     if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {
       // navigate away
       errorHandler = view.showErrorMessage(message)
-          .doOnCompleted(() -> navigator.navigateAway(isEditProfile));
+          .doOnCompleted(() -> navigateAway());
     } else {
       // show message but do not navigate
       errorHandler = view.showErrorMessage(message);

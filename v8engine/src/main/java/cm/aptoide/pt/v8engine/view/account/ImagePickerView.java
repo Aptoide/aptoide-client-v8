@@ -12,8 +12,6 @@ public interface ImagePickerView extends View {
 
   Observable<DialogInterface> dialogGallerySelected();
 
-  Observable<DialogInterface> dialogCancelsSelected();
-
   void showImagePickerDialog();
 
   void showIconPropertiesError(InvalidImageException exception);

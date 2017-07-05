@@ -8,8 +8,6 @@ public interface ManageUserView extends ImagePickerView {
 
   void setUserName(String name);
 
-  void loadImageStateless(String pictureUri);
-
   Observable<ManageUserFragment.ViewModel> saveUserDataButtonClick();
 
   Observable<Void> cancelButtonClick();
@@ -20,4 +18,5 @@ public interface ManageUserView extends ImagePickerView {
 
   Completable showErrorMessage(String error);
 
+  void loadImageStateless(String pictureUri);
 }

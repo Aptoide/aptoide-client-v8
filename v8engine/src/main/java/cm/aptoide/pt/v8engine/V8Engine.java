@@ -132,7 +132,6 @@ import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
-import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.notification.NotificationHandler;
 import cm.aptoide.pt.v8engine.notification.NotificationIdsMapper;
@@ -434,7 +433,6 @@ public abstract class V8Engine extends Application {
 
   public StoreManager getStoreManager() {
     if (storeManager == null) {
-      ImageLoader imageLoader = ImageLoader.with(getApplicationContext());
       storeManager =
           new StoreManager(accountManager, getDefaultClient(), WebService.getDefaultConverter(),
               getMultipartBodyInterceptor(), getBaseBodyInterceptorV3(), getBaseBodyInterceptorV7(),

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.account.user;
 
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 
 class ManageUserNavigator {
@@ -11,28 +10,16 @@ class ManageUserNavigator {
     this.navigator = navigator;
   }
 
-  private void toProfileStepOne() {
+  public void toProfileStepOne() {
     navigator.cleanBackStack();
     navigator.navigateTo(ProfileStepOneFragment.newInstance());
   }
 
-  private void toHome() {
+  public void goToHome() {
     navigator.navigateToHomeCleaningBackStack();
   }
 
-  public void back() {
+  public void goBack() {
     navigator.popBackStack();
-  }
-
-  public void navigateAway(boolean isEditProfile) {
-    final boolean showPrivacyConfigs = Application.getConfiguration()
-        .isCreateStoreAndSetUserPrivacyAvailable();
-    if (isEditProfile) {
-      back();
-    } else if (showPrivacyConfigs) {
-      toProfileStepOne();
-    } else {
-      toHome();
-    }
   }
 }

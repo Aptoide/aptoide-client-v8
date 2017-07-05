@@ -22,10 +22,11 @@ public class ManageStorePresenter implements Presenter {
   private final UriToPathResolver uriToPathResolver;
   private final String applicationPackageName;
   private final ManageStoreNavigator navigator;
+  private final boolean goBackToHome;
 
   public ManageStorePresenter(ManageStoreView view, CrashReport crashReport,
       StoreManager storeManager, Resources resources, UriToPathResolver uriToPathResolver,
-      String applicationPackageName, ManageStoreNavigator navigator) {
+      String applicationPackageName, ManageStoreNavigator navigator, boolean goBackToHome) {
     this.view = view;
     this.crashReport = crashReport;
     this.storeManager = storeManager;
@@ -33,6 +34,7 @@ public class ManageStorePresenter implements Presenter {
     this.uriToPathResolver = uriToPathResolver;
     this.applicationPackageName = applicationPackageName;
     this.navigator = navigator;
+    this.goBackToHome = goBackToHome;
   }
 
   @Override public void present() {
@@ -52,7 +54,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
-            .doOnNext(__2 -> navigator.navigate()))
+            .doOnNext(__2 -> navigate()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -75,7 +77,7 @@ public class ManageStorePresenter implements Presenter {
           uriToPathResolver.getMediaStoragePath(Uri.parse(storeModel.getPictureUri()));
     }
 
-    Completable saveDataCompletable =
+    final Completable saveDataCompletable =
         storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
             storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
             storeModel.getStoreThemeName(), storeModel.storeExists());
@@ -83,9 +85,17 @@ public class ManageStorePresenter implements Presenter {
     return Completable.fromAction(() -> view.showWaitProgressBar())
         .andThen(saveDataCompletable)
         .doOnCompleted(() -> view.dismissWaitProgressBar())
-        .doOnCompleted(() -> navigator.navigate())
+        .doOnCompleted(() -> navigate())
         .onErrorResumeNext(err -> Completable.fromAction(() -> view.dismissWaitProgressBar())
             .andThen(handleStoreCreationErrors(err)));
+  }
+
+  private void navigate() {
+    if (goBackToHome) {
+      navigator.goToHome();
+      return;
+    }
+    navigator.goBack();
   }
 
   private Completable handleStoreCreationErrors(Throwable err) {
