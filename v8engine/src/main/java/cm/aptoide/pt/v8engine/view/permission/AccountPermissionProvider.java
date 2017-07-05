@@ -1,9 +1,11 @@
 package cm.aptoide.pt.v8engine.view.permission;
 
 import android.Manifest;
+import java.util.List;
 import rx.Observable;
 
 public class AccountPermissionProvider {
+
   private final PermissionProvider permissionProvider;
 
   public AccountPermissionProvider(PermissionProvider permissionProvider) {
@@ -12,7 +14,8 @@ public class AccountPermissionProvider {
 
   public void requestCameraPermission(int requestCode) {
     permissionProvider.providePermissions(new String[] {
-        Manifest.permission.CAMERA
+        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE
     }, requestCode);
   }
 
@@ -22,10 +25,7 @@ public class AccountPermissionProvider {
     }, requestCode);
   }
 
-  public Observable<Boolean> singlePermissionResult(int requestCode) {
-    return permissionProvider.permissionResults(requestCode)
-        .flatMap(list -> Observable.from(list)
-            .map(permission -> permission.isGranted())
-            .first());
+  public Observable<List<PermissionProvider.Permission>> permissionResult(int requestCode) {
+    return permissionProvider.permissionResults(requestCode);
   }
 }

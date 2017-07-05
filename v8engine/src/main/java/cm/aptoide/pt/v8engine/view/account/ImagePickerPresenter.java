@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import cm.aptoide.pt.v8engine.view.permission.AccountPermissionProvider;
+import cm.aptoide.pt.v8engine.view.permission.PermissionProvider;
 import java.io.File;
 import rx.Completable;
 import rx.Scheduler;
@@ -65,20 +66,6 @@ public class ImagePickerPresenter implements Presenter {
     return imageValidator.validateOrGetException(createdUri)
         .observeOn(uiScheduler)
         .doOnCompleted(() -> view.loadImage(createdUri));
-    /*
-    return Completable.fromAction(() -> {
-
-      Bitmap image = imageLoader.loadBitmap(createdUri);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        MediaStore.Images.Media.insertImage(contentResolver, image,
-            createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
-      }
-    })
-        .andThen(imageValidator.validateOrGetException(createdUri))
-        .subscribeOn(Schedulers.io())
-        .observeOn(uiScheduler)
-        .doOnCompleted(() -> view.loadImage(createdUri));
-        */
   }
 
   @NonNull private Single<String> getFileNameFromCameraWithUri(String createdUri) {
@@ -115,8 +102,8 @@ public class ImagePickerPresenter implements Presenter {
   private void handleGalleryImageResult() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> accountPermissionProvider.singlePermissionResult(GALLERY_PICK)
-            .filter(success -> success)
+        .flatMap(__ -> accountPermissionProvider.permissionResult(GALLERY_PICK).first()
+            .filter(permissions -> permissions.get(0).isGranted())
             .doOnNext(__2 -> view.dismissLoadImageDialog())
             .flatMap(__2 -> navigator.navigateToGalleryForImageUri(GALLERY_PICK))
             .flatMapCompletable(
@@ -133,13 +120,6 @@ public class ImagePickerPresenter implements Presenter {
   }
 
   @NonNull private Completable loadValidImageOrThrowForGallery(Uri selectedImageUri) {
-    /*
-    return Single.just(uriToPathResolver.getMediaStoragePath(selectedImageUri))
-        .flatMapCompletable(imagePath -> imageValidator.validateOrGetException(imagePath)
-            .observeOn(uiScheduler)
-            .doOnCompleted(() -> view.loadImage(imagePath)));
-    */
-
     return imageValidator.validateOrGetException(selectedImageUri.toString())
         .observeOn(uiScheduler)
         .doOnCompleted(() -> view.loadImage(selectedImageUri.toString()));
@@ -158,8 +138,13 @@ public class ImagePickerPresenter implements Presenter {
   private void handleCameraImageResult() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> accountPermissionProvider.singlePermissionResult(CAMERA_PICK)
-            .filter(success -> success)
+        .flatMap(__ -> accountPermissionProvider.permissionResult(CAMERA_PICK)
+            .filter(permissions -> {
+              for (PermissionProvider.Permission permission : permissions) {
+                if(!permission.isGranted())return false;
+              }
+              return true;
+            })
             .doOnNext(__2 -> view.dismissLoadImageDialog())
             .flatMapSingle(__2 -> photoFileGenerator.generateNewImageFileUriAsString())
             .flatMapCompletable(
