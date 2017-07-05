@@ -12,7 +12,7 @@ class NetworkStateManager {
 
   private boolean wifiEnabledOnStart;
 
-  public NetworkStateManager(WifiManager wifimanager) {
+  NetworkStateManager(WifiManager wifimanager) {
     this.wifimanager = wifimanager;
   }
 

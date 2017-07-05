@@ -38,7 +38,7 @@ class JoinHotspotManager {
   private final Executor executor;
   private ScheduledFuture<?> timeoutFuture;
 
-  public JoinHotspotManager(Context context, WifiManager wifimanager) {
+  JoinHotspotManager(Context context, WifiManager wifimanager) {
     this.context = context;
     this.wifimanager = wifimanager;
     executor = Executors.newSingleThreadExecutor();

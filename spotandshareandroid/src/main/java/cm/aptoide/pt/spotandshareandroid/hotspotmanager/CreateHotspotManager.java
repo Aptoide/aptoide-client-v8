@@ -12,6 +12,8 @@ import rx.Single;
 
 class CreateHotspotManager {
 
+  private static final String TAG = CreateHotspotManager.class.getSimpleName();
+
   private static final int SUCCESS_HOTSPOT_CREATION = 6;
   private static final int FAILED_TO_CREATE_HOTSPOT = 7;
 
@@ -23,7 +25,7 @@ class CreateHotspotManager {
   // TODO: 22-06-2017 neuro busy not implemented.. hmmm...
   private boolean busy = false;
 
-  public CreateHotspotManager(WifiManager wifimanager) {
+  CreateHotspotManager(WifiManager wifimanager) {
     this.wifimanager = wifimanager;
     wifiConfigurationHelper = new WifiConfigurationHelper();
   }
@@ -58,7 +60,7 @@ class CreateHotspotManager {
           .getDeclaredMethods();   //Get all declared methods in WifiManager class
       for (Method method : wmMethods) {
         if (method.getName()
-            .equals(CreateHotspotManager.ReflectionMethods.GET_WIFI_AP_CONFIGURATION)) {
+            .equals(ReflectionMethods.GET_WIFI_AP_CONFIGURATION)) {
           //Logger.d(TAG, "saving old ssid ");
           try {
             wifiConfiguration = (WifiConfiguration) method.invoke(wifimanager);
@@ -71,17 +73,17 @@ class CreateHotspotManager {
           }
         }
         if (method.getName()
-            .equals(CreateHotspotManager.ReflectionMethods.SET_WIFI_AP_ENABLED)) {
+            .equals(ReflectionMethods.SET_WIFI_AP_ENABLED)) {
           try {
             boolean apstatus = (Boolean) method.invoke(wifimanager, netConfig, true);
             for (Method isWifiApEnabledmethod : wmMethods) {
               if (isWifiApEnabledmethod.getName()
-                  .equals(CreateHotspotManager.ReflectionMethods.IS_WIFI_AP_ENABLED)) {
+                  .equals(ReflectionMethods.IS_WIFI_AP_ENABLED)) {
                 while (!(Boolean) isWifiApEnabledmethod.invoke(wifimanager)) {
                 }
                 for (Method method1 : wmMethods) {
                   if (method1.getName()
-                      .equals(CreateHotspotManager.ReflectionMethods.GET_WIFI_AP_STATE)) {
+                      .equals(ReflectionMethods.GET_WIFI_AP_STATE)) {
                     int apstate = (Integer) method1.invoke(wifimanager);
                   }
                 }
@@ -107,7 +109,6 @@ class CreateHotspotManager {
       }
       return HotspotManager.ERROR_UNKNOWN;
     });
-
   }
 
   public Single<Void> resetHotspot() {
