@@ -21,4 +21,6 @@ public interface TimelineNavigation {
   void navigateToAddressBook();
 
   void navigateToAccountView();
+
+  void navigateToCommentsWithCommentDialogOpen(String cardId);
 }

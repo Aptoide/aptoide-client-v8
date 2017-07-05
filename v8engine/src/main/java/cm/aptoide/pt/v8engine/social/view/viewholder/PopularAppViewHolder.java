@@ -35,6 +35,7 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
   private final LinearLayout like;
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private final TextView commentButton;
 
   public PopularAppViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator) {
@@ -54,6 +55,7 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+    this.commentButton = (TextView) view.findViewById(R.id.social_comment);
   }
 
   @Override public void setCard(PopularApp card, int position) {
@@ -75,6 +77,8 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
 
     this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
+    this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
   }
 
   private void showFriendsAvatars(PopularApp card, Context context) {

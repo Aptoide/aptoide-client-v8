@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.social.presenter;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.account.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.view.account.MyAccountFragment;
@@ -63,5 +64,10 @@ public class TimelineNavigator implements TimelineNavigation {
     } else {
       fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false));
     }
+  }
+
+  @Override public void navigateToCommentsWithCommentDialogOpen(String cardId) {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId));
   }
 }

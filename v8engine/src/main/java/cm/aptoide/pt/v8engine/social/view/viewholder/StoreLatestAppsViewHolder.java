@@ -38,6 +38,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
   private final LinearLayout like;
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private final TextView commentButton;
 
   public StoreLatestAppsViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -46,7 +47,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
     this.spannableFactory = spannableFactory;
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
-
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.headerIcon = (ImageView) view.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_card_image);
     this.headerTitle =
@@ -57,7 +58,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
         R.id.displayable_social_timeline_store_latest_apps_container);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+    this.commentButton = (TextView) view.findViewById(R.id.social_comment);
   }
 
   @Override public void setCard(StoreLatestApps card, int position) {
@@ -76,6 +77,8 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
 
     this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
+    this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
   }
 
   public String getTimeSinceLastUpdate(Context context, Date latestUpdate) {

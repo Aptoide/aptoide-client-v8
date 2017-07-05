@@ -6,7 +6,7 @@ package cm.aptoide.pt.v8engine.social.data;
 
 public class TimelineLoginPost implements Post {
   @Override public String getCardId() {
-    return "n/a";
+    throw new RuntimeException("Aggregated cards have NO card id");
   }
 
   @Override public CardType getType() {

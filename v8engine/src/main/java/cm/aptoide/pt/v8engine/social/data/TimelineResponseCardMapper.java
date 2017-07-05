@@ -337,7 +337,7 @@ public class TimelineResponseCardMapper {
   }
 
   public Post map(TimelineStats timelineStats) {
-    return new TimelineStatsPost("n/a", timelineStats.getData()
+    return new TimelineStatsPost(timelineStats.getData()
         .getFollowers(), timelineStats.getData()
         .getFollowing(), CardType.TIMELINE_STATS);
   }

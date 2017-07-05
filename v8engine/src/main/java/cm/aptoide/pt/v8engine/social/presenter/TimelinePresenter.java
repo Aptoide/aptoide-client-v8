@@ -89,6 +89,8 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnLikeEvents();
 
+    handleCardClickOnCommentEvent();
+
     handleCardClickOnStatsEvents();
 
     handleCardClickOnLoginEvent();
@@ -104,6 +106,21 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handleCardClickOnCommentEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.COMMENT))
+        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
+            cardTouchEvent.getCard()
+                .getCardId()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
+        });
   }
 
   private void handleCardClickOnLoginEvent() {

@@ -5,13 +5,11 @@ package cm.aptoide.pt.v8engine.social.data;
  */
 
 public class TimelineStatsPost implements Post {
-  private final String dummyCardId;
   private final long followers;
   private final long following;
   private final CardType cardType;
 
-  public TimelineStatsPost(String dummyCardId, long followers, long following, CardType cardType) {
-    this.dummyCardId = dummyCardId;
+  public TimelineStatsPost(long followers, long following, CardType cardType) {
     this.followers = followers;
     this.following = following;
     this.cardType = cardType;
@@ -26,7 +24,7 @@ public class TimelineStatsPost implements Post {
   }
 
   @Override public String getCardId() {
-    return dummyCardId;
+    throw new RuntimeException("Aggregated cards have NO card id");
   }
 
   @Override public CardType getType() {

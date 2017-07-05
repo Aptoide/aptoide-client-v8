@@ -39,6 +39,7 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
   private final LinearLayout like;
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private final TextView commentButton;
 
   public RecommendationViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -46,6 +47,7 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
     super(view);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.headerIcon =
         (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_icon);
     this.headerTitle =
@@ -64,7 +66,7 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+    this.commentButton = (TextView) view.findViewById(R.id.social_comment);
   }
 
   @Override public void setCard(Recommendation card, int position) {
@@ -92,6 +94,8 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
 
     this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
+    this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
   }
 
   public String getTimeSinceRecommendation(Context context, Date timestamp) {

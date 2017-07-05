@@ -24,13 +24,8 @@ public class MinimalCardViewFactory {
   public static final int MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS = 2;
   private final DateCalculator dateCalculator;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
-  private TextView minimalCardHeaderMainName;
-  private ImageView minimalCardHeaderMainAvatar;
-  private ImageView minimalCardHeaderMainAvatar2;
-  private TextView cardHeaderTimestamp;
   private TextView morePostersLabel;
   private LikeButtonView likeButton;
-  private LinearLayout like;
 
   public MinimalCardViewFactory(DateCalculator dateCalculator,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
@@ -42,14 +37,17 @@ public class MinimalCardViewFactory {
       ViewGroup minimalCardContainer) {
     View subCardView =
         inflater.inflate(R.layout.timeline_sub_minimal_card, minimalCardContainer, false);
-    minimalCardHeaderMainName = (TextView) subCardView.findViewById(R.id.card_title);
-    minimalCardHeaderMainAvatar = (ImageView) subCardView.findViewById(R.id.card_header_avatar_1);
-    minimalCardHeaderMainAvatar2 = (ImageView) subCardView.findViewById(R.id.card_header_avatar_2);
-    cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
+    TextView minimalCardHeaderMainName = (TextView) subCardView.findViewById(R.id.card_title);
+    ImageView minimalCardHeaderMainAvatar =
+        (ImageView) subCardView.findViewById(R.id.card_header_avatar_1);
+    ImageView minimalCardHeaderMainAvatar2 =
+        (ImageView) subCardView.findViewById(R.id.card_header_avatar_2);
+    TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
     morePostersLabel = (TextView) subCardView.findViewById(
         R.id.timeline_header_aditional_number_of_shares_circular);
     this.likeButton = (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
-    this.like = (LinearLayout) subCardView.findViewById(R.id.social_like);
+    TextView commentButton = (TextView) subCardView.findViewById(R.id.social_comment);
+    LinearLayout like = (LinearLayout) subCardView.findViewById(R.id.social_like);
 
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(post.getMinimalPostPosters()
@@ -79,11 +77,12 @@ public class MinimalCardViewFactory {
       likeButton.setHeartState(false);
     }
 
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
+    like.setOnClickListener(click -> this.likeButton.performClick());
 
     this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, CardTouchEvent.Type.LIKE)));
-
+    commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(post, CardTouchEvent.Type.COMMENT)));
     return subCardView;
   }
 

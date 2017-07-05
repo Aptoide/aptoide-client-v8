@@ -40,12 +40,14 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
   private final LinearLayout like;
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private final TextView commentButton;
 
   public AppUpdateViewHolder(View view, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
     super(view);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.headerIcon =
         (ImageView) view.findViewById(R.id.displayable_social_timeline_app_update_card_image);
     this.headerTitle =
@@ -62,7 +64,7 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
         (RelativeLayout) view.findViewById(R.id.displayable_social_timeline_app_update_header);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+    this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
   }
 
   @Override public void setCard(AppUpdate card, int position) {
@@ -89,6 +91,8 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
 
     this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
+    this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
   }
 
   private void setAppUpdateButtonText(AppUpdate card) {

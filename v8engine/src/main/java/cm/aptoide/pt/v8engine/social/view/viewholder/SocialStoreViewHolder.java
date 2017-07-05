@@ -51,6 +51,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
   private final LinearLayout like;
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private final TextView commentButton;
 
   public SocialStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -59,6 +60,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.headerPrimaryAvatar = (ImageView) view.findViewById(R.id.card_image);
     this.headerSecondaryAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
     this.headerPrimaryName = (TextView) view.findViewById(R.id.card_title);
@@ -75,7 +77,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
     this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
-    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+    this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
   }
 
   @Override public void setCard(SocialStore card, int position) {
@@ -120,6 +122,8 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
 
     this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
+    this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
   }
 
   @NonNull private Spannable getStyledStoreName(SocialStore card) {
