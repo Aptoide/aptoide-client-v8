@@ -28,9 +28,6 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.util.DateCalculator;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialStoreLatestAppsDisplayable;
@@ -46,6 +43,9 @@ import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDis
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.VideoDisplayable;
+import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.HashMap;
 
 // TODO should this be a singleton?
@@ -235,8 +235,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     //
     converters.put(AggregatedSocialInstall.class,
         (card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> AggregatedSocialInstallDisplayable.from(
-            (AggregatedSocialInstall) card, timelineAnalytics, socialRepository,
-            dateCalculator));
+            (AggregatedSocialInstall) card, timelineAnalytics, socialRepository, dateCalculator));
 
     //
     // AggregatedSocialArticle
