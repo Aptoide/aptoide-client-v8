@@ -7,7 +7,7 @@
       <solid
           android:color="@color/orange"
           android:width="1dp"
-      >
+          >
       </solid>
 
       <corners

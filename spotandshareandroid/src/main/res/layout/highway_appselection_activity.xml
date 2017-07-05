@@ -5,25 +5,25 @@
     android:layout_height="match_parent"
     android:background="@color/timeline_separator"
     android:orientation="vertical"
->
+    >
 
   <android.support.design.widget.AppBarLayout
       android:id="@+id/shareAppsAppbar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-  >
+      >
     <android.support.v7.widget.Toolbar
         android:id="@+id/shareAppsToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="?attr/toolbarTheme"
-    />
+        />
   </android.support.design.widget.AppBarLayout>
 
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-  >
+      >
 
     <ProgressBar
         android:id="@+id/appSelectionProgressBar"
@@ -32,7 +32,7 @@
         android:layout_centerInParent="true"
         android:indeterminateDrawable="@drawable/custom_progressbarwheel"
         style="?android:attr/progressBarStyleLarge"
-    />
+        />
 
 
     <GridView
@@ -47,7 +47,7 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="2sp"
         android:visibility="gone"
-    />
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/sendButton"
@@ -59,7 +59,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_action_send_app"
         app:elevation="8dp"
-    />
+        />
 
   </RelativeLayout>
 

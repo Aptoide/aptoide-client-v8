@@ -3,7 +3,7 @@
     android:color="@color/orange">
   <item
       android:id="@android:id/mask"
-  >
+      >
     <shape
         android:shape="rectangle">
 

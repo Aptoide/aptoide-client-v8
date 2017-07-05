@@ -6,20 +6,20 @@
     android:background="@color/light_grey"
     android:orientation="horizontal"
     android:padding="2.5dp"
->
+    >
 
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_weight="0.8"
-  >
+      >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-    />
+        />
 
   </LinearLayout>
 
@@ -33,7 +33,7 @@
       android:background="@drawable/customcardview"
       android:orientation="vertical"
       android:paddingBottom="6dp"
-  >
+      >
 
     <TextView
         android:id="@+id/apkOrigin"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         tools:text="temporary text"
-    />
+        />
 
     <View
         android:layout_width="match_parent"
@@ -52,7 +52,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/timeline_separator"
-    />
+        />
 
     <LinearLayout
         android:id="@+id/transfRecRowImageLayout"
@@ -62,7 +62,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:orientation="horizontal"
-    >
+        >
 
       <!--<TextView-->
       <!--android:layout_width="wrap_content"-->
@@ -79,7 +79,7 @@
           android:layout_height="72dp"
           android:layout_gravity="center"
           android:scaleType="centerCrop"
-      />
+          />
 
       <RelativeLayout
           android:id="@+id/appInfoLayout"
@@ -91,7 +91,7 @@
           android:paddingBottom="5dp"
           android:paddingLeft="12dp"
           android:paddingStart="12dp"
-      >
+          >
 
         <TextView
             android:id="@+id/transfRecRowText"
@@ -104,7 +104,7 @@
             android:textColor="#000000"
             android:textSize="12sp"
             android:textStyle="bold"
-        />
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@id/transfRecRowText"
             android:orientation="horizontal"
-        >
+            >
 
           <TextView
               android:layout_width="wrap_content"
@@ -121,7 +121,7 @@
               android:text="v "
               android:textColor="@color/grey"
               android:textSize="10sp"
-          />
+              />
           <TextView
               android:id="@+id/transfRecRowAppVersion"
               android:layout_width="wrap_content"
@@ -130,7 +130,7 @@
               android:textColor="@color/grey"
               android:textSize="10sp"
               android:textStyle="bold"
-          />
+              />
         </LinearLayout>
 
       </RelativeLayout>
@@ -146,7 +146,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/timeline_separator"
-    />
+        />
 
     <RelativeLayout
         android:id="@+id/transfRecRecvRowIcons"
@@ -155,7 +155,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:orientation="horizontal"
-    >
+        >
 
       <Button
           android:id="@+id/transfRecReSendButton"
@@ -172,7 +172,7 @@
           android:text="@string/upperResend"
           android:textColor="@color/white"
           android:visibility="gone"
-      />
+          />
 
     </RelativeLayout>
 
@@ -181,7 +181,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-    >
+        >
 
       <TextView
           android:layout_width="wrap_content"
@@ -191,7 +191,7 @@
           android:text="@string/deletedMessage"
           android:textColor="@color/grey"
           android:textSize="10sp"
-      />
+          />
 
     </LinearLayout>
 
