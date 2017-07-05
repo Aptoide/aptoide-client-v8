@@ -71,6 +71,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private Converter.Factory converterFactory;
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
+  private ABTestManager abTestManager;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -100,6 +101,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    abTestManager = ((V8Engine) getContext().getApplicationContext()).getABTestManager();
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
@@ -240,8 +242,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   private Observable<Void> setupAbTest() {
     if (hasSubscribedResults && hasEverywhereResults) {
-      ABTest<SearchTabOptions> searchAbTest = ABTestManager.getInstance()
-          .get(ABTestManager.SEARCH_TAB_TEST);
+      ABTest<SearchTabOptions> searchAbTest = abTestManager.get(ABTestManager.SEARCH_TAB_TEST);
       return searchAbTest.participate()
           .observeOn(AndroidSchedulers.mainThread())
           .map(experiment -> setTabAccordingAbTest(searchAbTest));

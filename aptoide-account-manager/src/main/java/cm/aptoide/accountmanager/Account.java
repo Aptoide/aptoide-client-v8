@@ -138,7 +138,7 @@ public interface Account {
   /**
    * Account type.
    */
-  public enum Type {
+  enum Type {
     /**
      * Default account when user did not login yet.
      */

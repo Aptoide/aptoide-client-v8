@@ -106,6 +106,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.share.ShareAppHelper;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
@@ -160,9 +161,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private List<MinimalAd> suggestedAds;
   // buy app vars
   private String storeName;
-  private float priceValue;
-  private String currency;
-  private double taxRate;
   private AppViewInstallDisplayable installDisplayable;
   private String md5;
   private String uname;
@@ -173,7 +171,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
-  private GetApp getApp;
   private AptoideAccountManager accountManager;
   private StoreCredentialsProvider storeCredentialsProvider;
   private BodyInterceptor<BaseBody> bodyInterceptor;
@@ -191,6 +188,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
   private MinimalAdMapper adMapper;
+  private PublishRelay installAppRelay;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -297,9 +295,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
+    installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics,
+            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     downloadFactory = new DownloadFactory();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
@@ -358,7 +360,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
       subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
-          .map(getApp -> this.getApp = getApp)
+          .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
@@ -368,7 +370,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           }, throwable -> finishLoading(throwable));
     } else if (!TextUtils.isEmpty(md5)) {
       subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .map(getApp -> this.getApp = getApp)
+          .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
@@ -380,7 +382,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           });
     } else if (!TextUtils.isEmpty(uname)) {
       subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
-          .map(getApp -> this.getApp = getApp)
+          .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
@@ -399,7 +401,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     } else {
       Logger.d(TAG, "loading app info using app package name");
       subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .map(getApp -> this.getApp = getApp)
+          .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -473,17 +475,25 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
-
     if (i == R.id.menu_share) {
+
+      final boolean appRatingExists = app != null
+          && app.getStats() != null
+          && app.getStats()
+          .getRating() != null;
+
+      final float averageRating = appRatingExists ? app.getStats()
+          .getRating()
+          .getAvg() : 0f;
+
+      final boolean appHasStore = app != null && app.getStore() != null;
+
+      final Long storeId = appHasStore ? app.getStore()
+          .getId() : null;
+
       shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-          (app != null
-              && app.getStats() != null
-              && app.getStats()
-              .getRating() != null ? app.getStats()
-              .getRating()
-              .getAvg() : 0f), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW,
-          app != null ? app.getStore()
-              .getId() : null);
+          averageRating, SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
+
       appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {
@@ -744,7 +754,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
-            installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics);
+            installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
+            installAppRelay);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
