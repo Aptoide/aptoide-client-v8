@@ -52,7 +52,7 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
     this.headerUsersContainer =
         (ViewGroup) view.findViewById(R.id.displayable_social_timeline_popular_app_users_container);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
-    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
@@ -71,10 +71,10 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> {
-      this.likeButton.performClick();
-      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
-    });
+    this.like.setOnClickListener(click -> this.likeButton.performClick());
+
+    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
   }
 
   private void showFriendsAvatars(PopularApp card, Context context) {

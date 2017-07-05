@@ -49,7 +49,7 @@ public class MinimalCardViewFactory {
     morePostersLabel = (TextView) subCardView.findViewById(
         R.id.timeline_header_aditional_number_of_shares_circular);
     this.likeButton = (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
-    this.like = (LinearLayout) subCardView.findViewById(R.id.social_like_layout);
+    this.like = (LinearLayout) subCardView.findViewById(R.id.social_like);
 
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(post.getMinimalPostPosters()
@@ -79,10 +79,10 @@ public class MinimalCardViewFactory {
       likeButton.setHeartState(false);
     }
 
-    this.like.setOnClickListener(click -> {
-      this.likeButton.performClick();
-      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(post, CardTouchEvent.Type.LIKE));
-    });
+    this.like.setOnClickListener(click -> this.likeButton.performClick());
+
+    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(post, CardTouchEvent.Type.LIKE)));
 
     return subCardView;
   }

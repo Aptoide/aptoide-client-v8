@@ -53,7 +53,7 @@ public class MediaViewHolder extends CardViewHolder<Media> {
     cardIcon = (ImageView) itemView.findViewById(R.id.timeline_header_card_type_icon);
     playIcon = (ImageView) itemView.findViewById(R.id.play_button);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
-    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
@@ -91,10 +91,10 @@ public class MediaViewHolder extends CardViewHolder<Media> {
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> {
-      this.likeButton.performClick();
-      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(media, CardTouchEvent.Type.LIKE));
-    });
+    this.like.setOnClickListener(click -> this.likeButton.performClick());
+
+    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(media, CardTouchEvent.Type.LIKE)));
   }
 
   private void setIcon(int drawableId) {

@@ -56,7 +56,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
     this.appsContainer = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
-    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
@@ -72,10 +72,10 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> {
-      this.likeButton.performClick();
-      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
-    });
+    this.like.setOnClickListener(click -> this.likeButton.performClick());
+
+    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
   }
 
   public String getTimeSinceLastUpdate(Context context, Date latestUpdate) {

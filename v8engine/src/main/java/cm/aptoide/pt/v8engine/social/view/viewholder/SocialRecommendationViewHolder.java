@@ -64,7 +64,7 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
     this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
-    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
@@ -100,10 +100,10 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> {
-      this.likeButton.performClick();
-      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
-    });
+    this.like.setOnClickListener(click -> this.likeButton.performClick());
+
+    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
   }
 
   private void showHeaderSecondaryName(RatedRecommendation card) {

@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:id="@+id/social_like"
-        android:layout_width="40dp"
+        android:layout_width="48dp"
         android:layout_height="62dp"
         android:clickable="true"
         android:clipChildren="false"
