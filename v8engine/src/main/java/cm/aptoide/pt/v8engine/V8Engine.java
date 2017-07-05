@@ -877,7 +877,9 @@ public abstract class V8Engine extends Application {
   }
 
   private void sendAppStartToAnalytics() {
-    Analytics.Lifecycle.Application.onCreate(this, getDefaultSharedPreferences());
+    Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
+        getDefaultClient(), getBaseBodyInterceptorV7(), getDefaultSharedPreferences(),
+        getTokenInvalidator());
   }
 
   private Completable checkAppSecurity() {
