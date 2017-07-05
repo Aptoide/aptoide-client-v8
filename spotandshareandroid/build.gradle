@@ -45,4 +45,5 @@ dependencies {
   provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 
   compile project(':spotandshare')
+  compile project(':utils')
 }

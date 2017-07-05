@@ -13,6 +13,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -26,6 +27,8 @@ import lombok.Getter;
  */
 
 class JoinHotspotManager {
+
+  private static final String TAG = JoinHotspotManager.class.getSimpleName();
 
   private static final int ERROR_ON_RECONNECT = 0;
   private static final int SUCCESSFUL_JOIN = 2;
@@ -59,6 +62,7 @@ class JoinHotspotManager {
     timeoutFuture = getScheduledExecutorService().schedule(() -> {
       context.unregisterReceiver(joinNetworkBroadcastReceiver);
       wifiStateListener.onStateChanged(false);
+      Logger.e(TAG, "joinHotspot: JoinHotspotManager timed out!");
     }, timeout, TimeUnit.MILLISECONDS);
 
     return joinHotspot(ssid, true, joinNetworkBroadcastReceiver) == SUCCESSFUL_JOIN;
