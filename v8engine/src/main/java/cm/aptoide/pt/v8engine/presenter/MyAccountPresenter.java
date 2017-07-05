@@ -113,7 +113,8 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(__ -> view.userClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(account -> navigateToUser(account.getId()))
+        .doOnNext(account -> navigateToUser(account.getId(), account.getStore()
+            .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
@@ -139,8 +140,8 @@ public class MyAccountPresenter implements Presenter {
     // does nothing
   }
 
-  private void navigateToUser(String id) {
-    navigator.navigateToUserView(id);
+  private void navigateToUser(String id, String storeTheme) {
+    navigator.navigateToUserView(id, storeTheme);
   }
 
   private void navigateToStore(String storeName, String storeTheme) {

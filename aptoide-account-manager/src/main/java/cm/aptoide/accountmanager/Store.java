@@ -25,7 +25,7 @@ public class Store {
     this.avatar = "";
     this.id = 0;
     this.name = "";
-    this.theme = "";
+    this.theme = "DEFAULT";
     this.username = "";
     this.password = "";
   }

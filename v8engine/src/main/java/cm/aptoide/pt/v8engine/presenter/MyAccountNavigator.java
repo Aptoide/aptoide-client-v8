@@ -35,9 +35,9 @@ public class MyAccountNavigator {
     fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToEdit());
   }
 
-  public void navigateToUserView(String userId) {
+  public void navigateToUserView(String userId, String storeTheme) {
     fragmentNavigator.navigateTo(
-        StoreFragment.newInstance(userId, "DEFAULT", StoreFragment.OpenType.GetHome));
+        StoreFragment.newInstance(userId, storeTheme, StoreFragment.OpenType.GetHome));
   }
 
   public void navigateToStoreView(String storeName, String storeTheme) {
