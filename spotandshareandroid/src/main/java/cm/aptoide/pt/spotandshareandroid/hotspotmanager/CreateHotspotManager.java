@@ -2,6 +2,7 @@ package cm.aptoide.pt.spotandshareandroid.hotspotmanager;
 
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import cm.aptoide.pt.spotandshareandroid.util.TaskQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import rx.Single;
@@ -22,36 +23,35 @@ class CreateHotspotManager {
 
   private WifiConfiguration wifiConfiguration;
 
-  // TODO: 22-06-2017 neuro busy not implemented.. hmmm...
-  private boolean busy = false;
+  private final TaskQueue taskQueue;
 
-  CreateHotspotManager(WifiManager wifimanager) {
+  CreateHotspotManager(WifiManager wifimanager, TaskQueue taskQueue) {
     this.wifimanager = wifimanager;
-    wifiConfigurationHelper = new WifiConfigurationHelper();
+    this.taskQueue = taskQueue;
+    this.wifiConfigurationHelper = new WifiConfigurationHelper();
   }
 
   public Single<Void> enablePrivateHotspot(String SSID, String password_aptoide) {
     return enableHotspot(wifiConfigurationHelper.newPrivateWifi(SSID, password_aptoide)).flatMap(
-        integer -> {
-          if (integer == SUCCESS_HOTSPOT_CREATION) {
-            return Single.just(null);
-          } else {
-            return Single.error(new Exception("Failed to create hotspot"));
-          }
-        });
-
-    //return enableHotspot(new WifiConfigurationHelper().newPrivateWifi(SSID, password_aptoide)).map(
-    //    integer -> integer == SUCCESS_HOTSPOT_CREATION);
+        this::assertSuccessHotspotCreation);
   }
 
-  public Single<Boolean> enableOpenHotspot(String SSID) {
-    return enableHotspot(wifiConfigurationHelper.newPublicWifi(SSID)).map(
-        integer -> integer == SUCCESS_HOTSPOT_CREATION);
+  public Single<Void> enableOpenHotspot(String SSID) {
+    return enableHotspot(wifiConfigurationHelper.newPublicWifi(SSID)).flatMap(
+        this::assertSuccessHotspotCreation);
+  }
+
+  private Single<Void> assertSuccessHotspotCreation(int returnCode) {
+    if (returnCode == SUCCESS_HOTSPOT_CREATION) {
+      return Single.just(null);
+    } else {
+      return Single.error(new Exception("Failed to create hotspot"));
+    }
   }
 
   private Single<Integer> enableHotspot(WifiConfiguration netConfig) {
 
-    return Single.fromCallable(() -> {
+    return taskQueue.submitTask(Single.fromCallable(() -> {
       if (wifimanager.isWifiEnabled()) {
         wifimanager.setWifiEnabled(false);
       }
@@ -108,12 +108,12 @@ class CreateHotspotManager {
         }
       }
       return HotspotManager.ERROR_UNKNOWN;
-    });
+    }));
   }
 
   public Single<Void> resetHotspot() {
 
-    return Single.fromCallable(() -> {
+    return taskQueue.submitTask(Single.fromCallable(() -> {
       if (wifiConfiguration == null) {
         throw new IllegalStateException("WifiConfiguration is null!");
       }
@@ -152,7 +152,7 @@ class CreateHotspotManager {
       }
 
       return null;
-    });
+    }));
   }
 
   private static class ReflectionMethods {
