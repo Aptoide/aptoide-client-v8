@@ -9,11 +9,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequestBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.FirstLaunchAnalytics;
@@ -243,7 +241,9 @@ public class Analytics {
       private static String utmContent = UNKNOWN;
       private static String entryPoint = UNKNOWN;
 
-      public static void onCreate(android.app.Application application) {
+      public static void onCreate(android.app.Application application,
+          Converter.Factory converterFactory, OkHttpClient okHttpClient,
+          BodyInterceptor bodyInterceptor) {
 
         //Integrate FacebookSDK
         FacebookSdk.sdkInitialize(application);
@@ -251,35 +251,28 @@ public class Analytics {
         facebookLogger = AppEventsLogger.newLogger(application);
         FirstLaunchAnalytics firstLaunchAnalytics =
             new FirstLaunchAnalytics(facebookLogger, Analytics.getInstance());
-        final Converter.Factory converterFactory = WebService.getDefaultConverter();
-        final OkHttpClient okHttpClient =
-            ((V8Engine) application.getApplicationContext()).getDefaultClient();
-        final BodyInterceptor<BaseBody> bodyInterceptor =
-            ((V8Engine) application.getApplicationContext()).getBaseBodyInterceptorV7();
         Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
           return null;
         })
-            .filter(__ -> SecurePreferences.isFirstRun())
-            .doOnNext(__ -> setupDimensions(application))
-            .doOnCompleted(() -> {
-              firstLaunchAnalytics.sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
-                  utmContent, entryPoint);
+            .filter(firstRun -> SecurePreferences.isFirstRun())
+            .doOnNext(dimensions -> setupDimensions(application))
+            .doOnNext(facebookFirstLaunch -> firstLaunchAnalytics.sendFirstLaunchEvent(utmSource,
+                utmMedium, utmCampaign, utmContent, entryPoint))
+            .flatMap(facebookFirstLaunch -> {
               UTMTrackingBuilder utmTrackingBuilder =
                   new UTMTrackingBuilder(getTracking(application), getUTM());
               BIUTMAnalyticsRequestBody body =
                   new BIUTMAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
-              BIUTMAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
+              return BIUTMAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
                   okHttpClient, converterFactory)
                   .observe()
-                  .observeOn(Schedulers.io())
-                  .subscribe(baseV7Response -> {
-                  }, throwable -> throwable.printStackTrace());
+                  .observeOn(Schedulers.io());
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
-            }, Throwable::printStackTrace);
+            }, throwable -> Logger.e(TAG, throwable.getMessage()));
       }
 
       private static UTM getUTM() {

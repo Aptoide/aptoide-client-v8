@@ -569,7 +569,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void sendAppStartToAnalytics(SharedPreferences sPref) {
-    Analytics.Lifecycle.Application.onCreate(this);
+    Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
+        getDefaultClient(), getBaseBodyInterceptorV7());
   }
 
   private Completable checkAppSecurity() {
