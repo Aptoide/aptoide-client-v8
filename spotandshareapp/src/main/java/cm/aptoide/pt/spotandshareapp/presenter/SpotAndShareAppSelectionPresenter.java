@@ -57,9 +57,8 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private void leaveGroup() {
     //// TODO: 03-07-2017 filipe call spot&share lib to leave the group
     System.out.println("LEAVING THE GROUP");
-    view.navigateBack();
-    //spotAndShare.leaveGroup();
-
+    //view.navigateBack();
+    spotAndShare.leaveGroup(success -> view.navigateBack(), err -> view.onLeaveGroupError());
   }
 
   private void setupAdapterListener() {

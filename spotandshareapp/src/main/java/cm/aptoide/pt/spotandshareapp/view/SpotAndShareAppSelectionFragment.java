@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
@@ -79,6 +80,12 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
 
   @Override public void navigateBack() {
     getFragmentNavigator().popBackStack();
+  }
+
+  @Override public void onLeaveGroupError() {
+    Toast.makeText(getContext(), "There was an error while trying to leave the group",
+        Toast.LENGTH_SHORT)
+        .show();
   }
 
   private void setupLayoutManager() {

@@ -25,6 +25,8 @@ public interface SpotAndShareAppSelectionView extends View {
 
   void navigateBack();
 
+  void onLeaveGroupError();
+
   interface AppSelectionListener {
     void onAppSelected(AppModel appModel);
   }
