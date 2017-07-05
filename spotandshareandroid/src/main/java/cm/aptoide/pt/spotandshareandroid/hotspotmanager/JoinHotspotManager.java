@@ -21,6 +21,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
+import rx.Completable;
+import rx.Observable;
 import rx.functions.Action0;
 
 /**
@@ -52,12 +54,12 @@ class JoinHotspotManager {
     return Executors.newSingleThreadScheduledExecutor();
   }
 
-  public boolean joinHotspot(String ssid, WifiStateListener wifiStateListener, long timeout) {
+  public Completable joinHotspot(String ssid, WifiStateListener wifiStateListener, long timeout) {
     return joinHotspot(ssid, wifiStateListener, timeout,
         new JoinNetworkBroadcastReceiver(wifiStateListener, wifimanager, ssid));
   }
 
-  private boolean joinHotspot(String ssid, WifiStateListener wifiStateListener, long timeout,
+  private Completable joinHotspot(String ssid, WifiStateListener wifiStateListener, long timeout,
       JoinNetworkBroadcastReceiver joinNetworkBroadcastReceiver) {
 
     timeoutFuture = getScheduledExecutorService().schedule(() -> {
@@ -66,59 +68,69 @@ class JoinHotspotManager {
       Logger.e(TAG, "joinHotspot: JoinHotspotManager timed out!");
     }, timeout, TimeUnit.MILLISECONDS);
 
-    return joinHotspot(ssid, true, () -> registerStateChangeReceiver(joinNetworkBroadcastReceiver))
-        == SUCCESSFUL_JOIN;
+    return joinHotspot(ssid, true, () -> registerStateChangeReceiver(joinNetworkBroadcastReceiver));
   }
 
-  private int joinHotspot(String ssid, boolean shouldReconnect, @Nullable Action0 onSuccess) {
-    // TODO: 22-06-2017 neuro ligar wifi when needed
-    WifiConfiguration conf = new WifiConfiguration();
-    //Logger.d(TAG, "chosen hotspot is : " + ssid);
-    conf.SSID = "\"" + ssid + "\"";
-    conf.preSharedKey = "\"passwordAptoide\"";
-    conf.hiddenSSID = true;
-    conf.status = WifiConfiguration.Status.ENABLED;
-    conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+  private Completable joinHotspot(String ssid, boolean shouldReconnect,
+      @Nullable Action0 onSuccess) {
+    return Observable.fromCallable(() -> {
+      // TODO: 22-06-2017 neuro ligar wifi when needed
+      WifiConfiguration conf = new WifiConfiguration();
+      //Logger.d(TAG, "chosen hotspot is : " + ssid);
+      conf.SSID = "\"" + ssid + "\"";
+      conf.preSharedKey = "\"passwordAptoide\"";
+      conf.hiddenSSID = true;
+      conf.status = WifiConfiguration.Status.ENABLED;
+      conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
 
-    int netid = wifimanager.addNetwork(conf);
-    //Logger.d(TAG, "netid is: " + netid);
+      int netid = wifimanager.addNetwork(conf);
+      //Logger.d(TAG, "netid is: " + netid);
 
-    List<WifiConfiguration> list = wifimanager.getConfiguredNetworks();
-    if (list != null) {
-      for (WifiConfiguration i : list) {
-        if (i.SSID != null && i.SSID.equals("\"" + ssid + "\"")) {
-          try {
-            // TODO: 21-06-2017 neuro sleeps lol
+      List<WifiConfiguration> list = wifimanager.getConfiguredNetworks();
+      if (list != null) {
+        for (WifiConfiguration i : list) {
+          if (i.SSID != null && i.SSID.equals("\"" + ssid + "\"")) {
+            try {
+              // TODO: 21-06-2017 neuro sleeps lol
 
-            wifimanager.disconnect();
-            wifimanager.enableNetwork(i.networkId, true);
-            ////Logger.d(TAG,
-            //    "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
+              wifimanager.disconnect();
+              wifimanager.enableNetwork(i.networkId, true);
+              ////Logger.d(TAG,
+              //    "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
 
-            if (shouldReconnect) {
-              boolean reconnect = wifimanager.reconnect();
+              if (shouldReconnect) {
+                boolean reconnect = wifimanager.reconnect();
 
-              if (reconnect) {
+                if (reconnect) {
+                  if (onSuccess != null) {
+                    onSuccess.call();
+                  }
+                  return SUCCESSFUL_JOIN;
+                } else {
+                  return ERROR_ON_RECONNECT;
+                }
+              } else {
                 if (onSuccess != null) {
                   onSuccess.call();
                 }
                 return SUCCESSFUL_JOIN;
-              } else {
-                return ERROR_ON_RECONNECT;
               }
-            } else {
-              if (onSuccess != null) {
-                onSuccess.call();
-              }
-              return SUCCESSFUL_JOIN;
+            } catch (Exception e) {
+              e.printStackTrace();
             }
-          } catch (Exception e) {
-            e.printStackTrace();
           }
         }
       }
-    }
-    return HotspotManager.ERROR_UNKNOWN;
+      return HotspotManager.ERROR_UNKNOWN;
+    })
+        .flatMap(returnCode -> {
+          if (returnCode == SUCCESSFUL_JOIN) {
+            return Observable.just(null);
+          } else {
+            return Observable.error(new Throwable("Error Joining Hotspot"));
+          }
+        })
+        .toCompletable();
   }
 
   private void registerStateChangeReceiver(
@@ -178,6 +190,7 @@ class JoinHotspotManager {
       WifiInfo wifiInfo = wifimanager.getConnectionInfo();
       if (wifiInfo.getSSID()
           .contains(ssid)) {
+        Logger.e(TAG, "joinHotspot: checkCorrectNetworkConnected!");
         wifiStateListener.onStateChanged(true);
         context.unregisterReceiver(this);
         timeoutFuture.cancel(false);
