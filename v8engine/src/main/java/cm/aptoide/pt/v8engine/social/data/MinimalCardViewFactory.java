@@ -73,6 +73,12 @@ public class MinimalCardViewFactory {
 
     cardHeaderTimestamp.setText(dateCalculator.getTimeSinceDate(context, post.getDate()));
 
+    if (post.isLiked()) {
+      likeButton.setHeartState(true);
+    } else {
+      likeButton.setHeartState(false);
+    }
+
     this.like.setOnClickListener(click -> {
       this.likeButton.performClick();
       this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(post, CardTouchEvent.Type.LIKE));

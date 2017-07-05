@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.Install;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
@@ -24,7 +26,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 22/06/2017.
  */
 
-public class AppUpdateViewHolder extends SocialEventsViewHolder<AppUpdate> {
+public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
   private final DateCalculator dateCalculator;
   private final ImageView headerIcon;
   private final TextView headerTitle;
@@ -35,10 +37,13 @@ public class AppUpdateViewHolder extends SocialEventsViewHolder<AppUpdate> {
   private final SpannableFactory spannableFactory;
   private final TextView errorText;
   private final RelativeLayout cardHeader;
+  private final LinearLayout like;
+  private final LikeButtonView likeButton;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
   public AppUpdateViewHolder(View view, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
-    super(view, cardTouchEventPublishSubject);
+    super(view);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.headerIcon =
@@ -55,10 +60,12 @@ public class AppUpdateViewHolder extends SocialEventsViewHolder<AppUpdate> {
         (TextView) view.findViewById(R.id.displayable_social_timeline_app_update_error);
     this.cardHeader =
         (RelativeLayout) view.findViewById(R.id.displayable_social_timeline_app_update_header);
+    this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   @Override public void setCard(AppUpdate card, int position) {
-    super.setCard(card, position);
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
@@ -73,6 +80,15 @@ public class AppUpdateViewHolder extends SocialEventsViewHolder<AppUpdate> {
         new AppUpdateCardTouchEvent(card, CardTouchEvent.Type.BODY, position)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.HEADER)));
+    if (card.isLiked()) {
+      likeButton.setHeartState(true);
+    } else {
+      likeButton.setHeartState(false);
+    }
+    this.like.setOnClickListener(click -> {
+      this.likeButton.performClick();
+      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
+    });
   }
 
   private void setAppUpdateButtonText(AppUpdate card) {

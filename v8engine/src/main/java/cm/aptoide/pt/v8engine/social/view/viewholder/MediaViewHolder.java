@@ -5,12 +5,14 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.Media;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -19,7 +21,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 31/05/2017.
  */
 
-public class MediaViewHolder extends SocialEventsViewHolder<Media> {
+public class MediaViewHolder extends CardViewHolder<Media> {
   private final TextView publisherName;
   private final TextView date;
   private final ImageView publisherAvatar;
@@ -31,10 +33,13 @@ public class MediaViewHolder extends SocialEventsViewHolder<Media> {
   private final DateCalculator dateCalculator;
   private final ImageView cardIcon;
   private final ImageView playIcon;
+  private final LinearLayout like;
+  private final LikeButtonView likeButton;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
   public MediaViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
-    super(itemView, cardTouchEventPublishSubject);
+    super(itemView);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
 
@@ -47,10 +52,12 @@ public class MediaViewHolder extends SocialEventsViewHolder<Media> {
     relatedTo = (TextView) itemView.findViewById(R.id.app_name);
     cardIcon = (ImageView) itemView.findViewById(R.id.timeline_header_card_type_icon);
     playIcon = (ImageView) itemView.findViewById(R.id.play_button);
+    this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   @Override public void setCard(Media media, int position) {
-    super.setCard(media, position);
     if (media.getType()
         .equals(CardType.ARTICLE)) {
       setIcon(R.drawable.appstimeline_article_icon);
@@ -79,6 +86,15 @@ public class MediaViewHolder extends SocialEventsViewHolder<Media> {
         new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
     articleHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
+    if (media.isLiked()) {
+      likeButton.setHeartState(true);
+    } else {
+      likeButton.setHeartState(false);
+    }
+    this.like.setOnClickListener(click -> {
+      this.likeButton.performClick();
+      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(media, CardTouchEvent.Type.LIKE));
+    });
   }
 
   private void setIcon(int drawableId) {

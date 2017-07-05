@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialMedia;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -23,7 +25,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 27/06/2017.
  */
 
-public class SocialMediaViewHolder extends SocialEventsViewHolder<SocialMedia> {
+public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final ImageView headerPrimaryAvatar;
@@ -36,14 +38,16 @@ public class SocialMediaViewHolder extends SocialEventsViewHolder<SocialMedia> {
   private final TextView relatedTo;
   private final ImageView playIcon;
   private final RelativeLayout cardHeader;
+  private final LinearLayout like;
+  private final LikeButtonView likeButton;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
   public SocialMediaViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view, cardTouchEventPublishSubject);
+    super(view);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
-
     this.headerPrimaryAvatar = (ImageView) view.findViewById(R.id.card_image);
     this.headerSecondaryAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
     this.headerPrimaryName = (TextView) view.findViewById(R.id.card_title);
@@ -55,10 +59,12 @@ public class SocialMediaViewHolder extends SocialEventsViewHolder<SocialMedia> {
     this.relatedTo = (TextView) itemView.findViewById(R.id.app_name);
     this.playIcon = (ImageView) itemView.findViewById(R.id.play_button);
     this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
+    this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   @Override public void setCard(SocialMedia card, int position) {
-    super.setCard(card, position);
     if (card.getType()
         .equals(CardType.SOCIAL_ARTICLE)) {
       this.playIcon.setVisibility(View.GONE);
@@ -93,6 +99,15 @@ public class SocialMediaViewHolder extends SocialEventsViewHolder<SocialMedia> {
             .getStoreTheme(), card.getPoster()
             .getUser()
             .getId(), CardTouchEvent.Type.HEADER)));
+    if (card.isLiked()) {
+      likeButton.setHeartState(true);
+    } else {
+      likeButton.setHeartState(false);
+    }
+    this.like.setOnClickListener(click -> {
+      this.likeButton.performClick();
+      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
+    });
   }
 
   private void showHeaderSecondaryName(SocialMedia card) {

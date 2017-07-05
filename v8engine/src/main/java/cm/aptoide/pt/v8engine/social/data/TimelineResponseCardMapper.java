@@ -146,8 +146,8 @@ public class TimelineResponseCardMapper {
             .getIcon(), socialRecommendation.getApp()
             .getStats()
             .getRating()
-            .getAvg(), socialRecommendation.getDate(), abUrl, false,
-            CardType.SOCIAL_RECOMMENDATION));
+            .getAvg(), socialRecommendation.getDate(), abUrl, socialRecommendation.getMy()
+            .isLiked(), CardType.SOCIAL_RECOMMENDATION));
       } else if (item instanceof SocialInstallTimelineItem) {
         final SocialInstall socialInstall = ((SocialInstallTimelineItem) item).getData();
         UserSharerTimeline user =
@@ -160,7 +160,8 @@ public class TimelineResponseCardMapper {
             .getIcon(), socialInstall.getApp()
             .getStats()
             .getRating()
-            .getAvg(), socialInstall.getDate(), abUrl, false, CardType.SOCIAL_INSTALL));
+            .getAvg(), socialInstall.getDate(), abUrl, socialInstall.getMy()
+            .isLiked(), CardType.SOCIAL_INSTALL));
       } else if (item instanceof SocialArticleTimelineItem) {
         final SocialArticle socialArticle = ((SocialArticleTimelineItem) item).getData();
         UserSharerTimeline user =

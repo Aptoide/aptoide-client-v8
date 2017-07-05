@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -23,7 +25,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 26/06/2017.
  */
 
-public class SocialRecommendationViewHolder extends SocialEventsViewHolder<RatedRecommendation> {
+public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommendation> {
   private final DateCalculator dateCalculator;
   private final ImageView headerPrimaryAvatar;
   private final ImageView headerSecondaryAvatar;
@@ -37,15 +39,17 @@ public class SocialRecommendationViewHolder extends SocialEventsViewHolder<Rated
   private final SpannableFactory spannableFactory;
   private final int titleStringResourceId;
   private final RelativeLayout cardHeader;
+  private final LinearLayout like;
+  private final LikeButtonView likeButton;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
   public SocialRecommendationViewHolder(View view, int titleStringResourceId,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view, cardTouchEventPublishSubject);
+    super(view);
     this.titleStringResourceId = titleStringResourceId;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
-
     this.headerPrimaryAvatar = (ImageView) view.findViewById(R.id.card_image);
     this.headerSecondaryAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
     this.headerPrimaryName = (TextView) view.findViewById(R.id.card_title);
@@ -59,10 +63,12 @@ public class SocialRecommendationViewHolder extends SocialEventsViewHolder<Rated
     this.getAppButton =
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
     this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
+    this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   @Override public void setCard(RatedRecommendation card, int position) {
-    super.setCard(card, position);
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPoster()
             .getPrimaryAvatar(), headerPrimaryAvatar);
@@ -89,6 +95,15 @@ public class SocialRecommendationViewHolder extends SocialEventsViewHolder<Rated
             .getStoreTheme(), card.getPoster()
             .getUser()
             .getId(), CardTouchEvent.Type.HEADER)));
+    if (card.isLiked()) {
+      likeButton.setHeartState(true);
+    } else {
+      likeButton.setHeartState(false);
+    }
+    this.like.setOnClickListener(click -> {
+      this.likeButton.performClick();
+      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
+    });
   }
 
   private void showHeaderSecondaryName(RatedRecommendation card) {

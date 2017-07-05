@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
@@ -26,7 +27,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 21/06/2017.
  */
 
-public class StoreLatestAppsViewHolder extends SocialEventsViewHolder<StoreLatestApps> {
+public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
   private final DateCalculator dateCalculator;
   private final ImageView headerIcon;
   private final TextView headerTitle;
@@ -34,11 +35,14 @@ public class StoreLatestAppsViewHolder extends SocialEventsViewHolder<StoreLates
   private final LinearLayout appsContainer;
   private final LayoutInflater inflater;
   private final SpannableFactory spannableFactory;
+  private final LinearLayout like;
+  private final LikeButtonView likeButton;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
   public StoreLatestAppsViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view, cardTouchEventPublishSubject);
+    super(view);
     this.spannableFactory = spannableFactory;
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
@@ -51,16 +55,27 @@ public class StoreLatestAppsViewHolder extends SocialEventsViewHolder<StoreLates
         R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
     this.appsContainer = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
+    this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   @Override public void setCard(StoreLatestApps card, int position) {
-    super.setCard(card, position);
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
 
     headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
     headerSubtitle.setText(getTimeSinceLastUpdate(itemView.getContext(), card.getLatestUpdate()));
     showStoreLatestApps(card);
+    if (card.isLiked()) {
+      likeButton.setHeartState(true);
+    } else {
+      likeButton.setHeartState(false);
+    }
+    this.like.setOnClickListener(click -> {
+      this.likeButton.performClick();
+      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
+    });
   }
 
   public String getTimeSinceLastUpdate(Context context, Date latestUpdate) {

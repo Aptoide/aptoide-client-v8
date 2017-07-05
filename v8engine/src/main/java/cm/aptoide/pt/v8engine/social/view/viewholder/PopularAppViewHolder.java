@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import rx.subjects.PublishSubject;
 
@@ -21,7 +23,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 26/06/2017.
  */
 
-public class PopularAppViewHolder extends SocialEventsViewHolder<PopularApp> {
+public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
   private final LayoutInflater inflater;
   private final DateCalculator dateCalculator;
   private final TextView headerSubTitle;
@@ -30,10 +32,13 @@ public class PopularAppViewHolder extends SocialEventsViewHolder<PopularApp> {
   private final TextView appName;
   private final RatingBar appRating;
   private final Button getAppButton;
+  private final LinearLayout like;
+  private final LikeButtonView likeButton;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
   public PopularAppViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator) {
-    super(view, cardTouchEventPublishSubject);
+    super(view);
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
     this.headerSubTitle =
@@ -46,10 +51,12 @@ public class PopularAppViewHolder extends SocialEventsViewHolder<PopularApp> {
         (Button) view.findViewById(R.id.displayable_social_timeline_popular_app_get_app_button);
     this.headerUsersContainer =
         (ViewGroup) view.findViewById(R.id.displayable_social_timeline_popular_app_users_container);
+    this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   @Override public void setCard(PopularApp card, int position) {
-    super.setCard(card, position);
     this.headerSubTitle.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
     ImageLoader.with(itemView.getContext())
@@ -59,6 +66,15 @@ public class PopularAppViewHolder extends SocialEventsViewHolder<PopularApp> {
     showFriendsAvatars(card, itemView.getContext());
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    if (card.isLiked()) {
+      likeButton.setHeartState(true);
+    } else {
+      likeButton.setHeartState(false);
+    }
+    this.like.setOnClickListener(click -> {
+      this.likeButton.performClick();
+      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
+    });
   }
 
   private void showFriendsAvatars(PopularApp card, Context context) {

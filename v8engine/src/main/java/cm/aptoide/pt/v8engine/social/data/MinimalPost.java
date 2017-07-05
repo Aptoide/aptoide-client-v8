@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Utilizador on 7/4/2017.
+ * Created by Jdandrade on 7/4/2017.
  */
 
 public class MinimalPost implements Post {

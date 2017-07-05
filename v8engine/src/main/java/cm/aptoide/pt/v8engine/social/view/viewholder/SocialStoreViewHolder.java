@@ -20,6 +20,7 @@ import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialStore;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 28/06/2017.
  */
 
-public class SocialStoreViewHolder extends SocialEventsViewHolder<SocialStore> {
+public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final LayoutInflater inflater;
@@ -47,15 +48,17 @@ public class SocialStoreViewHolder extends SocialEventsViewHolder<SocialStore> {
   private final TextView storeNumberApps;
   private final Button followStoreButton;
   private final RelativeLayout cardHeader;
+  private final LinearLayout like;
+  private final LikeButtonView likeButton;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
   public SocialStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view, cardTouchEventPublishSubject);
+    super(view);
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
-
     this.headerPrimaryAvatar = (ImageView) view.findViewById(R.id.card_image);
     this.headerSecondaryAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
     this.headerPrimaryName = (TextView) view.findViewById(R.id.card_title);
@@ -70,10 +73,12 @@ public class SocialStoreViewHolder extends SocialEventsViewHolder<SocialStore> {
     this.storeNumberApps = (TextView) view.findViewById(R.id.social_number_of_apps_text);
     this.followStoreButton = (Button) view.findViewById(R.id.follow_btn);
     this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
+    this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
+    this.like = (LinearLayout) itemView.findViewById(R.id.social_like_layout);
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   @Override public void setCard(SocialStore card, int position) {
-    super.setCard(card, position);
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPoster()
             .getPrimaryAvatar(), this.headerPrimaryAvatar);
@@ -106,6 +111,15 @@ public class SocialStoreViewHolder extends SocialEventsViewHolder<SocialStore> {
     this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new StoreCardTouchEvent(card, card.getStoreName(), card.getStoreTheme(),
             CardTouchEvent.Type.BODY)));
+    if (card.isLiked()) {
+      likeButton.setHeartState(true);
+    } else {
+      likeButton.setHeartState(false);
+    }
+    this.like.setOnClickListener(click -> {
+      this.likeButton.performClick();
+      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.LIKE));
+    });
   }
 
   @NonNull private Spannable getStyledStoreName(SocialStore card) {
