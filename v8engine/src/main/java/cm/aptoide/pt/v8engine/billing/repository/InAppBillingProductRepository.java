@@ -38,7 +38,6 @@ public class InAppBillingProductRepository extends ProductRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
-  private final NetworkOperatorManager operatorManager;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final PackageRepository packageRepository;
@@ -46,16 +45,14 @@ public class InAppBillingProductRepository extends ProductRepository {
   public InAppBillingProductRepository(PurchaseFactory purchaseFactory,
       PaymentMethodMapper paymentMethodMapper, ProductFactory productFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, NetworkOperatorManager operatorManager,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      PackageRepository packageRepository) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, PackageRepository packageRepository) {
     super(paymentMethodMapper);
     this.purchaseFactory = purchaseFactory;
     this.productFactory = productFactory;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    this.operatorManager = operatorManager;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.packageRepository = packageRepository;
@@ -188,7 +185,7 @@ public class InAppBillingProductRepository extends ProductRepository {
 
   private Single<InAppBillingSkuDetailsResponse> getServerSKUs(int apiVersion, String packageName,
       List<String> skuList, String type, boolean bypassCache) {
-    return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
+    return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, type,
         bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(bypassCache)
         .first()

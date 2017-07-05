@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -25,14 +24,9 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
 
-/**
- * Created by marcelobenites on 29/11/16.
- */
-
 public class PaidAppProductRepository extends ProductRepository {
 
   private final PurchaseFactory purchaseFactory;
-  private final NetworkOperatorManager operatorManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -42,13 +36,11 @@ public class PaidAppProductRepository extends ProductRepository {
   private final Resources resources;
 
   public PaidAppProductRepository(PurchaseFactory purchaseFactory,
-      PaymentMethodMapper paymentMethodMapper, NetworkOperatorManager operatorManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, ProductFactory productFactory,
+      PaymentMethodMapper paymentMethodMapper, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      OkHttpClient httpClient, Converter.Factory converterFactory, ProductFactory productFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
     super(paymentMethodMapper);
     this.purchaseFactory = purchaseFactory;
-    this.operatorManager = operatorManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -86,8 +78,8 @@ public class PaidAppProductRepository extends ProductRepository {
 
   private Single<PaidApp> getServerPaidApp(boolean bypassCache, long appId, boolean sponsored,
       String storeName) {
-    return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
+    return GetApkInfoRequest.of(appId, sponsored, storeName, bodyInterceptorV3, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences, resources)
         .observe(bypassCache)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {

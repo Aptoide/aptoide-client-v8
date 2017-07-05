@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.telephony.TelephonyManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
@@ -16,7 +15,6 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -81,15 +79,9 @@ public final class RepositoryFactory {
         AccessorFactory.getAccessorFor(Download.class));
   }
 
-  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
-    return new NetworkOperatorManager(
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-  }
-
   public static AppRepository getAppRepository(Context context,
       SharedPreferences sharedPreferences) {
-    return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
-        getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
+    return new AppRepository(getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(), getHttpClient(context),
         WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
         context.getResources());

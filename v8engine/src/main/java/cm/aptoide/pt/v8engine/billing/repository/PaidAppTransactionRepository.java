@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.database.accessors.TransactionAccessor;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -31,12 +30,12 @@ public class PaidAppTransactionRepository extends TransactionRepository {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
-  public PaidAppTransactionRepository(NetworkOperatorManager operatorManager,
-      TransactionAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
-      TransactionFactory confirmationFactory, BodyInterceptor<BaseBody> bodyInterceptorV3,
-      Converter.Factory converterFactory, OkHttpClient httpClient, Payer payer,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(operatorManager, confirmationAccessor, backgroundSync, confirmationFactory, payer);
+  public PaidAppTransactionRepository(TransactionAccessor confirmationAccessor,
+      PaymentSyncScheduler backgroundSync, TransactionFactory confirmationFactory,
+      BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
+      OkHttpClient httpClient, Payer payer, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(confirmationAccessor, backgroundSync, confirmationFactory, payer);
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
@@ -45,7 +44,7 @@ public class PaidAppTransactionRepository extends TransactionRepository {
   }
 
   @Override public Completable createTransaction(int paymentId, Product product) {
-    return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
+    return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId,
         ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences, ((PaidAppProduct) product).getPackageVersionCode())
         .observe(true)

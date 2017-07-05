@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.database.accessors.TransactionAccessor;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Transaction;
@@ -16,16 +15,13 @@ import rx.Observable;
 
 public abstract class TransactionRepository {
 
-  protected final NetworkOperatorManager operatorManager;
   protected final TransactionFactory transactionFactory;
   private final Payer payer;
   private final TransactionAccessor transactionAccessor;
   private final PaymentSyncScheduler syncScheduler;
 
-  public TransactionRepository(NetworkOperatorManager operatorManager,
-      TransactionAccessor transactionAccessor, PaymentSyncScheduler syncScheduler,
-      TransactionFactory transactionFactory, Payer payer) {
-    this.operatorManager = operatorManager;
+  public TransactionRepository(TransactionAccessor transactionAccessor,
+      PaymentSyncScheduler syncScheduler, TransactionFactory transactionFactory, Payer payer) {
     this.transactionAccessor = transactionAccessor;
     this.syncScheduler = syncScheduler;
     this.transactionFactory = transactionFactory;

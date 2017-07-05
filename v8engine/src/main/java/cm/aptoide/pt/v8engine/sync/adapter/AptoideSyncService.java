@@ -9,18 +9,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.telephony.TelephonyManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 
-/**
- * Created by marcelobenites on 18/11/16.
- */
 public class AptoideSyncService extends Service {
 
   private static final Object lock = new Object();
@@ -33,8 +28,7 @@ public class AptoideSyncService extends Service {
         syncAdapter =
             new AptoideSyncAdapter(getApplicationContext(), true, false, new TransactionFactory(),
                 ((V8Engine) getApplicationContext()).getAuthorizationFactory(),
-                new ProductBundleMapper(), new NetworkOperatorManager(
-                (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
+                new ProductBundleMapper(),
                 AccessorFactory.getAccessorFor(PaymentConfirmation.class),
                 AccessorFactory.getAccessorFor(PaymentAuthorization.class),
                 ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(),

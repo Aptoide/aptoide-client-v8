@@ -108,10 +108,7 @@ import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
-import cm.aptoide.pt.v8engine.sync.alarm.NotificationAlarmManagerScheduler;
-import cm.aptoide.pt.v8engine.sync.adapter.PaymentSyncAdapterScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
-import cm.aptoide.pt.v8engine.sync.adapter.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
@@ -143,7 +140,6 @@ import cm.aptoide.pt.v8engine.notification.NotificationNetworkService;
 import cm.aptoide.pt.v8engine.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.v8engine.sync.alarm.NotificationSyncService;
 import cm.aptoide.pt.v8engine.notification.NotificationsCleaner;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
@@ -155,6 +151,10 @@ import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.sync.adapter.PaymentSyncAdapterScheduler;
+import cm.aptoide.pt.v8engine.sync.adapter.ProductBundleMapper;
+import cm.aptoide.pt.v8engine.sync.alarm.NotificationAlarmManagerScheduler;
+import cm.aptoide.pt.v8engine.sync.alarm.NotificationSyncService;
 import cm.aptoide.pt.v8engine.view.account.store.StoreManager;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
@@ -472,9 +472,9 @@ public abstract class V8Engine extends Application {
               NotificationSyncService.NOTIFICATIONS_SOCIAL_ACTION,
               pushNotificationSocialPeriodicity));
 
-      notificationSyncScheduler =
-          new NotificationAlarmManagerScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
-              NotificationSyncService.class, scheduleList, true);
+      notificationSyncScheduler = new NotificationAlarmManagerScheduler(this,
+          (AlarmManager) getSystemService(ALARM_SERVICE), NotificationSyncService.class,
+          scheduleList, true);
     }
     return notificationSyncScheduler;
   }
@@ -632,10 +632,10 @@ public abstract class V8Engine extends Application {
           new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager(),
               getDefaultSharedPreferences(), getResources(), getPackageName(),
-              Build.VERSION.SDK_INT, getPackageRepository()), getAccountFactory(),
-          getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter(),
-          getNonNullObjectMapper(), new RefreshTokenInvalidatorFactory(),
-          getDefaultSharedPreferences());
+              Build.VERSION.SDK_INT, getPackageRepository(), getNetworkOperatorManager()),
+          getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
+          WebService.getDefaultConverter(), getNonNullObjectMapper(),
+          new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
           SecurePreferencesImplementation.getInstance(this, getDefaultSharedPreferences()),
@@ -760,17 +760,15 @@ public abstract class V8Engine extends Application {
       final TransactionFactory confirmationFactory = new TransactionFactory();
 
       final TransactionRepositorySelector transactionRepositorySelector =
-          new TransactionRepositorySelector(
-              new InAppTransactionRepository(getNetworkOperatorManager(),
-                  AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-                  getPaymentSyncScheduler(), confirmationFactory, getBaseBodyInterceptorV3(),
-                  getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
-                  getTokenInvalidator(), getDefaultSharedPreferences()),
-              new PaidAppTransactionRepository(getNetworkOperatorManager(),
-                  AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-                  getPaymentSyncScheduler(), confirmationFactory, getBaseBodyInterceptorV3(),
-                  WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
-                  getTokenInvalidator(), getDefaultSharedPreferences()));
+          new TransactionRepositorySelector(new InAppTransactionRepository(
+              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
+              confirmationFactory, getBaseBodyInterceptorV3(), getDefaultClient(),
+              WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
+              getDefaultSharedPreferences()), new PaidAppTransactionRepository(
+              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
+              confirmationFactory, getBaseBodyInterceptorV3(), WebService.getDefaultConverter(),
+              getDefaultClient(), getAccountPayer(), getTokenInvalidator(),
+              getDefaultSharedPreferences()));
 
       final ProductFactory productFactory = new ProductFactory();
 
@@ -786,13 +784,11 @@ public abstract class V8Engine extends Application {
 
       final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
           new PaidAppProductRepository(purchaseFactory, paymentMethodMapper,
-              getNetworkOperatorManager(), getBaseBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), productFactory, getTokenInvalidator(),
-              getDefaultSharedPreferences(), getResources()),
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              productFactory, getTokenInvalidator(), getDefaultSharedPreferences(), getResources()),
           new InAppBillingProductRepository(purchaseFactory, paymentMethodMapper, productFactory,
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              getNetworkOperatorManager(), getTokenInvalidator(), getDefaultSharedPreferences(),
-              getPackageRepository()));
+              getTokenInvalidator(), getDefaultSharedPreferences(), getPackageRepository()));
 
       billing = new Billing(productRepositoryFactory, transactionRepositorySelector,
           getInAppBillingRepository());
@@ -1005,7 +1001,8 @@ public abstract class V8Engine extends Application {
       baseBodyInterceptorV3 =
           new BaseBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
               getAccountManager(), getQManager(), getDefaultSharedPreferences(),
-              BaseBodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT);
+              BaseBodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT,
+              getNetworkOperatorManager());
     }
     return baseBodyInterceptorV3;
   }

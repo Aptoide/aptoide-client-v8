@@ -36,18 +36,6 @@ public class CreatePaymentAuthorizationRequest extends V3<BaseV3Response> {
         converterFactory, false, tokenInvalidator, sharedPreferences);
   }
 
-  public static CreatePaymentAuthorizationRequest of(int paymentId, String authorizationCode,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    BaseBody args = new BaseBody();
-    args.put("payType", String.valueOf(paymentId));
-    args.put("authToken", authorizationCode);
-    args.put("reqType", "rest");
-    return new CreatePaymentAuthorizationRequest(args, bodyInterceptor, httpClient,
-        converterFactory, true, tokenInvalidator, sharedPreferences);
-  }
-
   @Override
   protected Observable<BaseV3Response> loadDataFromNetwork(Service service, boolean bypassCache) {
     if (hasAuthorizationCode) {

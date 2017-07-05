@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.sync.adapter;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
 import cm.aptoide.pt.database.accessors.TransactionAccessor;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -35,7 +34,6 @@ import rx.Single;
 public class TransactionSync extends ScheduledSync {
 
   private final Product product;
-  private final NetworkOperatorManager operatorManager;
   private final TransactionAccessor transactionAccessor;
   private final TransactionFactory transactionFactory;
   private final Payer payer;
@@ -46,13 +44,12 @@ public class TransactionSync extends ScheduledSync {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
-  public TransactionSync(Product product, NetworkOperatorManager operatorManager,
-      TransactionAccessor transactionAccessor, TransactionFactory transactionFactory, Payer payer,
+  public TransactionSync(Product product, TransactionAccessor transactionAccessor,
+      TransactionFactory transactionFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, PaymentAnalytics analytics, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     this.product = product;
-    this.operatorManager = operatorManager;
     this.transactionAccessor = transactionAccessor;
     this.transactionFactory = transactionFactory;
     this.payer = payer;
@@ -101,15 +98,15 @@ public class TransactionSync extends ScheduledSync {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
-            return GetTransactionRequest.of(product.getId(), operatorManager,
+            return GetTransactionRequest.of(product.getId(),
                 ((InAppProduct) product).getApiVersion(), bodyInterceptorV3, httpClient,
                 converterFactory, tokenInvalidator, sharedPreferences)
                 .observe()
                 .cast(TransactionResponse.class)
                 .toSingle();
           }
-          return GetTransactionRequest.of(product.getId(), operatorManager, bodyInterceptorV3,
-              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+          return GetTransactionRequest.of(product.getId(), bodyInterceptorV3, httpClient,
+              converterFactory, tokenInvalidator, sharedPreferences)
               .observe()
               .toSingle();
         })
@@ -127,8 +124,7 @@ public class TransactionSync extends ScheduledSync {
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
             return CreatePaymentConfirmationRequest.ofInApp(product.getId(),
-                transaction.getPaymentMethodId(), operatorManager,
-                ((InAppProduct) product).getDeveloperPayload(),
+                transaction.getPaymentMethodId(), ((InAppProduct) product).getDeveloperPayload(),
                 transaction.getPayPalConfirmationId(), bodyInterceptorV3, httpClient,
                 converterFactory, tokenInvalidator, sharedPreferences,
                 ((InAppProduct) product).getPackageVersionCode())
@@ -136,9 +132,9 @@ public class TransactionSync extends ScheduledSync {
                 .toSingle();
           }
           return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(),
-              transaction.getPaymentMethodId(), operatorManager,
-              ((PaidAppProduct) product).getStoreName(), transaction.getPayPalConfirmationId(),
-              bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+              transaction.getPaymentMethodId(), ((PaidAppProduct) product).getStoreName(),
+              transaction.getPayPalConfirmationId(), bodyInterceptorV3, httpClient,
+              converterFactory, tokenInvalidator, sharedPreferences,
               ((PaidAppProduct) product).getPackageVersionCode())
               .observe(true)
               .toSingle();
