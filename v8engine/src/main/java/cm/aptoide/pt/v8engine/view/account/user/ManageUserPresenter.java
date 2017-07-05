@@ -15,7 +15,6 @@ import cm.aptoide.pt.v8engine.view.account.UriToPathResolver;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeoutException;
 import rx.Completable;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class ManageUserPresenter implements Presenter {
@@ -104,19 +103,18 @@ public class ManageUserPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveUserDataButtonClick()
             .doOnNext(__2 -> view.showProgressDialog())
-            .flatMap(userData -> saveUserData(userData))
+            .flatMapCompletable(userData -> saveUserData(userData))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
-  @NonNull private Observable<Void> saveUserData(ManageUserFragment.ViewModel userData) {
+  @NonNull private Completable saveUserData(ManageUserFragment.ViewModel userData) {
     return updateUserAccount(userData).observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> view.dismissProgressDialog())
         .doOnCompleted(() -> sendAnalytics(userData))
         .doOnCompleted(() -> navigateAway())
-        .onErrorResumeNext(err -> handleSaveUserDataError(err))
-        .toObservable();
+        .onErrorResumeNext(err -> handleSaveUserDataError(err));
   }
 
   private void handleCancelClick() {

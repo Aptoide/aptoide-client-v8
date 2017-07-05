@@ -78,18 +78,18 @@ public class ImageLoader {
   /**
    * Blocking call to load a bitmap.
    *
-   * @param apkIconPath Path for the bitmap to be loaded.
+   * @param uri Path for the bitmap to be loaded.
    *
    * @return Loaded bitmap or null.
    */
-  @WorkerThread public @Nullable Bitmap loadBitmap(String apkIconPath) {
+  @WorkerThread public @Nullable Bitmap loadBitmap(String uri) {
     Context context = weakContext.get();
     if (context != null) {
       try {
         return Glide.
             with(context)
             .
-                load(apkIconPath)
+                load(uri)
             .
                 asBitmap()
             .
@@ -383,8 +383,8 @@ public class ImageLoader {
             with(context)
             .load(apkIconPath)
             .asBitmap()
-            .into(-1, -1). // full size
-            get();
+            .into(-1, -1) // full size
+            .get();
       } catch (InterruptedException e) {
         e.printStackTrace();
       } catch (ExecutionException e) {

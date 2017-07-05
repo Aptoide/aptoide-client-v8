@@ -4,16 +4,15 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
 
 public class UriToPathResolver {
 
+  private static final String TAG = UriToPathResolver.class.getName();
   private final ContentResolver contentResolver;
-  private final CrashReport crashReport;
 
-  public UriToPathResolver(ContentResolver contentResolver, CrashReport crashReport) {
+  public UriToPathResolver(ContentResolver contentResolver) {
     this.contentResolver = contentResolver;
-    this.crashReport = crashReport;
   }
 
   public String getMediaStoragePath(Uri contentUri) {
@@ -23,19 +22,30 @@ public class UriToPathResolver {
 
     Cursor cursor = null;
     try {
-      String[] projection = { MediaStore.Images.Media.DATA };
+      final String columnName = MediaStore.Images.Media.DATA;
+      String[] projection = { columnName };
       cursor = contentResolver.query(contentUri, projection, null, null, null);
-      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-      cursor.moveToFirst();
-      return cursor.getString(column_index);
-    } catch (NullPointerException ex) {
-      crashReport.log(ex);
+      int column_index = cursor.getColumnIndexOrThrow(columnName);
+      if(cursor!=null) {
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+      }
+    } catch (Exception ex) {
+      Logger.e(TAG, ex);
     } finally {
-      if (cursor != null) {
+      if (cursor != null && !cursor.isClosed()) {
         cursor.close();
       }
     }
+
     // default situation
-    return contentUri.getPath();
+    return contentUri.toString();
+  }
+
+  public String getCameraStoragePath(Uri uri) {
+    Cursor cursor = contentResolver.query(uri, null, null, null, null);
+    cursor.moveToFirst();
+    int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+    return cursor.getString(idx);
   }
 }

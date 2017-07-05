@@ -41,10 +41,10 @@ public class ImageValidator {
   private ImageInfo getInfo(String imagePath) {
     ImageInfo imageInfo = null;
     Bitmap image = imageLoader.load(imagePath);
-    //Bitmap image = BitmapFactory.decodeFile(imagePath);
     if (image != null) {
       imageInfo = new ImageInfo(image.getWidth(), image.getHeight(), new File(imagePath).length());
     }
+    image.recycle();
     return imageInfo;
   }
 

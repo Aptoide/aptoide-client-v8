@@ -163,12 +163,12 @@ public class StoreManager {
   }
 
   private Completable updateStoreWithAvatar(String storeName, String storeDescription,
-      String storeThemeName, String storeImage) {
+      String storeThemeName, String storeImagePath) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
         .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
-            storeImage, multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory,
+            storeImagePath, multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory,
             objectMapper, sharedPreferences, tokenInvalidator)
             .observe()
             .toSingle())

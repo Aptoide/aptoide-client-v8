@@ -120,7 +120,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
     crashReport = CrashReport.getInstance();
-    uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver(), crashReport);
+    uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
     imageValidator = new ImageValidator(ImageLoader.with(getActivity()), Schedulers.computation());
     manageStoreNavigator = new ManageStoreNavigator(getFragmentNavigator());
@@ -170,7 +170,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void loadImageStateless(String pictureUri) {
     ImageLoader.with(getActivity())
-        .loadUsingCircleTransform(pictureUri, storeImage);
+        .loadUsingCircleTransformAndPlaceholder(pictureUri, storeImage,
+            R.drawable.create_store_avatar);
     currentModel.setPictureUri(pictureUri);
   }
 
@@ -242,8 +243,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private void attachPresenters() {
     final ImagePickerPresenter imagePickerPresenter =
         new ImagePickerPresenter(this, crashReport, accountPermissionProvider, photoFileGenerator,
-            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver,
-            imagePickerNavigator);
+            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
+            getActivity().getContentResolver(), ImageLoader.with(getContext()));
 
     final ManageStorePresenter presenter =
         new ManageStorePresenter(this, crashReport, storeManager, getResources(), uriToPathResolver,

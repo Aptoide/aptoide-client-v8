@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.view.account.UriToPathResolver;
 import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import cm.aptoide.pt.v8engine.view.account.exception.StoreCreationException;
 import rx.Completable;
+import rx.Single;
 
 public class ManageStorePresenter implements Presenter {
 
@@ -64,30 +65,32 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveDataClick()
-            .flatMap(storeModel -> handleSaveClick(storeModel).toObservable())
+            .flatMapCompletable(storeModel -> handleSaveClick(storeModel))
+            .doOnError(err -> crashReport.log(err))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
   private Completable handleSaveClick(ManageStoreFragment.ViewModel storeModel) {
-    String mediaStoragePath = "";
-    if (storeModel.hasNewAvatar()) {
-      mediaStoragePath =
-          uriToPathResolver.getMediaStoragePath(Uri.parse(storeModel.getPictureUri()));
-    }
-
-    final Completable saveDataCompletable =
-        storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
-            storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
-            storeModel.getStoreThemeName(), storeModel.storeExists());
-
     return Completable.fromAction(() -> view.showWaitProgressBar())
-        .andThen(saveDataCompletable)
+        .andThen(saveData(storeModel))
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> navigate())
         .onErrorResumeNext(err -> Completable.fromAction(() -> view.dismissWaitProgressBar())
             .andThen(handleStoreCreationErrors(err)));
+  }
+
+  private Completable saveData(ManageStoreFragment.ViewModel storeModel) {
+    return Single.fromCallable(() -> {
+      if (storeModel.hasNewAvatar()) {
+        return uriToPathResolver.getMediaStoragePath(Uri.parse(storeModel.getPictureUri()));
+      }
+      return "";
+    })
+        .flatMapCompletable(mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreId(),
+            storeModel.getStoreName(), storeModel.getStoreDescription(), mediaStoragePath,
+            storeModel.hasNewAvatar(), storeModel.getStoreThemeName(), storeModel.storeExists()));
   }
 
   private void navigate() {

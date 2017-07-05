@@ -95,11 +95,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     return manageUserFragment;
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(currentModel));
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -119,7 +114,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
     crashReport = CrashReport.getInstance();
-    uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver(), crashReport);
+    uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver());
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
@@ -139,6 +134,11 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
         context.getString(R.string.please_wait_upload));
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(currentModel));
   }
 
   @Nullable @Override
@@ -172,7 +172,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private void attachPresenters() {
     final ImagePickerPresenter imagePickerPresenter =
         new ImagePickerPresenter(this, crashReport, accountPermissionProvider, photoFileGenerator,
-            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator);
+            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
+            getActivity().getContentResolver(), ImageLoader.with(getContext()));
 
     final ManageUserPresenter manageUserPresenter =
         new ManageUserPresenter(this, crashReport, accountManager, errorMapper, navigator,
@@ -228,18 +229,18 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     return ShowMessage.asLongObservableSnack(createUserButton, error);
   }
 
+  @Override public void loadImageStateless(String pictureUri) {
+    currentModel.setPictureUri(pictureUri);
+    ImageLoader.with(getActivity())
+        .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
+  }
+
   /**
    * @param pictureUri Load image to UI and save image in model to handle configuration changes.
    */
   @Override public void loadImage(String pictureUri) {
     loadImageStateless(pictureUri);
     currentModel.setNewPicture(true);
-  }
-
-  @Override public void loadImageStateless(String pictureUri) {
-    currentModel.setPictureUri(pictureUri);
-    ImageLoader.with(getActivity())
-        .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
   }
 
   @Override public Observable<DialogInterface> dialogCameraSelected() {

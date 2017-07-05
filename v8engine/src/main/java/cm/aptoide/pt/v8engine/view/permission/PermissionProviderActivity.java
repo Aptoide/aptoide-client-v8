@@ -46,8 +46,10 @@ public class PermissionProviderActivity extends PermissionServiceActivity
     }
 
     permissionRelay.call(grantedPermissions);
-    ActivityCompat.requestPermissions(this, remainingPermissions.toArray(new String[0]),
-        requestCode);
+    if (!remainingPermissions.isEmpty()) {
+      ActivityCompat.requestPermissions(this, remainingPermissions.toArray(new String[0]),
+          requestCode);
+    }
   }
 
   @Override public Observable<List<Permission>> permissionResults(int requestCode) {

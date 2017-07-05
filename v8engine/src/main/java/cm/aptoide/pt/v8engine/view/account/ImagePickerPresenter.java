@@ -1,15 +1,22 @@
 package cm.aptoide.pt.v8engine.view.account;
 
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import cm.aptoide.pt.v8engine.view.permission.AccountPermissionProvider;
+import java.io.File;
 import rx.Completable;
 import rx.Scheduler;
+import rx.Single;
+import rx.schedulers.Schedulers;
 
 public class ImagePickerPresenter implements Presenter {
 
@@ -24,11 +31,13 @@ public class ImagePickerPresenter implements Presenter {
   private final Scheduler uiScheduler;
   private final UriToPathResolver uriToPathResolver;
   private final ImagePickerNavigator navigator;
+  private final ContentResolver contentResolver;
+  private final ImageLoader imageLoader;
 
   public ImagePickerPresenter(ImagePickerView view, CrashReport crashReport,
       AccountPermissionProvider accountPermissionProvider, PhotoFileGenerator photoFileGenerator,
       ImageValidator imageValidator, Scheduler viewScheduler, UriToPathResolver uriToPathResolver,
-      ImagePickerNavigator navigator) {
+      ImagePickerNavigator navigator, ContentResolver contentResolver, ImageLoader imageLoader) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountPermissionProvider = accountPermissionProvider;
@@ -37,6 +46,8 @@ public class ImagePickerPresenter implements Presenter {
     this.uiScheduler = viewScheduler;
     this.uriToPathResolver = uriToPathResolver;
     this.navigator = navigator;
+    this.contentResolver = contentResolver;
+    this.imageLoader = imageLoader;
   }
 
   public void handlePickImageClick() {
@@ -50,17 +61,45 @@ public class ImagePickerPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  @NonNull private Completable loadValidImageOrThrow(String createdUri) {
+  @NonNull private Completable loadValidImageOrThrowForCamera(String createdUri) {
     return imageValidator.validateOrGetException(createdUri)
         .observeOn(uiScheduler)
         .doOnCompleted(() -> view.loadImage(createdUri));
+    /*
+    return Completable.fromAction(() -> {
+
+      Bitmap image = imageLoader.loadBitmap(createdUri);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        MediaStore.Images.Media.insertImage(contentResolver, image,
+            createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
+      }
+    })
+        .andThen(imageValidator.validateOrGetException(createdUri))
+        .subscribeOn(Schedulers.io())
+        .observeOn(uiScheduler)
+        .doOnCompleted(() -> view.loadImage(createdUri));
+        */
   }
 
-  @NonNull private Completable getFileFromCameraWithUri(String createdUri) {
-    final Uri fileUri = Uri.parse(createdUri);
-    return navigator.navigateToCameraWithImageUri(CAMERA_PICK, fileUri)
+  @NonNull private Single<String> getFileNameFromCameraWithUri(String createdUri) {
+    return navigator.navigateToCameraWithImageUri(CAMERA_PICK, Uri.parse(createdUri))
         .first()
-        .toCompletable();
+        .flatMapSingle(__ -> saveCameraPictureInPublicPhotos(createdUri))
+        .toSingle();
+  }
+
+  /**
+   * @return absolute Uri to the public photo
+   */
+  private Single<String> saveCameraPictureInPublicPhotos(String createdUri) {
+    return Single.fromCallable(() -> {
+      Bitmap image = imageLoader.loadBitmap(createdUri);
+      String path = MediaStore.Images.Media.insertImage(contentResolver, image,
+          createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
+      image.recycle();
+      return uriToPathResolver.getCameraStoragePath(Uri.parse(path));
+    })
+        .subscribeOn(Schedulers.io());
   }
 
   private void handleCameraSelection() {
@@ -80,7 +119,8 @@ public class ImagePickerPresenter implements Presenter {
             .filter(success -> success)
             .doOnNext(__2 -> view.dismissLoadImageDialog())
             .flatMap(__2 -> navigator.navigateToGalleryForImageUri(GALLERY_PICK))
-            .flatMapCompletable(selectedImageUri -> loadValidImageOrThrow(selectedImageUri))
+            .flatMapCompletable(
+                selectedImageUri -> loadValidImageOrThrowForGallery(selectedImageUri))
             .doOnError(err -> {
               crashReport.log(err);
               if (err instanceof InvalidImageException) {
@@ -92,9 +132,15 @@ public class ImagePickerPresenter implements Presenter {
         .subscribe();
   }
 
-  @NonNull private Completable loadValidImageOrThrow(Uri selectedImageUri) {
-    return imageValidator.validateOrGetException(
-        uriToPathResolver.getMediaStoragePath(selectedImageUri))
+  @NonNull private Completable loadValidImageOrThrowForGallery(Uri selectedImageUri) {
+    /*
+    return Single.just(uriToPathResolver.getMediaStoragePath(selectedImageUri))
+        .flatMapCompletable(imagePath -> imageValidator.validateOrGetException(imagePath)
+            .observeOn(uiScheduler)
+            .doOnCompleted(() -> view.loadImage(imagePath)));
+    */
+
+    return imageValidator.validateOrGetException(selectedImageUri.toString())
         .observeOn(uiScheduler)
         .doOnCompleted(() -> view.loadImage(selectedImageUri.toString()));
   }
@@ -116,11 +162,15 @@ public class ImagePickerPresenter implements Presenter {
             .filter(success -> success)
             .doOnNext(__2 -> view.dismissLoadImageDialog())
             .flatMapSingle(__2 -> photoFileGenerator.generateNewImageFileUriAsString())
-            .flatMapCompletable(createdUri -> getFileFromCameraWithUri(createdUri).andThen(
-                loadValidImageOrThrow(createdUri)))
+            .flatMapCompletable(
+                createdUri -> getFileNameFromCameraWithUri(createdUri).observeOn(uiScheduler)
+                    .flatMapCompletable(
+                        fullFilePath -> loadValidImageOrThrowForCamera(fullFilePath)))
             .doOnError(err -> {
               if (err instanceof InvalidImageException) {
                 view.showIconPropertiesError((InvalidImageException) err);
+              } else {
+                crashReport.log(err);
               }
             })
             .retry())
