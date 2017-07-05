@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.R;
 import java.util.List;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by filipe on 19-06-2017.
@@ -23,14 +23,13 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
   private static final int TYPE_HEADER = 0;
   private static final int TYPE_ITEM = 1;
 
-  private Context context;
   private Header header;
   private List<AppModel> installedApps;
-  private SpotAndShareAppSelectionView.AppSelectionListener appSelectionListener;
+  private PublishSubject<AppModel> appSubject;
 
-  public SpotAndShareAppSelectionAdapter(Context context, Header header,
+  public SpotAndShareAppSelectionAdapter(PublishSubject<AppModel> appSubject, Header header,
       List<AppModel> installedApps) {
-    this.context = context;
+    this.appSubject = appSubject;
     this.header = header;
     this.installedApps = installedApps;
   }
@@ -51,24 +50,11 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     if (holder instanceof ViewHolderHeader) {
       ViewHolderHeader viewHolderHeader = (ViewHolderHeader) holder;
-      viewHolderHeader.headerTextView.setText(header.getTitle());
+      viewHolderHeader.setAppModelHeader(header);
     } else if (holder instanceof ViewHolderItem) {
 
       ViewHolderItem viewHolderItem = (ViewHolderItem) holder;
-      viewHolderItem.appIcon.setImageDrawable(installedApps.get(position - 1)
-          .getAppIcon());
-      viewHolderItem.appName.setText(installedApps.get(position - 1)
-          .getAppName());
-
-      viewHolderItem.frameLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          if (appSelectionListener != null) {
-            appSelectionListener.onAppSelected(installedApps.get(position - 1));
-            System.out.println("Selected app : " + installedApps.get(position - 1)
-                .getAppName());
-          }
-        }
-      });
+      viewHolderItem.setAppModelItem(installedApps.get(position - 1));
     }
   }
 
@@ -87,10 +73,6 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
     return position == 0;
   }
 
-  public void setListener(SpotAndShareAppSelectionView.AppSelectionListener appSelectionListener) {
-    this.appSelectionListener = appSelectionListener;
-  }
-
   class ViewHolderHeader extends ViewHolder {
 
     private TextView headerTextView;
@@ -98,6 +80,10 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
     public ViewHolderHeader(View itemView) {
       super(itemView);
       headerTextView = (TextView) itemView.findViewById(R.id.app_item_text_view);
+    }
+
+    public void setAppModelHeader(Header header) {
+      headerTextView.setText(header.getTitle());
     }
   }
 
@@ -112,6 +98,12 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
       appIcon = (ImageView) itemView.findViewById(R.id.app_item_image_view);
       appName = (TextView) itemView.findViewById(R.id.app_item_text_view);
       frameLayout = (FrameLayout) itemView.findViewById(R.id.app_item_frame_layout);
+    }
+
+    public void setAppModelItem(AppModel appModel) {
+      appIcon.setImageDrawable(appModel.getAppIcon());
+      appName.setText(appModel.getAppName());
+      frameLayout.setOnClickListener(v -> appSubject.onNext(appModel));
     }
   }
 }

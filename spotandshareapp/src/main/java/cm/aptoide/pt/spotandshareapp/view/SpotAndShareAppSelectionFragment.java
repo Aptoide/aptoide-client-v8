@@ -23,6 +23,7 @@ import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by filipe on 12-06-2017.
@@ -38,6 +39,8 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private ClickHandler clickHandler;
   private RxAlertDialog warningDialog;
 
+  private PublishSubject<AppModel> appSubject;
+
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareAppSelectionFragment();
     return fragment;
@@ -46,6 +49,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     backRelay = PublishRelay.create();
+    appSubject = PublishSubject.create();
   }
 
   @Override public void finish() {
@@ -53,16 +57,12 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void setupRecyclerView(List<AppModel> installedApps) {
-    adapter = new SpotAndShareAppSelectionAdapter(getContext().getApplicationContext(),
+    adapter = new SpotAndShareAppSelectionAdapter(appSubject,
         new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
         installedApps);
     recyclerView.setAdapter(adapter);
     setupLayoutManager();
     recyclerView.setHasFixedSize(true);
-  }
-
-  @Override public void setupAppSelection(AppSelectionListener appSelectionListener) {
-    adapter.setListener(appSelectionListener);
   }
 
   @Override public Observable<Void> backButtonEvent() {
@@ -86,6 +86,10 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     Toast.makeText(getContext(), "There was an error while trying to leave the group",
         Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<AppModel> appSelection() {
+    return appSubject;
   }
 
   private void setupLayoutManager() {
@@ -130,11 +134,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void onDestroyView() {
-    adapter = null;
-    recyclerView = null;
     toolbar = null;
     unregisterClickHandler(clickHandler);
     clickHandler = null;
+    adapter = null;
+    recyclerView = null;
     super.onDestroyView();
   }
 

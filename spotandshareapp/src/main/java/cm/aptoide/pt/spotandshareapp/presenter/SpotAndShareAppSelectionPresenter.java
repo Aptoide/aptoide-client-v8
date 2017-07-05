@@ -32,7 +32,6 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.setupRecyclerView(installedRepositoryDummy.getInstalledApps()))
-        .doOnNext(created -> setupAdapterListener())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
@@ -52,23 +51,27 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.appSelection())
+        .doOnNext(appModel -> selectedApp(appModel))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
+  }
+
+  private void selectedApp(AppModel appModel) {
+    System.out.println("selected app " + appModel.getAppName());
+    if (selectedApps.contains(appModel)) {
+      selectedApps.remove(appModel);
+    } else {
+      selectedApps.add(appModel);
+    }
   }
 
   private void leaveGroup() {
     spotAndShare.leaveGroup(success -> view.navigateBack(), err -> view.onLeaveGroupError());
-  }
-
-  private void setupAdapterListener() {
-    view.setupAppSelection(new SpotAndShareAppSelectionView.AppSelectionListener() {
-
-      @Override public void onAppSelected(AppModel appModel) {
-        if (selectedApps.contains(appModel)) {
-          selectedApps.remove(appModel);
-        } else {
-          selectedApps.add(appModel);
-        }
-      }
-    });
   }
 
   @Override public void saveState(Bundle state) {
