@@ -21,6 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
+import rx.functions.Action0;
 
 /**
  * Created by neuro on 22-06-2017.
@@ -65,11 +66,11 @@ class JoinHotspotManager {
       Logger.e(TAG, "joinHotspot: JoinHotspotManager timed out!");
     }, timeout, TimeUnit.MILLISECONDS);
 
-    return joinHotspot(ssid, true, joinNetworkBroadcastReceiver) == SUCCESSFUL_JOIN;
+    return joinHotspot(ssid, true, () -> registerStateChangeReceiver(joinNetworkBroadcastReceiver))
+        == SUCCESSFUL_JOIN;
   }
 
-  private int joinHotspot(String ssid, boolean shouldReconnect,
-      @Nullable JoinNetworkBroadcastReceiver joinNetworkBroadcastReceiver) {
+  private int joinHotspot(String ssid, boolean shouldReconnect, @Nullable Action0 onSuccess) {
     // TODO: 22-06-2017 neuro ligar wifi when needed
     WifiConfiguration conf = new WifiConfiguration();
     //Logger.d(TAG, "chosen hotspot is : " + ssid);
@@ -98,16 +99,16 @@ class JoinHotspotManager {
               boolean reconnect = wifimanager.reconnect();
 
               if (reconnect) {
-                if (joinNetworkBroadcastReceiver != null) {
-                  registerStateChangeReceiver(joinNetworkBroadcastReceiver);
+                if (onSuccess != null) {
+                  onSuccess.call();
                 }
                 return SUCCESSFUL_JOIN;
               } else {
                 return ERROR_ON_RECONNECT;
               }
             } else {
-              if (joinNetworkBroadcastReceiver != null) {
-                registerStateChangeReceiver(joinNetworkBroadcastReceiver);
+              if (onSuccess != null) {
+                onSuccess.call();
               }
               return SUCCESSFUL_JOIN;
             }
@@ -149,8 +150,7 @@ class JoinHotspotManager {
 
       ConnectivityManager conMgr =
           (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-      int currentApiVersion = Build.VERSION.SDK_INT;
-      if (currentApiVersion >= Build.VERSION_CODES.LOLLIPOP) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         Network[] networks = conMgr.getAllNetworks();
         if (networks != null) {
           for (Network network : networks) {
