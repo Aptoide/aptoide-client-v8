@@ -1,12 +1,15 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import java.io.File;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,6 +71,14 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     } else {
       selectedApps.add(appModel);
     }
+    //// FIXME: 06-07-2017 filipe check connection status;
+    String appName = appModel.getAppName();
+    String packageName = appModel.getPackageName();
+    File apk = new File(appModel.getFilePath());
+
+    AndroidAppInfo androidAppInfo = new AndroidAppInfo(appName, packageName, apk);
+    spotAndShare.sendApps(Collections.singletonList(androidAppInfo));
+
     view.openTransferRecord();
   }
 
