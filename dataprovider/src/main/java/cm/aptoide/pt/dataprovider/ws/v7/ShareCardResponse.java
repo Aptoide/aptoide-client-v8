@@ -1,6 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.base.BaseV7Response;
 
 /**
  * Created by jdandrade on 13/03/2017.

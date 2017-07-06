@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.model.v7.store;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import java.util.List;
 import lombok.Data;

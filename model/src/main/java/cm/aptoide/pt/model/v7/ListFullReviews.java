@@ -5,9 +5,11 @@
 
 package cm.aptoide.pt.model.v7;
 
+import cm.aptoide.pt.model.v7.base.BaseV7EndlessDataListResponse;
+
 /**
  * Created by neuro on 04-07-2016.
  */
-public class ListFullReviews extends BaseV7EndlessDatalistResponse<FullReview> {
+public class ListFullReviews extends BaseV7EndlessDataListResponse<FullReview> {
 
 }

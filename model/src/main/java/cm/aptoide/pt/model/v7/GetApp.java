@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.model.v7;
 
+import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

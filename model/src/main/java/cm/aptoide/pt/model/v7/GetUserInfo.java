@@ -1,5 +1,6 @@
 package cm.aptoide.pt.model.v7;
 
+import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import lombok.Data;
 
 /**

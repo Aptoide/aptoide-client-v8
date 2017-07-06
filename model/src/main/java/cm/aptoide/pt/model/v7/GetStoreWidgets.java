@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.model.v7;
 
+import cm.aptoide.pt.model.v7.base.BaseV7EndlessDataListResponse;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,7 @@ import lombok.experimental.Accessors;
  * Created by neuro on 22-04-2016.
  */
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class GetStoreWidgets
-    extends BaseV7EndlessDatalistResponse<GetStoreWidgets.WSWidget> {
+    extends BaseV7EndlessDataListResponse<GetStoreWidgets.WSWidget> {
 
   @Data public static class WSWidget {
 

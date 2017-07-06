@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.exception;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.utils.BaseException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

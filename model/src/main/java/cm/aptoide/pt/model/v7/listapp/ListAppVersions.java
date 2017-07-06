@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.model.v7.listapp;
 
-import cm.aptoide.pt.model.v7.BaseV7EndlessListResponse;
+import cm.aptoide.pt.model.v7.base.BaseV7EndlessListResponse;
 import lombok.EqualsAndHashCode;
 
 /**

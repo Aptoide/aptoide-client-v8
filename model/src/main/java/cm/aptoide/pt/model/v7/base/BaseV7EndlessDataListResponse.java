@@ -1,20 +1,16 @@
-/*
- * Copyright (c) 2016.
- * Modified on 18/08/2016.
- */
+package cm.aptoide.pt.model.v7.base;
 
-package cm.aptoide.pt.model.v7;
-
+import cm.aptoide.pt.model.v7.DataList;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * Created on 18/08/16.
  */
-@EqualsAndHashCode(callSuper = true) @Data public class BaseV7EndlessDatalistResponse<T>
+@EqualsAndHashCode(callSuper = true) @Data public class BaseV7EndlessDataListResponse<T>
     extends BaseV7EndlessResponse {
 
-  private Datalist<T> datalist;
+  private DataList<T> datalist;
 
   @Override public int getTotal() {
     return hasData() ? datalist.getTotal() : 0;
