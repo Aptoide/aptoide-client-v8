@@ -1,16 +1,21 @@
 package cm.aptoide.pt.v8engine.billing;
 
-import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import java.util.List;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public interface TransactionPersistence {
 
-  Observable<List<PaymentConfirmation>> getTransaction(int productId, String payerId);
+  Single<Transaction> createTransaction(int productId, String metadata, Transaction.Status status,
+      String payerId, int paymentMethodId);
 
-  void removeTransaction(int productId);
+  Observable<Transaction> getTransaction(int productId, String payerId);
 
-  void removeAllTransactions();
+  Completable removeTransaction(int productId);
 
-  void saveTransaction(PaymentConfirmation transaction);
+  Completable removeAllTransactions();
+
+  Completable saveTransaction(Transaction transaction);
+
+  Single<Transaction> createTransaction(int productId, String payerId);
 }

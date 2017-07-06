@@ -13,26 +13,55 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 16/11/16.
- */
-public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
+public class CreateTransactionRequest extends V3<BaseV3Response> {
 
-  private CreatePaymentConfirmationRequest(BaseBody baseBody,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+  private CreateTransactionRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
         sharedPreferences);
   }
 
-  public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
+  public static CreateTransactionRequest ofInApp(int productId, int paymentId,
       String developerPayload, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, int versionCode) {
     final BaseBody args = getBaseBody(productId, paymentId, versionCode);
     args.put("developerPayload", developerPayload);
-    return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
+    return new CreateTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  public static CreateTransactionRequest ofInApp(int productId, int paymentId,
+      String developerPayload, String metadata,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, int versionCode) {
+    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
+    args.put("paykey", metadata);
+    args.put("developerPayload", developerPayload);
+    return new CreateTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  public static CreateTransactionRequest ofPaidApp(int productId, int paymentId, String store,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, int versionCode) {
+    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
+    args.put("repo", store);
+    return new CreateTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  public static CreateTransactionRequest ofPaidApp(int productId, int paymentId, String store,
+      String metadata, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, int versionCode) {
+    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
+    args.put("paykey", metadata);
+    args.put("repo", store);
+    return new CreateTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
@@ -45,41 +74,8 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
     return body;
   }
 
-  public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
-      String developerPayload, String paymentConfirmationId,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, int versionCode) {
-    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
-    args.put("paykey", paymentConfirmationId);
-    args.put("developerPayload", developerPayload);
-    return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
-  }
-
-  public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
-      String store, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, int versionCode) {
-    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
-    args.put("repo", store);
-    return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
-  }
-
-  public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
-      String store, String paymentConfirmationId, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, int versionCode) {
-    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
-    args.put("paykey", paymentConfirmationId);
-    args.put("repo", store);
-    return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
-  }
-
   @Override
   protected Observable<BaseV3Response> loadDataFromNetwork(Service service, boolean bypassCache) {
-    return service.createPaymentConfirmation(map);
+    return service.createTransaction(map);
   }
 }

@@ -53,6 +53,6 @@ public class GetTransactionRequest extends V3<TransactionResponse> {
 
   @Override protected Observable<TransactionResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
-    return service.getPaymentConfirmation(map);
+    return service.getTransaction(map);
   }
 }

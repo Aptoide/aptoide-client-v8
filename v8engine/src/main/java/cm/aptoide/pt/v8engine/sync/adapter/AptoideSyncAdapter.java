@@ -20,8 +20,8 @@ import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
+import cm.aptoide.pt.v8engine.billing.TransactionService;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -34,7 +34,6 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
 
   private final ProductBundleMapper productConverter;
-  private final TransactionFactory confirmationConverter;
   private final AuthorizationFactory authorizationConverter;
   private final TransactionPersistence transactionPersistence;
   private final PaymentAuthorizationAccessor authorizationAcessor;
@@ -45,16 +44,17 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final Payer payer;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private final TransactionService transactionService;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
-      TransactionFactory confirmationConverter, AuthorizationFactory authorizationConverter,
-      ProductBundleMapper productConverter, TransactionPersistence transactionPersistence,
+      AuthorizationFactory authorizationConverter, ProductBundleMapper productConverter,
+      TransactionPersistence transactionPersistence,
       PaymentAuthorizationAccessor authorizationAcessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, BillingAnalytics billingAnalytics, Payer payer,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      TransactionService transactionService) {
     super(context, autoInitialize, allowParallelSyncs);
-    this.confirmationConverter = confirmationConverter;
     this.authorizationConverter = authorizationConverter;
     this.productConverter = productConverter;
     this.transactionPersistence = transactionPersistence;
@@ -66,6 +66,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     this.payer = payer;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.transactionService = transactionService;
   }
 
   @Override public void onPerformSync(Account account, Bundle extras, String authority,
@@ -75,9 +76,8 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
 
     if (transactions) {
       final Product product = productConverter.mapToProduct(extras);
-      new TransactionSync(product, transactionPersistence, confirmationConverter, payer,
-          bodyInterceptorV3, converterFactory, httpClient, billingAnalytics, tokenInvalidator,
-          sharedPreferences).sync(syncResult);
+      new TransactionSync(product, transactionPersistence, payer, billingAnalytics,
+          transactionService).sync(syncResult);
     } else if (authorizations) {
       final int paymentId = extras.getInt(EXTRA_PAYMENT_ID);
       new AuthorizationSync(paymentId, authorizationAcessor, authorizationConverter, payer,

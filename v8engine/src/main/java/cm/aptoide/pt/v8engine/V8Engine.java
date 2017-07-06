@@ -92,7 +92,7 @@ import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.billing.TransactionAccessor;
+import cm.aptoide.pt.v8engine.billing.RealmTransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
@@ -263,6 +263,7 @@ public abstract class V8Engine extends Application {
   private ABTestManager abTestManager;
   private TransactionPersistence transactionPersistence;
   private Database database;
+  private TransactionFactory transactionFactory;
 
   /**
    * call after this instance onCreate()
@@ -763,16 +764,13 @@ public abstract class V8Engine extends Application {
 
     if (billing == null) {
 
-      final TransactionFactory confirmationFactory = new TransactionFactory();
-
       final TransactionRepositorySelector transactionRepositorySelector =
           new TransactionRepositorySelector(
               new InAppTransactionRepository(getTransactionPersistence(), getBillingSyncScheduler(),
-                  confirmationFactory, getBaseBodyInterceptorV3(), getDefaultClient(),
-                  WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
-                  getDefaultSharedPreferences()),
+                  getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+                  getAccountPayer(), getTokenInvalidator(), getDefaultSharedPreferences()),
               new PaidAppTransactionRepository(getTransactionPersistence(),
-                  getBillingSyncScheduler(), confirmationFactory, getBaseBodyInterceptorV3(),
+                  getBillingSyncScheduler(), getBaseBodyInterceptorV3(),
                   WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
                   getTokenInvalidator(), getDefaultSharedPreferences()));
 
@@ -803,9 +801,17 @@ public abstract class V8Engine extends Application {
     return billing;
   }
 
+  public TransactionFactory getTransactionFactory() {
+    if (transactionFactory == null) {
+      transactionFactory = new TransactionFactory();
+    }
+    return transactionFactory;
+  }
+
   public TransactionPersistence getTransactionPersistence() {
     if (transactionPersistence == null) {
-      transactionPersistence = new TransactionAccessor(getDatabase());
+      transactionPersistence =
+          new RealmTransactionPersistence(getDatabase(), getTransactionFactory());
     }
     return transactionPersistence;
   }

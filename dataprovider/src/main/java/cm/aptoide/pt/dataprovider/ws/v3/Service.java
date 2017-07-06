@@ -44,7 +44,7 @@ public interface Service {
   Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
 
   @POST("checkProductPayment") @FormUrlEncoded
-  Observable<TransactionResponse> getPaymentConfirmation(@FieldMap BaseBody args);
+  Observable<TransactionResponse> getTransaction(@FieldMap BaseBody args);
 
   @POST("productPurchaseAuthorization") @FormUrlEncoded
   Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
@@ -52,7 +52,7 @@ public interface Service {
   @POST("productPurchaseAuthorization") @FormUrlEncoded
   Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args);
 
-  @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createPaymentConfirmation(
+  @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createTransaction(
       @FieldMap BaseBody args);
 
   @POST("createPurchaseAuthorization") @FormUrlEncoded

@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CreateTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
@@ -30,11 +30,10 @@ public class InAppTransactionRepository extends TransactionRepository {
   private final SharedPreferences sharedPreferences;
 
   public InAppTransactionRepository(TransactionPersistence transactionPersistence,
-      BillingSyncScheduler backgroundSync, TransactionFactory transactionFactory,
-      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    super(transactionPersistence, backgroundSync, transactionFactory, payer);
+      BillingSyncScheduler backgroundSync, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      OkHttpClient httpClient, Converter.Factory converterFactory, Payer payer,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(transactionPersistence, backgroundSync, payer);
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -42,8 +41,8 @@ public class InAppTransactionRepository extends TransactionRepository {
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override public Completable createTransaction(int paymentId, Product product) {
-    return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId,
+  @Override public Completable createTransaction(int paymentMethodId, Product product) {
+    return CreateTransactionRequest.ofInApp(product.getId(), paymentMethodId,
         ((InAppProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences,
         ((InAppProduct) product).getPackageVersionCode())

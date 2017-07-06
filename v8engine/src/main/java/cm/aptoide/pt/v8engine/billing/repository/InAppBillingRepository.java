@@ -72,8 +72,7 @@ public class InAppBillingRepository {
         .flatMapCompletable(response -> {
           if (response != null && response.isOk()) {
             // TODO sync all payment confirmations instead. For now there is no web service for that.
-            transactionPersistence.removeAllTransactions();
-            return Completable.complete();
+            return transactionPersistence.removeAllTransactions();
           }
           if (isDeletionItemNotFound(response.getErrors())) {
             return Completable.error(

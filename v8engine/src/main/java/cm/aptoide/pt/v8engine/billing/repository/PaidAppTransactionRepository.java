@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CreateTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
@@ -30,11 +30,10 @@ public class PaidAppTransactionRepository extends TransactionRepository {
   private final SharedPreferences sharedPreferences;
 
   public PaidAppTransactionRepository(TransactionPersistence transactionPersistence,
-      BillingSyncScheduler backgroundSync, TransactionFactory confirmationFactory,
-      BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httpClient, Payer payer, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    super(transactionPersistence, backgroundSync, confirmationFactory, payer);
+      BillingSyncScheduler backgroundSync, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      Converter.Factory converterFactory, OkHttpClient httpClient, Payer payer,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(transactionPersistence, backgroundSync, payer);
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
@@ -42,8 +41,8 @@ public class PaidAppTransactionRepository extends TransactionRepository {
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override public Completable createTransaction(int paymentId, Product product) {
-    return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId,
+  @Override public Completable createTransaction(int paymentMethodId, Product product) {
+    return CreateTransactionRequest.ofPaidApp(product.getId(), paymentMethodId,
         ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences, ((PaidAppProduct) product).getPackageVersionCode())
         .observe(true)
