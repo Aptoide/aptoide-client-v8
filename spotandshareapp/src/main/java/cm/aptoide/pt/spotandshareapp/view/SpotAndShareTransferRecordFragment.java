@@ -3,6 +3,9 @@ package cm.aptoide.pt.spotandshareapp.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,8 @@ import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 
 public class SpotAndShareTransferRecordFragment extends FragmentView
     implements SpotAndShareTransferRecordView {
+
+  private Toolbar toolbar;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -31,10 +36,21 @@ public class SpotAndShareTransferRecordFragment extends FragmentView
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
+    setupToolbar();
     attachPresenter(new SpotAndShareTransferRecordPresenter(this), savedInstanceState);
   }
 
+  private void setupToolbar() {
+    setHasOptionsMenu(true);
+    toolbar.setTitle(R.string.spotandshare_title_toolbar);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
+  }
+
   @Override public void onDestroyView() {
+    toolbar = null;
     super.onDestroyView();
   }
 
