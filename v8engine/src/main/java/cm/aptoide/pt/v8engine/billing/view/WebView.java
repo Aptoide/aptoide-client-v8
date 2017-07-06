@@ -8,23 +8,19 @@ package cm.aptoide.pt.v8engine.billing.view;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 15/02/17.
- */
-
-public interface BoaCompraView extends View {
+public interface WebView extends View {
 
   void showLoading();
 
   void hideLoading();
 
-  void loadBoaCompraConsentWebsite(String url, String redirectUrl);
+  void loadWebsite(String url, String redirectUrl);
 
-  Observable<Void> backToStoreEvent();
+  Observable<Void> redirectUrlEvent();
 
-  Observable<Void> backButtonSelection();
+  Observable<Void> backButtonEvent();
 
-  Observable<Void> boaCompraConsentWebsiteLoaded();
+  Observable<Void> urlLoadedEvent();
 
   void showError();
 

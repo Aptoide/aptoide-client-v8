@@ -1,10 +1,11 @@
-package cm.aptoide.pt.v8engine.billing.methods;
+package cm.aptoide.pt.v8engine.billing.methods.boacompra;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;

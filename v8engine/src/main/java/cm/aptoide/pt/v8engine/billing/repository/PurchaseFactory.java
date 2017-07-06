@@ -9,8 +9,8 @@ import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
-import cm.aptoide.pt.v8engine.billing.purchase.InAppPurchase;
-import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
+import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class PurchaseFactory {

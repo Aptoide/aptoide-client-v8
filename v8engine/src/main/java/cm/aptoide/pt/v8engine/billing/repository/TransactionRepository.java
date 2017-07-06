@@ -9,7 +9,7 @@ import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Transaction;
-import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import rx.Completable;
 import rx.Observable;
 
@@ -18,10 +18,10 @@ public abstract class TransactionRepository {
   protected final TransactionFactory transactionFactory;
   private final Payer payer;
   private final TransactionAccessor transactionAccessor;
-  private final PaymentSyncScheduler syncScheduler;
+  private final BillingSyncScheduler syncScheduler;
 
   public TransactionRepository(TransactionAccessor transactionAccessor,
-      PaymentSyncScheduler syncScheduler, TransactionFactory transactionFactory, Payer payer) {
+      BillingSyncScheduler syncScheduler, TransactionFactory transactionFactory, Payer payer) {
     this.transactionAccessor = transactionAccessor;
     this.syncScheduler = syncScheduler;
     this.transactionFactory = transactionFactory;

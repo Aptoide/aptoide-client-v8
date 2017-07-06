@@ -12,7 +12,7 @@ import android.os.RemoteException;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.purchase.InAppPurchase;
+import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;

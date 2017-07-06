@@ -93,7 +93,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
@@ -108,7 +108,7 @@ import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
-import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
@@ -151,7 +151,7 @@ import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.sync.adapter.PaymentSyncAdapterScheduler;
+import cm.aptoide.pt.v8engine.sync.adapter.BillingSyncAdapterScheduler;
 import cm.aptoide.pt.v8engine.sync.adapter.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.sync.alarm.NotificationAlarmManagerScheduler;
 import cm.aptoide.pt.v8engine.sync.alarm.NotificationSyncService;
@@ -234,10 +234,10 @@ public abstract class V8Engine extends Application {
   private UserAgentInterceptor userAgentInterceptor;
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
-  private PaymentAnalytics paymentAnalytics;
+  private BillingAnalytics billingAnalytics;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
-  private PaymentSyncScheduler paymentSyncScheduler;
+  private BillingSyncScheduler billingSyncScheduler;
   private InAppBillingRepository inAppBillingRepository;
   private Payer accountPayer;
   private InAppBillingSerializer inAppBillingSerialzer;
@@ -735,22 +735,22 @@ public abstract class V8Engine extends Application {
     return secureCodeDecoder;
   }
 
-  public PaymentAnalytics getPaymentAnalytics() {
-    if (paymentAnalytics == null) {
-      paymentAnalytics =
-          new PaymentAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+  public BillingAnalytics getBillingAnalytics() {
+    if (billingAnalytics == null) {
+      billingAnalytics =
+          new BillingAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
               getAptoidePackage());
     }
-    return paymentAnalytics;
+    return billingAnalytics;
   }
 
-  public PaymentSyncScheduler getPaymentSyncScheduler() {
-    if (paymentSyncScheduler == null) {
-      paymentSyncScheduler =
-          new PaymentSyncAdapterScheduler(new ProductBundleMapper(), getAndroidAccountProvider(),
+  public BillingSyncScheduler getBillingSyncScheduler() {
+    if (billingSyncScheduler == null) {
+      billingSyncScheduler =
+          new BillingSyncAdapterScheduler(new ProductBundleMapper(), getAndroidAccountProvider(),
               getConfiguration().getContentAuthority());
     }
-    return paymentSyncScheduler;
+    return billingSyncScheduler;
   }
 
   public Billing getBilling() {
@@ -761,11 +761,11 @@ public abstract class V8Engine extends Application {
 
       final TransactionRepositorySelector transactionRepositorySelector =
           new TransactionRepositorySelector(new InAppTransactionRepository(
-              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
+              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBillingSyncScheduler(),
               confirmationFactory, getBaseBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
               getDefaultSharedPreferences()), new PaidAppTransactionRepository(
-              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
+              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBillingSyncScheduler(),
               confirmationFactory, getBaseBodyInterceptorV3(), WebService.getDefaultConverter(),
               getDefaultClient(), getAccountPayer(), getTokenInvalidator(),
               getDefaultSharedPreferences()));
@@ -777,7 +777,7 @@ public abstract class V8Engine extends Application {
 
       final PaymentMethodMapper paymentMethodMapper =
           new PaymentMethodMapper(transactionRepositorySelector, new AuthorizationRepository(
-              AccessorFactory.getAccessorFor(PaymentAuthorization.class), getPaymentSyncScheduler(),
+              AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBillingSyncScheduler(),
               getAuthorizationFactory(), getBaseBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
               getDefaultSharedPreferences()));

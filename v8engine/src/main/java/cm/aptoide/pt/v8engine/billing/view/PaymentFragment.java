@@ -19,7 +19,7 @@ import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.presenter.PaymentMethodSelector;
@@ -58,7 +58,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private ProductProvider productProvider;
   private Billing billing;
   private AptoideAccountManager accountManager;
-  private PaymentAnalytics paymentAnalytics;
+  private BillingAnalytics billingAnalytics;
   private PaymentMethodSelector paymentMethodSelector;
   private AccountNavigator accountNavigator;
   private PaymentNavigator paymentNavigator;
@@ -74,7 +74,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     productProvider = ProductProvider.fromBundle(billing, getArguments());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     paymentMethodSelector = new PaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     accountNavigator =
@@ -123,7 +123,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
     attachPresenter(
         new PaymentPresenter(this, billing, accountManager, paymentMethodSelector, accountNavigator,
-            paymentNavigator, paymentAnalytics, productProvider), savedInstanceState);
+            paymentNavigator, billingAnalytics, productProvider), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

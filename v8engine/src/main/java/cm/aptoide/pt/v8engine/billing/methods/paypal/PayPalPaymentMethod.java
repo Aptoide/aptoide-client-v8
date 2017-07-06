@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.methods;
+package cm.aptoide.pt.v8engine.billing.methods.paypal;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;

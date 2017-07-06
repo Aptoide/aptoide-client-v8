@@ -7,16 +7,18 @@ package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
-import cm.aptoide.pt.v8engine.billing.methods.BoaCompraPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.methods.PayPalPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.methods.SandboxPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.mol.MolPointsPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.sandbox.SandboxPaymentMethod;
 
 public class PaymentMethodMapper {
 
-  public static final String PAYPAL = "paypal";
-  public static final String BOACOMPRA = "boacompra";
-  public static final String BOACOMPRAGOLD = "boacompragold";
-  public static final String SANDBOX = "dummy";
+  private static final String PAYPAL = "paypal";
+  private static final String BOA_COMPRA = "boacompra";
+  private static final String BOA_COMPRA_GOLD = "boacompragold";
+  private static final String MOL_POINTS = "molpoints";
+  private static final String SANDBOX = "dummy";
 
   private final TransactionRepositorySelector transactionRepositorySelector;
   private final AuthorizationRepository authorizationRepository;
@@ -32,11 +34,14 @@ public class PaymentMethodMapper {
       case PAYPAL:
         return new PayPalPaymentMethod(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), transactionRepositorySelector);
-      case BOACOMPRA:
-      case BOACOMPRAGOLD:
+      case BOA_COMPRA:
+      case BOA_COMPRA_GOLD:
         return new BoaCompraPaymentMethod(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), transactionRepositorySelector,
             authorizationRepository);
+      case MOL_POINTS:
+        return new MolPointsPaymentMethod(paymentService.getId(), paymentService.getName(),
+            paymentService.getDescription(), transactionRepositorySelector);
       case SANDBOX:
         return new SandboxPaymentMethod(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), transactionRepositorySelector);

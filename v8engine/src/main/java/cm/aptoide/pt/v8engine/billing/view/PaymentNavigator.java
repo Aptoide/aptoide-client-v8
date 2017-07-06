@@ -7,8 +7,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.methods.BoaCompraPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.methods.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.mol.MolPointsPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
@@ -50,6 +51,8 @@ public class PaymentNavigator {
   public void navigateToLocalPaymentView(PaymentMethod paymentMethod, Product product) {
     if (paymentMethod instanceof PayPalPaymentMethod) {
       fragmentNavigator.navigateTo(PayPalFragment.create(getProductBundle(product)));
+    } else if (paymentMethod instanceof MolPointsPaymentMethod) {
+      fragmentNavigator.navigateTo(MolFragment.create(getProductBundle(product)));
     } else {
       throw new IllegalArgumentException("Invalid local payment.");
     }

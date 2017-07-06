@@ -8,13 +8,13 @@ import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.view.PaymentNavigator;
 import com.facebook.appevents.AppEventsLogger;
 
-public class PaymentAnalytics {
+public class BillingAnalytics {
 
   private final Analytics analytics;
   private final AppEventsLogger facebook;
   private final String aptoidePackageName;
 
-  public PaymentAnalytics(Analytics analytics, AppEventsLogger facebook,
+  public BillingAnalytics(Analytics analytics, AppEventsLogger facebook,
       String aptoidePackageName) {
     this.analytics = analytics;
     this.facebook = facebook;

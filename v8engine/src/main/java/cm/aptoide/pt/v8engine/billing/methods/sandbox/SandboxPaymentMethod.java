@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.billing.methods;
+package cm.aptoide.pt.v8engine.billing.methods.sandbox;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;

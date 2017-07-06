@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import rx.Observable;
@@ -24,8 +24,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
 
   private Billing billing;
   private ProductProvider productProvider;
-  private PaymentAnalytics paymentAnalytics;
-  private PaymentNavigator paymentNavigator;
+  private BillingAnalytics billingAnalytics;
 
   public static Fragment create(Bundle bundle) {
     final PayPalFragment fragment = new PayPalFragment();
@@ -37,10 +36,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
     super.onCreate(savedInstanceState);
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     productProvider = ProductProvider.fromBundle(billing, getArguments());
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
-    paymentNavigator =
-        new PaymentNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator());
+    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
   }
 
   @Nullable @Override
@@ -62,9 +58,10 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
             .setPositiveButton(R.string.ok)
             .build();
 
-    attachPresenter(
-        new PayPalPresenter(this, billing, productProvider, paymentAnalytics, paymentNavigator,
-            AndroidSchedulers.mainThread()), savedInstanceState);
+    attachPresenter(new PayPalPresenter(this, billing, productProvider, billingAnalytics,
+            new PaymentNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+                getActivityNavigator(), getFragmentNavigator()), AndroidSchedulers.mainThread()),
+        savedInstanceState);
   }
 
   @Override public void onDestroyView() {

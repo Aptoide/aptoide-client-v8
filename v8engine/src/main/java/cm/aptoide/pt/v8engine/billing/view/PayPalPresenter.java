@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
@@ -19,12 +19,12 @@ public class PayPalPresenter implements Presenter {
   private final PayPalView view;
   private final Billing billing;
   private final ProductProvider productProvider;
-  private final PaymentAnalytics analytics;
+  private final BillingAnalytics analytics;
   private final PaymentNavigator paymentNavigator;
   private final Scheduler viewScheduler;
 
   public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
-      PaymentAnalytics analytics, PaymentNavigator paymentNavigator, Scheduler viewScheduler) {
+      BillingAnalytics analytics, PaymentNavigator paymentNavigator, Scheduler viewScheduler) {
     this.view = view;
     this.billing = billing;
     this.productProvider = productProvider;

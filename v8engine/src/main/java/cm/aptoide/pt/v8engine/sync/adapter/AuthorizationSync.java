@@ -15,7 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentAuthorizationsRequest;
 import cm.aptoide.pt.v8engine.billing.Authorization;
 import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,14 +33,14 @@ public class AuthorizationSync extends ScheduledSync {
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
-  private final PaymentAnalytics paymentAnalytics;
+  private final BillingAnalytics billingAnalytics;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
   public AuthorizationSync(int paymentId, PaymentAuthorizationAccessor authorizationAccessor,
       AuthorizationFactory authorizationFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics,
+      Converter.Factory converterFactory, BillingAnalytics billingAnalytics,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.paymentId = paymentId;
     this.authorizationAccessor = authorizationAccessor;
@@ -49,7 +49,7 @@ public class AuthorizationSync extends ScheduledSync {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    this.paymentAnalytics = paymentAnalytics;
+    this.billingAnalytics = billingAnalytics;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
   }
@@ -99,7 +99,7 @@ public class AuthorizationSync extends ScheduledSync {
       databaseAuthorizations.add(
           authorizationFactory.convertToDatabasePaymentAuthorization(authorization));
 
-      paymentAnalytics.sendAuthorizationCompleteEvent(authorization);
+      billingAnalytics.sendAuthorizationCompleteEvent(authorization);
     }
 
     if (!containsPaymentId) {
@@ -113,14 +113,14 @@ public class AuthorizationSync extends ScheduledSync {
   private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
       String payerId) {
     if (throwable instanceof IOException) {
-      paymentAnalytics.sendPaymentAuthorizationNetworkRetryEvent();
+      billingAnalytics.sendPaymentAuthorizationNetworkRetryEvent();
       rescheduleSync(syncResult);
     } else {
       final Authorization authorization =
           authorizationFactory.create(paymentId, Authorization.Status.UNKNOWN_ERROR, payerId);
       authorizationAccessor.insert(
           authorizationFactory.convertToDatabasePaymentAuthorization(authorization));
-      paymentAnalytics.sendAuthorizationCompleteEvent(authorization);
+      billingAnalytics.sendAuthorizationCompleteEvent(authorization);
     }
   }
 }

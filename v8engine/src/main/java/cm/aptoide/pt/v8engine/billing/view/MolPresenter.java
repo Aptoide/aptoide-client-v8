@@ -1,51 +1,38 @@
-/*
- * Copyright (c) 2017.
- * Modified by Marcelo Benites on 15/02/2017.
- */
-
 package cm.aptoide.pt.v8engine.billing.view;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
-import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class BoaCompraPresenter implements Presenter {
+public class MolPresenter implements Presenter {
 
   private final WebView view;
   private final Billing billing;
   private final BillingAnalytics analytics;
-  private final BillingSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
   private final PaymentNavigator navigator;
-  private final int paymentId;
 
-  public BoaCompraPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      BillingSyncScheduler syncScheduler, ProductProvider productProvider,
-      PaymentNavigator navigator, int paymentId) {
+  public MolPresenter(WebView view, Billing billing, BillingAnalytics analytics,
+      ProductProvider productProvider, PaymentNavigator navigator) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
-    this.syncScheduler = syncScheduler;
     this.productProvider = productProvider;
     this.navigator = navigator;
-    this.paymentId = paymentId;
   }
 
   @Override public void present() {
 
-    onViewCreatedProcessBoaCompraPayment();
+    onViewCreatedAuthorizeMolPayment();
 
-    handleBoaCompraConsentWebsiteLoadedEvent();
+    handleMolWebsiteLoadedEvent();
 
     handleBackButtonEvent();
 
-    handleBackToStoreEvent();
+    handleRedirectUrlEvent();
 
     handleDismissEvent();
   }
@@ -58,25 +45,18 @@ public class BoaCompraPresenter implements Presenter {
 
   }
 
-  private void onViewCreatedProcessBoaCompraPayment() {
+  private void onViewCreatedAuthorizeMolPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(product -> view.showLoading())
-        .flatMapCompletable(product -> billing.getBoaCompraAuthorization(product)
+        .flatMapSingle(product -> billing.getMolTransaction(product)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(authorization -> view.loadWebsite(authorization.getUrl(),
-                authorization.getRedirectUrl()))
-            .flatMapCompletable(__ -> billing.processBoaCompraPayment(product))
-            .onErrorResumeNext(throwable -> {
-              if (throwable instanceof PaymentMethodAlreadyAuthorizedException) {
-                return billing.processBoaCompraPayment(product);
-              }
-              return Completable.error(throwable);
-            })
+            .doOnSuccess(transaction -> view.loadWebsite(transaction.getConfirmationUrl(),
+                transaction.getSuccessUrl()))
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.hideLoading()))
+            .doOnSuccess(__ -> view.hideLoading()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -86,16 +66,14 @@ public class BoaCompraPresenter implements Presenter {
         });
   }
 
-  private void handleBackToStoreEvent() {
+  private void handleRedirectUrlEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.redirectUrlEvent()
             .doOnNext(backToStorePressed -> view.showLoading())
             .flatMapSingle(loading -> productProvider.getProduct())
-            .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product)))
-        // Optimization to accelerate authorization sync once user interacts with the UI, should
-        // be removed once we have a better sync implementation
-        .flatMapCompletable(analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentId))
+            .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product))
+            .doOnNext(sent -> navigator.popLocalPaymentView()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -105,7 +83,7 @@ public class BoaCompraPresenter implements Presenter {
         });
   }
 
-  private void handleBoaCompraConsentWebsiteLoadedEvent() {
+  private void handleMolWebsiteLoadedEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.urlLoadedEvent())
@@ -137,7 +115,7 @@ public class BoaCompraPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popAuthorizedPaymentView())
+        .doOnNext(dismiss -> navigator.popLocalPaymentView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

@@ -3,7 +3,9 @@
  * Modified by Marcelo Benites on 10/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing;
+package cm.aptoide.pt.v8engine.billing.methods.paypal;
+
+import cm.aptoide.pt.v8engine.billing.Transaction;
 
 public class PayPalTransaction extends Transaction {
 

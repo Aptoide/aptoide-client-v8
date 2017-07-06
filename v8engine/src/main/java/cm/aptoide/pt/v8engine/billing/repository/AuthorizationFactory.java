@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.v8engine.billing.Authorization;
-import cm.aptoide.pt.v8engine.billing.methods.BoaCompraAuthorization;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
 import java.util.ArrayList;
 import java.util.List;
 

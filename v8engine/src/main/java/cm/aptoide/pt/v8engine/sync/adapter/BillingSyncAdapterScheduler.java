@@ -11,19 +11,19 @@ import android.content.SyncStatusObserver;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import rx.Completable;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
 
-public class PaymentSyncAdapterScheduler implements PaymentSyncScheduler {
+public class BillingSyncAdapterScheduler implements BillingSyncScheduler {
 
   private final AndroidAccountProvider androidAccountProvider;
   private final ProductBundleMapper syncDataConverter;
   private final String authority;
 
-  public PaymentSyncAdapterScheduler(ProductBundleMapper converter,
+  public BillingSyncAdapterScheduler(ProductBundleMapper converter,
       AndroidAccountProvider androidAccountProvider, String authority) {
     this.androidAccountProvider = androidAccountProvider;
     this.syncDataConverter = converter;

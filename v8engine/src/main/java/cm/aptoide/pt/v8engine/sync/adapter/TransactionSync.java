@@ -15,9 +15,9 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.v8engine.billing.PayPalTransaction;
+import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalTransaction;
 import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Transaction;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
@@ -40,14 +40,14 @@ public class TransactionSync extends ScheduledSync {
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final Converter.Factory converterFactory;
   private final OkHttpClient httpClient;
-  private final PaymentAnalytics analytics;
+  private final BillingAnalytics analytics;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
   public TransactionSync(Product product, TransactionAccessor transactionAccessor,
       TransactionFactory transactionFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httpClient, PaymentAnalytics analytics, TokenInvalidator tokenInvalidator,
+      OkHttpClient httpClient, BillingAnalytics analytics, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     this.product = product;
     this.transactionAccessor = transactionAccessor;

@@ -15,7 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
-import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -31,7 +31,7 @@ public class InAppTransactionRepository extends TransactionRepository {
   private final SharedPreferences sharedPreferences;
 
   public InAppTransactionRepository(TransactionAccessor transactionAccessor,
-      PaymentSyncScheduler backgroundSync, TransactionFactory transactionFactory,
+      BillingSyncScheduler backgroundSync, TransactionFactory transactionFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {

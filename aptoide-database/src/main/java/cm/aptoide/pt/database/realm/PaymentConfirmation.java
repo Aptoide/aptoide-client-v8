@@ -21,17 +21,21 @@ public class PaymentConfirmation extends RealmObject {
   private int paymentMethodId;
 
   private String paymentConfirmationId;
+  private String confirmationUrl;
+  private String successUrl;
 
   public PaymentConfirmation() {
   }
 
   public PaymentConfirmation(String localMetadata, int productId, String status, String payerId,
-      int paymentMethodId) {
+      int paymentMethodId, String confirmationUrl, String successUrl) {
     this.paymentConfirmationId = localMetadata;
     this.status = status;
     this.productId = productId;
     this.payerId = payerId;
     this.paymentMethodId = paymentMethodId;
+    this.confirmationUrl = confirmationUrl;
+    this.successUrl = successUrl;
   }
 
   public String getPayerId() {
@@ -52,5 +56,17 @@ public class PaymentConfirmation extends RealmObject {
 
   public int getPaymentMethodId() {
     return paymentMethodId;
+  }
+
+  public String getPaymentConfirmationId() {
+    return paymentConfirmationId;
+  }
+
+  public String getConfirmationUrl() {
+    return confirmationUrl;
+  }
+
+  public String getSuccessUrl() {
+    return successUrl;
   }
 }

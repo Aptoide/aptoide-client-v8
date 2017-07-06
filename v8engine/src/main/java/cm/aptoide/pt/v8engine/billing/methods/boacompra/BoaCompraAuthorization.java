@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 23/12/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.methods;
+package cm.aptoide.pt.v8engine.billing.methods.boacompra;
 
 import cm.aptoide.pt.v8engine.billing.Authorization;
 

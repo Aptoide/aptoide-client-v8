@@ -7,9 +7,11 @@ package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
-import cm.aptoide.pt.v8engine.billing.methods.BoaCompraAuthorization;
-import cm.aptoide.pt.v8engine.billing.methods.BoaCompraPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.methods.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.mol.MolPointsPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.mol.MolTransaction;
+import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
@@ -99,6 +101,10 @@ public class Billing {
     return getBoaCompraPaymentMethod(product).flatMap(payment -> payment.getAuthorization());
   }
 
+  public Single<MolTransaction> getMolTransaction(Product product) {
+    return getMolPaymentMethod(product).flatMap(payment -> payment.getTransaction(product));
+  }
+
   public Completable processPayment(int paymentId, Product product) {
     return getPaymentMethod(paymentId, product).flatMapCompletable(
         payment -> payment.process(product));
@@ -137,6 +143,14 @@ public class Billing {
         .filter(payment -> payment instanceof BoaCompraPaymentMethod)
         .first()
         .cast(BoaCompraPaymentMethod.class)
+        .toSingle();
+  }
+
+  private Single<MolPointsPaymentMethod> getMolPaymentMethod(Product product) {
+    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
+        .filter(payment -> payment instanceof MolPointsPaymentMethod)
+        .first()
+        .cast(MolPointsPaymentMethod.class)
         .toSingle();
   }
 }

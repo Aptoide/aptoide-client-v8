@@ -14,7 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Authorization;
 import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -24,7 +24,7 @@ import rx.Observable;
 public class AuthorizationRepository {
 
   private final PaymentAuthorizationAccessor authotizationAccessor;
-  private final PaymentSyncScheduler backgroundSync;
+  private final BillingSyncScheduler backgroundSync;
   private final AuthorizationFactory authorizationFactory;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
@@ -34,7 +34,7 @@ public class AuthorizationRepository {
   private final SharedPreferences sharedPreferences;
 
   public AuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
-      PaymentSyncScheduler backgroundSync, AuthorizationFactory authorizationFactory,
+      BillingSyncScheduler backgroundSync, AuthorizationFactory authorizationFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {

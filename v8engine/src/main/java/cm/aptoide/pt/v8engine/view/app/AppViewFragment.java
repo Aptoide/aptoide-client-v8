@@ -69,9 +69,9 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentException;
-import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -179,7 +179,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
-  private PaymentAnalytics paymentAnalytics;
+  private BillingAnalytics billingAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
   private PurchaseBundleMapper purchaseBundleMapper;
   private ShareAppHelper shareAppHelper;
@@ -273,7 +273,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     final TokenInvalidator tokenInvalidator =
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
@@ -294,7 +294,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
@@ -432,7 +431,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
+    billingAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
         .getPrice(), app.getPay()
         .getCurrency());
     startActivityForResult(PaymentActivity.getIntent(getActivity(), app.getId(), app.getStore()

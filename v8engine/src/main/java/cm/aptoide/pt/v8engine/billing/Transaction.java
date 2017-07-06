@@ -26,11 +26,16 @@ public class Transaction {
   }
 
   public boolean isNew() {
-    return Status.NEW.equals(status);
+    return Status.NEW.equals(status)
+        || Status.PENDING_AUTHORIZATION.equals(status);
   }
 
   public boolean isCompleted() {
     return Status.COMPLETED.equals(status);
+  }
+
+  public boolean isPendingAuthorization() {
+    return Status.PENDING_AUTHORIZATION.equals(status);
   }
 
   public boolean isPending() {
@@ -48,6 +53,6 @@ public class Transaction {
   }
 
   public enum Status {
-    NEW, CREATED, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
+    NEW, CREATED, PENDING_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
   }
 }

@@ -9,7 +9,7 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.billing.Billing;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
@@ -36,11 +36,11 @@ public class PaymentPresenter implements Presenter {
   private final AccountNavigator accountNavigator;
   private final PaymentNavigator paymentNavigator;
   private final ProductProvider productProvider;
-  private final PaymentAnalytics paymentAnalytics;
+  private final BillingAnalytics billingAnalytics;
 
   public PaymentPresenter(PaymentView view, Billing billing, AptoideAccountManager accountManager,
       PaymentMethodSelector paymentMethodSelector, AccountNavigator accountNavigator,
-      PaymentNavigator paymentNavigator, PaymentAnalytics paymentAnalytics,
+      PaymentNavigator paymentNavigator, BillingAnalytics billingAnalytics,
       ProductProvider productProvider) {
     this.view = view;
     this.billing = billing;
@@ -48,7 +48,7 @@ public class PaymentPresenter implements Presenter {
     this.paymentMethodSelector = paymentMethodSelector;
     this.accountNavigator = accountNavigator;
     this.paymentNavigator = paymentNavigator;
-    this.paymentAnalytics = paymentAnalytics;
+    this.billingAnalytics = billingAnalytics;
     this.productProvider = productProvider;
   }
 
@@ -191,7 +191,7 @@ public class PaymentPresenter implements Presenter {
             .doOnNext(buySelection -> view.showPaymentLoading())
             .flatMapSingle(selection -> productProvider.getProduct())
             .flatMapCompletable(product -> getSelectedPaymentMethod(product).doOnSuccess(
-                payment -> paymentAnalytics.sendPaymentBuyButtonPressedEvent(product,
+                payment -> billingAnalytics.sendPaymentBuyButtonPressedEvent(product,
                     payment.getName()))
                 .flatMapCompletable(payment -> billing.processPayment(payment.getId(), product)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -250,7 +250,7 @@ public class PaymentPresenter implements Presenter {
   private Completable sendCancellationAnalytics() {
     return productProvider.getProduct()
         .flatMapCompletable(product -> getSelectedPaymentMethod(product).doOnSuccess(
-            payment -> paymentAnalytics.sendPaymentCancelButtonPressedEvent(product,
+            payment -> billingAnalytics.sendPaymentCancelButtonPressedEvent(product,
                 payment.getName()))
             .toCompletable());
   }
@@ -258,7 +258,7 @@ public class PaymentPresenter implements Presenter {
   private Completable sendTapOutsideAnalytics() {
     return productProvider.getProduct()
         .flatMapCompletable(product -> getSelectedPaymentMethod(product).doOnSuccess(
-            payment -> paymentAnalytics.sendPaymentTapOutsideEvent(product, payment.getName()))
+            payment -> billingAnalytics.sendPaymentTapOutsideEvent(product, payment.getName()))
             .toCompletable());
   }
 

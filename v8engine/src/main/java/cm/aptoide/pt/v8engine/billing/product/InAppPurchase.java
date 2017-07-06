@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.billing.purchase;
+package cm.aptoide.pt.v8engine.billing.product;
 
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
