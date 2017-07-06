@@ -66,7 +66,7 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
     ImageLoader.with(itemView.getContext())
         .load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
-    this.appRating.setRating(card.getRatingAverage());
+    this.appRating.setRating(card.getAppAverageRating());
     showFriendsAvatars(card, itemView.getContext());
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));

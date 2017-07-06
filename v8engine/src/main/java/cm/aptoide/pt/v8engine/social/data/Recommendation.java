@@ -14,9 +14,10 @@ public class Recommendation extends AppPost {
   private final int publisherDrawableId;
 
   public Recommendation(String cardId, long appId, String packageName, String appName,
-      String appIcon, String relatedToAppName, Publisher publisher, Date timestamp, String abUrl,
-      boolean isLiked, CardType cardType) {
-    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
+      String appIcon, float appAverageRating, String relatedToAppName, Publisher publisher,
+      Date timestamp, String abUrl, boolean isLiked, CardType cardType) {
+    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType,
+        appAverageRating);
     this.publisherName = publisher.getPublisherName();
     this.publisherDrawableId = publisher.getPublisherAvatar()
         .getDrawableId();

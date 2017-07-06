@@ -18,6 +18,7 @@ public class AppUpdate implements Post {
   private final String appUpdateIcon;
   private final String appUpdateName;
   private final String packageName;
+  private final float appUpdateAverageRating;
   private final Date updateAddedDate;
   private final String abUrl;
   private final boolean isLiked;
@@ -27,8 +28,8 @@ public class AppUpdate implements Post {
   private Install.InstallationStatus installationStatus;
 
   public AppUpdate(String cardId, String storeName, String storeAvatar, String storeTheme,
-      String appUpdateIcon, String appUpdateName, String packageName, Date updateAddedDate,
-      String abUrl, boolean isLiked, CardType cardType, File file, Obb obb,
+      String appUpdateIcon, String appUpdateName, String packageName, float appUpdateAverageRating,
+      Date updateAddedDate, String abUrl, boolean isLiked, CardType cardType, File file, Obb obb,
       Install.InstallationStatus installationStatus) {
     this.cardId = cardId;
     this.storeName = storeName;
@@ -37,6 +38,7 @@ public class AppUpdate implements Post {
     this.appUpdateIcon = appUpdateIcon;
     this.appUpdateName = appUpdateName;
     this.packageName = packageName;
+    this.appUpdateAverageRating = appUpdateAverageRating;
     this.updateAddedDate = updateAddedDate;
     this.abUrl = abUrl;
     this.isLiked = isLiked;
@@ -104,5 +106,9 @@ public class AppUpdate implements Post {
 
   public boolean isLiked() {
     return isLiked;
+  }
+
+  public float getAppUpdateAverageRating() {
+    return appUpdateAverageRating;
   }
 }

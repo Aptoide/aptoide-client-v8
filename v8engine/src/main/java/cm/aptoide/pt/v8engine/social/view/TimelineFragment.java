@@ -36,6 +36,7 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
+import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
@@ -91,6 +92,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private StoreContext storeContext;
   private AptoideAccountManager accountManager;
   private AlertDialog shareDialog;
+  private SharePreviewFactory sharePreviewFactory;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -117,6 +119,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    sharePreviewFactory = new SharePreviewFactory();
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     cardTouchEventPublishSubject = PublishSubject.create();
@@ -286,6 +289,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void showSharePreview(Post post) {
     shareDialog = new AlertDialog.Builder(getContext()).setMessage("Shared Card Preview")
+        .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
         .setPositiveButton(android.R.string.ok,
             (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
         .create();

@@ -11,15 +11,14 @@ import java.util.List;
 public class AggregatedRecommendation extends AppPost {
   private final List<Poster> posters;
   private final List<Post> minimalPosts;
-  private final float appAverageRating;
 
   AggregatedRecommendation(String cardId, List<Poster> posters, List<Post> minimalPosts,
       String appIcon, String appName, long appId, float appAverageRating, String packageName,
       Date timestamp, String abUrl, CardType cardType) {
-    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
+    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType,
+        appAverageRating);
     this.posters = posters;
     this.minimalPosts = minimalPosts;
-    this.appAverageRating = appAverageRating;
   }
 
   public List<Post> getMinimalPosts() {
@@ -32,9 +31,5 @@ public class AggregatedRecommendation extends AppPost {
 
   @Override public String getCardId() {
     throw new RuntimeException("Aggregated cards have NO card id");
-  }
-
-  public float getAppAverageRating() {
-    return appAverageRating;
   }
 }

@@ -87,7 +87,7 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
     ImageLoader.with(itemView.getContext())
         .load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
-    this.appRating.setRating(card.getRatingAverage());
+    this.appRating.setRating(card.getAppAverageRating());
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));

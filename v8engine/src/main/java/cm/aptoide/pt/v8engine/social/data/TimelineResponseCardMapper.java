@@ -90,7 +90,10 @@ public class TimelineResponseCardMapper {
             .getId(), recommendation.getRecommendedApp()
             .getPackageName(), recommendation.getRecommendedApp()
             .getName(), recommendation.getRecommendedApp()
-            .getIcon(), recommendation.getSimilarApps()
+            .getIcon(), recommendation.getRecommendedApp()
+            .getStats()
+            .getRating()
+            .getAvg(), recommendation.getSimilarApps()
             .get(0)
             .getName(), new AptoidePublisher(), recommendation.getTimestamp(), abUrl, false,
             CardType.RECOMMENDATION));
@@ -115,9 +118,11 @@ public class TimelineResponseCardMapper {
             .getAvatar(), appUpdate.getStore()
             .getAppearance()
             .getTheme(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getPackageName(),
-            appUpdate.getAdded(), abUrl, false, CardType.UPDATE, appUpdate.getFile(),
+            appUpdate.getStats()
+                .getRating()
+                .getAvg(), appUpdate.getAdded(), abUrl, false, CardType.UPDATE,
             // TODO: 26/06/2017 probably should get progress state someway because the download might be happening already.
-            appUpdate.getObb(), Install.InstallationStatus.UNINSTALLED));
+            appUpdate.getFile(), appUpdate.getObb(), Install.InstallationStatus.UNINSTALLED));
       } else if (item instanceof PopularAppTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.PopularApp popularApp =
             ((PopularAppTimelineItem) item).getData();

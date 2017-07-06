@@ -15,9 +15,10 @@ abstract class AppPost implements Post {
   protected final String packageName;
   protected final String abUrl;
   protected final long appId;
+  protected final float appAverageRating;
 
   AppPost(String cardId, String appIcon, String appName, long appId, String packageName,
-      Date timestamp, String abUrl, CardType cardType) {
+      Date timestamp, String abUrl, CardType cardType, float appAverageRating) {
     this.abUrl = abUrl;
     this.cardId = cardId;
     this.timestamp = timestamp;
@@ -26,6 +27,11 @@ abstract class AppPost implements Post {
     this.packageName = packageName;
     this.cardType = cardType;
     this.appIcon = appIcon;
+    this.appAverageRating = appAverageRating;
+  }
+
+  public float getAppAverageRating() {
+    return appAverageRating;
   }
 
   public long getAppId() {

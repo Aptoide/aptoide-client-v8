@@ -9,25 +9,19 @@ import java.util.List;
  */
 
 public class PopularApp extends AppPost {
-  private final float ratingAverage;
   private final List<UserSharerTimeline.User> users;
   private final boolean isLiked;
 
   public PopularApp(String cardId, long appId, String packageName, String appName, String appIcon,
       float ratingAverage, List<UserSharerTimeline.User> users, Date timestamp, String abUrl,
       boolean isLiked, CardType cardType) {
-    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType);
-    this.ratingAverage = ratingAverage;
+    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage);
     this.users = users;
     this.isLiked = isLiked;
   }
 
   public List<UserSharerTimeline.User> getUsers() {
     return users;
-  }
-
-  public float getRatingAverage() {
-    return ratingAverage;
   }
 
   public boolean isLiked() {
