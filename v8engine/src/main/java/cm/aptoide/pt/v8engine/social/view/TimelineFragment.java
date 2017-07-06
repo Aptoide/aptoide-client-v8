@@ -65,6 +65,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   public static final int RANDOM_PACKAGES_COUNT = 10;
   private static final String ACTION_KEY = "action";
   private static final String USER_ID_KEY = "USER_ID_KEY";
+  private static final String STORE_ID = "STORE_ID";
+  private static final String STORE_CONTEXT = "STORE_CONTEXT";
+
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -84,6 +87,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private InstallManager installManager;
   private boolean newRefresh;
   private Long userId;
+  private Long storeId;
+  private StoreContext storeContext;
   private AptoideAccountManager accountManager;
   private AlertDialog shareDialog;
 
@@ -93,6 +98,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     if (userId != null) {
       args.putLong(USER_ID_KEY, userId);
     }
+    if (storeId != null) {
+      args.putLong(STORE_ID, storeId);
+    }
+    args.putSerializable(STORE_CONTEXT, storeContext);
     Fragment fragment = new TimelineFragment();
     args.putString(ACTION_KEY, action);
     fragment.setArguments(args);
@@ -103,6 +112,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     super.onCreate(savedInstanceState);
     newRefresh = true;
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
+    storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
+    storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
@@ -159,7 +170,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             WebService.getDefaultConverter(),
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-        new StoreCredentialsProviderImpl(), accountManager, userId), savedInstanceState);
+        new StoreCredentialsProviderImpl(), accountManager, userId, storeId, storeContext,
+        getContext().getResources()), savedInstanceState);
   }
 
   @Override public void showCards(List<Post> cards) {

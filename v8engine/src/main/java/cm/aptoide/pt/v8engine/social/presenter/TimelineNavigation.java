@@ -23,4 +23,12 @@ public interface TimelineNavigation {
   void navigateToAccountView();
 
   void navigateToCommentsWithCommentDialogOpen(String cardId);
+
+  void navigateToFollowersViewStore(Long storeId, String title);
+
+  void navigateToFollowersViewUser(Long userId, String title);
+
+  void navigateToFollowingViewStore(Long storeId, String title);
+
+  void navigateToFollowingViewUser(Long userId, String title);
 }

@@ -40,11 +40,17 @@ public class TimelineStatsViewHolder extends CardViewHolder<TimelineStatsPost> {
             .getString(R.string.timeline_followers, card.getFollowers()),
         new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(card.getFollowers()), String.valueOf(card.getFollowers())));
-
     following.setText(spannableFactory.createSpan(itemView.getContext()
             .getString(R.string.timeline_followed, card.getFollowing()),
         new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(card.getFollowing()), String.valueOf(card.getFollowing())));
+
+    followers.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWERS,
+            CardTouchEvent.Type.TIMELINE_STATS)));
+    following.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWING,
+            CardTouchEvent.Type.TIMELINE_STATS)));
     followFriends.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWFRIENDS,
             CardTouchEvent.Type.TIMELINE_STATS)));

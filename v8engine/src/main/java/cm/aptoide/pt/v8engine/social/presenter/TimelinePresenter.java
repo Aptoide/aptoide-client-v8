@@ -1,12 +1,16 @@
 package cm.aptoide.pt.v8engine.social.presenter;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -28,6 +32,7 @@ import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
+import cm.aptoide.pt.v8engine.social.data.TimelineStatsPost;
 import cm.aptoide.pt.v8engine.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -57,13 +62,17 @@ public class TimelinePresenter implements Presenter {
   private final StoreCredentialsProviderImpl storeCredentialsProvider;
   private final AptoideAccountManager accountManager;
   private final Long userId;
+  private final Long storeId;
+  private final StoreContext storeContext;
+  private final Resources resources;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
       PermissionManager permissionManager, PermissionService permissionRequest,
       InstallManager installManager, StoreRepository storeRepository,
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
-      AptoideAccountManager accountManager, Long userId) {
+      AptoideAccountManager accountManager, Long userId, Long storeId, StoreContext storeContext,
+      Resources resources) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -76,6 +85,9 @@ public class TimelinePresenter implements Presenter {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.accountManager = accountManager;
     this.userId = userId;
+    this.storeId = storeId;
+    this.storeContext = storeContext;
+    this.resources = resources;
   }
 
   @Override public void present() {
@@ -175,9 +187,41 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> {
           TimelineStatsTouchEvent timelineStatsTouchEvent =
               (TimelineStatsTouchEvent) cardTouchEvent;
+          TimelineStatsPost timelineStatsPost =
+              (TimelineStatsPost) timelineStatsTouchEvent.getCard();
           if (timelineStatsTouchEvent.getButtonClicked()
               .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWFRIENDS)) {
             timelineNavigation.navigateToAddressBook();
+          } else if (timelineStatsTouchEvent.getButtonClicked()
+              .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWERS)) {
+            String title = AptoideUtils.StringU.getFormattedString(
+                R.string.social_timeline_followers_fragment_title, resources,
+                timelineStatsPost.getFollowers());
+            if (storeContext.equals(StoreContext.home)) {
+              timelineNavigation.navigateToFollowersViewStore(0L, title);
+            } else {
+              if (userId == null || userId <= 0) {
+                timelineNavigation.navigateToFollowersViewStore(storeId, title);
+              } else {
+                timelineNavigation.navigateToFollowersViewUser(userId, title);
+              }
+            }
+          } else {
+            if (timelineStatsTouchEvent.getButtonClicked()
+                .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWING)) {
+              String title = AptoideUtils.StringU.getFormattedString(
+                  R.string.social_timeline_following_fragment_title, resources,
+                  timelineStatsPost.getFollowing());
+              if (storeContext.equals(StoreContext.home)) {
+                timelineNavigation.navigateToFollowingViewUser(userId, title);
+              } else {
+                if (userId == null || userId <= 0) {
+                  timelineNavigation.navigateToFollowingViewStore(storeId, title);
+                } else {
+                  timelineNavigation.navigateToFollowingViewUser(userId, title);
+                }
+              }
+            }
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

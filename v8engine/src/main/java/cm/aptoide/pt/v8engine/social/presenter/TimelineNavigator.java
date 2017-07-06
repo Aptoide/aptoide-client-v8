@@ -70,4 +70,31 @@ public class TimelineNavigator implements TimelineNavigation {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId));
   }
+
+  @Override public void navigateToFollowersViewStore(Long storeId, String title) {
+    if (storeId > 0) {
+      fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+          .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title));
+    } else {
+      fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+          .newTimeLineFollowersFragment("DEFAULT", title));
+    }
+  }
+
+  @Override public void navigateToFollowersViewUser(Long userId, String title) {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newTimeLineFollowersUsingUserIdFragment(userId, "DEFAULT", title));
+  }
+
+  @Override public void navigateToFollowingViewStore(Long storeId, String title) {
+    if (storeId > 0) {
+      fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+          .newTimeLineFollowingFragmentUsingStoreId(storeId, "DEFAULT", title));
+    }
+  }
+
+  @Override public void navigateToFollowingViewUser(Long userId, String title) {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newTimeLineFollowingFragmentUsingUserId(userId, "DEFAULT", title));
+  }
 }
