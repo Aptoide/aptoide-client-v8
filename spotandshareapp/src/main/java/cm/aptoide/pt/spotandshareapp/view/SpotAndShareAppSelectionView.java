@@ -26,4 +26,6 @@ public interface SpotAndShareAppSelectionView extends View {
   void onLeaveGroupError();
 
   Observable<AppModel> appSelection();
+
+  void openTransferRecord();
 }

@@ -68,6 +68,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     } else {
       selectedApps.add(appModel);
     }
+    view.openTransferRecord();
   }
 
   private void leaveGroup() {

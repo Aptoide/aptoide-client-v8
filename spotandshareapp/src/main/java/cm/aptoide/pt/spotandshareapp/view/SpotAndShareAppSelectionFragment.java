@@ -92,6 +92,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     return appSubject;
   }
 
+  @Override public void openTransferRecord() {
+    getFragmentNavigator().navigateToWithoutBackSave(
+        SpotAndShareTransferRecordFragment.newInstance());
+  }
+
   private void setupLayoutManager() {
     GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
     gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
