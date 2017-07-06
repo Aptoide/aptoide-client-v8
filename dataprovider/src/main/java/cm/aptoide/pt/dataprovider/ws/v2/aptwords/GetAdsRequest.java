@@ -152,10 +152,17 @@ import rx.Observable;
         googlePlayServicesAvailable, oemid, mature);
   }
 
-  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature, List<String> excludedPackages){
+  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature, String excludedPackages){
       GetAdsRequest getAdsRequest = of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable, oemid, mature);
-      getAdsRequest.setExcludedPackage(AptoideUtils.StringU.commaSeparatedValues(excludedPackages));
+      getAdsRequest.setExcludedPackage(excludedPackages);
       return getAdsRequest;
+  }
+
+  @Partners public static GetAdsRequest ofNotification(String aptoideClientUUID,
+      boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature,
+      String excludedPackage) {
+    return of(Location.notification, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
+        oemid, mature).setExcludedPackage(excludedPackage);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
@@ -226,7 +233,8 @@ import rx.Observable;
     homepage("native-aptoide:homepage"), appview("native-aptoide:appview"), middleappview(
         "native-aptoide:middleappview"), search("native-aptoide:search"), secondinstall(
         "native-aptoide:secondinstall"), secondtry("native-aptoide:secondtry"), aptoidesdk(
-        "sdk-aptoide:generic"), firstinstall("native-aptoide:first-install");
+        "sdk-aptoide:generic"), firstinstall("native-aptoide:first-install"), notification(
+        "native-aptoide:notifications");
 
     private final String value;
 

@@ -12,18 +12,18 @@
   <PreferenceCategory
       android:key="generalDownloadRules"
       android:title="@string/setting_general_download_rules"
-      >
+  >
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="generalnetworkwifi"
         android:title="@string/setting_wifi"
-        />
+    />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="generalnetworkmobile"
         android:title="@string/setting_mobile"
-        />
+    />
 
   </PreferenceCategory>
 
@@ -135,11 +135,19 @@
   </PreferenceCategory>
 
   <PreferenceCategory
+      android:key="topAppsNotification"
+      android:title="@string/topAppsNotification">
+    <Preference
+        android:key="topAppsNotificationDialog"
+        android:title="@string/topAppsNotification_dialog"/>
+  </PreferenceCategory>
+
+  <PreferenceCategory
       android:key="language"
       android:title="@string/languages">
     <Preference
         android:key="languageDialog"
-        android:title="@string/languages"/>
+        android:title="@string/language_dialog"/>
   </PreferenceCategory>
 
   <!--

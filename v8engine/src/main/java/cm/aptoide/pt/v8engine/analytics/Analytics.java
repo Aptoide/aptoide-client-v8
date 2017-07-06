@@ -1080,6 +1080,36 @@ public class Analytics {
     }
   }
 
+  public static class TopAppsNotifications {
+    static final String SHOW_ADS_NOTIFICATION = "SHOW_TOP_APP_NOTIFICATION";
+    static final String CLICK_ADS_NOTIFICATION = "CLICK_TOP_APP_NOTIFICATION";
+    static final String NO_ADS_DISPLAY_NOTIFICATION = "NO_ADS_DISPLAY_NOTIFICATION";
+    static final String TYPE_NOTIFICATION = "type";
+    public static final String WEEKLY_TOP_APP = "weekly top app";
+    public static final String DAILY_TOP_APP = "daily top app";
+
+    public static void showAdsNotification(String type) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(TYPE_NOTIFICATION, type);
+      logFacebookEvents(SHOW_ADS_NOTIFICATION, map);
+      track(SHOW_ADS_NOTIFICATION, FLURRY);
+    }
+
+    public static void clickAdsNotification(String type) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(TYPE_NOTIFICATION, type);
+      logFacebookEvents(CLICK_ADS_NOTIFICATION, map);
+      track(CLICK_ADS_NOTIFICATION, FLURRY);
+    }
+
+    public static void noAdsDisplayNotification(String type) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(TYPE_NOTIFICATION, type);
+      logFacebookEvents(NO_ADS_DISPLAY_NOTIFICATION, map);
+      track(NO_ADS_DISPLAY_NOTIFICATION, FLURRY);
+    }
+  }
+
   public static class VideoAdSDK {
     static final String ON_VIDEO_AD_END = "ON_VIDEO_AD_END";
     static final String ON_VIDEO_AD_START = "ON_VIDEO_AD_START";
