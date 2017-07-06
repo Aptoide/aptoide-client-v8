@@ -37,6 +37,7 @@ public class MediaViewHolder extends CardViewHolder<Media> {
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
+  private final TextView shareButton;
 
   public MediaViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
@@ -57,6 +58,7 @@ public class MediaViewHolder extends CardViewHolder<Media> {
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
+    this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
   }
 
   @Override public void setCard(Media media, int position) {
@@ -99,6 +101,8 @@ public class MediaViewHolder extends CardViewHolder<Media> {
         new CardTouchEvent(media, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(media, CardTouchEvent.Type.COMMENT)));
+    this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(media, CardTouchEvent.Type.SHARE)));
   }
 
   private void setIcon(int drawableId) {

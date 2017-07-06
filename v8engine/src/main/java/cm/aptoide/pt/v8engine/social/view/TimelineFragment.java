@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
@@ -71,6 +73,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private final int visibleThreshold = 5;
   private CardAdapter adapter;
   private PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private PublishSubject<Void> sharePreviewPublishSubject;
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -84,6 +87,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private boolean newRefresh;
   private Long userId;
   private AptoideAccountManager accountManager;
+  private AlertDialog shareDialog;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -117,6 +121,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
+
+    shareDialog = new AlertDialog.Builder(getContext()).setMessage("dummy share dialog")
+        .setPositiveButton(android.R.string.ok, null)
+        .create();
   }
 
   @Nullable @Override
@@ -216,6 +224,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return cardTouchEventPublishSubject;
   }
 
+  @Override public Observable<Void> shareConfirmation() {
+    return sharePreviewPublishSubject;
+  }
+
   @Override public Observable<Void> retry() {
     return RxView.clicks(retryButton);
   }
@@ -263,5 +275,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     ShowMessage.asSnack(getView(),
         AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
             getContext().getResources(), storeName));
+  }
+
+  @Override public void showSharePreview(CardType type) {
+    if (!shareDialog.isShowing()) {
+      shareDialog.show();
+    }
   }
 }

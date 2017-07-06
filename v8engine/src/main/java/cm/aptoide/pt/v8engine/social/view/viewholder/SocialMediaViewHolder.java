@@ -42,6 +42,7 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
+  private final TextView shareButton;
 
   public SocialMediaViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -64,6 +65,7 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
+    this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
   }
 
   @Override public void setCard(SocialMedia card, int position) {
@@ -112,6 +114,8 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
         new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
+    this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
   }
 
   private void showHeaderSecondaryName(SocialMedia card) {

@@ -52,6 +52,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
+  private final TextView shareButton;
 
   public SocialStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -78,6 +79,7 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
+    this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
   }
 
   @Override public void setCard(SocialStore card, int position) {
@@ -124,6 +126,8 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
         new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
+    this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
   }
 
   @NonNull private Spannable getStyledStoreName(SocialStore card) {

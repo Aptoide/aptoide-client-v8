@@ -54,4 +54,8 @@ public class Timeline {
   public Single<Post> getTimelineLoginPost() {
     return Single.just(new TimelineLoginPost());
   }
+
+  public void sharePost() {
+
+  }
 }

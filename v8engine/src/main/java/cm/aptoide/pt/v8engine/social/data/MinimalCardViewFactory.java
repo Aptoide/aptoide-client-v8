@@ -25,7 +25,6 @@ public class MinimalCardViewFactory {
   private final DateCalculator dateCalculator;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private TextView morePostersLabel;
-  private LikeButtonView likeButton;
 
   public MinimalCardViewFactory(DateCalculator dateCalculator,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
@@ -45,10 +44,10 @@ public class MinimalCardViewFactory {
     TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
     morePostersLabel = (TextView) subCardView.findViewById(
         R.id.timeline_header_aditional_number_of_shares_circular);
-    this.likeButton = (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
-    TextView commentButton = (TextView) subCardView.findViewById(R.id.social_comment);
+    LikeButtonView likeButton = (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
     LinearLayout like = (LinearLayout) subCardView.findViewById(R.id.social_like);
-
+    TextView commentButton = (TextView) subCardView.findViewById(R.id.social_comment);
+    TextView shareButton = (TextView) subCardView.findViewById(R.id.social_share);
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(post.getMinimalPostPosters()
             .get(0)
@@ -77,12 +76,14 @@ public class MinimalCardViewFactory {
       likeButton.setHeartState(false);
     }
 
-    like.setOnClickListener(click -> this.likeButton.performClick());
+    like.setOnClickListener(click -> likeButton.performClick());
 
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+    likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, CardTouchEvent.Type.LIKE)));
     commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, CardTouchEvent.Type.COMMENT)));
+    shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(post, CardTouchEvent.Type.SHARE)));
     return subCardView;
   }
 
