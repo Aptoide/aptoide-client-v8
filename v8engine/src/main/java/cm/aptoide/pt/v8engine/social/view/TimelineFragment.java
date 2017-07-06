@@ -33,7 +33,6 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
@@ -64,7 +63,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   public static final int LATEST_PACKAGES_COUNT = 20;
   public static final int RANDOM_PACKAGES_COUNT = 10;
-  public static final String NEW = "NEW";
   private static final String ACTION_KEY = "action";
   private static final String USER_ID_KEY = "USER_ID_KEY";
   /**
@@ -73,7 +71,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private final int visibleThreshold = 5;
   private CardAdapter adapter;
   private PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
-  private PublishSubject<Void> sharePreviewPublishSubject;
+  private PublishSubject<Post> sharePreviewPublishSubject;
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -111,6 +109,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     cardTouchEventPublishSubject = PublishSubject.create();
+    sharePreviewPublishSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
@@ -121,10 +120,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
-
-    shareDialog = new AlertDialog.Builder(getContext()).setMessage("dummy share dialog")
-        .setPositiveButton(android.R.string.ok, null)
-        .create();
   }
 
   @Nullable @Override
@@ -224,7 +219,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return cardTouchEventPublishSubject;
   }
 
-  @Override public Observable<Void> shareConfirmation() {
+  @Override public Observable<Post> shareConfirmation() {
     return sharePreviewPublishSubject;
   }
 
@@ -277,9 +272,17 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             getContext().getResources(), storeName));
   }
 
-  @Override public void showSharePreview(CardType type) {
+  @Override public void showSharePreview(Post post) {
+    shareDialog = new AlertDialog.Builder(getContext()).setMessage("Shared Card Preview")
+        .setPositiveButton(android.R.string.ok,
+            (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
+        .create();
     if (!shareDialog.isShowing()) {
       shareDialog.show();
     }
+  }
+
+  @Override public void showShareSuccessMessage() {
+    ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
   }
 }

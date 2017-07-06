@@ -31,7 +31,7 @@ public interface TimelineView extends View {
 
   Observable<CardTouchEvent> postClicked();
 
-  Observable<Void> shareConfirmation();
+  Observable<Post> shareConfirmation();
 
   Observable<Void> retry();
 
@@ -49,5 +49,7 @@ public interface TimelineView extends View {
 
   void showStoreUnsubscribedMessage(String storeName);
 
-  void showSharePreview(CardType type);
+  void showSharePreview(Post post);
+
+  void showShareSuccessMessage();
 }

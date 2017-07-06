@@ -55,7 +55,7 @@ public class Timeline {
     return Single.just(new TimelineLoginPost());
   }
 
-  public void sharePost() {
-
+  public Completable sharePost(Post post) {
+    return service.share(post);
   }
 }

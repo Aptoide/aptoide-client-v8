@@ -115,8 +115,10 @@ public class TimelinePresenter implements Presenter {
   private void handleSharePostConfirmationEvent() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.shareConfirmation())
-        .doOnNext(__ -> timeline.sharePost())
+        .flatMap(created -> view.shareConfirmation()
+            .flatMapCompletable(post -> timeline.sharePost(post)
+                .retry()
+                .doOnCompleted(() -> view.showShareSuccessMessage())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
@@ -129,8 +131,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.SHARE))
-        .doOnNext(cardTouchEvent -> view.showSharePreview(cardTouchEvent.getCard()
-            .getType()))
+        .doOnNext(cardTouchEvent -> view.showSharePreview(cardTouchEvent.getCard()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {

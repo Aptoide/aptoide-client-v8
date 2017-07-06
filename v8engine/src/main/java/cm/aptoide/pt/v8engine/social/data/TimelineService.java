@@ -8,9 +8,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -129,5 +131,19 @@ public class TimelineService {
               new IllegalStateException("Could not obtain timeline stats from server."));
         })
         .map(timelineStats -> mapper.map(timelineStats));
+  }
+
+  public Completable share(Post post) {
+    return ShareCardRequest.of(post.getCardId(), bodyInterceptor, okhttp, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          }
+          return Completable.error(
+              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        })
+        .toCompletable();
   }
 }
