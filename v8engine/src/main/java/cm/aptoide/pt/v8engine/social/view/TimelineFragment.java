@@ -277,9 +277,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .setPositiveButton(android.R.string.ok,
             (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
         .create();
-    if (!shareDialog.isShowing()) {
-      shareDialog.show();
-    }
+    shareDialog.show();
   }
 
   @Override public void showShareSuccessMessage() {
