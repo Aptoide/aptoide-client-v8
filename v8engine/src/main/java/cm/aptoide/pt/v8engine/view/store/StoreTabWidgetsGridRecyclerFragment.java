@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
@@ -24,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -60,7 +60,9 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
     idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -68,10 +70,12 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
-        tokenInvalidator,
+        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class), httpClient,
+        WebService.getDefaultConverter(), tokenInvalidator,
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,

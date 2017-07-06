@@ -36,7 +36,6 @@ import cm.aptoide.accountmanager.AccountManagerService;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
@@ -44,7 +43,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
-import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -92,11 +90,14 @@ import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
-import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.Payer;
+import cm.aptoide.pt.v8engine.billing.TransactionAccessor;
+import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
+import cm.aptoide.pt.v8engine.billing.repository.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingProductRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppTransactionRepository;
@@ -108,12 +109,12 @@ import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
-import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.DownloadAnalytics;
 import cm.aptoide.pt.v8engine.download.DownloadMirrorEventInterceptor;
@@ -186,7 +187,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
-import okhttp3.Authenticator;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -261,7 +261,8 @@ public abstract class V8Engine extends Application {
   private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   private AdsRepository adsRepository;
   private ABTestManager abTestManager;
-  private Authenticator webServiceAuthenticator;
+  private TransactionPersistence transactionPersistence;
+  private Database database;
 
   /**
    * call after this instance onCreate()
@@ -319,8 +320,6 @@ public abstract class V8Engine extends Application {
     //}
 
     Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
-
-    Database.initialize(this);
 
     //
     // async app initialization
@@ -432,7 +431,8 @@ public abstract class V8Engine extends Application {
           new NotificationIdsMapper());
 
       final NotificationAccessor notificationAccessor =
-          AccessorFactory.getAccessorFor(Notification.class);
+          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
+              Notification.class);
 
       final NotificationProvider notificationProvider =
           new NotificationProvider(notificationAccessor, Schedulers.io());
@@ -581,8 +581,10 @@ public abstract class V8Engine extends Application {
       FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
-      downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
-          getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
+      downloadManager = new AptoideDownloadManager(
+          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
+              Download.class), getCacheHelper(),
+          new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
           getConfiguration().getCachePath(), apkPath, obbPath);
     }
@@ -602,7 +604,10 @@ public abstract class V8Engine extends Application {
               new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance())).create(this,
               installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
-              getDefaultSharedPreferences()));
+              getDefaultSharedPreferences()),
+          RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
+          RepositoryFactory.getInstalledRepository(
+              getApplicationContext().getApplicationContext()));
       installManagers.put(installerType, installManager);
     }
 
@@ -647,7 +652,8 @@ public abstract class V8Engine extends Application {
 
       final AccountDataPersist accountDataPersist =
           new AndroidAccountManagerDataPersist(AccountManager.get(this),
-              new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(Store.class),
+              new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(
+                  ((V8Engine) this.getApplicationContext()).getDatabase(), Store.class),
                   new DatabaseStoreDataPersist.DatabaseStoreMapper()), getAccountFactory(),
               accountDataMigration, getAndroidAccountProvider(), Schedulers.io());
 
@@ -760,15 +766,15 @@ public abstract class V8Engine extends Application {
       final TransactionFactory confirmationFactory = new TransactionFactory();
 
       final TransactionRepositorySelector transactionRepositorySelector =
-          new TransactionRepositorySelector(new InAppTransactionRepository(
-              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBillingSyncScheduler(),
-              confirmationFactory, getBaseBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
-              getDefaultSharedPreferences()), new PaidAppTransactionRepository(
-              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBillingSyncScheduler(),
-              confirmationFactory, getBaseBodyInterceptorV3(), WebService.getDefaultConverter(),
-              getDefaultClient(), getAccountPayer(), getTokenInvalidator(),
-              getDefaultSharedPreferences()));
+          new TransactionRepositorySelector(
+              new InAppTransactionRepository(getTransactionPersistence(), getBillingSyncScheduler(),
+                  confirmationFactory, getBaseBodyInterceptorV3(), getDefaultClient(),
+                  WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
+                  getDefaultSharedPreferences()),
+              new PaidAppTransactionRepository(getTransactionPersistence(),
+                  getBillingSyncScheduler(), confirmationFactory, getBaseBodyInterceptorV3(),
+                  WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
+                  getTokenInvalidator(), getDefaultSharedPreferences()));
 
       final ProductFactory productFactory = new ProductFactory();
 
@@ -777,10 +783,11 @@ public abstract class V8Engine extends Application {
 
       final PaymentMethodMapper paymentMethodMapper =
           new PaymentMethodMapper(transactionRepositorySelector, new AuthorizationRepository(
-              AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBillingSyncScheduler(),
-              getAuthorizationFactory(), getBaseBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), getAccountPayer(), getTokenInvalidator(),
-              getDefaultSharedPreferences()));
+              AccessorFactory.getAccessorFor(
+                  ((V8Engine) this.getApplicationContext()).getDatabase(),
+                  PaymentAuthorization.class), getBillingSyncScheduler(), getAuthorizationFactory(),
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              getAccountPayer(), getTokenInvalidator(), getDefaultSharedPreferences()));
 
       final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
           new PaidAppProductRepository(purchaseFactory, paymentMethodMapper,
@@ -794,6 +801,21 @@ public abstract class V8Engine extends Application {
           getInAppBillingRepository());
     }
     return billing;
+  }
+
+  public TransactionPersistence getTransactionPersistence() {
+    if (transactionPersistence == null) {
+      transactionPersistence = new TransactionAccessor(getDatabase());
+    }
+    return transactionPersistence;
+  }
+
+  public Database getDatabase() {
+    if (database == null) {
+      database = new Database();
+      database.initialize(this);
+    }
+    return database;
   }
 
   public PackageRepository getPackageRepository() {
@@ -841,9 +863,9 @@ public abstract class V8Engine extends Application {
   public InAppBillingRepository getInAppBillingRepository() {
     if (inAppBillingRepository == null) {
       inAppBillingRepository =
-          new InAppBillingRepository(AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              getTokenInvalidator(), getDefaultSharedPreferences());
+          new InAppBillingRepository(getTransactionPersistence(), getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences());
     }
     return inAppBillingRepository;
   }
@@ -965,12 +987,15 @@ public abstract class V8Engine extends Application {
   private Completable setupFirstRun(final AptoideAccountManager accountManager) {
     return Completable.defer(() -> {
 
-      final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
+      final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl(
+          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
+              Store.class));
 
       StoreUtilsProxy proxy =
           new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7(), storeCredentials,
-              AccessorFactory.getAccessorFor(Store.class), getDefaultClient(),
-              WebService.getDefaultConverter(), getTokenInvalidator(),
+              AccessorFactory.getAccessorFor(
+                  ((V8Engine) this.getApplicationContext()).getDatabase(), Store.class),
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
@@ -1072,7 +1097,9 @@ public abstract class V8Engine extends Application {
   }
 
   private Completable discoverAndSaveInstalledApps() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    InstalledAccessor installedAccessor =
+        AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
+            Installed.class);
     return Observable.fromCallable(() -> {
       // remove the current installed apps
       //AccessorFactory.getAccessorFor(Installed.class).removeAll();

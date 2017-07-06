@@ -5,11 +5,10 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Transaction;
-import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import rx.Completable;
 import rx.Observable;
 
@@ -17,12 +16,12 @@ public abstract class TransactionRepository {
 
   protected final TransactionFactory transactionFactory;
   private final Payer payer;
-  private final TransactionAccessor transactionAccessor;
+  private final TransactionPersistence transactionPersistence;
   private final BillingSyncScheduler syncScheduler;
 
-  public TransactionRepository(TransactionAccessor transactionAccessor,
+  public TransactionRepository(TransactionPersistence transactionPersistence,
       BillingSyncScheduler syncScheduler, TransactionFactory transactionFactory, Payer payer) {
-    this.transactionAccessor = transactionAccessor;
+    this.transactionPersistence = transactionPersistence;
     this.syncScheduler = syncScheduler;
     this.transactionFactory = transactionFactory;
     this.payer = payer;
@@ -33,7 +32,7 @@ public abstract class TransactionRepository {
   public Observable<Transaction> getTransaction(Product product) {
     return payer.getId()
         .flatMapObservable(payerId -> syncTransaction(product).andThen(
-            transactionAccessor.getPersistedTransactions(product.getId(), payerId)
+            transactionPersistence.getTransaction(product.getId(), payerId)
                 .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
                     .map(paymentConfirmation -> transactionFactory.map(paymentConfirmation))
                     .switchIfEmpty(syncTransaction(product).toObservable()))));
@@ -44,12 +43,13 @@ public abstract class TransactionRepository {
     return payer.getId()
         .map(payerId -> transactionFactory.create(product.getId(), payPalConfirmationId,
             Transaction.Status.PENDING, payerId, paymentMethodId))
-        .doOnSuccess(transaction -> transactionAccessor.insert(transactionFactory.map(transaction)))
+        .doOnSuccess(transaction -> transactionPersistence.saveTransaction(
+            transactionFactory.map(transaction)))
         .flatMapCompletable(transaction -> syncTransaction(product));
   }
 
   public Completable remove(int productId) {
-    return Completable.fromAction(() -> transactionAccessor.remove(productId));
+    return Completable.fromAction(() -> transactionPersistence.removeTransaction(productId));
   }
 
   protected Completable syncTransaction(Product product) {

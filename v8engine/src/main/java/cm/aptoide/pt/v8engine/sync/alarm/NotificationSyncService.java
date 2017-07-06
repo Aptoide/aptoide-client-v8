@@ -4,10 +4,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationNetworkService;
 import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import rx.schedulers.Schedulers;
@@ -20,7 +20,9 @@ public class NotificationSyncService extends Service {
   @Override public void onCreate() {
     super.onCreate();
 
-    NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
+    NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+        Notification.class);
     NotificationProvider notificationProvider =
         new NotificationProvider(notificationAccessor, Schedulers.io());
     final NotificationNetworkService notificationHandler =

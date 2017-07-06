@@ -26,11 +26,6 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     resultRelay.call(new Result(requestCode, resultCode, data));
   }
 
-  @Override public void finish(int code, Bundle bundle) {
-    setResult(code, new Intent().putExtras(bundle));
-    finish();
-  }
-
   @Override
   public Observable<Result> navigateForResult(Class<? extends AppCompatActivity> activityClass,
       int requestCode) {
@@ -40,8 +35,8 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     return resultRelay.filter(result -> result.getRequestCode() == requestCode);
   }
 
-  @Override public void navigateForResult(Class<? extends Activity> activityClass,
-      int requestCode, Bundle bundle) {
+  @Override public void navigateForResult(Class<? extends Activity> activityClass, int requestCode,
+      Bundle bundle) {
     final Intent intent = new Intent();
     intent.setComponent(new ComponentName(this, activityClass));
     intent.putExtras(bundle);
@@ -80,5 +75,10 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     intent.setComponent(new ComponentName(this, activityClass));
     intent.putExtras(bundle);
     startActivity(intent);
+  }
+
+  @Override public void finish(int code, Bundle bundle) {
+    setResult(code, new Intent().putExtras(bundle));
+    finish();
   }
 }

@@ -26,8 +26,7 @@ public class Transaction {
   }
 
   public boolean isNew() {
-    return Status.NEW.equals(status)
-        || Status.PENDING_AUTHORIZATION.equals(status);
+    return Status.NEW.equals(status) || Status.PENDING_AUTHORIZATION.equals(status);
   }
 
   public boolean isCompleted() {

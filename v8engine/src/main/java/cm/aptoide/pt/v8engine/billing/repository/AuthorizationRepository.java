@@ -14,7 +14,6 @@ import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Authorization;
 import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

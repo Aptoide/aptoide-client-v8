@@ -9,8 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Data @EqualsAndHashCode(callSuper = true) public class TransactionResponse
-    extends BaseV3Response {
+@Data @EqualsAndHashCode(callSuper = true) public class TransactionResponse extends BaseV3Response {
 
   @JsonProperty("payStatus") private String transactionStatus;
   @JsonProperty("paykey") private String localMetadata;

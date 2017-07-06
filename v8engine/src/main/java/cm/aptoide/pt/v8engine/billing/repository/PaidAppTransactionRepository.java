@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -14,8 +13,8 @@ import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
+import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
-import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -30,12 +29,12 @@ public class PaidAppTransactionRepository extends TransactionRepository {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
-  public PaidAppTransactionRepository(TransactionAccessor confirmationAccessor,
+  public PaidAppTransactionRepository(TransactionPersistence transactionPersistence,
       BillingSyncScheduler backgroundSync, TransactionFactory confirmationFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, Payer payer, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    super(confirmationAccessor, backgroundSync, confirmationFactory, payer);
+    super(transactionPersistence, backgroundSync, confirmationFactory, payer);
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;

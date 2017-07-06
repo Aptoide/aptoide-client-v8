@@ -12,8 +12,7 @@ public interface ActivityNavigator {
   Observable<Result> navigateForResult(Class<? extends AppCompatActivity> activityClass,
       int requestCode);
 
-  void navigateForResult(Class<? extends Activity> activityClass, int requestCode,
-      Bundle bundle);
+  void navigateForResult(Class<? extends Activity> activityClass, int requestCode, Bundle bundle);
 
   Observable<Result> results(int requestCode);
 

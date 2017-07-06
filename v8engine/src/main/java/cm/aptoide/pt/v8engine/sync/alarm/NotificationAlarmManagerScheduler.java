@@ -44,17 +44,21 @@ public class NotificationAlarmManagerScheduler implements NotificationSyncSchedu
     }
   }
 
-  private boolean isAlarmActive(Schedule schedule) {
-    return PendingIntent.getService(context, 0, buildIntent(schedule), PendingIntent.FLAG_NO_CREATE)
-        != null;
-  }
-
   @Override public void removeSchedules() {
     for (final Schedule schedule : scheduleList) {
       PendingIntent pendingIntent = getPendingIntent(schedule);
       alarmManager.cancel(pendingIntent);
       pendingIntent.cancel();
     }
+  }
+
+  @Override public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  private boolean isAlarmActive(Schedule schedule) {
+    return PendingIntent.getService(context, 0, buildIntent(schedule), PendingIntent.FLAG_NO_CREATE)
+        != null;
   }
 
   private PendingIntent getPendingIntent(Schedule schedule) {
@@ -66,10 +70,6 @@ public class NotificationAlarmManagerScheduler implements NotificationSyncSchedu
     Intent intent = new Intent(context, serviceClass);
     intent.setAction(schedule.getAction());
     return intent;
-  }
-
-  @Override public void setEnabled(boolean enabled) {
-    this.enabled = enabled;
   }
 
   public static class Schedule {

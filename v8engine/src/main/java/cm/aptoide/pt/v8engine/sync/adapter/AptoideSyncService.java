@@ -9,12 +9,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
-import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 
 public class AptoideSyncService extends Service {
 
@@ -29,8 +28,10 @@ public class AptoideSyncService extends Service {
             new AptoideSyncAdapter(getApplicationContext(), true, false, new TransactionFactory(),
                 ((V8Engine) getApplicationContext()).getAuthorizationFactory(),
                 new ProductBundleMapper(),
-                AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-                AccessorFactory.getAccessorFor(PaymentAuthorization.class),
+                ((V8Engine) getApplicationContext()).getTransactionPersistence(),
+                AccessorFactory.getAccessorFor(
+                    ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+                    PaymentAuthorization.class),
                 ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(),
                 ((V8Engine) getApplicationContext()).getDefaultClient(),
                 WebService.getDefaultConverter(),

@@ -33,7 +33,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.AppAction;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -75,6 +74,7 @@ import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -290,9 +290,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
-    installedRepository = RepositoryFactory.getInstalledRepository();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
+    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
@@ -496,7 +501,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       appViewAnalytics.sendScheduleDownloadEvent();
       scheduled = createScheduled(app, appAction);
 
-      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
+          ((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Scheduled.class);
       scheduledAccessor.insert(scheduled);
 
       String str = this.getString(R.string.added_to_scheduled);
@@ -793,7 +800,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     //      }
     //    });
 
-    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class);
     storeAccessor.getAll()
         .flatMapIterable(list -> list)
         .filter(store -> store != null && store.getStoreId() == storeId)
@@ -813,7 +822,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     //      adapter.notifyDataSetChanged();
     //    });
 
-    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Rollback.class);
     rollbackAccessor.getAll()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

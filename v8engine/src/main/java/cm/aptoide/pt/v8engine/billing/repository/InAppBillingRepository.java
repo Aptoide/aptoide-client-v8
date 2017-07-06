@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.database.accessors.TransactionAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -14,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -22,23 +22,20 @@ import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 8/11/16.
- */
 public class InAppBillingRepository {
 
-  private final TransactionAccessor confirmationAccessor;
+  private final TransactionPersistence transactionPersistence;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
-  public InAppBillingRepository(TransactionAccessor confirmationAccessor,
+  public InAppBillingRepository(TransactionPersistence transactionPersistence,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    this.confirmationAccessor = confirmationAccessor;
+    this.transactionPersistence = transactionPersistence;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -75,7 +72,7 @@ public class InAppBillingRepository {
         .flatMapCompletable(response -> {
           if (response != null && response.isOk()) {
             // TODO sync all payment confirmations instead. For now there is no web service for that.
-            confirmationAccessor.removeAll();
+            transactionPersistence.removeAllTransactions();
             return Completable.complete();
           }
           if (isDeletionItemNotFound(response.getErrors())) {

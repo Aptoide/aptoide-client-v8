@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;

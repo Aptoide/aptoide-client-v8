@@ -76,7 +76,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
 
     adMapper = new MinimalAdMapper();
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";

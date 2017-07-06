@@ -83,7 +83,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

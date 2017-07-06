@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.search.SearchAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -264,9 +266,11 @@ public class SearchFragment extends BasePagerToolbarFragment {
     searchAnalytics.search(query);
     if (storeName != null) {
       shouldFinishLoading = true;
-      ListSearchAppsRequest of =
-          ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+      ListSearchAppsRequest of = ListSearchAppsRequest.of(query, storeName,
+          StoreUtils.getSubscribedStoresAuthMap(AccessorFactory.getAccessorFor(
+              ((V8Engine) getContext().getApplicationContext()
+                  .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor,
+          httpClient, converterFactory, tokenInvalidator, sharedPreferences);
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
             .getList();
@@ -280,8 +284,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
         }
       }, e -> finishLoading());
     } else {
-      ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+      ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
+          converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
                 .getList();
@@ -296,8 +302,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
           }, e -> finishLoading());
 
       // Other stores
-      ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+      ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
+          converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
                 .getList();

@@ -72,7 +72,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository = RepositoryFactory.getInstalledRepository(getContext());
     cancelClick = PublishRelay.create();
     postClick = PublishRelay.create();
     loginAction = PublishRelay.create();

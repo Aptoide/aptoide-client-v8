@@ -11,7 +11,7 @@ import android.content.SyncStatusObserver;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.repository.sync.BillingSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.repository.BillingSyncScheduler;
 import rx.Completable;
 import rx.Observable;
 import rx.Subscriber;
