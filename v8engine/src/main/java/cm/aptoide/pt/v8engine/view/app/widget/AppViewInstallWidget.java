@@ -504,7 +504,8 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
+            if (accountManager.isLoggedIn()
+                && ManagerPreferences.isShowPreviewDialog(
                 ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
                 && Application.getConfiguration()
                 .isCreateStoreAndSetUserPrivacyAvailable()) {

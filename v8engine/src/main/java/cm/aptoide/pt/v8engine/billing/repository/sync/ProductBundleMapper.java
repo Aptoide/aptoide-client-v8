@@ -67,14 +67,20 @@ public class ProductBundleMapper {
 
     if (id != -1
         && icon != null
-        && title != null && description != null && amount != -1 && packageVersionCode != -1
+        && title != null
+        && description != null
+        && amount != -1
+        && packageVersionCode != -1
         && taxRate != -1
         && currency != null
         && currencySymbol != null) {
 
       final Price price = new Price(amount, currency, currencySymbol, taxRate);
 
-      if (developerPayload != null && sku != null && packageName != null && applicationName != null
+      if (developerPayload != null
+          && sku != null
+          && packageName != null
+          && applicationName != null
           && type != null
           && apiVersion != -1) {
         return new InAppProduct(id, icon, title, description, apiVersion, sku, packageName,
