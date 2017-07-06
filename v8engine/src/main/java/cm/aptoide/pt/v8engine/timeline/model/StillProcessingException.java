@@ -1,4 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.model;
 
-public class StillProcessingException {
+import java.io.IOException;
+
+public class StillProcessingException extends IOException {
 }

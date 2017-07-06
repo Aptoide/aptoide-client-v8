@@ -111,7 +111,7 @@ public class PostFragment extends FragmentView implements PostView {
 
     InstalledRepository installedRepository = RepositoryFactory.getInstalledRepository();
     final PostPresenter presenter =
-        new PostPresenter(this, CrashReport.getInstance(), new PostManager(), installedRepository,
+        new PostPresenter(this, CrashReport.getInstance(), new PostManager(timelineRepository), installedRepository,
             adapter, getFragmentNavigator());
     attachPresenter(presenter, null);
   }

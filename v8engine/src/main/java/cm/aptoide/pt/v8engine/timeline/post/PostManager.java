@@ -1,16 +1,22 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.social.data.Card;
+import cm.aptoide.pt.v8engine.timeline.PostRepository;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import rx.Completable;
 import rx.Single;
 
 public class PostManager {
-  public Completable post(String data) {
-    return Completable.fromAction(() -> Logger.i("PostManager", "server received post: " + data))
-        .delay(1, TimeUnit.SECONDS);
+
+  private final PostRepository postRepository;
+
+  public PostManager(PostRepository postRepository) {
+    this.postRepository = postRepository;
+  }
+
+  public Single<Card> post(String url, String content, String packageName) {
+    return postRepository.postOnTimeline(url, content, packageName);
   }
 
   public Single<List<RelatedApp>> getAppSuggestions(String data) {

@@ -23,7 +23,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
-import cm.aptoide.pt.model.v7.Datalist;
+import cm.aptoide.pt.model.v7.DataList;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
@@ -313,7 +313,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   private boolean hasMoreResults(ListSearchApps listSearchApps) {
-    Datalist<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDatalist();
+    DataList<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDatalist();
 
     return datalist.getList()
         .size() > 0 || listSearchApps.getTotal() > listSearchApps.getNextSize();
