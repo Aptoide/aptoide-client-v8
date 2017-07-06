@@ -61,8 +61,8 @@ public class TransactionSync extends ScheduledSync {
         .filter(transaction -> transaction instanceof PayPalTransaction)
         .cast(PayPalTransaction.class)
         .flatMapSingle(payPalTransaction -> transactionService.createTransaction(product,
-            payPalTransaction.getPaymentMethodId(), payPalTransaction.getPayPalConfirmationId(),
-            payPalTransaction.getPayerId())
+            payPalTransaction.getPaymentMethodId(), payPalTransaction.getPayerId(),
+            payPalTransaction.getPayPalConfirmationId())
             .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
                 .andThen(Single.just(transaction))));
   }

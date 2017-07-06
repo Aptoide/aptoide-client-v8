@@ -7,7 +7,7 @@ import android.view.View;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
-import cm.aptoide.pt.v8engine.billing.repository.BillingSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 
 public class BoaCompraFragment extends WebViewFragment implements WebView {
 

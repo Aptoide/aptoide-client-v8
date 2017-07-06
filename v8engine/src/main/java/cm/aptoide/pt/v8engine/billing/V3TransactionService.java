@@ -7,12 +7,8 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetTransactionRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
@@ -57,12 +53,12 @@ public class V3TransactionService implements TransactionService {
           if (response != null && response.isOk()) {
             return Single.just(transactionFactory.map(product.getId(), response, payerId));
           }
-          return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+          return Single.just(transactionFactory.create(product.getId(), payerId));
         });
   }
 
   @Override public Single<Transaction> createTransaction(Product product, int paymentMethodId,
-      String metadata, String payerId) {
+      String payerId, String metadata) {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
@@ -86,7 +82,29 @@ public class V3TransactionService implements TransactionService {
                 transactionFactory.create(product.getId(), metadata, Transaction.Status.COMPLETED,
                     payerId, paymentMethodId));
           }
-          return Single.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+          return getTransaction(product, payerId);
         });
+  }
+
+  @Override public Single<Transaction> createTransaction(Product product, int paymentMethodId,
+      String payerId) {
+    return Single.just(product instanceof InAppProduct)
+        .flatMap(isInAppBilling -> {
+          if (isInAppBilling) {
+            return CreateTransactionRequest.ofInApp(product.getId(), paymentMethodId,
+                ((InAppProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient,
+                converterFactory, tokenInvalidator, sharedPreferences,
+                ((InAppProduct) product).getPackageVersionCode())
+                .observe(true)
+                .toSingle();
+          }
+          return CreateTransactionRequest.ofPaidApp(product.getId(), paymentMethodId,
+              ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient,
+              converterFactory, tokenInvalidator, sharedPreferences,
+              ((PaidAppProduct) product).getPackageVersionCode())
+              .observe(true)
+              .toSingle();
+        })
+        .flatMap(response -> getTransaction(product, payerId));
   }
 }

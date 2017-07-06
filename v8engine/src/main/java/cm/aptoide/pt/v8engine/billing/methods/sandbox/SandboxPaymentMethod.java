@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.billing.methods.sandbox;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import rx.Completable;
 
 public class SandboxPaymentMethod implements PaymentMethod {
@@ -10,14 +10,14 @@ public class SandboxPaymentMethod implements PaymentMethod {
   private final int id;
   private final String name;
   private final String description;
-  private final TransactionRepositorySelector transactionRepositorySelector;
+  private final TransactionRepository transactionRepository;
 
   public SandboxPaymentMethod(int id, String name, String description,
-      TransactionRepositorySelector transactionRepositorySelector) {
+      TransactionRepository transactionRepository) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.transactionRepositorySelector = transactionRepositorySelector;
+    this.transactionRepository = transactionRepository;
   }
 
   @Override public int getId() {
@@ -33,7 +33,7 @@ public class SandboxPaymentMethod implements PaymentMethod {
   }
 
   @Override public Completable process(Product product) {
-    return transactionRepositorySelector.select(product)
-        .createTransaction(getId(), product);
+    return transactionRepository.createTransaction(getId(), product)
+        .toCompletable();
   }
 }

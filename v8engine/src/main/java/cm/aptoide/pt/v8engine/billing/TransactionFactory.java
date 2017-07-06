@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 16/12/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.repository;
+package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
@@ -19,9 +19,8 @@ public class TransactionFactory {
         paymentMethodId);
   }
 
-  public Transaction create(int productId, Transaction.Status status, String payerId,
-      int paymentMethodId) {
-    return new Transaction(productId, payerId, status, paymentMethodId);
+  public Transaction create(int productId, String payerId) {
+    return new Transaction(productId, payerId, Transaction.Status.NEW, -1);
   }
 
   public Transaction map(int productId, TransactionResponse response, String payerId) {

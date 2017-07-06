@@ -5,7 +5,7 @@ import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import rx.Completable;
 import rx.Observable;
@@ -16,14 +16,14 @@ public class MolPointsPaymentMethod implements PaymentMethod {
   private final int id;
   private final String name;
   private final String description;
-  private final TransactionRepositorySelector transactionRepositorySelector;
+  private final TransactionRepository transactionRepository;
 
   public MolPointsPaymentMethod(int id, String name, String description,
-      TransactionRepositorySelector transactionRepositorySelector) {
+      TransactionRepository transactionRepository) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.transactionRepositorySelector = transactionRepositorySelector;
+    this.transactionRepository = transactionRepository;
   }
 
   @Override public int getId() {
@@ -39,14 +39,11 @@ public class MolPointsPaymentMethod implements PaymentMethod {
   }
 
   @Override public Completable process(Product product) {
-    return transactionRepositorySelector.select(product)
-        .createTransaction(id, product)
-        .andThen(transactionRepositorySelector.select(product)
-            .getTransaction(product))
+    return transactionRepository.createTransaction(id, product)
+        .flatMapObservable(transaction -> transactionRepository.getTransaction(product))
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof RepositoryIllegalArgumentException) {
-            return transactionRepositorySelector.select(product)
-                .getTransaction(product);
+            return transactionRepository.getTransaction(product);
           }
           return Observable.error(throwable);
         })
@@ -69,8 +66,7 @@ public class MolPointsPaymentMethod implements PaymentMethod {
   }
 
   public Single<MolTransaction> getTransaction(Product product) {
-    return transactionRepositorySelector.select(product)
-        .getTransaction(product)
+    return transactionRepository.getTransaction(product)
         .takeUntil(transaction -> transaction.isPendingAuthorization())
         .cast(MolTransaction.class)
         .flatMap(transaction -> {

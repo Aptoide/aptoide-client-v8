@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -31,7 +30,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
 
   @Override public Single<Transaction> createTransaction(int productId, String payerId) {
     final Transaction transaction =
-        transactionMapper.create(productId, Transaction.Status.NEW, payerId, -1);
+        transactionMapper.create(productId, payerId);
     return saveTransaction(transaction).andThen(Single.just(transaction));
   }
 
@@ -44,7 +43,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
         .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
             .map(paymentConfirmation -> transactionMapper.map(paymentConfirmation))
             .defaultIfEmpty(
-                transactionMapper.create(productId, Transaction.Status.NEW, payerId, -1)));
+                transactionMapper.create(productId, payerId)));
   }
 
   @Override public Completable removeTransaction(int productId) {

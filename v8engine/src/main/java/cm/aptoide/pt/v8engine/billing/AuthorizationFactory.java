@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 16/12/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.repository;
+package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.v8engine.billing.Authorization;

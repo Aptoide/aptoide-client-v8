@@ -6,7 +6,7 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import rx.Completable;
 import rx.Observable;
@@ -17,16 +17,16 @@ public class BoaCompraPaymentMethod implements PaymentMethod {
   private final int id;
   private final String name;
   private final String description;
-  private final TransactionRepositorySelector transactionRepositorySelector;
+  private final TransactionRepository transactionRepository;
   private final AuthorizationRepository authorizationRepository;
 
   public BoaCompraPaymentMethod(int id, String name, String description,
-      TransactionRepositorySelector transactionRepositorySelector,
+      TransactionRepository transactionRepository,
       AuthorizationRepository authorizationRepository) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.transactionRepositorySelector = transactionRepositorySelector;
+    this.transactionRepository = transactionRepository;
     this.authorizationRepository = authorizationRepository;
   }
 
@@ -43,15 +43,14 @@ public class BoaCompraPaymentMethod implements PaymentMethod {
   }
 
   @Override public Completable process(Product product) {
-    return transactionRepositorySelector.select(product)
-        .createTransaction(getId(), product)
+    return transactionRepository.createTransaction(getId(), product)
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof RepositoryIllegalArgumentException) {
-            return Completable.error(
-                new PaymentMethodNotAuthorizedException("Payment not authorized."));
+            return Single.error(new PaymentMethodNotAuthorizedException("Payment not authorized."));
           }
-          return Completable.error(throwable);
-        });
+          return Single.error(throwable);
+        })
+        .toCompletable();
   }
 
   public Single<BoaCompraAuthorization> getAuthorization() {

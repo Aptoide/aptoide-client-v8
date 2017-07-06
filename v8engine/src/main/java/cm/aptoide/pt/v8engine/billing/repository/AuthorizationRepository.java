@@ -13,6 +13,8 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Authorization;
+import cm.aptoide.pt.v8engine.billing.AuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;

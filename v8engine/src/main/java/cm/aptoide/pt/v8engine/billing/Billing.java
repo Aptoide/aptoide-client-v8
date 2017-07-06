@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.billing.methods.mol.MolTransaction;
 import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -25,14 +25,13 @@ import rx.Single;
 public class Billing {
 
   private final ProductRepositoryFactory productRepositoryFactory;
-  private final TransactionRepositorySelector transactionRepositorySelector;
+  private final TransactionRepository transactionRepository;
   private final InAppBillingRepository inAppBillingRepository;
 
   public Billing(ProductRepositoryFactory productRepositoryFactory,
-      TransactionRepositorySelector transactionRepositorySelector,
-      InAppBillingRepository inAppBillingRepository) {
+      TransactionRepository transactionRepository, InAppBillingRepository inAppBillingRepository) {
     this.productRepositoryFactory = productRepositoryFactory;
-    this.transactionRepositorySelector = transactionRepositorySelector;
+    this.transactionRepository = transactionRepository;
     this.inAppBillingRepository = inAppBillingRepository;
   }
 
@@ -120,8 +119,7 @@ public class Billing {
   }
 
   public Observable<Transaction> getTransaction(Product product) {
-    return transactionRepositorySelector.select(product)
-        .getTransaction(product)
+    return transactionRepository.getTransaction(product)
         .distinctUntilChanged(transaction -> transaction.getStatus());
   }
 
@@ -130,8 +128,7 @@ public class Billing {
         .getPurchase(product)
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof RepositoryIllegalArgumentException) {
-            return transactionRepositorySelector.select(product)
-                .remove(product.getId())
+            return transactionRepository.remove(product.getId())
                 .andThen(Single.error(throwable));
           }
           return Single.error(throwable);

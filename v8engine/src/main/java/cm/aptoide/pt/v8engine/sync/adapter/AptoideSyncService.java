@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.billing.V3TransactionService;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
 
 public class AptoideSyncService extends Service {
@@ -38,12 +37,7 @@ public class AptoideSyncService extends Service {
             ((V8Engine) getApplicationContext()).getAccountPayer(),
             ((V8Engine) getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getApplicationContext()).getDefaultSharedPreferences(),
-            new V3TransactionService(((V8Engine) getApplicationContext()).getTransactionFactory(),
-                ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(),
-                WebService.getDefaultConverter(),
-                ((V8Engine) getApplicationContext()).getDefaultClient(),
-                ((V8Engine) getApplicationContext()).getTokenInvalidator(),
-                ((V8Engine) getApplicationContext()).getDefaultSharedPreferences()));
+            ((V8Engine) getApplicationContext()).getV3TransactionService());
       }
     }
   }

@@ -21,7 +21,7 @@ import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.TransactionService;
-import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.AuthorizationFactory;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 

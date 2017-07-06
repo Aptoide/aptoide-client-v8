@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
+import cm.aptoide.pt.v8engine.billing.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import java.util.List;

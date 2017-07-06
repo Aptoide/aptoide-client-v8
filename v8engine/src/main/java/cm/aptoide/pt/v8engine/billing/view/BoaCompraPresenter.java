@@ -9,7 +9,7 @@ import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
-import cm.aptoide.pt.v8engine.billing.repository.BillingSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Completable;

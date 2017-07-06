@@ -89,26 +89,26 @@ import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
+import cm.aptoide.pt.v8engine.billing.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
+import cm.aptoide.pt.v8engine.billing.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.RealmTransactionPersistence;
+import cm.aptoide.pt.v8engine.billing.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
+import cm.aptoide.pt.v8engine.billing.TransactionService;
+import cm.aptoide.pt.v8engine.billing.V3TransactionService;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
-import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
-import cm.aptoide.pt.v8engine.billing.repository.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingProductRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
-import cm.aptoide.pt.v8engine.billing.repository.InAppTransactionRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaidAppProductRepository;
-import cm.aptoide.pt.v8engine.billing.repository.PaidAppTransactionRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
-import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionFactory;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepositorySelector;
+import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
@@ -264,6 +264,7 @@ public abstract class V8Engine extends Application {
   private TransactionPersistence transactionPersistence;
   private Database database;
   private TransactionFactory transactionFactory;
+  private V3TransactionService transactionService;
 
   /**
    * call after this instance onCreate()
@@ -764,28 +765,21 @@ public abstract class V8Engine extends Application {
 
     if (billing == null) {
 
-      final TransactionRepositorySelector transactionRepositorySelector =
-          new TransactionRepositorySelector(
-              new InAppTransactionRepository(getTransactionPersistence(), getBillingSyncScheduler(),
-                  getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-                  getAccountPayer(), getTokenInvalidator(), getDefaultSharedPreferences()),
-              new PaidAppTransactionRepository(getTransactionPersistence(),
-                  getBillingSyncScheduler(), getBaseBodyInterceptorV3(),
-                  WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer(),
-                  getTokenInvalidator(), getDefaultSharedPreferences()));
+      final TransactionRepository transactionRepository =
+          new TransactionRepository(getTransactionPersistence(), getBillingSyncScheduler(),
+              getAccountPayer(), getV3TransactionService());
 
       final ProductFactory productFactory = new ProductFactory();
 
       final PurchaseFactory purchaseFactory =
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
 
-      final PaymentMethodMapper paymentMethodMapper =
-          new PaymentMethodMapper(transactionRepositorySelector, new AuthorizationRepository(
-              AccessorFactory.getAccessorFor(
-                  ((V8Engine) this.getApplicationContext()).getDatabase(),
-                  PaymentAuthorization.class), getBillingSyncScheduler(), getAuthorizationFactory(),
-              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              getAccountPayer(), getTokenInvalidator(), getDefaultSharedPreferences()));
+      final PaymentMethodMapper paymentMethodMapper = new PaymentMethodMapper(transactionRepository,
+          new AuthorizationRepository(AccessorFactory.getAccessorFor(
+              ((V8Engine) this.getApplicationContext()).getDatabase(), PaymentAuthorization.class),
+              getBillingSyncScheduler(), getAuthorizationFactory(), getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
+              getTokenInvalidator(), getDefaultSharedPreferences()));
 
       final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
           new PaidAppProductRepository(purchaseFactory, paymentMethodMapper,
@@ -795,10 +789,20 @@ public abstract class V8Engine extends Application {
               getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
               getTokenInvalidator(), getDefaultSharedPreferences(), getPackageRepository()));
 
-      billing = new Billing(productRepositoryFactory, transactionRepositorySelector,
-          getInAppBillingRepository());
+      billing =
+          new Billing(productRepositoryFactory, transactionRepository, getInAppBillingRepository());
     }
     return billing;
+  }
+
+  public TransactionService getV3TransactionService() {
+    if (transactionService == null) {
+      transactionService =
+          new V3TransactionService(getTransactionFactory(), getBaseBodyInterceptorV3(),
+              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
+              getDefaultSharedPreferences());
+    }
+    return transactionService;
   }
 
   public TransactionFactory getTransactionFactory() {

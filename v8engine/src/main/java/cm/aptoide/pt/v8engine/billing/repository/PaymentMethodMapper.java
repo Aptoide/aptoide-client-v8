@@ -20,12 +20,12 @@ public class PaymentMethodMapper {
   private static final String MOL_POINTS = "molpoints";
   private static final String SANDBOX = "dummy";
 
-  private final TransactionRepositorySelector transactionRepositorySelector;
+  private final TransactionRepository transactionRepository;
   private final AuthorizationRepository authorizationRepository;
 
-  public PaymentMethodMapper(TransactionRepositorySelector transactionRepositorySelector,
+  public PaymentMethodMapper(TransactionRepository transactionRepository,
       AuthorizationRepository authorizationRepository) {
-    this.transactionRepositorySelector = transactionRepositorySelector;
+    this.transactionRepository = transactionRepository;
     this.authorizationRepository = authorizationRepository;
   }
 
@@ -33,18 +33,17 @@ public class PaymentMethodMapper {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPaymentMethod(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), transactionRepositorySelector);
+            paymentService.getDescription(), transactionRepository);
       case BOA_COMPRA:
       case BOA_COMPRA_GOLD:
         return new BoaCompraPaymentMethod(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), transactionRepositorySelector,
-            authorizationRepository);
+            paymentService.getDescription(), transactionRepository, authorizationRepository);
       case MOL_POINTS:
         return new MolPointsPaymentMethod(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), transactionRepositorySelector);
+            paymentService.getDescription(), transactionRepository);
       case SANDBOX:
         return new SandboxPaymentMethod(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), transactionRepositorySelector);
+            paymentService.getDescription(), transactionRepository);
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());

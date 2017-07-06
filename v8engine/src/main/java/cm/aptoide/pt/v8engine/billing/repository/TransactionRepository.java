@@ -5,27 +5,36 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
+import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Transaction;
 import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
+import cm.aptoide.pt.v8engine.billing.TransactionService;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
-public abstract class TransactionRepository {
+public class TransactionRepository {
 
   private final Payer payer;
   private final TransactionPersistence transactionPersistence;
+  private final TransactionService transactionService;
   private final BillingSyncScheduler syncScheduler;
 
   public TransactionRepository(TransactionPersistence transactionPersistence,
-      BillingSyncScheduler syncScheduler, Payer payer) {
+      BillingSyncScheduler syncScheduler, Payer payer, TransactionService transactionService) {
     this.transactionPersistence = transactionPersistence;
     this.syncScheduler = syncScheduler;
     this.payer = payer;
+    this.transactionService = transactionService;
   }
 
-  public abstract Completable createTransaction(int paymentMethodId, Product product);
+  public Single<Transaction> createTransaction(int paymentMethodId, Product product) {
+    return payer.getId()
+        .flatMap(payerId -> transactionService.createTransaction(product, paymentMethodId, payerId))
+        .flatMap(transaction -> syncTransaction(product).andThen(Single.just(transaction)));
+  }
 
   public Observable<Transaction> getTransaction(Product product) {
     return payer.getId()
@@ -33,11 +42,12 @@ public abstract class TransactionRepository {
             transactionPersistence.getTransaction(product.getId(), payerId)));
   }
 
-  public Completable createTransaction(Product product, int paymentMethodId, String metadata) {
+  public Single<Transaction> createTransaction(Product product, int paymentMethodId,
+      String metadata) {
     return payer.getId()
         .flatMap(payerId -> transactionPersistence.createTransaction(product.getId(), metadata,
             Transaction.Status.PENDING, payerId, paymentMethodId))
-        .flatMapCompletable(transaction -> syncTransaction(product));
+        .flatMap(transaction -> syncTransaction(product).andThen(Single.just(transaction)));
   }
 
   public Completable remove(int productId) {
