@@ -28,4 +28,6 @@ public interface SpotAndShareAppSelectionView extends View {
   Observable<AppModel> appSelection();
 
   void openTransferRecord();
+
+  void openWaitingToSendScreen();
 }

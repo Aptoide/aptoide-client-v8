@@ -71,15 +71,23 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     } else {
       selectedApps.add(appModel);
     }
-    //// FIXME: 06-07-2017 filipe check connection status;
-    String appName = appModel.getAppName();
-    String packageName = appModel.getPackageName();
-    File apk = new File(appModel.getFilePath());
+    if (canSend()) {
+      String appName = appModel.getAppName();
+      String packageName = appModel.getPackageName();
+      File apk = new File(appModel.getFilePath());
 
-    AndroidAppInfo androidAppInfo = new AndroidAppInfo(appName, packageName, apk);
-    spotAndShare.sendApps(Collections.singletonList(androidAppInfo));
+      AndroidAppInfo androidAppInfo = new AndroidAppInfo(appName, packageName, apk);
+      spotAndShare.sendApps(Collections.singletonList(androidAppInfo));
 
-    view.openTransferRecord();
+      view.openTransferRecord();
+    } else {
+      view.openWaitingToSendScreen();
+    }
+  }
+
+  private boolean canSend() {
+    //// TODO: 06-07-2017 filipe implement on spot&share class this verification - if has friends
+    return true;
   }
 
   private void leaveGroup() {
