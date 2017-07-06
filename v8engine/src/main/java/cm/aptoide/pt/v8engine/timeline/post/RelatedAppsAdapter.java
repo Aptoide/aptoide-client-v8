@@ -15,22 +15,22 @@ import rx.Completable;
 import rx.Observable;
 
 class RelatedAppsAdapter extends RecyclerView.Adapter {
-  private final ArrayList<PostManager.RelatedApp> relatedAppList;
-  private final PublishRelay<PostManager.RelatedApp> relatedAppPublisher;
+  private final ArrayList<PostRemoteAccessor.RelatedApp> relatedAppList;
+  private final PublishRelay<PostRemoteAccessor.RelatedApp> relatedAppPublisher;
 
   public RelatedAppsAdapter() {
     relatedAppList = new ArrayList<>();
     relatedAppPublisher = PublishRelay.create();
   }
 
-  public Observable<PostManager.RelatedApp> getClickedView() {
+  public Observable<PostRemoteAccessor.RelatedApp> getClickedView() {
     return relatedAppPublisher;
   }
 
-  public Completable setRelatedApps(List<PostManager.RelatedApp> relatedApps) {
+  public Completable setRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedApps) {
     return Completable.fromAction(() -> {
-      PostManager.RelatedApp selected = null;
-      for (PostManager.RelatedApp relatedApp : relatedAppList) {
+      PostRemoteAccessor.RelatedApp selected = null;
+      for (PostRemoteAccessor.RelatedApp relatedApp : relatedAppList) {
         if (relatedApp.isSelected()) {
           selected = relatedApp;
           break;
@@ -38,7 +38,7 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
       }
 
       if (selected != null) {
-        for (PostManager.RelatedApp newRelatedApp : relatedApps) {
+        for (PostRemoteAccessor.RelatedApp newRelatedApp : relatedApps) {
           if (newRelatedApp.equals(selected)) {
             newRelatedApp.setSelected(true);
             break;
@@ -52,9 +52,9 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
     });
   }
 
-  public Completable setRelatedAppSelected(PostManager.RelatedApp relatedApp) {
+  public Completable setRelatedAppSelected(PostRemoteAccessor.RelatedApp relatedApp) {
     return Completable.fromAction(() -> {
-      for (PostManager.RelatedApp app : relatedAppList) {
+      for (PostRemoteAccessor.RelatedApp app : relatedAppList) {
         app.setSelected(app.equals(relatedApp));
       }
       notifyDataSetChanged();
@@ -75,13 +75,20 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
     return relatedAppList.size();
   }
 
+  public PostRemoteAccessor.RelatedApp getCurrentSelected() {
+    for (PostRemoteAccessor.RelatedApp relatedApp : relatedAppList) {
+      if(relatedApp.isSelected()) return relatedApp;
+    }
+    return null;
+  }
+
   private static class RelatedAppViewHolder extends RecyclerView.ViewHolder {
     private final View highlight;
     private final ImageView image;
     private final TextView name;
-    private PostManager.RelatedApp app;
+    private PostRemoteAccessor.RelatedApp app;
 
-    RelatedAppViewHolder(View itemView, PublishRelay<PostManager.RelatedApp> relatedAppPublisher) {
+    RelatedAppViewHolder(View itemView, PublishRelay<PostRemoteAccessor.RelatedApp> relatedAppPublisher) {
       super(itemView);
       image = (ImageView) itemView.findViewById(R.id.app_image);
       name = (TextView) itemView.findViewById(R.id.app_name);
@@ -89,7 +96,7 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
       itemView.setOnClickListener(view -> relatedAppPublisher.call(app));
     }
 
-    void bind(PostManager.RelatedApp app) {
+    void bind(PostRemoteAccessor.RelatedApp app) {
       this.app = app;
       ImageLoader.with(image.getContext())
           .load(app.getImage(), image);

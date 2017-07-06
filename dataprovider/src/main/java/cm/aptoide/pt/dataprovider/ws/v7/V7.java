@@ -23,7 +23,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.GetFollowers;
@@ -37,6 +36,9 @@ import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.model.v7.TimelineStats;
+import cm.aptoide.pt.model.v7.base.BaseV7Response;
+import cm.aptoide.pt.model.v7.base.Error;
+import cm.aptoide.pt.model.v7.base.Info;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.GetHome;
@@ -98,7 +100,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
   @NonNull public static String getErrorMessage(BaseV7Response response) {
     final StringBuilder builder = new StringBuilder();
     if (response != null && response.getErrors() != null) {
-      for (BaseV7Response.Error error : response.getErrors()) {
+      for (Error error : response.getErrors()) {
         builder.append(error.getDescription());
         builder.append(". ");
       }
@@ -121,7 +123,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     return observable.subscribeOn(Schedulers.io())
         .flatMap(t -> {
           // FIXME: 01-08-2016 damn jackson parsing black magic error :/
-          if (((BaseV7Response) t).getInfo() != null && BaseV7Response.Info.Status.QUEUED.equals(
+          if (((BaseV7Response) t).getInfo() != null && Info.Status.QUEUED.equals(
               ((BaseV7Response) t).getInfo()
                   .getStatus())) {
             return Observable.error(new ToRetryThrowable());

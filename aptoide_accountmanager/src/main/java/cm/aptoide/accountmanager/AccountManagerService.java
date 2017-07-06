@@ -16,10 +16,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.OAuth;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetUserInfo;
 import cm.aptoide.pt.model.v7.GetUserMeta;
 import cm.aptoide.pt.model.v7.GetUserSettings;
+import cm.aptoide.pt.model.v7.base.Error;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -227,7 +227,7 @@ public class AccountManagerService {
     return observableError.zipWith(Observable.range(2, 4), (throwable, count) -> {
       try {
         AptoideWsV7Exception v7Exception = (AptoideWsV7Exception) throwable;
-        List<BaseV7Response.Error> errors = v7Exception.getBaseResponse()
+        List<Error> errors = v7Exception.getBaseResponse()
             .getErrors();
         if (errors != null && !errors.isEmpty() && errors.get(0)
             .getCode()

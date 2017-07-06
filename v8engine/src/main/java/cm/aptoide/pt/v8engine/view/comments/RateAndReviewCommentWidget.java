@@ -22,9 +22,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.model.v7.base.Error;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -251,9 +251,9 @@ import rx.Observable;
               return;
             }
 
-            List<BaseV7Response.Error> errorList = response.getErrors();
+            List<cm.aptoide.pt.model.v7.base.Error> errorList = response.getErrors();
             if (errorList != null && !errorList.isEmpty()) {
-              for (final BaseV7Response.Error error : errorList) {
+              for (final Error error : errorList) {
                 Logger.e(TAG, error.getDescription());
               }
               return;

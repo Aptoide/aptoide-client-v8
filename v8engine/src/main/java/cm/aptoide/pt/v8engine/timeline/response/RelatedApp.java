@@ -1,11 +1,11 @@
-package cm.aptoide.pt.v8engine.timeline.model;
+package cm.aptoide.pt.v8engine.timeline.response;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RelatedApp {
+public final class RelatedApp {
   private long id;
   private String name;
-  @SerializedName("package") private String packageName;
+  @JsonProperty("package") private String packageName;
   private String icon;
 
   public long getId() {

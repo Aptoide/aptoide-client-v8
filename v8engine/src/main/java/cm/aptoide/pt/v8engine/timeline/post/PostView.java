@@ -14,7 +14,7 @@ interface PostView extends View {
 
   Completable showSuccessMessage();
 
-  void showCardPreview(PostManager.PostPreview suggestion);
+  void showCardPreview(PostPreview suggestion);
 
   void showCardPreviewLoading();
 
@@ -25,4 +25,23 @@ interface PostView extends View {
   void hideRelatedAppsLoading();
 
   void hideCardPreview();
+
+  class PostPreview {
+    private final String image;
+    private final String title;
+
+    PostPreview(String image, String title) {
+      this.image = image;
+      this.title = title;
+    }
+
+    public String getImage() {
+      return image;
+    }
+
+    public String getTitle() {
+      return title;
+    }
+  }
+
 }

@@ -9,7 +9,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
+import cm.aptoide.pt.model.v7.base.Info;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -54,7 +54,7 @@ public class StoreUtils {
 
     return getStoreMetaRequest.observe()
         .flatMap(getStoreMeta -> {
-          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo()
+          if (Info.Status.OK.equals(getStoreMeta.getInfo()
               .getStatus())) {
             // TODO: 18-05-2016 neuro private ainda na ta
             if (accountManager.isLoggedIn()) {

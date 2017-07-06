@@ -1,99 +1,49 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
-import cm.aptoide.pt.v8engine.social.data.Card;
-import cm.aptoide.pt.v8engine.timeline.PostRepository;
-import java.util.LinkedList;
+import android.text.TextUtils;
+import cm.aptoide.pt.model.v7.timeline.SocialCard;
+import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import rx.Single;
 
 public class PostManager {
 
-  private final PostRepository postRepository;
+  private final PostAccessor postRemoteRepository;
+  private final PostAccessor postLocalRepository;
 
-  public PostManager(PostRepository postRepository) {
-    this.postRepository = postRepository;
+  public PostManager(PostRemoteAccessor postRemoteRepository, PostAccessor postLocalRepository) {
+    this.postRemoteRepository = postRemoteRepository;
+    this.postLocalRepository = postLocalRepository;
   }
 
-  public Single<Card> post(String url, String content, String packageName) {
-    return postRepository.postOnTimeline(url, content, packageName);
+  public Single<SocialCard> post(String url, String content, String packageName) {
+    return postRemoteRepository.postOnTimeline(url, content, packageName);
   }
 
-  public Single<List<RelatedApp>> getAppSuggestions(String data) {
-    return Single.just(getRandomRelatedApps())
-        .delay(300, TimeUnit.MILLISECONDS);
+  public Single<List<RelatedApp>> getAppSuggestions(String url) {
+
+    Single<List<PostRemoteAccessor.RelatedApp>> remoteSuggestions =
+        !TextUtils.isEmpty(url) ? postRemoteRepository.getRelatedApps(url)
+            : Single.just(Collections.emptyList());
+
+    Single<List<PostRemoteAccessor.RelatedApp>> installedApps =
+        postLocalRepository.getRelatedApps(url);
+
+    return Single.zip(remoteSuggestions, installedApps, (listA, listB) -> {
+      ArrayList<RelatedApp> relatedApps = new ArrayList<>(listA.size() + listB.size());
+      relatedApps.addAll(listA);
+      relatedApps.addAll(listB);
+      return relatedApps;
+    });
   }
 
-  public Single<PostPreview> getPreview(String data) {
-    return Single.just(new PostPreview("", "preview title"))
-        .delay(300, TimeUnit.MILLISECONDS);
-  }
-
-  private List<RelatedApp> getRandomRelatedApps() {
-    LinkedList<RelatedApp> relatedApps = new LinkedList<>();
-    for (int i = 0; i < 3; ++i) {
-      relatedApps.add(new RelatedApp("", "app " + (i + 1), Origin.Remote, i == 0));
-    }
-    return relatedApps;
+  public Single<PostView.PostPreview> getPreview(String url) {
+    return postRemoteRepository.getCardPreview(url);
   }
 
   enum Origin {
     Installed, Remote, Searched
-  }
-
-  static class PostPreview {
-    private final String image;
-    private final String title;
-
-    public PostPreview(String image, String title) {
-      this.image = image;
-      this.title = title;
-    }
-
-    public String getImage() {
-      return image;
-    }
-
-    public String getTitle() {
-      return title;
-    }
-  }
-
-  static class RelatedApp {
-    private final String image;
-    private final String name;
-    private final Origin origin;
-    private boolean selected;
-
-    public RelatedApp(String image, String name, Origin origin, boolean selected) {
-      this.image = image;
-      this.name = name;
-      this.origin = origin;
-      this.selected = selected;
-    }
-
-    public String getImage() {
-      return image;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public Origin getOrigin() {
-      return origin;
-    }
-
-    public boolean isSelected() {
-      return selected;
-    }
-
-    public void setSelected(boolean selected) {
-      this.selected = selected;
-    }
-
-    @Override public String toString() {
-      return "{name='" + name + '\'' + '}';
-    }
   }
 }

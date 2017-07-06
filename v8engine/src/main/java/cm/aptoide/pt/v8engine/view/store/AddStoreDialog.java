@@ -305,7 +305,7 @@ public class AddStoreDialog extends BaseDialog {
           dismissLoadingDialog();
           if (e instanceof AptoideWsV7Exception) {
             BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
-            BaseV7Response.Error error = baseResponse.getError();
+            cm.aptoide.pt.model.v7.base.Error error = baseResponse.getError();
             switch (StoreUtils.getErrorType(error.getCode())) {
               case PRIVATE_STORE_ERROR:
                 DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog

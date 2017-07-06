@@ -110,9 +110,14 @@ public class PostFragment extends FragmentView implements PostView {
     relatedApps.setAdapter(adapter);
 
     InstalledRepository installedRepository = RepositoryFactory.getInstalledRepository();
-    final PostPresenter presenter =
-        new PostPresenter(this, CrashReport.getInstance(), new PostManager(timelineRepository), installedRepository,
-            adapter, getFragmentNavigator());
+
+    // FIXME
+    final PostRemoteAccessor postRemoteAccessor = new PostRemoteAccessor(null, null);
+
+    final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
+    final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
+        new PostManager(postRemoteAccessor, postLocalAccessor), installedRepository, adapter,
+        getFragmentNavigator());
     attachPresenter(presenter, null);
   }
 
@@ -134,8 +139,7 @@ public class PostFragment extends FragmentView implements PostView {
     return ShowMessage.asLongObservableSnack(getActivity(), R.string.title_successful);
   }
 
-  @Override public void showCardPreview(PostManager.PostPreview suggestion) {
-
+  @Override public void showCardPreview(PostPreview suggestion) {
     previewImage.setVisibility(View.VISIBLE);
     previewTitle.setVisibility(View.VISIBLE);
 
