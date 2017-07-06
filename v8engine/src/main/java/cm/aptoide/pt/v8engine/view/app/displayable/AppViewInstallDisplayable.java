@@ -25,9 +25,9 @@ import rx.Observable;
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
+  private final Observable<Void> installAppRelay;
   private int versionCode;
   @Getter @Setter private boolean shouldInstall;
-  private final Observable<Void> installAppRelay;
   @Getter private MinimalAd minimalAd;
 
   private InstallManager installManager;
