@@ -262,6 +262,21 @@ public class ImageLoader {
     return null;
   }
 
+  public Target<GlideDrawable> loadWithShadowCircleTransformWithPlaceholder(String url,
+      ImageView imageView, float strokeSize, int drawable) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
+          .placeholder(drawable)
+          .transform(new ShadowCircleTransformation(context, imageView, strokeSize))
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
+    }
+    return null;
+  }
+
   public Target<GlideDrawable> loadWithShadowCircleTransform(@DrawableRes int drawableId,
       ImageView imageView, @ColorInt int shadowColor) {
     Context context = weakContext.get();

@@ -57,7 +57,7 @@ public interface DownloadsView extends View {
     }
 
     public enum Status {
-      DOWNLOADING, STAND_BY, COMPLETED, ERROR;
+      DOWNLOADING, STAND_BY, COMPLETED, ERROR
     }
   }
 }

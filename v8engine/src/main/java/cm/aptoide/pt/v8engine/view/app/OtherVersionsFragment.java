@@ -132,6 +132,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             displayables.add(new OtherVersionDisplayable(app));
           }
           addDisplayables(displayables);
+          getRecyclerView().setVisibility(View.VISIBLE);
         };
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
