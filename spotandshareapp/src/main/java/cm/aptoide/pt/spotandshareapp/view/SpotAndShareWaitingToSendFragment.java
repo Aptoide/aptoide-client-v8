@@ -12,11 +12,11 @@ import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
  * Created by filipe on 07-07-2017.
  */
 
-public class SpotAndShareWaitingToSend extends FragmentView
+public class SpotAndShareWaitingToSendFragment extends FragmentView
     implements SpotAndShareWaitingToSendView {
 
   public static Fragment newInstance() {
-    Fragment fragment = new SpotAndShareAppSelectionFragment();
+    Fragment fragment = new SpotAndShareWaitingToSendFragment();
     return fragment;
   }
 
@@ -36,6 +36,6 @@ public class SpotAndShareWaitingToSend extends FragmentView
   public android.view.View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_spotandshare_app_selection, container, false);
+    return inflater.inflate(R.layout.fragment_spotandshare_waiting_to_send, container, false);
   }
 }

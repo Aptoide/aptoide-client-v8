@@ -99,6 +99,8 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
 
   @Override public void openWaitingToSendScreen() {
     //// TODO: 07-07-2017 filipe create waiting to send screen
+    getFragmentNavigator().navigateToWithoutBackSave(
+        SpotAndShareWaitingToSendFragment.newInstance());
   }
 
   private void setupLayoutManager() {
