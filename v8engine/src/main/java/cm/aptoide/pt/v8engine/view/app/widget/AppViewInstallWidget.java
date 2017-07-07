@@ -232,10 +232,16 @@ import rx.android.schedulers.AndroidSchedulers;
       GetApp getApp) {
     Install.InstallationStatus state = install.getState();
     switch (state) {
+      case IN_QUEUE:
+        updateInstallingUi(install, getApp.getNodes()
+            .getMeta()
+            .getData(), isSetup, true);
+
+        break;
       case INSTALLING:
         updateInstallingUi(install, getApp.getNodes()
             .getMeta()
-            .getData(), isSetup);
+            .getData(), isSetup, !install.isIndeterminate());
         break;
       case INSTALLATION_TIMEOUT:
         if (isSetup) {
@@ -243,7 +249,7 @@ import rx.android.schedulers.AndroidSchedulers;
         } else {
           updateInstallingUi(install, getApp.getNodes()
               .getMeta()
-              .getData(), isSetup);
+              .getData(), isSetup, false);
         }
         break;
       case PAUSED:
@@ -318,15 +324,24 @@ import rx.android.schedulers.AndroidSchedulers;
     showProgress(install.getProgress(), install.isIndeterminate());
     actionResume.setVisibility(View.VISIBLE);
     actionPause.setVisibility(View.GONE);
+    actionCancel.setVisibility(View.VISIBLE);
     setupDownloadControls(app.getNodes()
         .getMeta()
         .getData(), isSetup, install.getType());
   }
 
-  private void updateInstallingUi(Install install, GetAppMeta.App app, boolean isSetup) {
+  private void updateInstallingUi(Install install, GetAppMeta.App app, boolean isSetup,
+      boolean showControlButtons) {
     showProgress(install.getProgress(), install.isIndeterminate());
-    actionResume.setVisibility(View.GONE);
-    actionPause.setVisibility(View.VISIBLE);
+    if (showControlButtons) {
+      actionResume.setVisibility(View.GONE);
+      actionPause.setVisibility(View.VISIBLE);
+      actionCancel.setVisibility(View.VISIBLE);
+    } else {
+      actionResume.setVisibility(View.GONE);
+      actionPause.setVisibility(View.GONE);
+      actionCancel.setVisibility(View.GONE);
+    }
     setupDownloadControls(app, isSetup, install.getType());
   }
 
