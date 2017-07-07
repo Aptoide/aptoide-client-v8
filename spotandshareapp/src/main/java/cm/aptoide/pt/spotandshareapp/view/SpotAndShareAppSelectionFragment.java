@@ -37,7 +37,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private Toolbar toolbar;
   private PublishRelay<Void> backRelay;
   private ClickHandler clickHandler;
-  private RxAlertDialog warningDialog;
+  private RxAlertDialog backDialog;
 
   private PublishSubject<AppModel> appSubject;
 
@@ -70,11 +70,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void showExitWarning() {
-    warningDialog.show();
+    backDialog.show();
   }
 
   @Override public Observable<Void> exitEvent() {
-    return warningDialog.positiveClicks()
+    return backDialog.positiveClicks()
         .map(dialogInterface -> null);
   }
 
@@ -126,7 +126,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
       return true;
     };
     registerClickHandler(clickHandler);
-    warningDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+    backDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.spotandshare_message_leave_group_warning)
         .setPositiveButton(R.string.spotandshare_button_leave_group)
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
@@ -148,7 +148,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     toolbar = null;
     unregisterClickHandler(clickHandler);
     clickHandler = null;
-    warningDialog = null;
+    backDialog = null;
     adapter = null;
     recyclerView = null;
     super.onDestroyView();
