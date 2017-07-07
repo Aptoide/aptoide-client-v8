@@ -97,6 +97,10 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         SpotAndShareTransferRecordFragment.newInstance());
   }
 
+  @Override public void openWaitingToSendScreen() {
+    //// TODO: 07-07-2017 filipe create waiting to send screen
+  }
+
   private void setupLayoutManager() {
     GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
     gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
