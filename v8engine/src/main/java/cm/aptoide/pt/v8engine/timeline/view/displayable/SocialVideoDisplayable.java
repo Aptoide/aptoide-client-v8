@@ -6,19 +6,18 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.WindowManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.SocialVideo;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -53,6 +52,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
   private SpannableFactory spannableFactory;
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
+  private InstalledRepository installedRepository;
 
   public SocialVideoDisplayable() {
   }
@@ -62,8 +62,8 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       long appId, String abUrl, Comment.User user, long numberOfLikes, long numberOfComments,
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository, TimelineNavigator timelineNavigator,
-      WindowManager windowManager) {
+      SocialRepository socialRepository, InstalledRepository installedRepository,
+      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
         socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy()
             .isLiked(), socialVideo.getLikes(), socialVideo.getComments(), date, spannableFactory,
@@ -84,12 +84,14 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
     this.spannableFactory = spannableFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
+    this.installedRepository = installedRepository;
   }
 
   public static SocialVideoDisplayable from(SocialVideo socialVideo, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+      InstalledRepository installedRepository, AppsTimelineNavigator timelineNavigator,
+      WindowManager windowManager) {
     long appId = 0;
 
     String abTestingURL = null;
@@ -114,12 +116,12 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
         .getLogoUrl(), appId, abTestingURL, socialVideo.getUser(), socialVideo.getStats()
         .getLikes(), socialVideo.getStats()
         .getComments(), socialVideo.getApps(), socialVideo.getDate(), dateCalculator,
-        spannableFactory, timelineAnalytics, socialRepository, timelineNavigator, windowManager);
+        spannableFactory, timelineAnalytics, socialRepository, installedRepository,
+        timelineNavigator, windowManager);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
     if (relatedToAppsList != null && relatedToAppsList.size() > 0) {
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       List<String> packageNamesList = new ArrayList<String>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
@@ -129,10 +131,9 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
-      if (installedAccessor != null) {
-        return installedAccessor.get(packageNames)
-            .observeOn(Schedulers.computation());
-      }
+      return installedRepository.getInstalled(packageNames)
+          .observeOn(Schedulers.computation())
+          .first();
     }
     return Observable.just(null);
   }

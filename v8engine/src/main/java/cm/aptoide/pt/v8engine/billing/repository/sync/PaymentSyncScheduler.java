@@ -37,9 +37,9 @@ public class PaymentSyncScheduler {
     return scheduleOneOffSync(bundle);
   }
 
-  public Completable scheduleConfirmationSync(Product product) {
+  public Completable scheduleTransactionSync(Product product) {
     final Bundle bundle = syncDataConverter.mapToBundle(product);
-    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
+    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_TRANSACTIONS, true);
     return scheduleOneOffSync(bundle);
   }
 

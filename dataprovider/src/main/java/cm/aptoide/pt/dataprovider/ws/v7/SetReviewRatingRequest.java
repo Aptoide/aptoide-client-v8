@@ -8,12 +8,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -52,8 +49,7 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
     return interfaces.setReviewVote(body, true);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  public static class Body extends BaseBody {
 
     private long review_id;
     private String vote;
@@ -61,6 +57,22 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
     public Body(long reviewId, String vote) {
 
       this.review_id = reviewId;
+      this.vote = vote;
+    }
+
+    public long getReview_id() {
+      return review_id;
+    }
+
+    public void setReview_id(long review_id) {
+      this.review_id = review_id;
+    }
+
+    public String getVote() {
+      return vote;
+    }
+
+    public void setVote(String vote) {
       this.vote = vote;
     }
   }

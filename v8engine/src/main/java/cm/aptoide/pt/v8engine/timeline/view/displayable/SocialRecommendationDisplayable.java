@@ -5,16 +5,16 @@ import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.WindowManager;
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.SocialRecommendation;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendation;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -53,7 +53,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
       long numberOfComments, SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
-      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      AppsTimelineNavigator timelineNavigator, Resources resources, String marketName,
       WindowManager windowManager) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
         socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
@@ -86,7 +86,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   public static Displayable from(SocialRecommendation socialRecommendation,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
-      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      AppsTimelineNavigator timelineNavigator, Resources resources, String marketName,
       WindowManager windowManager) {
 
     String abTestingURL = null;

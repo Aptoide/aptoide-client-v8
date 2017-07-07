@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
-import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
@@ -42,7 +42,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
 
   @NonNull private List<Displayable> createDisplayables(ListStores listStores) {
     List<Displayable> displayables = new ArrayList<>();
-    for (final Store store : listStores.getDatalist()
+    for (final Store store : listStores.getDataList()
         .getList()) {
       displayables.add(new GridStoreDisplayable(store));
     }

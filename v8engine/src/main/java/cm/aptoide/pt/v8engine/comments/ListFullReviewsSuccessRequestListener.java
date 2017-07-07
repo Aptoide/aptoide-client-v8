@@ -1,13 +1,13 @@
 package cm.aptoide.pt.v8engine.comments;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.ListReviews;
+import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.model.v7.ListReviews;
-import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
@@ -50,7 +50,7 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
 
   @Override public void call(ListReviews listFullReviews) {
 
-    List<Review> reviews = listFullReviews.getDatalist()
+    List<Review> reviews = listFullReviews.getDataList()
         .getList();
     List<Displayable> displayables = new LinkedList<>();
 
@@ -94,15 +94,15 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
       }
       if (review.getCommentList() != null
           && review.getCommentList()
-          .getDatalist() != null
+          .getDataList() != null
           && review.getCommentList()
-          .getDatalist()
+          .getDataList()
           .getLimit() != null) {
         fragment.createDisplayableComments(review.getCommentList()
-            .getDatalist()
+            .getDataList()
             .getList(), displayables);
         if (review.getCommentList()
-            .getDatalist()
+            .getDataList()
             .getList()
             .size() > 2) {
           displayables.add(fragment.createReadMoreDisplayable(count, review));

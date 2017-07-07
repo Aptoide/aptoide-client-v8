@@ -16,22 +16,22 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.MinimalCard;
-import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
-import cm.aptoide.pt.model.v7.timeline.UserTimeline;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -126,17 +126,27 @@ public class AggregatedSocialStoreLatestAppsWidget
 
   @Override public void bindView(AggregatedSocialStoreLatestAppsDisplayable displayable) {
     super.bindView(displayable);
-
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(0)
-            .getUser()
-            .getAvatar(), headerAvatar1);
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(1)
-            .getUser()
-            .getAvatar(), headerAvatar2);
+    if (displayable.getSharers()
+        .get(0)
+        .getUser() != null) {
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(displayable.getSharers()
+              .get(0)
+              .getUser()
+              .getAvatar(), headerAvatar1);
+    }
+    if (displayable.getSharers()
+        .size() > 1) {
+      if (displayable.getSharers()
+          .get(1)
+          .getUser() != null) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(displayable.getSharers()
+                .get(1)
+                .getUser()
+                .getAvatar(), headerAvatar2);
+      }
+    }
     headerNames.setText(displayable.getCardHeaderNames());
     headerTime.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
@@ -319,19 +329,27 @@ public class AggregatedSocialStoreLatestAppsWidget
       ImageView additionalNumberOfSharesCircularMask =
           (ImageView) subCardView.findViewById(R.id.card_header_avatar_plus);
 
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(minimalCard.getSharers()
-              .get(0)
-              .getUser()
-              .getAvatar(), minimalCardHeaderMainAvatar);
-
       if (minimalCard.getSharers()
-          .size() > 1) {
+          .get(0)
+          .getUser() != null) {
         ImageLoader.with(getContext())
             .loadWithShadowCircleTransform(minimalCard.getSharers()
-                .get(1)
+                .get(0)
                 .getUser()
-                .getAvatar(), minimalCardHeaderMainAvatar2);
+                .getAvatar(), minimalCardHeaderMainAvatar);
+      }
+
+      if (displayable.getSharers()
+          .size() > 1) {
+        if (displayable.getSharers()
+            .get(1)
+            .getUser() != null) {
+          ImageLoader.with(getContext())
+              .loadWithShadowCircleTransform(minimalCard.getSharers()
+                  .get(1)
+                  .getUser()
+                  .getAvatar(), minimalCardHeaderMainAvatar2);
+        }
       } else {
         plusFrame.setVisibility(View.GONE);
         minimalCardHeaderMainAvatar2.setVisibility(View.GONE);
@@ -460,8 +478,8 @@ public class AggregatedSocialStoreLatestAppsWidget
                 if (!minimalCard.getMy()
                     .isLiked()) {
                   UserTimeline user = new UserTimeline();
-                  cm.aptoide.pt.model.v7.store.Store store =
-                      new cm.aptoide.pt.model.v7.store.Store();
+                  cm.aptoide.pt.dataprovider.model.v7.store.Store store =
+                      new cm.aptoide.pt.dataprovider.model.v7.store.Store();
                   store.setAvatar(account.getStoreAvatar());
                   user.setAvatar(account.getAvatar());
                   user.setStore(store);

@@ -18,15 +18,15 @@ public abstract class BackButtonActivity extends ActivityView implements BackBut
     clickHandlers = new HashSet<>();
   }
 
-  @Override public void registerBackClickHandler(ClickHandler clickHandler) {
+  @Override public void registerClickHandler(ClickHandler clickHandler) {
     clickHandlers.add(clickHandler);
   }
 
-  @Override public void unregisterBackClickHandler(ClickHandler clickHandler) {
+  @Override public void unregisterClickHandler(ClickHandler clickHandler) {
     clickHandlers.remove(clickHandler);
   }
 
-  @Override public void backClick() {
+  @Override public void onBackPressed() {
     boolean handled = false;
     for (ClickHandler clickHandler : clickHandlers) {
       if (clickHandler.handle()) {
@@ -37,9 +37,5 @@ public abstract class BackButtonActivity extends ActivityView implements BackBut
     if (!handled) {
       super.onBackPressed();
     }
-  }
-
-  @Override public void onBackPressed() {
-    backClick();
   }
 }

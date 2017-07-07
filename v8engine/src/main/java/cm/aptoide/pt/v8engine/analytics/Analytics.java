@@ -1,26 +1,38 @@
 package cm.aptoide.pt.v8engine.analytics;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
+import cm.aptoide.pt.v8engine.FirstLaunchAnalytics;
 import cm.aptoide.pt.v8engine.V8Engine;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipFile;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
@@ -125,6 +137,18 @@ public class Analytics {
     facebookLogger.logEvent(eventName, bundle);
   }
 
+  private static void track(String event, int flags) {
+
+    try {
+      if (checkAcceptability(flags, FLURRY)) {
+        FlurryAgent.logEvent(event);
+        Logger.d(TAG, "Flurry Event: " + event);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -148,18 +172,6 @@ public class Analytics {
       }
     }
     logFacebookEvents(eventName, parameters);
-  }
-
-  private static void track(String event, int flags) {
-
-    try {
-      if (checkAcceptability(flags, FLURRY)) {
-        FlurryAgent.logEvent(event);
-        Logger.d(TAG, "Flurry Event: " + event);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   private static void logFacebookEvents(String eventName, Bundle parameters) {
@@ -200,23 +212,148 @@ public class Analytics {
 
     public static class Application {
 
+      private static final String UNKNOWN = "unknown";
+      private static final String BI_ACTION = "OPEN";
+      private static final String EVENT_NAME = "FIRST_LAUNCH";
+      private static final String CONTEXT = "APPLICATION";
+      private static final String UTM_SOURCE = "utm_source";
+      private static final String UTM_MEDIUM = "utm_medium";
+      private static final String UTM_CAMPAIGN = "utm_campaign";
+      private static final String UTM_CONTENT = "utm_content";
+      private static final String ENTRY_POINT = "entry_point";
+      private static final String URL = "url";
+      private static final String PACKAGE = "package";
+      private static final String COUNTRY = "country";
+      private static final String BROWSER = "browser";
+      private static final String SITE_VERSION = "site_version";
+      private static final String USER_AGENT = "user_agent";
       static AppEventsLogger facebookLogger;
+      private static String utmSource = UNKNOWN;
+      private static String utmMedium = UNKNOWN;
+      private static String utmCampaign = UNKNOWN;
+      private static String utmContent = UNKNOWN;
+      private static String entryPoint = UNKNOWN;
 
-      public static void onCreate(android.app.Application application) {
+      public static void onCreate(android.app.Application application,
+          Converter.Factory converterFactory, OkHttpClient okHttpClient,
+          BodyInterceptor bodyInterceptor, SharedPreferences sharedPreferences,
+          TokenInvalidator tokenInvalidator) {
 
         //Integrate FacebookSDK
         FacebookSdk.sdkInitialize(application);
         AppEventsLogger.activateApp(application);
         facebookLogger = AppEventsLogger.newLogger(application);
+        FirstLaunchAnalytics firstLaunchAnalytics =
+            new FirstLaunchAnalytics(facebookLogger, Analytics.getInstance());
         Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(((V8Engine) application).getIdsRepository()
               .getUniqueIdentifier());
           return null;
         })
+            .filter(firstRun -> SecurePreferences.isFirstRun(sharedPreferences))
+            .doOnNext(dimensions -> setupDimensions(application))
+            .doOnNext(facebookFirstLaunch -> firstLaunchAnalytics.sendFirstLaunchEvent(utmSource,
+                utmMedium, utmCampaign, utmContent, entryPoint))
+            .flatMap(facebookFirstLaunch -> {
+              UTMTrackingBuilder utmTrackingBuilder =
+                  new UTMTrackingBuilder(getTracking(application), getUTM());
+              BiUtmAnalyticsRequestBody body =
+                  new BiUtmAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
+              return BiUtmAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
+                  okHttpClient, converterFactory, sharedPreferences, tokenInvalidator)
+                  .observe();
+            })
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(o -> {
-            }, Throwable::printStackTrace);
+            }, throwable -> Logger.e(TAG, throwable.getMessage()));
+      }
+
+      private static UTM getUTM() {
+        return new UTM(utmSource, utmMedium, utmCampaign, utmContent, entryPoint);
+      }
+
+      private static void setupDimensions(android.app.Application application) {
+        if (!checkForUTMFileInMetaINF(application)) {
+          Dimensions.setUTMDimensionsToUnknown();
+        } else {
+          Dimensions.setUserProperties(utmSource, utmMedium, utmCampaign, utmContent, entryPoint);
+        }
+      }
+
+      private static boolean checkForUTMFileInMetaINF(android.app.Application application) {
+        ZipFile myZipFile = null;
+        try {
+          final String sourceDir = application.getApplicationContext()
+              .getPackageManager()
+              .getPackageInfo(application.getApplicationContext()
+                  .getPackageName(), 0).applicationInfo.sourceDir;
+          myZipFile = new ZipFile(sourceDir);
+          final InputStream utmInputStream =
+              myZipFile.getInputStream(myZipFile.getEntry("META-INF/utm"));
+
+          UTMTrackingFileParser utmTrackingFileParser = new UTMTrackingFileParser(utmInputStream);
+          myZipFile.close();
+
+          utmSource = utmTrackingFileParser.valueExtracter(UTM_SOURCE);
+          utmMedium = utmTrackingFileParser.valueExtracter(UTM_MEDIUM);
+          utmCampaign = utmTrackingFileParser.valueExtracter(UTM_CAMPAIGN);
+          utmContent = utmTrackingFileParser.valueExtracter(UTM_CONTENT);
+          entryPoint = utmTrackingFileParser.valueExtracter(ENTRY_POINT);
+
+          utmInputStream.close();
+        } catch (IOException e) {
+          Logger.d(TAG, "problem parsing utm/no utm file");
+          return false;
+        } catch (PackageManager.NameNotFoundException e) {
+          Logger.d(TAG, "No package name utm file.");
+          return false;
+        } catch (NullPointerException e) {
+          if (myZipFile != null) {
+            try {
+              myZipFile.close();
+            } catch (IOException e1) {
+              e1.printStackTrace();
+              return false;
+            }
+            return false;
+          }
+          Logger.d(TAG, "No utm file.");
+        }
+        return true;
+      }
+
+      private static Tracking getTracking(android.app.Application application) {
+        Tracking tracking = null;
+        try {
+          tracking = createTrackingObject(getTrackingFile(application));
+        } catch (Exception e) {
+          Logger.d(TAG, "Failed to parse utm/tracking files");
+          return new Tracking(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
+        }
+        return tracking;
+      }
+
+      private static ZipFile getTrackingFile(android.app.Application application) throws Exception {
+        final String sourceDir = application.getApplicationContext()
+            .getPackageManager()
+            .getPackageInfo(application.getApplicationContext()
+                .getPackageName(), 0).applicationInfo.sourceDir;
+        return new ZipFile(sourceDir);
+      }
+
+      private static Tracking createTrackingObject(ZipFile zipFile) throws IOException {
+        InputStream inputStream = zipFile.getInputStream(zipFile.getEntry("META-INF/tracking"));
+        UTMTrackingFileParser utmTrackingFileParser = new UTMTrackingFileParser(inputStream);
+        zipFile.close();
+
+        String url = utmTrackingFileParser.valueExtracter(URL);
+        String packageName = utmTrackingFileParser.valueExtracter(PACKAGE);
+        String country = utmTrackingFileParser.valueExtracter(COUNTRY);
+        String browser = utmTrackingFileParser.valueExtracter(BROWSER);
+        String siteVersion = utmTrackingFileParser.valueExtracter(SITE_VERSION);
+        String userAgent = utmTrackingFileParser.valueExtracter(USER_AGENT);
+
+        return new Tracking(url, packageName, country, browser, siteVersion, userAgent);
       }
     }
 
@@ -484,50 +621,6 @@ public class Analytics {
     }
   }
 
-  public static class ApplicationInstall {
-
-    public static final String EVENT_NAME = "Application Install";
-    //this will be the one remaining after localytics is killed
-
-    private static final String TYPE = "Type";
-    private static final String PACKAGE_NAME = "Package Name";
-    private static final String REFERRED = "Referred";
-    private static final String TRUSTED_BADGE = "Trusted Badge";
-
-    private static final String REPLACED = "Replaced";
-    private static final String INSTALLED = "Installed";
-    private static final String DOWNGRADED_ROLLBACK = "Downgraded Rollback";
-
-    public static void installed(String packageName, String trustedBadge) {
-      innerTrack(packageName, INSTALLED, trustedBadge, ALL);
-    }
-
-    private static void innerTrack(String packageName, String type, String trustedBadge,
-        int flags) {
-      try {
-        HashMap<String, String> stringObjectHashMap = new HashMap<>();
-
-        stringObjectHashMap.put(TRUSTED_BADGE, trustedBadge);
-        stringObjectHashMap.put(TYPE, type);
-        stringObjectHashMap.put(PACKAGE_NAME, packageName);
-
-        track(EVENT_NAME, stringObjectHashMap, flags);
-
-        Bundle parameters = new Bundle();
-        parameters.putString(PACKAGE_NAME, packageName);
-        parameters.putString(TRUSTED_BADGE, trustedBadge);
-        parameters.putString(TYPE, type);
-        logFacebookEvents(EVENT_NAME, parameters);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-    public static void replaced(String packageName, String trustedBadge) {
-      innerTrack(packageName, REPLACED, trustedBadge, ALL);
-    }
-  }
-
   public static class ApplicationLaunch {
 
     public static final String EVENT_NAME = "Application Launch";
@@ -703,14 +796,7 @@ public class Analytics {
 
   public static class Dimensions {
 
-    public static final String VERTICAL = V8Engine.getConfiguration()
-        .getVerticalDimension();
-    public static final String PARTNER = V8Engine.getConfiguration()
-        .getPartnerDimension();
     public static final String UNKNOWN = "unknown";
-    public static final String APKFY = "Apkfy";
-    public static final String WEBSITE = "Website";
-    public static final String INSTALLER = "Installer";
     public static final String GMS = "GMS";
     public static final String HAS_HGMS = "Has GMS";
     public static final String NO_GMS = "No GMS";
@@ -739,24 +825,36 @@ public class Analytics {
           response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
 
-    public static void setUTMSource(String utmSource) {
-      setUserProperties(UTM_SOURCE, utmSource);
+    private static void setUserPropertiesWithBundle(Bundle data) {
+      AppEventsLogger.updateUserProperties(data,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
 
-    public static void setUTMMedium(String utmMedium) {
-      setUserProperties(UTM_MEDIUM, utmMedium);
+    public static void setUserProperties(String utmSource, String utmMedium, String utmCampaign,
+        String utmContent, String entryPoint) {
+      setUserPropertiesWithBundle(
+          createUserPropertiesBundle(utmSource, utmMedium, utmCampaign, utmContent, entryPoint));
     }
 
-    public static void setUTMCampaign(String utmCampaign) {
-      setUserProperties(UTM_CAMPAIGN, utmCampaign);
+    public static Bundle createUserPropertiesBundle(String utmSource, String utmMedium,
+        String utmCampaign, String utmContent, String entryPoint) {
+      Bundle data = new Bundle();
+      data.putString(UTM_SOURCE, utmSource);
+      data.putString(UTM_MEDIUM, utmMedium);
+      data.putString(UTM_CAMPAIGN, utmCampaign);
+      data.putString(UTM_CONTENT, utmContent);
+      data.putString(ENTRY_POINT, entryPoint);
+      return data;
     }
 
-    public static void setUTMContent(String utmContent) {
-      setUserProperties(UTM_CONTENT, utmContent);
-    }
-
-    public static void setEntryPointDimension(String entryPoint) {
-      setUserProperties(ENTRY_POINT, entryPoint);
+    public static void setUTMDimensionsToUnknown() {
+      Bundle data = new Bundle();
+      data.putString(UTM_SOURCE, UNKNOWN);
+      data.putString(UTM_MEDIUM, UNKNOWN);
+      data.putString(UTM_CAMPAIGN, UNKNOWN);
+      data.putString(UTM_CONTENT, UNKNOWN);
+      data.putString(ENTRY_POINT, UNKNOWN);
+      setUserPropertiesWithBundle(data);
     }
   }
 

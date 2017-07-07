@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.filemanager;
 
+import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.utils.FileUtils;
 import rx.Observable;
 

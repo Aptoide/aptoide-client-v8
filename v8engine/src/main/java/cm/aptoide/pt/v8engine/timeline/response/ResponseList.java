@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.response;
 
-import cm.aptoide.pt.model.v7.DataList;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import java.util.List;
 
 public final class ResponseList<T extends DataList> {

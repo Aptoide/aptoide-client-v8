@@ -6,8 +6,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
@@ -62,9 +62,9 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
 
       final int[] hidden = { 0 };
       Action1<GetFollowers> action = (followersList) -> {
-        hidden[0] += followersList.getDatalist()
+        hidden[0] += followersList.getDataList()
             .getHidden();
-        for (GetFollowers.TimelineUser user : followersList.getDatalist()
+        for (GetFollowers.TimelineUser user : followersList.getDataList()
             .getList()) {
           dispList.add(createUserDisplayable(user));
         }

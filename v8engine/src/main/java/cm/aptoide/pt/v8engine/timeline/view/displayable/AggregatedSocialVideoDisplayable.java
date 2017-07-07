@@ -9,17 +9,17 @@ import android.view.WindowManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.AggregatedSocialVideo;
-import cm.aptoide.pt.model.v7.timeline.MinimalCard;
-import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideo;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -52,7 +52,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   private SpannableFactory spannableFactory;
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
-  private TimelineNavigator timelineNavigator;
+  private AppsTimelineNavigator timelineNavigator;
 
   public AggregatedSocialVideoDisplayable() {
   }
@@ -61,7 +61,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
       String publisherName, String thumbnailUrl, long appId, String abTestingURL,
       List<App> relatedToApps, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository, TimelineNavigator timelineNavigator,
+      SocialRepository socialRepository, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     super(card, timelineAnalytics, windowManager);
     this.title = title;
@@ -84,7 +84,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   public static Displayable from(AggregatedSocialVideo card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     long appId = 0;
 
     String abTestingURL = null;
@@ -121,7 +121,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
-      return installedAccessor.get(packageNames)
+      return installedAccessor.getInstalled(packageNames)
           .observeOn(Schedulers.computation());
     }
     return Observable.just(null);

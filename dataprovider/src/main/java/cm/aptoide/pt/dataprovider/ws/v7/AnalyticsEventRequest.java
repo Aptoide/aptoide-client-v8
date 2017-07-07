@@ -2,9 +2,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

@@ -5,17 +5,17 @@ import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.WindowManager;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.AggregatedSocialStoreLatestApps;
-import cm.aptoide.pt.model.v7.timeline.MinimalCard;
-import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialStoreLatestApps;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -42,7 +42,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private TimelineNavigator timelineNavigator;
+  private AppsTimelineNavigator timelineNavigator;
 
   public AggregatedSocialStoreLatestAppsDisplayable() {
   }
@@ -52,7 +52,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, SpannableFactory spannableFactory,
       StoreCredentialsProvider storeCredentialsProvider, List<MinimalCard> minimalCards,
-      List<UserSharerTimeline> sharers, TimelineNavigator timelineNavigator,
+      List<UserSharerTimeline> sharers, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     super(card, timelineAnalytics, windowManager);
     this.latestApps = apps;
@@ -73,7 +73,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
   public static Displayable from(AggregatedSocialStoreLatestApps card,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      StoreCredentialsProvider storeCredentialsProvider, TimelineNavigator timelineNavigator,
+      StoreCredentialsProvider storeCredentialsProvider, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
 
     String abTestingURL = null;

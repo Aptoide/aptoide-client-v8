@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
-import cm.aptoide.pt.model.v7.DataList;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.v8engine.timeline.request.CardPreviewRequest;
 import cm.aptoide.pt.v8engine.timeline.request.PostRequest;
 import cm.aptoide.pt.v8engine.timeline.request.RelatedAppsRequest;

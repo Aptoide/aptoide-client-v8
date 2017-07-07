@@ -7,11 +7,11 @@ package cm.aptoide.pt.v8engine.view.comments;
 
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.ListComments;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -51,7 +51,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
     compositeSubscription.add(RxView.clicks(readMoreButton)
         .flatMap(__ -> listCommentsObservable)
         .subscribe(listComments -> displayable.getCommentAdder()
-            .addComment(listComments.getDatalist()
+            .addComment(listComments.getDataList()
                 .getList())));
   }
 }

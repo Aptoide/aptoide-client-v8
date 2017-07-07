@@ -4,10 +4,10 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +41,7 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
   }
 
   public static SetStoreImageRequest of(String storeName, String storeTheme,
-      String storeDescription, String storeAvatarPath,
+      String storeDescription, String storeImagePath,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, RequestBodyFactory requestBodyFactory,
       ObjectMapper serializer, SharedPreferences sharedPreferences,
@@ -53,7 +53,7 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
     addStoreProperties(storeTheme, storeDescription, requestBodyFactory, serializer, body);
 
     return new SetStoreImageRequest(body,
-        requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
+        requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeImagePath)),
         bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
   }
 

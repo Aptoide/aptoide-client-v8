@@ -14,11 +14,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -40,6 +40,7 @@ public class PostFragment extends FragmentView implements PostView {
   private TextView previewTitle;
   private TextView previewHeader;
   private TextView relatedAppsHeader;
+  private InstalledRepository installedRepository;
 
   public static PostFragment newInstance(String toShare) {
     Bundle args = new Bundle();
@@ -48,6 +49,11 @@ public class PostFragment extends FragmentView implements PostView {
     PostFragment fragment = new PostFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   @Nullable @Override
@@ -109,15 +115,12 @@ public class PostFragment extends FragmentView implements PostView {
     final RelatedAppsAdapter adapter = new RelatedAppsAdapter();
     relatedApps.setAdapter(adapter);
 
-    InstalledRepository installedRepository = RepositoryFactory.getInstalledRepository();
-
     // FIXME
     final PostRemoteAccessor postRemoteAccessor = new PostRemoteAccessor(null, null);
 
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
-        new PostManager(postRemoteAccessor, postLocalAccessor), installedRepository, adapter,
-        getFragmentNavigator());
+        new PostManager(postRemoteAccessor, postLocalAccessor), adapter, getFragmentNavigator());
     attachPresenter(presenter, null);
   }
 

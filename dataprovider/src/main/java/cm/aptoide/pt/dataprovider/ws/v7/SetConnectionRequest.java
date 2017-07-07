@@ -3,11 +3,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -46,12 +44,20 @@ public class SetConnectionRequest extends V7<BaseV7Response, SetConnectionReques
     return interfaces.setConnection(body);
   }
 
-  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  public static class Body extends BaseBody {
 
     private String phoneHash;
 
     public Body(String userPhone) {
       this.phoneHash = userPhone;
+    }
+
+    public String getPhoneHash() {
+      return phoneHash;
+    }
+
+    public void setPhoneHash(String phoneHash) {
+      this.phoneHash = phoneHash;
     }
   }
 }

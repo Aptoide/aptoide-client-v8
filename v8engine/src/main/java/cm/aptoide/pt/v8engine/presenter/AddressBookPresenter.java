@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.model.v7.FacebookModel;
-import cm.aptoide.pt.model.v7.TwitterModel;
+import cm.aptoide.pt.dataprovider.model.v7.FacebookModel;
+import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;

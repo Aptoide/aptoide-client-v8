@@ -31,6 +31,6 @@ public class ActiveDownloadsHeaderDisplayable extends Displayable {
   }
 
   public void pauseAllDownloads(Context context) {
-    installManager.stopAllInstallations(context);
+    installManager.stopAllInstallations();
   }
 }

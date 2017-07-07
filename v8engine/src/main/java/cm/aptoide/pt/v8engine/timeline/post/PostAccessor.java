@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
-import cm.aptoide.pt.model.v7.timeline.SocialCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import java.util.List;
 import rx.Single;
 

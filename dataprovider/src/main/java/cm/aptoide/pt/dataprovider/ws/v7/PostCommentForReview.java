@@ -8,13 +8,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -53,8 +50,7 @@ public class PostCommentForReview extends V7<BaseV7Response, PostCommentForRevie
     return interfaces.postReviewComment(body, true);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  public static class Body extends BaseBody {
 
     private long reviewId;
     private String body;
@@ -63,6 +59,30 @@ public class PostCommentForReview extends V7<BaseV7Response, PostCommentForRevie
     public Body(long reviewId, String text) {
       this.reviewId = reviewId;
       this.body = text;
+    }
+
+    public long getReviewId() {
+      return reviewId;
+    }
+
+    public void setReviewId(long reviewId) {
+      this.reviewId = reviewId;
+    }
+
+    public String getBody() {
+      return body;
+    }
+
+    public void setBody(String body) {
+      this.body = body;
+    }
+
+    public String getCommentType() {
+      return commentType;
+    }
+
+    public void setCommentType(String commentType) {
+      this.commentType = commentType;
     }
   }
 }

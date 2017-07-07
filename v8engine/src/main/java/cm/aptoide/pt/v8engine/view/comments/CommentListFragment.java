@@ -21,17 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.SetComment;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.model.v7.SetComment;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -275,12 +275,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<ListComments> listCommentsAction = (listComments -> {
-      if (listComments != null
-          && listComments.getDatalist() != null
-          && listComments.getDatalist()
+      if (listComments != null && listComments.getDataList() != null && listComments.getDataList()
           .getList() != null) {
         comments = commentOperations.flattenByDepth(commentOperations.transform(
-            listComments.getDatalist()
+            listComments.getDataList()
                 .getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
@@ -327,12 +325,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     final String storeName = storeCredentials.getName();
 
     Action1<ListComments> listCommentsAction = (listComments -> {
-      if (listComments != null
-          && listComments.getDatalist() != null
-          && listComments.getDatalist()
+      if (listComments != null && listComments.getDataList() != null && listComments.getDataList()
           .getList() != null) {
         comments = commentOperations.flattenByDepth(commentOperations.transform(
-            listComments.getDatalist()
+            listComments.getDataList()
                 .getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());

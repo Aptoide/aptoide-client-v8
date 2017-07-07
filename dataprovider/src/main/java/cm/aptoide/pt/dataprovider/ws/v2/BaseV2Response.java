@@ -5,12 +5,17 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2;
 
-import lombok.Data;
-
 /**
  * Base response for v2 webservices.
  */
-@Data public class BaseV2Response {
-
+public class BaseV2Response {
   private String status;
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
 }

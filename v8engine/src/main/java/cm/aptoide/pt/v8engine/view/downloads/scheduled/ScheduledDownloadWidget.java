@@ -11,17 +11,15 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -66,27 +64,13 @@ import rx.android.schedulers.AndroidSchedulers;
     isSelected.setChecked(displayable.isSelected());
     itemView.setOnClickListener(v -> isSelected.setChecked(!isSelected.isChecked()));
 
-    isDownloading(displayable);
-  }
-
-  private void isDownloading(ScheduledDownloadDisplayable displayable) {
-    Observable<Progress<Download>> installation = installManager.getInstallation(
-        displayable.getPojo()
-            .getMd5());
-
-    compositeSubscription.add(installation.map(
-        downloadProgress -> installManager.isInstalling(downloadProgress)
-            || installManager.isPending(downloadProgress))
+    compositeSubscription.add(displayable.isDownloading()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe((isDownloading) -> {
-          updateUi(isDownloading);
-        }, throwable -> {
-          updateUi(false);
-          throwable.printStackTrace();
-        }));
+        .subscribe(isDownloading -> updateUi(isDownloading), throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
-  public void updateUi(boolean isDownloading) {
+  private void updateUi(boolean isDownloading) {
     if (isSelected != null) {
       isSelected.setVisibility(isDownloading ? View.GONE : View.VISIBLE);
     }

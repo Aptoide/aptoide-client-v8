@@ -1,15 +1,14 @@
 package cm.aptoide.pt.v8engine.view.account.user;
 
-import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.view.account.ImagePickerView;
 import rx.Completable;
 import rx.Observable;
 
-public interface ManageUserView extends View {
-  void showLoadImageDialog();
+public interface ManageUserView extends ImagePickerView {
+
+  void setUserName(String name);
 
   Observable<ManageUserFragment.ViewModel> saveUserDataButtonClick();
-
-  Observable<Void> selectUserImageClick();
 
   Observable<Void> cancelButtonClick();
 
@@ -18,4 +17,6 @@ public interface ManageUserView extends View {
   void dismissProgressDialog();
 
   Completable showErrorMessage(String error);
+
+  void loadImageStateless(String pictureUri);
 }

@@ -23,14 +23,14 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -305,7 +305,7 @@ public class AddStoreDialog extends BaseDialog {
           dismissLoadingDialog();
           if (e instanceof AptoideWsV7Exception) {
             BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
-            cm.aptoide.pt.model.v7.base.Error error = baseResponse.getError();
+            BaseV7Response.Error error = baseResponse.getError();
             switch (StoreUtils.getErrorType(error.getCode())) {
               case PRIVATE_STORE_ERROR:
                 DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog

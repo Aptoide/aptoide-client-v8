@@ -24,18 +24,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.notification.AptoideNotification;
 import cm.aptoide.pt.v8engine.notification.view.InboxAdapter;
 import cm.aptoide.pt.v8engine.presenter.MyAccountNavigator;
@@ -83,21 +83,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return new MyAccountFragment();
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.menu_empty, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
     logoutButton = null;
@@ -112,6 +97,21 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     header = null;
     headerText = null;
     moreNotificationsButton = null;
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.menu_empty, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -176,13 +176,15 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
       userAvatarUrl = account.getAvatar();
       userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(userAvatarUrl, userAvatar, STROKE_SIZE);
+          .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar, STROKE_SIZE,
+              R.drawable.my_account_placeholder);
     }
 
     if (!TextUtils.isEmpty(account.getStoreName())) {
       storeNameTextView.setText(account.getStoreName());
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(account.getStoreAvatar(), storeAvatar, STROKE_SIZE);
+          .loadWithShadowCircleTransformWithPlaceholder(account.getStoreAvatar(), storeAvatar,
+              STROKE_SIZE, R.drawable.my_account_placeholder);
     } else {
       separator.setVisibility(View.GONE);
       storeLayout.setVisibility(View.GONE);

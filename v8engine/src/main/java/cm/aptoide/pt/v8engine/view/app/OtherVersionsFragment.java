@@ -14,18 +14,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
@@ -132,6 +132,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             displayables.add(new OtherVersionDisplayable(app));
           }
           addDisplayables(displayables);
+          getRecyclerView().setVisibility(View.VISIBLE);
         };
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),

@@ -19,13 +19,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
+import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
-import cm.aptoide.pt.model.v7.DataList;
-import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
@@ -71,6 +71,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private Converter.Factory converterFactory;
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
+  private ABTestManager abTestManager;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -100,6 +101,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    abTestManager = ((V8Engine) getContext().getApplicationContext()).getABTestManager();
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
@@ -240,8 +242,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   private Observable<Void> setupAbTest() {
     if (hasSubscribedResults && hasEverywhereResults) {
-      ABTest<SearchTabOptions> searchAbTest = ABTestManager.getInstance()
-          .get(ABTestManager.SEARCH_TAB_TEST);
+      ABTest<SearchTabOptions> searchAbTest = abTestManager.get(ABTestManager.SEARCH_TAB_TEST);
       return searchAbTest.participate()
           .observeOn(AndroidSchedulers.mainThread())
           .map(experiment -> setTabAccordingAbTest(searchAbTest));
@@ -267,7 +268,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
               bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
       of.execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
             .getList();
 
         if (list != null && hasMoreResults(listSearchApps)) {
@@ -282,7 +283,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
           bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
                 .getList();
 
             if (list != null && hasMoreResults(listSearchApps)) {
@@ -298,7 +299,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
           bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
                 .getList();
 
             if (list != null && hasMoreResults(listSearchApps)) {
@@ -313,7 +314,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   private boolean hasMoreResults(ListSearchApps listSearchApps) {
-    DataList<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDatalist();
+    DataList<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDataList();
 
     return datalist.getList()
         .size() > 0 || listSearchApps.getTotal() > listSearchApps.getNextSize();

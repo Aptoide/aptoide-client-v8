@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.app;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -10,7 +9,7 @@ import com.facebook.appevents.AppEventsLogger;
  * Created by pedroribeiro on 10/05/17.
  */
 
-public class AppViewAnalytics extends AptoideAnalytics {
+public class AppViewAnalytics {
 
   private static final String ACTION = "Action";
   private static final String APP_VIEW_INTERACT = "App_View_Interact";
@@ -97,5 +96,11 @@ public class AppViewAnalytics extends AptoideAnalytics {
   public void sendRemoteInstallEvent() {
     analytics.sendEvent(
         new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Install on TV")));
+  }
+
+  private Bundle createBundleData(String key, String value) {
+    final Bundle data = new Bundle();
+    data.putString(key, value);
+    return data;
   }
 }

@@ -6,11 +6,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.DateFormat;
@@ -90,7 +90,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
                 ShowMessage.asSnack(context, R.string.uninstall);
                 compositeSubscription.add(
                     displayable.uninstall(context, displayable.getDownloadFromPojo())
-                        .subscribe(uninstalled -> {
+                        .subscribe(() -> {
                         }, throwable -> throwable.printStackTrace()));
                 break;
 

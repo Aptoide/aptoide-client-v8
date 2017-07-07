@@ -6,14 +6,14 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.base.Info;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +54,7 @@ public class StoreUtils {
 
     return getStoreMetaRequest.observe()
         .flatMap(getStoreMeta -> {
-          if (Info.Status.OK.equals(getStoreMeta.getInfo()
+          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo()
               .getStatus())) {
             // TODO: 18-05-2016 neuro private ainda na ta
             if (accountManager.isLoggedIn()) {
@@ -103,7 +103,7 @@ public class StoreUtils {
     return storeCredentialsProvider.get(storeName);
   }
 
-  private static void saveStore(cm.aptoide.pt.model.v7.store.Store storeData,
+  private static void saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
       GetStoreMetaRequest getStoreMetaRequest, StoreAccessor storeAccessor) {
     Store store = new Store();
 

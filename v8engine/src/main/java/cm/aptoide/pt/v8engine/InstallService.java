@@ -19,18 +19,25 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
+import cm.aptoide.pt.v8engine.install.InstallFabricEvents;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import com.crashlytics.android.answers.Answers;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import rx.Completable;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -50,6 +57,7 @@ public class InstallService extends Service {
   public static final String ACTION_INSTALL_FINISHED = "INSTALL_FINISHED";
   public static final String EXTRA_INSTALLATION_MD5 = "INSTALLATION_MD5";
   public static final String EXTRA_INSTALLER_TYPE = "INSTALLER_TYPE";
+  public static final String EXTRA_FORCE_DEFAULT_INSTALL = "EXTRA_FORCE_DEFAULT_INSTALL";
   public static final int INSTALLER_TYPE_DEFAULT = 0;
   public static final int INSTALLER_TYPE_ROLLBACK = 1;
 
@@ -64,19 +72,24 @@ public class InstallService extends Service {
   private InstallManager installManager;
   private Map<String, Integer> installerTypeMap;
   private Analytics analytics;
+  private InstalledRepository installedRepository;
 
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
     downloadManager = ((V8Engine) getApplicationContext()).getDownloadManager();
-    defaultInstaller = new InstallerFactory().create(this, InstallerFactory.DEFAULT);
-    rollbackInstaller = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
+    final MinimalAdMapper adMapper = new MinimalAdMapper();
+    InstallerFactory installerFactory = new InstallerFactory(adMapper,
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()));
+    defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
+    rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap();
     analytics = Analytics.getInstance();
+    installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -85,8 +98,9 @@ public class InstallService extends Service {
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
         installerTypeMap.put(md5,
             intent.getIntExtra(EXTRA_INSTALLER_TYPE, INSTALLER_TYPE_ROLLBACK));
-        subscriptions.add(downloadAndInstall(this, md5).subscribe(hasNext -> treatNext(hasNext),
-            throwable -> removeNotificationAndStop()));
+        subscriptions.add(downloadAndInstall(this, md5, intent.getExtras()
+            .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false)).subscribe(
+            hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
       } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
         subscriptions.add(stopDownload(md5).subscribe(hasNext -> treatNext(hasNext),
             throwable -> removeNotificationAndStop()));
@@ -99,7 +113,7 @@ public class InstallService extends Service {
       }
     } else {
       subscriptions.add(
-          downloadAndInstallCurrentDownload(this).subscribe(hasNext -> treatNext(hasNext),
+          downloadAndInstallCurrentDownload(this, false).subscribe(hasNext -> treatNext(hasNext),
               throwable -> removeNotificationAndStop()));
     }
     return START_STICKY;
@@ -130,15 +144,19 @@ public class InstallService extends Service {
     }
   }
 
-  private Observable<Boolean> downloadAndInstallCurrentDownload(Context context) {
+  private Observable<Boolean> downloadAndInstallCurrentDownload(Context context,
+      boolean forceDefaultInstall) {
     return downloadManager.getCurrentDownload()
         .first()
-        .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5()));
+        .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5(),
+            forceDefaultInstall));
   }
 
-  private Observable<Boolean> downloadAndInstall(Context context, String md5) {
+  private Observable<Boolean> downloadAndInstall(Context context, String md5,
+      boolean forceDefaultInstall) {
     return downloadManager.getDownload(md5)
         .first()
+        .doOnNext(download -> initInstallationProgress(download))
         .flatMap(download -> downloadManager.startDownload(download))
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
@@ -157,13 +175,18 @@ public class InstallService extends Service {
               (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
                   DownloadEvent.class);
           if (report != null) {
-            report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
+            report.setResultStatus(Result.ResultStatus.SUCC);
             analytics.sendEvent(report);
           }
         })
-        .flatMap(download -> stopForegroundAndInstall(context, download, true).doOnNext(
-            success -> sendBackgroundInstallFinishedBroadcast(download)))
-        .flatMap(completed -> hasNextDownload());
+        .flatMap(download -> stopForegroundAndInstall(context, download, true,
+            forceDefaultInstall).andThen(sendBackgroundInstallFinishedBroadcast(download))
+            .andThen(hasNextDownload()));
+  }
+
+  private void initInstallationProgress(Download download) {
+    Installed installed = convertDownloadToInstalled(download);
+    installedRepository.save(installed);
   }
 
   private void stopOnDownloadError(int downloadStatus) {
@@ -183,12 +206,14 @@ public class InstallService extends Service {
     stopSelf();
   }
 
-  private void sendBackgroundInstallFinishedBroadcast(Download download) {
-    sendBroadcast(
-        new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
-    if (download.isScheduled()) {
-      removeFromScheduled(download.getMd5());
-    }
+  private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
+    return Completable.fromAction(() -> {
+      sendBroadcast(
+          new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
+      if (download.isScheduled()) {
+        removeFromScheduled(download.getMd5());
+      }
+    });
   }
 
   private void removeFromScheduled(String md5) {
@@ -197,19 +222,19 @@ public class InstallService extends Service {
     Logger.d(TAG, "Removing schedulled download with appId " + md5);
   }
 
-  private Observable<Void> stopForegroundAndInstall(Context context, Download download,
-      boolean removeNotification) {
+  private Completable stopForegroundAndInstall(Context context, Download download,
+      boolean removeNotification, boolean forceDefaultInstall) {
     Installer installer = getInstaller(download.getMd5());
     stopForeground(removeNotification);
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
-        return installer.install(context, download.getMd5());
+        return installer.install(context, download.getMd5(), forceDefaultInstall);
       case Download.ACTION_UPDATE:
-        return installer.update(context, download.getMd5());
+        return installer.update(context, download.getMd5(), forceDefaultInstall);
       case Download.ACTION_DOWNGRADE:
-        return installer.downgrade(context, download.getMd5());
+        return installer.downgrade(context, download.getMd5(), forceDefaultInstall);
       default:
-        return Observable.error(
+        return Completable.error(
             new IllegalArgumentException("Invalid download action " + download.getAction()));
     }
   }
@@ -231,15 +256,11 @@ public class InstallService extends Service {
 
   private void setupNotification() {
     subscriptions.add(installManager.getCurrentInstallation()
-        .subscribe(progress -> {
-          if (!progress.isIndeterminate()) {
+        .subscribe(installation -> {
+          if (!installation.isIndeterminate()) {
 
-            int requestCode = progress.getRequest()
-                .getFilesToDownload()
-                .get(0)
-                .getDownloadId();
-            String md5 = progress.getRequest()
-                .getMd5();
+            String md5 = installation.getMd5();
+            int requestCode = md5.hashCode();
 
             NotificationCompat.Action downloadManagerAction =
                 getDownloadManagerAction(requestCode, md5);
@@ -248,11 +269,11 @@ public class InstallService extends Service {
             NotificationCompat.Action pauseAction = getPauseAction(requestCode, md5);
 
             if (notification == null) {
-              notification = buildNotification(progress, pauseAction, downloadManagerAction,
+              notification = buildNotification(installation, pauseAction, downloadManagerAction,
                   appViewPendingIntent);
             } else {
               long oldWhen = notification.when;
-              notification = buildNotification(progress, pauseAction, downloadManagerAction,
+              notification = buildNotification(installation, pauseAction, downloadManagerAction,
                   appViewPendingIntent);
               notification.when = oldWhen;
             }
@@ -277,7 +298,7 @@ public class InstallService extends Service {
         ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
 
-  private Notification buildNotification(Progress<Download> progress,
+  private Notification buildNotification(Install installation,
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -286,14 +307,12 @@ public class InstallService extends Service {
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
             Application.getConfiguration()
                 .getMarketName()))
-        .setContentText(new StringBuilder().append(progress.getRequest()
-            .getAppName())
+        .setContentText(new StringBuilder().append(installation.getAppName())
             .append(" - ")
-            .append(progress.getRequest()
-                .getStatusName(this)))
+            .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
         .setContentIntent(contentIntent)
-        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, progress.getRequest()
-            .getOverallProgress(), progress.isIndeterminate())
+        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, installation.getProgress(),
+            installation.isIndeterminate())
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
@@ -334,5 +353,16 @@ public class InstallService extends Service {
         .getMainActivityFragmentClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;
+  }
+
+  @NonNull private Installed convertDownloadToInstalled(Download download) {
+    Installed installed = new Installed();
+    installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
+    installed.setVersionCode(download.getVersionCode());
+    installed.setVersionName(download.getVersionName());
+    installed.setStatus(Installed.STATUS_WAITING);
+    installed.setType(Installed.TYPE_UNKNOWN);
+    installed.setPackageName(download.getPackageName());
+    return installed;
   }
 }

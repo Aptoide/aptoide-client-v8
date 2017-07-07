@@ -25,6 +25,8 @@ public class ProductBundleMapper {
   private static final String SKU = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_SKU";
   private static final String PACKAGE_NAME =
       "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_PACKAGE_NAME";
+  private static final String APPLICATION_NAME =
+      "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_APPLICATION_NAME";
   private static final String DEVELOPER_PAYLOAD =
       "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_DEVELOPER_PAYLOAD";
   private static final String TYPE = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_TYPE";
@@ -55,6 +57,7 @@ public class ProductBundleMapper {
     final String developerPayload = bundle.getString(DEVELOPER_PAYLOAD);
     final String sku = bundle.getString(SKU);
     final String packageName = bundle.getString(PACKAGE_NAME);
+    final String applicationName = bundle.getString(APPLICATION_NAME);
     final String type = bundle.getString(TYPE);
     final int apiVersion = bundle.getInt(API_VERSION, -1);
 
@@ -76,12 +79,11 @@ public class ProductBundleMapper {
 
       if (developerPayload != null
           && sku != null
-          && packageName != null
-          && packageName != null
+          && packageName != null && applicationName != null
           && type != null
           && apiVersion != -1) {
         return new InAppProduct(id, icon, title, description, apiVersion, sku, packageName,
-            developerPayload, type, price, packageVersionCode);
+            developerPayload, type, price, packageVersionCode, applicationName);
       }
       if (id != -1 && storeName != null) {
         return new PaidAppProduct(id, icon, title, description, appId, storeName, price, sponsored,
@@ -110,6 +112,7 @@ public class ProductBundleMapper {
       bundle.putString(DEVELOPER_PAYLOAD, ((InAppProduct) product).getDeveloperPayload());
       bundle.putString(SKU, ((InAppProduct) product).getSku());
       bundle.putString(PACKAGE_NAME, ((InAppProduct) product).getPackageName());
+      bundle.putString(APPLICATION_NAME, ((InAppProduct) product).getApplicationName());
       bundle.putString(TYPE, ((InAppProduct) product).getType());
       bundle.putInt(API_VERSION, ((InAppProduct) product).getApiVersion());
       bundle.putInt(PACKAGE_VERSION_CODE, ((InAppProduct) product).getPackageVersionCode());

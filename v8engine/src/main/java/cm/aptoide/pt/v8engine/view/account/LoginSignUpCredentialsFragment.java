@@ -121,7 +121,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void onDestroyView() {
-    unregisterBackClickHandler(presenter);
+    unregisterClickHandler(presenter);
     unlockScreenRotation();
     super.onDestroyView();
   }
@@ -353,8 +353,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
-    attachPresenter(presenter, savedInstanceState);
-    registerBackClickHandler(presenter);
+    attachPresenter(presenter, null);
+    registerClickHandler(presenter);
   }
 
   @Override protected void showGoogleLoginError() {

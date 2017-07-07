@@ -2,10 +2,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -13,7 +11,6 @@ import rx.Observable;
 /**
  * Created by pedroribeiro on 01/06/17.
  */
-
 public class SetUserSettings extends V7<BaseV7Response, SetUserSettings.Body> {
 
   protected SetUserSettings(Body body, String baseHost, OkHttpClient httpClient,
@@ -43,10 +40,18 @@ public class SetUserSettings extends V7<BaseV7Response, SetUserSettings.Body> {
     return interfaces.setUserSettings(body);
   }
 
-  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  public static class Body extends BaseBody {
     public boolean mature;
 
     public Body(boolean mature) {
+      this.mature = mature;
+    }
+
+    @Override public boolean isMature() {
+      return mature;
+    }
+
+    @Override public void setMature(boolean mature) {
       this.mature = mature;
     }
   }

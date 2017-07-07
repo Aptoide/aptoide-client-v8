@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.timeline.SocialCard;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import java.util.List;
 import rx.Single;
 
@@ -20,7 +20,7 @@ public class PostLocalAccessor implements PostAccessor {
   }
 
   @Override public Single<List<PostRemoteAccessor.RelatedApp>> getRelatedApps(String url) {
-    return installedRepository.getAllSorted()
+    return installedRepository.getAllInstalledSorted()
         .first()
         .flatMapIterable(list -> list)
         .filter(app -> !app.isSystemApp())
@@ -29,12 +29,12 @@ public class PostLocalAccessor implements PostAccessor {
         .toSingle();
   }
 
+  @Override public Single<PostView.PostPreview> getCardPreview(String url) {
+    return Single.error(new NoSuchMethodException());
+  }
+
   private PostRemoteAccessor.RelatedApp convertInstalledToRelatedApp(Installed installed) {
     return new PostRemoteAccessor.RelatedApp(installed.getIcon(), installed.getName(),
         PostManager.Origin.Installed, false, installed.getPackageName());
-  }
-
-  @Override public Single<PostView.PostPreview> getCardPreview(String url) {
-    return Single.error(new NoSuchMethodException());
   }
 }

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
-import cm.aptoide.pt.model.v7.DataList;
-import cm.aptoide.pt.model.v7.timeline.SocialCard;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.v8engine.timeline.response.CardPreview;
 import cm.aptoide.pt.v8engine.timeline.response.Response;
 import cm.aptoide.pt.v8engine.timeline.response.StillProcessingException;
@@ -64,17 +64,17 @@ public class PostRemoteAccessor implements PostAccessor {
         .toSingle();
   }
 
-  private RelatedApp convertToLocalRelatedApp(
-      cm.aptoide.pt.v8engine.timeline.response.RelatedApp remoteRelatedApp, boolean isSelected) {
-    return new RelatedApp(remoteRelatedApp.getIcon(), remoteRelatedApp.getName(),
-        PostManager.Origin.Remote, isSelected, remoteRelatedApp.getPackageName());
-  }
-
   @Override public Single<PostView.PostPreview> getCardPreview(String url) {
     return postWebService.getCardPreview(requestFactory.getCardPreviewRequest(url))
         .map(response -> convertToLocalCardPreview(response))
         .first()
         .toSingle();
+  }
+
+  private RelatedApp convertToLocalRelatedApp(
+      cm.aptoide.pt.v8engine.timeline.response.RelatedApp remoteRelatedApp, boolean isSelected) {
+    return new RelatedApp(remoteRelatedApp.getIcon(), remoteRelatedApp.getName(),
+        PostManager.Origin.Remote, isSelected, remoteRelatedApp.getPackageName());
   }
 
   private PostView.PostPreview convertToLocalCardPreview(Response<CardPreview> response) {

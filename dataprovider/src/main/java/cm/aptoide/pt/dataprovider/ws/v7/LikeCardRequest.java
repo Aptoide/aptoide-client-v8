@@ -3,8 +3,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -17,6 +17,7 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
 
   private final String cardId;
   private final int rating;
+
   public LikeCardRequest(BaseBody body, String cardId, int rating,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
@@ -35,12 +36,11 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
         + "/api/7/";
   }
 
-  public static LikeCardRequest of(String timelineCardId, String cardType, String ownerHash,
-      int rating, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+  public static LikeCardRequest of(String timelineCardId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final BaseBody body = new BaseBody();
-    return new LikeCardRequest(body, timelineCardId, rating, bodyInterceptor, httpClient,
+    return new LikeCardRequest(body, timelineCardId, 1, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 

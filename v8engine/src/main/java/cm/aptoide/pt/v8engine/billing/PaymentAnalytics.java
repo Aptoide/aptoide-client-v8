@@ -5,6 +5,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.Event;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
+import cm.aptoide.pt.v8engine.billing.view.PayPalView;
 import com.facebook.appevents.AppEventsLogger;
 
 public class PaymentAnalytics {
@@ -25,16 +26,16 @@ public class PaymentAnalytics {
         getProductBundle(price, currency, aptoidePackageName)));
   }
 
-  public void sendPaymentCancelButtonPressedEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Cancel", payment, product));
+  public void sendPaymentCancelButtonPressedEvent(Product product, String paymentName) {
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Cancel", product, paymentName));
   }
 
-  public void sendPaymentBuyButtonPressedEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Buy", payment, product));
+  public void sendPaymentBuyButtonPressedEvent(Product product, String paymentName) {
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Buy", product, paymentName));
   }
 
-  public void sendPaymentTapOutsideEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Tap Outside", payment, product));
+  public void sendPaymentTapOutsideEvent(Product product, String paymentName) {
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Tap Outside", product, paymentName));
   }
 
   public void sendBackToStoreButtonPressedEvent(Product product) {
@@ -48,15 +49,15 @@ public class PaymentAnalytics {
         new FacebookEvent(facebook, "Payment_Purchase_Retry", getProductBundle(product)));
   }
 
-  public void sendPurchaseCompleteEvent(PaymentConfirmation paymentConfirmation, Product product) {
+  public void sendPurchaseStatusEvent(Transaction transaction, Product product) {
 
     // We only send analytics about failed or completed payment confirmations
-    if (paymentConfirmation.isPending() || paymentConfirmation.isNew()) {
+    if (transaction.isPending() || transaction.isNew()) {
       return;
     }
 
     final Bundle bundle = getProductBundle(product);
-    bundle.putString("status", getPurchaseStatus(paymentConfirmation));
+    bundle.putString("status", getPurchaseStatus(transaction));
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Purchase_Complete", bundle));
   }
 
@@ -78,6 +79,25 @@ public class PaymentAnalytics {
     }
   }
 
+  public void sendPayPalResultEvent(PayPalView.PayPalResult result) {
+    final Bundle bundle = new Bundle();
+    bundle.putString("status", mapToLocalPaymentStatus(result.getStatus()));
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Local_Process", bundle));
+  }
+
+  private String mapToLocalPaymentStatus(int status) {
+    switch (status) {
+      case PayPalView.PayPalResult.SUCCESS:
+        return "success";
+      case PayPalView.PayPalResult.CANCELLED:
+        return "user cancel";
+      case PayPalView.PayPalResult.ERROR:
+        return "error";
+      default:
+        throw new IllegalStateException("Invalid PayPal result status " + status);
+    }
+  }
+
   private String getAuthorizationStatus(Authorization paymentAuthorization) {
 
     if (paymentAuthorization.isAuthorized()) {
@@ -91,23 +111,24 @@ public class PaymentAnalytics {
     throw new IllegalArgumentException("Can NOT determine payment authorization analytics status.");
   }
 
-  private String getPurchaseStatus(PaymentConfirmation paymentConfirmation) {
+  private String getPurchaseStatus(Transaction transaction) {
 
-    if (paymentConfirmation.isFailed()) {
+    if (transaction.isFailed()) {
       return "failed";
     }
 
-    if (paymentConfirmation.isCompleted()) {
+    if (transaction.isCompleted()) {
       return "success";
     }
 
     throw new IllegalArgumentException("Can NOT determine payment confirmation analytics status.");
   }
 
-  private Event getPaymentEvent(String eventName, String action, Payment payment, Product product) {
+  private Event getPaymentEvent(String eventName, String action, Product product,
+      String paymentName) {
     final Bundle bundle = getProductBundle(product);
     bundle.putString("action", action);
-    bundle.putString("payment_method", payment.getName());
+    bundle.putString("payment_method", paymentName);
     return new FacebookEvent(facebook, eventName, bundle);
   }
 

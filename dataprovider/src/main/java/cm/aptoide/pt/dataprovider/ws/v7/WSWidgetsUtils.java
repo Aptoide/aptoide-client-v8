@@ -12,6 +12,11 @@ import android.util.Pair;
 import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
@@ -20,11 +25,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.model.v7.base.Error;
-import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -192,7 +192,7 @@ public class WSWidgetsUtils {
 
   public static boolean shouldAddObjectView(List<String> list, Throwable throwable) {
     if (throwable instanceof AptoideWsV7Exception) {
-      for (Error error : ((AptoideWsV7Exception) throwable).getBaseResponse()
+      for (BaseV7Response.Error error : ((AptoideWsV7Exception) throwable).getBaseResponse()
           .getErrors()) {
         if (list.contains(error.getCode())) {
           return true;

@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -20,14 +21,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -35,7 +36,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.util.Locale;
 import okhttp3.OkHttpClient;
@@ -87,7 +88,7 @@ import rx.subscriptions.Subscriptions;
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
               accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
-            });
+            }, Snackbar.LENGTH_SHORT);
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
         return;
@@ -199,7 +200,7 @@ import rx.subscriptions.Subscriptions;
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
-          });
+          }, Snackbar.LENGTH_SHORT);
 
       return;
     }

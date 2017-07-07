@@ -25,19 +25,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
+import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v7.base.BaseV7Response;
-import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.store.GetStoreTabs;
-import cm.aptoide.pt.model.v7.store.HomeUser;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -274,19 +274,19 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
-
-    setupSearch(menu);
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
           .getDefaultTheme()));
     }
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_search, menu);
+
+    setupSearch(menu);
   }
 
   protected void setupSearch(Menu menu) {

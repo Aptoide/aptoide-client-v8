@@ -4,14 +4,14 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.WindowManager;
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.SocialCard;
-import cm.aptoide.pt.model.v7.timeline.TimelineCard;
-import cm.aptoide.pt.model.v7.timeline.UserTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
@@ -32,7 +32,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   @Getter private SocialCard.CardComment latestComment;
   @Getter private boolean liked;
   @Getter private String abUrl;
-  private TimelineNavigator timelineNavigator;
+  private AppsTimelineNavigator timelineNavigator;
 
   SocialCardDisplayable() {
     numberOfLikes = 0;
@@ -43,7 +43,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
       Store store, Comment.User user, Comment.User userSharer, boolean liked,
       List<UserTimeline> userLikes, List<SocialCard.CardComment> comments, Date date,
       SpannableFactory spannableFactory, DateCalculator dateCalculator, String abUrl,
-      TimelineAnalytics timelineAnalytics, TimelineNavigator timelineNavigator,
+      TimelineAnalytics timelineAnalytics, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     super(timelineCard, timelineAnalytics, windowManager);
     this.date = date;

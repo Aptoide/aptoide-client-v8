@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.updates.installed;
 
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;

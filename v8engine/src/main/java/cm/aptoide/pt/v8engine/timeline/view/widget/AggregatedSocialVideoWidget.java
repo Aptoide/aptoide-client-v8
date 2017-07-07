@@ -13,18 +13,18 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.image.ImageLoader;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.MinimalCard;
-import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
-import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
@@ -91,17 +91,27 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
 
   @Override public void bindView(AggregatedSocialVideoDisplayable displayable) {
     super.bindView(displayable);
-
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(0)
-            .getUser()
-            .getAvatar(), headerAvatar1);
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(1)
-            .getUser()
-            .getAvatar(), headerAvatar2);
+    if (displayable.getSharers()
+        .get(0)
+        .getUser() != null) {
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(displayable.getSharers()
+              .get(0)
+              .getUser()
+              .getAvatar(), headerAvatar1);
+    }
+    if (displayable.getSharers()
+        .size() > 1) {
+      if (displayable.getSharers()
+          .get(1)
+          .getUser() != null) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(displayable.getSharers()
+                .get(1)
+                .getUser()
+                .getAvatar(), headerAvatar2);
+      }
+    }
     headerNames.setText(displayable.getCardHeaderNames());
     headerTime.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
@@ -197,19 +207,27 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
 
       int marginOfTheNextLikePreview = 0;
 
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(minimalCard.getSharers()
-              .get(0)
-              .getUser()
-              .getAvatar(), minimalCardHeaderMainAvatar);
-
       if (minimalCard.getSharers()
-          .size() > 1) {
+          .get(0)
+          .getUser() != null) {
         ImageLoader.with(getContext())
             .loadWithShadowCircleTransform(minimalCard.getSharers()
-                .get(1)
+                .get(0)
                 .getUser()
-                .getAvatar(), minimalCardHeaderMainAvatar2);
+                .getAvatar(), minimalCardHeaderMainAvatar);
+      }
+
+      if (displayable.getSharers()
+          .size() > 1) {
+        if (displayable.getSharers()
+            .get(1)
+            .getUser() != null) {
+          ImageLoader.with(getContext())
+              .loadWithShadowCircleTransform(minimalCard.getSharers()
+                  .get(1)
+                  .getUser()
+                  .getAvatar(), minimalCardHeaderMainAvatar2);
+        }
       } else {
         plusFrame.setVisibility(View.GONE);
         minimalCardHeaderMainAvatar2.setVisibility(View.GONE);

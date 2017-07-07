@@ -143,7 +143,7 @@ public class PullingContentService extends Service {
                   }
                   return downloadList;
                 })
-                .flatMap(downloads -> installManager.startInstalls(downloads, this));
+                .flatMap(downloads -> installManager.startInstalls(downloads));
           } else {
             return Observable.just(false);
           }

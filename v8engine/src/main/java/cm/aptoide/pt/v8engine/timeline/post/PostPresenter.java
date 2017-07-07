@@ -6,7 +6,6 @@ import android.util.Patterns;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -21,15 +20,12 @@ class PostPresenter implements Presenter {
   private final PostManager postManager;
   private final RelatedAppsAdapter adapter;
   private final FragmentNavigator fragmentNavigator;
-  private InstalledRepository installedRepository;
 
   public PostPresenter(PostView view, CrashReport crashReport, PostManager postManager,
-      InstalledRepository installedRepository, RelatedAppsAdapter adapter,
-      FragmentNavigator fragmentNavigator) {
+      RelatedAppsAdapter adapter, FragmentNavigator fragmentNavigator) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
-    this.installedRepository = installedRepository;
     this.adapter = adapter;
     this.fragmentNavigator = fragmentNavigator;
   }
@@ -148,7 +144,8 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
-            .flatMap(textToShare -> postManager.post(null, textToShare, adapter.getCurrentSelected().getPackageName())
+            .flatMap(textToShare -> postManager.post(null, textToShare, adapter.getCurrentSelected()
+                .getPackageName())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toCompletable()
                 .andThen(view.showSuccessMessage())

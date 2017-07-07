@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.model.v7.timeline.SocialCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
 import java.util.ArrayList;
 import java.util.Collections;
