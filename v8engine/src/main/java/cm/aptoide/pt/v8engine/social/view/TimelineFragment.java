@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.social.view;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -301,5 +302,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void showShareSuccessMessage() {
     ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+  }
+
+  // TODO: 07/07/2017 migrate this behaviour to mvp
+  @UiThread public void goToTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      list.scrollToPosition(10);
+    }
+    list.smoothScrollToPosition(0);
   }
 }
