@@ -146,9 +146,16 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     toolbar = null;
     unregisterClickHandler(clickHandler);
     clickHandler = null;
+    warningDialog = null;
     adapter = null;
     recyclerView = null;
     super.onDestroyView();
+  }
+
+  @Override public void onDestroy() {
+    backRelay = null;
+    appSubject = null;
+    super.onDestroy();
   }
 
   @Nullable @Override

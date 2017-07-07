@@ -94,8 +94,15 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     toolbar = null;
     unregisterClickHandler(clickHandler);
     clickHandler = null;
+    backDialog = null;
     transferRecordRecyclerView = null;
     super.onDestroyView();
+  }
+
+  @Override public void onDestroy() {
+    backRelay = null;
+    acceptApp = null;
+    super.onDestroy();
   }
 
   @Override public void finish() {
@@ -120,7 +127,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public void navigateBack() {
-
+    getFragmentNavigator().popBackStack();
   }
 
   @Override public void onLeaveGroupError() {
