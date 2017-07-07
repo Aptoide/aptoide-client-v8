@@ -12,13 +12,13 @@ import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
-import cm.aptoide.pt.v8engine.view.permission.PermissionServiceActivity;
+import cm.aptoide.pt.v8engine.view.permission.PermissionProviderActivity;
 import lombok.Getter;
 
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class BaseActivity extends PermissionServiceActivity {
+public abstract class BaseActivity extends PermissionProviderActivity {
 
   @Getter private boolean _resumed = false;
 
