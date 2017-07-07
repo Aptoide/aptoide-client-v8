@@ -21,4 +21,11 @@
       android:scrollbars="vertical"
       >
   </android.support.v7.widget.RecyclerView>
+
+  <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/spotandshare_button_share_another_app"
+      />
+
 </LinearLayout>
