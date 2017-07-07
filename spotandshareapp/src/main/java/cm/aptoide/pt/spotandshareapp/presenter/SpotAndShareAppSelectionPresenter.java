@@ -19,8 +19,8 @@ import java.util.List;
 
 public class SpotAndShareAppSelectionPresenter implements Presenter {
   private final SpotAndShareAppSelectionView view;
-  private InstalledRepositoryDummy installedRepositoryDummy;
   private final SpotAndShare spotAndShare;
+  private InstalledRepositoryDummy installedRepositoryDummy;
   private List<AppModel> selectedApps;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
@@ -64,6 +64,14 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         }, error -> error.printStackTrace());
   }
 
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
+  }
+
   private void selectedApp(AppModel appModel) {
     System.out.println("selected app " + appModel.getAppName());
     if (selectedApps.contains(appModel)) {
@@ -92,13 +100,5 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
 
   private void leaveGroup() {
     spotAndShare.leaveGroup(success -> view.navigateBack(), err -> view.onLeaveGroupError());
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }
