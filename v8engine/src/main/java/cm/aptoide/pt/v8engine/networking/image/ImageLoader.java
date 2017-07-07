@@ -78,18 +78,18 @@ public class ImageLoader {
   /**
    * Blocking call to load a bitmap.
    *
-   * @param apkIconPath Path for the bitmap to be loaded.
+   * @param uri Path for the bitmap to be loaded.
    *
    * @return Loaded bitmap or null.
    */
-  @WorkerThread public @Nullable Bitmap loadBitmap(String apkIconPath) {
+  @WorkerThread public @Nullable Bitmap loadBitmap(String uri) {
     Context context = weakContext.get();
     if (context != null) {
       try {
         return Glide.
             with(context)
             .
-                load(apkIconPath)
+                load(uri)
             .
                 asBitmap()
             .
@@ -396,13 +396,10 @@ public class ImageLoader {
       try {
         return Glide.
             with(context)
-            .
-                load(apkIconPath)
-            .
-                asBitmap()
-            .
-                into(-1, -1). // full size
-            get();
+            .load(apkIconPath)
+            .asBitmap()
+            .into(-1, -1) // full size
+            .get();
       } catch (InterruptedException e) {
         e.printStackTrace();
       } catch (ExecutionException e) {
@@ -444,6 +441,21 @@ public class ImageLoader {
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
+    }
+    return null;
+  }
+
+  public Target<GlideDrawable> loadUsingCircleTransformAndPlaceholder(String url,
+      ImageView imageView, int defaultImagePlaceholder) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .transform(new CircleTransform(context))
+          .placeholder(defaultImagePlaceholder)
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::loadUsingCircleTransformAndPlaceholder() Context is null");
     }
     return null;
   }

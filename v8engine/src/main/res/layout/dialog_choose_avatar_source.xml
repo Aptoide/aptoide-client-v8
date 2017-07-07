@@ -4,25 +4,17 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/padding_medium_default"
+    android:paddingLeft="@dimen/padding_medium_default"
+    android:paddingStart="@dimen/padding_medium_default"
+    android:paddingEnd="@dimen/padding_medium_default"
+    android:paddingRight="@dimen/padding_medium_default"
+    android:paddingTop="@dimen/padding_medium_default"
     >
-
-  <TextView
-      android:id="@+id/title"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center_horizontal"
-      android:text="@string/upload_dialog_title"
-      android:textColor="@color/create_store_title_color"
-      android:textSize="@dimen/text_size_medium_large"
-      style="@style/Aptoide.TextView.Medium.L"
-      />
 
   <TextView
       android:id="@+id/button_camera"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/padding_medium_small"
       android:drawableLeft="@drawable/upload_camera"
       android:drawablePadding="@dimen/padding_smaller"
       android:drawableStart="@drawable/upload_camera"
@@ -44,17 +36,6 @@
       android:gravity="center"
       android:text="@string/upload_dialog_gallery"
       android:textColor="@color/create_store_title_color"
-      android:textSize="@dimen/text_size_medium_small"
-      style="@style/Aptoide.TextView.Regular.XS"
-      />
-
-  <TextView
-      android:id="@+id/cancel"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/padding_medium_small"
-      android:gravity="end"
-      android:text="@string/cancel"
       android:textSize="@dimen/text_size_medium_small"
       style="@style/Aptoide.TextView.Regular.XS"
       />
