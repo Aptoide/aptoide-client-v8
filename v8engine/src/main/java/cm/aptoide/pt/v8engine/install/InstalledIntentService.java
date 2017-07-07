@@ -60,27 +60,29 @@ public class InstalledIntentService extends IntentService {
 
   @Override protected void onHandleIntent(Intent intent) {
 
-    final String action = intent.getAction();
-    final String packageName = intent.getData().getEncodedSchemeSpecificPart();
+    if(intent != null) {
+      final String action = intent.getAction();
+      final String packageName = intent.getData().getEncodedSchemeSpecificPart();
 
-    confirmAction(packageName, action);
+      confirmAction(packageName, action);
 
-    if (!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(
-        Intent.EXTRA_REPLACING, false)) {
-      return;
-    }
-    Logger.d(TAG, "Action : " + action);
+      if (!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(
+              Intent.EXTRA_REPLACING, false)) {
+        return;
+      }
+      Logger.d(TAG, "Action : " + action);
 
-    switch (action) {
-      case Intent.ACTION_PACKAGE_ADDED:
-        onPackageAdded(packageName);
-        break;
-      case Intent.ACTION_PACKAGE_REPLACED:
-        onPackageReplaced(packageName);
-        break;
-      case Intent.ACTION_PACKAGE_REMOVED:
-        onPackageRemoved(packageName);
-        break;
+      switch (action) {
+        case Intent.ACTION_PACKAGE_ADDED:
+          onPackageAdded(packageName);
+          break;
+        case Intent.ACTION_PACKAGE_REPLACED:
+          onPackageReplaced(packageName);
+          break;
+        case Intent.ACTION_PACKAGE_REMOVED:
+          onPackageRemoved(packageName);
+          break;
+      }
     }
   }
 
