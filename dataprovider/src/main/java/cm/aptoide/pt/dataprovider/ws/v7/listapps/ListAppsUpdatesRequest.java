@@ -150,6 +150,9 @@ import rx.schedulers.Schedulers;
       this.notPackageTags = body.getNotPackageTags();
       this.setAptoideMd5sum(body.getAptoideMd5sum());
       this.setAptoidePackage(body.getAptoidePackage());
+      this.setLang(body.getLang());
+      this.setCdn(body.getCdn());
+      this.setMature(body.isMature());
     }
 
     private void setSystemAppsUpdates() {

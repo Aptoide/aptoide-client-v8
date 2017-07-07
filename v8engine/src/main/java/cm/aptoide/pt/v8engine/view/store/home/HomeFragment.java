@@ -33,7 +33,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.DrawerAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
