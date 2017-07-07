@@ -12,4 +12,14 @@ public interface SpotAndShareTransferRecordView extends View {
   void finish();
 
   Observable<AndroidAppInfo> acceptApp();
+
+  Observable<Void> backButtonEvent();
+
+  void showExitWarning();
+
+  Observable<Void> exitEvent();
+
+  void navigateBack();
+
+  void onLeaveGroupError();
 }

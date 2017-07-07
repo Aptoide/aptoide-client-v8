@@ -8,12 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.BackButtonFragment;
+import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -21,10 +26,13 @@ import rx.subjects.PublishSubject;
  * Created by filipe on 12-06-2017.
  */
 
-public class SpotAndShareTransferRecordFragment extends FragmentView
+public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     implements SpotAndShareTransferRecordView {
 
   private Toolbar toolbar;
+  private PublishRelay<Void> backRelay;
+  private RxAlertDialog backDialog;
+  private ClickHandler clickHandler;
   private RecyclerView transferRecordRecyclerView;
   private SpotAndShareTransferRecordAdapter adapter;
   private PublishSubject<AndroidAppInfo> acceptApp;
@@ -32,6 +40,12 @@ public class SpotAndShareTransferRecordFragment extends FragmentView
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    backRelay = PublishRelay.create();
+    acceptApp = PublishSubject.create();
   }
 
   @Nullable @Override
@@ -48,11 +62,22 @@ public class SpotAndShareTransferRecordFragment extends FragmentView
     transferRecordRecyclerView =
         (RecyclerView) view.findViewById(R.id.transfer_record_recycler_view);
     setupRecyclerView();
-    attachPresenter(new SpotAndShareTransferRecordPresenter(this), savedInstanceState);
+    clickHandler = () -> {
+      backRelay.call(null);
+      return true;
+    };
+    registerClickHandler(clickHandler);
+    backDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+        R.string.spotandshare_message_leave_group_warning)
+        .setPositiveButton(R.string.spotandshare_button_leave_group)
+        .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
+        .build();
+    attachPresenter(
+        new SpotAndShareTransferRecordPresenter(this, SpotAndShare.getInstance(getContext())),
+        savedInstanceState);
   }
 
   private void setupRecyclerView() {
-    acceptApp = PublishSubject.create();
     adapter = new SpotAndShareTransferRecordAdapter(null, acceptApp);
     transferRecordRecyclerView.setAdapter(adapter);
   }
@@ -67,6 +92,8 @@ public class SpotAndShareTransferRecordFragment extends FragmentView
 
   @Override public void onDestroyView() {
     toolbar = null;
+    unregisterClickHandler(clickHandler);
+    clickHandler = null;
     transferRecordRecyclerView = null;
     super.onDestroyView();
   }
@@ -77,5 +104,35 @@ public class SpotAndShareTransferRecordFragment extends FragmentView
 
   @Override public Observable<AndroidAppInfo> acceptApp() {
     return acceptApp;
+  }
+
+  @Override public Observable<Void> backButtonEvent() {
+    return backRelay;
+  }
+
+  @Override public void showExitWarning() {
+    backDialog.show();
+  }
+
+  @Override public Observable<Void> exitEvent() {
+    return backDialog.positiveClicks()
+        .map(dialogInterface -> null);
+  }
+
+  @Override public void navigateBack() {
+
+  }
+
+  @Override public void onLeaveGroupError() {
+    Toast.makeText(getContext(), "There was an error while trying to leave the group",
+        Toast.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      backRelay.call(null);
+    }
+    return false;
   }
 }
