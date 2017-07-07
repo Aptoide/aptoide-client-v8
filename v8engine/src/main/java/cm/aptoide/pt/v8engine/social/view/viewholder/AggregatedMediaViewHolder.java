@@ -97,7 +97,7 @@ public class AggregatedMediaViewHolder extends CardViewHolder<AggregatedMedia> {
     showMorePostersLabel(card);
 
     minimalCardContainer.removeAllViews();
-    minimalCardContainer.addView(minimalCardViewFactory.getView(card.getMinimalCards(),
+    minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalCards(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
         itemView.getContext()));
   }

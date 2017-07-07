@@ -86,7 +86,7 @@ public class AggregatedRecommendationViewHolder extends CardViewHolder<Aggregate
 
     showMorePostersLabel(card);
     minimalCardContainer.removeAllViews();
-    minimalCardContainer.addView(minimalCardViewFactory.getView(card.getMinimalPosts(),
+    minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalPosts(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
         itemView.getContext()));
   }

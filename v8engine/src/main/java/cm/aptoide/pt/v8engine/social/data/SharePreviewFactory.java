@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
@@ -22,6 +24,12 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
  */
 
 public class SharePreviewFactory {
+
+  private AptoideAccountManager accountManager;
+
+  public SharePreviewFactory(AptoideAccountManager accountManager) {
+    this.accountManager = accountManager;
+  }
 
   public View getSharePreviewView(Post post, Context context) {
     LayoutInflater factory = LayoutInflater.from(context);
@@ -43,10 +51,14 @@ public class SharePreviewFactory {
       TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
       ImageView playIcon = (ImageView) view.findViewById(R.id.play_button);
       if (post.getType()
-          .equals(CardType.ARTICLE)) {
+          .equals(CardType.ARTICLE) || post.getType()
+          .equals(CardType.SOCIAL_ARTICLE) || post.getType()
+          .equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
         playIcon.setVisibility(View.GONE);
       } else if (post.getType()
-          .equals(CardType.VIDEO)) {
+          .equals(CardType.VIDEO) || post.getType()
+          .equals(CardType.SOCIAL_VIDEO) || post.getType()
+          .equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
         playIcon.setVisibility(View.VISIBLE);
       }
       mediaTitle.setMaxLines(1);
@@ -61,7 +73,7 @@ public class SharePreviewFactory {
       TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
       ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
       LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_popular_app_users_container);
+          R.id.displayable_social_timeline_store_latest_apps_container);
       RelativeLayout followStoreBar = (RelativeLayout) view.findViewById(R.id.follow_store_bar);
 
       followStoreBar.setVisibility(View.GONE);
@@ -105,7 +117,7 @@ public class SharePreviewFactory {
           context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
           ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
     } else if (post instanceof AppUpdate) {
-      view = factory.inflate(R.layout.timeline_recommendation_item, null);
+      view = factory.inflate(R.layout.timeline_recommendation_preview, null);
       ImageView appIcon =
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
       TextView appName = (TextView) view.findViewById(
@@ -124,27 +136,6 @@ public class SharePreviewFactory {
       getApp.setText(spannableFactory.createColorSpan(
           context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
           ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (post instanceof SocialMedia) {
-      view = factory.inflate(R.layout.timeline_media_preview, null);
-      TextView articleTitle =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
-      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
-      ImageView playIcon = (ImageView) view.findViewById(R.id.play_button);
-
-      if (post.getType()
-          .equals(CardType.ARTICLE)) {
-        playIcon.setVisibility(View.GONE);
-      } else if (post.getType()
-          .equals(CardType.VIDEO)) {
-        playIcon.setVisibility(View.VISIBLE);
-      }
-      articleTitle.setMaxLines(1);
-      articleTitle.setText(((SocialMedia) post).getMediaTitle());
-      relatedTo.setVisibility(View.GONE);
-
-      ImageLoader.with(context)
-          .load(((SocialMedia) post).getMediaThumbnailUrl(), thumbnail);
     } else if (post instanceof RatedRecommendation) {
       view = factory.inflate(R.layout.timeline_recommendation_preview, null);
       ImageView appIcon =
@@ -163,30 +154,6 @@ public class SharePreviewFactory {
       getApp.setText(spannableFactory.createColorSpan(
           context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
           ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (post instanceof SocialStore) {
-      view = factory.inflate(R.layout.timeline_store_preview, null);
-      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
-      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
-      TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
-
-      LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_container);
-
-      sharedStoreTitleName.setText(((SocialStore) post).getStoreName());
-      sharedStoreName.setText(((SocialStore) post).getStoreName());
-      ImageLoader.with(context)
-          .loadWithShadowCircleTransform(((SocialStore) post).getStoreAvatar(), sharedStoreAvatar);
-      View latestAppView;
-      ImageView latestAppIcon;
-      for (App latestApp : ((SocialStore) post).getApps()) {
-        latestAppView =
-            factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
-        latestAppIcon =
-            (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
-        ImageLoader.with(context)
-            .load(latestApp.getIcon(), latestAppIcon);
-        latestAppsContainer.addView(latestAppView);
-      }
     } else if (post instanceof PopularApp) {
       view = factory.inflate(R.layout.timeline_recommendation_preview, null);
       ImageView appIcon =
@@ -207,28 +174,6 @@ public class SharePreviewFactory {
       getApp.setText(spannableFactory.createColorSpan(
           context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
           ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (post instanceof AggregatedMedia) {
-      view = factory.inflate(R.layout.timeline_media_preview, null);
-
-      TextView articleTitle =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
-      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
-      ImageView playIcon = (ImageView) view.findViewById(R.id.play_button);
-
-      if (post.getType()
-          .equals(CardType.ARTICLE)) {
-        playIcon.setVisibility(View.GONE);
-      } else if (post.getType()
-          .equals(CardType.VIDEO)) {
-        playIcon.setVisibility(View.VISIBLE);
-      }
-      articleTitle.setMaxLines(1);
-      articleTitle.setText(((AggregatedMedia) post).getMediaTitle());
-      relatedTo.setVisibility(View.GONE);
-
-      ImageLoader.with(context)
-          .load(((AggregatedMedia) post).getMediaThumbnailUrl(), thumbnail);
     } else if (post instanceof AggregatedRecommendation) {
       view = factory.inflate(R.layout.timeline_recommendation_preview, null);
 
@@ -248,32 +193,8 @@ public class SharePreviewFactory {
       getApp.setText(spannableFactory.createColorSpan(
           context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
           ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (post instanceof AggregatedRecommendation) {
-      view = factory.inflate(R.layout.timeline_store_preview, null);
-      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
-      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
-      TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
-
-      LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_container);
-
-      sharedStoreTitleName.setText(((AggregatedStore) post).getStoreName());
-      sharedStoreName.setText(((AggregatedStore) post).getStoreName());
-      ImageLoader.with(context)
-          .loadWithShadowCircleTransform(((AggregatedStore) post).getStoreAvatar(),
-              sharedStoreAvatar);
-      View latestAppView;
-      ImageView latestAppIcon;
-      for (App latestApp : ((AggregatedStore) post).getApps()) {
-        latestAppView =
-            factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
-        latestAppIcon =
-            (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
-        ImageLoader.with(context)
-            .load(latestApp.getIcon(), latestAppIcon);
-        latestAppsContainer.addView(latestAppView);
-      }
     } else {
+      // TODO: 07/07/2017 return an error preview
       return null;
     }
 
@@ -291,6 +212,9 @@ public class SharePreviewFactory {
     TextView numberOfComments = (TextView) view.findViewById(R.id.social_number_of_comments);
     socialInfoBar = (LinearLayout) view.findViewById(R.id.social_info_bar);
     socialCommentBar = (LinearLayout) view.findViewById(R.id.social_latest_comment_bar);
+
+    setPreviewHeader(storeName, storeAvatar, userAvatar, userName, context);
+
     cardView.setRadius(8);
     cardView.setCardElevation(10);
     like.setOnClickListener(null);
@@ -305,5 +229,41 @@ public class SharePreviewFactory {
     socialCommentBar.setVisibility(View.GONE);
 
     return view;
+  }
+
+  private void setPreviewHeader(TextView storeName, ImageView storeAvatar, ImageView userAvatar,
+      TextView userName, Context context) {
+    if (accountManager.getAccount()
+        .getStoreName() != null) {
+      storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
+      if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
+        storeAvatar.setVisibility(View.VISIBLE);
+        userAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(accountManager.getAccount()
+                .getStoreAvatar(), storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(accountManager.getAccount()
+                .getAvatar(), userAvatar);
+        storeName.setText(accountManager.getAccount()
+            .getStoreName());
+        userName.setText(accountManager.getAccount()
+            .getNickname());
+      } else {
+        storeAvatar.setVisibility(View.VISIBLE);
+        userAvatar.setVisibility(View.INVISIBLE);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(accountManager.getAccount()
+                .getStoreAvatar(), storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(accountManager.getAccount()
+                .getAvatar(), userAvatar);
+        storeName.setText(accountManager.getAccount()
+            .getStoreName());
+        userName.setText(accountManager.getAccount()
+            .getNickname());
+        userName.setVisibility(View.GONE);
+      }
+    }
   }
 }

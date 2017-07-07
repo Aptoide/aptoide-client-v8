@@ -32,8 +32,8 @@ public class MinimalCardViewFactory {
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
-  private View getMinimalCardView(MinimalPost post, LayoutInflater inflater, Context context,
-      ViewGroup minimalCardContainer) {
+  private View getMinimalCardView(Post originalPost, MinimalPost post, LayoutInflater inflater,
+      Context context, ViewGroup minimalCardContainer) {
     View subCardView =
         inflater.inflate(R.layout.timeline_sub_minimal_card, minimalCardContainer, false);
     TextView minimalCardHeaderMainName = (TextView) subCardView.findViewById(R.id.card_title);
@@ -83,7 +83,7 @@ public class MinimalCardViewFactory {
     commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, CardTouchEvent.Type.COMMENT)));
     shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(post, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(originalPost, CardTouchEvent.Type.SHARE)));
     return subCardView;
   }
 
@@ -114,23 +114,24 @@ public class MinimalCardViewFactory {
     return headerNamesStringBuilder.toString();
   }
 
-  public View getView(List<MinimalPost> minimalPosts, LayoutInflater inflater, Context context) {
+  public View getView(Post originalPost, List<MinimalPost> minimalPosts, LayoutInflater inflater,
+      Context context) {
     LinearLayout minimalCardContainer = new LinearLayout(context);
 
     for (MinimalPost post : minimalPosts) {
       minimalCardContainer.addView(
-          getMinimalCardView(post, inflater, context, minimalCardContainer));
+          getMinimalCardView(originalPost, post, inflater, context, minimalCardContainer));
     }
     return minimalCardContainer;
   }
 
-  public View getView(List<Post> minimalCards, int numberOfCardsToShow, LayoutInflater inflater,
-      Context context) {
+  public View getView(Post originalPost, List<Post> minimalCards, int numberOfCardsToShow,
+      LayoutInflater inflater, Context context) {
     LinearLayout minimalCardContainer = new LinearLayout(context);
 
     for (int i = 0; i < numberOfCardsToShow && i < minimalCards.size(); i++) {
       minimalCardContainer.addView(
-          getMinimalCardView((MinimalPost) minimalCards.get(i), inflater, context,
+          getMinimalCardView(originalPost, (MinimalPost) minimalCards.get(i), inflater, context,
               minimalCardContainer));
     }
 

@@ -119,7 +119,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    sharePreviewFactory = new SharePreviewFactory();
+    sharePreviewFactory = new SharePreviewFactory(accountManager);
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     cardTouchEventPublishSubject = PublishSubject.create();
@@ -288,10 +288,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showSharePreview(Post post) {
-    shareDialog = new AlertDialog.Builder(getContext()).setMessage("Shared Card Preview")
+    shareDialog = new AlertDialog.Builder(getContext()).setTitle("Shared Card Preview")
+        .setMessage(R.string.social_timeline_you_will_share)
         .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
-        .setPositiveButton(android.R.string.ok,
+        .setPositiveButton(R.string.share,
             (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
+        .setNegativeButton(android.R.string.cancel, null)
         .create();
     shareDialog.show();
   }

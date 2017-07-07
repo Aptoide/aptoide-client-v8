@@ -133,8 +133,7 @@ public class TimelinePresenter implements Presenter {
                 .doOnCompleted(() -> view.showShareSuccessMessage())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
-        }, throwable -> {
-        });
+        }, throwable -> throwable.printStackTrace());
   }
 
   private void handleCardClickOnShareEvents() {
