@@ -108,7 +108,7 @@ public @ToString(of = { "state", "isIndeterminate" }) class Install {
   }
 
   public enum InstallationStatus {
-    INSTALLING, PAUSED, INSTALLED, UNINSTALLED, INSTALLATION_TIMEOUT, GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR,
+    INSTALLING, PAUSED, INSTALLED, UNINSTALLED, INSTALLATION_TIMEOUT, GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR, IN_QUEUE
   }
 
   public enum InstallationType {
