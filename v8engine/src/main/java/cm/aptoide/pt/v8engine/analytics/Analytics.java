@@ -10,8 +10,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BIUtmAnalyticsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BIUtmAnalyticsRequestBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
@@ -257,9 +257,9 @@ public class Analytics {
             .flatMap(facebookFirstLaunch -> {
               UTMTrackingBuilder utmTrackingBuilder =
                   new UTMTrackingBuilder(getTracking(application), getUTM());
-              BIUtmAnalyticsRequestBody body =
-                  new BIUtmAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
-              return BIUtmAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
+              BiUtmAnalyticsRequestBody body =
+                  new BiUtmAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
+              return BiUtmAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
                   okHttpClient, converterFactory, sharedPreferences, tokenInvalidator)
                   .observe();
             })

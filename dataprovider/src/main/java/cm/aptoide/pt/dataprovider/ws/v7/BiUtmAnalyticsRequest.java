@@ -12,14 +12,14 @@ import rx.Observable;
  * Created by pedroribeiro on 29/06/17.
  */
 
-public class BIUtmAnalyticsRequest extends V7<BaseV7Response, BIUtmAnalyticsRequestBody> {
+public class BiUtmAnalyticsRequest extends V7<BaseV7Response, BiUtmAnalyticsRequestBody> {
 
   private final String action;
   private final String name;
   private final String context;
 
-  private BIUtmAnalyticsRequest(String action, String name, String context,
-      BIUtmAnalyticsRequestBody body, OkHttpClient httpClient, Converter.Factory converterFactory,
+  private BiUtmAnalyticsRequest(String action, String name, String context,
+      BiUtmAnalyticsRequestBody body, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor bodyInterceptor, SharedPreferences sharedPreferences,
       TokenInvalidator tokenInvalidator) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
@@ -29,11 +29,11 @@ public class BIUtmAnalyticsRequest extends V7<BaseV7Response, BIUtmAnalyticsRequ
     this.context = context;
   }
 
-  public static BIUtmAnalyticsRequest of(String action, String eventName, String context,
-      BIUtmAnalyticsRequestBody body, BodyInterceptor<BaseBody> bodyInterceptor,
+  public static BiUtmAnalyticsRequest of(String action, String eventName, String context,
+      BiUtmAnalyticsRequestBody body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator) {
-    return new BIUtmAnalyticsRequest(action, eventName, context, body, httpClient, converterFactory,
+    return new BiUtmAnalyticsRequest(action, eventName, context, body, httpClient, converterFactory,
         bodyInterceptor, sharedPreferences, tokenInvalidator);
   }
 
