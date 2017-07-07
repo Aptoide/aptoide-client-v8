@@ -93,6 +93,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private AptoideAccountManager accountManager;
   private AlertDialog shareDialog;
   private SharePreviewFactory sharePreviewFactory;
+  private SpannableFactory spannableFactory;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -127,11 +128,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
+    spannableFactory = new SpannableFactory();
     adapter = new CardAdapter(Collections.emptyList(),
-        new CardViewHolderFactory(cardTouchEventPublishSubject, dateCalculator,
-            new SpannableFactory(),
-            new MinimalCardViewFactory(dateCalculator, cardTouchEventPublishSubject)),
-        new ProgressCard());
+        new CardViewHolderFactory(cardTouchEventPublishSubject, dateCalculator, spannableFactory,
+            new MinimalCardViewFactory(dateCalculator, spannableFactory,
+                cardTouchEventPublishSubject)), new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
   }

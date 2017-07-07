@@ -23,9 +23,9 @@
 
     <include layout="@layout/apps_timeline_multiple_heads_card_header"/>
 
-    <!--<include layout="@layout/social_last_comment_bar"/>-->
+    <include layout="@layout/social_last_comment_bar"/>
 
-    <!--<include layout="@layout/social_info_bar_timeline"/>-->
+    <include layout="@layout/social_info_bar_timeline"/>
 
 
     <View
