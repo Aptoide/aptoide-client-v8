@@ -104,4 +104,9 @@ public class TimelineNavigator implements TimelineNavigation {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineLikesFragment(cardId, numberOfLikes, "default", likesTitle));
   }
+
+  @Override public void navigateToComments(String cardId) {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId));
+  }
 }

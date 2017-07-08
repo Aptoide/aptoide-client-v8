@@ -155,6 +155,8 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
+    this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
   private void showHeaderSecondaryName(SocialMedia card) {

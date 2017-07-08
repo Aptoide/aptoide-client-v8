@@ -152,6 +152,8 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
+    this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */

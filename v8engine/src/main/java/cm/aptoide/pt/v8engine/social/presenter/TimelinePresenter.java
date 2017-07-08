@@ -104,6 +104,8 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnCommentEvent();
 
+    handleCardClickOnCommentsNumberEvent();
+
     handleCardClickOnShareEvents();
 
     handleSharePostConfirmationEvent();
@@ -125,6 +127,21 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handleCardClickOnCommentsNumberEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(create -> view.postClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.COMMENT_NUMBER))
+        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToComments(cardTouchEvent.getCard()
+            .getCardId()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+
+        }, throwable -> {
+        });
   }
 
   private void handleCardClickOnLikesPreviewEvent() {

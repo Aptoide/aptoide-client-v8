@@ -22,5 +22,5 @@ public class CardTouchEvent {
     return actionType;
   }
 
-  public enum Type {HEADER, LIKE, TIMELINE_STATS, LOGIN, COMMENT, SHARE, LIKES_PREVIEW, BODY}
+  public enum Type {HEADER, LIKE, TIMELINE_STATS, LOGIN, COMMENT, SHARE, LIKES_PREVIEW, COMMENT_NUMBER, BODY}
 }
