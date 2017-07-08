@@ -290,13 +290,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showSharePreview(Post post) {
-    shareDialog = new AlertDialog.Builder(getContext()).setTitle("Shared Card Preview")
-        .setMessage(R.string.social_timeline_you_will_share)
-        .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
-        .setPositiveButton(R.string.share,
-            (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
-        .setNegativeButton(android.R.string.cancel, null)
-        .create();
+    shareDialog =
+        new AlertDialog.Builder(getContext()).setTitle(R.string.timeline_title_shared_card_preview)
+            .setMessage(R.string.social_timeline_you_will_share)
+            .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
+            .setPositiveButton(R.string.share,
+                (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
+            .setNegativeButton(android.R.string.cancel, null)
+            .create();
     shareDialog.show();
   }
 
