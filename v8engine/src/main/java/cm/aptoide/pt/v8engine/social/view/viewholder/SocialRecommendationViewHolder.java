@@ -17,6 +17,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -149,6 +150,8 @@ public class SocialRecommendationViewHolder extends CardViewHolder<RatedRecommen
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+    this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
   }
 
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */

@@ -18,11 +18,13 @@ public class TimelineNavigator implements TimelineNavigation {
 
   private final FragmentNavigator fragmentNavigator;
   private AptoideAccountManager accountManager;
+  private String likesTitle;
 
   public TimelineNavigator(FragmentNavigator fragmentNavigator,
-      AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager, String likesTitle) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
+    this.likesTitle = likesTitle;
   }
 
   @Override
@@ -96,5 +98,10 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override public void navigateToFollowingViewUser(Long userId, String title) {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineFollowingFragmentUsingUserId(userId, "DEFAULT", title));
+  }
+
+  @Override public void navigateToLikesView(String cardId, long numberOfLikes) {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newTimeLineLikesFragment(cardId, numberOfLikes, "default", likesTitle));
   }
 }

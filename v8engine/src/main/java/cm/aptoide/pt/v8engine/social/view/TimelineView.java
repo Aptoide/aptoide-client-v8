@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.social.view;
 
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import java.util.List;
 import rx.Observable;

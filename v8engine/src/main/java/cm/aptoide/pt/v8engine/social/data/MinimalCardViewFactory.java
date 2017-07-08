@@ -123,6 +123,8 @@ public class MinimalCardViewFactory {
         new CardTouchEvent(post, CardTouchEvent.Type.COMMENT)));
     shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(originalPost, CardTouchEvent.Type.SHARE)));
+    this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesCardTouchEvent(post, post.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
     return subCardView;
   }
 

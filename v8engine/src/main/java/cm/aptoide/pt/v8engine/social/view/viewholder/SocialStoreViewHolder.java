@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialStore;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
@@ -161,6 +162,8 @@ public class SocialStoreViewHolder extends CardViewHolder<SocialStore> {
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+    this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
   }
 
   @NonNull private Spannable getStyledStoreName(SocialStore card) {

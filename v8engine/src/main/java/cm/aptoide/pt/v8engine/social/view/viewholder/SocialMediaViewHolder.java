@@ -17,6 +17,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
+import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialMedia;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -152,6 +153,8 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+    this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
   }
 
   private void showHeaderSecondaryName(SocialMedia card) {

@@ -21,6 +21,7 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
@@ -109,6 +110,8 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnStatsEvents();
 
+    handleCardClickOnLikesPreviewEvent();
+
     handleCardClickOnLoginEvent();
 
     showMoreCardsOnBottomReached();
@@ -122,6 +125,22 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handleCardClickOnLikesPreviewEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.LIKES_PREVIEW))
+        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(cardTouchEvent.getCard()
+            .getCardId(), ((LikesCardTouchEvent) cardTouchEvent).getLikesNumber()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+
+        }, throwable -> {
+
+        });
   }
 
   private void handleSharePostConfirmationEvent() {

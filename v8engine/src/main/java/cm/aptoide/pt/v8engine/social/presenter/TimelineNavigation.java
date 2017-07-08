@@ -31,4 +31,6 @@ public interface TimelineNavigation {
   void navigateToFollowingViewStore(Long storeId, String title);
 
   void navigateToFollowingViewUser(Long userId, String title);
+
+  void navigateToLikesView(String cardId, long numberOfLikes);
 }
