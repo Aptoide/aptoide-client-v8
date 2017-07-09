@@ -32,7 +32,7 @@ public class TaskQueue {
   }
 
   public Completable submitTask(Completable completable) {
-    return submitTask(completable.toSingle(() -> null)).toCompletable();
+    return submitTask(completable.toSingleDefault(0)).toCompletable();
   }
 
   public Completable submitTask(Action0 action0) {

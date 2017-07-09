@@ -5,6 +5,9 @@ import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import java.util.List;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * Created by neuro on 19-06-2017.
@@ -51,8 +54,10 @@ public class SpotAndShare {
     }, 10000);
   }
 
-  public void leaveGroup(OnSuccess onSuccess, OnError onError) {
-    // TODO: 19-06-2017 neuro
+  public void leaveGroup(Action0 onSuccess, Action1<? super Throwable> onError) {
+    hotspotManager.resetHotspot()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(onSuccess, onError);
   }
 
   public void sendApps(List<AndroidAppInfo> appsList) {
