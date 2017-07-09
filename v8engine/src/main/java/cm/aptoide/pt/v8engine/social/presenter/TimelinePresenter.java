@@ -325,7 +325,7 @@ public class TimelinePresenter implements Presenter {
               .equals(CardType.ARTICLE)) {
             ((Media) cardTouchEvent.getCard()).getPublisherLink()
                 .launch();
-          } else if (isSocialPost(cardTouchEvent)) {
+          } else if (isSocialPost(cardTouchEvent.getCard())) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
@@ -362,7 +362,7 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.BODY))
         .doOnNext(cardTouchEvent -> {
-          if (isMediaPost(cardTouchEvent)) {
+          if (isMediaPost(cardTouchEvent.getCard())) {
             ((Media) cardTouchEvent.getCard()).getMediaLink()
                 .launch();
           } else if (cardTouchEvent.getCard()
@@ -509,33 +509,22 @@ public class TimelinePresenter implements Presenter {
     view.showCards(cards);
   }
 
-  private boolean isMediaPost(CardTouchEvent cardTouchEvent) {
-    return cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.VIDEO) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.ARTICLE) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-        .getType()
+  private boolean isMediaPost(Post post) {
+    return post.getType()
+        .equals(CardType.VIDEO) || post.getType()
+        .equals(CardType.ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_VIDEO) || post.getType()
+        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || post.getType()
         .equals(CardType.AGGREGATED_SOCIAL_VIDEO);
   }
 
-  private boolean isSocialPost(CardTouchEvent cardTouchEvent) {
-    return cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
-        .getType()
+  private boolean isSocialPost(Post post) {
+    return post.getType()
+        .equals(CardType.SOCIAL_ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_VIDEO) || post.getType()
+        .equals(CardType.SOCIAL_STORE) || post.getType()
+        .equals(CardType.SOCIAL_RECOMMENDATION) || post.getType()
         .equals(CardType.SOCIAL_INSTALL);
   }
 
