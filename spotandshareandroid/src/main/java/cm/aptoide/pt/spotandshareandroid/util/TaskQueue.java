@@ -1,9 +1,10 @@
 package cm.aptoide.pt.spotandshareandroid.util;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import rx.Completable;
 import rx.Single;
+import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
 /**
@@ -26,21 +27,16 @@ public class TaskQueue {
     this.executorService = executorService;
   }
 
-  public <T> Single<T> submitTask(Single<T> observable) {
-    return observable.compose(
-        observable1 -> observable1.subscribeOn(Schedulers.from(executorService)));
+  public <T> Single<T> submitTask(Single<T> single) {
+    return single.compose(single1 -> single1.subscribeOn(Schedulers.from(executorService)));
   }
 
-  public void submitTask(Runnable runnable) {
-    submitTask(Single.fromCallable(() -> {
-      runnable.run();
-      return null;
-    })).subscribe(o -> {
-    }, Throwable::printStackTrace);
+  public Completable submitTask(Completable completable) {
+    return submitTask(completable.toSingle(() -> null)).toCompletable();
   }
 
-  public <T> Single<T> submitTask(Callable<T> callable) {
-    return submitTask(Single.fromCallable(callable));
+  public Completable submitTask(Action0 action0) {
+    return submitTask(Completable.fromAction(action0));
   }
 
   public void shutdown() {

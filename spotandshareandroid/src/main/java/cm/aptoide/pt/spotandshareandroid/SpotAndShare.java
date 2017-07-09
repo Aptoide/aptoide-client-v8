@@ -28,7 +28,7 @@ public class SpotAndShare {
     isGroupCreated(created -> {
       if (!created) {
         hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE)
-            .subscribe(aVoid -> onSuccess.onSuccess(DUMMY_UUID), throwable -> {
+            .subscribe(() -> onSuccess.onSuccess(DUMMY_UUID), throwable -> {
               //// TODO: 27-06-2017 filipe join the group that is already created
             });
       }

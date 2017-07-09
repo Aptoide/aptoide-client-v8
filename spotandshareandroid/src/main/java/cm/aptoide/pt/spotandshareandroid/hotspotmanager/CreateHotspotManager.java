@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshareandroid.util.TaskQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -31,14 +32,16 @@ class CreateHotspotManager {
     this.wifiConfigurationHelper = new WifiConfigurationHelper();
   }
 
-  public Single<Void> enablePrivateHotspot(String SSID, String password_aptoide) {
+  public Completable enablePrivateHotspot(String SSID, String password_aptoide) {
     return enableHotspot(wifiConfigurationHelper.newPrivateWifi(SSID, password_aptoide)).flatMap(
-        this::assertSuccessHotspotCreation);
+        this::assertSuccessHotspotCreation)
+        .toCompletable();
   }
 
-  public Single<Void> enableOpenHotspot(String SSID) {
+  public Completable enableOpenHotspot(String SSID) {
     return enableHotspot(wifiConfigurationHelper.newPublicWifi(SSID)).flatMap(
-        this::assertSuccessHotspotCreation);
+        this::assertSuccessHotspotCreation)
+        .toCompletable();
   }
 
   private Single<Void> assertSuccessHotspotCreation(int returnCode) {
@@ -111,9 +114,9 @@ class CreateHotspotManager {
     }));
   }
 
-  public Single<Void> resetHotspot() {
+  public Completable resetHotspot() {
 
-    return taskQueue.submitTask(Single.fromCallable(() -> {
+    return taskQueue.submitTask(Completable.fromAction(() -> {
       if (wifiConfiguration == null) {
         throw new IllegalStateException("WifiConfiguration is null!");
       }
@@ -150,8 +153,6 @@ class CreateHotspotManager {
           }
         }
       }
-
-      return null;
     }));
   }
 
