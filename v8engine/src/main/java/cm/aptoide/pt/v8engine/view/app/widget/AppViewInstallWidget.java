@@ -289,6 +289,9 @@ import rx.android.schedulers.AndroidSchedulers;
     switch (installationType) {
       case INSTALL:
         setupInstallOrBuyButton(displayable, getApp);
+        compositeSubscription.add(displayable.getInstallAppRelay()
+            .doOnNext(__ -> actionButton.performClick())
+            .subscribe());
         break;
       case UPDATE:
         //update

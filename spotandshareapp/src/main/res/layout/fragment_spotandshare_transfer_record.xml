@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
-  <TextView
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/spotandshare_toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="?attr/colorPrimary"
+      />
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/transfer_record_recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="20dp"
+      android:layout_marginRight="20dp"
+      android:scrollbars="vertical"
+      >
+  </android.support.v7.widget.RecyclerView>
+
+  <Button
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Hello this will be the transfer record"
+      android:text="@string/spotandshare_button_share_another_app"
       />
 
 </LinearLayout>

@@ -353,7 +353,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
-    attachPresenter(presenter, savedInstanceState);
+    attachPresenter(presenter, null);
     registerClickHandler(presenter);
   }
 

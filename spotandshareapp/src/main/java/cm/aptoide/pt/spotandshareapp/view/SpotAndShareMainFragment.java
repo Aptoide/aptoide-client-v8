@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
@@ -41,8 +41,6 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
   private Toolbar toolbar;
   private SpotAndShareMainFragmentPresenter presenter;
 
-  private SpotAndShare spotAndShare;
-
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareMainFragment();
     return fragment;
@@ -50,8 +48,6 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    spotAndShare = new SpotAndShare(getContext());
   }
 
   @Override public void finish() {
@@ -141,7 +137,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     username = (TextView) view.findViewById(R.id.username);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
-    presenter = new SpotAndShareMainFragmentPresenter(this, spotAndShare,
+    presenter = new SpotAndShareMainFragmentPresenter(this, SpotAndShare.getInstance(getContext()),
         new SpotAndShareUserManager(new SpotAndShareUserPersister(
             getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE))));

@@ -83,6 +83,7 @@ public class MainPresenter implements Presenter {
         .doOnNext(__ -> navigate())
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+
     setupInstallErrorsDisplay();
   }
 

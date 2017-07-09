@@ -309,6 +309,11 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Path(value = "action") String action, @Path(value = "context") String context,
         @retrofit2.http.Body AnalyticsEventRequest.Body body);
 
+    @POST("user/addEvent/name={name}/action={action}/context={context}")
+    Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
+        @Path(value = "action") String action, @Path(value = "context") String context,
+        @retrofit2.http.Body BiUtmAnalyticsRequestBody body);
+
     @POST("user/shareTimeline/access_token={accessToken}") Observable<ShareCardResponse> shareCard(
         @retrofit2.http.Body ShareCardRequest.Body body,
         @Path(value = "accessToken") String accessToken);

@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.search;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -103,9 +102,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    searchAbTest = ABTestManager.getInstance()
+    searchAbTest = ((V8Engine) getContext().getApplicationContext()).getABTestManager()
         .get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();

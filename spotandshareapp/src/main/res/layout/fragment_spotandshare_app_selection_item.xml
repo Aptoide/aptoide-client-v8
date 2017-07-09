@@ -5,8 +5,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/spot_and_share_app_selection_item_selector"
     android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     >
 
   <LinearLayout

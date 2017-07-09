@@ -11,17 +11,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
+import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by filipe on 12-06-2017.
@@ -35,7 +37,9 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private Toolbar toolbar;
   private PublishRelay<Void> backRelay;
   private ClickHandler clickHandler;
-  private RxAlertDialog warningDialog;
+  private RxAlertDialog backDialog;
+
+  private PublishSubject<AppModel> appSubject;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareAppSelectionFragment();
@@ -45,6 +49,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     backRelay = PublishRelay.create();
+    appSubject = PublishSubject.create();
   }
 
   @Override public void finish() {
@@ -52,7 +57,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void setupRecyclerView(List<AppModel> installedApps) {
-    adapter = new SpotAndShareAppSelectionAdapter(getContext().getApplicationContext(),
+    adapter = new SpotAndShareAppSelectionAdapter(appSubject,
         new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
         installedApps);
     recyclerView.setAdapter(adapter);
@@ -60,21 +65,42 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     recyclerView.setHasFixedSize(true);
   }
 
-  @Override public void setupAppSelection(AppSelectionListener appSelectionListener) {
-    adapter.setListener(appSelectionListener);
-  }
-
   @Override public Observable<Void> backButtonEvent() {
     return backRelay;
   }
 
   @Override public void showExitWarning() {
-    warningDialog.show();
+    backDialog.show();
   }
 
   @Override public Observable<Void> exitEvent() {
-    return warningDialog.positiveClicks()
+    return backDialog.positiveClicks()
         .map(dialogInterface -> null);
+  }
+
+  @Override public void navigateBack() {
+    getFragmentNavigator().popBackStack();
+  }
+
+  @Override public void onLeaveGroupError() {
+    Toast.makeText(getContext(), "There was an error while trying to leave the group",
+        Toast.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public Observable<AppModel> appSelection() {
+    return appSubject;
+  }
+
+  @Override public void openTransferRecord() {
+    getFragmentNavigator().navigateToWithoutBackSave(
+        SpotAndShareTransferRecordFragment.newInstance());
+  }
+
+  @Override public void openWaitingToSendScreen() {
+    //// TODO: 07-07-2017 filipe create waiting to send screen
+    getFragmentNavigator().navigateToWithoutBackSave(
+        SpotAndShareWaitingToSendFragment.newInstance());
   }
 
   private void setupLayoutManager() {
@@ -100,14 +126,14 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
       return true;
     };
     registerClickHandler(clickHandler);
-    warningDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+    backDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.spotandshare_message_leave_group_warning)
         .setPositiveButton(R.string.spotandshare_button_leave_group)
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
     attachPresenter(new SpotAndShareAppSelectionPresenter(this,
         new InstalledRepositoryDummy(getContext().getPackageManager()),
-        new SpotAndShare(getContext())), savedInstanceState);
+        SpotAndShare.getInstance(getContext())), savedInstanceState);
   }
 
   private void setupToolbar() {
@@ -119,12 +145,19 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void onDestroyView() {
-    adapter = null;
-    recyclerView = null;
     toolbar = null;
     unregisterClickHandler(clickHandler);
     clickHandler = null;
+    backDialog = null;
+    adapter = null;
+    recyclerView = null;
     super.onDestroyView();
+  }
+
+  @Override public void onDestroy() {
+    backRelay = null;
+    appSubject = null;
+    super.onDestroy();
   }
 
   @Nullable @Override
@@ -135,6 +168,9 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    return super.onOptionsItemSelected(item);
+    if (item.getItemId() == android.R.id.home) {
+      backRelay.call(null);
+    }
+    return false;
   }
 }

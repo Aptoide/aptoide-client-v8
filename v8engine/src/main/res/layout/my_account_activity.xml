@@ -62,7 +62,6 @@
               android:layout_height="74dp"
               android:layout_margin="16dp"
               android:foregroundGravity="center"
-              app:srcCompat="@drawable/create_user_avatar"
               />
 
           <LinearLayout

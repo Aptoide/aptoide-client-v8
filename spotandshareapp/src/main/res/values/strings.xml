@@ -16,4 +16,8 @@
   <string name="spotandshare_message_leave_group_warning">Are you sure you want to leave this group?</string>
   <string name="spotandshare_button_leave_group">Leave</string>
   <string name="spotandshare_button_cancel_leave_group">cancel</string>
+  <string name="spotandshare_button_share_another_app">Share an app</string>
+  <string name="spotandshare_message_instruction_for_friend_to_receive">Your friend should go to Spot&amp;Share and press Receive</string>
+  <string name="spotandshare_message_looking_for_a_friend_to_receive_app">Looking for a friend to receive app</string>
+  <string name="spotandshare_mesage_sending_app">Sending</string>
 </resources>
