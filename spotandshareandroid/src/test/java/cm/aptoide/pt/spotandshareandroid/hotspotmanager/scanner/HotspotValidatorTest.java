@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid.hotspotmanager.scanner;
 
+import cm.aptoide.pt.spotandshareandroid.hotspotmanager.MultiRulesValidator;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.Validator;
 import java.util.Arrays;
 import java.util.Collections;

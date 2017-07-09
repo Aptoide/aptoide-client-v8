@@ -1,6 +1,5 @@
-package cm.aptoide.pt.spotandshareandroid.hotspotmanager.scanner;
+package cm.aptoide.pt.spotandshareandroid.hotspotmanager;
 
-import cm.aptoide.pt.spotandshareandroid.hotspotmanager.Validator;
 import java.util.Iterator;
 import java.util.List;
 
