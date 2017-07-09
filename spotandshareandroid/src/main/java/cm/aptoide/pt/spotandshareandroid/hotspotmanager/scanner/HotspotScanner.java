@@ -13,7 +13,7 @@ import java.util.List;
  * Created by filipe on 26-06-2017.
  */
 
-public class HotspotScanner implements ScanResultsReceiver.OnScanResults {
+public class HotspotScanner {
 
   private final Context context;
   private final WifiManager wifimanager;
@@ -30,19 +30,14 @@ public class HotspotScanner implements ScanResultsReceiver.OnScanResults {
     this(context, wifimanager, new LinkedList<>());
   }
 
-  public void scan() {
-    registerScannerBroadcast();
+  public void scan(ScanResultsReceiver.OnScanResults onScanResults) {
+    registerScannerBroadcast(onScanResults);
     wifimanager.startScan();
   }
 
-  private void registerScannerBroadcast() {
+  private void registerScannerBroadcast(ScanResultsReceiver.OnScanResults onScanResults) {
     context.registerReceiver(
-        new ScanResultsReceiver(wifimanager, new MultiRulesValidator<>(validators), this),
+        new ScanResultsReceiver(wifimanager, new MultiRulesValidator<>(validators), onScanResults),
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-  }
-
-  @Override public void onScanResults(List<Hotspot> hotspots) {
-    System.out.println("onScanResults called !");
-    System.out.println(hotspots);
   }
 }
