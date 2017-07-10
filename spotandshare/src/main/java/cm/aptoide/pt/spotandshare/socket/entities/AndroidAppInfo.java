@@ -25,8 +25,15 @@ import lombok.experimental.Accessors;
     this.appName = appName;
     this.packageName = packageName;
     this.apk = new FileInfo(apk);
-    this.mainObb = new FileInfo(mainObb);
-    this.patchObb = new FileInfo(patchObb);
+
+    if (mainObb != null) {
+      this.mainObb = new FileInfo(mainObb);
+    }
+
+    if (patchObb != null) {
+      this.patchObb = new FileInfo(patchObb);
+    }
+
     this.icon = icon;
 
     fileInfos = buildFileInfos();
@@ -62,8 +69,12 @@ import lombok.experimental.Accessors;
     List<FileInfo> fileInfos = new LinkedList<>();
 
     fileInfos.add(apk);
-    fileInfos.add(mainObb);
-    fileInfos.add(patchObb);
+    if (mainObb != null) {
+      fileInfos.add(mainObb);
+    }
+    if (patchObb != null) {
+      fileInfos.add(patchObb);
+    }
 
     return Collections.unmodifiableList(fileInfos);
   }
