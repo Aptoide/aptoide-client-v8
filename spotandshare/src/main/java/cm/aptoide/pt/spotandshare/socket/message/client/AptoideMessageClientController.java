@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.AptoideMessageController;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.handlers.v1.DefaultClientHandlersListV1;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import java.io.IOException;
@@ -20,8 +21,8 @@ public class AptoideMessageClientController extends AptoideMessageController
   public AptoideMessageClientController(AptoideMessageClientSocket aptoideMessageClientSocket,
       String rootDir, StorageCapacity storageCapacity,
       FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
-      OnError<IOException> onError) {
+      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter) {
     super(DefaultClientHandlersListV1.create(rootDir, storageCapacity, fileLifecycleProvider,
-        aptoideMessageClientSocket, socketBinder), onError);
+        aptoideMessageClientSocket, socketBinder, androidAppInfoAccepter), onError);
   }
 }

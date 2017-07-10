@@ -233,7 +233,8 @@ public class ServerService extends Service {
         // TODO: 07-04-2017 asdsadefeqf neuro Filipe onError sff lol
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
-                storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE);
+                storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
+                androidAppInfoAccepter -> androidAppInfoAccepter.accept());
         aptoideMessageClientSocket.startAsync();
       } else if (intent.getAction() != null && intent.getAction()
           .equals("SEND")) {

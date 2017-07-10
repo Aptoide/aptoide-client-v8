@@ -8,6 +8,7 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import java.io.IOException;
 import java.net.Socket;
@@ -22,21 +23,23 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
 
   public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
-      SocketBinder socketBinder, OnError<IOException> onError, int timeout) {
+      SocketBinder socketBinder, OnError<IOException> onError, int timeout,
+      AndroidAppInfoAccepter androidAppInfoAccepter) {
     super(host, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
-            socketBinder, onError);
+            socketBinder, onError, androidAppInfoAccepter);
     this.onError = onError;
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
-      SocketBinder socketBinder, OnError<IOException> onError, int timeout) {
+      SocketBinder socketBinder, OnError<IOException> onError, int timeout,
+      AndroidAppInfoAccepter androidAppInfoAccepter) {
     super(host, fallbackHostName, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
-            socketBinder, onError);
+            socketBinder, onError, androidAppInfoAccepter);
     this.onError = onError;
   }
 

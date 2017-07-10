@@ -221,7 +221,8 @@ public class ClientService extends Service {
         // TODO: 07-04-2017 asdsadefeqf neuro Filipe onError sff lol
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
-                storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE);
+                storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
+                androidAppInfoAccepter -> androidAppInfoAccepter.accept());
         aptoideMessageClientSocket.setSocketBinder(socketBinder);
         aptoideMessageClientSocket.startAsync();
 

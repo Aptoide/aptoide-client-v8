@@ -10,6 +10,8 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.MessageHandler;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.AckMessage;
@@ -70,14 +72,17 @@ public class HandlersFactoryV1 {
     private final StorageCapacity storageCapacity;
     private final FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
     private final SocketBinder socketBinder;
+    private final AndroidAppInfoAccepter androidAppInfoAccepter;
 
     public ReceiveApkHandler(String root, StorageCapacity storageCapacity,
-        FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder) {
+        FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
+        AndroidAppInfoAccepter androidAppInfoAccepter) {
       super(ReceiveApk.class);
       this.root = root;
       this.storageCapacity = storageCapacity;
       this.fileLifecycleProvider = fileLifecycleProvider;
       this.socketBinder = socketBinder;
+      this.androidAppInfoAccepter = androidAppInfoAccepter;
     }
 
     String changeFilesRootDir(AndroidAppInfo androidAppInfo) {
@@ -92,28 +97,35 @@ public class HandlersFactoryV1 {
     }
 
     @Override public void handleMessage(ReceiveApk receiveApk, Sender<Message> messageSender) {
-      AckMessage ackMessage = new AckMessage(messageSender.getHost());
       AndroidAppInfo androidAppInfo = receiveApk.getAndroidAppInfo();
-      if (storageCapacity.hasCapacity(androidAppInfo.getFilesSize())) {
-        ackMessage.setSuccess(true);
 
-        messageSender.send(ackMessage);
-        Host receiveApkServerHost = receiveApk.getServerHost();
+      androidAppInfoAccepter.call(new Accepter<AndroidAppInfo>() {
+        @Override public AndroidAppInfo getMeta() {
+          return androidAppInfo;
+        }
 
-        String generatedRoot = changeFilesRootDir(androidAppInfo);
-        boolean mkdirs = new File(generatedRoot).mkdirs();
+        @Override public void accept() {
+          if (storageCapacity.hasCapacity(androidAppInfo.getFilesSize())) {
+            Host receiveApkServerHost = receiveApk.getServerHost();
 
-        ShareAppsFileClientSocket shareAppsFileClientSocket =
-            new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
-                receiveApkServerHost.getPort(), androidAppInfo.getFiles());
+            String generatedRoot = ReceiveApkHandler.this.changeFilesRootDir(androidAppInfo);
+            boolean mkdirs = new File(generatedRoot).mkdirs();
 
-        shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo,
-            fileLifecycleProvider.newFileClientLifecycle());
-        shareAppsFileClientSocket.setSocketBinder(socketBinder);
-        shareAppsFileClientSocket.startAsync();
-      } else {
-        messageSender.send(ackMessage);
-      }
+            ShareAppsFileClientSocket shareAppsFileClientSocket =
+                new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
+                    receiveApkServerHost.getPort(), androidAppInfo.getFiles());
+
+            shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo,
+                fileLifecycleProvider.newFileClientLifecycle());
+            shareAppsFileClientSocket.setSocketBinder(socketBinder);
+            shareAppsFileClientSocket.startAsync();
+          }
+        }
+      });
+
+      AckMessage ackMessage = new AckMessage(messageSender.getHost());
+      ackMessage.setSuccess(false);
+      messageSender.send(ackMessage);
     }
   }
 
