@@ -109,6 +109,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private SpannableFactory spannableFactory;
   private TabNavigator tabNavigator;
   private String cardIdPriority;
+  private TimelineAnalytics timelineAnalytics;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -189,6 +190,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()),
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+        WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId(), sharedPreferences);
     attachPresenter(new TimelinePresenter(this, new Timeline(
         new TimelineService(getArguments().getString(ACTION_KEY), cardIdPriority, userId,
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
@@ -208,14 +215,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             WebService.getDefaultConverter(),
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-        new StoreCredentialsProviderImpl(), accountManager,
-        new TimelineAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
-            .getAppId(), sharedPreferences), userId, storeId, storeContext,
-        getContext().getResources()), savedInstanceState);
+        new StoreCredentialsProviderImpl(), accountManager, timelineAnalytics, userId, storeId,
+        storeContext, getContext().getResources()), savedInstanceState);
   }
 
   @Override public void showCards(List<Post> cards) {
@@ -339,7 +340,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
             .setPositiveButton(R.string.share,
                 (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(android.R.string.cancel,
+                (dialogInterface, i) -> timelineAnalytics.sendSocialCardPreviewActionEvent(
+                    TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL))
             .create();
     shareDialog.show();
   }
