@@ -14,7 +14,7 @@ public class HotspotManager {
 
   @Delegate private final JoinHotspotManager joinHotspotManager;
   @Delegate private final CreateHotspotManager createHotspotManager;
-  private final NetworkStateManager networkStateManager;
+  @Delegate private final NetworkStateManager networkStateManager;
   @Delegate private final HotspotScanner hotspotScanner;
 
   private final TaskQueue taskQueue;
