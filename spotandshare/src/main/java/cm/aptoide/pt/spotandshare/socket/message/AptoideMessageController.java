@@ -132,6 +132,10 @@ public abstract class AptoideMessageController implements Sender<Message> {
     onError = null;
   }
 
+  public boolean isEnabled() {
+    return onError != null;
+  }
+
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
 
     Print.d(TAG, "sendWithAck() called with: message = [" + message + "], " + message.getClass()

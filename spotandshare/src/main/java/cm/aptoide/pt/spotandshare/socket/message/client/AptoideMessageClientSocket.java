@@ -78,6 +78,10 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
     onError = null;
   }
 
+  public boolean isEnabled() {
+    return aptoideMessageController.isEnabled();
+  }
+
   public void send(Message message) {
     aptoideMessageController.send(message);
   }
