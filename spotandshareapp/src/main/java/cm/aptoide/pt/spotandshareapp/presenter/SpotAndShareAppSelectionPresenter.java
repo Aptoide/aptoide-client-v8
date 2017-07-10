@@ -5,6 +5,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareAppSelectionManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -22,12 +23,15 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private final SpotAndShare spotAndShare;
   private InstalledRepositoryDummy installedRepositoryDummy;
   private List<AppModel> selectedApps;
+  private SpotAndShareAppSelectionManager spotAndShareAppSelectionManager;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
-      InstalledRepositoryDummy installedRepositoryDummy, SpotAndShare spotAndShare) {
+      InstalledRepositoryDummy installedRepositoryDummy, SpotAndShare spotAndShare,
+      SpotAndShareAppSelectionManager spotAndShareAppSelectionManager) {
     this.view = view;
     this.installedRepositoryDummy = installedRepositoryDummy;
     this.spotAndShare = spotAndShare;
+    this.spotAndShareAppSelectionManager = spotAndShareAppSelectionManager;
     selectedApps = new LinkedList<>();
   }
 
@@ -84,7 +88,11 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
       String packageName = appModel.getPackageName();
       File apk = new File(appModel.getFilePath());
 
-      AndroidAppInfo androidAppInfo = new AndroidAppInfo(appName, packageName, apk);
+      byte[] bitmapdata =
+          spotAndShareAppSelectionManager.convertDrawableToBitmap(appModel.getAppIcon());
+
+      AndroidAppInfo androidAppInfo =
+          new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata);
       spotAndShare.sendApps(Collections.singletonList(androidAppInfo));
 
       view.openTransferRecord();

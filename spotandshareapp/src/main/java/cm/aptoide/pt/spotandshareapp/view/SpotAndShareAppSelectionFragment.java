@@ -17,6 +17,7 @@ import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareAppSelectionManager;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -132,8 +133,9 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
     attachPresenter(new SpotAndShareAppSelectionPresenter(this,
-        new InstalledRepositoryDummy(getContext().getPackageManager()),
-        SpotAndShare.getInstance(getContext())), savedInstanceState);
+            new InstalledRepositoryDummy(getContext().getPackageManager()),
+            SpotAndShare.getInstance(getContext()), new SpotAndShareAppSelectionManager()),
+        savedInstanceState);
   }
 
   private void setupToolbar() {
