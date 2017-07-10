@@ -89,7 +89,7 @@ public class HandlersFactoryV1 {
       String packageName = androidAppInfo.getPackageName();
       String rootToFiles = root + File.separatorChar + packageName;
 
-      for (FileInfo fileInfo : androidAppInfo.getFiles()) {
+      for (FileInfo fileInfo : androidAppInfo.getFileInfos()) {
         fileInfo.setParentDirectory(rootToFiles);
       }
 
@@ -113,7 +113,7 @@ public class HandlersFactoryV1 {
 
             ShareAppsFileClientSocket shareAppsFileClientSocket =
                 new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
-                    receiveApkServerHost.getPort(), androidAppInfo.getFiles());
+                    receiveApkServerHost.getPort(), androidAppInfo.getFileInfos());
 
             shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo,
                 fileLifecycleProvider.newFileClientLifecycle());

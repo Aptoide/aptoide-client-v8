@@ -3,41 +3,41 @@ package cm.aptoide.pt.spotandshare.socket.entities;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Created by neuro on 27-01-2017.
  */
-@Data public class AndroidAppInfo implements Serializable {
+@Data @Accessors(chain = true) public class AndroidAppInfo implements Serializable {
 
+  private final String appName;
+  private final String packageName;
+  private final List<FileInfo> fileInfos;
   private FileInfo apk, mainObb, patchObb;
-  private String appName;
-  private String packageName;
-  private List<FileInfo> fileInfos;
+  private String senderName;
 
   public AndroidAppInfo(String appName, String packageName, File apk, File mainObb, File patchObb) {
-    this(appName, packageName, apk, mainObb);
-    this.patchObb = new FileInfo(patchObb);
-  }
-
-  public AndroidAppInfo(String appName, String packageName, File apk, File mainObb) {
-    this(appName, packageName, apk);
-    this.mainObb = new FileInfo(mainObb);
-  }
-
-  public AndroidAppInfo(String appName, String packageName, File apk) {
     this.appName = appName;
     this.packageName = packageName;
     this.apk = new FileInfo(apk);
-    this.fileInfos = parseFileInfos(apk);
+    this.mainObb = new FileInfo(mainObb);
+    this.patchObb = new FileInfo(patchObb);
+
+    fileInfos = buildFileInfos();
   }
 
-  private List<FileInfo> parseFileInfos(File apk) {
-    return Collections.singletonList(new FileInfo(apk));
+  public AndroidAppInfo(String appName, String packageName, File apk, File mainObb) {
+    this(appName, packageName, apk, mainObb, null);
   }
 
-  public AndroidAppInfo(String appName, String packageName, List<FileInfo> fileInfos) {
+  public AndroidAppInfo(String appName, String packageName, File apk) {
+    this(appName, packageName, apk, null, null);
+  }
+
+  @Deprecated public AndroidAppInfo(String appName, String packageName, List<FileInfo> fileInfos) {
     this.fileInfos = fileInfos;
     this.packageName = packageName;
     this.appName = appName;
@@ -55,8 +55,14 @@ import lombok.Data;
     return null;
   }
 
-  public List<FileInfo> getFiles() {
-    return fileInfos;
+  private List<FileInfo> buildFileInfos() {
+    List<FileInfo> fileInfos = new LinkedList<>();
+
+    fileInfos.add(apk);
+    fileInfos.add(mainObb);
+    fileInfos.add(patchObb);
+
+    return Collections.unmodifiableList(fileInfos);
   }
 
   public long getFilesSize() {

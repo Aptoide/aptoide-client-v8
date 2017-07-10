@@ -11,10 +11,10 @@ public class ShareAppsFileServerSocket extends AptoideFileServerSocket<AndroidAp
   static final int TIMEOUT = 5000;
 
   public ShareAppsFileServerSocket(int port, AndroidAppInfo androidAppInfo) {
-    super(port, androidAppInfo.getFiles(), SERVER_SOCKET_TIMEOUT, TIMEOUT);
+    super(port, androidAppInfo.getFileInfos(), SERVER_SOCKET_TIMEOUT, TIMEOUT);
   }
 
   public ShareAppsFileServerSocket(int bufferSize, int port, AndroidAppInfo androidAppInfo) {
-    super(bufferSize, port, androidAppInfo.getFiles(), SERVER_SOCKET_TIMEOUT, TIMEOUT);
+    super(bufferSize, port, androidAppInfo.getFileInfos(), SERVER_SOCKET_TIMEOUT, TIMEOUT);
   }
 }
