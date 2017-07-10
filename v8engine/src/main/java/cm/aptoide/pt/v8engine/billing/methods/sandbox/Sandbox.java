@@ -6,14 +6,14 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import rx.Completable;
 
-public class SandboxPaymentMethod implements PaymentMethod {
+public class Sandbox implements PaymentMethod {
 
   private final int id;
   private final String name;
   private final String description;
   private final TransactionRepository transactionRepository;
 
-  public SandboxPaymentMethod(int id, String name, String description,
+  public Sandbox(int id, String name, String description,
       TransactionRepository transactionRepository) {
     this.id = id;
     this.name = name;

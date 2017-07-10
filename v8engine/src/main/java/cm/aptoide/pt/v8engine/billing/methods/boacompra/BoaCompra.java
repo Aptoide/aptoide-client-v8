@@ -11,7 +11,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class BoaCompraPaymentMethod implements PaymentMethod {
+public class BoaCompra implements PaymentMethod {
 
   private final int id;
   private final String name;
@@ -19,7 +19,7 @@ public class BoaCompraPaymentMethod implements PaymentMethod {
   private final TransactionRepository transactionRepository;
   private final AuthorizationRepository authorizationRepository;
 
-  public BoaCompraPaymentMethod(int id, String name, String description,
+  public BoaCompra(int id, String name, String description,
       TransactionRepository transactionRepository,
       AuthorizationRepository authorizationRepository) {
     this.id = id;

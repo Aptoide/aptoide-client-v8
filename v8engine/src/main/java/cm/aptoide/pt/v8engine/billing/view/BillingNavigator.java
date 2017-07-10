@@ -7,8 +7,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.methods.mol.MolPointsPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompra;
+import cm.aptoide.pt.v8engine.billing.methods.mol.MolPoints;
+import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPal;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
@@ -36,18 +37,24 @@ public class BillingNavigator {
 
   public void navigateToTransactionAuthorizationView(PaymentMethod paymentMethod, Product product) {
 
-    if (paymentMethod instanceof PayPalPaymentMethod) {
+    if (paymentMethod instanceof PayPal) {
       fragmentNavigator.navigateTo(PayPalFragment.create(getProductBundle(product)));
       return;
     }
 
-    if (paymentMethod instanceof MolPointsPaymentMethod) {
+    if (paymentMethod instanceof MolPoints) {
       fragmentNavigator.navigateTo(MolFragment.create(getProductBundle(product)));
       return;
     }
 
-    fragmentNavigator.navigateTo(
-        BoaCompraFragment.create(getProductBundle(product), paymentMethod .getId()));
+    if (paymentMethod instanceof BoaCompra) {
+      fragmentNavigator.navigateTo(
+          BoaCompraFragment.create(getProductBundle(product), paymentMethod.getId()));
+    }
+
+    throw new IllegalArgumentException("Invalid payment method id "
+        + paymentMethod.getId()
+        + " can not navigate to authorization view");
   }
 
   public void popAuthorizedPaymentView() {

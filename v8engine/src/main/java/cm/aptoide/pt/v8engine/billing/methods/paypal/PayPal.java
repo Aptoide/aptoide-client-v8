@@ -12,14 +12,14 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedExcept
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import rx.Completable;
 
-public class PayPalPaymentMethod implements PaymentMethod {
+public class PayPal implements PaymentMethod {
 
   private final int id;
   private final String name;
   private final String description;
   private final TransactionRepository transactionRepository;
 
-  public PayPalPaymentMethod(int id, String name, String description,
+  public PayPal(int id, String name, String description,
       TransactionRepository transactionRepository) {
     this.id = id;
     this.name = name;

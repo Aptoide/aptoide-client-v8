@@ -8,10 +8,10 @@ package cm.aptoide.pt.v8engine.billing;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
 import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
-import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraPaymentMethod;
-import cm.aptoide.pt.v8engine.billing.methods.mol.MolPointsPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompra;
+import cm.aptoide.pt.v8engine.billing.methods.mol.MolPoints;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolTransaction;
-import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPal;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
@@ -111,9 +111,9 @@ public class Billing {
 
   public Completable processPayPalPayment(Product product, String payPalConfirmationId) {
     return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
-        .filter(payment -> payment instanceof PayPalPaymentMethod)
+        .filter(payment -> payment instanceof PayPal)
         .first()
-        .cast(PayPalPaymentMethod.class)
+        .cast(PayPal.class)
         .toSingle()
         .flatMapCompletable(payment -> payment.processLocal(product, payPalConfirmationId));
   }
@@ -135,19 +135,19 @@ public class Billing {
         });
   }
 
-  private Single<BoaCompraPaymentMethod> getBoaCompraPaymentMethod(Product product) {
+  private Single<BoaCompra> getBoaCompraPaymentMethod(Product product) {
     return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
-        .filter(payment -> payment instanceof BoaCompraPaymentMethod)
+        .filter(payment -> payment instanceof BoaCompra)
         .first()
-        .cast(BoaCompraPaymentMethod.class)
+        .cast(BoaCompra.class)
         .toSingle();
   }
 
-  private Single<MolPointsPaymentMethod> getMolPaymentMethod(Product product) {
+  private Single<MolPoints> getMolPaymentMethod(Product product) {
     return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
-        .filter(payment -> payment instanceof MolPointsPaymentMethod)
+        .filter(payment -> payment instanceof MolPoints)
         .first()
-        .cast(MolPointsPaymentMethod.class)
+        .cast(MolPoints.class)
         .toSingle();
   }
 }
