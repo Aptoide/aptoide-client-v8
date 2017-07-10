@@ -2,6 +2,7 @@ package cm.aptoide.pt.spotandshare.socket.entities;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import lombok.Data;
 
@@ -29,6 +30,11 @@ import lombok.Data;
     this.appName = appName;
     this.packageName = packageName;
     this.apk = new FileInfo(apk);
+    this.fileInfos = parseFileInfos(apk);
+  }
+
+  private List<FileInfo> parseFileInfos(File apk) {
+    return Collections.singletonList(new FileInfo(apk));
   }
 
   public AndroidAppInfo(String appName, String packageName, List<FileInfo> fileInfos) {
