@@ -87,6 +87,11 @@ public class RxAlertDialog implements DialogInterface {
       return this;
     }
 
+    public Builder setTitle(@StringRes int titleId) {
+      builder.setTitle(titleId);
+      return this;
+    }
+
     public Builder setMessage(@StringRes int messageId) {
       builder.setMessage(messageId);
       return this;

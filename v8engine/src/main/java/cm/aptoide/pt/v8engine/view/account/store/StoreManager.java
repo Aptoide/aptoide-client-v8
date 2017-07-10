@@ -13,7 +13,10 @@ import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
+import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
+import cm.aptoide.pt.v8engine.view.account.exception.StoreCreationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -58,17 +61,17 @@ public class StoreManager {
   }
 
   public Completable createOrUpdate(long storeId, String storeName, String storeDescription,
-      String storeImage, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
+      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
     return Completable.defer(() -> {
       if (storeExists) {
-        return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
+        return updateStore(storeId, storeName, storeDescription, storeImagePath, hasNewAvatar,
             storeThemeName);
       }
-      return createStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
+      return createStore(storeId, storeName, storeDescription, storeImagePath, hasNewAvatar,
           storeThemeName);
     })
         .onErrorResumeNext(err -> {
-          if (err instanceof StoreCreationError || err instanceof NetworkError) {
+          if (err instanceof StoreCreationException || err instanceof InvalidImageException) {
             return Completable.error(err);
           }
           if (err instanceof AptoideWsV7Exception) {
@@ -77,9 +80,12 @@ public class StoreManager {
                 .get(0)
                 .getCode()
                 .equals(ERROR_API_1)) {
-              return Completable.error(new NetworkError());
+              return Completable.error(new InvalidImageException(
+                  Collections.singletonList(InvalidImageException.ImageError.API_ERROR)));
             } else {
-              return Completable.error(new NetworkError(err.getMessage()));
+              return Completable.error(new InvalidImageException(
+                  Collections.singletonList(InvalidImageException.ImageError.API_ERROR),
+                  err.getMessage()));
             }
           }
 
@@ -108,17 +114,16 @@ public class StoreManager {
             .flatMap(data -> {
               final List<ErrorResponse> errors = data.getErrors();
               if (errors != null && !errors.isEmpty() && errors.get(0).code.equals(ERROR_CODE_2)) {
-                return Single.error(new StoreCreationError());
+                return Single.error(new StoreCreationException());
               } else if (errors != null && errors.size() > 0 && errors.get(0).code.equals(
                   ERROR_CODE_3)) {
-                return Single.error(new StoreCreationErrorWithCode(errors.get(0).code));
+                return Single.error(new StoreCreationException(errors.get(0).code));
               }
 
               return Single.just(data);
             }))
         .flatMapCompletable(data -> {
           // TODO use response store ID to upload image
-          // data.repo
 
           final Completable syncAccount = accountManager.syncCurrentAccount();
 
@@ -158,53 +163,15 @@ public class StoreManager {
   }
 
   private Completable updateStoreWithAvatar(String storeName, String storeDescription,
-      String storeThemeName, String storeImage) {
+      String storeThemeName, String storeImagePath) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
         .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
-            storeImage, multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory,
-            objectMapper, sharedPreferences, tokenInvalidator)
+            storeImagePath, multipartBodyInterceptor, httpClient, converterFactory,
+            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator)
             .observe()
             .toSingle())
         .toCompletable();
-  }
-
-  static class StoreCreationErrorWithCode extends Exception {
-    private final String errorCode;
-
-    StoreCreationErrorWithCode(String errorCode) {
-      this.errorCode = errorCode;
-    }
-
-    public String getErrorCode() {
-      return errorCode;
-    }
-  }
-
-  static class StoreCreationError extends Exception {
-  }
-
-  static class NetworkError extends Exception {
-    private final boolean apiError;
-    private final String error;
-
-    NetworkError() {
-      this.apiError = true;
-      this.error = null;
-    }
-
-    NetworkError(String error) {
-      this.apiError = false;
-      this.error = error;
-    }
-
-    public String getError() {
-      return error;
-    }
-
-    public boolean isApiError() {
-      return apiError;
-    }
   }
 }

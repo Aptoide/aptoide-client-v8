@@ -99,6 +99,8 @@ public class DefaultInstaller implements Installer {
         .flatMap(installation -> isInstalled(md5).first()
             .flatMap(isInstalled -> {
               if (isInstalled) {
+                installation.setStatus(Installed.STATUS_COMPLETED);
+                installation.save();
                 return Observable.just(null);
               } else {
                 if (forceDefaultInstall) {
