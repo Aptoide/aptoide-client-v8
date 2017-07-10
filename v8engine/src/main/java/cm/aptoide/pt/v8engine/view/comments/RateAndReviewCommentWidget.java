@@ -218,7 +218,6 @@ import rx.Observable;
         .subscribe(__ -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
-
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {

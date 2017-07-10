@@ -144,7 +144,8 @@ public final class AptoideAccount implements Account {
         + '\''
         + ", type="
         + type
-        + ", store='" + store.toString()
+        + ", store='"
+        + store.toString()
         + '\''
         + ", adultContentEnabled="
         + adultContentEnabled
