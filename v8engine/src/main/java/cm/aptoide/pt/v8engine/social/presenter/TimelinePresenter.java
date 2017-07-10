@@ -418,20 +418,6 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
-  private void sendClickOnMediaHeaderEvent(Media card) {
-    if (card.getType()
-        .equals(CardType.ARTICLE)) {
-      timelineAnalytics.sendMediaCardClickEvent(card.getType()
-              .name(), card.getMediaTitle(), card.getPublisherName(),
-          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
-    } else if (card.getType()
-        .equals(CardType.VIDEO)) {
-      timelineAnalytics.sendMediaCardClickEvent(card.getType()
-              .name(), card.getMediaTitle(), card.getPublisherName(),
-          Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
-    }
-  }
-
   private void handleCardClickOnBodyEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -530,14 +516,32 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
+  private void sendClickOnMediaHeaderEvent(Media card) {
+    if (card.getType()
+        .equals(CardType.ARTICLE) || card.getType()
+        .equals(CardType.SOCIAL_ARTICLE)) {
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
+    } else if (card.getType()
+        .equals(CardType.VIDEO) || card.getType()
+        .equals(CardType.SOCIAL_VIDEO)) {
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
+    }
+  }
+
   private void sendClickOnMediaBodyEvent(Media card) {
     if (card.getType()
-        .equals(CardType.ARTICLE)) {
+        .equals(CardType.ARTICLE) || card.getType()
+        .equals(CardType.SOCIAL_ARTICLE)) {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
     } else if (card.getType()
-        .equals(CardType.VIDEO)) {
+        .equals(CardType.VIDEO) || card.getType()
+        .equals(CardType.SOCIAL_VIDEO)) {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO,
           "(blank)");
