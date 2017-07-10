@@ -30,7 +30,8 @@ public class FileLifecycleProviderHelper {
       }
 
       @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-        System.out.println(TAG + ": onProgressChanged: " + androidAppInfo + " : " + progress);
+        System.out.println(
+            TAG + ": onProgressChanged: " + androidAppInfo.getAppName() + " : " + progress);
       }
     };
   }
@@ -50,7 +51,8 @@ public class FileLifecycleProviderHelper {
       }
 
       @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-        System.out.println(TAG + ": onProgressChanged: " + androidAppInfo + " : " + progress);
+        System.out.println(
+            TAG + ": onProgressChanged: " + androidAppInfo.getAppName() + " : " + progress);
       }
     };
   }
