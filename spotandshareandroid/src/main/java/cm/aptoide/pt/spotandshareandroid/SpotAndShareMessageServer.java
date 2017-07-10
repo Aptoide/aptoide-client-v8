@@ -82,7 +82,11 @@ public class SpotAndShareMessageServer {
   }
 
   public void exit() {
-    aptoideMessageClientSocket.disable();
-    aptoideMessageServerSocket.shutdown();
+    if (aptoideMessageClientSocket != null) {
+      aptoideMessageClientSocket.disable();
+    }
+    if (aptoideMessageServerSocket != null) {
+      aptoideMessageServerSocket.shutdown();
+    }
   }
 }
