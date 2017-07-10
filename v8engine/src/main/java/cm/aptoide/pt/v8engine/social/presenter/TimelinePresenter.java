@@ -448,6 +448,9 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.RECOMMENDATION)) {
             Recommendation card = (Recommendation) cardTouchEvent.getCard();
+            timelineAnalytics.sendRecommendationCardClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
+                card.getPublisherName());
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
