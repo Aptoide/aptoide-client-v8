@@ -128,7 +128,7 @@ class SpotAndShareV2 {
     spotAndShareMessageServer.sendApps(appsList);
   }
 
-  public BehaviorRelay<List<Accepter<AndroidAppInfo>>> intentObservable() {
+  public BehaviorRelay<List<Accepter<AndroidAppInfo>>> observeAccepters() {
     return accepterRelay.asObservable();
   }
 
