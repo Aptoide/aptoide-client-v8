@@ -166,7 +166,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
     Print.d(TAG, "sendWithAck: " + Thread.currentThread()
         .getId() + ": Received ack: " + ackMessage);
 
-    return ackMessage != null && ackMessage.isSuccess();
+    return ackMessage != null;
   }
 
   @Override public synchronized void send(Message message) {
