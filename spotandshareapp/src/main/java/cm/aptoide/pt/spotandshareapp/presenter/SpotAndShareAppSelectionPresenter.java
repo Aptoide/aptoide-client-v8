@@ -95,7 +95,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
 
   private boolean canSend() {
     //// TODO: 06-07-2017 filipe implement on spot&share class this verification - if has friends
-    return true;
+    return spotAndShare.canSend();
   }
 
   private void leaveGroup() {

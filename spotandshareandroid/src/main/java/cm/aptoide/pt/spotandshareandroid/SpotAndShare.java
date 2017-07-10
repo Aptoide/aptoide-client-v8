@@ -3,8 +3,12 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -15,26 +19,24 @@ import rx.functions.Action1;
 
 public class SpotAndShare {
 
+  public static final String DUMMY_HOTSPOT = "DummyHotspot";
   private final String PASSWORD_APTOIDE = "passwordAptoide";
-
   private final HotspotManager hotspotManager;
-  private final String DUMMY_HOTSPOT = "DummyHotspot";
   private final String DUMMY_UUID = "dummy_uuid";
+  private final SpotAndShareV2 spotAndShareV2;
+  private Map<AndroidAppInfo, Accepter<AndroidAppInfo>> androidAppInfoAccepterMap = new HashMap<>();
 
   public SpotAndShare(Context context) {
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
         .getSystemService(Context.WIFI_SERVICE));
+    spotAndShareV2 = new SpotAndShareV2(context);
   }
 
-  public void createGroup(OnSuccess onSuccess, OnError onError, AcceptReception acceptReception) {
-
-    isGroupCreated(created -> {
-      if (!created) {
-        hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE)
-            .subscribe(() -> onSuccess.onSuccess(DUMMY_UUID), throwable -> {
-              //// TODO: 27-06-2017 filipe join the group that is already created
-            });
-      }
+  public void createGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
+      AndroidAppInfoAccepter androidAppInfoAccepter) {
+    spotAndShareV2.send(onSuccess, onError::onError, androidAppInfoAccepter1 -> {
+      androidAppInfoAccepter.call(androidAppInfoAccepter1);
+      androidAppInfoAccepterMap.put(androidAppInfoAccepter1.getMeta(), androidAppInfoAccepter1);
     });
   }
 
@@ -62,6 +64,10 @@ public class SpotAndShare {
 
   public void sendApps(List<AndroidAppInfo> appsList) {
     // TODO: 19-06-2017 neuro
+  }
+
+  public boolean canSend() {
+    return true;
   }
 
   public interface GroupCreated {

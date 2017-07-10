@@ -64,7 +64,8 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
           Log.i(getClass().getName(), "GOING TO START SENDING");
           spotAndShare.createGroup(uuid -> view.openAppSelectionFragment(),
               view::onCreateGroupError,
-              androidAppInfo -> view.requestPermissionToReceiveApp(androidAppInfo));
+              androidAppInfoAccepter -> view.requestPermissionToReceiveApp(
+                  androidAppInfoAccepter.getMeta()));
         });
   }
 
