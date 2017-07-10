@@ -44,6 +44,8 @@ dependencies {
   // Just for lombok not to complain
   provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 
+  compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
+
   compile project(':spotandshare')
   compile project(':utils')
 }

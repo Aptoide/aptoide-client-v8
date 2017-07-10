@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
-import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
+import cm.aptoide.pt.spotandshareandroid.util.AccepterRelay;
 import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -27,6 +29,7 @@ class SpotAndShareV2 {
   private final SpotAndShareMessageServer spotAndShareMessageServer;
   private final String DUMMY_UUID = "dummy_uuid";
   private final Context applicationContext;
+  private final AccepterRelay accepterRelay = new AccepterRelay();
   private boolean enabled;
 
   SpotAndShareV2(Context context) {
@@ -35,8 +38,6 @@ class SpotAndShareV2 {
     spotAndShareMessageServer = new SpotAndShareMessageServer(55555);
     applicationContext = context.getApplicationContext();
   }
-
-  SpotAndShareSender spotAndShareSender = createSpotAndShareSender();
 
   private SpotAndShareSender createSpotAndShareSender() {
     return androidAppInfo -> {
@@ -48,8 +49,7 @@ class SpotAndShareV2 {
     };
   }
 
-  void send(Action1<SpotAndShareSender> onSuccess, OnError onError,
-      AndroidAppInfoAccepter androidAppInfoAccepter) {
+  void send(Action1<SpotAndShareSender> onSuccess, OnError onError) {
 
     isGroupCreated().flatMap(created -> {
       if (!created) {
@@ -59,7 +59,7 @@ class SpotAndShareV2 {
           spotAndShareMessageServer.startServer(createHostsChangedCallback(onError));
           spotAndShareMessageServer.startClient(
               new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-                  androidAppInfoAccepter));
+                  accepterRelay.getAccepter()));
           onSuccess.call(createSpotAndShareSender());
         })
             .toSingle(() -> 0);
@@ -69,7 +69,7 @@ class SpotAndShareV2 {
           // TODO: 10-07-2017 neuro
           spotAndShareMessageServer.startClient(
               new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-                  androidAppInfoAccepter));
+                  accepterRelay.getAccepter()));
           onSuccess.call(createSpotAndShareSender());
         }, throwable -> {
           enabled = false;
@@ -127,6 +127,11 @@ class SpotAndShareV2 {
   public void sendApps(List<AndroidAppInfo> appsList) {
     spotAndShareMessageServer.sendApps(appsList);
   }
+
+  public BehaviorRelay<List<Accepter<AndroidAppInfo>>> intentObservable() {
+    return accepterRelay.asObservable();
+  }
+
   public interface OnError {
     void onError(Throwable throwable);
   }
