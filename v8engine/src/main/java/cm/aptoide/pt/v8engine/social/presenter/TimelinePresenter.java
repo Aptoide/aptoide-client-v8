@@ -421,12 +421,12 @@ public class TimelinePresenter implements Presenter {
   private void sendClickOnMediaHeaderEvent(Media card) {
     if (card.getType()
         .equals(CardType.ARTICLE)) {
-      timelineAnalytics.sendArticleWidgetCardClickEvent(card.getType()
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
     } else if (card.getType()
         .equals(CardType.VIDEO)) {
-      timelineAnalytics.sendArticleWidgetCardClickEvent(card.getType()
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
     }
@@ -530,12 +530,12 @@ public class TimelinePresenter implements Presenter {
   private void sendClickOnMediaBodyEvent(Media card) {
     if (card.getType()
         .equals(CardType.ARTICLE)) {
-      timelineAnalytics.sendArticleWidgetCardClickEvent(card.getType()
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
     } else if (card.getType()
         .equals(CardType.VIDEO)) {
-      timelineAnalytics.sendArticleWidgetCardClickEvent(card.getType()
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO,
           "(blank)");
     }

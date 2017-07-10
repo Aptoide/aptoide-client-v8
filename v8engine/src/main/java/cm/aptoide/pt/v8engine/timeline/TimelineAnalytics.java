@@ -105,7 +105,7 @@ public class TimelineAnalytics {
     return bundle;
   }
 
-  public void sendArticleWidgetCardClickEvent(String cardType, String title, String publisher,
+  public void sendMediaCardClickEvent(String cardType, String title, String publisher,
       String action, String socialAction) {
     analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
         createArticleCardData(cardType, title, publisher, action, socialAction)));
