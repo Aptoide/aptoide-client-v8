@@ -153,7 +153,10 @@ public class TimelineResponseCardMapper {
             .getStats()
             .getRating()
             .getAvg(), socialRecommendation.getDate(), abUrl, socialRecommendation.getMy()
-            .isLiked(), CardType.SOCIAL_RECOMMENDATION));
+            .isLiked(), socialRecommendation.getStats()
+            .getComments(), socialRecommendation.getStats()
+            .getLikes(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
+            CardType.SOCIAL_RECOMMENDATION));
       } else if (item instanceof SocialInstallTimelineItem) {
         final SocialInstall socialInstall = ((SocialInstallTimelineItem) item).getData();
         UserSharerTimeline user =
@@ -167,7 +170,10 @@ public class TimelineResponseCardMapper {
             .getStats()
             .getRating()
             .getAvg(), socialInstall.getDate(), abUrl, socialInstall.getMy()
-            .isLiked(), CardType.SOCIAL_INSTALL));
+            .isLiked(), socialInstall.getStats()
+            .getComments(), socialInstall.getStats()
+            .getLikes(), socialInstall.getLikes(), socialInstall.getComments(),
+            CardType.SOCIAL_INSTALL));
       } else if (item instanceof SocialArticleTimelineItem) {
         final SocialArticle socialArticle = ((SocialArticleTimelineItem) item).getData();
         UserSharerTimeline user =
@@ -183,7 +189,10 @@ public class TimelineResponseCardMapper {
                     .getBaseUrl()),
                 linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
                 socialArticle.getMy()
-                    .isLiked(), CardType.SOCIAL_ARTICLE));
+                    .isLiked(), socialArticle.getStats()
+                .getComments(), socialArticle.getStats()
+                .getLikes(), socialArticle.getLikes(), socialArticle.getComments(),
+                CardType.SOCIAL_ARTICLE));
       } else if (item instanceof SocialVideoTimelineItem) {
         final SocialVideo socialVideo = ((SocialVideoTimelineItem) item).getData();
         UserSharerTimeline user =
@@ -199,7 +208,10 @@ public class TimelineResponseCardMapper {
                     .getBaseUrl()),
                 linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialVideo.getUrl()),
                 socialVideo.getMy()
-                    .isLiked(), CardType.SOCIAL_VIDEO));
+                    .isLiked(), socialVideo.getStats()
+                .getComments(), socialVideo.getStats()
+                .getLikes(), socialVideo.getLikes(), socialVideo.getComments(),
+                CardType.SOCIAL_VIDEO));
       } else if (item instanceof SocialStoreLatestAppsTimelineItem) {
         final SocialStoreLatestApps socialStoreLatestApps =
             ((SocialStoreLatestAppsTimelineItem) item).getData();
@@ -217,7 +229,10 @@ public class TimelineResponseCardMapper {
             .getStats()
             .getApps(), socialStoreLatestApps.getDate(), socialStoreLatestApps.getApps(), abUrl,
             socialStoreLatestApps.getMy()
-                .isLiked(), CardType.SOCIAL_STORE));
+                .isLiked(), socialStoreLatestApps.getStats()
+            .getComments(), socialStoreLatestApps.getStats()
+            .getLikes(), socialStoreLatestApps.getLikes(), socialStoreLatestApps.getComments(),
+            CardType.SOCIAL_STORE));
       } else if (item instanceof AggregatedSocialArticleTimelineItem) {
         final AggregatedSocialArticle aggregatedSocialArticle =
             ((AggregatedSocialArticleTimelineItem) item).getData();
@@ -235,7 +250,10 @@ public class TimelineResponseCardMapper {
           subposts.add(
               new MinimalPost(minimalCard.getCardId(), minimalPostPosters, minimalCard.getDate(),
                   minimalCard.getMy()
-                      .isLiked(), CardType.MINIMAL_CARD));
+                      .isLiked(), minimalCard.getStats()
+                  .getComments(), minimalCard.getStats()
+                  .getLikes(), minimalCard.getUsersLikes(), minimalCard.getComments(),
+                  CardType.MINIMAL_CARD));
         }
         cards.add(new AggregatedMedia("n/a", posters, aggregatedSocialArticle.getTitle(),
             aggregatedSocialArticle.getThumbnailUrl(), aggregatedSocialArticle.getDate(),
@@ -263,7 +281,10 @@ public class TimelineResponseCardMapper {
           subposts.add(
               new MinimalPost(minimalCard.getCardId(), minimalPostPosters, minimalCard.getDate(),
                   minimalCard.getMy()
-                      .isLiked(), CardType.MINIMAL_CARD));
+                      .isLiked(), minimalCard.getStats()
+                  .getComments(), minimalCard.getStats()
+                  .getLikes(), minimalCard.getUsersLikes(), minimalCard.getComments(),
+                  CardType.MINIMAL_CARD));
         }
 
         cards.add(new AggregatedMedia("n/a", posters, aggregatedSocialVideo.getTitle(),
@@ -292,7 +313,10 @@ public class TimelineResponseCardMapper {
           subposts.add(
               new MinimalPost(minimalCard.getCardId(), minimalPostPosters, minimalCard.getDate(),
                   minimalCard.getMy()
-                      .isLiked(), CardType.MINIMAL_CARD));
+                      .isLiked(), minimalCard.getStats()
+                  .getComments(), minimalCard.getStats()
+                  .getLikes(), minimalCard.getUsersLikes(), minimalCard.getComments(),
+                  CardType.MINIMAL_CARD));
         }
         cards.add(new AggregatedRecommendation("n/a", posters, subposts,
             aggregatedSocialInstall.getApp()
@@ -321,7 +345,10 @@ public class TimelineResponseCardMapper {
           subposts.add(
               new MinimalPost(minimalCard.getCardId(), minimalPostPosters, minimalCard.getDate(),
                   minimalCard.getMy()
-                      .isLiked(), CardType.MINIMAL_CARD));
+                      .isLiked(), minimalCard.getStats()
+                  .getComments(), minimalCard.getStats()
+                  .getLikes(), minimalCard.getUsersLikes(), minimalCard.getComments(),
+                  CardType.MINIMAL_CARD));
         }
         cards.add(new AggregatedStore("n/a", posters, subposts,
             aggregatedSocialStoreLatestApps.getSharedStore()

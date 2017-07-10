@@ -21,6 +21,7 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
@@ -107,11 +108,15 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnCommentEvent();
 
+    handleCardClickOnCommentsNumberEvent();
+
     handleCardClickOnShareEvents();
 
     handleSharePostConfirmationEvent();
 
     handleCardClickOnStatsEvents();
+
+    handleCardClickOnLikesPreviewEvent();
 
     handleCardClickOnLoginEvent();
 
@@ -167,6 +172,37 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
+  }
+
+  private void handleCardClickOnCommentsNumberEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(create -> view.postClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.COMMENT_NUMBER))
+        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToComments(cardTouchEvent.getCard()
+            .getCardId()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+
+        }, throwable -> {
+        });
+  }
+
+  private void handleCardClickOnLikesPreviewEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.LIKES_PREVIEW))
+        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(cardTouchEvent.getCard()
+            .getCardId(), ((LikesCardTouchEvent) cardTouchEvent).getLikesNumber()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+
+        }, throwable -> {
+
+        });
   }
 
   private void handleSharePostConfirmationEvent() {
@@ -334,7 +370,7 @@ public class TimelinePresenter implements Presenter {
               .equals(CardType.ARTICLE)) {
             ((Media) cardTouchEvent.getCard()).getPublisherLink()
                 .launch();
-          } else if (isSocialPost(cardTouchEvent)) {
+          } else if (isSocialPost(cardTouchEvent.getCard())) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
@@ -371,7 +407,7 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.BODY))
         .doOnNext(cardTouchEvent -> {
-          if (isMediaPost(cardTouchEvent)) {
+          if (isMediaPost(cardTouchEvent.getCard())) {
             ((Media) cardTouchEvent.getCard()).getMediaLink()
                 .launch();
           } else if (cardTouchEvent.getCard()
@@ -518,33 +554,22 @@ public class TimelinePresenter implements Presenter {
     view.showCards(cards);
   }
 
-  private boolean isMediaPost(CardTouchEvent cardTouchEvent) {
-    return cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.VIDEO) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.ARTICLE) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-        .getType()
+  private boolean isMediaPost(Post post) {
+    return post.getType()
+        .equals(CardType.VIDEO) || post.getType()
+        .equals(CardType.ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_VIDEO) || post.getType()
+        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || post.getType()
         .equals(CardType.AGGREGATED_SOCIAL_VIDEO);
   }
 
-  private boolean isSocialPost(CardTouchEvent cardTouchEvent) {
-    return cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_ARTICLE) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_VIDEO) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
-        .getType()
-        .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
-        .getType()
+  private boolean isSocialPost(Post post) {
+    return post.getType()
+        .equals(CardType.SOCIAL_ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_VIDEO) || post.getType()
+        .equals(CardType.SOCIAL_STORE) || post.getType()
+        .equals(CardType.SOCIAL_RECOMMENDATION) || post.getType()
         .equals(CardType.SOCIAL_INSTALL);
   }
 

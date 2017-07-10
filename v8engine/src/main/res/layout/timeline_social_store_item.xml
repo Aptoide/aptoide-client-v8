@@ -44,9 +44,9 @@
         android:visibility="visible"
         />
 
-    <!--<include layout="@layout/social_info_bar_timeline"/>-->
+    <include layout="@layout/social_info_bar_timeline"/>
 
-    <!--<include layout="@layout/social_last_comment_bar"/>-->
+    <include layout="@layout/social_last_comment_bar"/>
 
     <include layout="@layout/social_bar_timeline"/>
   </LinearLayout>

@@ -96,4 +96,6 @@
   <string name="popular_app_among_friends">Popular app among friends</string>
   <string name="timeline_short_shared">shared</string>
   <string name="timeline_short_plus" translatable="false">%s+</string>
+  <string name="timeline_title_shared_card_preview">Shared Card Preview</string>
+
 </resources>

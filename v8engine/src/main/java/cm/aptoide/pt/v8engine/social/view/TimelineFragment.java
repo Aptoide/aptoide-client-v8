@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -97,6 +98,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private AptoideAccountManager accountManager;
   private AlertDialog shareDialog;
   private SharePreviewFactory sharePreviewFactory;
+  private SpannableFactory spannableFactory;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -131,11 +133,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
+    spannableFactory = new SpannableFactory();
     adapter = new CardAdapter(Collections.emptyList(),
-        new CardViewHolderFactory(cardTouchEventPublishSubject, dateCalculator,
-            new SpannableFactory(),
-            new MinimalCardViewFactory(dateCalculator, cardTouchEventPublishSubject)),
-        new ProgressCard());
+        new CardViewHolderFactory(cardTouchEventPublishSubject, dateCalculator, spannableFactory,
+            new MinimalCardViewFactory(dateCalculator, spannableFactory,
+                cardTouchEventPublishSubject)), new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
   }
@@ -170,8 +172,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
             RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
             Integer.MAX_VALUE, tokenInvalidator, sharedPreferences), installManager,
-            new DownloadFactory()), CrashReport.getInstance(),
-        new TimelineNavigator(getFragmentNavigator(), accountManager), new PermissionManager(),
+        new DownloadFactory()), CrashReport.getInstance(),
+        new TimelineNavigator(getFragmentNavigator(), accountManager,
+            getContext().getString(R.string.likes)), new PermissionManager(),
         (PermissionService) getContext(), installManager, RepositoryFactory.getStoreRepository(),
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
@@ -322,17 +325,28 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showSharePreview(Post post) {
-    shareDialog = new AlertDialog.Builder(getContext()).setTitle("Shared Card Preview")
-        .setMessage(R.string.social_timeline_you_will_share)
-        .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
-        .setPositiveButton(R.string.share,
-            (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
-        .setNegativeButton(android.R.string.cancel, null)
-        .create();
+    shareDialog =
+        new AlertDialog.Builder(getContext()).setTitle(R.string.timeline_title_shared_card_preview)
+            .setMessage(R.string.social_timeline_you_will_share)
+            .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
+            .setPositiveButton(R.string.share,
+                (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
+            .setNegativeButton(android.R.string.cancel, null)
+            .create();
     shareDialog.show();
   }
 
   @Override public void showShareSuccessMessage() {
     ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+  }
+
+  // TODO: 07/07/2017 migrate this behaviour to mvp
+  @UiThread public void goToTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      list.scrollToPosition(10);
+    }
+    list.smoothScrollToPosition(0);
   }
 }
