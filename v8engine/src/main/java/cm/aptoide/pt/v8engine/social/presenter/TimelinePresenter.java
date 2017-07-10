@@ -38,6 +38,7 @@ import cm.aptoide.pt.v8engine.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class TimelinePresenter implements Presenter {
   private final StoreUtilsProxy storeUtilsProxy;
   private final StoreCredentialsProviderImpl storeCredentialsProvider;
   private final AptoideAccountManager accountManager;
+  private final TimelineAnalytics timelineAnalytics;
   private final Long userId;
   private final Long storeId;
   private final StoreContext storeContext;
@@ -72,8 +74,8 @@ public class TimelinePresenter implements Presenter {
       PermissionManager permissionManager, PermissionService permissionRequest,
       InstallManager installManager, StoreRepository storeRepository,
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
-      AptoideAccountManager accountManager, Long userId, Long storeId, StoreContext storeContext,
-      Resources resources) {
+      AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
+      Long storeId, StoreContext storeContext, Resources resources) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -85,6 +87,7 @@ public class TimelinePresenter implements Presenter {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.accountManager = accountManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.userId = userId;
     this.storeId = storeId;
     this.storeContext = storeContext;
@@ -169,6 +172,8 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.shareConfirmation()
             .flatMapSingle(post -> timeline.sharePost(post)
                 .doOnSuccess(cardId -> view.showShareSuccessMessage())))
+        .doOnNext(cardid -> timelineAnalytics.sendSocialCardPreviewActionEvent(
+            TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> throwable.printStackTrace());
@@ -258,34 +263,37 @@ public class TimelinePresenter implements Presenter {
               (TimelineStatsPost) timelineStatsTouchEvent.getCard();
           if (timelineStatsTouchEvent.getButtonClicked()
               .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWFRIENDS)) {
+            timelineAnalytics.sendFollowFriendsEvent();
             timelineNavigation.navigateToAddressBook();
-          } else if (timelineStatsTouchEvent.getButtonClicked()
-              .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWERS)) {
-            String title = AptoideUtils.StringU.getFormattedString(
-                R.string.social_timeline_followers_fragment_title, resources,
-                timelineStatsPost.getFollowers());
-            if (storeContext.equals(StoreContext.home)) {
-              timelineNavigation.navigateToFollowersViewStore(0L, title);
-            } else {
-              if (userId == null || userId <= 0) {
-                timelineNavigation.navigateToFollowersViewStore(storeId, title);
-              } else {
-                timelineNavigation.navigateToFollowersViewUser(userId, title);
-              }
-            }
           } else {
             if (timelineStatsTouchEvent.getButtonClicked()
-                .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWING)) {
+                .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWERS)) {
               String title = AptoideUtils.StringU.getFormattedString(
-                  R.string.social_timeline_following_fragment_title, resources,
-                  timelineStatsPost.getFollowing());
+                  R.string.social_timeline_followers_fragment_title, resources,
+                  timelineStatsPost.getFollowers());
               if (storeContext.equals(StoreContext.home)) {
-                timelineNavigation.navigateToFollowingViewUser(userId, title);
+                timelineNavigation.navigateToFollowersViewStore(0L, title);
               } else {
                 if (userId == null || userId <= 0) {
-                  timelineNavigation.navigateToFollowingViewStore(storeId, title);
+                  timelineNavigation.navigateToFollowersViewStore(storeId, title);
                 } else {
+                  timelineNavigation.navigateToFollowersViewUser(userId, title);
+                }
+              }
+            } else {
+              if (timelineStatsTouchEvent.getButtonClicked()
+                  .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWING)) {
+                String title = AptoideUtils.StringU.getFormattedString(
+                    R.string.social_timeline_following_fragment_title, resources,
+                    timelineStatsPost.getFollowing());
+                if (storeContext.equals(StoreContext.home)) {
                   timelineNavigation.navigateToFollowingViewUser(userId, title);
+                } else {
+                  if (userId == null || userId <= 0) {
+                    timelineNavigation.navigateToFollowingViewStore(storeId, title);
+                  } else {
+                    timelineNavigation.navigateToFollowingViewUser(userId, title);
+                  }
                 }
               }
             }

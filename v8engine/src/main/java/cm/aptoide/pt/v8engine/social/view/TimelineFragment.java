@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -48,6 +49,7 @@ import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
@@ -56,6 +58,7 @@ import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -205,7 +208,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             WebService.getDefaultConverter(),
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-        new StoreCredentialsProviderImpl(), accountManager, userId, storeId, storeContext,
+        new StoreCredentialsProviderImpl(), accountManager,
+        new TimelineAnalytics(Analytics.getInstance(),
+            AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
+            .getAppId(), sharedPreferences), userId, storeId, storeContext,
         getContext().getResources()), savedInstanceState);
   }
 
