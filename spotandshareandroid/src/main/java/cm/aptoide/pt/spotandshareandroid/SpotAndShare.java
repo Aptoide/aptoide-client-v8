@@ -61,6 +61,7 @@ public class SpotAndShare {
 
   public void sendApps(List<AndroidAppInfo> appsList) {
     // TODO: 19-06-2017 neuro
+    spotAndShareV2.sendApps(appsList);
   }
 
   public boolean canSend() {

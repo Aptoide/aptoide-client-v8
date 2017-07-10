@@ -3,9 +3,11 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
+import java.util.List;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
@@ -114,6 +116,13 @@ class SpotAndShareV2 {
         .subscribe(onSuccess, onError);
   }
 
+  public void sendApp(AndroidAppInfo androidAppInfo) {
+    spotAndShareMessageServer.sendApp(androidAppInfo);
+  }
+
+  public void sendApps(List<AndroidAppInfo> appsList) {
+    spotAndShareMessageServer.sendApps(appsList);
+  }
   public interface OnError {
     void onError(Throwable throwable);
   }

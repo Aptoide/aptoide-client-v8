@@ -8,8 +8,10 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by neuro on 10-07-2017.
@@ -50,6 +52,17 @@ public class SpotAndShareMessageServer {
               storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
               androidAppInfoAccepter);
       aptoideMessageClientSocket.startAsync();
+    }
+  }
+
+  public void sendApp(AndroidAppInfo androidAppInfo) {
+    aptoideMessageClientSocket.send(
+        new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), androidAppInfo));
+  }
+
+  public void sendApps(List<AndroidAppInfo> androidAppInfoList) {
+    for (AndroidAppInfo androidAppInfo : androidAppInfoList) {
+      sendApp(androidAppInfo);
     }
   }
 
