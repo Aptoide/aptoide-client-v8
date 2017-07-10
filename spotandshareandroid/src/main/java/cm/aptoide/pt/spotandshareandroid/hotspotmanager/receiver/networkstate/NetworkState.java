@@ -1,12 +1,13 @@
 package cm.aptoide.pt.spotandshareandroid.hotspotmanager.receiver.networkstate;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Created by neuro on 07-07-2017.
  */
-@ToString @EqualsAndHashCode public class NetworkState {
+@Data @ToString @EqualsAndHashCode public class NetworkState {
 
   private final State state;
   private final String ssid;
