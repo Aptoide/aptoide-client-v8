@@ -2,7 +2,6 @@ package cm.aptoide.pt.spotandshareandroid;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
@@ -89,7 +88,7 @@ class SpotAndShareV2 {
     };
   }
 
-  @NonNull private Completable joinHotspot(Action0 onSuccess, OnError onError) {
+  private Completable joinHotspot(Action0 onSuccess, OnError onError) {
     return hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled -> {
       if (enabled) {
         onSuccess.call();
@@ -99,7 +98,7 @@ class SpotAndShareV2 {
     }, 20000);
   }
 
-  @NonNull private Completable enableHotspot(Action0 onSuccess, OnError onError) {
+  private Completable enableHotspot(Action0 onSuccess, OnError onError) {
     return hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE);
   }
 

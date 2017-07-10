@@ -44,15 +44,9 @@ public class SpotAndShare {
     groupCreated.isCreated(false);//added this in order to test the hotspot creation
   }
 
-  public void joinGroup(OnSuccess onSuccess, OnError onError, AcceptReception acceptReception) {
-    hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled -> {
-      if (enabled) {
-        // TODO: 19-06-2017 neuro
-        onSuccess.onSuccess(DUMMY_UUID);
-      } else {
-        System.out.println("Failed to connect to DummyHotspot");
-      }
-    }, 10000);
+  public void joinGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
+      AndroidAppInfoAccepter androidAppInfoAccepter) {
+    spotAndShareV2.receive(onSuccess, onError::onError, androidAppInfoAccepter);
   }
 
   public void leaveGroup(Action0 onSuccess, Action1<? super Throwable> onError) {

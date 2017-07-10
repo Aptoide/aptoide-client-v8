@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
@@ -74,7 +75,8 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     getFragmentNavigator().navigateTo(SpotAndShareAppSelectionFragment.newInstance());
   }
 
-  @Override public boolean requestPermissionToReceiveApp(AndroidAppInfo androidAppInfo) {
+  @Override
+  public boolean requestPermissionToReceiveApp(Accepter<AndroidAppInfo> androidAppInfoAccepter) {
     // TODO: 19-06-2017 filipe
     return true;
   }
