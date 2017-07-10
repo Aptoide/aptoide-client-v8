@@ -43,20 +43,22 @@ public interface Service {
   @POST("processInAppBilling") @FormUrlEncoded
   Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
 
-  @POST("checkProductPayment") @FormUrlEncoded
-  Observable<TransactionResponse> getTransaction(@FieldMap BaseBody args);
+  @POST("checkProductPayment") @FormUrlEncoded Observable<TransactionResponse> getTransaction(
+      @FieldMap BaseBody args);
 
   @POST("productPurchaseAuthorization") @FormUrlEncoded
   Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
 
   @POST("productPurchaseAuthorization") @FormUrlEncoded
-  Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args);
+  Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createTransaction(
-      @FieldMap BaseBody args);
+      @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("createPurchaseAuthorization") @FormUrlEncoded
-  Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args);
+  Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

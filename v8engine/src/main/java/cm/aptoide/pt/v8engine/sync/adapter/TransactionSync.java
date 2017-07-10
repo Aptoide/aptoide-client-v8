@@ -70,13 +70,7 @@ public class TransactionSync extends ScheduledSync {
   public Single<Transaction> syncTransaction(String payerId) {
     return transactionService.getTransaction(product, payerId)
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
-            .andThen(Single.just(transaction)))
-        .onErrorResumeNext(throwable -> {
-          if (!(throwable instanceof IOException)) {
-            return transactionPersistence.createTransaction(product.getId(), payerId);
-          }
-          return Single.error(throwable);
-        });
+            .andThen(Single.just(transaction)));
   }
 
   private void reschedulePendingTransaction(Transaction transaction, SyncResult syncResult) {

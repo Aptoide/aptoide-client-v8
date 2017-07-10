@@ -5,7 +5,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.Event;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
-import cm.aptoide.pt.v8engine.billing.view.PaymentNavigator;
+import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
 import com.facebook.appevents.AppEventsLogger;
 
 public class BillingAnalytics {
@@ -79,7 +79,7 @@ public class BillingAnalytics {
     }
   }
 
-  public void sendPayPalResultEvent(PaymentNavigator.PayPalResult result) {
+  public void sendPayPalResultEvent(BillingNavigator.PayPalResult result) {
     final Bundle bundle = new Bundle();
     bundle.putString("status", mapToLocalPaymentStatus(result.getStatus()));
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Local_Process", bundle));
@@ -87,11 +87,11 @@ public class BillingAnalytics {
 
   private String mapToLocalPaymentStatus(int status) {
     switch (status) {
-      case PaymentNavigator.PayPalResult.SUCCESS:
+      case BillingNavigator.PayPalResult.SUCCESS:
         return "success";
-      case PaymentNavigator.PayPalResult.CANCELLED:
+      case BillingNavigator.PayPalResult.CANCELLED:
         return "user cancel";
-      case PaymentNavigator.PayPalResult.ERROR:
+      case BillingNavigator.PayPalResult.ERROR:
         return "error";
       default:
         throw new IllegalStateException("Invalid PayPal result status " + status);

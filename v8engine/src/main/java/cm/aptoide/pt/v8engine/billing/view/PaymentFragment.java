@@ -61,7 +61,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private BillingAnalytics billingAnalytics;
   private PaymentMethodSelector paymentMethodSelector;
   private AccountNavigator accountNavigator;
-  private PaymentNavigator paymentNavigator;
+  private BillingNavigator billingNavigator;
 
   public static Fragment create(Bundle bundle) {
     final PaymentFragment fragment = new PaymentFragment();
@@ -79,8 +79,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
-    paymentNavigator =
-        new PaymentNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+    billingNavigator =
+        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
             getActivityNavigator(), getFragmentNavigator());
   }
 
@@ -123,7 +123,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
     attachPresenter(
         new PaymentPresenter(this, billing, accountManager, paymentMethodSelector, accountNavigator,
-            paymentNavigator, billingAnalytics, productProvider), savedInstanceState);
+            billingNavigator, billingAnalytics, productProvider), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

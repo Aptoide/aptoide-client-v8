@@ -59,7 +59,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
             .build();
 
     attachPresenter(new PayPalPresenter(this, billing, productProvider, billingAnalytics,
-            new PaymentNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+            new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
                 getActivityNavigator(), getFragmentNavigator()), AndroidSchedulers.mainThread()),
         savedInstanceState);
   }

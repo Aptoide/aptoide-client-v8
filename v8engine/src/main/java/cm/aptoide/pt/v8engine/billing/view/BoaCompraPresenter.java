@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Completable;
@@ -22,12 +22,12 @@ public class BoaCompraPresenter implements Presenter {
   private final BillingAnalytics analytics;
   private final BillingSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
-  private final PaymentNavigator navigator;
+  private final BillingNavigator navigator;
   private final int paymentId;
 
   public BoaCompraPresenter(WebView view, Billing billing, BillingAnalytics analytics,
       BillingSyncScheduler syncScheduler, ProductProvider productProvider,
-      PaymentNavigator navigator, int paymentId) {
+      BillingNavigator navigator, int paymentId) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
@@ -41,11 +41,11 @@ public class BoaCompraPresenter implements Presenter {
 
     onViewCreatedProcessBoaCompraPayment();
 
-    handleBoaCompraConsentWebsiteLoadedEvent();
+    handleWebsiteLoadedEvent();
 
     handleBackButtonEvent();
 
-    handleBackToStoreEvent();
+    handleRedirectUrlEvent();
 
     handleDismissEvent();
   }
@@ -81,12 +81,12 @@ public class BoaCompraPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          view.showError();
           view.hideLoading();
+          view.showError();
         });
   }
 
-  private void handleBackToStoreEvent() {
+  private void handleRedirectUrlEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.redirectUrlEvent()
@@ -105,7 +105,7 @@ public class BoaCompraPresenter implements Presenter {
         });
   }
 
-  private void handleBoaCompraConsentWebsiteLoadedEvent() {
+  private void handleWebsiteLoadedEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.urlLoadedEvent())

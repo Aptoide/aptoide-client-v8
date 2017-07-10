@@ -33,10 +33,9 @@ public class CreateTransactionRequest extends V3<BaseV3Response> {
   }
 
   public static CreateTransactionRequest ofInApp(int productId, int paymentId,
-      String developerPayload, String metadata,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, int versionCode) {
+      String developerPayload, String metadata, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, int versionCode) {
     final BaseBody args = getBaseBody(productId, paymentId, versionCode);
     args.put("paykey", metadata);
     args.put("developerPayload", developerPayload);
@@ -55,9 +54,9 @@ public class CreateTransactionRequest extends V3<BaseV3Response> {
   }
 
   public static CreateTransactionRequest ofPaidApp(int productId, int paymentId, String store,
-      String metadata, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, int versionCode) {
+      String metadata, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, int versionCode) {
     final BaseBody args = getBaseBody(productId, paymentId, versionCode);
     args.put("paykey", metadata);
     args.put("repo", store);
@@ -76,6 +75,6 @@ public class CreateTransactionRequest extends V3<BaseV3Response> {
 
   @Override
   protected Observable<BaseV3Response> loadDataFromNetwork(Service service, boolean bypassCache) {
-    return service.createTransaction(map);
+    return service.createTransaction(map, bypassCache);
   }
 }

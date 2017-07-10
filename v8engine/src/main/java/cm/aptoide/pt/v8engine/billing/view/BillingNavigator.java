@@ -7,7 +7,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolPointsPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
@@ -22,40 +21,37 @@ import com.paypal.android.sdk.payments.PaymentConfirmation;
 import java.math.BigDecimal;
 import rx.Observable;
 
-public class PaymentNavigator {
+public class BillingNavigator {
 
   private final PurchaseBundleMapper bundleMapper;
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
 
-  public PaymentNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
+  public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
       FragmentNavigator fragmentNavigator) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
   }
 
-  public void navigateToAuthorizedPaymentView(PaymentMethod paymentMethod, Product product) {
-    if (paymentMethod instanceof BoaCompraPaymentMethod) {
-      fragmentNavigator.navigateTo(
-          BoaCompraFragment.create(getProductBundle(product), paymentMethod.getId()));
-    } else {
-      throw new IllegalArgumentException("Invalid authorized payment.");
+  public void navigateToTransactionAuthorizationView(PaymentMethod paymentMethod, Product product) {
+
+    if (paymentMethod instanceof PayPalPaymentMethod) {
+      fragmentNavigator.navigateTo(PayPalFragment.create(getProductBundle(product)));
+      return;
     }
+
+    if (paymentMethod instanceof MolPointsPaymentMethod) {
+      fragmentNavigator.navigateTo(MolFragment.create(getProductBundle(product)));
+      return;
+    }
+
+    fragmentNavigator.navigateTo(
+        BoaCompraFragment.create(getProductBundle(product), paymentMethod .getId()));
   }
 
   public void popAuthorizedPaymentView() {
     fragmentNavigator.popBackStack();
-  }
-
-  public void navigateToLocalPaymentView(PaymentMethod paymentMethod, Product product) {
-    if (paymentMethod instanceof PayPalPaymentMethod) {
-      fragmentNavigator.navigateTo(PayPalFragment.create(getProductBundle(product)));
-    } else if (paymentMethod instanceof MolPointsPaymentMethod) {
-      fragmentNavigator.navigateTo(MolFragment.create(getProductBundle(product)));
-    } else {
-      throw new IllegalArgumentException("Invalid local payment.");
-    }
   }
 
   public void popLocalPaymentView() {
@@ -116,17 +112,17 @@ public class PaymentNavigator {
             .getParcelableExtra(
                 com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
         if (confirmation != null && confirmation.getProofOfPayment() != null) {
-          return new PaymentNavigator.PayPalResult(PaymentNavigator.PayPalResult.SUCCESS,
+          return new BillingNavigator.PayPalResult(BillingNavigator.PayPalResult.SUCCESS,
               confirmation.getProofOfPayment()
                   .getPaymentId());
         } else {
-          return new PaymentNavigator.PayPalResult(PaymentNavigator.PayPalResult.ERROR, null);
+          return new BillingNavigator.PayPalResult(BillingNavigator.PayPalResult.ERROR, null);
         }
       case Activity.RESULT_CANCELED:
-        return new PaymentNavigator.PayPalResult(PaymentNavigator.PayPalResult.CANCELLED, null);
+        return new BillingNavigator.PayPalResult(BillingNavigator.PayPalResult.CANCELLED, null);
       case PayPalFuturePaymentActivity.RESULT_EXTRAS_INVALID:
       default:
-        return new PaymentNavigator.PayPalResult(PaymentNavigator.PayPalResult.ERROR, null);
+        return new BillingNavigator.PayPalResult(BillingNavigator.PayPalResult.ERROR, null);
     }
   }
 

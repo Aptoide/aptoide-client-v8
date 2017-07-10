@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.billing.methods.sandbox;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import rx.Completable;
 
@@ -34,6 +35,13 @@ public class SandboxPaymentMethod implements PaymentMethod {
 
   @Override public Completable process(Product product) {
     return transactionRepository.createTransaction(getId(), product)
-        .toCompletable();
+        .flatMapCompletable(transaction -> {
+
+          if (transaction.isFailed()) {
+            return Completable.error(new PaymentFailureException("Sandbox payment failed."));
+          }
+
+          return Completable.complete();
+        });
   }
 }

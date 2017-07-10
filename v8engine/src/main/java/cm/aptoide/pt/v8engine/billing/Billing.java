@@ -93,7 +93,7 @@ public class Billing {
 
   public Completable processBoaCompraPayment(Product product) {
     return getBoaCompraPaymentMethod(product).flatMapCompletable(
-        payment -> payment.authorizedProcess(product));
+        payment -> payment.processAuthorized(product));
   }
 
   public Single<BoaCompraAuthorization> getBoaCompraAuthorization(Product product) {
@@ -115,7 +115,7 @@ public class Billing {
         .first()
         .cast(PayPalPaymentMethod.class)
         .toSingle()
-        .flatMapCompletable(payment -> payment.process(product, payPalConfirmationId));
+        .flatMapCompletable(payment -> payment.processLocal(product, payPalConfirmationId));
   }
 
   public Observable<Transaction> getTransaction(Product product) {

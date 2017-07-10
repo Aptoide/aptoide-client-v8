@@ -16,6 +16,4 @@ public interface TransactionPersistence {
   Completable removeAllTransactions();
 
   Completable saveTransaction(Transaction transaction);
-
-  Single<Transaction> createTransaction(int productId, String payerId);
 }

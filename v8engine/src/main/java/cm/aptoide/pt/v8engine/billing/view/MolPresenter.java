@@ -13,10 +13,10 @@ public class MolPresenter implements Presenter {
   private final Billing billing;
   private final BillingAnalytics analytics;
   private final ProductProvider productProvider;
-  private final PaymentNavigator navigator;
+  private final BillingNavigator navigator;
 
   public MolPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      ProductProvider productProvider, PaymentNavigator navigator) {
+      ProductProvider productProvider, BillingNavigator navigator) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
@@ -28,7 +28,7 @@ public class MolPresenter implements Presenter {
 
     onViewCreatedAuthorizeMolPayment();
 
-    handleMolWebsiteLoadedEvent();
+    handleWebsiteLoadedEvent();
 
     handleBackButtonEvent();
 
@@ -83,7 +83,7 @@ public class MolPresenter implements Presenter {
         });
   }
 
-  private void handleMolWebsiteLoadedEvent() {
+  private void handleWebsiteLoadedEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.urlLoadedEvent())

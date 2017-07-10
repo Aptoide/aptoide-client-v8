@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.billing;
 
-import cm.aptoide.pt.v8engine.billing.Product;
 import rx.Completable;
 
 public interface BillingSyncScheduler {

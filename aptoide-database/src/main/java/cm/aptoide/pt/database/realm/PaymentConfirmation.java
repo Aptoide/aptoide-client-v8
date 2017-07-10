@@ -58,10 +58,6 @@ public class PaymentConfirmation extends RealmObject {
     return paymentMethodId;
   }
 
-  public String getPaymentConfirmationId() {
-    return paymentConfirmationId;
-  }
-
   public String getConfirmationUrl() {
     return confirmationUrl;
   }

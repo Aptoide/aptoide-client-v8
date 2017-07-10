@@ -20,16 +20,16 @@ public class PayPalPresenter implements Presenter {
   private final Billing billing;
   private final ProductProvider productProvider;
   private final BillingAnalytics analytics;
-  private final PaymentNavigator paymentNavigator;
+  private final BillingNavigator billingNavigator;
   private final Scheduler viewScheduler;
 
   public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
-      BillingAnalytics analytics, PaymentNavigator paymentNavigator, Scheduler viewScheduler) {
+      BillingAnalytics analytics, BillingNavigator billingNavigator, Scheduler viewScheduler) {
     this.view = view;
     this.billing = billing;
     this.productProvider = productProvider;
     this.analytics = analytics;
-    this.paymentNavigator = paymentNavigator;
+    this.billingNavigator = billingNavigator;
     this.viewScheduler = viewScheduler;
   }
 
@@ -55,7 +55,7 @@ public class PayPalPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(created -> productProvider.getProduct())
         .observeOn(viewScheduler)
-        .doOnNext(product -> paymentNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
+        .doOnNext(product -> billingNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
             product.getPrice()
                 .getCurrency(), getPaymentDescription(product), product.getPrice()
                 .getAmount()))
@@ -67,13 +67,13 @@ public class PayPalPresenter implements Presenter {
   private void handlePayPalResultEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> paymentNavigator.payPalResults(PAY_APP_REQUEST_CODE)
+        .flatMap(created -> billingNavigator.payPalResults(PAY_APP_REQUEST_CODE)
             .doOnNext(result -> view.showLoading())
             .doOnNext(result -> analytics.sendPayPalResultEvent(result))
             .flatMapCompletable(result -> processPayPalPayment(result).observeOn(viewScheduler)
                 .doOnCompleted(() -> {
                   view.hideLoading();
-                  paymentNavigator.popLocalPaymentView();
+                  billingNavigator.popLocalPaymentView();
                 })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -84,20 +84,20 @@ public class PayPalPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismisses())
-        .doOnNext(product -> paymentNavigator.popLocalPaymentView())
+        .doOnNext(product -> billingNavigator.popLocalPaymentView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> hideLoadingAndShowError(throwable));
   }
 
-  private Completable processPayPalPayment(PaymentNavigator.PayPalResult result) {
+  private Completable processPayPalPayment(BillingNavigator.PayPalResult result) {
     switch (result.getStatus()) {
-      case PaymentNavigator.PayPalResult.SUCCESS:
+      case BillingNavigator.PayPalResult.SUCCESS:
         return productProvider.getProduct()
             .flatMapCompletable(product -> billing.processPayPalPayment(product,
                 result.getPaymentConfirmationId()));
-      case PaymentNavigator.PayPalResult.CANCELLED:
-      case PaymentNavigator.PayPalResult.ERROR:
+      case BillingNavigator.PayPalResult.CANCELLED:
+      case BillingNavigator.PayPalResult.ERROR:
       default:
         return Completable.complete();
     }

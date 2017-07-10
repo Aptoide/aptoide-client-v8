@@ -7,7 +7,6 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedEx
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -44,13 +43,18 @@ public class BoaCompraPaymentMethod implements PaymentMethod {
 
   @Override public Completable process(Product product) {
     return transactionRepository.createTransaction(getId(), product)
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof RepositoryIllegalArgumentException) {
-            return Single.error(new PaymentMethodNotAuthorizedException("Payment not authorized."));
+        .flatMapCompletable(transaction -> {
+          if (transaction.isPendingAuthorization()) {
+            return Completable.error(
+                new PaymentMethodNotAuthorizedException("Pending Boa Compra local authorization."));
           }
-          return Single.error(throwable);
-        })
-        .toCompletable();
+
+          if (transaction.isFailed()) {
+            return Completable.error(new PaymentFailureException("Boa Compra payment failed."));
+          }
+
+          return Completable.complete();
+        });
   }
 
   public Single<BoaCompraAuthorization> getAuthorization() {
@@ -72,7 +76,7 @@ public class BoaCompraPaymentMethod implements PaymentMethod {
         .toSingle();
   }
 
-  public Completable authorizedProcess(Product product) {
+  public Completable processAuthorized(Product product) {
     return authorizationRepository.getAuthorization(getId())
         .takeUntil(authorization -> authorization.isAuthorized())
         .flatMapCompletable(authorization -> {

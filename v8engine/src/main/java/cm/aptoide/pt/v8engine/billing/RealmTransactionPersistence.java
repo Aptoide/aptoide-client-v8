@@ -24,13 +24,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
   @Override public Single<Transaction> createTransaction(int productId, String metadata,
       Transaction.Status status, String payerId, int paymentMethodId) {
     final Transaction transaction =
-        transactionMapper.create(productId, metadata, status, payerId, paymentMethodId);
-    return saveTransaction(transaction).andThen(Single.just(transaction));
-  }
-
-  @Override public Single<Transaction> createTransaction(int productId, String payerId) {
-    final Transaction transaction =
-        transactionMapper.create(productId, payerId);
+        transactionMapper.create(productId, status, payerId, paymentMethodId, metadata);
     return saveTransaction(transaction).andThen(Single.just(transaction));
   }
 
@@ -42,8 +36,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
         .flatMap(query -> realm.findAsList(query))
         .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
             .map(paymentConfirmation -> transactionMapper.map(paymentConfirmation))
-            .defaultIfEmpty(
-                transactionMapper.create(productId, payerId)));
+            .defaultIfEmpty(transactionMapper.createNewTransaction(productId, payerId)));
   }
 
   @Override public Completable removeTransaction(int productId) {

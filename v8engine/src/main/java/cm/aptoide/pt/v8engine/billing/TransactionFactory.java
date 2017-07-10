@@ -7,70 +7,65 @@ package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
-import cm.aptoide.pt.v8engine.billing.Transaction;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolTransaction;
 import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalTransaction;
 
 public class TransactionFactory {
 
-  public Transaction create(int productId, String paymentConfirmationId, Transaction.Status status,
-      String payerId, int paymentMethodId) {
-    return new PayPalTransaction(productId, payerId, paymentConfirmationId, status,
-        paymentMethodId);
+  public Transaction createNewTransaction(int productId, String payerId) {
+    return getTransaction(productId, payerId, Transaction.Status.NEW, -1, null, null, null);
   }
 
-  public Transaction create(int productId, String payerId) {
-    return new Transaction(productId, payerId, Transaction.Status.NEW, -1);
+  public Transaction create(int productId, Transaction.Status status, String payerId,
+      int paymentMethodId, String metadata) {
+    return getTransaction(productId, payerId, status, paymentMethodId, metadata, null, null);
   }
 
   public Transaction map(int productId, TransactionResponse response, String payerId) {
-    final Transaction.Status status = Transaction.Status.valueOf(response.getTransactionStatus());
-    if (response.getLocalMetadata() != null) {
-      return new PayPalTransaction(productId, payerId, response.getLocalMetadata(), status,
-          response.getPaymentMethodId());
-    } else if (response.getConfirmationUrl() != null && response.getSuccessUrl() != null) {
-      return new MolTransaction(productId, payerId,
-          (status.equals(Transaction.Status.PENDING) ? Transaction.Status.PENDING_AUTHORIZATION
-              : status), response.getPaymentMethodId(), response.getConfirmationUrl(),
-          response.getSuccessUrl());
-    } else {
-      return new Transaction(productId, payerId, status, response.getPaymentMethodId());
-    }
+    return getTransaction(productId, payerId,
+        Transaction.Status.valueOf(response.getTransactionStatus()), response.getPaymentMethodId(),
+        response.getLocalMetadata(), response.getConfirmationUrl(), response.getSuccessUrl());
   }
 
   public PaymentConfirmation map(Transaction transaction) {
+    String metadata = null;
+    String confirmationUrl = null;
+    String successUrl = null;
     if (transaction instanceof PayPalTransaction) {
-      return new PaymentConfirmation(((PayPalTransaction) transaction).getPayPalConfirmationId(),
-          transaction.getProductId(), transaction.getStatus()
-          .name(), transaction.getPayerId(), transaction.getPaymentMethodId(), null, null);
-    } else if (transaction instanceof MolTransaction) {
-      return new PaymentConfirmation(null, transaction.getProductId(), transaction.getStatus()
-          .name(), transaction.getPayerId(), transaction.getPaymentMethodId(),
-          ((MolTransaction) transaction).getConfirmationUrl(),
-          ((MolTransaction) transaction).getSuccessUrl());
-    } else {
-      return new PaymentConfirmation(null, transaction.getProductId(), transaction.getStatus()
-          .name(), transaction.getPayerId(), transaction.getPaymentMethodId(), null, null);
+      metadata = ((PayPalTransaction) transaction).getPayPalConfirmationId();
     }
+
+    if (transaction instanceof MolTransaction) {
+      confirmationUrl = ((MolTransaction) transaction).getConfirmationUrl();
+      successUrl = ((MolTransaction) transaction).getSuccessUrl();
+    }
+
+    return new PaymentConfirmation(metadata, transaction.getProductId(), transaction.getStatus()
+        .name(), transaction.getPayerId(), transaction.getPaymentMethodId(), confirmationUrl,
+        successUrl);
   }
 
   public Transaction map(PaymentConfirmation persistedTransaction) {
-    if (persistedTransaction.getLocalMetadata() != null) {
-      return new PayPalTransaction(persistedTransaction.getProductId(),
-          persistedTransaction.getPayerId(), persistedTransaction.getLocalMetadata(),
-          Transaction.Status.valueOf(persistedTransaction.getStatus()),
-          persistedTransaction.getPaymentMethodId());
-    } else if (persistedTransaction.getConfirmationUrl() != null
-        && persistedTransaction.getSuccessUrl() != null) {
-      return new MolTransaction(persistedTransaction.getProductId(),
-          persistedTransaction.getPayerId(),
-          Transaction.Status.valueOf(persistedTransaction.getStatus()),
-          persistedTransaction.getPaymentMethodId(), persistedTransaction.getConfirmationUrl(),
-          persistedTransaction.getSuccessUrl());
-    } else {
-      return new Transaction(persistedTransaction.getProductId(), persistedTransaction.getPayerId(),
-          Transaction.Status.valueOf(persistedTransaction.getStatus()),
-          persistedTransaction.getPaymentMethodId());
+    return getTransaction(persistedTransaction.getProductId(), persistedTransaction.getPayerId(),
+        Transaction.Status.valueOf(persistedTransaction.getStatus()),
+        persistedTransaction.getPaymentMethodId(), persistedTransaction.getLocalMetadata(),
+        persistedTransaction.getConfirmationUrl(), persistedTransaction.getSuccessUrl());
+  }
+
+  private Transaction getTransaction(int productId, String payerId, Transaction.Status status,
+      int paymentMethodId, String metadata, String confirmationUrl, String successUrl) {
+    switch (paymentMethodId) {
+      case PaymentMethodMapper.PAYPAL:
+        return new PayPalTransaction(productId, payerId, metadata, status, paymentMethodId);
+      case PaymentMethodMapper.MOL_POINTS:
+        return new MolTransaction(productId, payerId,
+            (status.equals(Transaction.Status.PENDING) ? Transaction.Status.PENDING_USER_AUTHORIZATION
+                : status), paymentMethodId, confirmationUrl, successUrl);
+      case PaymentMethodMapper.BOA_COMPRA:
+      case PaymentMethodMapper.BOA_COMPRA_GOLD:
+      case PaymentMethodMapper.SANDBOX:
+      default:
+        return new Transaction(productId, payerId, status, paymentMethodId);
     }
   }
 }

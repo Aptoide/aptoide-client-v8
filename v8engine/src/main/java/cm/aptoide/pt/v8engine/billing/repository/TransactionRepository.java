@@ -33,7 +33,8 @@ public class TransactionRepository {
   public Single<Transaction> createTransaction(int paymentMethodId, Product product) {
     return payer.getId()
         .flatMap(payerId -> transactionService.createTransaction(product, paymentMethodId, payerId))
-        .flatMap(transaction -> syncTransaction(product).andThen(Single.just(transaction)));
+        .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
+            .andThen(Single.just(transaction)));
   }
 
   public Observable<Transaction> getTransaction(Product product) {
@@ -42,7 +43,7 @@ public class TransactionRepository {
             transactionPersistence.getTransaction(product.getId(), payerId)));
   }
 
-  public Single<Transaction> createTransaction(Product product, int paymentMethodId,
+  public Single<Transaction> createTransaction(int paymentMethodId, Product product,
       String metadata) {
     return payer.getId()
         .flatMap(payerId -> transactionPersistence.createTransaction(product.getId(), metadata,
@@ -56,5 +57,11 @@ public class TransactionRepository {
 
   protected Completable syncTransaction(Product product) {
     return syncScheduler.scheduleTransactionSync(product);
+  }
+
+  public Single<Transaction> createLocalTransaction(int paymentMethodId, int productId) {
+    return payer.getId()
+        .flatMap(payerId -> transactionPersistence.createTransaction(productId, null,
+            Transaction.Status.PENDING_USER_AUTHORIZATION, payerId, paymentMethodId));
   }
 }

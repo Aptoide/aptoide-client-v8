@@ -33,13 +33,13 @@ public class MolFragment extends WebViewFragment {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_boa_compra, container, false);
+    return inflater.inflate(R.layout.fragment_payment_web_view, container, false);
   }
 
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     attachPresenter(new MolPresenter(this, billing, billingAnalytics, productProvider,
-        new PaymentNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
             getActivityNavigator(), getFragmentNavigator())), savedInstanceState);
   }
 }

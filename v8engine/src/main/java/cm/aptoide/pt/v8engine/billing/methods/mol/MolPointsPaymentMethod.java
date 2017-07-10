@@ -3,10 +3,9 @@ package cm.aptoide.pt.v8engine.billing.methods.mol;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -40,29 +39,18 @@ public class MolPointsPaymentMethod implements PaymentMethod {
 
   @Override public Completable process(Product product) {
     return transactionRepository.createTransaction(id, product)
-        .flatMapObservable(transaction -> transactionRepository.getTransaction(product))
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof RepositoryIllegalArgumentException) {
-            return transactionRepository.getTransaction(product);
-          }
-          return Observable.error(throwable);
-        })
-        .takeUntil(transaction -> transaction.isCompleted())
-        .flatMap(transaction -> {
-
+        .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
-            return Observable.error(new PaymentLocalProcessingRequiredException(
-                "MOL Points requires website authorization."));
+            return Completable.error(
+                new PaymentMethodNotAuthorizedException("Pending MolPoints local authorization."));
           }
 
-          if (transaction.isFailed() || transaction.isNew()) {
-            return Observable.error(new PaymentFailureException(
-                "MOL Points transaction failed with status: " + transaction.getStatus()));
+          if (transaction.isFailed()) {
+            return Completable.error(new PaymentFailureException("MolPoints payment failed."));
           }
 
-          return Observable.empty();
-        })
-        .toCompletable();
+          return Completable.complete();
+        });
   }
 
   public Single<MolTransaction> getTransaction(Product product) {

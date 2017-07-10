@@ -13,6 +13,7 @@
       android:id="@+id/activity_boa_compra_authorization_web_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:theme="@style/AptoideThemeDefault"
       />
   <LinearLayout
       android:id="@+id/activity_web_authorization_preogress_bar"

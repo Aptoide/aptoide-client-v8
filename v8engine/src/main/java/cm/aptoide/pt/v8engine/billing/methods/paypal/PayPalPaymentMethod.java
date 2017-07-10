@@ -7,7 +7,8 @@ package cm.aptoide.pt.v8engine.billing.methods.paypal;
 
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import rx.Completable;
 
@@ -39,22 +40,23 @@ public class PayPalPaymentMethod implements PaymentMethod {
   }
 
   @Override public Completable process(Product product) {
-    return transactionRepository.getTransaction(product)
-        .takeUntil(transaction -> transaction.isCompleted())
+    return transactionRepository.createLocalTransaction(getId(), product.getId())
         .flatMapCompletable(transaction -> {
-
-          if (transaction.isCompleted() || transaction.isPending()) {
-            return Completable.complete();
+          if (transaction.isPendingAuthorization()) {
+            return Completable.error(
+                new PaymentMethodNotAuthorizedException("Pending PayPal local authorization."));
           }
 
-          return Completable.error(new PaymentLocalProcessingRequiredException(
-              "PayPal SDK local processing of the payment required."));
-        })
-        .toCompletable();
+          if (transaction.isFailed()) {
+            return Completable.error(new PaymentFailureException("PayPal payment failed."));
+          }
+
+          return Completable.complete();
+        });
   }
 
-  public Completable process(Product product, String payPalConfirmationId) {
-    return transactionRepository.createTransaction(product, getId(), payPalConfirmationId)
+  public Completable processLocal(Product product, String payPalConfirmationId) {
+    return transactionRepository.createTransaction(getId(), product, payPalConfirmationId)
         .toCompletable();
   }
 }

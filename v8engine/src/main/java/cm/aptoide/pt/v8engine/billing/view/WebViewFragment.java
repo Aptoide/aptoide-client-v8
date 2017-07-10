@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class WebViewFragment extends PermissionServiceFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_boa_compra, container, false);
+    return inflater.inflate(R.layout.fragment_payment_web_view, container, false);
   }
 
   @SuppressLint("SetJavaScriptEnabled") @Override
@@ -48,8 +49,12 @@ public class WebViewFragment extends PermissionServiceFragment
         .setJavaScriptEnabled(true);
     webView.setWebChromeClient(new WebChromeClient());
     progressBarContainer = view.findViewById(R.id.activity_web_authorization_preogress_bar);
+
+    final ContextThemeWrapper dialogTheme =
+        new ContextThemeWrapper(getContext(), R.style.AptoideThemeDefault);
+
     unknownErrorDialog =
-        new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
+        new RxAlertDialog.Builder(dialogTheme).setMessage(R.string.all_message_general_error)
             .setPositiveButton(R.string.ok)
             .build();
     clickHandler = () -> {
@@ -80,7 +85,7 @@ public class WebViewFragment extends PermissionServiceFragment
     progressBarContainer.setVisibility(View.GONE);
   }
 
-  public void loadWebsite(String url, String redirectUrl) {
+  public void loadWebsite(String mainUrl, String redirectUrl) {
     webView.setWebViewClient(new WebViewClient() {
 
       @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -92,12 +97,14 @@ public class WebViewFragment extends PermissionServiceFragment
 
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        if (url.equals(url)) {
+        if (url.equals(mainUrl)) {
           mainUrlSubject.call(null);
         }
       }
+
+
     });
-    webView.loadUrl(url);
+    webView.loadUrl(mainUrl);
   }
 
   public Observable<Void> redirectUrlEvent() {

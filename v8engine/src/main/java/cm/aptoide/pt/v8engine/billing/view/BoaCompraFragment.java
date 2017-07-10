@@ -41,7 +41,7 @@ public class BoaCompraFragment extends WebViewFragment implements WebView {
     super.onViewCreated(view, savedInstanceState);
     attachPresenter(new BoaCompraPresenter(this, billing, billingAnalytics, billingSyncScheduler,
         productProvider,
-        new PaymentNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
             getActivityNavigator(), getFragmentNavigator()), paymentId), savedInstanceState);
   }
 }
