@@ -18,23 +18,26 @@ import lombok.experimental.Accessors;
   private final List<FileInfo> fileInfos;
   private FileInfo apk, mainObb, patchObb;
   private String senderName;
+  private byte[] icon;
 
-  public AndroidAppInfo(String appName, String packageName, File apk, File mainObb, File patchObb) {
+  public AndroidAppInfo(String appName, String packageName, File apk, File mainObb, File patchObb,
+      byte[] icon) {
     this.appName = appName;
     this.packageName = packageName;
     this.apk = new FileInfo(apk);
     this.mainObb = new FileInfo(mainObb);
     this.patchObb = new FileInfo(patchObb);
+    this.icon = icon;
 
     fileInfos = buildFileInfos();
   }
 
   public AndroidAppInfo(String appName, String packageName, File apk, File mainObb) {
-    this(appName, packageName, apk, mainObb, null);
+    this(appName, packageName, apk, mainObb, null, null);
   }
 
   public AndroidAppInfo(String appName, String packageName, File apk) {
-    this(appName, packageName, apk, null, null);
+    this(appName, packageName, apk, null, null, null);
   }
 
   @Deprecated public AndroidAppInfo(String appName, String packageName, List<FileInfo> fileInfos) {
