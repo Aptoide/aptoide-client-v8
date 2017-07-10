@@ -1,11 +1,15 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import java.util.List;
 
 /**
  * Created by filipe on 12-06-2017.
@@ -15,14 +19,24 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
   private final SpotAndShareTransferRecordView view;
   private SpotAndShare spotAndShare;
+  private SpotAndShareTransferRecordManager transferRecordManager;
 
   public SpotAndShareTransferRecordPresenter(SpotAndShareTransferRecordView view,
-      SpotAndShare spotAndShare) {
+      SpotAndShare spotAndShare, SpotAndShareTransferRecordManager transferRecordManager) {
     this.view = view;
     this.spotAndShare = spotAndShare;
+    this.transferRecordManager = transferRecordManager;
   }
 
   @Override public void present() {
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> spotAndShare.intentObservable())
+        .doOnNext(appList -> updateTransferRecord(appList))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> err.printStackTrace());
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -47,6 +61,10 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
+  }
+
+  private void updateTransferRecord(List<Accepter<AndroidAppInfo>> accepterList) {
+    view.updateReceivedAppsList(transferRecordManager.getTransferAppModelList(accepterList));
   }
 
   private void leaveGroup() {

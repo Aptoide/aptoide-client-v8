@@ -14,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -73,8 +75,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
     attachPresenter(
-        new SpotAndShareTransferRecordPresenter(this, SpotAndShare.getInstance(getContext())),
-        savedInstanceState);
+        new SpotAndShareTransferRecordPresenter(this, SpotAndShare.getInstance(getContext()),
+            new SpotAndShareTransferRecordManager(getContext())), savedInstanceState);
   }
 
   private void setupRecyclerView() {
@@ -134,6 +136,10 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     Toast.makeText(getContext(), "There was an error while trying to leave the group",
         Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public void updateReceivedAppsList(List<TransferAppModel> transferAppModelList) {
+    adapter.updateTransferList(transferAppModelList);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

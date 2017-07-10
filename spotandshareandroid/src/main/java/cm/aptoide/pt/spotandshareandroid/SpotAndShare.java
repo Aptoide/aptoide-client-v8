@@ -6,6 +6,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,10 @@ public class SpotAndShare {
 
   public boolean canSend() {
     return true;
+  }
+
+  public BehaviorRelay<List<Accepter<AndroidAppInfo>>> intentObservable() {
+    return spotAndShareV2.observeAccepters();
   }
 
   public interface GroupCreated {

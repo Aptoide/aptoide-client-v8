@@ -43,6 +43,11 @@ public class SpotAndShareTransferRecordAdapter
     return appsTransfered.size();
   }
 
+  public void updateTransferList(List<TransferAppModel> transferAppModelList) {
+    this.appsTransfered = transferAppModelList;
+    notifyDataSetChanged();
+  }
+
   class TransferViewHolder extends ViewHolder {
 
     private TextView senderName;

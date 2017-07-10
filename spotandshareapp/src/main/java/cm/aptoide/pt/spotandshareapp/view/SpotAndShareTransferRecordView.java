@@ -2,6 +2,7 @@ package cm.aptoide.pt.spotandshareapp.view;
 
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.v8engine.presenter.View;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -22,4 +23,6 @@ public interface SpotAndShareTransferRecordView extends View {
   void navigateBack();
 
   void onLeaveGroupError();
+
+  void updateReceivedAppsList(List<TransferAppModel> transferAppModelList);
 }
