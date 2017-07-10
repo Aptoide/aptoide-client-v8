@@ -31,7 +31,7 @@ public class SpotAndShareTransferRecordAdapter
 
   @Override public TransferViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.fragment_spotandshare_app_selection_item, parent, false);
+        .inflate(R.layout.fragment_spotandshare_transfer_record_item, parent, false);
     return new TransferViewHolder(view);
   }
 
