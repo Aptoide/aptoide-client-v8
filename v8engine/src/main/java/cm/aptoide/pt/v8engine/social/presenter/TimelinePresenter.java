@@ -396,6 +396,9 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
+            timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", card.getPackageName(),
+                card.getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (cardTouchEvent.getCard()
               .getType()
