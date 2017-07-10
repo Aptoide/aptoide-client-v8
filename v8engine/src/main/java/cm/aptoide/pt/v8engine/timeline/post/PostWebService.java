@@ -17,11 +17,11 @@ public interface PostWebService {
 
   String BASE_URI = "https://ws75.aptoide.com/api/7/";
 
-  @POST("user/timeline/card/preview/get") Observable<Response<CardPreview>> getCardPreview(
-      CardPreviewRequest request);
+  @POST("user/timeline/card/preview/get") Single<Response<CardPreview>> getCardPreview(
+      @Body CardPreviewRequest request);
 
   @POST("user/timeline/card/apps/get")
-  Observable<ResponseList<DataList<RelatedApp>>> getRelatedApps(RelatedAppsRequest request);
+  Observable<ResponseList<DataList<RelatedApp>>> getRelatedApps(@Body RelatedAppsRequest request);
 
   @POST("user/timeline/card/set") Single<Void> postInTimeline(@Body PostRequest request);
 }

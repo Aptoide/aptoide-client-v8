@@ -1,12 +1,16 @@
 package cm.aptoide.pt.v8engine.timeline.request;
 
-public class CardPreviewRequest extends BaseRequest {
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+
+public class CardPreviewRequest extends BaseBody {
 
   private final String url;
 
-  public CardPreviewRequest(String accessToken, String appMd5Sum, String appPackage, String appVersionCode,
-      String appUid, String cdn, String language, boolean mature, String q, String url) {
-    super(accessToken, appMd5Sum, appPackage, appVersionCode, appUid, cdn, language, mature, q);
+  public CardPreviewRequest(String url) {
     this.url = url;
+  }
+
+  public String getUrl() {
+    return url;
   }
 }

@@ -64,10 +64,9 @@ public class PostRemoteAccessor implements PostAccessor {
   }
 
   @Override public Single<PostView.PostPreview> getCardPreview(String url) {
-    return postWebService.getCardPreview(requestFactory.getCardPreviewRequest(url))
-        .map(response -> convertToLocalCardPreview(response))
-        .first()
-        .toSingle();
+    return requestFactory.getCardPreviewRequest(url)
+        .flatMap(cardPreviewRequest -> postWebService.getCardPreview(cardPreviewRequest))
+        .map(response -> convertToLocalCardPreview(response));
   }
 
   private RelatedApp convertToLocalRelatedApp(

@@ -5,7 +5,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.v8engine.timeline.request.CardPreviewRequest;
 import cm.aptoide.pt.v8engine.timeline.request.PostRequest;
 import cm.aptoide.pt.v8engine.timeline.request.RelatedAppsRequest;
-import rx.Observable;
 import rx.Single;
 
 class PostRequestBuilder {
@@ -18,17 +17,18 @@ class PostRequestBuilder {
 
   public Single<PostRequest> getPostOnTimelineRequest(String url, String content,
       String packageName) {
-    return Observable.just(new PostRequest(url, content, packageName))
-        .flatMapSingle(postRequest -> baseBodyInterceptor.intercept(postRequest)
-            .map(baseBody -> ((PostRequest) baseBody)))
-        .toSingle();
+    return Single.just(new PostRequest(url, content, packageName))
+        .flatMap(postRequest -> baseBodyInterceptor.intercept(postRequest)
+            .map(baseBody -> ((PostRequest) baseBody)));
+  }
+
+  public Single<CardPreviewRequest> getCardPreviewRequest(String url) {
+    return Single.just(new CardPreviewRequest(url))
+        .flatMap(cardPreviewRequest -> baseBodyInterceptor.intercept(cardPreviewRequest)
+            .map(baseBodySingle -> ((CardPreviewRequest) baseBodySingle)));
   }
 
   public RelatedAppsRequest getRelatedAppsRequest(String url) {
-    return null;
-  }
-
-  public CardPreviewRequest getCardPreviewRequest(String url) {
     return null;
   }
 }
