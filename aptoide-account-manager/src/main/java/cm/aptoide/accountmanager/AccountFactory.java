@@ -16,12 +16,10 @@ public class AccountFactory {
 
   public Account createAccount(String access, List<Store> stores, String id, String name,
       String nickname, String avatar, String refreshToken, String token, String password,
-      Account.Type type, String store, String storeAvatar, boolean adultContentEnabled,
-      boolean accessConfirmed) {
+      Account.Type type, Store store, boolean adultContentEnabled, boolean accessConfirmed) {
     final Account aptoideAccount =
         new AptoideAccount(id, name, nickname, avatar, refreshToken, token, password, type, store,
-            storeAvatar, adultContentEnabled, getAccessFrom(access), accessConfirmed, stores,
-            accountService);
+            adultContentEnabled, getAccessFrom(access), accessConfirmed, stores, accountService);
     switch (type) {
       case APTOIDE:
         return aptoideAccount;

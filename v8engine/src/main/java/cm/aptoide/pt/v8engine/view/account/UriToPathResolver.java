@@ -26,7 +26,7 @@ public class UriToPathResolver {
       String[] projection = { columnName };
       cursor = contentResolver.query(contentUri, projection, null, null, null);
       int column_index = cursor.getColumnIndexOrThrow(columnName);
-      if(cursor!=null) {
+      if (cursor != null) {
         cursor.moveToFirst();
         return cursor.getString(column_index);
       }

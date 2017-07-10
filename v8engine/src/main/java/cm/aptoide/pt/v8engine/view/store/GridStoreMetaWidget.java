@@ -163,7 +163,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           .observeOn(AndroidSchedulers.mainThread())
           .doOnSuccess(account -> {
             if (!TextUtils.isEmpty(store.getName()) && account.isLoggedIn() && store.getName()
-                .equals(account.getStoreName())) {
+                .equals(account.getStore()
+                    .getName())) {
               description.setVisibility(View.VISIBLE);
               backgroundView.setVisibility(View.VISIBLE);
               if (TextUtils.isEmpty(store.getAppearance()
