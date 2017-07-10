@@ -1,15 +1,17 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Patterns;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import rx.Single;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -86,20 +88,17 @@ class PostPresenter implements Presenter {
   private void showCardPreviewAfterTextChanges() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.onInputTextChanged()
-            .skip(1)
-            .flatMap(text -> findUrlOrNull(text).toObservable()
-                .filter(url -> !TextUtils.isEmpty(url))
-                .debounce(1, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(__2 -> view.showCardPreviewLoading())
-                .doOnNext(__2 -> view.hideCardPreview())
-                .observeOn(Schedulers.io())
-                .flatMapSingle(url -> postManager.getPreview(url))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(__2 -> view.hideCardPreviewLoading())
-                .doOnNext(suggestion -> view.showCardPreview(suggestion))
-                .doOnError(throwable -> view.hideCardPreviewLoading()))
+        .flatMap(__ -> getInsertedUrl().flatMap(insertedUrl -> Observable.just(insertedUrl)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(__2 -> view.showCardPreviewLoading())
+            .doOnNext(__2 -> view.hideCardPreview())
+            .observeOn(Schedulers.io())
+            .flatMapSingle(url -> postManager.getPreview(url))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(__2 -> view.hideCardPreviewLoading())
+            .doOnNext(suggestion -> view.showCardPreview(suggestion))
+            .doOnError(throwable -> view.hideCardPreviewLoading()))
+            .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -109,35 +108,39 @@ class PostPresenter implements Presenter {
         });
   }
 
-  private Single<String> findUrlOrNull(String text) {
-    return Single.just(text)
-        .map(input -> {
-          for (String textPart : input.split(" ")) {
-            if (URL_PATTERN.matcher(textPart)
-                .matches()) {
-              return textPart;
-            }
-          }
-          return null;
-        });
+  @NonNull private Observable<String> getInsertedUrl() {
+    return view.onInputTextChanged()
+        .skip(1)
+        .map(text -> findUrlOrNull(text))
+        .distinctUntilChanged()
+        .filter(url -> !TextUtils.isEmpty(url))
+        .debounce(1, TimeUnit.SECONDS);
+  }
+
+  private String findUrlOrNull(String text) {
+    for (String textPart : text.split(" ")) {
+      if (URL_PATTERN.matcher(textPart)
+          .matches()) {
+        return textPart;
+      }
+    }
+    return null;
   }
 
   private void showRelatedAppsAfterTextChanges() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.onInputTextChanged()
-            .skip(1)
-            .flatMap(text -> findUrlOrNull(text).toObservable()
-                .filter(url -> !TextUtils.isEmpty(url))
-                .debounce(1, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(__2 -> view.showRelatedAppsLoading())
-                .observeOn(Schedulers.io())
-                .flatMapSingle(url -> postManager.getAppSuggestions(url))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(__2 -> view.hideRelatedAppsLoading())
-                .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
-                .flatMapCompletable(relatedApps -> adapter.setRelatedApps(relatedApps)))
+        .flatMap(__ -> getInsertedUrl().flatMap(inputUrl -> Observable.just(inputUrl)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(__2 -> view.showRelatedAppsLoading())
+            .observeOn(Schedulers.io())
+            .flatMapSingle(url -> postManager.getAppSuggestions(url))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(__2 -> view.hideRelatedAppsLoading())
+            .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
+            .flatMapCompletable(relatedApps -> adapter.setRelatedApps(relatedApps)))
+            .doOnError(throwable -> view.hideRelatedAppsLoading())
+            .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -152,13 +155,15 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
-            .flatMapCompletable(textToShare -> findUrlOrNull(textToShare).flatMapCompletable(
-                url -> postManager.post(url, textToShare, adapter.getCurrentSelected()
-                    .getPackageName()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> view.showSuccessMessage())
-                .doOnCompleted(() -> fragmentNavigator.popBackStack())))
-        .retry()
+            .flatMapCompletable(
+                textToShare -> postManager.post(findUrlOrNull(textToShare), textToShare,
+                    adapter.getCurrentSelected()
+                        .getPackageName())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnCompleted(() -> view.showSuccessMessage())
+                    .doOnCompleted(() -> fragmentNavigator.popBackStack()))
+            .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
