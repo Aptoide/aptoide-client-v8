@@ -83,7 +83,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private void setupRecyclerView() {
     transferRecordRecyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-    adapter = new SpotAndShareTransferRecordAdapter(null, acceptApp);
+    adapter = new SpotAndShareTransferRecordAdapter(acceptApp);
     transferRecordRecyclerView.setAdapter(adapter);
   }
 

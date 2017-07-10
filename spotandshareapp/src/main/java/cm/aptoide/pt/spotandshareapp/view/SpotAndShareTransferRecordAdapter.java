@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
+import java.util.LinkedList;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -23,9 +24,8 @@ public class SpotAndShareTransferRecordAdapter
   private List<TransferAppModel> appsTransfered;
   private PublishSubject<TransferAppModel> acceptSubject;
 
-  public SpotAndShareTransferRecordAdapter(List<TransferAppModel> appsTransfered,
-      PublishSubject<TransferAppModel> acceptSubject) {
-    this.appsTransfered = appsTransfered;
+  public SpotAndShareTransferRecordAdapter(PublishSubject<TransferAppModel> acceptSubject) {
+    this.appsTransfered = new LinkedList<>();
     this.acceptSubject = acceptSubject;
   }
 
