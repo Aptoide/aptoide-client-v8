@@ -29,7 +29,7 @@ public class SpotAndShareMessageServer {
   }
 
   public void startServer(HostsChangedCallback hostsCallbackManager) {
-    if (aptoideMessageServerSocket != null) {
+    if (aptoideMessageServerSocket != null && !aptoideMessageServerSocket.isShutdown()) {
       throw new IllegalStateException("Server Already started!");
     } else {
       aptoideMessageServerSocket =
@@ -42,7 +42,7 @@ public class SpotAndShareMessageServer {
   public void startClient(String externalStoragepath, StorageCapacity storageCapacity,
       FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
       OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter) {
-    if (aptoideMessageClientSocket != null) {
+    if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
       aptoideMessageClientSocket =
@@ -51,5 +51,10 @@ public class SpotAndShareMessageServer {
               androidAppInfoAccepter);
       aptoideMessageClientSocket.startAsync();
     }
+  }
+
+  public void exit() {
+    aptoideMessageClientSocket.disable();
+    aptoideMessageServerSocket.shutdown();
   }
 }

@@ -8,6 +8,7 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccept
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import rx.Completable;
 import rx.Single;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -102,6 +103,15 @@ class SpotAndShareV2 {
             .flatMap(wifiEnabled -> hotspotManager.setWifiEnabled(true)
                 .flatMap(wifiEnabled1 -> hotspotManager.scan())
                 .map(hotspots -> !hotspots.isEmpty())));
+  }
+
+  public void exit(Action0 onSuccess, Action1<? super Throwable> onError) {
+    Completable.fromAction(spotAndShareMessageServer::exit)
+        .andThen(hotspotManager.resetHotspot()
+            .andThen(hotspotManager.restoreNetworkState()
+                .toCompletable()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(onSuccess, onError);
   }
 
   public interface OnError {

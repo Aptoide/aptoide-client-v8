@@ -9,7 +9,6 @@ import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -57,9 +56,7 @@ public class SpotAndShare {
   }
 
   public void leaveGroup(Action0 onSuccess, Action1<? super Throwable> onError) {
-    hotspotManager.resetHotspot()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(onSuccess, onError);
+    spotAndShareV2.exit(onSuccess, onError);
   }
 
   public void sendApps(List<AndroidAppInfo> appsList) {
