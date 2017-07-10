@@ -381,7 +381,9 @@ public class TimelinePresenter implements Presenter {
               .equals(CardType.VIDEO) || cardTouchEvent.getCard()
               .getType()
               .equals(CardType.ARTICLE)) {
-            ((Media) cardTouchEvent.getCard()).getPublisherLink()
+            Media card = (Media) cardTouchEvent.getCard();
+            sendClickOnMediaHeaderEvent(card);
+            card.getPublisherLink()
                 .launch();
           } else if (isSocialPost(cardTouchEvent.getCard())) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
@@ -416,6 +418,20 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
+  private void sendClickOnMediaHeaderEvent(Media card) {
+    if (card.getType()
+        .equals(CardType.ARTICLE)) {
+      timelineAnalytics.sendArticleWidgetCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
+    } else if (card.getType()
+        .equals(CardType.VIDEO)) {
+      timelineAnalytics.sendArticleWidgetCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
+    }
+  }
+
   private void handleCardClickOnBodyEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -424,7 +440,9 @@ public class TimelinePresenter implements Presenter {
             .equals(CardTouchEvent.Type.BODY))
         .doOnNext(cardTouchEvent -> {
           if (isMediaPost(cardTouchEvent.getCard())) {
-            ((Media) cardTouchEvent.getCard()).getMediaLink()
+            Media card = (Media) cardTouchEvent.getCard();
+            sendClickOnMediaBodyEvent(card);
+            card.getMediaLink()
                 .launch();
           } else if (cardTouchEvent.getCard()
               .getType()
@@ -507,6 +525,20 @@ public class TimelinePresenter implements Presenter {
           throwable.printStackTrace();
           crashReport.log(throwable);
         });
+  }
+
+  private void sendClickOnMediaBodyEvent(Media card) {
+    if (card.getType()
+        .equals(CardType.ARTICLE)) {
+      timelineAnalytics.sendArticleWidgetCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
+    } else if (card.getType()
+        .equals(CardType.VIDEO)) {
+      timelineAnalytics.sendArticleWidgetCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO,
+          "(blank)");
+    }
   }
 
   private void navigateToAppView(StoreAppCardTouchEvent cardTouchEvent) {
