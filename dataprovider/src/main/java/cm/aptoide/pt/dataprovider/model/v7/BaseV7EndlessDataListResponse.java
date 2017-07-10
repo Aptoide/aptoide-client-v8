@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.model.v7;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,8 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true) @Data public class BaseV7EndlessDataListResponse<T>
     extends BaseV7EndlessResponse {
-
-  private DataList<T> dataList;
+  @JsonProperty("datalist") private DataList<T> dataList;
 
   @Override public int getTotal() {
     return hasData() ? dataList.getTotal() : 0;
