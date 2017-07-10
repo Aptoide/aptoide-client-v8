@@ -33,4 +33,6 @@ public interface SpotAndShareMainFragmentView extends View {
   void openEditProfile();
 
   void loadProfileInformation(SpotAndShareUser user);
+
+  void openTransferRecordFragment();
 }

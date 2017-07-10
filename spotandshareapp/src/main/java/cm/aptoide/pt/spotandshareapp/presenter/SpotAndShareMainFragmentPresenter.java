@@ -77,8 +77,9 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
           //// TODO: 09-06-2017 filipe call spot&share lib
           spotAndShare.joinGroup(andShareSender -> {
             // TODO: 10-07-2017 filipe
+            view.openTransferRecordFragment();
           }, view::onJoinGroupError);
-          view.openWaitingToReceiveFragment();
+          //view.openWaitingToReceiveFragment();
         });
   }
 

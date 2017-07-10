@@ -102,6 +102,10 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
         .getResourceID());
   }
 
+  @Override public void openTransferRecordFragment() {
+    getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance());
+  }
+
   private void setAvatar(int resourceID) {
     switch (resourceID) {
       case 0:
