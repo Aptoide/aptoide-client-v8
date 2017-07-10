@@ -12,9 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -35,7 +35,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private ClickHandler clickHandler;
   private RecyclerView transferRecordRecyclerView;
   private SpotAndShareTransferRecordAdapter adapter;
-  private PublishSubject<AndroidAppInfo> acceptApp;
+  private PublishSubject<TransferAppModel> acceptApp;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -109,7 +109,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     getActivity().finish();
   }
 
-  @Override public Observable<AndroidAppInfo> acceptApp() {
+  @Override public Observable<TransferAppModel> acceptApp() {
     return acceptApp;
   }
 

@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -20,11 +20,11 @@ import rx.subjects.PublishSubject;
 public class SpotAndShareTransferRecordAdapter
     extends RecyclerView.Adapter<SpotAndShareTransferRecordAdapter.TransferViewHolder> {
 
-  private List<AndroidAppInfo> appsTransfered;
-  private PublishSubject<AndroidAppInfo> acceptSubject;
+  private List<TransferAppModel> appsTransfered;
+  private PublishSubject<TransferAppModel> acceptSubject;
 
-  public SpotAndShareTransferRecordAdapter(List<AndroidAppInfo> appsTransfered,
-      PublishSubject<AndroidAppInfo> acceptSubject) {
+  public SpotAndShareTransferRecordAdapter(List<TransferAppModel> appsTransfered,
+      PublishSubject<TransferAppModel> acceptSubject) {
     this.appsTransfered = appsTransfered;
     this.acceptSubject = acceptSubject;
   }
@@ -56,14 +56,14 @@ public class SpotAndShareTransferRecordAdapter
       acceptButton = (Button) itemView.findViewById(R.id.transfer_record_accept_app_button);
     }
 
-    public void setTransferItem(AndroidAppInfo transferItem) {
-      senderName.setText(transferItem.getPackageName());
-      //// TODO: 06-07-2017 filipe create transfer model to represent the transfer object
-      //appIcon.setImageDrawable(transferItem.getAppIcon());
-      //if(transferItem.isSent()){
-      // acceptButton.setVisibility(View.GONE);
-      //}else{
-      acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
+    public void setTransferItem(TransferAppModel transferItem) {
+      senderName.setText(transferItem.getSenderName());
+      appIcon.setImageDrawable(transferItem.getAppIcon());
+      if (transferItem.isTransferenceOriginatedHere()) {
+        acceptButton.setVisibility(View.GONE);
+      } else {
+        acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
+      }
     }
   }
 }

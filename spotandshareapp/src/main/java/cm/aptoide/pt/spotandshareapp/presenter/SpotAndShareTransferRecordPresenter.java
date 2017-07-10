@@ -1,8 +1,8 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -27,7 +27,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.acceptApp())
-        .doOnNext(androidAppInfo -> acceptedApp(androidAppInfo))
+        .doOnNext(transferAppModel -> acceptedApp(transferAppModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
@@ -53,7 +53,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
     spotAndShare.leaveGroup(view::navigateBack, err -> view.onLeaveGroupError());
   }
 
-  private void acceptedApp(AndroidAppInfo androidAppInfo) {
+  private void acceptedApp(TransferAppModel transferAppModel) {
     //// TODO: 07-07-2017 filipe inform spot and share accepted app
   }
 

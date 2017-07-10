@@ -1,6 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
@@ -11,7 +11,7 @@ import rx.Observable;
 public interface SpotAndShareTransferRecordView extends View {
   void finish();
 
-  Observable<AndroidAppInfo> acceptApp();
+  Observable<TransferAppModel> acceptApp();
 
   Observable<Void> backButtonEvent();
 
