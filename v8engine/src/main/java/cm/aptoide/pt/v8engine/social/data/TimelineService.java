@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.v8engine.PackageRepository;
@@ -133,9 +134,9 @@ public class TimelineService {
         .map(timelineStats -> mapper.map(timelineStats));
   }
 
-  public Single<String> share(Post post) {
-    return ShareCardRequest.of(post.getCardId(), bodyInterceptor, okhttp, converterFactory,
-        tokenInvalidator, sharedPreferences)
+  public Single<String> share(String cardId) {
+    return ShareCardRequest.of(cardId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
+        sharedPreferences)
         .observe()
         .toSingle()
         .flatMap(response -> {
@@ -145,5 +146,19 @@ public class TimelineService {
           }
           return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
         });
+  }
+
+  public Completable postComment(String cardId, String commentText) {
+    return PostCommentForTimelineArticle.of(cardId, commentText, bodyInterceptor, okhttp,
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .observe()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new IllegalStateException(V7.getErrorMessage(response)));
+          }
+        })
+        .toCompletable();
   }
 }

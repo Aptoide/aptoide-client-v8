@@ -56,6 +56,14 @@ public class Timeline {
   }
 
   public Single<String> sharePost(Post post) {
-    return service.share(post);
+    return service.share(post.getCardId());
+  }
+
+  public Single<String> sharePost(String cardId) {
+    return service.share(cardId);
+  }
+
+  public Completable postComment(String cardId, String commentText) {
+    return service.postComment(cardId, commentText);
   }
 }

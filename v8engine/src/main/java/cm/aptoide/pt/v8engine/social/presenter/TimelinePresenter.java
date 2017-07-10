@@ -112,6 +112,8 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnShareEvents();
 
+    handleCommentPostResponseEvent();
+
     handleSharePostConfirmationEvent();
 
     handleCardClickOnStatsEvents();
@@ -176,6 +178,19 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> throwable.printStackTrace());
   }
 
+  private void handleCommentPostResponseEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.commentPosted())
+        .flatMapCompletable((comment) -> timeline.sharePost(comment.getCardId())
+            .flatMapCompletable(
+                responseCardId -> timeline.postComment(responseCardId, comment.getCommentText()))
+            .doOnCompleted(() -> view.showCommentSuccess()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> throwable.printStackTrace());
+  }
+
   private void handleCardClickOnShareEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -208,7 +223,17 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void handleCardClickOnNonSocialCommentsEvent() {
-    // TODO: 10/07/2017
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked())
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.COMMENT) && (isNormalPost(cardTouchEvent.getCard())))
+        .doOnNext(cardTouchEvent -> view.showCommentDialog(cardTouchEvent.getCard()
+            .getCardId()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
+        });
   }
 
   private void handleCardClickOnLoginEvent() {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +38,7 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
+import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
@@ -46,6 +48,7 @@ import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -77,6 +80,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private CardAdapter adapter;
   private PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private PublishSubject<Post> sharePreviewPublishSubject;
+  private PublishSubject<PostComment> commentPostResponseSubject;
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -126,6 +130,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     cardTouchEventPublishSubject = PublishSubject.create();
     sharePreviewPublishSubject = PublishSubject.create();
+    commentPostResponseSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
@@ -241,6 +246,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return sharePreviewPublishSubject;
   }
 
+  @Override public Observable<PostComment> commentPosted() {
+    return commentPostResponseSubject;
+  }
+
   @Override public Observable<Void> retry() {
     return RxView.clicks(retryButton);
   }
@@ -303,6 +312,21 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showShareSuccessMessage() {
+    ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+  }
+
+  @Override public void showCommentDialog(String cardId) {
+    FragmentManager fm = getFragmentManager();
+    CommentDialogFragment commentDialogFragment =
+        CommentDialogFragment.newInstanceTimelineArticleComment(cardId);
+    commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
+      PostComment postComment = new PostComment(cardId, inputText);
+      commentPostResponseSubject.onNext(postComment);
+    });
+    commentDialogFragment.show(fm, "fragment_comment_dialog");
+  }
+
+  @Override public void showCommentSuccess() {
     ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
   }
 
