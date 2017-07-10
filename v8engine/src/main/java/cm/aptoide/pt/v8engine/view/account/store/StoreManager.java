@@ -169,8 +169,7 @@ public class StoreManager {
         .toSingle()
         .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
             storeImagePath, multipartBodyInterceptor, httpClient, converterFactory,
-            requestBodyFactory,
-            objectMapper, sharedPreferences, tokenInvalidator)
+            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator)
             .observe()
             .toSingle())
         .toCompletable();

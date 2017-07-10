@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.social.view;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
+import cm.aptoide.pt.v8engine.social.data.PostComment;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -33,6 +34,8 @@ public interface TimelineView extends View {
 
   Observable<Post> shareConfirmation();
 
+  Observable<PostComment> commentPosted();
+
   Observable<Void> retry();
 
   void showLoadMoreProgressIndicator();
@@ -60,4 +63,8 @@ public interface TimelineView extends View {
   void showSharePreview(Post post);
 
   void showShareSuccessMessage();
+
+  void showCommentDialog(String cardId);
+
+  void showCommentSuccess();
 }

@@ -1,11 +1,13 @@
 package cm.aptoide.pt.v8engine.social.view;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.annotation.UiThread;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +31,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -38,6 +41,7 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
+import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
@@ -46,13 +50,20 @@ import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -79,6 +90,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private CardAdapter adapter;
   private PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private PublishSubject<Post> sharePreviewPublishSubject;
+  private PublishSubject<PostComment> commentPostResponseSubject;
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -99,6 +111,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private AlertDialog shareDialog;
   private SharePreviewFactory sharePreviewFactory;
   private SpannableFactory spannableFactory;
+  private TabNavigator tabNavigator;
+  private String cardIdPriority;
+  private TimelineAnalytics timelineAnalytics;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -116,8 +131,25 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return fragment;
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    tabNavigator.navigation()
+        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(tabNavigation -> cardIdPriority = tabNavigation.getBundle()
+            .getString(AppsTimelineTabNavigation.CARD_ID_KEY), err -> CrashReport.getInstance()
+            .log(err));
     newRefresh = true;
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
@@ -130,6 +162,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     cardTouchEventPublishSubject = PublishSubject.create();
     sharePreviewPublishSubject = PublishSubject.create();
+    commentPostResponseSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
@@ -164,8 +197,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     coordinatorLayout = view.findViewById(R.id.coordinator_layout);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
-    attachPresenter(new TimelinePresenter(this,
-        new Timeline(new TimelineService(getArguments().getString(ACTION_KEY), userId,
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()),
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+        WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId(), sharedPreferences);
+
+    attachPresenter(new TimelinePresenter(this, new Timeline(
+        new TimelineService(getArguments().getString(ACTION_KEY), cardIdPriority, userId,
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
@@ -183,8 +223,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             WebService.getDefaultConverter(),
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-        new StoreCredentialsProviderImpl(), accountManager, userId, storeId, storeContext,
-        getContext().getResources(), getFragmentNavigator()), savedInstanceState);
+        new StoreCredentialsProviderImpl(), accountManager, timelineAnalytics, userId, storeId,
+        storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
   }
 
   @Override public void showCards(List<Post> cards) {
@@ -248,6 +288,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Post> shareConfirmation() {
     return sharePreviewPublishSubject;
+  }
+
+  @Override public Observable<PostComment> commentPosted() {
+    return commentPostResponseSubject;
   }
 
   @Override public Observable<Void> retry() {
@@ -331,12 +375,29 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
             .setPositiveButton(R.string.share,
                 (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(android.R.string.cancel,
+                (dialogInterface, i) -> timelineAnalytics.sendSocialCardPreviewActionEvent(
+                    TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL))
             .create();
     shareDialog.show();
   }
 
   @Override public void showShareSuccessMessage() {
+    ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+  }
+
+  @Override public void showCommentDialog(String cardId) {
+    FragmentManager fm = getFragmentManager();
+    CommentDialogFragment commentDialogFragment =
+        CommentDialogFragment.newInstanceTimelineArticleComment(cardId);
+    commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
+      PostComment postComment = new PostComment(cardId, inputText);
+      commentPostResponseSubject.onNext(postComment);
+    });
+    commentDialogFragment.show(fm, "fragment_comment_dialog");
+  }
+
+  @Override public void showCommentSuccess() {
     ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
   }
 

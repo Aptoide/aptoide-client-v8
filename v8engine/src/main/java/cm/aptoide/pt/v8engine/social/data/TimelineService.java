@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.v8engine.PackageRepository;
@@ -43,13 +44,16 @@ public class TimelineService {
   private int total;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private String cardIdPriority;
 
-  public TimelineService(String url, Long userId, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient okhttp, Converter.Factory converterFactory, PackageRepository packageRepository,
+  public TimelineService(String url, String cardIdPriority, Long userId,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
+      Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.url = url;
+    this.cardIdPriority = cardIdPriority;
     this.userId = userId;
     this.bodyInterceptor = bodyInterceptor;
     this.okhttp = okhttp;
@@ -77,7 +81,8 @@ public class TimelineService {
     }
     return getPackages().doOnSuccess(packages -> loading = true)
         .flatMap(packages -> GetUserTimelineRequest.of(url, limit, initialOffset, packages,
-            bodyInterceptor, okhttp, converterFactory, null, tokenInvalidator, sharedPreferences)
+            bodyInterceptor, okhttp, converterFactory, cardIdPriority, tokenInvalidator,
+            sharedPreferences)
             .observe()
             .toSingle()
             .flatMap(timelineResponse -> {
@@ -133,16 +138,30 @@ public class TimelineService {
         .map(timelineStats -> mapper.map(timelineStats));
   }
 
-  public Completable share(Post post) {
-    return ShareCardRequest.of(post.getCardId(), bodyInterceptor, okhttp, converterFactory,
-        tokenInvalidator, sharedPreferences)
+  public Single<String> share(String cardId) {
+    return ShareCardRequest.of(cardId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
+        sharedPreferences)
+        .observe()
+        .toSingle()
+        .flatMap(response -> {
+          if (response.isOk()) {
+            return Single.just(response.getData()
+                .getCardUid());
+          }
+          return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        });
+  }
+
+  public Completable postComment(String cardId, String commentText) {
+    return PostCommentForTimelineArticle.of(cardId, commentText, bodyInterceptor, okhttp,
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
             return Completable.complete();
+          } else {
+            return Completable.error(new IllegalStateException(V7.getErrorMessage(response)));
           }
-          return Completable.error(
-              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
         })
         .toCompletable();
   }
