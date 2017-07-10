@@ -54,7 +54,7 @@ class SpotAndShareV2 {
 
     isGroupCreated().flatMapCompletable(created -> {
       if (!created) {
-        return enableHotspot(null, null).doOnCompleted(() -> {
+        return enableHotspot().doOnCompleted(() -> {
           enabled = true;
           // TODO: 10-07-2017 neuro
           spotAndShareMessageServer.startServer(createHostsChangedCallback(onError));
@@ -118,7 +118,7 @@ class SpotAndShareV2 {
     }, 20000);
   }
 
-  private Completable enableHotspot(Action0 onSuccess, OnError onError) {
+  private Completable enableHotspot() {
     return hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE);
   }
 
