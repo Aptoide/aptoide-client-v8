@@ -147,7 +147,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
                   knockWithSixpackCredentials(displayable.getAbUrl());
                   UserTimeline user = new UserTimeline();
                   Store store = new Store();
-                  store.setAvatar(account.getStoreAvatar());
+                  store.setAvatar(account.getStore()
+                      .getAvatar());
                   user.setAvatar(account.getAvatar());
                   user.setStore(store);
                   addUserToPreview(marginOfTheNextLikePreview, user);
