@@ -10,6 +10,7 @@ import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by filipe on 12-06-2017.
@@ -32,7 +33,14 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> spotAndShare.intentObservable())
+        .flatMap(created -> spotAndShare.intentObservable()
+            .doOnNext(accepters -> {
+              // TODO: 10-07-2017 neuro This will crash! :)
+              for (Accepter<AndroidAppInfo> accepter : accepters) {
+                accepter.accept();
+              }
+            }))
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(appList -> updateTransferRecord(appList))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
