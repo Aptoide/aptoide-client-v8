@@ -44,13 +44,16 @@ public class TimelineService {
   private int total;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private String cardIdPriority;
 
-  public TimelineService(String url, Long userId, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient okhttp, Converter.Factory converterFactory, PackageRepository packageRepository,
+  public TimelineService(String url, String cardIdPriority, Long userId,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
+      Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.url = url;
+    this.cardIdPriority = cardIdPriority;
     this.userId = userId;
     this.bodyInterceptor = bodyInterceptor;
     this.okhttp = okhttp;
@@ -78,7 +81,8 @@ public class TimelineService {
     }
     return getPackages().doOnSuccess(packages -> loading = true)
         .flatMap(packages -> GetUserTimelineRequest.of(url, limit, initialOffset, packages,
-            bodyInterceptor, okhttp, converterFactory, null, tokenInvalidator, sharedPreferences)
+            bodyInterceptor, okhttp, converterFactory, cardIdPriority, tokenInvalidator,
+            sharedPreferences)
             .observe()
             .toSingle()
             .flatMap(timelineResponse -> {

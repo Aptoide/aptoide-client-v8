@@ -145,7 +145,6 @@ public class TimelinePresenter implements Presenter {
             .getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
-
         }, throwable -> {
         });
   }
@@ -160,9 +159,7 @@ public class TimelinePresenter implements Presenter {
             .getCardId(), ((LikesCardTouchEvent) cardTouchEvent).getLikesNumber()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
-
         }, throwable -> {
-
         });
   }
 
@@ -171,7 +168,6 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
             .flatMapSingle(post -> timeline.sharePost(post)
-                .retry()
                 .doOnSuccess(cardId -> view.showShareSuccessMessage())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
