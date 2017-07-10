@@ -40,7 +40,9 @@ public class PostRemoteAccessor implements PostAccessor {
    * the request.
    */
   @Override public Single<List<RelatedApp>> getRelatedApps(String url) {
-    return postWebService.getRelatedApps(requestFactory.getRelatedAppsRequest(url))
+    return requestFactory.getRelatedAppsRequest(url)
+        .flatMap(relatedAppsRequest -> postWebService.getRelatedApps(relatedAppsRequest))
+        .toObservable()
         .filter(response -> response.getDatalist()
             .getCount() > 0)
         .map(response -> {

@@ -28,7 +28,9 @@ class PostRequestBuilder {
             .map(baseBodySingle -> ((CardPreviewRequest) baseBodySingle)));
   }
 
-  public RelatedAppsRequest getRelatedAppsRequest(String url) {
-    return null;
+  public Single<RelatedAppsRequest> getRelatedAppsRequest(String url) {
+    return Single.just(new RelatedAppsRequest(url))
+        .flatMap(relatedAppsRequest -> baseBodyInterceptor.intercept(relatedAppsRequest)
+            .map(baseBody -> ((RelatedAppsRequest) baseBody)));
   }
 }

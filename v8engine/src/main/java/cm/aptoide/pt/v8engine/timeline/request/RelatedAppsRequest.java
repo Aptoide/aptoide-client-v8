@@ -1,9 +1,16 @@
 package cm.aptoide.pt.v8engine.timeline.request;
 
-public class RelatedAppsRequest extends BaseRequest {
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 
-  public RelatedAppsRequest(String accessToken, String appMd5Sum, String appPackage, String appVersionCode,
-      String appUid, String cdn, String language, boolean mature, String q) {
-    super(accessToken, appMd5Sum, appPackage, appVersionCode, appUid, cdn, language, mature, q);
+public class RelatedAppsRequest extends BaseBody {
+
+  private String url;
+
+  public RelatedAppsRequest(String url) {
+    this.url = url;
+  }
+
+  public String getUrl() {
+    return url;
   }
 }
