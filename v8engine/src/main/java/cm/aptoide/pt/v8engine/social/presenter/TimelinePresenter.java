@@ -498,6 +498,10 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.SOCIAL_INSTALL)) {
             RatedRecommendation card = (RatedRecommendation) cardTouchEvent.getCard();
+            timelineAnalytics.sendSocialInstallClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
+                card.getPoster()
+                    .getPrimaryName());
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
