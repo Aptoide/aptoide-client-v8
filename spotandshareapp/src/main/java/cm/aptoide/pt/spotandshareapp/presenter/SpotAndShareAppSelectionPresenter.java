@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppSelectionManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.File;
@@ -93,7 +94,8 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
 
       AndroidAppInfo androidAppInfo =
           new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata);
-      spotAndShare.sendApps(Collections.singletonList(androidAppInfo));
+      AptoideUtils.ThreadU.runOnIoThread(
+          () -> spotAndShare.sendApps(Collections.singletonList(androidAppInfo)));
 
       view.openTransferRecord();
     } else {
