@@ -104,7 +104,9 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnNonSocialLikeEvents();
 
-    handleCardClickOnCommentEvent();
+    handleCardClickOnSocialCommentEvent();
+
+    handleCardClickOnNonSocialCommentsEvent();
 
     handleCardClickOnCommentsNumberEvent();
 
@@ -187,12 +189,15 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
-  private void handleCardClickOnCommentEvent() {
+  private void handleCardClickOnSocialCommentEvent() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-            .equals(CardTouchEvent.Type.COMMENT))
+            .equals(CardTouchEvent.Type.COMMENT) && (isSocialPost(cardTouchEvent.getCard())
+            || cardTouchEvent.getCard()
+            .getType()
+            .equals(CardType.MINIMAL_CARD)))
         .doOnNext(cardTouchEvent -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
             cardTouchEvent.getCard()
                 .getCardId()))
@@ -200,6 +205,10 @@ public class TimelinePresenter implements Presenter {
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
         });
+  }
+
+  private void handleCardClickOnNonSocialCommentsEvent() {
+    // TODO: 10/07/2017
   }
 
   private void handleCardClickOnLoginEvent() {
