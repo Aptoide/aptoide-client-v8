@@ -96,10 +96,12 @@ class SpotAndShareV2 {
   }
 
   private Single<Boolean> isGroupCreated() {
-    return hotspotManager.isWifiEnabled()
-        .flatMap(wifiEnabled -> hotspotManager.setWifiEnabled(true)
-            .flatMap(wifiEnabled1 -> hotspotManager.scan())
-            .map(hotspots -> !hotspots.isEmpty()));
+    return hotspotManager.saveActualNetworkState()
+        .toSingle(() -> 0)
+        .flatMap(__ -> hotspotManager.isWifiEnabled()
+            .flatMap(wifiEnabled -> hotspotManager.setWifiEnabled(true)
+                .flatMap(wifiEnabled1 -> hotspotManager.scan())
+                .map(hotspots -> !hotspots.isEmpty())));
   }
 
   public interface OnError {

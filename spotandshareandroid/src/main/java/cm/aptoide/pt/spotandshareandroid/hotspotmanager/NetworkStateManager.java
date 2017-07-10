@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareandroid.hotspotmanager;
 
 import android.net.wifi.WifiManager;
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -17,19 +18,19 @@ class NetworkStateManager {
     this.wifimanager = wifimanager;
   }
 
-  public void saveActualNetworkState() {
-    wifiEnabledOnStart = wifimanager.isWifiEnabled();
+  public Completable saveActualNetworkState() {
+    return Completable.fromAction(() -> wifiEnabledOnStart = wifimanager.isWifiEnabled());
   }
 
-  public void restoreNetworkState() {
-    wifimanager.setWifiEnabled(wifiEnabledOnStart);
+  public Single<Boolean> restoreNetworkState() {
+    return setWifiEnabled(wifiEnabledOnStart);
   }
 
   public Single<Boolean> isWifiEnabled() {
-    return Single.just(wifimanager.isWifiEnabled());
+    return Single.fromCallable(wifimanager::isWifiEnabled);
   }
 
   public Single<Boolean> setWifiEnabled(boolean enabled) {
-    return Single.just(wifimanager.setWifiEnabled(enabled));
+    return Single.fromCallable(() -> wifimanager.setWifiEnabled(enabled));
   }
 }
