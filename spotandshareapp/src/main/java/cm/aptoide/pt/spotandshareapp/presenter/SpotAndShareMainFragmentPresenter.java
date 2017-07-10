@@ -75,9 +75,9 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .doOnNext(selection -> {
           Log.i(getClass().getName(), "GOING TO START RECEIVING");
           //// TODO: 09-06-2017 filipe call spot&share lib
-          spotAndShare.joinGroup(uuid -> {
-              }, view::onJoinGroupError,
-              androidAppInfo -> view.requestPermissionToReceiveApp(androidAppInfo));
+          spotAndShare.joinGroup(andShareSender -> {
+            // TODO: 10-07-2017 filipe
+          }, view::onJoinGroupError);
           view.openWaitingToReceiveFragment();
         });
   }

@@ -30,6 +30,7 @@ class SpotAndShareV2 {
   private final String DUMMY_UUID = "dummy_uuid";
   private final Context applicationContext;
   private final AccepterRelay accepterRelay = new AccepterRelay();
+  private final int TIMEOUT = 60 * 1000;
   private boolean enabled;
 
   SpotAndShareV2(Context context) {
@@ -51,7 +52,7 @@ class SpotAndShareV2 {
 
   void send(Action1<SpotAndShareSender> onSuccess, OnError onError) {
 
-    isGroupCreated().flatMap(created -> {
+    isGroupCreated().flatMapCompletable(created -> {
       if (!created) {
         return enableHotspot(null, null).doOnCompleted(() -> {
           enabled = true;
@@ -61,8 +62,7 @@ class SpotAndShareV2 {
               new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
                   accepterRelay.getAccepter()));
           onSuccess.call(createSpotAndShareSender());
-        })
-            .toSingle(() -> 0);
+        });
       } else {
         return joinHotspot(() -> {
           enabled = true;
@@ -74,10 +74,25 @@ class SpotAndShareV2 {
         }, throwable -> {
           enabled = false;
           onError.onError(throwable);
-        }).toSingle(() -> 0);
+        });
       }
     })
-        .toCompletable()
+        .subscribe(() -> {
+        }, Throwable::printStackTrace);
+  }
+
+  void receive(Action1<SpotAndShareSender> onSuccess, OnError onError) {
+    // TODO: 10-07-2017 neuro duplicated with isGroupCreated()
+    hotspotManager.saveActualNetworkState()
+        .andThen(hotspotManager.isWifiEnabled()
+            .flatMap(wifiEnabled -> hotspotManager.setWifiEnabled(true)))
+        .flatMapCompletable(aBoolean -> hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled1 -> {
+          if (enabled1) {
+            onSuccess.call(createSpotAndShareSender());
+          } else {
+            onError.onError(new Throwable("Failed to join hotspot"));
+          }
+        }, TIMEOUT))
         .subscribe(() -> {
         }, Throwable::printStackTrace);
   }
@@ -104,8 +119,7 @@ class SpotAndShareV2 {
 
   private Single<Boolean> isGroupCreated() {
     return hotspotManager.saveActualNetworkState()
-        .toSingle(() -> 0)
-        .flatMap(__ -> hotspotManager.isWifiEnabled()
+        .andThen(hotspotManager.isWifiEnabled()
             .flatMap(wifiEnabled -> hotspotManager.setWifiEnabled(true)
                 .flatMap(wifiEnabled1 -> hotspotManager.scan())
                 .map(hotspots -> !hotspots.isEmpty())));

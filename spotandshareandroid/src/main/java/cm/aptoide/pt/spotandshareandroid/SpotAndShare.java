@@ -41,9 +41,8 @@ public class SpotAndShare {
     groupCreated.isCreated(false);//added this in order to test the hotspot creation
   }
 
-  public void joinGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
-      AndroidAppInfoAccepter androidAppInfoAccepter) {
-    //spotAndShareV2.receive(onSuccess, onError::onError, androidAppInfoAccepter);
+  public void joinGroup(Action1<SpotAndShareSender> onSuccess, OnError onError) {
+    spotAndShareV2.receive(onSuccess, onError::onError);
   }
 
   public void leaveGroup(Action0 onSuccess, Action1<? super Throwable> onError) {
