@@ -133,17 +133,17 @@ public class TimelineService {
         .map(timelineStats -> mapper.map(timelineStats));
   }
 
-  public Completable share(Post post) {
+  public Single<String> share(Post post) {
     return ShareCardRequest.of(post.getCardId(), bodyInterceptor, okhttp, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe()
-        .flatMapCompletable(response -> {
+        .toSingle()
+        .flatMap(response -> {
           if (response.isOk()) {
-            return Completable.complete();
+            return Single.just(response.getData()
+                .getCardUid());
           }
-          return Completable.error(
-              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
-        })
-        .toCompletable();
+          return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        });
   }
 }

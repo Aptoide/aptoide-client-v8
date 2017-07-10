@@ -100,7 +100,9 @@ public class TimelinePresenter implements Presenter {
 
     handleCardClickOnBodyEvents();
 
-    handleCardClickOnLikeEvents();
+    handleCardClickOnSocialLikeEvents();
+
+    handleCardClickOnNonSocialLikeEvents();
 
     handleCardClickOnCommentEvent();
 
@@ -164,9 +166,9 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
-            .flatMapCompletable(post -> timeline.sharePost(post)
+            .flatMapSingle(post -> timeline.sharePost(post)
                 .retry()
-                .doOnCompleted(() -> view.showShareSuccessMessage())))
+                .doOnSuccess(cardId -> view.showShareSuccessMessage())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> throwable.printStackTrace());
@@ -265,14 +267,31 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
-  private void handleCardClickOnLikeEvents() {
+  private void handleCardClickOnSocialLikeEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-                .equals(CardTouchEvent.Type.LIKE))
-            .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard())
-                .retry()))
+                .equals(CardTouchEvent.Type.LIKE) && isSocialPost(cardTouchEvent.getCard()))
+            .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard()
+                .getCardId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
+        });
+  }
+
+  private void handleCardClickOnNonSocialLikeEvents() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.LIKE) && isNormalPost(cardTouchEvent.getCard()))
+            .flatMapCompletable(cardTouchEvent -> timeline.sharePost(cardTouchEvent.getCard())
+                .flatMapCompletable(cardId -> timeline.like(cardId))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> view.showShareSuccessMessage()))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
@@ -526,6 +545,16 @@ public class TimelinePresenter implements Presenter {
         .equals(CardType.SOCIAL_STORE) || post.getType()
         .equals(CardType.SOCIAL_RECOMMENDATION) || post.getType()
         .equals(CardType.SOCIAL_INSTALL);
+  }
+
+  private boolean isNormalPost(Post post) {
+    return post.getType()
+        .equals(CardType.RECOMMENDATION) || post.getType()
+        .equals(CardType.ARTICLE) || post.getType()
+        .equals(CardType.VIDEO) || post.getType()
+        .equals(CardType.POPULAR_APP) || post.getType()
+        .equals(CardType.STORE) || post.getType()
+        .equals(CardType.UPDATE);
   }
 
   private void navigateToStoreTimeline(SocialHeaderCardTouchEvent socialHeaderCardTouchEvent) {

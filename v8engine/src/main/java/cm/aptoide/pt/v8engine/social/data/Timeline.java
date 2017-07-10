@@ -43,8 +43,8 @@ public class Timeline {
             .getVercode()));
   }
 
-  public Completable like(Post post) {
-    return service.like(post.getCardId());
+  public Completable like(String cardId) {
+    return service.like(cardId);
   }
 
   public Single<Post> getTimelineStats() {
@@ -55,7 +55,7 @@ public class Timeline {
     return Single.just(new TimelineLoginPost());
   }
 
-  public Completable sharePost(Post post) {
+  public Single<String> sharePost(Post post) {
     return service.share(post);
   }
 }
