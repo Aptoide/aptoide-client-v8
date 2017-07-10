@@ -71,6 +71,12 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     } else {
       datePos1.setVisibility(View.VISIBLE);
     }
+
+    compositeSubscription.add(RxView.clicks(itemView)
+        .doOnNext(click -> displayable.itemClicked())
+        .subscribe(__ -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void bindComplexComment(ComplexComment comment) {

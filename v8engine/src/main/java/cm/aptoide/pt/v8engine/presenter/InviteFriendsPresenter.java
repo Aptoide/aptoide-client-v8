@@ -42,7 +42,8 @@ public class InviteFriendsPresenter implements InviteFriendsContract.UserActions
         ((V8Engine) context.getApplicationContext()).getAccountManager();
 
     String url = context.getString(R.string.store_url, accountManager.getAccount()
-        .getStoreName());
+        .getStore()
+        .getName());
     String shareText = context.getString(R.string.follow_my_store, V8Engine.getConfiguration()
         .getMarketName(), url);
 
