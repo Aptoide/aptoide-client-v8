@@ -11,6 +11,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -452,6 +453,10 @@ public class TimelinePresenter implements Presenter {
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.UPDATE)) {
+            AppUpdate card = (AppUpdate) cardTouchEvent.getCard();
+            timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.UPDATE_APP, "(blank)", card.getPackageName(),
+                card.getStoreName());
             permissionManager.requestExternalStoragePermission(permissionRequest)
                 .flatMap(success -> {
                   if (installManager.showWarning()) {
