@@ -88,6 +88,10 @@ class SpotAndShareV2 {
             .flatMap(wifiEnabled -> hotspotManager.setWifiEnabled(true)))
         .flatMapCompletable(aBoolean -> hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled1 -> {
           if (enabled1) {
+            enabled = true;
+            spotAndShareMessageServer.startClient(
+                new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
+                    accepterRelay.getAccepter()));
             onSuccess.call(createSpotAndShareSender());
           } else {
             onError.onError(new Throwable("Failed to join hotspot"));
@@ -100,6 +104,7 @@ class SpotAndShareV2 {
   private HostsChangedCallback createHostsChangedCallback(OnError onError) {
     return hostList -> {
       // TODO: 10-07-2017 neuro
+      System.out.println("Filipe: " + hostList);
     };
   }
 
