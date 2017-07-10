@@ -33,10 +33,7 @@ public class SpotAndShare {
 
   public void createGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
       AndroidAppInfoAccepter androidAppInfoAccepter) {
-    spotAndShareV2.send(onSuccess, onError::onError, androidAppInfoAccepter1 -> {
-      androidAppInfoAccepter.call(androidAppInfoAccepter1);
-      androidAppInfoAccepterMap.put(androidAppInfoAccepter1.getMeta(), androidAppInfoAccepter1);
-    });
+    spotAndShareV2.send(onSuccess, onError::onError);
   }
 
   public void isGroupCreated(GroupCreated groupCreated) {
@@ -46,7 +43,7 @@ public class SpotAndShare {
 
   public void joinGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
       AndroidAppInfoAccepter androidAppInfoAccepter) {
-    spotAndShareV2.receive(onSuccess, onError::onError, androidAppInfoAccepter);
+    //spotAndShareV2.receive(onSuccess, onError::onError, androidAppInfoAccepter);
   }
 
   public void leaveGroup(Action0 onSuccess, Action1<? super Throwable> onError) {
