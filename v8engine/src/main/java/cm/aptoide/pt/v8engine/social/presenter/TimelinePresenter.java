@@ -393,6 +393,9 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
+            timelineAnalytics.sendStoreLatestAppsClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", Analytics.AppsTimeline.BLANK,
+                card.getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (cardTouchEvent.getCard()
               .getType()
