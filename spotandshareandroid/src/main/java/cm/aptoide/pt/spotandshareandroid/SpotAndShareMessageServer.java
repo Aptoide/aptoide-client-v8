@@ -10,6 +10,7 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccept
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
+import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,6 +39,20 @@ public class SpotAndShareMessageServer {
           new AptoideMessageServerSocket(port, Integer.MAX_VALUE, Integer.MAX_VALUE);
       aptoideMessageServerSocket.setHostsChangedCallbackCallback(hostsCallbackManager);
       aptoideMessageServerSocket.startAsync();
+    }
+  }
+
+  public void startClient(MessageServerConfiguration messageServerConfiguration) {
+    if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
+      throw new IllegalStateException("Client Already started!");
+    } else {
+      aptoideMessageClientSocket = new AptoideMessageClientSocket(HOTSPOT_DEFAULT_ADDRESS, port,
+          messageServerConfiguration.getExternalStoragepath(),
+          messageServerConfiguration.getStorageCapacity(),
+          messageServerConfiguration.getFileLifecycleProvider(),
+          messageServerConfiguration.getSocketBinder(), messageServerConfiguration.getOnError(),
+          Integer.MAX_VALUE, messageServerConfiguration.getAndroidAppInfoAccepter());
+      aptoideMessageClientSocket.startAsync();
     }
   }
 

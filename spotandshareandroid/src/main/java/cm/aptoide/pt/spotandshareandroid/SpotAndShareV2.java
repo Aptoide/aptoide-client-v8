@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
+import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -26,12 +27,14 @@ class SpotAndShareV2 {
   private final HotspotManager hotspotManager;
   private final SpotAndShareMessageServer spotAndShareMessageServer;
   private final String DUMMY_UUID = "dummy_uuid";
+  private final Context applicationContext;
   private boolean enabled;
 
   SpotAndShareV2(Context context) {
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
         .getSystemService(Context.WIFI_SERVICE));
     spotAndShareMessageServer = new SpotAndShareMessageServer(55555);
+    applicationContext = context.getApplicationContext();
   }
 
   SpotAndShareSender spotAndShareSender = createSpotAndShareSender();
@@ -55,8 +58,9 @@ class SpotAndShareV2 {
           enabled = true;
           // TODO: 10-07-2017 neuro
           spotAndShareMessageServer.startServer(createHostsChangedCallback(onError));
-          spotAndShareMessageServer.startClient(null, null, null, null, null,
-              androidAppInfoAccepter);
+          spotAndShareMessageServer.startClient(
+              new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
+                  androidAppInfoAccepter));
           onSuccess.call(createSpotAndShareSender());
         })
             .toSingle(() -> 0);
@@ -64,8 +68,9 @@ class SpotAndShareV2 {
         return joinHotspot(() -> {
           enabled = true;
           // TODO: 10-07-2017 neuro
-          spotAndShareMessageServer.startClient(null, null, null, null, null,
-              androidAppInfoAccepter);
+          spotAndShareMessageServer.startClient(
+              new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
+                  androidAppInfoAccepter));
           onSuccess.call(createSpotAndShareSender());
         }, throwable -> {
           enabled = false;
