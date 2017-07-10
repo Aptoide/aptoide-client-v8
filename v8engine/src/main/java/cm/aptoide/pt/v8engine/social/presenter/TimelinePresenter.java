@@ -441,10 +441,19 @@ public class TimelinePresenter implements Presenter {
                 AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.STORE) || cardTouchEvent.getCard()
+              .equals(CardType.STORE)) {
+            StoreAppCardTouchEvent storeAppCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
+            timelineAnalytics.sendStoreLatestAppsClickEvent(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)",
+                storeAppCardTouchEvent.getPackageName(),
+                ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName());
+            navigateToAppView(storeAppCardTouchEvent);
+          } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
-            navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
+            StoreAppCardTouchEvent storeAppCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
+            navigateToAppView(storeAppCardTouchEvent);
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.SOCIAL_STORE)) {
