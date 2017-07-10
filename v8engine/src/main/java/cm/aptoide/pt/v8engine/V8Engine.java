@@ -342,7 +342,10 @@ public abstract class V8Engine extends Application {
     // app synchronous initialization
     //
 
-    sendAppStartToAnalytics();
+    sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences())))
+        .subscribe();
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -891,10 +894,11 @@ public abstract class V8Engine extends Application {
         .build(context, flurryKey);
   }
 
-  private void sendAppStartToAnalytics() {
-    Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
-        getDefaultClient(), getBaseBodyInterceptorV7(), getDefaultSharedPreferences(),
-        getTokenInvalidator());
+  private Observable sendAppStartToAnalytics() {
+    return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
+        getDefaultClient(), getBaseBodyInterceptorV7(),
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences()), getTokenInvalidator());
   }
 
   private Completable checkAppSecurity() {
@@ -959,9 +963,6 @@ public abstract class V8Engine extends Application {
   // todo re-factor all this code to proper Rx
   private Completable setupFirstRun(final AptoideAccountManager accountManager) {
     return Completable.defer(() -> {
-      SecurePreferences.setFirstRun(false,
-          SecurePreferencesImplementation.getInstance(getApplicationContext(),
-              getDefaultSharedPreferences()));
 
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 
