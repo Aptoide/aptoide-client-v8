@@ -1028,7 +1028,7 @@ public abstract class V8Engine extends Application {
     return nonNullObjectMapper;
   }
 
-  private String getAptoideMd5sum() {
+  public String getAptoideMd5sum() {
     if (aptoideMd5sum == null) {
       synchronized (this) {
         if (aptoideMd5sum == null) {

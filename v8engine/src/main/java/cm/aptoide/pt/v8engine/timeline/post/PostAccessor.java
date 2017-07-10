@@ -1,11 +1,11 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
-import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import java.util.List;
+import rx.Completable;
 import rx.Single;
 
 interface PostAccessor {
-  Single<SocialCard> postOnTimeline(String url, String content, String packageName);
+  Completable postOnTimeline(String url, String content, String packageName);
 
   Single<List<PostRemoteAccessor.RelatedApp>> getRelatedApps(String url);
 

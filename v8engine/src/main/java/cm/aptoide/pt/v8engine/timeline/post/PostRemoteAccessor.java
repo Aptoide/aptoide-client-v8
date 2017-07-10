@@ -1,17 +1,18 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.v8engine.timeline.response.CardPreview;
 import cm.aptoide.pt.v8engine.timeline.response.Response;
 import cm.aptoide.pt.v8engine.timeline.response.StillProcessingException;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public class PostRemoteAccessor implements PostAccessor {
 
+  private static final String TAG = PostRemoteAccessor.class.getSimpleName();
   private final PostWebService postWebService;
   private final PostRequestBuilder requestFactory;
 
@@ -24,12 +25,10 @@ public class PostRemoteAccessor implements PostAccessor {
    * @return Card inserted in the timeline. Possible types of cards: SOCIAL_APP, SOCIAL_ARTICLE,
    * SOCIAL_VIDEO
    */
-  @Override public Single<SocialCard> postOnTimeline(String url, String content, String packageName) {
-    return postWebService.postInTimeline(
-        requestFactory.getPostOnTimelineRequest(url, content, packageName))
-        .first()
-        .toSingle()
-        .map(response -> null);
+  @Override public Completable postOnTimeline(String url, String content, String packageName) {
+    return requestFactory.getPostOnTimelineRequest(url, content, packageName)
+        .flatMap(postRequest -> postWebService.postInTimeline(postRequest))
+        .toCompletable();
   }
 
   /**

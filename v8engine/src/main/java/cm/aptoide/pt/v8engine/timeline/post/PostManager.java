@@ -1,11 +1,11 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import rx.Completable;
 import rx.Single;
 
 public class PostManager {
@@ -18,7 +18,7 @@ public class PostManager {
     this.postLocalRepository = postLocalRepository;
   }
 
-  public Single<SocialCard> post(String url, String content, String packageName) {
+  public Completable post(String url, String content, String packageName) {
     return postRemoteRepository.postOnTimeline(url, content, packageName);
   }
 

@@ -14,8 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
@@ -23,6 +25,8 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Observable;
 
@@ -115,8 +119,18 @@ public class PostFragment extends FragmentView implements PostView {
     final RelatedAppsAdapter adapter = new RelatedAppsAdapter();
     relatedApps.setAdapter(adapter);
 
-    // FIXME
-    final PostRemoteAccessor postRemoteAccessor = new PostRemoteAccessor(null, null);
+    V8Engine v8Engine = (V8Engine) getContext().getApplicationContext();
+
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(PostWebService.BASE_URI)
+        .addConverterFactory(WebService.getDefaultConverter())
+        .client(v8Engine.getDefaultClient())
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .build();
+
+    PostWebService postWebService = retrofit.create(PostWebService.class);
+
+    final PostRemoteAccessor postRemoteAccessor = new PostRemoteAccessor(postWebService,
+        new PostRequestBuilder(v8Engine.getBaseBodyInterceptorV7()));
 
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),

@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.timeline.response.ResponseList;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import rx.Observable;
+import rx.Single;
 
 public interface PostWebService {
 
@@ -19,8 +20,8 @@ public interface PostWebService {
   @POST("user/timeline/card/preview/get") Observable<Response<CardPreview>> getCardPreview(
       CardPreviewRequest request);
 
-  @POST("user/timeline/card/apps/get") Observable<ResponseList<DataList<RelatedApp>>> getRelatedApps(
-      RelatedAppsRequest request);
+  @POST("user/timeline/card/apps/get")
+  Observable<ResponseList<DataList<RelatedApp>>> getRelatedApps(RelatedAppsRequest request);
 
-  @POST("user/timeline/card/set") Observable<Void> postInTimeline(@Body PostRequest request);
+  @POST("user/timeline/card/set") Single<Void> postInTimeline(@Body PostRequest request);
 }

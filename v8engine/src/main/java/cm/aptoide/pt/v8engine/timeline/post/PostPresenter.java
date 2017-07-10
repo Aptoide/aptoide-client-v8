@@ -15,6 +15,7 @@ import rx.schedulers.Schedulers;
 
 class PostPresenter implements Presenter {
   private static final Pattern URL_PATTERN = Patterns.WEB_URL;
+  private static final String TAG = PostPresenter.class.getSimpleName();
   private final PostView view;
   private final CrashReport crashReport;
   private final PostManager postManager;
@@ -89,6 +90,7 @@ class PostPresenter implements Presenter {
             .flatMapSingle(text -> findUrlOrNull(text))
             .filter(url -> !TextUtils.isEmpty(url))
             .debounce(1, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(__2 -> view.showCardPreviewLoading())
             .doOnNext(__2 -> view.hideCardPreview())
             .observeOn(Schedulers.io())
@@ -124,6 +126,7 @@ class PostPresenter implements Presenter {
             .flatMapSingle(text -> findUrlOrNull(text))
             .filter(url -> !TextUtils.isEmpty(url))
             .debounce(1, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(__2 -> view.showRelatedAppsLoading())
             .observeOn(Schedulers.io())
             .flatMapSingle(url -> postManager.getAppSuggestions(url))
@@ -144,13 +147,13 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
-            .flatMap(textToShare -> postManager.post(null, textToShare, adapter.getCurrentSelected()
-                .getPackageName())
+            .flatMapCompletable(textToShare -> findUrlOrNull(textToShare).flatMapCompletable(
+                url -> postManager.post(url, textToShare, adapter.getCurrentSelected()
+                    .getPackageName()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .toCompletable()
-                .andThen(view.showSuccessMessage())
-                .doOnCompleted(() -> fragmentNavigator.popBackStack())
-                .toObservable()))
+                .doOnCompleted(() -> view.showSuccessMessage())
+                .doOnCompleted(() -> fragmentNavigator.popBackStack())))
+        .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {

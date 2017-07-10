@@ -1,15 +1,17 @@
 package cm.aptoide.pt.v8engine.timeline.request;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PostRequest extends BaseRequest {
+public class PostRequest extends BaseBody {
   private String url;
   private String content;
   @JsonProperty("package_name") private String packageName;
 
-  public PostRequest(String accessToken, String appMd5Sum, String appPackage, String appVersionCode,
-      String appUid, String cdn, String language, boolean mature, String q) {
-    super(accessToken, appMd5Sum, appPackage, appVersionCode, appUid, cdn, language, mature, q);
+  public PostRequest(String url, String content, String packageName) {
+    this.url = url;
+    this.content = content;
+    this.packageName = packageName;
   }
 
   public String getUrl() {
