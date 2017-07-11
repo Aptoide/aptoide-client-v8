@@ -6,7 +6,7 @@ package cm.aptoide.pt.spotandshare.socket.interfaces;
 
 public interface FileLifecycleProvider<T> {
 
-  FileServerLifecycle<T> newFileServerLifecycle();
+  TransferLifecycle<T> newFileServerLifecycle();
 
-  FileClientLifecycle<T> newFileClientLifecycle();
+  TransferLifecycle<T> newFileClientLifecycle();
 }

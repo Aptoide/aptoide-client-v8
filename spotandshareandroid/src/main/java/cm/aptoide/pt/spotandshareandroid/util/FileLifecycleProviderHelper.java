@@ -1,9 +1,8 @@
 package cm.aptoide.pt.spotandshareandroid.util;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import java.io.IOException;
 
 /**
@@ -14,14 +13,14 @@ public class FileLifecycleProviderHelper {
 
   private static final String TAG = FileLifecycleProviderHelper.class.getSimpleName();
 
-  private FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
-    return new FileServerLifecycle<AndroidAppInfo>() {
-      @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
-        System.out.println(TAG + ": onStartSending: " + androidAppInfo);
+  private TransferLifecycle<AndroidAppInfo> newFileServerLifecycle() {
+    return new TransferLifecycle<AndroidAppInfo>() {
+      @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
+        System.out.println(TAG + ": onStartTransfer: " + androidAppInfo);
       }
 
-      @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
-        System.out.println(TAG + ": onFinishSending: " + androidAppInfo);
+      @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
+        System.out.println(TAG + ": onFinishTransfer: " + androidAppInfo);
       }
 
       @Override public void onError(IOException e) {
@@ -36,14 +35,14 @@ public class FileLifecycleProviderHelper {
     };
   }
 
-  private FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
-    return new FileClientLifecycle<AndroidAppInfo>() {
-      @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(TAG + ": onStartSending: " + androidAppInfo);
+  private TransferLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+    return new TransferLifecycle<AndroidAppInfo>() {
+      @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
+        System.out.println(TAG + ": onStartTransfer: " + androidAppInfo);
       }
 
-      @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(TAG + ": onFinishSending: " + androidAppInfo);
+      @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
+        System.out.println(TAG + ": onFinishTransfer: " + androidAppInfo);
       }
 
       @Override public void onError(IOException e) {
@@ -59,11 +58,11 @@ public class FileLifecycleProviderHelper {
 
   public FileLifecycleProvider<AndroidAppInfo> newFileLifecycleProvider() {
     return new FileLifecycleProvider<AndroidAppInfo>() {
-      @Override public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
+      @Override public TransferLifecycle<AndroidAppInfo> newFileServerLifecycle() {
         return FileLifecycleProviderHelper.this.newFileServerLifecycle();
       }
 
-      @Override public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+      @Override public TransferLifecycle<AndroidAppInfo> newFileClientLifecycle() {
         return FileLifecycleProviderHelper.this.newFileClientLifecycle();
       }
     };

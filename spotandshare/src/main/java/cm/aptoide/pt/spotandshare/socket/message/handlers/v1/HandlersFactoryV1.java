@@ -58,7 +58,7 @@ public class HandlersFactoryV1 {
       ShareAppsFileServerSocket shareAppsFileServerSocket =
           new ShareAppsFileServerSocket(sendApkMessage.getServerPort(),
               sendApkMessage.getAndroidAppInfo());
-      shareAppsFileServerSocket.setFileServerLifecycle(sendApkMessage.getAndroidAppInfo(),
+      shareAppsFileServerSocket.setTransferLifecycle(sendApkMessage.getAndroidAppInfo(),
           fileLifecycleProvider.newFileServerLifecycle());
       shareAppsFileServerSocket.startAsync();
       messageSender.send(new AckMessage(messageSender.getHost()));
@@ -115,7 +115,7 @@ public class HandlersFactoryV1 {
                 new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
                     receiveApkServerHost.getPort(), androidAppInfo.getFileInfos());
 
-            shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo,
+            shareAppsFileClientSocket.setTransferLifecycle(androidAppInfo,
                 fileLifecycleProvider.newFileClientLifecycle());
             shareAppsFileClientSocket.setSocketBinder(socketBinder);
             shareAppsFileClientSocket.startAsync();

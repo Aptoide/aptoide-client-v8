@@ -15,11 +15,10 @@ import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
@@ -70,13 +69,13 @@ public class ServerService extends Service {
     }
 
     fileLifecycleProvider = new FileLifecycleProvider<AndroidAppInfo>() {
-      @Override public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
-        return new FileServerLifecycle<AndroidAppInfo>() {
+      @Override public TransferLifecycle<AndroidAppInfo> newFileServerLifecycle() {
+        return new TransferLifecycle<AndroidAppInfo>() {
 
           private ProgressFilter progressFilter;
           private AndroidAppInfo androidAppInfo;
 
-          @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
+          @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
 
             this.androidAppInfo = androidAppInfo;
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
@@ -93,7 +92,7 @@ public class ServerService extends Service {
             sendBroadcast(i);
           }
 
-          @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
+          @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
             Logger.d(TAG, "Server : finished sending " + androidAppInfo);
 
             finishSendNotification(androidAppInfo);
@@ -130,13 +129,13 @@ public class ServerService extends Service {
         };
       }
 
-      @Override public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
-        return new FileClientLifecycle<AndroidAppInfo>() {
+      @Override public TransferLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+        return new TransferLifecycle<AndroidAppInfo>() {
 
           private ProgressFilter progressFilter;
           private AndroidAppInfo androidAppInfo;
 
-          @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+          @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
             this.androidAppInfo = androidAppInfo;
 
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
@@ -150,7 +149,7 @@ public class ServerService extends Service {
             sendBroadcast(i);
           }
 
-          @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+          @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
 
             finishReceiveNotification(androidAppInfo.getApk()
                 .getFilePath(), androidAppInfo.getPackageName(), androidAppInfo);

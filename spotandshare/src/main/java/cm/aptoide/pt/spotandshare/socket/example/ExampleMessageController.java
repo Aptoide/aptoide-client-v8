@@ -1,9 +1,8 @@
 package cm.aptoide.pt.spotandshare.socket.example;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import java.io.IOException;
@@ -15,14 +14,14 @@ import java.io.IOException;
 public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController(AptoideMessageClientSocket aptoideMessageClientSocket) {
-    super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newFileServerLifecycleProvider(),
+    super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newTransferLifecycleProvider(),
         null, null, null);
   }
 
-  private static FileLifecycleProvider<AndroidAppInfo> newFileServerLifecycleProvider() {
+  private static FileLifecycleProvider<AndroidAppInfo> newTransferLifecycleProvider() {
     return new FileLifecycleProvider<AndroidAppInfo>() {
-      @Override public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
-        return new FileServerLifecycle<AndroidAppInfo>() {
+      @Override public TransferLifecycle<AndroidAppInfo> newFileServerLifecycle() {
+        return new TransferLifecycle<AndroidAppInfo>() {
           @Override public void onError(IOException e) {
             e.printStackTrace();
           }
@@ -32,28 +31,28 @@ public class ExampleMessageController extends AptoideMessageClientController {
                 "onProgressChanged() called with: " + "progress = [" + progress + "]");
           }
 
-          @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
+          @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
             System.out.println(
-                "onStartSending() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+                "onStartTransfer() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
           }
 
-          @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
+          @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
             System.out.println(
-                "onFinishSending() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+                "onFinishTransfer() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
           }
         };
       }
 
-      @Override public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
-        return new FileClientLifecycle<AndroidAppInfo>() {
-          @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+      @Override public TransferLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+        return new TransferLifecycle<AndroidAppInfo>() {
+          @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
             System.out.println(
-                "onStartReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+                "onStartTransfer() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
           }
 
-          @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+          @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
             System.out.println(
-                "onFinishReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+                "onFinishTransfer() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
           }
 
           @Override public void onError(IOException e) {
@@ -69,16 +68,16 @@ public class ExampleMessageController extends AptoideMessageClientController {
     };
   }
 
-  private static FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
-    return new FileClientLifecycle<AndroidAppInfo>() {
-      @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+  private static TransferLifecycle<AndroidAppInfo> newTransferLifecycle() {
+    return new TransferLifecycle<AndroidAppInfo>() {
+      @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
         System.out.println(
-            "onStartReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+            "onStartTransfer() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
       }
 
-      @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+      @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
         System.out.println(
-            "onFinishReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+            "onFinishTransfer() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
       }
 
       @Override public void onError(IOException e) {
