@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.timeline.post;
 
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.v8engine.timeline.request.CardPreviewRequest;
 import cm.aptoide.pt.v8engine.timeline.request.RelatedAppsRequest;
 import rx.Single;
 
@@ -12,12 +11,6 @@ class PostRequestBuilder {
 
   PostRequestBuilder(BodyInterceptor<BaseBody> baseBodyInterceptor) {
     this.baseBodyInterceptor = baseBodyInterceptor;
-  }
-
-  public Single<CardPreviewRequest> getCardPreviewRequest(String url) {
-    return Single.just(new CardPreviewRequest(url))
-        .flatMap(cardPreviewRequest -> baseBodyInterceptor.intercept(cardPreviewRequest)
-            .map(baseBodySingle -> ((CardPreviewRequest) baseBodySingle)));
   }
 
   public Single<RelatedAppsRequest> getRelatedAppsRequest(String url) {

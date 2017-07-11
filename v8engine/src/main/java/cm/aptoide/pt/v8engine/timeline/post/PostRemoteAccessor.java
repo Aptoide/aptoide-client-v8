@@ -4,9 +4,9 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
-import cm.aptoide.pt.v8engine.timeline.response.CardPreview;
-import cm.aptoide.pt.v8engine.timeline.response.Response;
 import cm.aptoide.pt.v8engine.timeline.response.StillProcessingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +84,10 @@ public class PostRemoteAccessor implements PostAccessor {
   }
 
   @Override public Single<PostView.PostPreview> getCardPreview(String url) {
-    return requestFactory.getCardPreviewRequest(url)
-        .flatMap(cardPreviewRequest -> postWebService.getCardPreview(cardPreviewRequest))
+    return CardPreviewRequest.of(url, preferences, client, converter, bodyInterceptor,
+        tokenInvalidator)
+        .observe()
+        .toSingle()
         .map(response -> convertToLocalCardPreview(response));
   }
 
@@ -95,7 +97,7 @@ public class PostRemoteAccessor implements PostAccessor {
         PostManager.Origin.Remote, isSelected, remoteRelatedApp.getPackageName());
   }
 
-  private PostView.PostPreview convertToLocalCardPreview(Response<CardPreview> response) {
+  private PostView.PostPreview convertToLocalCardPreview(CardPreviewResponse response) {
     return new PostView.PostPreview(response.getData()
         .getData()
         .getThumbnail(), response.getData()
