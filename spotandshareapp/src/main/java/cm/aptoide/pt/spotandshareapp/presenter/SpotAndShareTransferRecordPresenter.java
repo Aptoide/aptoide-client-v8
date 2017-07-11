@@ -37,7 +37,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
             .doOnNext(accepters -> {
               // TODO: 10-07-2017 neuro This will crash! :)
               for (Accepter<AndroidAppInfo> accepter : accepters) {
-                accepter.accept();
+                accepter.accept(null);
               }
             }))
         .observeOn(AndroidSchedulers.mainThread())

@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileServerSocket;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.MessageHandler;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
@@ -104,7 +105,7 @@ public class HandlersFactoryV1 {
           return androidAppInfo;
         }
 
-        @Override public void accept() {
+        @Override public void accept(TransferLifecycle<AndroidAppInfo> fileClientLifecycle) {
           if (storageCapacity.hasCapacity(androidAppInfo.getFilesSize())) {
             Host receiveApkServerHost = receiveApk.getServerHost();
 
@@ -116,7 +117,8 @@ public class HandlersFactoryV1 {
                     receiveApkServerHost.getPort(), androidAppInfo.getFileInfos());
 
             shareAppsFileClientSocket.setTransferLifecycle(androidAppInfo,
-                fileLifecycleProvider.newFileClientLifecycle());
+                fileClientLifecycle != null ? fileClientLifecycle
+                    : fileLifecycleProvider.newFileClientLifecycle());
             shareAppsFileClientSocket.setSocketBinder(socketBinder);
             shareAppsFileClientSocket.startAsync();
           }
