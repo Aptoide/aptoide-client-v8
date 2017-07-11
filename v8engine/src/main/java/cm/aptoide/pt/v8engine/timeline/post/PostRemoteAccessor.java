@@ -7,6 +7,8 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
 import cm.aptoide.pt.v8engine.timeline.response.StillProcessingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,19 +20,14 @@ import rx.Single;
 
 public class PostRemoteAccessor implements PostAccessor {
 
-  private final PostWebService postWebService;
-  private final PostRequestBuilder requestFactory;
   private SharedPreferences preferences;
   private BodyInterceptor bodyInterceptor;
   private OkHttpClient client;
   private Converter.Factory converter;
   private TokenInvalidator tokenInvalidator;
 
-  public PostRemoteAccessor(PostWebService postWebService, PostRequestBuilder requestFactory,
-      SharedPreferences preferences, BodyInterceptor bodyInterceptor, OkHttpClient client,
-      Converter.Factory converter, TokenInvalidator tokenInvalidator) {
-    this.postWebService = postWebService;
-    this.requestFactory = requestFactory;
+  public PostRemoteAccessor(SharedPreferences preferences, BodyInterceptor bodyInterceptor,
+      OkHttpClient client, Converter.Factory converter, TokenInvalidator tokenInvalidator) {
     this.preferences = preferences;
     this.bodyInterceptor = bodyInterceptor;
     this.client = client;
@@ -58,15 +55,14 @@ public class PostRemoteAccessor implements PostAccessor {
    * the request.
    */
   @Override public Single<List<RelatedApp>> getRelatedApps(String url) {
-    return requestFactory.getRelatedAppsRequest(url)
-        .flatMap(relatedAppsRequest -> postWebService.getRelatedApps(relatedAppsRequest))
-        .toObservable()
-        .filter(response -> response.getDatalist()
+    return RelatedAppRequest.of(url, preferences, client, converter, bodyInterceptor,
+        tokenInvalidator)
+        .observe()
+        .filter(response -> response.getDataList()
             .getCount() > 0)
         .map(response -> {
-          List<cm.aptoide.pt.v8engine.timeline.response.RelatedApp> remoteList =
-              response.getDatalist()
-                  .getList();
+          List<RelatedAppResponse.RelatedApp> remoteList = response.getDataList()
+              .getList();
 
           List<RelatedApp> localList = new ArrayList<>(remoteList.size());
           localList.add(convertToLocalRelatedApp(remoteList.get(0), true));
@@ -91,8 +87,8 @@ public class PostRemoteAccessor implements PostAccessor {
         .map(response -> convertToLocalCardPreview(response));
   }
 
-  private RelatedApp convertToLocalRelatedApp(
-      cm.aptoide.pt.v8engine.timeline.response.RelatedApp remoteRelatedApp, boolean isSelected) {
+  private RelatedApp convertToLocalRelatedApp(RelatedAppResponse.RelatedApp remoteRelatedApp,
+      boolean isSelected) {
     return new RelatedApp(remoteRelatedApp.getIcon(), remoteRelatedApp.getName(),
         PostManager.Origin.Remote, isSelected, remoteRelatedApp.getPackageName());
   }

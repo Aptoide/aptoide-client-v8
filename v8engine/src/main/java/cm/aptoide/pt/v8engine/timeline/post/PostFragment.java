@@ -25,8 +25,6 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Observable;
 
@@ -121,19 +119,10 @@ public class PostFragment extends FragmentView implements PostView {
 
     V8Engine v8Engine = (V8Engine) getContext().getApplicationContext();
 
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(PostWebService.BASE_URI)
-        .addConverterFactory(WebService.getDefaultConverter())
-        .client(v8Engine.getDefaultClient())
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-        .build();
-
-    PostWebService postWebService = retrofit.create(PostWebService.class);
-
-    final PostRemoteAccessor postRemoteAccessor = new PostRemoteAccessor(postWebService,
-        new PostRequestBuilder(v8Engine.getBaseBodyInterceptorV7()),
-        v8Engine.getDefaultSharedPreferences(), v8Engine.getBaseBodyInterceptorV7(),
-        v8Engine.getDefaultClient(), WebService.getDefaultConverter(),
-        v8Engine.getTokenInvalidator());
+    final PostRemoteAccessor postRemoteAccessor =
+        new PostRemoteAccessor(v8Engine.getDefaultSharedPreferences(),
+            v8Engine.getBaseBodyInterceptorV7(), v8Engine.getDefaultClient(),
+            WebService.getDefaultConverter(), v8Engine.getTokenInvalidator());
 
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
