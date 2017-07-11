@@ -114,7 +114,13 @@ class PostPresenter implements Presenter {
         .map(text -> findUrlOrNull(text))
         .distinctUntilChanged()
         .filter(url -> !TextUtils.isEmpty(url))
-        .debounce(1, TimeUnit.SECONDS);
+        .debounce(1, TimeUnit.SECONDS)
+        .map(url -> {
+          if (!url.contains("http://")) {
+            url = "http://".concat(url);
+          }
+          return url;
+        });
   }
 
   private String findUrlOrNull(String text) {
