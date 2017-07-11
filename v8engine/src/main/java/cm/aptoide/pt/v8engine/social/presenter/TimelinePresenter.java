@@ -562,14 +562,14 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void sendClickOnMediaBodyEvent(Media card) {
-    timelineAnalytics.sendOpenArticleEvent(card.getType()
-        .name(), card.getMediaTitle(), card.getMediaLink()
-        .getUrl(), card.getRelatedApp()
-        .getPackageName());
     if (card.getType()
         .equals(CardType.ARTICLE) || card.getType()
         .equals(CardType.SOCIAL_ARTICLE) || card.getType()
         .equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
+      timelineAnalytics.sendOpenArticleEvent(card.getType()
+          .name(), card.getMediaTitle(), card.getMediaLink()
+          .getUrl(), card.getRelatedApp()
+          .getPackageName());
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
@@ -577,6 +577,10 @@ public class TimelinePresenter implements Presenter {
         .equals(CardType.VIDEO) || card.getType()
         .equals(CardType.SOCIAL_VIDEO) || card.getType()
         .equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
+      timelineAnalytics.sendOpenVideoEvent(card.getType()
+          .name(), card.getMediaTitle(), card.getMediaLink()
+          .getUrl(), card.getRelatedApp()
+          .getPackageName());
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO,
           "(blank)");
