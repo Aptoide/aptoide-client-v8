@@ -11,22 +11,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToReceivePresenter;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.BackButtonFragment;
+import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
 /**
  * Created by filipe on 12-06-2017.
  */
 
-public class SpotAndShareWaitingToReceiveFragment extends FragmentView
+public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
     implements SpotAndShareWaitingToReceiveView {
 
   private ImageView refreshButton;
   private Toolbar toolbar;
+  private PublishRelay<Void> backRelay;
+  private ClickHandler clickHandler;
+  private RxAlertDialog backDialog;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareWaitingToReceiveFragment();
@@ -35,6 +41,7 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    backRelay = PublishRelay.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -42,6 +49,17 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
     refreshButton = (ImageView) view.findViewById(R.id.sync_image);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
+    clickHandler = () -> {
+      backRelay.call(null);
+      return true;
+    };
+    registerClickHandler(clickHandler);
+    backDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+        R.string.spotandshare_message_leave_group_warning)
+        .setPositiveButton(R.string.spotandshare_button_leave_group)
+        .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
+        .build();
+    //// TODO: 11-07-2017 filipe FIX THIS DIALOG.
     attachPresenter(
         new SpotAndShareWaitingToReceivePresenter(this, SpotAndShare.getInstance(getContext())),
         savedInstanceState);
@@ -50,7 +68,15 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
   @Override public void onDestroyView() {
     refreshButton = null;
     toolbar = null;
+    unregisterClickHandler(clickHandler);
+    clickHandler = null;
+    backDialog = null;
     super.onDestroyView();
+  }
+
+  @Override public void onDestroy() {
+    backRelay = null;
+    super.onDestroy();
   }
 
   private void setupToolbar() {
@@ -85,7 +111,33 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
     //// TODO: 11-07-2017 filipe
   }
 
+  @Override public Observable<Void> backButtonEvent() {
+    return backRelay;
+  }
+
+  @Override public void showExitWarning() {
+    backDialog.show();
+  }
+
+  @Override public Observable<Void> exitEvent() {
+    return backDialog.positiveClicks()
+        .map(dialogInterface -> null);
+  }
+
+  @Override public void navigateBack() {
+    getFragmentNavigator().popBackStack();
+  }
+
+  @Override public void onLeaveGroupError() {
+    Toast.makeText(getContext(), "There was an error while trying to leave the group",
+        Toast.LENGTH_SHORT)
+        .show();
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    return super.onOptionsItemSelected(item);
+    if (item.getItemId() == android.R.id.home) {
+      backRelay.call(null);
+    }
+    return false;
   }
 }
