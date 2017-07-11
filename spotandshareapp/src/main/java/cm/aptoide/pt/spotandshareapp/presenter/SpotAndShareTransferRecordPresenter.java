@@ -1,15 +1,15 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
+import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -33,15 +33,12 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> spotAndShare.intentObservable()
-            .doOnNext(accepters -> {
-              // TODO: 10-07-2017 neuro This will crash! :)
-              for (Accepter<AndroidAppInfo> accepter : accepters) {
-                accepter.accept();
-              }
-            }))
+        .flatMap(created -> spotAndShare.observeTransfers()
+            .flatMap(transfers -> Observable.from(transfers)
+                .flatMap(Transfer::accept)
+                .toList()))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(appList -> updateTransferRecord(appList))
+        .doOnNext(transfers -> updateTransferRecord(transfers))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> err.printStackTrace());
@@ -79,8 +76,8 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         }, error -> error.printStackTrace());
   }
 
-  private void updateTransferRecord(List<Accepter<AndroidAppInfo>> accepterList) {
-    view.updateReceivedAppsList(transferRecordManager.getTransferAppModelList(accepterList));
+  private void updateTransferRecord(List<Transfer> transferList) {
+    view.updateReceivedAppsList(transferRecordManager.getTransferAppModelList(transferList));
   }
 
   private void leaveGroup() {

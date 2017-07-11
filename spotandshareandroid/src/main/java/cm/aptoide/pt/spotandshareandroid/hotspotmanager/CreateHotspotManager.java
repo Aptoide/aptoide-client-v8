@@ -156,6 +156,10 @@ class CreateHotspotManager {
     }));
   }
 
+  public Single<Boolean> isConfigurationStored() {
+    return Single.just(wifiConfiguration != null);
+  }
+
   private static class ReflectionMethods {
     private static final String SET_WIFI_AP_CONFIGURATION = "setWifiApConfiguration";
     private static final String SET_WIFI_AP_ENABLED = "setWifiApEnabled";

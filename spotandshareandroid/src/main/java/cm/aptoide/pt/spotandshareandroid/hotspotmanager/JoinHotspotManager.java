@@ -15,10 +15,6 @@ import rx.Completable;
 
 public class JoinHotspotManager {
 
-  private static final int SUCCESSFUL_JOIN = 0;
-  private static final int ERROR_UNKNOWN = 1;
-
-
   private final Context context;
   private final WifiManager wifimanager;
 

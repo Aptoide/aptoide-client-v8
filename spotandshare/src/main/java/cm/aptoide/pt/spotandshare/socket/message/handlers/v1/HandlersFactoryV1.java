@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileServerSocket;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.MessageHandler;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
@@ -58,7 +59,7 @@ public class HandlersFactoryV1 {
       ShareAppsFileServerSocket shareAppsFileServerSocket =
           new ShareAppsFileServerSocket(sendApkMessage.getServerPort(),
               sendApkMessage.getAndroidAppInfo());
-      shareAppsFileServerSocket.setFileServerLifecycle(sendApkMessage.getAndroidAppInfo(),
+      shareAppsFileServerSocket.setTransferLifecycle(sendApkMessage.getAndroidAppInfo(),
           fileLifecycleProvider.newFileServerLifecycle());
       shareAppsFileServerSocket.startAsync();
       messageSender.send(new AckMessage(messageSender.getHost()));
@@ -104,7 +105,7 @@ public class HandlersFactoryV1 {
           return androidAppInfo;
         }
 
-        @Override public void accept() {
+        @Override public void accept(TransferLifecycle<AndroidAppInfo> fileClientLifecycle) {
           if (storageCapacity.hasCapacity(androidAppInfo.getFilesSize())) {
             Host receiveApkServerHost = receiveApk.getServerHost();
 
@@ -115,8 +116,9 @@ public class HandlersFactoryV1 {
                 new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
                     receiveApkServerHost.getPort(), androidAppInfo.getFileInfos());
 
-            shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo,
-                fileLifecycleProvider.newFileClientLifecycle());
+            shareAppsFileClientSocket.setTransferLifecycle(androidAppInfo,
+                fileClientLifecycle != null ? fileClientLifecycle
+                    : fileLifecycleProvider.newFileClientLifecycle());
             shareAppsFileClientSocket.setSocketBinder(socketBinder);
             shareAppsFileClientSocket.startAsync();
           }

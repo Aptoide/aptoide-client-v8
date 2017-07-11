@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
+import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,11 +21,11 @@ public class SpotAndShareTransferRecordManager {
     this.context = context;
   }
 
-  private List<AndroidAppInfo> getAndroidAppInfoList(List<Accepter<AndroidAppInfo>> acceptersList) {
+  private List<AndroidAppInfo> getAndroidAppInfoList(List<Transfer> transferList) {
     List<AndroidAppInfo> androidAppInfoList = new LinkedList<>();
-    for (int i = 0; i < acceptersList.size(); i++) {
-      androidAppInfoList.add(acceptersList.get(i)
-          .getMeta());
+    for (int i = 0; i < transferList.size(); i++) {
+      androidAppInfoList.add(transferList.get(i)
+          .getAndroidAppInfo());
     }
     return androidAppInfoList;
   }
@@ -43,9 +43,8 @@ public class SpotAndShareTransferRecordManager {
     return appModelList;
   }
 
-  public List<TransferAppModel> getTransferAppModelList(
-      List<Accepter<AndroidAppInfo>> acceptersList) {
-    List<AndroidAppInfo> androidAppInfoList = getAndroidAppInfoList(acceptersList);
+  public List<TransferAppModel> getTransferAppModelList(List<Transfer> transferList) {
+    List<AndroidAppInfo> androidAppInfoList = getAndroidAppInfoList(transferList);
     return convertAndroidAppInfoToTransferModel(androidAppInfoList);
   }
 
