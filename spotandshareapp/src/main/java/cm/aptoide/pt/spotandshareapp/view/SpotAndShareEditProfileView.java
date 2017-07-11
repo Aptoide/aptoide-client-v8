@@ -33,4 +33,6 @@ public interface SpotAndShareEditProfileView extends View {
   void saveChanges();
 
   void selectedAvatar(int avatar);
+
+  void setActualAvatar(Integer avatar);
 }

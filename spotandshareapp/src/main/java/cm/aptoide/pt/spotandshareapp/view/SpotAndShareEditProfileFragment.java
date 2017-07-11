@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   private ImageView fourthAvatar;
   private ImageView fifthAvatar;
   private ImageView sixthAvatar;
+  private ImageView actualAvatar;
   private EditText usernameEditText;
   private Button saveProfile;
   private Button cancel;
@@ -107,6 +109,35 @@ public class SpotAndShareEditProfileFragment extends FragmentView
         .setImageDrawable(getResources().getDrawable(R.drawable.spotandshare_avatar_highlighter));
   }
 
+  @Override public void setActualAvatar(Integer avatar) {
+    switch (avatar) {
+      case 0:
+        actualAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+        break;
+      case 1:
+        actualAvatar.setImageDrawable(
+            new ColorDrawable(getResources().getColor(R.color.aptoide_orange)));
+        break;
+      case 2:
+        actualAvatar.setImageDrawable(
+            new ColorDrawable(getResources().getColor(R.color.light_blue)));
+        break;
+      case 3:
+        actualAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.amber)));
+        break;
+      case 4:
+        actualAvatar.setImageDrawable(
+            new ColorDrawable(getResources().getColor(R.color.grey_fog_normal)));
+        break;
+      case 5:
+        actualAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.teal_700)));
+        break;
+      default:
+        actualAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+        break;
+    }
+  }
+
   private void deselectAllAvatars() {
     for (int i = 0; i < defaultAvatarList.size(); i++) {
       if (defaultAvatarList.get(i)
@@ -125,6 +156,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     fourthAvatar = (ImageView) view.findViewById(R.id.fourth_option_avatar);
     fifthAvatar = (ImageView) view.findViewById(R.id.fifth_option_avatar);
     sixthAvatar = (ImageView) view.findViewById(R.id.sixth_option_avatar);
+    actualAvatar = (ImageView) view.findViewById(R.id.actual_avatar);
     usernameEditText = (EditText) view.findViewById(R.id.username_edit_text);
     cancel = (Button) view.findViewById(R.id.cancel_profile_edition_button);
     saveProfile = (Button) view.findViewById(R.id.save_profile_edition_button);

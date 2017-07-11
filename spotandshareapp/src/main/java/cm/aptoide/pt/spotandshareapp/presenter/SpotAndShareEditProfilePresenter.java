@@ -43,6 +43,14 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .map(resumed -> loadChosenAvatar())
+        .doOnNext(avatar -> view.setActualAvatar(avatar))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, error -> error.printStackTrace());
   }
 
   @Override public void saveState(Bundle state) {
@@ -108,6 +116,12 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
     return view.saveProfileChanges()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(user -> saveUser(user));
+  }
+
+  private int loadChosenAvatar() {
+    return spotAndShareUserManager.getUser()
+        .getAvatar()
+        .getResourceID();
   }
 
   private void saveUser(SpotAndShareUser user) {
