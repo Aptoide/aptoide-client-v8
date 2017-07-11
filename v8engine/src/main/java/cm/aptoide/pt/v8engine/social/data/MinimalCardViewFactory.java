@@ -289,6 +289,7 @@ public class MinimalCardViewFactory {
   public View getView(Post originalPost, List<MinimalPost> minimalPosts, LayoutInflater inflater,
       Context context) {
     LinearLayout minimalCardContainer = new LinearLayout(context);
+    minimalCardContainer.setOrientation(LinearLayout.VERTICAL);
 
     for (MinimalPost post : minimalPosts) {
       minimalCardContainer.addView(
@@ -300,6 +301,7 @@ public class MinimalCardViewFactory {
   public View getView(Post originalPost, List<Post> minimalCards, int numberOfCardsToShow,
       LayoutInflater inflater, Context context) {
     LinearLayout minimalCardContainer = new LinearLayout(context);
+    minimalCardContainer.setOrientation(LinearLayout.VERTICAL);
 
     for (int i = 0; i < numberOfCardsToShow && i < minimalCards.size(); i++) {
       minimalCardContainer.addView(
