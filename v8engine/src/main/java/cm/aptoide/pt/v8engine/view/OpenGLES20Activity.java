@@ -1,13 +1,9 @@
 package cm.aptoide.pt.v8engine.view;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.v8engine.R;
 
-/**
- * Created by jdandrade on 14/11/2016.
- */
-public class OpenGLES20Activity extends AppCompatActivity {
+public class OpenGLES20Activity extends ActivityView {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

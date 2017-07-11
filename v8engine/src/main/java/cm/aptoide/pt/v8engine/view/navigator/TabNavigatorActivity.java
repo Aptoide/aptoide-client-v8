@@ -1,15 +1,11 @@
 package cm.aptoide.pt.v8engine.view.navigator;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.view.BaseActivity;
+import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 01/03/17.
- */
-
-public class TabNavigatorActivity extends BaseActivity implements TabNavigator {
+public class TabNavigatorActivity extends LoginBottomSheetActivity implements TabNavigator {
 
   private BehaviorRelay<TabNavigation> navigatorSubject;
 

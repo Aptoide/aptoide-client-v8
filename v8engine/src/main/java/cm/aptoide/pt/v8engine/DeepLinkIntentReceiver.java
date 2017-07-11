@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -26,6 +25,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.view.ActivityView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -47,10 +47,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-/**
- * Created by neuro on 10-08-2016.
- */
-public class DeepLinkIntentReceiver extends AppCompatActivity {
+public class DeepLinkIntentReceiver extends ActivityView {
 
   public static final String AUTHORITY = "cm.aptoide.pt";
   public static final int DEEPLINK_ID = 1;

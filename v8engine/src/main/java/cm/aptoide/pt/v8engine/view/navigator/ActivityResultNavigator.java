@@ -8,15 +8,27 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import cm.aptoide.pt.v8engine.NavigationProvider;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.leak.LeakActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public abstract class ActivityResultNavigator extends LeakActivity implements ActivityNavigator {
+public abstract class ActivityResultNavigator extends LeakActivity
+    implements ActivityNavigator, NavigationProvider {
 
   private PublishRelay<Result> resultRelay;
+  private FragmentNavigator fragmentNavigator;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    fragmentNavigator =
+        new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
+            android.R.anim.fade_in, android.R.anim.fade_out,
+            ((V8Engine) getApplicationContext()).getDefaultSharedPreferences());
+    // super.onCreate handles fragment creation using FragmentManager.
+    // Make sure navigator instances are already created when fragments are created,
+    // else getFragmentNavigator and getActivityNavigator will return null.
     super.onCreate(savedInstanceState);
     resultRelay = PublishRelay.create();
   }
@@ -80,5 +92,13 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
   @Override public void finish(int code, Bundle bundle) {
     setResult(code, new Intent().putExtras(bundle));
     finish();
+  }
+
+  @Override public ActivityNavigator getActivityNavigator() {
+    return this;
+  }
+
+  @Override public FragmentNavigator getFragmentNavigator() {
+    return fragmentNavigator;
   }
 }

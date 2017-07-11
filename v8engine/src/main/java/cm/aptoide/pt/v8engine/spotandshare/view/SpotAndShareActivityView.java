@@ -1,12 +1,8 @@
 package cm.aptoide.pt.v8engine.spotandshare.view;
 
-import android.support.v7.app.AppCompatActivity;
+import cm.aptoide.pt.v8engine.view.AnalyticsActivity;
 
-/**
- * Created by filipegoncalves on 31-01-2017.
- */
-
-public class ActivityView extends AppCompatActivity {
+public class SpotAndShareActivityView extends AnalyticsActivity {
 
   private Presenter presenter;
 
