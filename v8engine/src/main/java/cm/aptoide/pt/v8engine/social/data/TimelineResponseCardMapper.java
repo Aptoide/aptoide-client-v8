@@ -54,7 +54,7 @@ public class TimelineResponseCardMapper {
     for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist()
         .getList()) {
       try {
-        mapCard(linksFactory, cards, item);
+        addMappedCardFromItem(linksFactory, cards, item);
       } catch (Exception e) {
         CrashReport.getInstance()
             .log(e);
@@ -64,7 +64,7 @@ public class TimelineResponseCardMapper {
     return cards;
   }
 
-  private void mapCard(LinksHandlerFactory linksFactory, List<Post> cards,
+  private void addMappedCardFromItem(LinksHandlerFactory linksFactory, List<Post> cards,
       TimelineItem<TimelineCard> item) throws Exception {
     String abUrl = null;
     if (item.getAb() != null
