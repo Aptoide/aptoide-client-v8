@@ -460,12 +460,9 @@ public class TimelinePresenter implements Presenter {
             navigateToAppView(storeAppCardTouchEvent);
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
-            StoreAppCardTouchEvent storeAppCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
-            navigateToAppView(storeAppCardTouchEvent);
-          } else if (cardTouchEvent.getCard()
+              .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.SOCIAL_STORE)) {
+              .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
             if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
               navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
             } else if (cardTouchEvent instanceof FollowStoreCardTouchEvent) {
