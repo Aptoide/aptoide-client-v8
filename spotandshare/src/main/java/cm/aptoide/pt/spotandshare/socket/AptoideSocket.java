@@ -11,13 +11,14 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AptoideSocket {
 
+  public static final int BUFFER_SIZE = 64 * 1024;
   private static final String TAG = AptoideSocket.class.getSimpleName();
   protected final ExecutorService executorService;
   protected final int bufferSize;
   protected OnError<IOException> onError = Throwable::printStackTrace;
 
   public AptoideSocket() {
-    this(Executors.newCachedThreadPool(), 8192);
+    this(Executors.newCachedThreadPool(), BUFFER_SIZE);
   }
 
   public AptoideSocket(ExecutorService executorService, int bufferSize) {
@@ -30,7 +31,7 @@ public abstract class AptoideSocket {
   }
 
   public AptoideSocket(ExecutorService executorService) {
-    this(executorService, 8192);
+    this(executorService, BUFFER_SIZE);
   }
 
   public AptoideSocket startAsync() {
