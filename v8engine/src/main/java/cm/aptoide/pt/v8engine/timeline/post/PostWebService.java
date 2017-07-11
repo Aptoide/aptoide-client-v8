@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.timeline.post;
 
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.v8engine.timeline.request.CardPreviewRequest;
-import cm.aptoide.pt.v8engine.timeline.request.PostRequest;
 import cm.aptoide.pt.v8engine.timeline.request.RelatedAppsRequest;
 import cm.aptoide.pt.v8engine.timeline.response.CardPreview;
 import cm.aptoide.pt.v8engine.timeline.response.RelatedApp;
@@ -22,5 +21,4 @@ public interface PostWebService {
   @POST("user/timeline/card/apps/get") Single<ResponseList<DataList<RelatedApp>>> getRelatedApps(
       @Body RelatedAppsRequest request);
 
-  @POST("user/timeline/card/set") Single<Void> postInTimeline(@Body PostRequest request);
 }

@@ -130,7 +130,10 @@ public class PostFragment extends FragmentView implements PostView {
     PostWebService postWebService = retrofit.create(PostWebService.class);
 
     final PostRemoteAccessor postRemoteAccessor = new PostRemoteAccessor(postWebService,
-        new PostRequestBuilder(v8Engine.getBaseBodyInterceptorV7()));
+        new PostRequestBuilder(v8Engine.getBaseBodyInterceptorV7()),
+        v8Engine.getDefaultSharedPreferences(), v8Engine.getBaseBodyInterceptorV7(),
+        v8Engine.getDefaultClient(), WebService.getDefaultConverter(),
+        v8Engine.getTokenInvalidator());
 
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),

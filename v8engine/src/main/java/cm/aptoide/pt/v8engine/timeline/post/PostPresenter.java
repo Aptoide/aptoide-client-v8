@@ -139,8 +139,9 @@ class PostPresenter implements Presenter {
             .doOnNext(__2 -> view.hideRelatedAppsLoading())
             .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
             .flatMapCompletable(relatedApps -> adapter.setRelatedApps(relatedApps)))
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> view.hideRelatedAppsLoading())
-            .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable))
+            .doOnError(throwable -> Logger.w(TAG, "showRelatedAppsAfterTextChanges: ", throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -162,7 +163,7 @@ class PostPresenter implements Presenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> view.showSuccessMessage())
                     .doOnCompleted(() -> fragmentNavigator.popBackStack()))
-            .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable))
+            .doOnError(throwable -> Logger.w(TAG, "postOnTimelineOnButtonClick: ", throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

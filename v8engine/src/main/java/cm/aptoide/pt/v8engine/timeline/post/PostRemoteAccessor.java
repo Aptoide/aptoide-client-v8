@@ -1,24 +1,41 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.v8engine.timeline.response.CardPreview;
 import cm.aptoide.pt.v8engine.timeline.response.Response;
 import cm.aptoide.pt.v8engine.timeline.response.StillProcessingException;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public class PostRemoteAccessor implements PostAccessor {
 
-  private static final String TAG = PostRemoteAccessor.class.getSimpleName();
   private final PostWebService postWebService;
   private final PostRequestBuilder requestFactory;
+  private SharedPreferences preferences;
+  private BodyInterceptor bodyInterceptor;
+  private OkHttpClient client;
+  private Converter.Factory converter;
+  private TokenInvalidator tokenInvalidator;
 
-  public PostRemoteAccessor(PostWebService postWebService, PostRequestBuilder requestFactory) {
+  public PostRemoteAccessor(PostWebService postWebService, PostRequestBuilder requestFactory,
+      SharedPreferences preferences, BodyInterceptor bodyInterceptor, OkHttpClient client,
+      Converter.Factory converter, TokenInvalidator tokenInvalidator) {
     this.postWebService = postWebService;
     this.requestFactory = requestFactory;
+    this.preferences = preferences;
+    this.bodyInterceptor = bodyInterceptor;
+    this.client = client;
+    this.converter = converter;
+    this.tokenInvalidator = tokenInvalidator;
   }
 
   /**
@@ -26,8 +43,9 @@ public class PostRemoteAccessor implements PostAccessor {
    * SOCIAL_VIDEO
    */
   @Override public Completable postOnTimeline(String url, String content, String packageName) {
-    return requestFactory.getPostOnTimelineRequest(url, content, packageName)
-        .flatMap(postRequest -> postWebService.postInTimeline(postRequest))
+    return PostRequest.of(url, content, packageName, preferences, bodyInterceptor, client,
+        converter, tokenInvalidator)
+        .observe()
         .toCompletable();
   }
 
