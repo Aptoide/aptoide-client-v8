@@ -383,6 +383,10 @@ public class TimelinePresenter implements Presenter {
               .equals(CardType.ARTICLE)) {
             Media card = (Media) cardTouchEvent.getCard();
             sendClickOnMediaHeaderEvent(card);
+            timelineAnalytics.sendOpenBlogEvent(card.getType()
+                .name(), card.getMediaTitle(), card.getPublisherLink()
+                .getUrl(), card.getRelatedApp()
+                .getPackageName());
             card.getPublisherLink()
                 .launch();
           } else if (isSocialPost(cardTouchEvent.getCard())) {
@@ -545,14 +549,12 @@ public class TimelinePresenter implements Presenter {
 
   private void sendClickOnMediaHeaderEvent(Media card) {
     if (card.getType()
-        .equals(CardType.ARTICLE) || card.getType()
-        .equals(CardType.SOCIAL_ARTICLE)) {
+        .equals(CardType.ARTICLE)) {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
     } else if (card.getType()
-        .equals(CardType.VIDEO) || card.getType()
-        .equals(CardType.SOCIAL_VIDEO)) {
+        .equals(CardType.VIDEO)) {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
