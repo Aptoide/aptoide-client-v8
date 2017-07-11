@@ -6,6 +6,12 @@ import rx.Completable;
 
 public class LocalAccount implements Account {
 
+  private final Store store;
+
+  public LocalAccount(Store store) {
+    this.store = store;
+  }
+
   @Override public Completable logout() {
     return Completable.complete();
   }
@@ -27,14 +33,6 @@ public class LocalAccount implements Account {
   }
 
   @Override public String getAvatar() {
-    return "";
-  }
-
-  @Override public String getStoreName() {
-    return "";
-  }
-
-  @Override public String getStoreAvatar() {
     return "";
   }
 
@@ -72,5 +70,9 @@ public class LocalAccount implements Account {
 
   @Override public Type getType() {
     return Type.LOCAL;
+  }
+
+  @Override public Store getStore() {
+    return store;
   }
 }

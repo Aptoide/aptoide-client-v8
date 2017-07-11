@@ -48,14 +48,6 @@ public class GoogleAccount implements Account {
     return account.getAvatar();
   }
 
-  @Override public String getStoreName() {
-    return account.getStoreName();
-  }
-
-  @Override public String getStoreAvatar() {
-    return account.getStoreAvatar();
-  }
-
   @Override public boolean isAdultContentEnabled() {
     return account.isAdultContentEnabled();
   }
@@ -90,5 +82,9 @@ public class GoogleAccount implements Account {
 
   @Override public Type getType() {
     return account.getType();
+  }
+
+  @Override public Store getStore() {
+    return account.getStore();
   }
 }

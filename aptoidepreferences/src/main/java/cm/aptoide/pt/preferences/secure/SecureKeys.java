@@ -13,5 +13,4 @@ public class SecureKeys {
   public static final String WIZARD_AVAILABLE = "wizardAvailable";
   public static final String ROOT_DIALOG_ShOWED = "rootDialogShowed";
   public static final String SHOULD_RUN_APK_FY = "shouldRunApkFy";
-  public static final String LOGOUT_USER = "logoutUser";
 }

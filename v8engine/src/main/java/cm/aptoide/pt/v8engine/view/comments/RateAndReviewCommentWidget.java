@@ -212,6 +212,12 @@ import rx.Observable;
     } else {
       showHideReplies.setVisibility(View.GONE);
     }
+
+    compositeSubscription.add(RxView.clicks(itemView)
+        .doOnNext(click -> displayable.itemClicked())
+        .subscribe(__ -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {

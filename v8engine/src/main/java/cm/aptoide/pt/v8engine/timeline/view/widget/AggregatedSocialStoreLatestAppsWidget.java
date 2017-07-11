@@ -480,7 +480,8 @@ public class AggregatedSocialStoreLatestAppsWidget
                   UserTimeline user = new UserTimeline();
                   cm.aptoide.pt.dataprovider.model.v7.store.Store store =
                       new cm.aptoide.pt.dataprovider.model.v7.store.Store();
-                  store.setAvatar(account.getStoreAvatar());
+                  store.setAvatar(account.getStore()
+                      .getAvatar());
                   user.setAvatar(account.getAvatar());
                   user.setStore(store);
                   addUserToPreview(marginOfTheNextLikePreview, user, likePreviewContainer,

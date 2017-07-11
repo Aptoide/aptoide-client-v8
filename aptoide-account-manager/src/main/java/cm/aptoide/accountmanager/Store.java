@@ -1,10 +1,10 @@
 package cm.aptoide.accountmanager;
 
 public class Store {
-  private final long downloadCount;
-  private final String avatar;
   private final long id;
   private final String name;
+  private final String avatar;
+  private final long downloadCount;
   private final String theme;
   private final String username;
   private final String password;
@@ -18,6 +18,20 @@ public class Store {
     this.theme = theme;
     this.username = username;
     this.password = password;
+  }
+
+  private Store() {
+    this.downloadCount = 0;
+    this.avatar = "";
+    this.id = 0;
+    this.name = "";
+    this.theme = "DEFAULT";
+    this.username = "";
+    this.password = "";
+  }
+
+  public static Store emptyStore() {
+    return new Store();
   }
 
   public String getUsername() {

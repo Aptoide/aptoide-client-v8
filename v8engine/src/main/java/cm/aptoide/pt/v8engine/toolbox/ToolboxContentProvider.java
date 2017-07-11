@@ -99,7 +99,7 @@ public class ToolboxContentProvider extends ContentProvider {
         case REPO:
           if (account != null) {
             final MatrixCursor userRepoCursor = new MatrixCursor(new String[] { "userRepo" }, 1);
-            userRepoCursor.addRow(new Object[] { account.getStoreName() });
+            userRepoCursor.addRow(new Object[] { account.getStore().getName() });
             return userRepoCursor;
           }
           throw new IllegalStateException("User not logged in.");
