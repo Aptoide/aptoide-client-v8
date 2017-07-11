@@ -88,10 +88,6 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
         .show();
   }
 
-  @Override public void onJoinGroupError(Throwable throwable) {
-    // TODO: 19-06-2017 filipe
-  }
-
   @Override public void openEditProfile() {
     getFragmentNavigator().navigateTo(SpotAndShareEditProfileFragment.newInstance());
   }
@@ -100,10 +96,6 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     username.setText(user.getUsername());
     setAvatar(user.getAvatar()
         .getResourceID());
-  }
-
-  @Override public void openTransferRecordFragment() {
-    getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance());
   }
 
   private void setAvatar(int resourceID) {

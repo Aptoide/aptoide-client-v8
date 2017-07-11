@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToReceivePresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -41,7 +42,9 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
     refreshButton = (ImageView) view.findViewById(R.id.sync_image);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
-    attachPresenter(new SpotAndShareWaitingToReceivePresenter(this), savedInstanceState);
+    attachPresenter(
+        new SpotAndShareWaitingToReceivePresenter(this, SpotAndShare.getInstance(getContext())),
+        savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -74,7 +77,12 @@ public class SpotAndShareWaitingToReceiveFragment extends FragmentView
   }
 
   @Override public void openSpotandShareTransferRecordFragment() {
-    getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance());
+    getFragmentNavigator().navigateToWithoutBackSave(
+        SpotAndShareTransferRecordFragment.newInstance());
+  }
+
+  @Override public void onJoinGroupError(Throwable throwable) {
+    //// TODO: 11-07-2017 filipe
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

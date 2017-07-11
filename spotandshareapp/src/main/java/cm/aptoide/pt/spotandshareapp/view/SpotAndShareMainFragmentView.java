@@ -28,11 +28,7 @@ public interface SpotAndShareMainFragmentView extends View {
 
   void onCreateGroupError(Throwable throwable);
 
-  void onJoinGroupError(Throwable throwable);
-
   void openEditProfile();
 
   void loadProfileInformation(SpotAndShareUser user);
-
-  void openTransferRecordFragment();
 }
