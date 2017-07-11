@@ -3,13 +3,18 @@ package cm.aptoide.pt.v8engine.timeline.post;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,8 +28,8 @@ import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
-import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Completable;
 import rx.Observable;
 
@@ -36,13 +41,14 @@ public class PostFragment extends FragmentView implements PostView {
   private ProgressBar relatedAppsLoading;
   private RecyclerView relatedApps;
   private EditText userInput;
-  private Button share;
-  private Button cancel;
   private ImageView previewImage;
   private TextView previewTitle;
   private TextView previewHeader;
   private TextView relatedAppsHeader;
   private InstalledRepository installedRepository;
+  private Toolbar toolbar;
+  private PublishRelay<Void> cancelClick;
+  private PublishRelay<Void> postClick;
 
   public static PostFragment newInstance(String toShare) {
     Bundle args = new Bundle();
@@ -56,6 +62,24 @@ public class PostFragment extends FragmentView implements PostView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     installedRepository = RepositoryFactory.getInstalledRepository();
+    cancelClick = PublishRelay.create();
+    postClick = PublishRelay.create();
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_timeline_post, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      cancelClick.call(null);
+      return true;
+    } else if (item.getItemId() == R.id.post_button) {
+      postClick.call(null);
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Nullable @Override
@@ -77,11 +101,10 @@ public class PostFragment extends FragmentView implements PostView {
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
     previewHeader = (TextView) view.findViewById(R.id.preview_header);
     relatedAppsHeader = (TextView) view.findViewById(R.id.related_apps_header);
-    share = (Button) view.findViewById(R.id.post_button);
-    cancel = (Button) view.findViewById(R.id.cancel_button);
     previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
     relatedAppsLoading = (ProgressBar) view.findViewById(R.id.related_apps_progress_bar);
     relatedApps = (RecyclerView) view.findViewById(R.id.related_apps_list);
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 
   @Override public void onDestroyView() {
@@ -124,10 +147,24 @@ public class PostFragment extends FragmentView implements PostView {
             v8Engine.getBaseBodyInterceptorV7(), v8Engine.getDefaultClient(),
             WebService.getDefaultConverter(), v8Engine.getTokenInvalidator());
 
+    setUpToolbar();
+
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor), adapter, getFragmentNavigator());
     attachPresenter(presenter, null);
+  }
+
+  private void setUpToolbar() {
+    if (toolbar != null && getActivity() instanceof AppCompatActivity) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      setHasOptionsMenu(true);
+      toolbar.setEnabled(true);
+      ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setHomeButtonEnabled(true);
+      actionBar.setTitle(R.string.timeline_title_post);
+    }
   }
 
   @Override public Observable<String> onInputTextChanged() {
@@ -136,12 +173,11 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public Observable<String> shareButtonPressed() {
-    return RxView.clicks(share)
-        .map(__ -> getInputText());
+    return postClick.map(__ -> getInputText());
   }
 
   @Override public Observable<Void> cancelButtonPressed() {
-    return RxView.clicks(cancel);
+    return cancelClick;
   }
 
   @Override public Completable showSuccessMessage() {

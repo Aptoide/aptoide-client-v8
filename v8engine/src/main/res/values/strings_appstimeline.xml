@@ -97,5 +97,6 @@
   <string name="timeline_short_shared">shared</string>
   <string name="timeline_short_plus" translatable="false">%s+</string>
   <string name="timeline_title_shared_card_preview">Shared Card Preview</string>
+  <string name="timeline_title_post">New Post</string>
 
 </resources>

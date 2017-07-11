@@ -156,8 +156,6 @@ class PostPresenter implements Presenter {
 
   private void postOnTimelineOnButtonClick() {
 
-    // view.onInputTextChanged()
-
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.shareButtonPressed()
