@@ -582,8 +582,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void navigateToAppView(StoreAppCardTouchEvent cardTouchEvent) {
-    StoreAppCardTouchEvent storeCardTouchEvent = cardTouchEvent;
-    timelineNavigation.navigateToAppView(storeCardTouchEvent.getPackageName(),
+    timelineNavigation.navigateToAppView(cardTouchEvent.getPackageName(),
         AppViewFragment.OpenType.OPEN_ONLY);
   }
 
