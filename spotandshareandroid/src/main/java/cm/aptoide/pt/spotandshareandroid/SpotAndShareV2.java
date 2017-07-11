@@ -4,13 +4,13 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
-import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
-import cm.aptoide.pt.spotandshareandroid.util.AccepterRelay;
+import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
+import cm.aptoide.pt.spotandshareandroid.transfermanager.TransferManager;
 import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
-import com.jakewharton.rxrelay.BehaviorRelay;
 import java.util.List;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -27,9 +27,9 @@ class SpotAndShareV2 {
   private final String PASSWORD_APTOIDE = "passwordAptoide";
   private final HotspotManager hotspotManager;
   private final SpotAndShareMessageServer spotAndShareMessageServer;
+  private final TransferManager transferManager;
   private final String DUMMY_UUID = "dummy_uuid";
   private final Context applicationContext;
-  private final AccepterRelay accepterRelay = new AccepterRelay();
   private final int TIMEOUT = 60 * 1000;
   private boolean enabled;
   private boolean isHotspot;
@@ -39,6 +39,7 @@ class SpotAndShareV2 {
         .getSystemService(Context.WIFI_SERVICE));
     spotAndShareMessageServer = new SpotAndShareMessageServer(55555);
     applicationContext = context.getApplicationContext();
+    transferManager = new TransferManager();
   }
 
   private SpotAndShareSender createSpotAndShareSender() {
@@ -79,7 +80,7 @@ class SpotAndShareV2 {
   private void startSpotAndShareMessageClient() {
     spotAndShareMessageServer.startClient(
         new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-            accepterRelay.getAccepter()));
+            transferManager.getAndroidAppInfoAccepter()));
   }
 
   private void startSpotAndShareMessageServer(OnError onError) {
@@ -161,8 +162,8 @@ class SpotAndShareV2 {
     spotAndShareMessageServer.sendApps(appsList);
   }
 
-  public BehaviorRelay<List<Accepter<AndroidAppInfo>>> observeAccepters() {
-    return accepterRelay.asObservable();
+  public Observable<List<Transfer>> observeTransfers() {
+    return transferManager.observeTransfers();
   }
 
   public interface OnError {
