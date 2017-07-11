@@ -518,6 +518,12 @@ public class TimelinePresenter implements Presenter {
                   followStoreCardTouchEvent.getStoreName());
             } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
               StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
+              if (cardTouchEvent.getCard() instanceof StoreLatestApps) {
+                timelineAnalytics.sendOpenStoreEvent(cardTouchEvent.getCard()
+                        .getType()
+                        .name(), TimelineAnalytics.SOURCE_APTOIDE,
+                    ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName());
+              }
               timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
                   storeCardTouchEvent.getStoreTheme());
             }
