@@ -32,6 +32,7 @@ class SpotAndShareV2 {
   private final AccepterRelay accepterRelay = new AccepterRelay();
   private final int TIMEOUT = 60 * 1000;
   private boolean enabled;
+  private boolean isHotspot;
 
   SpotAndShareV2(Context context) {
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
@@ -56,20 +57,14 @@ class SpotAndShareV2 {
       if (!created) {
         return enableHotspot().doOnCompleted(() -> {
           enabled = true;
-          // TODO: 10-07-2017 neuro
-          spotAndShareMessageServer.startServer(createHostsChangedCallback(onError));
-          spotAndShareMessageServer.startClient(
-              new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-                  accepterRelay.getAccepter()));
+          startSpotAndShareMessageServer(onError);
+
           onSuccess.call(createSpotAndShareSender());
         });
       } else {
         return joinHotspot(() -> {
           enabled = true;
-          // TODO: 10-07-2017 neuro
-          spotAndShareMessageServer.startClient(
-              new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-                  accepterRelay.getAccepter()));
+          startSpotAndShareMessageClient();
           onSuccess.call(createSpotAndShareSender());
         }, throwable -> {
           enabled = false;
@@ -81,6 +76,18 @@ class SpotAndShareV2 {
         }, Throwable::printStackTrace);
   }
 
+  private void startSpotAndShareMessageClient() {
+    spotAndShareMessageServer.startClient(
+        new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
+            accepterRelay.getAccepter()));
+  }
+
+  private void startSpotAndShareMessageServer(OnError onError) {
+    // TODO: 10-07-2017 neuro
+    spotAndShareMessageServer.startServer(createHostsChangedCallback(onError));
+    startSpotAndShareMessageClient();
+  }
+
   void receive(Action1<SpotAndShareSender> onSuccess, OnError onError) {
     // TODO: 10-07-2017 neuro duplicated with isGroupCreated()
     hotspotManager.saveActualNetworkState()
@@ -89,9 +96,7 @@ class SpotAndShareV2 {
         .flatMapCompletable(aBoolean -> hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled1 -> {
           if (enabled1) {
             enabled = true;
-            spotAndShareMessageServer.startClient(
-                new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-                    accepterRelay.getAccepter()));
+            startSpotAndShareMessageClient();
             onSuccess.call(createSpotAndShareSender());
           } else {
             onError.onError(new Throwable("Failed to join hotspot"));
@@ -119,7 +124,8 @@ class SpotAndShareV2 {
   }
 
   private Completable enableHotspot() {
-    return hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE);
+    return hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE)
+        .doOnCompleted(() -> isHotspot = true);
   }
 
   private Single<Boolean> isGroupCreated() {
@@ -131,12 +137,20 @@ class SpotAndShareV2 {
   }
 
   public void exit(Action0 onSuccess, Action1<? super Throwable> onError) {
-    Completable.fromAction(spotAndShareMessageServer::exit)
-        .andThen(hotspotManager.resetHotspot()
-            .andThen(hotspotManager.restoreNetworkState()
-                .toCompletable()))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(onSuccess, onError);
+    if (isHotspot) {
+      Completable.fromAction(spotAndShareMessageServer::exit)
+          .andThen(hotspotManager.resetHotspot()
+              .andThen(hotspotManager.restoreNetworkState()
+                  .toCompletable()))
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(onSuccess, onError);
+    } else {
+      Completable.fromAction(spotAndShareMessageServer::exit)
+          .andThen(hotspotManager.restoreNetworkState()
+              .toCompletable())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(onSuccess, onError);
+    }
   }
 
   public void sendApp(AndroidAppInfo androidAppInfo) {
