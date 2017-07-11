@@ -229,7 +229,9 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(),
                 baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+                getFragmentNavigator(),
+                ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()),
             (throwable) -> throwable.printStackTrace());
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
@@ -280,7 +282,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override
   public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
     for (final Comment comment : comments) {
-      displayables.add(new CommentDisplayable(comment));
+      displayables.add(new CommentDisplayable(comment, getFragmentNavigator(),
+          ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
     }
   }
 

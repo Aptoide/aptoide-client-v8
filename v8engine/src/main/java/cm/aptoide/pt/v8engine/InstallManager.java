@@ -297,9 +297,11 @@ public class InstallManager {
         case Download.CONNECTED:
         case Download.BLOCK_COMPLETE:
         case Download.PROGRESS:
-        case Download.IN_QUEUE:
         case Download.PENDING:
           status = Install.InstallationStatus.INSTALLING;
+          break;
+        case Download.IN_QUEUE:
+          status = Install.InstallationStatus.IN_QUEUE;
           break;
       }
     }

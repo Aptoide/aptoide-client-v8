@@ -185,9 +185,13 @@ public class AccountManagerService {
   }
 
   private Store mapToStore(cm.aptoide.pt.dataprovider.model.v7.store.Store store) {
-    return new Store(store.getStats()
-        .getDownloads(), store.getAvatar(), store.getId(), store.getName(), store.getAppearance()
-        .getTheme(), null, null);
+    if (store == null) {
+      return Store.emptyStore();
+    }
+    return new Store(store.getStats() == null ? 0 : store.getStats()
+        .getDownloads(), store.getAvatar(), store.getId(), store.getName(),
+        store.getAppearance() == null ? "DEFAULT" : store.getAppearance()
+            .getTheme(), null, null);
   }
 
   public Single<Account> getAccount(String accessToken, String refreshToken,
@@ -251,14 +255,10 @@ public class AccountManagerService {
     final GetUserSettings.Data userSettings = userInfo.getNodes()
         .getSettings()
         .getData();
-    final String storeName = userData.getStore() == null ? "" : userData.getStore()
-        .getName();
-    final String storeAvatar = userData.getStore() == null ? "" : userData.getStore()
-        .getAvatar();
     return accountFactory.createAccount(userData.getAccess(), subscribedStores,
         String.valueOf(userData.getId()), userData.getIdentity()
             .getEmail(), userData.getName(), userData.getAvatar(), refreshToken, accessToken,
-        encryptedPassword, Account.Type.valueOf(type), storeName, storeAvatar,
+        encryptedPassword, Account.Type.valueOf(type), mapToStore(userData.getStore()),
         userSettings.isMature(), userSettings.getAccess()
             .isConfirmed());
   }

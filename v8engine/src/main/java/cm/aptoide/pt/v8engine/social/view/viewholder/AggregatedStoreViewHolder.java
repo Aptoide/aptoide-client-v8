@@ -13,8 +13,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.AggregatedStore;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -98,6 +100,13 @@ public class AggregatedStoreViewHolder extends CardViewHolder<AggregatedStore> {
     minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalPosts(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
         itemView.getContext()));
+
+    this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new FollowStoreCardTouchEvent(card, card.getStoreId(), card.getStoreName(),
+            CardTouchEvent.Type.BODY)));
+    this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new StoreCardTouchEvent(card, card.getStoreName(), card.getStoreTheme(),
+            CardTouchEvent.Type.BODY)));
   }
 
   public String getCardHeaderNames(AggregatedStore card) {

@@ -60,6 +60,12 @@ import rx.schedulers.Schedulers;
       ImageLoader.with(getContext())
           .load(installation.getIcon(), appIcon);
     }
+    if (installation.getState()
+        .equals(Install.InstallationStatus.INSTALLING) && installation.isIndeterminate()) {
+      pauseCancelButton.setVisibility(View.INVISIBLE);
+    } else {
+      pauseCancelButton.setVisibility(View.VISIBLE);
+    }
 
     progressBar.setIndeterminate(installation.isIndeterminate());
     progressBar.setProgress(installation.getProgress());

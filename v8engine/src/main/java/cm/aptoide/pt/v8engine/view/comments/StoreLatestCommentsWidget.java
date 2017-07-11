@@ -22,7 +22,9 @@ import cm.aptoide.pt.v8engine.comments.ComplexComment;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
+import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -82,7 +84,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private void setAdapter(List<Comment> comments) {
     recyclerView.setAdapter(new CommentListAdapter(storeId, storeName, comments,
         getContext().getSupportFragmentManager(), recyclerView,
-        Observable.fromCallable(() -> reloadComments()), accountManager, accountNavigator));
+        Observable.fromCallable(() -> reloadComments()), accountManager, accountNavigator,
+        getFragmentNavigator(),
+        ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
   }
 
   private Void reloadComments() {
@@ -113,7 +117,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     CommentListAdapter(long storeId, @NonNull String storeName, @NonNull List<Comment> comments,
         @NonNull FragmentManager fragmentManager, @NonNull View view,
         Observable<Void> reloadComments, AptoideAccountManager accountManager,
-        AccountNavigator accountNavigator) {
+        AccountNavigator accountNavigator, FragmentNavigator fragmentNavigator,
+        FragmentProvider fragmentProvider) {
       this.accountManager = accountManager;
       this.accountNavigator = accountNavigator;
 
@@ -125,7 +130,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
       for (CommentNode commentNode : sortedComments) {
         displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
             showStoreCommentFragment(storeId, commentNode.getComment(), storeName, fragmentManager,
-                view, reloadComments))));
+                view, reloadComments)), fragmentNavigator, fragmentProvider));
       }
       addDisplayables(displayables);
     }

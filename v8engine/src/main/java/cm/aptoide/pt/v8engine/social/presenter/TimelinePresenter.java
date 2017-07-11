@@ -450,6 +450,9 @@ public class TimelinePresenter implements Presenter {
             timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", card.getPackageName(),
                 card.getStoreName());
+            timelineAnalytics.sendAppUpdateOpenStoreEvent(card.getType()
+                    .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName(),
+                card.getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (cardTouchEvent.getCard()
               .getType()
@@ -486,6 +489,9 @@ public class TimelinePresenter implements Presenter {
             timelineAnalytics.sendRecommendationCardClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
                 card.getPublisherName());
+            timelineAnalytics.sendRecommendedOpenAppEvent(card.getType()
+                    .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getRelatedToPackageName(),
+                card.getPackageName());
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
@@ -500,12 +506,9 @@ public class TimelinePresenter implements Presenter {
             navigateToAppView(storeAppCardTouchEvent);
           } else if (cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
-            StoreAppCardTouchEvent storeAppCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
-            navigateToAppView(storeAppCardTouchEvent);
-          } else if (cardTouchEvent.getCard()
+              .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
               .getType()
-              .equals(CardType.SOCIAL_STORE)) {
+              .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
             if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
               navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
             } else if (cardTouchEvent instanceof FollowStoreCardTouchEvent) {
@@ -525,6 +528,8 @@ public class TimelinePresenter implements Presenter {
             timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.UPDATE_APP, "(blank)", card.getPackageName(),
                 card.getStoreName());
+            timelineAnalytics.sendUpdateAppEvent(card.getType()
+                .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
             permissionManager.requestExternalStoragePermission(permissionRequest)
                 .flatMap(success -> {
                   if (installManager.showWarning()) {

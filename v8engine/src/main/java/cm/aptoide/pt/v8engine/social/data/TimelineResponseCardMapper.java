@@ -95,7 +95,9 @@ public class TimelineResponseCardMapper {
             .getRating()
             .getAvg(), recommendation.getSimilarApps()
             .get(0)
-            .getName(), new AptoidePublisher(), recommendation.getTimestamp(), abUrl, false,
+            .getName(), recommendation.getSimilarApps()
+            .get(0)
+            .getPackageName(), new AptoidePublisher(), recommendation.getTimestamp(), abUrl, false,
             CardType.RECOMMENDATION));
       } else if (item instanceof StoreLatestAppsTimelineItem) {
         final cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestApps store =

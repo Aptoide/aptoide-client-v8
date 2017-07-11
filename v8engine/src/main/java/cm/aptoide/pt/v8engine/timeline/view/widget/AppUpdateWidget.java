@@ -129,6 +129,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
     switch (downloadProgress.getState()) {
       case INSTALLING:
+      case IN_QUEUE:
       case INSTALLATION_TIMEOUT:
         updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         updateButton.setText(displayable.getUpdatingText(getContext()));
