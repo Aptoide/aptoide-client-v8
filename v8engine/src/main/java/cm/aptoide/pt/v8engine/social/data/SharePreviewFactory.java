@@ -234,19 +234,22 @@ public class SharePreviewFactory {
   private void setPreviewHeader(TextView storeName, ImageView storeAvatar, ImageView userAvatar,
       TextView userName, Context context) {
     if (accountManager.getAccount()
-        .getStoreName() != null) {
+        .getStore()
+        .getName() != null) {
       storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
       if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(accountManager.getAccount()
-                .getStoreAvatar(), storeAvatar);
+                .getStore()
+                .getAvatar(), storeAvatar);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(accountManager.getAccount()
                 .getAvatar(), userAvatar);
         storeName.setText(accountManager.getAccount()
-            .getStoreName());
+            .getStore()
+            .getName());
         userName.setText(accountManager.getAccount()
             .getNickname());
       } else {
@@ -254,12 +257,14 @@ public class SharePreviewFactory {
         userAvatar.setVisibility(View.INVISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(accountManager.getAccount()
-                .getStoreAvatar(), storeAvatar);
+                .getStore()
+                .getAvatar(), storeAvatar);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(accountManager.getAccount()
                 .getAvatar(), userAvatar);
         storeName.setText(accountManager.getAccount()
-            .getStoreName());
+            .getStore()
+            .getName());
         userName.setText(accountManager.getAccount()
             .getNickname());
         userName.setVisibility(View.GONE);
