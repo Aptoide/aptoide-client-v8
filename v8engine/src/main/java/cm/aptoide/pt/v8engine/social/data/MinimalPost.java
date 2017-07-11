@@ -70,4 +70,9 @@ public class MinimalPost implements Post {
   @Override public CardType getType() {
     return cardType;
   }
+
+  @Override public String getAbUrl() {
+    //supposed to return null
+    return null;
+  }
 }

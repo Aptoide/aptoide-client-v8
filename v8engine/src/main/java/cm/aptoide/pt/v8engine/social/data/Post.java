@@ -8,4 +8,6 @@ public interface Post {
   String getCardId();
 
   CardType getType();
+
+  String getAbUrl();
 }

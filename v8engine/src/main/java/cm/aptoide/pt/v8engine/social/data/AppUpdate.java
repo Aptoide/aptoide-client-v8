@@ -92,16 +92,16 @@ public class AppUpdate implements Post {
     return packageName;
   }
 
-  public String getAbUrl() {
-    return abUrl;
-  }
-
   @Override public String getCardId() {
     return this.cardId;
   }
 
   @Override public CardType getType() {
     return this.cardType;
+  }
+
+  @Override public String getAbUrl() {
+    return abUrl;
   }
 
   public boolean isLiked() {

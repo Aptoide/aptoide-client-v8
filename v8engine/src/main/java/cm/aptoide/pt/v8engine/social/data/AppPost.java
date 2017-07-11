@@ -38,10 +38,6 @@ abstract class AppPost implements Post {
     return appId;
   }
 
-  public String getAbUrl() {
-    return abUrl;
-  }
-
   public String getAppName() {
     return appName;
   }
@@ -64,5 +60,9 @@ abstract class AppPost implements Post {
 
   @Override public CardType getType() {
     return this.cardType;
+  }
+
+  @Override public String getAbUrl() {
+    return abUrl;
   }
 }
