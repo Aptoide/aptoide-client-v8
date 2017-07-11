@@ -8,4 +8,6 @@ import rx.functions.Action1;
  */
 
 public interface AndroidAppInfoAccepter extends Action1<Accepter<AndroidAppInfo>> {
+
+  @Override void call(Accepter<AndroidAppInfo> androidAppInfoAccepter);
 }
