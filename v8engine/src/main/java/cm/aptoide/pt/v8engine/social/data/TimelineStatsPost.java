@@ -30,4 +30,9 @@ public class TimelineStatsPost implements Post {
   @Override public CardType getType() {
     return cardType;
   }
+
+  @Override public String getAbUrl() {
+    //supposed to be null
+    return null;
+  }
 }

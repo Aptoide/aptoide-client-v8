@@ -15,4 +15,9 @@ public class ProgressCard implements Post {
   @Override public CardType getType() {
     return CardType.PROGRESS;
   }
+
+  @Override public String getAbUrl() {
+    //supposed to be null
+    return null;
+  }
 }

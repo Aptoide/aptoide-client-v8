@@ -12,4 +12,9 @@ public class TimelineLoginPost implements Post {
   @Override public CardType getType() {
     return CardType.LOGIN;
   }
+
+  @Override public String getAbUrl() {
+    //supposed to be null
+    return null;
+  }
 }

@@ -71,16 +71,16 @@ public class StoreLatestApps implements Post {
     return apps;
   }
 
-  public String getAbUrl() {
-    return abUrl;
-  }
-
   @Override public String getCardId() {
     return this.cardId;
   }
 
   @Override public CardType getType() {
     return this.cardType;
+  }
+
+  @Override public String getAbUrl() {
+    return abUrl;
   }
 
   public Long getStoreId() {

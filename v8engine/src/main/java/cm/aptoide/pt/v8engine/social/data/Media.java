@@ -65,7 +65,7 @@ public class Media implements Post {
     return relatedApp;
   }
 
-  public String getAbTestURL() {
+  public String getAbUrl() {
     return abTestURL;
   }
 

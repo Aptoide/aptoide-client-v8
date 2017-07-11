@@ -194,8 +194,8 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> timelineNavigation.navigateToComments(cardTouchEvent.getCard()
             .getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> {
-        }, throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
         });
   }
 
@@ -208,8 +208,8 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(cardTouchEvent.getCard()
             .getCardId(), ((LikesCardTouchEvent) cardTouchEvent).getLikesNumber()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> {
-        }, throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
         });
   }
 
@@ -247,8 +247,8 @@ public class TimelinePresenter implements Presenter {
             .equals(CardTouchEvent.Type.SHARE))
         .doOnNext(cardTouchEvent -> view.showSharePreview(cardTouchEvent.getCard()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> {
-        }, throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
         });
   }
 
@@ -265,8 +265,8 @@ public class TimelinePresenter implements Presenter {
             cardTouchEvent.getCard()
                 .getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> {
-        }, throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
         });
   }
 
@@ -279,8 +279,8 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> view.showCommentDialog(cardTouchEvent.getCard()
             .getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> {
-        }, throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
         });
   }
 
@@ -361,8 +361,8 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard()
                 .getCardId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> {
-        }, throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
         });
   }
 
@@ -378,8 +378,8 @@ public class TimelinePresenter implements Presenter {
                 .doOnCompleted(() -> view.showShareSuccessMessage()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> {
-        }, throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
         });
   }
 
@@ -422,6 +422,8 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.HEADER))
         .doOnNext(cardTouchEvent -> {
+          timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+              .getAbUrl());
           if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.VIDEO) || cardTouchEvent.getCard()
@@ -477,6 +479,8 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.BODY))
         .doOnNext(cardTouchEvent -> {
+          timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+              .getAbUrl());
           if (isMediaPost(cardTouchEvent.getCard())) {
             Media card = (Media) cardTouchEvent.getCard();
             sendClickOnMediaBodyEvent(card);
