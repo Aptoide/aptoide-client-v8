@@ -606,15 +606,21 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void sendClickOnMediaBodyEvent(Media card) {
+    timelineAnalytics.sendOpenArticleEvent(card.getType()
+        .name(), card.getMediaTitle(), card.getMediaLink()
+        .getUrl(), card.getRelatedApp()
+        .getPackageName());
     if (card.getType()
         .equals(CardType.ARTICLE) || card.getType()
-        .equals(CardType.SOCIAL_ARTICLE)) {
+        .equals(CardType.SOCIAL_ARTICLE) || card.getType()
+        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
     } else if (card.getType()
         .equals(CardType.VIDEO) || card.getType()
-        .equals(CardType.SOCIAL_VIDEO)) {
+        .equals(CardType.SOCIAL_VIDEO) || card.getType()
+        .equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO,
           "(blank)");
@@ -622,8 +628,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void navigateToAppView(StoreAppCardTouchEvent cardTouchEvent) {
-    StoreAppCardTouchEvent storeCardTouchEvent = cardTouchEvent;
-    timelineNavigation.navigateToAppView(storeCardTouchEvent.getPackageName(),
+    timelineNavigation.navigateToAppView(cardTouchEvent.getPackageName(),
         AppViewFragment.OpenType.OPEN_ONLY);
   }
 
