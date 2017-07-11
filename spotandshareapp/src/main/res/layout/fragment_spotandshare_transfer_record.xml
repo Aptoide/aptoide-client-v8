@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,6 +9,7 @@
       android:id="@+id/spotandshare_toolbar"
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
+      android:layout_alignParentTop="true"
       android:background="?attr/colorPrimary"
       />
 
@@ -16,6 +17,7 @@
       android:id="@+id/transfer_record_recycler_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_below="@id/spotandshare_toolbar"
       android:layout_marginLeft="20dp"
       android:layout_marginRight="20dp"
       android:scrollbars="vertical"
@@ -26,8 +28,9 @@
       android:id="@+id/transfer_record_share_an_app_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
+      android:layout_alignParentBottom="true"
+      android:layout_centerHorizontal="true"
       android:text="@string/spotandshare_button_share_another_app"
       />
 
-</LinearLayout>
+</RelativeLayout>
