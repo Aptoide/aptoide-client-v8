@@ -8,6 +8,7 @@ import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.TransferManager;
 import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
+import cm.aptoide.pt.spotandshareandroid.util.service.ServiceProvider;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -33,10 +34,12 @@ class SpotAndShareV2 {
   private final int TIMEOUT = 60 * 1000;
   private boolean enabled;
   private boolean isHotspot;
+  private final ServiceProvider serviceProvider;
 
   SpotAndShareV2(Context context) {
+    serviceProvider = new ServiceProvider(context);
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
-        .getSystemService(Context.WIFI_SERVICE));
+        .getSystemService(Context.WIFI_SERVICE), serviceProvider.getWifiManager());
     spotAndShareMessageServer = new SpotAndShareMessageServer(55555);
     applicationContext = context.getApplicationContext();
     transferManager = new TransferManager();

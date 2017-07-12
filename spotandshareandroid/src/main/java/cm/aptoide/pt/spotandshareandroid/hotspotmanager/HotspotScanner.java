@@ -19,21 +19,21 @@ class HotspotScanner {
   private final Context context;
   private final TaskQueue taskQueue;
   private final List<Validator<ScanResult>> validators;
+  private final WifiManager wifiManager;
 
-  public HotspotScanner(Context context, TaskQueue taskQueue) {
-    this(context, taskQueue, Collections.singletonList(scanResult -> true));
+  public HotspotScanner(Context context, TaskQueue taskQueue, WifiManager wifiManager) {
+    this(context, taskQueue, Collections.singletonList(scanResult -> true), wifiManager);
   }
 
-  HotspotScanner(Context context, TaskQueue taskQueue, List<Validator<ScanResult>> validators) {
+  HotspotScanner(Context context, TaskQueue taskQueue, List<Validator<ScanResult>> validators,
+      WifiManager wifiManager) {
     this.context = context;
     this.taskQueue = taskQueue;
     this.validators = validators;
+    this.wifiManager = wifiManager;
   }
 
   public Single<List<Hotspot>> scan() {
-    WifiManager wifiManager = (WifiManager) context.getApplicationContext()
-        .getSystemService(Context.WIFI_SERVICE);
-
     ScanResultsReceiverHelper scanResultsReceiverHelper =
         new ScanResultsReceiverHelper(context, wifiManager, new MultiRulesValidator<>(validators));
     Single<List<Hotspot>> hotspotsSingle = scanResultsReceiverHelper.newScanResultsReceiver();
