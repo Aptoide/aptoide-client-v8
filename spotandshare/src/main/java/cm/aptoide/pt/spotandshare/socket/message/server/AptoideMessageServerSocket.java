@@ -12,7 +12,6 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ServerLeftMessage;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,6 +28,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   @Getter private final ConcurrentLinkedQueue<AptoideMessageServerController>
       aptoideMessageControllers = new ConcurrentLinkedQueue<>();
   private AptoideMessageServerController aptoideMessageServerController;
+  private int availablePort = 10000;
 
   public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout) {
     super(port, serverSocketTimeout, timeout);
@@ -132,7 +132,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   }
 
   private int getAvailablePort() {
-    return new Random().nextInt(10000) + 20000;
+    return availablePort++;
   }
 
   public void sendWithAck(Host host, Message message) {
