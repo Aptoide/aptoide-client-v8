@@ -11,18 +11,17 @@ public class MultiProgressAccumulator<T> implements ProgressAccumulator {
 
   protected final T t;
   private final ProgressCallback<T> progressCallback;
+  private final int interval;
   private long totalProgress;
   private long addedProgress;
+  private long lastPublish;
 
-  public MultiProgressAccumulator(long totalProgress, ProgressCallback<T> progressCallback, T t) {
+  public MultiProgressAccumulator(long totalProgress, ProgressCallback<T> progressCallback, T t,
+      int interval) {
     this.totalProgress = totalProgress;
     this.progressCallback = progressCallback;
     this.t = t;
-  }
-
-  @Override public void addProgress(long progress) {
-    addedProgress += progress;
-    onProgressChanged(1.0f * addedProgress / totalProgress);
+    this.interval = interval;
   }
 
   //@Override public void addProgress(long progress) {
@@ -35,11 +34,22 @@ public class MultiProgressAccumulator<T> implements ProgressAccumulator {
   //  }
   //}
 
+  @Override public void addProgress(long progress) {
+    addedProgress += progress;
+    System.out.println("addProgress" + progress);
+    onProgressChanged(1.0f * addedProgress / totalProgress);
+  }
+
   @Override public void accumulate(long progressToAdd) {
     totalProgress += progressToAdd;
   }
 
   @Override public void onProgressChanged(float progress) {
-    progressCallback.onProgressChanged(t, progress);
+    long currentTimeMillis = System.currentTimeMillis();
+
+    if ((currentTimeMillis - lastPublish) >= interval || totalProgress == addedProgress) {
+      progressCallback.onProgressChanged(t, progress);
+      lastPublish = currentTimeMillis;
+    }
   }
 }

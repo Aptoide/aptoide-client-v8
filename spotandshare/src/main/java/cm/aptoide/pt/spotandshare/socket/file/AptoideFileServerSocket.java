@@ -115,7 +115,7 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
 
     public MultiProgressAccumulatorServer(long totalProgress,
         TransferLifecycle<T> TransferLifecycle, T androidAppInfo) {
-      super(totalProgress, TransferLifecycle, androidAppInfo);
+      super(totalProgress, TransferLifecycle, androidAppInfo, 1000);
       this.TransferLifecycle = TransferLifecycle;
     }
 

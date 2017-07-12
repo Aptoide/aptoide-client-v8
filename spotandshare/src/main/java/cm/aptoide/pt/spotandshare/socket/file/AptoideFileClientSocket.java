@@ -83,7 +83,7 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
 
     public MultiProgressAccumulatorClient(long totalProgress,
         TransferLifecycle<T> TransferLifecycle, T androidAppInfo) {
-      super(totalProgress, TransferLifecycle, androidAppInfo);
+      super(totalProgress, TransferLifecycle, androidAppInfo, 1000);
       this.TransferLifecycle = TransferLifecycle;
     }
 
