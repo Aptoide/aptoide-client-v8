@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">Baxando %s</string>
-    <string name="pause_download">Posar</string>
-    <string name="resume_download">Resumir</string>
-<string name="general_downloads_dialog_no_download_rule_message">Nun s\'afitaron regles de descarga. ¿Quies camudar los axustes?</string>
-<string name="general_downloads_dialog_only_mobile_message">Escoyesti baxar namái en 3G/4G móvil. ¿Quies camudar los axustes?</string>
-  <string name="general_downloads_dialog_only_wifi_message">Escoyesti baxar namái en W-Fi. ¿Quies camudar los axustes?</string>
-  </resources>

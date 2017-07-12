@@ -11,6 +11,7 @@
     android:layout_height="100dp"
     android:layout_marginEnd="5dp"
     android:layout_marginRight="5dp"
+    android:layout_marginEnd="5dp"
     android:background="@drawable/displayable_app_view_suggested_app_border"
     android:clickable="true"
     android:orientation="horizontal"

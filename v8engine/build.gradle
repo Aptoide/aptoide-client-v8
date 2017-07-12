@@ -36,21 +36,12 @@ android {
 
   productFlavors {
     internal {
-      buildConfigField "String", "PAYPAL_ENVIRONMENT",
-          "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
+      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
-          "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
-          "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     }
     prod {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
-          "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
-          "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     }
   }
 
@@ -167,6 +158,8 @@ dependencies {
     exclude group: 'io.card'
   }
 
+  compile 'com.github.jd-alexander:LikeButton:0.2.0'
+
   // Flurry Android sdk
   compile "com.flurry.android:analytics:${FLURRY_VERSION}"
 
@@ -182,8 +175,4 @@ dependencies {
   compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
     transitive = true;
   }
-
-  // Parceler - https://github.com/johncarl81/parceler
-  //compile 'org.parceler:parceler-api:1.1.6'
-  //annotationProcessor 'org.parceler:parceler:1.1.6'
 }

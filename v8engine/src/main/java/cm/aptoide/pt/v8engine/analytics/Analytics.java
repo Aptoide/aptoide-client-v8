@@ -311,6 +311,12 @@ public class Analytics {
       public static void onNewIntent(android.app.Activity activity, Intent intent) {
 
       }
+
+      IdsRepositoryImpl idsRepository =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext());
+
+      String cpuid = idsRepository.getAptoideClientUUID();
     }
   }
 
@@ -1159,5 +1165,13 @@ public class Analytics {
       logFacebookEvents(ON_VIDEO_AD_PLAYABLE_CHANGED, map);
       track(ON_VIDEO_AD_PLAYABLE_CHANGED, map, FLURRY);
     }
+  }
+  public static class SMSUserRegisterEvents {
+
+      public static final String SMS_USER_REGISTERED_EVENT = "SMS User Registered";
+
+      public static void smsRegister() {
+          track(SMS_USER_REGISTERED_EVENT, FLURRY);
+      }
   }
 }

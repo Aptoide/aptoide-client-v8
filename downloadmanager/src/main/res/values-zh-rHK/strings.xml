@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">%s個正在下載</string>
-    <string name="pause_download">暫停</string>
-    <string name="resume_download">繼續</string>
-<string name="general_downloads_dialog_only_mobile_message">您選擇了僅在使用Mobile 3G/4G時下載。是否要更改設定？</string>
-  <string name="general_downloads_dialog_only_wifi_message">您選擇了僅在使用WiFi時下載。是否要更改設定？</string>
-  <string name="general_downloads_dialog_no_download_rule_message">沒有設定下載規則。是否要更改設定？</string>
-</resources>

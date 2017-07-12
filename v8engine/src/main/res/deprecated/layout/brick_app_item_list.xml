@@ -37,6 +37,7 @@
         android:layout_centerVertical="true"
         android:paddingEnd="1.5dp"
         android:paddingRight="1.5dp"
+        android:paddingEnd="1.5dp"
         android:text="Little Commander worl world II"
         android:textColor="?attr/inverseTextColor"
         />
@@ -49,6 +50,7 @@
         android:layout_alignBottom="@id/app_name"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="3dp"
         android:clickable="false"
         android:isIndicator="true"

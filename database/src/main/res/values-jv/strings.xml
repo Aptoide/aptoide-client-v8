@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">Undhuhan rampung</string>
-  <string name="download_paused">Undhuhan istirahat</string>
-  <string name="download_progress">Undhuhan lagi diproses</string>
-  <string name="download_queue">Ing Antrian</string>
-  <string name="out_of_space_error">Ruang entek</string>
-</resources>
