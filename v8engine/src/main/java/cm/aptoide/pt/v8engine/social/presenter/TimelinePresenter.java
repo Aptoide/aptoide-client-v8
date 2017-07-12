@@ -390,11 +390,18 @@ public class TimelinePresenter implements Presenter {
           } else if (isSocialPost(cardTouchEvent.getCard())) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
+            Analytics.AppsTimeline.clickOnCard(socialHeaderCardTouchEvent.getCard()
+                    .getType()
+                    .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+                socialHeaderCardTouchEvent.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
+            Analytics.AppsTimeline.clickOnCard(card.getType()
+                    .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+                card.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
             timelineAnalytics.sendStoreLatestAppsClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", Analytics.AppsTimeline.BLANK,
                 card.getStoreName());
@@ -403,6 +410,9 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
+            Analytics.AppsTimeline.clickOnCard(card.getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
+                Analytics.AppsTimeline.OPEN_STORE);
             timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", card.getPackageName(),
                 card.getStoreName());
@@ -414,12 +424,22 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.POPULAR_APP)) {
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
+            Analytics.AppsTimeline.clickOnCard(popularAppTouchEvent.getCard()
+                    .getType()
+                    .name(), ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
+                Analytics.AppsTimeline.BLANK, String.valueOf(popularAppTouchEvent.getUserId()),
+                Analytics.AppsTimeline.OPEN_STORE);
+            timelineAnalytics.sendPopularAppOpenUserStoreEvent(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), TimelineAnalytics.SOURCE_APTOIDE,
+                ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
+                String.valueOf(popularAppTouchEvent.getUserId()));
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
                 popularAppTouchEvent.getStoreTheme());
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(articleUrl -> {
+        .subscribe(touchEvent -> {
         }, throwable -> {
           throwable.printStackTrace();
           crashReport.log(throwable);
@@ -557,6 +577,9 @@ public class TimelinePresenter implements Presenter {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
     } else if (card.getType()
         .equals(CardType.VIDEO)) {
       timelineAnalytics.sendOpenChannelEvent(card.getType()
@@ -566,6 +589,9 @@ public class TimelinePresenter implements Presenter {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
     }
   }
 
