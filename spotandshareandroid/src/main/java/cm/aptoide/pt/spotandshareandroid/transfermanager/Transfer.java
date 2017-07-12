@@ -83,4 +83,8 @@ public class Transfer {
       transfer.behaviorRelay.call(transfer);
     }
   }
+
+  public boolean isPendingAcception() {
+    return state == State.PENDING_ACCEPTION;
+  }
 }
