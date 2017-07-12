@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid.reflect;
+package cm.aptoide.pt.spotandshareandroid.util.service;
 
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;

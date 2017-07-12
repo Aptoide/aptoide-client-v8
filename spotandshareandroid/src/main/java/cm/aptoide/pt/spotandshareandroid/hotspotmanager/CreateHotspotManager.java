@@ -2,8 +2,8 @@ package cm.aptoide.pt.spotandshareandroid.hotspotmanager;
 
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import cm.aptoide.pt.spotandshareandroid.reflect.WifiManagerReflect;
 import cm.aptoide.pt.spotandshareandroid.util.TaskQueue;
+import cm.aptoide.pt.spotandshareandroid.util.service.WifiManagerReflect;
 import rx.Completable;
 import rx.Single;
 

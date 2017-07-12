@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid.util;
+package cm.aptoide.pt.spotandshareandroid.util.service;
 
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -94,6 +94,10 @@ public class ServiceProvider {
 
   public WifiManager getWifiManager() {
     return (WifiManager) applicationContext.getSystemService(Context.WIFI_SERVICE);
+  }
+
+  public WifiManagerReflect getWifiManagerReflect() {
+    return new WifiManagerReflect(getWifiManager());
   }
 
   public AudioManager getAudioManager() {
