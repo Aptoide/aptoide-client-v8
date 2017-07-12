@@ -234,7 +234,7 @@ public class ServerService extends Service {
             new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
                 storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
                 androidAppInfoAccepter -> androidAppInfoAccepter.accept(
-                    fileLifecycleProvider.newFileClientLifecycle()));
+                    fileLifecycleProvider.newFileClientLifecycle()), "username");
         aptoideMessageClientSocket.startAsync();
       } else if (intent.getAction() != null && intent.getAction()
           .equals("SEND")) {

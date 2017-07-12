@@ -10,9 +10,11 @@ public class SpotAndShare {
 
   private static cm.aptoide.pt.spotandshareandroid.SpotAndShare instance;
 
+  private static final String username = "dummy_username";
+
   public static cm.aptoide.pt.spotandshareandroid.SpotAndShare getInstance(Context context) {
     if (instance == null) {
-      instance = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(context);
+      instance = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(context, username);
     }
     return instance;
   }

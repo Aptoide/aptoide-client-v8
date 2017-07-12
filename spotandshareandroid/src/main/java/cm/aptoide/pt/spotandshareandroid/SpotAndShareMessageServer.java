@@ -42,7 +42,7 @@ public class SpotAndShareMessageServer {
     }
   }
 
-  public void startClient(MessageServerConfiguration messageServerConfiguration) {
+  public void startClient(MessageServerConfiguration messageServerConfiguration, String username) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
@@ -51,21 +51,22 @@ public class SpotAndShareMessageServer {
           messageServerConfiguration.getStorageCapacity(),
           messageServerConfiguration.getFileLifecycleProvider(),
           messageServerConfiguration.getSocketBinder(), messageServerConfiguration.getOnError(),
-          Integer.MAX_VALUE, messageServerConfiguration.getAndroidAppInfoAccepter());
+          Integer.MAX_VALUE, messageServerConfiguration.getAndroidAppInfoAccepter(), username);
       aptoideMessageClientSocket.startAsync();
     }
   }
 
   public void startClient(String externalStoragepath, StorageCapacity storageCapacity,
       FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
-      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter) {
+      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter,
+      String username) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
       aptoideMessageClientSocket =
           new AptoideMessageClientSocket(HOTSPOT_DEFAULT_ADDRESS, port, externalStoragepath,
               storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
-              androidAppInfoAccepter);
+              androidAppInfoAccepter, username);
       aptoideMessageClientSocket.startAsync();
     }
   }

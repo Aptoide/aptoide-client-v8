@@ -19,15 +19,19 @@ import java.io.IOException;
 public class AptoideMessageClientController extends AptoideMessageController
     implements Sender<Message> {
 
+  private final String username;
+
   public AptoideMessageClientController(AptoideMessageClientSocket aptoideMessageClientSocket,
       String rootDir, StorageCapacity storageCapacity,
       FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
-      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter) {
+      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter,
+      String username) {
     super(DefaultClientHandlersListV1.create(rootDir, storageCapacity, fileLifecycleProvider,
         aptoideMessageClientSocket, socketBinder, androidAppInfoAccepter), onError);
+    this.username = username;
   }
 
   @Override protected void doOnConnect() {
-    send(new WelcomeMessage(getLocalhost()));
+    send(new WelcomeMessage(getLocalhost(), username));
   }
 }

@@ -30,11 +30,11 @@ public class SpotAndShare {
   private Map<AndroidAppInfo, Accepter<AndroidAppInfo>> androidAppInfoAccepterMap = new HashMap<>();
   private final ServiceProvider serviceProvider;
 
-  public SpotAndShare(Context context) {
+  public SpotAndShare(Context context, String username) {
     serviceProvider = new ServiceProvider(context);
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
         .getSystemService(Context.WIFI_SERVICE), serviceProvider.getWifiManager());
-    spotAndShareV2 = new SpotAndShareV2(context);
+    spotAndShareV2 = new SpotAndShareV2(context, username);
   }
 
   public Completable createGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,

@@ -14,8 +14,8 @@ import java.io.IOException;
 public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController(AptoideMessageClientSocket aptoideMessageClientSocket) {
-    super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newTransferLifecycleProvider(),
-        null, null, null);
+    super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newTransferLifecycleProvider(), null,
+        null, null, "username");
   }
 
   private static FileLifecycleProvider<AndroidAppInfo> newTransferLifecycleProvider() {

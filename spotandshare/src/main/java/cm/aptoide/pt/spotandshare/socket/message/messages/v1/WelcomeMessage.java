@@ -10,7 +10,10 @@ public class WelcomeMessage extends Message {
 
   private static final long serialVersionUID = 3171074727404858798L;
 
-  public WelcomeMessage(Host localHost) {
+  private final String username;
+
+  public WelcomeMessage(Host localHost, String username) {
     super(localHost);
+    this.username = username;
   }
 }
