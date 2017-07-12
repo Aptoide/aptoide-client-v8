@@ -33,7 +33,6 @@
         android:layout_height="match_parent"
         android:layout_toEndOf="@+id/icon"
         android:layout_toRightOf="@+id/icon"
-        android:layout_toEndOf="@+id/icon"
         android:orientation="vertical"
         android:padding="8dp"
         >

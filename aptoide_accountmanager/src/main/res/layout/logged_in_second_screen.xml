@@ -102,7 +102,6 @@
           android:id="@+id/logged_in_private_button"
           android:layout_width="0dp"
           android:layout_height="46dp"
-          android:layout_marginEnd="23dp"
           android:layout_marginRight="23dp"
           android:layout_marginEnd="23dp"
           android:layout_weight="1"

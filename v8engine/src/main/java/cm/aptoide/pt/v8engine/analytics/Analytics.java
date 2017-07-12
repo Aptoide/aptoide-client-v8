@@ -311,12 +311,6 @@ public class Analytics {
       public static void onNewIntent(android.app.Activity activity, Intent intent) {
 
       }
-
-      IdsRepositoryImpl idsRepository =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext());
-
-      String cpuid = idsRepository.getAptoideClientUUID();
     }
   }
 

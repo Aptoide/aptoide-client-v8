@@ -308,6 +308,8 @@
   <string name="social_timeline_recommends">توصیه می‌کند</string>
   <string name="private_profile_create_store">با ساخت یک فروشگاه، پروفایل خود را شخصی کنید</string>
   <string name="social_timeline_shared_by">به اشتراک گذاشته شده توسط %1$s</string>
+  <string name="social_timeline_who_liked">Who liked</string>
+  <string name="social_timeline_users_private">%d are private</string>
 
   <string name="edit_store">ویرایش</string>
 

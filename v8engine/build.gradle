@@ -38,10 +38,18 @@ android {
     internal {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
+              "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
+              "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     }
     prod {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
+              "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
+              "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     }
   }
 

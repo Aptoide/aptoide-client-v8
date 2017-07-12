@@ -75,7 +75,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingExtra="8sp"
-        android:paddingEnd="@dimen/appview_description_right"
         android:paddingLeft="@dimen/appview_description_left"
         android:paddingRight="@dimen/appview_description_right"
         android:paddingEnd="@dimen/appview_description_right"
