@@ -18,15 +18,17 @@ public class TransferAppModel {
   private boolean transferenceOriginatedHere;
   private boolean finishedTransference;
   private String senderName;
+  private int hashcode;
 
   public TransferAppModel(String appName, String packageName, String filePath, Drawable appIcon,
-      boolean transferenceOriginatedHere, String senderName) {
+      boolean transferenceOriginatedHere, String senderName, int hashcode) {
     this.appName = appName;
     this.packageName = packageName;
     this.filePath = filePath;
     this.appIcon = appIcon;
     this.transferenceOriginatedHere = transferenceOriginatedHere;
     this.senderName = senderName;
+    this.hashcode = hashcode;
   }
 
   public String getAppName() {
@@ -59,5 +61,9 @@ public class TransferAppModel {
 
   public void setTransferenceFinished(boolean finishedTransference) {
     this.finishedTransference = finishedTransference;
+  }
+
+  public int getHashcode() {
+    return hashcode;
   }
 }

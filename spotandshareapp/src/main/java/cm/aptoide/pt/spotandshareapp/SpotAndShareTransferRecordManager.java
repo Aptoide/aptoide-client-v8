@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,40 +15,38 @@ import java.util.List;
 public class SpotAndShareTransferRecordManager {
 
   private Context context;
+  private List<Transfer> transferList;
 
   public SpotAndShareTransferRecordManager(Context context) {
     this.context = context;
   }
 
-  private List<AndroidAppInfo> getAndroidAppInfoList(List<Transfer> transferList) {
-    List<AndroidAppInfo> androidAppInfoList = new LinkedList<>();
-    for (int i = 0; i < transferList.size(); i++) {
-      androidAppInfoList.add(transferList.get(i)
-          .getAndroidAppInfo());
-    }
-    return androidAppInfoList;
-  }
-
-  private List<TransferAppModel> convertAndroidAppInfoToTransferModel(
-      List<AndroidAppInfo> appsList) {
+  public List<TransferAppModel> getTransferAppModelList(List<Transfer> transferList) {
+    this.transferList = transferList;
     List<TransferAppModel> appModelList = new LinkedList<>();
-    AndroidAppInfo androidAppInfo;
-    for (int i = 0; i < appsList.size(); i++) {
-      androidAppInfo = appsList.get(i);
-      appModelList.add(
-          new TransferAppModel(androidAppInfo.getAppName(), androidAppInfo.getPackageName(), "",
-              convertByteToDrawable(androidAppInfo.getIcon()), false, "sendername"));
+    for (Transfer transfer : transferList) {
+      appModelList.add(new TransferAppModel(transfer.getAndroidAppInfo()
+          .getAppName(), transfer.getAndroidAppInfo()
+          .getPackageName(), "", convertByteToDrawable(transfer.getAndroidAppInfo()
+          .getIcon()), (transfer.getState() == Transfer.State.SERVING), transfer.getAndroidAppInfo()
+          .getSenderName(), transfer.hashCode()));
     }
     return appModelList;
-  }
-
-  public List<TransferAppModel> getTransferAppModelList(List<Transfer> transferList) {
-    List<AndroidAppInfo> androidAppInfoList = getAndroidAppInfoList(transferList);
-    return convertAndroidAppInfoToTransferModel(androidAppInfoList);
   }
 
   private Drawable convertByteToDrawable(byte[] icon) {
     return new BitmapDrawable(context.getResources(),
         BitmapFactory.decodeByteArray(icon, 0, icon.length));
+  }
+
+  public void acceptApp(TransferAppModel transferAppModel) {
+    for (int i = 0; i < transferList.size(); i++) {
+      if (transferAppModel.getHashcode() == transferList.get(i)
+          .hashCode()) {
+        transferList.get(i)
+            .accept();
+        break;
+      }
+    }
   }
 }

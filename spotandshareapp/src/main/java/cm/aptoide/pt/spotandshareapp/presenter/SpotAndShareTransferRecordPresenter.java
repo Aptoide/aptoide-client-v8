@@ -9,7 +9,6 @@ import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -33,11 +32,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> spotAndShare.observeTransfers()
-            .flatMap(transfers -> Observable.from(transfers)
-                .filter(Transfer::isPendingAcception)
-                .flatMap(Transfer::accept)
-                .map(transfer -> transfers)))
+        .flatMap(created -> spotAndShare.observeTransfers())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(transfers -> updateTransferRecord(transfers))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -87,6 +82,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
   private void acceptedApp(TransferAppModel transferAppModel) {
     //// TODO: 07-07-2017 filipe inform spot and share accepted app
+    transferRecordManager.acceptApp(transferAppModel);
     System.out.println("accepted : " + transferAppModel.getAppName());
   }
 
