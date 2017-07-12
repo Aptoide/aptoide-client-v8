@@ -358,8 +358,9 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.LIKE) && isSocialPost(cardTouchEvent.getCard()))
-            .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard()
-                .getCardId())))
+            .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard(),
+                cardTouchEvent.getCard()
+                    .getCardId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
@@ -373,7 +374,7 @@ public class TimelinePresenter implements Presenter {
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.LIKE) && isNormalPost(cardTouchEvent.getCard()))
             .flatMapCompletable(cardTouchEvent -> timeline.sharePost(cardTouchEvent.getCard())
-                .flatMapCompletable(cardId -> timeline.like(cardId))
+                .flatMapCompletable(cardId -> timeline.like(cardTouchEvent.getCard(), cardId))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> view.showShareSuccessMessage()))
             .retry())
@@ -436,11 +437,18 @@ public class TimelinePresenter implements Presenter {
           } else if (isSocialPost(cardTouchEvent.getCard())) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
+            Analytics.AppsTimeline.clickOnCard(socialHeaderCardTouchEvent.getCard()
+                    .getType()
+                    .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+                socialHeaderCardTouchEvent.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
+            Analytics.AppsTimeline.clickOnCard(card.getType()
+                    .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+                card.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
             timelineAnalytics.sendStoreLatestAppsClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", Analytics.AppsTimeline.BLANK,
                 card.getStoreName());
@@ -449,6 +457,9 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
+            Analytics.AppsTimeline.clickOnCard(card.getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
+                Analytics.AppsTimeline.OPEN_STORE);
             timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", card.getPackageName(),
                 card.getStoreName());
@@ -460,12 +471,22 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.POPULAR_APP)) {
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
+            Analytics.AppsTimeline.clickOnCard(popularAppTouchEvent.getCard()
+                    .getType()
+                    .name(), ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
+                Analytics.AppsTimeline.BLANK, String.valueOf(popularAppTouchEvent.getUserId()),
+                Analytics.AppsTimeline.OPEN_STORE);
+            timelineAnalytics.sendPopularAppOpenUserStoreEvent(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), TimelineAnalytics.SOURCE_APTOIDE,
+                ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
+                String.valueOf(popularAppTouchEvent.getUserId()));
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
                 popularAppTouchEvent.getStoreTheme());
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(articleUrl -> {
+        .subscribe(touchEvent -> {
         }, throwable -> {
           throwable.printStackTrace();
           crashReport.log(throwable);
@@ -490,6 +511,9 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.RECOMMENDATION)) {
             Recommendation card = (Recommendation) cardTouchEvent.getCard();
+            Analytics.AppsTimeline.clickOnCard(card.getType()
+                    .name(), card.getPackageName(), card.getPublisherName(), card.getPublisherName(),
+                Analytics.AppsTimeline.OPEN_APP_VIEW);
             timelineAnalytics.sendRecommendationCardClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
                 card.getPublisherName());
@@ -502,6 +526,13 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.STORE)) {
             StoreAppCardTouchEvent storeAppCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
+            if (storeAppCardTouchEvent.getCard() instanceof StoreLatestApps) {
+              Analytics.AppsTimeline.clickOnCard(storeAppCardTouchEvent.getCard()
+                      .getType()
+                      .name(), storeAppCardTouchEvent.getPackageName(), Analytics.AppsTimeline.BLANK,
+                  ((StoreLatestApps) storeAppCardTouchEvent.getCard()).getStoreName(),
+                  Analytics.AppsTimeline.OPEN_APP_VIEW);
+            }
             timelineAnalytics.sendStoreLatestAppsClickEvent(cardTouchEvent.getCard()
                     .getType()
                     .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)",
@@ -514,6 +545,12 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
             if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
+              Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                      .getType()
+                      .name(), ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName(),
+                  Analytics.AppsTimeline.BLANK,
+                  ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
+                  Analytics.AppsTimeline.OPEN_APP_VIEW);
               navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
             } else if (cardTouchEvent instanceof FollowStoreCardTouchEvent) {
               FollowStoreCardTouchEvent followStoreCardTouchEvent =
@@ -523,6 +560,11 @@ public class TimelinePresenter implements Presenter {
             } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
               StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
               if (cardTouchEvent.getCard() instanceof StoreLatestApps) {
+                Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                        .getType()
+                        .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+                    ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
+                    Analytics.AppsTimeline.OPEN_STORE);
                 timelineAnalytics.sendOpenStoreEvent(cardTouchEvent.getCard()
                         .getType()
                         .name(), TimelineAnalytics.SOURCE_APTOIDE,
@@ -535,6 +577,10 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.UPDATE)) {
             AppUpdate card = (AppUpdate) cardTouchEvent.getCard();
+            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
+                Analytics.AppsTimeline.UPDATE_APP);
             timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.UPDATE_APP, "(blank)", card.getPackageName(),
                 card.getStoreName());
@@ -563,6 +609,10 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.POPULAR_APP)) {
             PopularApp card = (PopularApp) cardTouchEvent.getCard();
+            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK,
+                Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_APP_VIEW);
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
@@ -571,6 +621,10 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.SOCIAL_INSTALL)) {
             RatedRecommendation card = (RatedRecommendation) cardTouchEvent.getCard();
+            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK,
+                Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_APP_VIEW);
             timelineAnalytics.sendSocialRecommendationClickEvent(card.getType()
                     .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
                 card.getPoster()
@@ -581,6 +635,10 @@ public class TimelinePresenter implements Presenter {
               .getType()
               .equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
             AggregatedRecommendation card = (AggregatedRecommendation) cardTouchEvent.getCard();
+            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK,
+                Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_APP_VIEW);
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
           }
@@ -603,6 +661,9 @@ public class TimelinePresenter implements Presenter {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
     } else if (card.getType()
         .equals(CardType.VIDEO)) {
       timelineAnalytics.sendOpenChannelEvent(card.getType()
@@ -612,6 +673,9 @@ public class TimelinePresenter implements Presenter {
       timelineAnalytics.sendMediaCardClickEvent(card.getType()
               .name(), card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
     }
   }
 
@@ -620,6 +684,9 @@ public class TimelinePresenter implements Presenter {
         .equals(CardType.ARTICLE) || card.getType()
         .equals(CardType.SOCIAL_ARTICLE) || card.getType()
         .equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE);
       timelineAnalytics.sendOpenArticleEvent(card.getType()
           .name(), card.getMediaTitle(), card.getMediaLink()
           .getUrl(), card.getRelatedApp()
@@ -631,6 +698,9 @@ public class TimelinePresenter implements Presenter {
         .equals(CardType.VIDEO) || card.getType()
         .equals(CardType.SOCIAL_VIDEO) || card.getType()
         .equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO);
       timelineAnalytics.sendOpenVideoEvent(card.getType()
           .name(), card.getMediaTitle(), card.getMediaLink()
           .getUrl(), card.getRelatedApp()

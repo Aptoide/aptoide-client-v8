@@ -379,4 +379,10 @@ public class TimelineAnalytics {
     data.putString(key, value);
     return data;
   }
+
+  public void sendPopularAppOpenUserStoreEvent(String cardType, String source, String packageName,
+      String store) {
+    analytics.sendEvent(
+        createEvent(OPEN_STORE, createStoreAppData(cardType, source, packageName, store)));
+  }
 }
