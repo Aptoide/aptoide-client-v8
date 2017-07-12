@@ -30,4 +30,10 @@ public interface SpotAndShareAppSelectionView extends View {
   void openTransferRecord();
 
   void openWaitingToSendScreen();
+
+  void onCreateGroupError(Throwable throwable);
+
+  void hideLoading();
+
+  void showLoading();
 }

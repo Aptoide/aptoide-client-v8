@@ -71,8 +71,9 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     getFragmentNavigator().navigateTo(SpotAndShareWaitingToReceiveFragment.newInstance());
   }
 
-  @Override public void openAppSelectionFragment() {
-    getFragmentNavigator().navigateTo(SpotAndShareAppSelectionFragment.newInstance());
+  @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
+    getFragmentNavigator().navigateTo(
+        SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
   }
 
   @Override

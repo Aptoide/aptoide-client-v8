@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
+    android:orientation="vertical"
     >
 
   <android.support.v7.widget.Toolbar
@@ -13,6 +13,23 @@
       android:background="?attr/colorPrimary"
       />
 
+  <LinearLayout
+      android:id="@+id/app_selection_progress_bar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/white"
+      android:clickable="true"
+      android:focusable="true"
+      android:gravity="center"
+      android:orientation="vertical"
+      android:visibility="visible"
+      >
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+  </LinearLayout>
+
   <android.support.v7.widget.RecyclerView
       android:id="@+id/app_selection_recycler_view"
       android:layout_width="match_parent"
@@ -21,6 +38,7 @@
       android:layout_marginRight="20dp"
       android:scrollbars="vertical"
       >
-
   </android.support.v7.widget.RecyclerView>
+
+
 </LinearLayout>

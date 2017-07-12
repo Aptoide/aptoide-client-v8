@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.AppModel;
@@ -33,22 +34,32 @@ import rx.subjects.PublishSubject;
 public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     implements SpotAndShareAppSelectionView {
 
+  private boolean shouldCreateGroup;
+  private static String CREATE_GROUP_KEY = "CREATE_GROUP_KEY";
   private RecyclerView recyclerView;
   private SpotAndShareAppSelectionAdapter adapter;
   private Toolbar toolbar;
   private PublishRelay<Void> backRelay;
   private ClickHandler clickHandler;
   private RxAlertDialog backDialog;
-
   private PublishSubject<AppModel> appSubject;
+  private View progressBarContainer;
 
-  public static Fragment newInstance() {
+  public static Fragment newInstance(boolean shouldCreateGroup) {
+    Bundle args = new Bundle();
+    args.putBoolean(CREATE_GROUP_KEY, shouldCreateGroup);
     Fragment fragment = new SpotAndShareAppSelectionFragment();
+    Bundle arguments = fragment.getArguments();
+    if (arguments != null) {
+      args.putAll(arguments);
+    }
+    fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    shouldCreateGroup = getArguments().getBoolean(CREATE_GROUP_KEY);
     backRelay = PublishRelay.create();
     appSubject = PublishSubject.create();
   }
@@ -104,6 +115,20 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         SpotAndShareWaitingToSendFragment.newInstance());
   }
 
+  @Override public void hideLoading() {
+    progressBarContainer.setVisibility(View.GONE);
+  }
+
+  @Override public void showLoading() {
+    progressBarContainer.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void onCreateGroupError(Throwable throwable) {
+    Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
+        Toast.LENGTH_SHORT)
+        .show();
+  }
+
   private void setupLayoutManager() {
     GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
     gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -132,7 +157,8 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         .setPositiveButton(R.string.spotandshare_button_leave_group)
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
-    attachPresenter(new SpotAndShareAppSelectionPresenter(this,
+    progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
+    attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
             new InstalledRepositoryDummy(getContext().getPackageManager()),
             SpotAndShare.getInstance(getContext()), new SpotAndShareAppSelectionManager()),
         savedInstanceState);
@@ -153,6 +179,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     backDialog = null;
     adapter = null;
     recyclerView = null;
+    progressBarContainer = null;
     super.onDestroyView();
   }
 

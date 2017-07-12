@@ -154,9 +154,9 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     return RxView.clicks(shareAppButton);
   }
 
-  @Override public void openAppSelectionFragment() {
+  @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
     getFragmentNavigator().navigateToWithoutBackSave(
-        SpotAndShareAppSelectionFragment.newInstance());
+        SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

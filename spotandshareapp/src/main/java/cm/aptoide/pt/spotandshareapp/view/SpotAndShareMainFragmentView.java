@@ -22,7 +22,7 @@ public interface SpotAndShareMainFragmentView extends View {
 
   void openWaitingToReceiveFragment();
 
-  void openAppSelectionFragment();
+  void openAppSelectionFragment(boolean fromMainFragment);
 
   boolean requestPermissionToReceiveApp(Accepter<AndroidAppInfo> androidAppInfoAccepter);
 

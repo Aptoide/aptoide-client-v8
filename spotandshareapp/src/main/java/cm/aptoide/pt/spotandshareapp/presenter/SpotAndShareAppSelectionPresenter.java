@@ -14,6 +14,9 @@ import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by filipe on 12-06-2017.
@@ -22,14 +25,16 @@ import java.util.List;
 public class SpotAndShareAppSelectionPresenter implements Presenter {
   private final SpotAndShareAppSelectionView view;
   private final SpotAndShare spotAndShare;
+  private boolean shouldCreateGroup;
   private InstalledRepositoryDummy installedRepositoryDummy;
   private List<AppModel> selectedApps;
   private SpotAndShareAppSelectionManager spotAndShareAppSelectionManager;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
-      InstalledRepositoryDummy installedRepositoryDummy, SpotAndShare spotAndShare,
-      SpotAndShareAppSelectionManager spotAndShareAppSelectionManager) {
+      boolean shouldCreateGroup, InstalledRepositoryDummy installedRepositoryDummy,
+      SpotAndShare spotAndShare, SpotAndShareAppSelectionManager spotAndShareAppSelectionManager) {
     this.view = view;
+    this.shouldCreateGroup = shouldCreateGroup;
     this.installedRepositoryDummy = installedRepositoryDummy;
     this.spotAndShare = spotAndShare;
     this.spotAndShareAppSelectionManager = spotAndShareAppSelectionManager;
@@ -37,12 +42,29 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   }
 
   @Override public void present() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> view.setupRecyclerView(installedRepositoryDummy.getInstalledApps()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
+
+    //Observable<List<AppModel>> compose = view.getLifecycle()
+    //    .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+    //    .doOnNext(lifecycleEvent -> view.showLoading())
+    //    .observeOn(Schedulers.io())
+    //    .map(lifecycleEvent -> installedRepositoryDummy.getInstalledApps())
+    //    .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
+    //
+    //getInstaledAppsObservable();
+    //getCreateGroupObservable();
+
+    //Observable<View.LifecycleEvent> compose1 = view.getLifecycle()
+    //    .filter(lifecycleEvent -> shouldCreateGroup && lifecycleEvent.equals(
+    //        View.LifecycleEvent.CREATE))
+    //    .doOnNext(lifecycleEvent -> view.showLoading())
+    //    .doOnNext(created -> createGroup())
+    //    .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
+
+    Observable.zip(getInstaledAppsObservable(), getCreateGroupObservable(),
+        (appModels, s) -> appModels)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(installedApps -> view.setupRecyclerView(installedApps))
+        .subscribe(o -> view.hideLoading());
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -67,6 +89,29 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
+  }
+
+  private Observable<View.LifecycleEvent> getCreateGroupObservable() {
+    return view.getLifecycle()
+        .filter(lifecycleEvent -> shouldCreateGroup && lifecycleEvent.equals(
+            View.LifecycleEvent.CREATE))
+        .doOnNext(lifecycleEvent -> view.showLoading())
+        .doOnNext(created -> createGroup())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
+  }
+
+  private Observable<List<AppModel>> getInstaledAppsObservable() {
+    return view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(lifecycleEvent -> view.showLoading())
+        .observeOn(Schedulers.io())
+        .map(lifecycleEvent -> installedRepositoryDummy.getInstalledApps())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
+  }
+
+  private void createGroup() {
+    spotAndShare.createGroup(uuid -> {
+    }, view::onCreateGroupError, null);
   }
 
   @Override public void saveState(Bundle state) {
