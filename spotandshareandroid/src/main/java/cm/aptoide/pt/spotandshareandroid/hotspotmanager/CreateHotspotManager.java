@@ -17,14 +17,12 @@ class CreateHotspotManager {
   private static final int SUCCESS_HOTSPOT_CREATION = 6;
   private static final int FAILED_TO_CREATE_HOTSPOT = 7;
   private final WifiManagerReflect wifiManagerReflect;
-  private final WifiManager wifimanager;
   private final WifiConfigurationHelper wifiConfigurationHelper;
   private final TaskQueue taskQueue;
 
   private WifiConfiguration storedWifiConfiguration;
 
   CreateHotspotManager(WifiManager wifimanager, TaskQueue taskQueue) {
-    this.wifimanager = wifimanager;
     this.taskQueue = taskQueue;
     this.wifiConfigurationHelper = new WifiConfigurationHelper();
     this.wifiManagerReflect = new WifiManagerReflect(wifimanager);
@@ -54,8 +52,8 @@ class CreateHotspotManager {
 
     return taskQueue.submitTask(Single.fromCallable(() -> {
 
-      if (wifimanager.isWifiEnabled()) {
-        wifimanager.setWifiEnabled(false);
+      if (wifiManagerReflect.isWifiEnabled()) {
+        wifiManagerReflect.setWifiEnabled(false);
       }
 
       storedWifiConfiguration = wifiManagerReflect.getWifiApConfiguration();
