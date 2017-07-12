@@ -84,9 +84,10 @@
   <string name="store_meta_following">Following</string>
   <string name="store_meta_followers">Followers</string>
   <string name="addressbook_about">About Address Book</string>
-  <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
+  <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to connect you</string>
 
-  <string name="x_liked_it">%s liked it</string>
+  <string name="x_liked_it">%s likes it</string>
+  <string name="x_likes_it">%s likes it</string>
   <string name="related_to">Related to</string>
   <string name="store_has_an_update">%1$s has an update</string>
   <string name="store_has_new_apps">%1$s store has new apps</string>
