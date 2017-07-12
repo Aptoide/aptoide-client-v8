@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareapp.R;
@@ -54,22 +55,36 @@ public class SpotAndShareTransferRecordAdapter
     private TextView senderName;
     private ImageView appIcon;
     private Button acceptButton;
+    private Button installButton;
+    private ProgressBar transferProgressBar;
 
     public TransferViewHolder(android.view.View itemView) {
       super(itemView);
       senderName = (TextView) itemView.findViewById(R.id.sender_info);
       appIcon = (ImageView) itemView.findViewById(R.id.transfer_app_icon);
       acceptButton = (Button) itemView.findViewById(R.id.transfer_record_accept_app_button);
+      installButton = (Button) itemView.findViewById(R.id.transfer_record_install_app_button);
+      transferProgressBar = (ProgressBar) itemView.findViewById(R.id.transfer_record_progress_bar);
     }
 
     public void setTransferItem(TransferAppModel transferItem) {
       senderName.setText(transferItem.getSenderName());
       appIcon.setImageDrawable(transferItem.getAppIcon());
-      if (transferItem.getTransferState() != Transfer.State.PENDING_ACCEPTION) {
-        acceptButton.setVisibility(View.GONE);
-      } else {
+      if (transferItem.getTransferState() == Transfer.State.PENDING_ACCEPTION) {
         acceptButton.setVisibility(View.VISIBLE);
         acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
+      } else {
+        acceptButton.setVisibility(View.GONE);
+        transferProgressBar.setIndeterminate(false);
+        installButton.setVisibility(View.GONE);
+        if (transferItem.getTransferState() == Transfer.State.RECEIVING
+            || transferItem.getTransferState() == Transfer.State.SERVING) {
+          transferProgressBar.setIndeterminate(true);
+        }
+        if (transferItem.getTransferState() == Transfer.State.RECEIVED) {
+          installButton.setVisibility(View.VISIBLE);
+          //// TODO: 12-07-2017 filipe set up install listener
+        }
       }
     }
   }
