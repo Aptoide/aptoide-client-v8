@@ -31,7 +31,6 @@ import android.view.inputmethod.InputMethodManager;
 /**
  * Created by neuro on 12-07-2017.
  */
-
 public class ServiceProvider {
 
   private final Context applicationContext;

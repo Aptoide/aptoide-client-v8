@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareandroid;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
@@ -68,7 +69,7 @@ class SpotAndShareV2 {
       } else {
         return joinHotspot(() -> {
           enabled = true;
-          startSpotAndShareMessageClient();
+          startSpotAndShareMessageClient(serviceProvider.getConnectivityManager());
           onSuccess.call(createSpotAndShareSender());
         }, throwable -> {
           enabled = false;
@@ -78,16 +79,16 @@ class SpotAndShareV2 {
     });
   }
 
-  private void startSpotAndShareMessageClient() {
+  private void startSpotAndShareMessageClient(ConnectivityManager connectivityManager) {
     spotAndShareMessageServer.startClient(
         new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-            transferManager.getAndroidAppInfoAccepter()));
+            transferManager.getAndroidAppInfoAccepter(), connectivityManager));
   }
 
   private void startSpotAndShareMessageServer(OnError onError) {
     // TODO: 10-07-2017 neuro
     spotAndShareMessageServer.startServer(createHostsChangedCallback(onError));
-    startSpotAndShareMessageClient();
+    startSpotAndShareMessageClient(serviceProvider.getConnectivityManager());
   }
 
   void receive(Action1<SpotAndShareSender> onSuccess, OnError onError) {
@@ -98,7 +99,7 @@ class SpotAndShareV2 {
         .flatMapCompletable(aBoolean -> hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled1 -> {
           if (enabled1) {
             enabled = true;
-            startSpotAndShareMessageClient();
+            startSpotAndShareMessageClient(serviceProvider.getConnectivityManager());
             onSuccess.call(createSpotAndShareSender());
           } else {
             onError.onError(new Throwable("Failed to join hotspot"));

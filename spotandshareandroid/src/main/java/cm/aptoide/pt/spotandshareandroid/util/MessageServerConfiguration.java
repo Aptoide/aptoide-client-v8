@@ -29,10 +29,12 @@ import lombok.Getter;
   private final SocketBinder socketBinder;
   private final OnError<IOException> onError;
   private final AndroidAppInfoAccepter androidAppInfoAccepter;
+  private final ConnectivityManager connectivityManager;
 
   public MessageServerConfiguration(Context context, OnError<IOException> onError,
-      AndroidAppInfoAccepter androidAppInfoAccepter) {
+      AndroidAppInfoAccepter androidAppInfoAccepter, ConnectivityManager connectivityManager) {
     this.context = context;
+    this.connectivityManager = connectivityManager;
     this.externalStoragepath =
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             .toString();
@@ -46,12 +48,10 @@ import lombok.Getter;
   public SocketBinder newDefaultSocketBinder() {
     return socket -> {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        ConnectivityManager conMgr =
-            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        Network[] networks = conMgr.getAllNetworks();
+        Network[] networks = connectivityManager.getAllNetworks();
         if (networks != null) {
           for (Network network : networks) {
-            NetworkInfo networkInfo = conMgr.getNetworkInfo(network);
+            NetworkInfo networkInfo = connectivityManager.getNetworkInfo(network);
             if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
               if (networkInfo.isAvailable() && networkInfo.isConnected()) {
                 try {
