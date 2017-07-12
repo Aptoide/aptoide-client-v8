@@ -19,6 +19,10 @@ class TransferListRelay {
 
   public void add(Transfer transfer) {
     transfers.add(transfer);
+    callRelay();
+  }
+
+  void callRelay() {
     transferListRelay.call(transfers);
   }
 

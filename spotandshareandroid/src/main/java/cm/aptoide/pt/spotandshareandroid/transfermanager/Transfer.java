@@ -18,16 +18,19 @@ public class Transfer {
 
   @Getter private State state;
   @Getter private float progress;
+  private TransferManager transferManager;
 
-  public Transfer(Accepter<AndroidAppInfo> androidAppInfoAccepter, State state) {
+  private Transfer(Accepter<AndroidAppInfo> androidAppInfoAccepter, State state,
+      TransferManager transferManager) {
     this.androidAppInfoAccepter = androidAppInfoAccepter;
     this.state = state;
+    this.transferManager = transferManager;
 
     behaviorRelay = BehaviorRelay.create();
   }
 
-  public Transfer(Accepter<AndroidAppInfo> androidAppInfoAccepter) {
-    this(androidAppInfoAccepter, State.PENDING_ACCEPTION);
+  Transfer(Accepter<AndroidAppInfo> androidAppInfoAccepter, TransferManager transferManager) {
+    this(androidAppInfoAccepter, State.PENDING_ACCEPTION, transferManager);
   }
 
   public Observable<Transfer> accept() {
@@ -36,7 +39,7 @@ public class Transfer {
     }
 
     state = State.RECEIVING;
-    androidAppInfoAccepter.accept(new TransferLifecycleRelay(this));
+    androidAppInfoAccepter.accept(new TransferLifecycleRelay(this, transferManager));
     behaviorRelay.call(this);
 
     return behaviorRelay;
@@ -58,29 +61,36 @@ public class Transfer {
   private static class TransferLifecycleRelay implements TransferLifecycle<AndroidAppInfo> {
 
     private final Transfer transfer;
+    private final TransferManager transferManager;
 
-    private TransferLifecycleRelay(Transfer transfer) {
+    private TransferLifecycleRelay(Transfer transfer, TransferManager transferManager) {
       this.transfer = transfer;
+      this.transferManager = transferManager;
+    }
+
+    private void notifyListeners() {
+      transfer.behaviorRelay.call(transfer);
+      transferManager.callRelay();
     }
 
     @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
       transfer.state = State.PENDING;
-      transfer.behaviorRelay.call(transfer);
+      notifyListeners();
     }
 
     @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
       transfer.state = State.RECEIVED;
-      transfer.behaviorRelay.call(transfer);
+      notifyListeners();
     }
 
     @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
       transfer.progress = progress;
-      transfer.behaviorRelay.call(transfer);
+      notifyListeners();
     }
 
     @Override public void onError(IOException e) {
       transfer.state = State.ERROR;
-      transfer.behaviorRelay.call(transfer);
+      notifyListeners();
     }
   }
 

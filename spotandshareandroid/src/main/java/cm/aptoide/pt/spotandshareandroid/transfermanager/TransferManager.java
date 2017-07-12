@@ -17,11 +17,15 @@ public class TransferManager {
   public TransferManager() {
     transferListRelay = new TransferListRelay();
 
-    androidAppInfoAccepter =
-        androidAppInfoAccepter1 -> transferListRelay.add(new Transfer(androidAppInfoAccepter1));
+    androidAppInfoAccepter = androidAppInfoAccepter1 -> transferListRelay.add(
+        new Transfer(androidAppInfoAccepter1, this));
   }
 
   public Observable<List<Transfer>> observeTransfers() {
     return transferListRelay.asObservable();
+  }
+
+  void callRelay() {
+    transferListRelay.callRelay();
   }
 }
