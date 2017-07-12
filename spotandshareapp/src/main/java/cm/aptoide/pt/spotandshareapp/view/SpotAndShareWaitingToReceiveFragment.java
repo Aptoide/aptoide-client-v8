@@ -108,7 +108,14 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
   }
 
   @Override public void onJoinGroupError(Throwable throwable) {
-    //// TODO: 11-07-2017 filipe
+    showErrorJoiningGroupMessage();
+    navigateBack();
+  }
+
+  private void showErrorJoiningGroupMessage() {
+    Toast.makeText(getContext(), "There was an error while trying to join the group",
+        Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public Observable<Void> backButtonEvent() {
@@ -129,6 +136,10 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
   }
 
   @Override public void onLeaveGroupError() {
+    showLeaveGroupErrorMessage();
+  }
+
+  private void showLeaveGroupErrorMessage() {
     Toast.makeText(getContext(), "There was an error while trying to leave the group",
         Toast.LENGTH_SHORT)
         .show();
