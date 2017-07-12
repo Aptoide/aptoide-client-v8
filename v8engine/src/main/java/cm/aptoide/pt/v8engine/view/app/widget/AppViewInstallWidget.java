@@ -435,6 +435,7 @@ import rx.android.schedulers.AndroidSchedulers;
                               .doOnSubscribe(() -> setupEvents(appDownload)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
+                            // TODO: 12/07/2017 this code doesnt run
                             Logger.d(TAG, "Installing");
                           }, throwable -> CrashReport.getInstance()
                               .log(throwable)));
@@ -504,46 +505,45 @@ import rx.android.schedulers.AndroidSchedulers;
       }
 
       showRootInstallWarningPopup(context);
-
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
-          .flatMap(success -> {
-            Download download = new DownloadFactory().create(displayable.getPojo()
-                .getNodes()
-                .getMeta()
-                .getData(), downloadAction);
-            return installManager.install(download)
-                .toObservable()
-                .doOnSubscribe(() -> setupEvents(download));
-          })
-          .first()
+          .map(success -> new DownloadFactory().create(displayable.getPojo()
+              .getNodes()
+              .getMeta()
+              .getData(), downloadAction))
+          .flatMapCompletable(download -> installManager.install(download)
+              .doOnSubscribe(subcription -> setupEvents(download))
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> {
+                if (accountManager.isLoggedIn()
+                    && ManagerPreferences.isShowPreviewDialog(
+                    ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+                    && Application.getConfiguration()
+                    .isCreateStoreAndSetUserPrivacyAvailable()) {
+                  SharePreviewDialog sharePreviewDialog =
+                      new SharePreviewDialog(displayable, accountManager, true,
+                          SharePreviewDialog.SharePreviewOpenMode.SHARE,
+                          displayable.getTimelineAnalytics(),
+                          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                  AlertDialog.Builder alertDialog =
+                      sharePreviewDialog.getPreviewDialogBuilder(getContext());
+
+                  sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
+                          .getNodes()
+                          .getMeta()
+                          .getData()
+                          .getPackageName(), displayable.getPojo()
+                          .getNodes()
+                          .getMeta()
+                          .getData()
+                          .getStore()
+                          .getId(), "install", context, sharePreviewDialog, alertDialog,
+                      socialRepository);
+                }
+                ShowMessage.asSnack(v, installOrUpgradeMsg);
+              }))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            if (accountManager.isLoggedIn()
-                && ManagerPreferences.isShowPreviewDialog(
-                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
-                && Application.getConfiguration()
-                .isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog =
-                  new SharePreviewDialog(displayable, accountManager, true,
-                      SharePreviewDialog.SharePreviewOpenMode.SHARE,
-                      displayable.getTimelineAnalytics(),
-                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
-              AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getPreviewDialogBuilder(getContext());
-
-              sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
-                  .getNodes()
-                  .getMeta()
-                  .getData()
-                  .getPackageName(), displayable.getPojo()
-                  .getNodes()
-                  .getMeta()
-                  .getData()
-                  .getStore()
-                  .getId(), "install", context, sharePreviewDialog, alertDialog, socialRepository);
-            }
-            ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
@@ -634,7 +634,6 @@ import rx.android.schedulers.AndroidSchedulers;
             .flatMap(success -> installManager.install(download)
                 .toObservable()
                 .doOnSubscribe(() -> setupEvents(download)))
-            .first()
             .subscribe(downloadProgress -> Logger.d(TAG, "Installing"),
                 err -> CrashReport.getInstance()
                     .log(err)));
