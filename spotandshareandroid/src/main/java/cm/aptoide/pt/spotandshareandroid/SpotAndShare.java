@@ -10,6 +10,7 @@ import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import rx.Completable;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -33,9 +34,9 @@ public class SpotAndShare {
     spotAndShareV2 = new SpotAndShareV2(context);
   }
 
-  public void createGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
+  public Completable createGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
       AndroidAppInfoAccepter androidAppInfoAccepter) {
-    spotAndShareV2.send(onSuccess, onError::onError);
+    return spotAndShareV2.send(onSuccess, onError::onError);
   }
 
   public void isGroupCreated(GroupCreated groupCreated) {

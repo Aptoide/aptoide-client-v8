@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -91,12 +92,18 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         }, error -> error.printStackTrace());
   }
 
-  private Observable<View.LifecycleEvent> getCreateGroupObservable() {
+  private Observable<Integer> getCreateGroupObservable() {
     return view.getLifecycle()
-        .filter(lifecycleEvent -> shouldCreateGroup && lifecycleEvent.equals(
-            View.LifecycleEvent.CREATE))
-        .doOnNext(lifecycleEvent -> view.showLoading())
-        .doOnNext(created -> createGroup())
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(lifecycleEvent -> {
+          if (shouldCreateGroup) {
+            view.showLoading();
+            return createGroup().toSingleDefault(2);
+            //// FIXME: 12-07-2017 should not pass this integer
+          }
+          return Completable.complete()
+              .toSingleDefault(2);
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
   }
 
@@ -109,8 +116,8 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
   }
 
-  private void createGroup() {
-    spotAndShare.createGroup(uuid -> {
+  private Completable createGroup() {
+    return spotAndShare.createGroup(uuid -> {
     }, view::onCreateGroupError, null);
   }
 

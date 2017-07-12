@@ -52,9 +52,9 @@ class SpotAndShareV2 {
     };
   }
 
-  void send(Action1<SpotAndShareSender> onSuccess, OnError onError) {
+  Completable send(Action1<SpotAndShareSender> onSuccess, OnError onError) {
 
-    isGroupCreated().flatMapCompletable(created -> {
+    return isGroupCreated().flatMapCompletable(created -> {
       if (!created) {
         return enableHotspot().doOnCompleted(() -> {
           enabled = true;
@@ -72,9 +72,7 @@ class SpotAndShareV2 {
           onError.onError(throwable);
         });
       }
-    })
-        .subscribe(() -> {
-        }, Throwable::printStackTrace);
+    });
   }
 
   private void startSpotAndShareMessageClient() {
