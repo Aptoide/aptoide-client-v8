@@ -59,6 +59,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + newVersion
         + "]");
 
+    sharedPreferences = ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences();
+    securePreferences = SecurePreferencesImplementation.getInstance(context.getApplicationContext(),
+        sharedPreferences);
+
     migrate(db);
 
     ManagerPreferences.setNeedsSqliteDbMigration(false, sharedPreferences);
