@@ -2,8 +2,8 @@ package cm.aptoide.pt.v8engine.social.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
+import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.view.viewholder.CardViewHolder;
 import java.util.List;
 
@@ -53,8 +53,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
   }
 
   public void addLoadMoreProgress() {
-    this.cards.add(progressCard);
-    notifyDataSetChanged();
+    if (!this.cards.contains(progressCard)) {
+      this.cards.add(progressCard);
+      notifyDataSetChanged();
+    }
   }
 
   public void removeLoadMoreProgress() {

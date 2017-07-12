@@ -23,6 +23,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -85,6 +86,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private final int visibleThreshold = 5;
+  private boolean bottomAlreadyReached;
   private CardAdapter adapter;
   private PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private PublishSubject<Post> sharePreviewPublishSubject;
@@ -219,6 +221,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         storeContext, getContext().getResources()), savedInstanceState);
   }
 
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    hideLoadMoreProgressIndicator();
+  }
+
   @Override public void showCards(List<Post> cards) {
     adapter.updateCards(cards);
     genericError.setVisibility(View.GONE);
@@ -262,13 +269,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
-        .filter(event -> helper != null
+        .filter(event -> !bottomAlreadyReached
+            && helper != null
             && event.view()
             .isAttachedToWindow()
             && (helper.getItemCount() - event.view()
             .getChildCount()) <= ((helper.findFirstVisibleItemPosition() == -1 ? 0
             : helper.findFirstVisibleItemPosition()) + visibleThreshold))
         .map(event -> null)
+        .doOnNext(__ -> bottomAlreadyReached = true)
         .cast(Void.class);
   }
 
@@ -289,10 +298,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showLoadMoreProgressIndicator() {
+    Logger.d(this.getClass()
+        .getName(), "show indicator called");
     adapter.addLoadMoreProgress();
   }
 
   @Override public void hideLoadMoreProgressIndicator() {
+    Logger.d(this.getClass()
+        .getName(), "hide indicator called");
+    bottomAlreadyReached = false;
     adapter.removeLoadMoreProgress();
   }
 

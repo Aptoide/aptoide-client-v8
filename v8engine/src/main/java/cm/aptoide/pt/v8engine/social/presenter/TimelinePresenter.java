@@ -358,8 +358,7 @@ public class TimelinePresenter implements Presenter {
   private void showMoreCardsOnBottomReached() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(create -> view.reachesBottom()
-            .debounce(300, TimeUnit.MILLISECONDS))
+        .flatMap(create -> view.reachesBottom())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(create -> view.showLoadMoreProgressIndicator())
         .flatMapSingle(bottomReached -> timeline.getNextCards())
