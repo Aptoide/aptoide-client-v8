@@ -193,7 +193,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository(context,
-          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+          ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
