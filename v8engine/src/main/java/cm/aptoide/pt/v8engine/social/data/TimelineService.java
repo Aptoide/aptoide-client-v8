@@ -106,6 +106,7 @@ public class TimelineService {
   }
 
   public Single<List<Post>> getCards() {
+    mapper.clearCachedPostsIds();
     return getCards(limit, initialOffset);
   }
 
