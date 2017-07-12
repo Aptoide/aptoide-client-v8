@@ -4,10 +4,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/padding_medium_default"
-    android:paddingStart="@dimen/padding_medium_default"
     android:paddingEnd="@dimen/padding_medium_default"
+    android:paddingLeft="@dimen/padding_medium_default"
     android:paddingRight="@dimen/padding_medium_default"
+    android:paddingStart="@dimen/padding_medium_default"
     android:paddingTop="@dimen/padding_medium_default"
     >
 

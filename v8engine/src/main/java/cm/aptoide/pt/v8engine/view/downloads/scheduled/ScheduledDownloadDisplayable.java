@@ -48,6 +48,7 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
     return installManager.getInstall(getPojo().getMd5(), getPojo().getPackageName(),
         getPojo().getVerCode())
         .map(installationProgress -> installationProgress.getState()
-            == Install.InstallationStatus.INSTALLING);
+            == Install.InstallationStatus.INSTALLING
+            || installationProgress.getState() == Install.InstallationStatus.IN_QUEUE);
   }
 }

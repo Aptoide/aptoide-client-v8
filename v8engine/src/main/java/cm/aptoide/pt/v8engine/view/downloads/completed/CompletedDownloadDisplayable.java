@@ -113,6 +113,7 @@ public class CompletedDownloadDisplayable extends Displayable {
     switch (installation.getState()) {
       case INSTALLATION_TIMEOUT:
       case INSTALLING:
+      case IN_QUEUE:
         return context.getString(cm.aptoide.pt.database.R.string.download_progress);
       case PAUSED:
         return context.getString(cm.aptoide.pt.database.R.string.download_paused);

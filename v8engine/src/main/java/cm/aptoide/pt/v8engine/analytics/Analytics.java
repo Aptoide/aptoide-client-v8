@@ -234,7 +234,7 @@ public class Analytics {
       private static String utmContent = UNKNOWN;
       private static String entryPoint = UNKNOWN;
 
-      public static void onCreate(android.app.Application application,
+      public static Observable onCreate(android.app.Application application,
           Converter.Factory converterFactory, OkHttpClient okHttpClient,
           BodyInterceptor bodyInterceptor, SharedPreferences sharedPreferences,
           TokenInvalidator tokenInvalidator) {
@@ -245,7 +245,7 @@ public class Analytics {
         facebookLogger = AppEventsLogger.newLogger(application);
         FirstLaunchAnalytics firstLaunchAnalytics =
             new FirstLaunchAnalytics(facebookLogger, Analytics.getInstance());
-        Observable.fromCallable(() -> {
+        return Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(((V8Engine) application).getIdsRepository()
               .getUniqueIdentifier());
           return null;
@@ -263,9 +263,7 @@ public class Analytics {
                   okHttpClient, converterFactory, sharedPreferences, tokenInvalidator)
                   .observe();
             })
-            .subscribeOn(Schedulers.io())
-            .subscribe(o -> {
-            }, throwable -> Logger.e(TAG, throwable.getMessage()));
+            .subscribeOn(Schedulers.io());
       }
 
       private static UTM getUTM() {
