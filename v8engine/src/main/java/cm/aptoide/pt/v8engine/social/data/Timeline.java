@@ -2,10 +2,13 @@ package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.TimelineSocialActionData;
 import java.io.IOException;
 import java.util.List;
 import okhttp3.Call;
@@ -26,12 +29,14 @@ public class Timeline {
   private final TimelineService service;
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
+  private final TimelineAnalytics timelineAnalytics;
 
   public Timeline(TimelineService service, InstallManager installManager,
-      DownloadFactory downloadFactory) {
+      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public Single<List<Post>> getCards() {
@@ -52,7 +57,8 @@ public class Timeline {
             .getVercode()));
   }
 
-  public Completable like(String cardId) {
+  public Completable like(Post post, String cardId) {
+    sendSocialAnalyticsEvent(post, "Like");
     return service.like(cardId);
   }
 
@@ -65,6 +71,7 @@ public class Timeline {
   }
 
   public Single<String> sharePost(Post post) {
+    sendSocialAnalyticsEvent(post, "Share");
     return service.share(post.getCardId());
   }
 
@@ -104,4 +111,35 @@ public class Timeline {
           }
         });
   }
+
+  private void sendSocialAnalyticsEvent(Post post, String like) {
+    String blank = "(blank)";
+    if (post instanceof Media) {
+      timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
+          .name(), blank, like, ((Media) post).getRelatedApp()
+          .getPackageName(), ((Media) post).getPublisherName(), ((Media) post).getMediaTitle()));
+    } else if (post instanceof AppPost) {
+      if (post instanceof Recommendation) {
+        timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
+            .name(), blank, like, ((AppPost) post).packageName, Application.getConfiguration()
+            .getMarketName(), blank));
+      } else if (post instanceof RatedRecommendation) {
+        timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
+            .name(), blank, like, ((AppPost) post).packageName,
+            ((RatedRecommendation) post).getPoster()
+                .getPrimaryName(), blank));
+      } else if (post instanceof AggregatedRecommendation) {
+        timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
+            .name(), blank, like, ((AppPost) post).packageName, blank, blank));
+      }
+    } else if (post instanceof StoreLatestApps) {
+      timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
+          .name(), blank, like, blank, blank, blank));
+    } else if (post instanceof AppUpdate) {
+      timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
+          .name(), blank, like, ((AppUpdate) post).getPackageName(),
+          ((AppUpdate) post).getStoreName(), blank));
+    }
+  }
 }
+

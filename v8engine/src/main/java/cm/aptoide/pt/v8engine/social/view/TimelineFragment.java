@@ -204,7 +204,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
             RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
             Integer.MAX_VALUE, tokenInvalidator, sharedPreferences), installManager,
-        new DownloadFactory()), CrashReport.getInstance(),
+        new DownloadFactory(), timelineAnalytics), CrashReport.getInstance(),
         new TimelineNavigator(getFragmentNavigator(), accountManager,
             getContext().getString(R.string.likes)), new PermissionManager(),
         (PermissionService) getContext(), installManager, RepositoryFactory.getStoreRepository(),
