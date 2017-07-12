@@ -347,6 +347,18 @@ public class ImageLoader {
     return null;
   }
 
+  public Target<GlideDrawable> loadWithoutResizing(String url, ImageView imageView) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::load() Context is null");
+    }
+    return null;
+  }
+
   public Target<GlideDrawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {

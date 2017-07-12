@@ -93,6 +93,7 @@
   <integer name="min_avatar_width">600</integer>
   <integer name="max_avatar_width">10240</integer>
   <integer name="max_avatar_Size">5242880</integer>
-
+  <dimen name="timeline_post_hint_left_margin">17dp</dimen>
+  <dimen name="timeline_post_post_title_title">28sp</dimen>
 
 </resources>

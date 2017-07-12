@@ -15,7 +15,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="?attr/toolbarTheme"
+        android:background="@color/white"
         />
   </android.support.design.widget.AppBarLayout>
 
@@ -28,106 +28,89 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
-      <ImageView
-          android:id="@+id/preview_image"
-          android:layout_width="match_parent"
-          android:layout_height="140dp"
-          android:background="@color/orange_700"
-          android:scaleType="fitCenter"
-          android:src="@drawable/wizard_community"
-          android:visibility="gone"
-          tools:visibility="visible"
-          />
-      <LinearLayout
+      <android.support.design.widget.TextInputLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:padding="@dimen/padding_very_small"
           >
-        <TextView
-            android:id="@+id/input_layout_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/share_on_timeline"
-            android:textAppearance="@style/Aptoide.TextView.Medium.L"
-            android:textColor="@color/grey_700"
-            />
         <EditText
             android:id="@+id/input_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/timeline_post_hint_left_margin"
+            android:layout_marginTop="4dp"
             android:background="@null"
             android:gravity="top|start"
-            android:hint="What is on your mind?"
+            android:hint="@string/share_on_timeline"
             android:inputType="textUri|textMultiLine"
-            android:lines="3"
+            android:minLines="3"
             android:textAppearance="@style/Aptoide.TextView.Regular.L"
             android:textColor="@color/grey_700"
             />
+      </android.support.design.widget.TextInputLayout>
+      <ImageView
+          android:id="@+id/preview_image"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="25dp"
+          android:visibility="gone"
+          tools:background="@color/orange_700"
+          tools:scaleType="centerInside"
+          tools:src="@drawable/wizard_community"
+          tools:visibility="visible"
+          />
+      <ProgressBar
+          android:id="@+id/preview_progress_bar"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@color/white"
+          android:indeterminate="true"
+          android:visibility="gone"
+          tools:visibility="visible"
+          />
+      <TextView
+          android:id="@+id/preview_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/label_padding"
+          android:layout_marginStart="@dimen/label_padding"
+          android:layout_marginTop="@dimen/label_padding"
+          android:gravity="center_horizontal"
+          android:textColor="@color/black_87_alpha"
+          android:textSize="@dimen/timeline_post_post_title_title"
+          android:visibility="gone"
+          tools:text="Preview Title"
+          tools:visibility="visible"
+          />
 
-        <TextView
-            android:id="@+id/preview_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_medium"
-            android:text="Post preview"
-            android:textAppearance="@style/Aptoide.TextView.Medium.S"
-            android:textColor="@color/grey_700"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-        <ProgressBar
-            android:id="@+id/preview_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:indeterminate="true"
-            android:visibility="gone"
-            tools:visibility="visible"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            />
+      <TextView
+          android:id="@+id/related_apps_header"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/label_padding"
+          android:layout_marginTop="@dimen/label_padding"
+          android:text="Related apps"
+          android:textAppearance="@style/Aptoide.TextView.Medium.S"
+          android:textColor="@color/black"
+          android:textSize="@dimen/text_size_huge"
+          android:visibility="gone"
+          tools:visibility="visible"
+          />
+      <ProgressBar
+          android:id="@+id/related_apps_progress_bar"
+          android:layout_width="match_parent"
+          android:layout_height="10dp"
+          android:indeterminate="true"
+          android:visibility="gone"
+          tools:visibility="visible"
+          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+          />
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/related_apps_list"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:scrollbars="horizontal"
+          />
 
-        <TextView
-            android:id="@+id/preview_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_tiny"
-            android:gravity="center_horizontal"
-            android:textAppearance="@style/Aptoide.TextView.Regular"
-            android:visibility="gone"
-            tools:text="Preview Title"
-            tools:visibility="visible"
-            />
-
-        <TextView
-            android:id="@+id/related_apps_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_medium"
-            android:text="Related apps"
-            android:textAppearance="@style/Aptoide.TextView.Medium.S"
-            android:textColor="@color/grey_700"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-        <ProgressBar
-            android:id="@+id/related_apps_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:indeterminate="true"
-            android:visibility="gone"
-            tools:visibility="visible"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/related_apps_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="horizontal"
-            />
-
-      </LinearLayout>
     </LinearLayout>
   </ScrollView>
 </LinearLayout>

@@ -43,7 +43,6 @@ public class PostFragment extends FragmentView implements PostView {
   private EditText userInput;
   private ImageView previewImage;
   private TextView previewTitle;
-  private TextView previewHeader;
   private TextView relatedAppsHeader;
   private InstalledRepository installedRepository;
   private Toolbar toolbar;
@@ -99,7 +98,6 @@ public class PostFragment extends FragmentView implements PostView {
     userInput = (EditText) view.findViewById(R.id.input_text);
     previewImage = (ImageView) view.findViewById(R.id.preview_image);
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
-    previewHeader = (TextView) view.findViewById(R.id.preview_header);
     relatedAppsHeader = (TextView) view.findViewById(R.id.related_apps_header);
     previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
     relatedAppsLoading = (ProgressBar) view.findViewById(R.id.related_apps_progress_bar);
@@ -189,18 +187,16 @@ public class PostFragment extends FragmentView implements PostView {
     previewTitle.setVisibility(View.VISIBLE);
 
     ImageLoader.with(getContext())
-        .load(suggestion.getImage(), previewImage);
+        .loadWithoutResizing(suggestion.getImage(), previewImage);
     previewTitle.setText(suggestion.getTitle());
   }
 
   @Override public void showCardPreviewLoading() {
     previewLoading.setVisibility(View.VISIBLE);
-    previewHeader.setVisibility(View.GONE);
   }
 
   @Override public void hideCardPreviewLoading() {
     previewLoading.setVisibility(View.GONE);
-    previewHeader.setVisibility(View.VISIBLE);
   }
 
   @Override public void showRelatedAppsLoading() {
