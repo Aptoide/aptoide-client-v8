@@ -18,14 +18,20 @@ public class WifiManagerReflect {
   private Method isWifiApEnabled;
   private Method getWifiApState;
 
+  private Method[] declaredMethods;
+
   public WifiManagerReflect(WifiManager wifiManager) {
     this.wifiManager = wifiManager;
   }
 
   private Method findMethods(String methodName) {
 
-    Method[] wmMethods = wifiManager.getClass()
-        .getDeclaredMethods();
+    if (declaredMethods == null) {
+      declaredMethods = wifiManager.getClass()
+          .getDeclaredMethods();
+    }
+
+    Method[] wmMethods = declaredMethods;
     for (Method method : wmMethods) {
       if (method.getName()
           .equals(methodName)) {
@@ -58,11 +64,11 @@ public class WifiManagerReflect {
     }
   }
 
-  public void setWifiApEnabled(WifiConfiguration wifiConfiguration, boolean enable) {
+  public boolean setWifiApEnabled(WifiConfiguration wifiConfiguration, boolean enable) {
     if (setWifiApEnabled == null) {
       setWifiApEnabled = findMethods("setWifiApEnabled");
     }
-    invoke(setWifiApEnabled, wifiConfiguration, enable);
+    return (boolean) invokeWithReturn(setWifiApEnabled, wifiConfiguration, enable);
   }
 
   public WifiConfiguration getWifiApConfiguration() {

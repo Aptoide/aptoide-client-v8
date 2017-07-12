@@ -8,8 +8,6 @@ import lombok.experimental.Delegate;
 
 public class HotspotManager {
 
-  static final int ERROR_UNKNOWN = 3;
-
   private static final String TAG = HotspotManager.class.getSimpleName();
 
   @Delegate private final JoinHotspotManager joinHotspotManager;
