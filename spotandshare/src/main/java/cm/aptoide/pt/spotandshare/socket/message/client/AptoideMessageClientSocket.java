@@ -2,6 +2,7 @@ package cm.aptoide.pt.spotandshare.socket.message.client;
 
 import cm.aptoide.pt.spotandshare.socket.AptoideClientSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
@@ -24,22 +25,22 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       SocketBinder socketBinder, OnError<IOException> onError, int timeout,
-      AndroidAppInfoAccepter androidAppInfoAccepter, String username) {
+      AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
     super(host, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
-            socketBinder, onError, androidAppInfoAccepter, username);
+            socketBinder, onError, androidAppInfoAccepter, friend);
     this.onError = onError;
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       SocketBinder socketBinder, OnError<IOException> onError, int timeout,
-      AndroidAppInfoAccepter androidAppInfoAccepter, String username) {
+      AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
     super(host, fallbackHostName, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
-            socketBinder, onError, androidAppInfoAccepter, username);
+            socketBinder, onError, androidAppInfoAccepter, friend);
     this.onError = onError;
   }
 

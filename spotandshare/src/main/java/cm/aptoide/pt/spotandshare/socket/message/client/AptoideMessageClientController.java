@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshare.socket.message.client;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
@@ -19,19 +20,18 @@ import java.io.IOException;
 public class AptoideMessageClientController extends AptoideMessageController
     implements Sender<Message> {
 
-  private final String username;
+  private final Friend friend;
 
   public AptoideMessageClientController(AptoideMessageClientSocket aptoideMessageClientSocket,
       String rootDir, StorageCapacity storageCapacity,
       FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
-      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter,
-      String username) {
+      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
     super(DefaultClientHandlersListV1.create(rootDir, storageCapacity, fileLifecycleProvider,
         aptoideMessageClientSocket, socketBinder, androidAppInfoAccepter), onError);
-    this.username = username;
+    this.friend = friend;
   }
 
   @Override protected void doOnConnect() {
-    send(new WelcomeMessage(getLocalhost(), username));
+    send(new WelcomeMessage(getLocalhost(), friend));
   }
 }

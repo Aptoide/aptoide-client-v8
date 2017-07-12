@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
@@ -33,19 +34,19 @@ class SpotAndShareV2 {
   private final String DUMMY_UUID = "dummy_uuid";
   private final Context applicationContext;
   private final int TIMEOUT = 60 * 1000;
-  private final String username;
+  private final Friend friend;
   private boolean enabled;
   private boolean isHotspot;
   private final ServiceProvider serviceProvider;
 
-  SpotAndShareV2(Context context, String username) {
+  SpotAndShareV2(Context context, Friend friend) {
     serviceProvider = new ServiceProvider(context);
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
         .getSystemService(Context.WIFI_SERVICE), serviceProvider.getWifiManager());
     spotAndShareMessageServer = new SpotAndShareMessageServer(55555);
     applicationContext = context.getApplicationContext();
     transferManager = new TransferManager();
-    this.username = username;
+    this.friend = friend;
   }
 
   private SpotAndShareSender createSpotAndShareSender() {
@@ -71,7 +72,7 @@ class SpotAndShareV2 {
       } else {
         return joinHotspot(() -> {
           enabled = true;
-          startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), username);
+          startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), friend);
           onSuccess.call(createSpotAndShareSender());
         }, throwable -> {
           enabled = false;
@@ -82,16 +83,16 @@ class SpotAndShareV2 {
   }
 
   private void startSpotAndShareMessageClient(ConnectivityManager connectivityManager,
-      String username) {
+      Friend friend) {
     spotAndShareMessageServer.startClient(
         new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-            transferManager.getAndroidAppInfoAccepter(), connectivityManager), username);
+            transferManager.getAndroidAppInfoAccepter(), connectivityManager), friend);
   }
 
   private void startSpotAndShareMessageServer(OnError onError) {
     // TODO: 10-07-2017 neuro
     spotAndShareMessageServer.startServer(createHostsChangedCallback(onError));
-    startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), username);
+    startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), friend);
   }
 
   void receive(Action1<SpotAndShareSender> onSuccess, OnError onError) {
@@ -102,7 +103,7 @@ class SpotAndShareV2 {
         .flatMapCompletable(aBoolean -> hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled1 -> {
           if (enabled1) {
             enabled = true;
-            startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), username);
+            startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), friend);
             onSuccess.call(createSpotAndShareSender());
           } else {
             onError.onError(new Throwable("Failed to join hotspot"));

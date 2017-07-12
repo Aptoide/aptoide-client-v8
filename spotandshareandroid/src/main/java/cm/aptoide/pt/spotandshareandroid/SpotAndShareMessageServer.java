@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareandroid;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
@@ -42,7 +43,7 @@ public class SpotAndShareMessageServer {
     }
   }
 
-  public void startClient(MessageServerConfiguration messageServerConfiguration, String username) {
+  public void startClient(MessageServerConfiguration messageServerConfiguration, Friend friend) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
@@ -51,22 +52,21 @@ public class SpotAndShareMessageServer {
           messageServerConfiguration.getStorageCapacity(),
           messageServerConfiguration.getFileLifecycleProvider(),
           messageServerConfiguration.getSocketBinder(), messageServerConfiguration.getOnError(),
-          Integer.MAX_VALUE, messageServerConfiguration.getAndroidAppInfoAccepter(), username);
+          Integer.MAX_VALUE, messageServerConfiguration.getAndroidAppInfoAccepter(), friend);
       aptoideMessageClientSocket.startAsync();
     }
   }
 
   public void startClient(String externalStoragepath, StorageCapacity storageCapacity,
       FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
-      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter,
-      String username) {
+      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
       aptoideMessageClientSocket =
           new AptoideMessageClientSocket(HOTSPOT_DEFAULT_ADDRESS, port, externalStoragepath,
               storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
-              androidAppInfoAccepter, username);
+              androidAppInfoAccepter, friend);
       aptoideMessageClientSocket.startAsync();
     }
   }

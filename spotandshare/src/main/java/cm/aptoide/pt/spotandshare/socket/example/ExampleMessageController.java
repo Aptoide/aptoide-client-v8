@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshare.socket.example;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientController;
@@ -15,7 +16,7 @@ public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController(AptoideMessageClientSocket aptoideMessageClientSocket) {
     super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newTransferLifecycleProvider(), null,
-        null, null, "username");
+        null, null, new Friend("username"));
   }
 
   private static FileLifecycleProvider<AndroidAppInfo> newTransferLifecycleProvider() {
