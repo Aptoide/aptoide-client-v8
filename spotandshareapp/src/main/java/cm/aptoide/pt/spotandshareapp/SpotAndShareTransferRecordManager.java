@@ -28,7 +28,7 @@ public class SpotAndShareTransferRecordManager {
       appModelList.add(new TransferAppModel(transfer.getAndroidAppInfo()
           .getAppName(), transfer.getAndroidAppInfo()
           .getPackageName(), "", convertByteToDrawable(transfer.getAndroidAppInfo()
-          .getIcon()), (transfer.getState() == Transfer.State.SERVING), transfer.getAndroidAppInfo()
+          .getIcon()), transfer.getState(), transfer.getAndroidAppInfo()
           .getSenderName(), transfer.hashCode()));
     }
     return appModelList;

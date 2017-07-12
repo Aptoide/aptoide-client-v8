@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import java.util.LinkedList;
@@ -64,7 +65,7 @@ public class SpotAndShareTransferRecordAdapter
     public void setTransferItem(TransferAppModel transferItem) {
       senderName.setText(transferItem.getSenderName());
       appIcon.setImageDrawable(transferItem.getAppIcon());
-      if (transferItem.isTransferenceOriginatedHere()) {
+      if (transferItem.getTransferState() != Transfer.State.PENDING_ACCEPTION) {
         acceptButton.setVisibility(View.GONE);
       } else {
         acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
