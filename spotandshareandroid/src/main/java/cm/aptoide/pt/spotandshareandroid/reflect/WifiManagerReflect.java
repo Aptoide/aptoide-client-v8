@@ -4,13 +4,14 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import lombok.experimental.Delegate;
 
 /**
  * Created by neuro on 12-07-2017.
  */
 public class WifiManagerReflect {
 
-  private final WifiManager wifiManager;
+  @Delegate private final WifiManager wifiManager;
 
   private Method setWifiApConfiguration;
   private Method setWifiApEnabled;
