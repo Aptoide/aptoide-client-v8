@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="90dp"
-    android:layout_height="90dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
+    style="?attr/backgroundCard"
     >
 
   <View
@@ -13,32 +14,33 @@
       android:layout_height="match_parent"
       android:background="@color/orange_700"
       android:visibility="gone"
-      tools:visibility="visible"
       />
 
   <ImageView
       android:id="@+id/app_image"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_margin="@dimen/padding_tiny"
-      android:background="@color/white"
-      android:src="@drawable/placeholder_square"
+      android:layout_width="96dp"
+      android:layout_height="96dp"
+      android:layout_centerHorizontal="true"
+      android:layout_gravity="center_horizontal"
+      android:adjustViewBounds="true"
+      android:contentDescription="@null"
       />
+
 
   <TextView
       android:id="@+id/app_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
       android:layout_margin="@dimen/padding_tiny"
-      android:background="@color/transparent_black"
+      android:ellipsize="end"
+      android:lines="2"
       android:paddingEnd="@dimen/padding_smaller"
       android:paddingLeft="@dimen/padding_smaller"
       android:paddingRight="@dimen/padding_smaller"
       android:paddingStart="@dimen/padding_smaller"
-      android:textColor="@color/white"
-      tools:text="BigAppName"
-      style="@style/Aptoide.TextView.Regular"
+      android:textColor="@color/black_87_alpha"
+      android:textSize="14sp"
+      tools:text="He as compliment unreserved projecting."
       />
 
-</RelativeLayout>
+</LinearLayout>
