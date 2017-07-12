@@ -22,6 +22,7 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ServerLeftMessage;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.WelcomeMessage;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 
@@ -173,6 +174,17 @@ public class HandlersFactoryV1 {
       aptoideMessageClientSocket.serverLeft();
       messageSender.send(new AckMessage(messageSender.getHost()));
       aptoideMessageClientSocket.shutdown();
+    }
+  }
+
+  static class WelcomeMessageHandler extends MessageHandler<WelcomeMessage> {
+
+    public WelcomeMessageHandler() {
+      super(WelcomeMessage.class);
+    }
+
+    @Override public void handleMessage(WelcomeMessage message, Sender<Message> messageSender) {
+      messageSender.send(new AckMessage(messageSender.getHost(), true));
     }
   }
 }

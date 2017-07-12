@@ -10,6 +10,7 @@ import cm.aptoide.pt.spotandshare.socket.message.handlers.v1.DefaultClientHandle
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.WelcomeMessage;
 import java.io.IOException;
 
 /**
@@ -24,5 +25,9 @@ public class AptoideMessageClientController extends AptoideMessageController
       OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter) {
     super(DefaultClientHandlersListV1.create(rootDir, storageCapacity, fileLifecycleProvider,
         aptoideMessageClientSocket, socketBinder, androidAppInfoAccepter), onError);
+  }
+
+  @Override protected void doOnConnect() {
+    send(new WelcomeMessage(getLocalhost()));
   }
 }
