@@ -38,15 +38,18 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   public SQLiteDatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
     this.context = context;
+    sharedPreferences = ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences();
+    securePreferences = SecurePreferencesImplementation.getInstance(context.getApplicationContext(),
+        sharedPreferences);
+
+    Logger.w(TAG,
+        "SQLiteDatabaseHelper() sharedPreferences is null: " + (sharedPreferences == null));
   }
 
   @Override public void onCreate(SQLiteDatabase db) {
     Logger.w(TAG, "onCreate() called");
 
     // do nothing here.
-    sharedPreferences = ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences();
-    securePreferences = SecurePreferencesImplementation.getInstance(context.getApplicationContext(),
-        sharedPreferences);
     packageManager = context.getPackageManager();
     ManagerPreferences.setNeedsSqliteDbMigration(false, sharedPreferences);
   }
