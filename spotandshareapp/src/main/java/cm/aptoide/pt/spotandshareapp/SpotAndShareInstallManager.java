@@ -60,15 +60,6 @@ public class SpotAndShareInstallManager {
     }
   }
 
-  private String getAppFolder(String filePath) {
-    String[] filePathArray = filePath.split("/");
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < filePathArray.length - 1; i++) {
-      sb.append(filePathArray[i] + "/");
-    }
-    return sb.toString();
-  }
-
   private void startInstallIntent(Context context, File file) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
 
