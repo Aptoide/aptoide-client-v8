@@ -30,8 +30,6 @@ public interface SpotAndShareEditProfileView extends View {
 
   Observable<Void> selectedSixthAvatar();
 
-  void saveChanges();
-
   void selectedAvatar(int avatar);
 
   void setActualAvatar(Integer avatar);

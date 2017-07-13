@@ -98,10 +98,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     return RxView.clicks(sixthAvatar);
   }
 
-  @Override public void saveChanges() {
-
-  }
-
   @Override public void selectedAvatar(int avatar) {
     selectedAvatar = avatar;
     deselectAllAvatars();
@@ -214,7 +210,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    finish();
     return super.onOptionsItemSelected(item);
   }
 

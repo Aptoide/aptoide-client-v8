@@ -132,5 +132,6 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
     } else if (spotAndShareUserManager.getUser() != user) {
       spotAndShareUserManager.updateUser(user);
     }
+    view.goBack();
   }
 }
