@@ -65,20 +65,29 @@ public class AndroidAccountDataMigration {
 
         Log.i(TAG, String.format("Migrating from version %d to %d", oldVersion, currentVersion));
 
-        if (oldVersion < 43) {
-          return migrateAccountFromV7();
-        }
-
-        return migrateAccountFromV8();
+        return migrateAccountFromPreviousThan43().andThen(migrateAccountFrom43to59())
+            .andThen(migrateAccountFromVersion59To60())
+            .doOnCompleted(() -> markMigrated());
       }
     });
+  }
+
+  private Completable migrateAccountFromVersion59To60() {
+    if (oldVersion >= 59) {
+      // TODO: 13/07/2017 Pedro
+    }
+    return Completable.complete();
   }
 
   private boolean isMigrated() {
     return oldVersion == currentVersion;
   }
 
-  private Completable migrateAccountFromV7() {
+  //V7
+  private Completable migrateAccountFromPreviousThan43() {
+    if (oldVersion >= 43) {
+      return Completable.complete();
+    }
     return Completable.defer(() -> Completable.fromCallable(() -> {
       //
       // migration from v7 to this v8
@@ -125,12 +134,12 @@ public class AndroidAccountDataMigration {
       cleanKeysFromPreferences(MIGRATION_KEYS, defaultSharedPreferences);
       cleanKeysFromPreferences(MIGRATION_KEYS, secureSharedPreferences);
 
-      markMigrated();
       return Completable.complete();
     }));
   }
 
-  private Completable migrateAccountFromV8() {
+  //v8
+  private Completable migrateAccountFrom43to59() {
     return Completable.defer(() -> Completable.fromCallable(() -> {
 
       //
@@ -184,7 +193,6 @@ public class AndroidAccountDataMigration {
       cleanKeysFromPreferences(MIGRATION_KEYS, secureSharedPreferences);
 
       Log.i(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 succeeded");
-      markMigrated();
       return Completable.complete();
     }));
   }
