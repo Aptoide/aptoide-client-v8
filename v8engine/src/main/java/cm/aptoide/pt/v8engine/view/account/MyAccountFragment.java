@@ -70,6 +70,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private RelativeLayout header;
   private TextView headerText;
   private Button moreNotificationsButton;
+  private View userLayout;
 
   private PublishSubject<AptoideNotification> notificationSubject;
   private InboxAdapter adapter;
@@ -97,6 +98,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     header = null;
     headerText = null;
     moreNotificationsButton = null;
+    userLayout = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -138,6 +140,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
     usernameTextView = (TextView) view.findViewById(R.id.my_account_username);
     storeNameTextView = (TextView) view.findViewById(R.id.my_account_store_name);
+    userLayout = view.findViewById(R.id.my_account_user);
     userProfileEditButton = (Button) view.findViewById(R.id.my_account_edit_user_profile);
     userStoreEditButton = (Button) view.findViewById(R.id.my_account_edit_user_store);
     storeLayout = (RelativeLayout) view.findViewById(R.id.my_account_store);
@@ -176,13 +179,17 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
       userAvatarUrl = account.getAvatar();
       userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(userAvatarUrl, userAvatar, STROKE_SIZE);
+          .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar, STROKE_SIZE,
+              R.drawable.my_account_placeholder);
     }
 
-    if (!TextUtils.isEmpty(account.getStoreName())) {
-      storeNameTextView.setText(account.getStoreName());
+    if (!TextUtils.isEmpty(account.getStore()
+        .getName())) {
+      storeNameTextView.setText(account.getStore()
+          .getName());
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(account.getStoreAvatar(), storeAvatar, STROKE_SIZE);
+          .loadWithShadowCircleTransformWithPlaceholder(account.getStore()
+              .getAvatar(), storeAvatar, STROKE_SIZE, R.drawable.my_account_placeholder);
     } else {
       separator.setVisibility(View.GONE);
       storeLayout.setVisibility(View.GONE);
@@ -195,6 +202,14 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public Observable<Void> moreNotificationsClick() {
     return RxView.clicks(moreNotificationsButton);
+  }
+
+  @Override public Observable<Void> storeClick() {
+    return RxView.clicks(storeLayout);
+  }
+
+  @Override public Observable<Void> userClick() {
+    return RxView.clicks(userLayout);
   }
 
   @Override public Observable<AptoideNotification> notificationSelection() {
@@ -212,9 +227,10 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   @Override public Observable<GetStore> getStore() {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> GetStoreRequest.of(
-            new BaseRequestWithStore.StoreCredentials(account.getStoreName(), null, null),
-            StoreContext.meta, bodyInterceptor, httpClient, converterFactory,
+        .flatMap(account -> GetStoreRequest.of(new BaseRequestWithStore.StoreCredentials(
+                account.getStore()
+                    .getName(), null, null), StoreContext.meta, bodyInterceptor, httpClient,
+            converterFactory,
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),

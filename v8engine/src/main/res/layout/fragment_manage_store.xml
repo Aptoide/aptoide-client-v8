@@ -1,100 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
-  <RelativeLayout
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
       >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-
-      <android.support.v7.widget.Toolbar
-          android:id="@+id/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:theme="?attr/toolbarTheme"
-          />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <TextView
-        android:id="@+id/create_store_header"
-        android:layout_width="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/appbar"
-        android:background="@color/create_user_dark_orange"
-        android:gravity="center_vertical"
-        android:padding="@dimen/padding_medium_default"
-        android:text="@string/create_store_header"
-        android:textColor="@color/white"
-        style="@style/Aptoide.TextView.Medium"
+        android:theme="?attr/toolbarTheme"
         />
 
+  </android.support.design.widget.AppBarLayout>
+
+  <ScrollView
+      android:id="@+id/scroll_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
 
     <LinearLayout
-        android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/padding_medium_small"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_marginLeft="@dimen/padding_small"
-        android:layout_marginRight="@dimen/padding_small"
-        android:layout_marginStart="@dimen/padding_small"
-        android:layout_marginTop="@dimen/padding_medium"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:weightSum="2"
+        android:orientation="vertical"
         >
 
-      <Button
-          android:id="@+id/create_store_skip"
-          android:layout_width="0dp"
-          android:layout_marginEnd="@dimen/padding_smaller"
-          android:layout_marginRight="@dimen/padding_smaller"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/skip"
-          style="@style/Aptoide.Button.Ghost"
+      <TextView
+          android:id="@+id/create_store_header"
+          android:layout_width="match_parent"
+          android:background="@color/create_user_dark_orange"
+          android:gravity="center_vertical"
+          android:padding="@dimen/padding_medium_default"
+          android:text="@string/create_store_header"
+          android:textColor="@color/white"
+          style="@style/Aptoide.TextView.Medium"
           />
 
-      <Button
-          android:id="@+id/create_store_action"
-          android:layout_width="0dp"
-          android:layout_marginLeft="@dimen/padding_smaller"
-          android:layout_marginStart="@dimen/padding_smaller"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/create_store_create"
-          style="@style/Aptoide.Button"
-          />
-
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_buttons"
-        android:layout_below="@id/create_store_header"
-        >
-
-      <LinearLayout
+      <RelativeLayout
+          android:id="@+id/create_store_image_action"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:orientation="vertical"
+          android:layout_marginEnd="@dimen/padding_small"
+          android:layout_marginLeft="@dimen/padding_small"
+          android:layout_marginRight="@dimen/padding_small"
+          android:layout_marginStart="@dimen/padding_small"
+          android:layout_marginTop="@dimen/padding_medium"
           >
 
-        <RelativeLayout
-            android:id="@+id/create_store_image_action"
+        <ImageView
+            android:id="@+id/create_store_image"
+            android:layout_width="@dimen/profile_picture_large_size"
+            android:layout_height="@dimen/profile_picture_large_size"
+            android:src="@drawable/create_store_avatar"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/select_picture_camera_icon_size"
+            android:layout_height="@dimen/select_picture_camera_icon_size"
+            android:layout_alignBottom="@+id/create_store_image"
+            android:layout_alignEnd="@+id/create_store_image"
+            android:layout_alignRight="@+id/create_store_image"
+            android:background="@drawable/create_user_camera_background_shape"
+            android:padding="@dimen/padding_very_small"
+            android:src="@drawable/create_user_camera"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/padding_medium_default"
+            android:layout_marginStart="@dimen/padding_medium_default"
+            android:layout_toEndOf="@id/create_store_image"
+            android:layout_toRightOf="@id/create_store_image"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:text="@string/create_store_choose_image"
+            android:textAlignment="center"
+            style="@style/Aptoide.TextView.Medium"
+            />
+
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          >
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/padding_small"
@@ -102,143 +103,129 @@
             android:layout_marginRight="@dimen/padding_small"
             android:layout_marginStart="@dimen/padding_small"
             android:layout_marginTop="@dimen/padding_medium"
+            android:orientation="vertical"
             >
 
-          <ImageView
-              android:id="@+id/create_store_image"
-              android:layout_width="@dimen/profile_picture_large_size"
-              android:layout_height="@dimen/profile_picture_large_size"
-              android:src="@drawable/create_store_avatar"
+          <TextView
+              android:id="@+id/create_store_choose_name_title"
+              android:layout_width="match_parent"
+              android:text="@string/create_store_name"
+              style="@style/Aptoide.TextView.Medium.S"
               />
 
-          <ImageView
-              android:layout_width="@dimen/select_picture_camera_icon_size"
-              android:layout_height="@dimen/select_picture_camera_icon_size"
-              android:layout_alignBottom="@+id/create_store_image"
-              android:layout_alignEnd="@+id/create_store_image"
-              android:layout_alignRight="@+id/create_store_image"
-              android:background="@drawable/create_user_camera_background_shape"
-              android:padding="@dimen/padding_very_small"
-              android:src="@drawable/create_user_camera"
+          <EditText
+              android:id="@+id/create_store_name"
+              android:layout_width="match_parent"
+              android:layout_marginTop="@dimen/padding_very_small"
+              android:background="@drawable/rounded_corners_white"
+              android:hint="@string/create_store_name_inserted"
+              android:paddingBottom="@dimen/padding_very_small"
+              android:paddingEnd="@dimen/padding_smaller"
+              android:paddingLeft="@dimen/padding_smaller"
+              android:paddingRight="@dimen/padding_smaller"
+              android:paddingStart="@dimen/padding_smaller"
+              android:paddingTop="@dimen/padding_very_small"
+              android:textColorHint="@color/grey_fog_dark"
+              style="@style/Aptoide.TextView.Regular.S"
+              />
+
+          <EditText
+              android:id="@+id/edit_store_description"
+              android:layout_width="match_parent"
+              android:layout_height="80dp"
+              android:layout_marginTop="@dimen/padding_very_small"
+              android:background="@drawable/rounded_corners_white"
+              android:gravity="top|start"
+              android:hint="@string/create_store_description_title"
+              android:inputType="textMultiLine"
+              android:maxLength="140"
+              android:maxLines="3"
+              android:paddingBottom="@dimen/padding_very_small"
+              android:paddingEnd="@dimen/padding_smaller"
+              android:paddingLeft="@dimen/padding_smaller"
+              android:paddingRight="@dimen/padding_smaller"
+              android:paddingStart="@dimen/padding_smaller"
+              android:paddingTop="@dimen/padding_very_small"
+              android:textColorHint="@color/grey_fog_dark"
+              android:visibility="gone"
+              tools:visibility="gone"
+              style="@style/Aptoide.TextView.Regular.S"
               />
 
           <TextView
               android:layout_width="match_parent"
-              android:layout_centerVertical="true"
-              android:layout_marginLeft="@dimen/padding_medium_default"
-              android:layout_marginStart="@dimen/padding_medium_default"
-              android:layout_toEndOf="@id/create_store_image"
-              android:layout_toRightOf="@id/create_store_image"
-              android:gravity="center_vertical"
-              android:maxLines="2"
-              android:text="@string/create_store_choose_image"
-              android:textAlignment="center"
-              style="@style/Aptoide.TextView.Medium"
+              android:layout_marginTop="@dimen/padding_medium_default"
+              android:text="@string/create_store_theme"
+              style="@style/Aptoide.TextView.Medium.S"
               />
 
-        </RelativeLayout>
+          <View
+              android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:layout_marginTop="8dp"
+              android:background="@color/grey_fog_dark"
+              >
+          </View>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
-
-          <LinearLayout
+          <android.support.v7.widget.RecyclerView
+              android:id="@+id/theme_selector"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginEnd="@dimen/padding_small"
-              android:layout_marginLeft="@dimen/padding_small"
-              android:layout_marginRight="@dimen/padding_small"
-              android:layout_marginStart="@dimen/padding_small"
-              android:layout_marginTop="@dimen/padding_medium"
-              android:orientation="vertical"
+              android:layout_marginBottom="@dimen/padding_very_small"
+              android:layout_marginTop="@dimen/padding_very_small"
+              />
+
+          <View
+              android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:background="@color/grey_fog_dark"
               >
+          </View>
 
-            <TextView
-                android:id="@+id/create_store_choose_name_title"
-                android:layout_width="match_parent"
-                android:text="@string/create_store_name"
-                style="@style/Aptoide.TextView.Medium.S"
-                />
+        </LinearLayout>
 
-            <EditText
-                android:id="@+id/create_store_name"
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding_very_small"
-                android:background="@drawable/rounded_corners_white"
-                android:hint="@string/create_store_name_inserted"
-                android:paddingBottom="@dimen/padding_very_small"
-                android:paddingEnd="@dimen/padding_smaller"
-                android:paddingLeft="@dimen/padding_smaller"
-                android:paddingRight="@dimen/padding_smaller"
-                android:paddingStart="@dimen/padding_smaller"
-                android:paddingTop="@dimen/padding_very_small"
-                android:textColorHint="@color/grey_fog_dark"
-                style="@style/Aptoide.TextView.Regular.S"
-                />
+      </RelativeLayout>
 
-            <EditText
-                android:id="@+id/edit_store_description"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginTop="@dimen/padding_very_small"
-                android:background="@drawable/rounded_corners_white"
-                android:gravity="top|start"
-                android:hint="@string/create_store_description_title"
-                android:inputType="textMultiLine"
-                android:maxLength="140"
-                android:maxLines="3"
-                android:paddingBottom="@dimen/padding_very_small"
-                android:paddingEnd="@dimen/padding_smaller"
-                android:paddingLeft="@dimen/padding_smaller"
-                android:paddingRight="@dimen/padding_smaller"
-                android:paddingStart="@dimen/padding_smaller"
-                android:paddingTop="@dimen/padding_very_small"
-                android:textColorHint="@color/grey_fog_dark"
-                android:visibility="gone"
-                tools:visibility="gone"
-                style="@style/Aptoide.TextView.Regular.S"
-                />
+      <LinearLayout
+          android:id="@+id/bottom_buttons"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/padding_medium_small"
+          android:layout_marginEnd="@dimen/padding_small"
+          android:layout_marginLeft="@dimen/padding_small"
+          android:layout_marginRight="@dimen/padding_small"
+          android:layout_marginStart="@dimen/padding_small"
+          android:layout_marginTop="@dimen/padding_medium"
+          android:gravity="bottom"
+          android:orientation="horizontal"
+          android:weightSum="2"
+          >
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding_medium_default"
-                android:text="@string/create_store_theme"
-                style="@style/Aptoide.TextView.Medium.S"
-                />
+        <Button
+            android:id="@+id/create_store_skip"
+            android:layout_width="0dp"
+            android:layout_marginEnd="@dimen/padding_smaller"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/skip"
+            style="@style/Aptoide.Button.Ghost"
+            />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/grey_fog_dark"
-                >
-            </View>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/theme_selector"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_very_small"
-                android:layout_marginTop="@dimen/padding_very_small"
-                />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey_fog_dark"
-                >
-            </View>
-
-          </LinearLayout>
-
-        </RelativeLayout>
+        <Button
+            android:id="@+id/create_store_action"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/padding_smaller"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/create_store_create"
+            style="@style/Aptoide.Button"
+            />
 
       </LinearLayout>
 
-    </ScrollView>
+    </LinearLayout>
 
-  </RelativeLayout>
+  </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>
 

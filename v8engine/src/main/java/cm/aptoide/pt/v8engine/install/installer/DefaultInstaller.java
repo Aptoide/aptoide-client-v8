@@ -31,6 +31,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.InstallerAnalytics;
 import cm.aptoide.pt.v8engine.install.RootCommandTimeoutException;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import java.io.File;
@@ -57,16 +58,19 @@ public class DefaultInstaller implements Installer {
   private Analytics analytics;
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
+  private InstallerAnalytics installerAnalytics;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       FileUtils fileUtils, Analytics analytics, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,
-      RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences) {
+      RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
+      InstallerAnalytics installerAnalytics) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
     this.analytics = analytics;
     this.installedRepository = installedRepository;
+    this.installerAnalytics = installerAnalytics;
     RootShell.debugMode = debug;
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
@@ -95,6 +99,8 @@ public class DefaultInstaller implements Installer {
         .flatMap(installation -> isInstalled(md5).first()
             .flatMap(isInstalled -> {
               if (isInstalled) {
+                installation.setStatus(Installed.STATUS_COMPLETED);
+                installation.save();
                 return Observable.just(null);
               } else {
                 if (forceDefaultInstall) {
@@ -165,7 +171,7 @@ public class DefaultInstaller implements Installer {
     if (ManagerPreferences.allowRootInstallation(sharedPreferences)) {
       return Observable.create(new RootCommandOnSubscribe(installation.getId()
           .hashCode(), ROOT_INSTALL_COMMAND + installation.getFile()
-          .getAbsolutePath()))
+          .getAbsolutePath(), installerAnalytics))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
           .startWith(

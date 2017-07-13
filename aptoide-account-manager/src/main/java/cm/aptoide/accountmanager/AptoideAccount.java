@@ -16,8 +16,7 @@ public final class AptoideAccount implements Account {
   private final String avatar;
   private final String refreshToken;
   private final Type type;
-  private final String store;
-  private final String storeAvatar;
+  private final Store store;
   private final boolean adultContentEnabled;
   private final Access access;
   private final boolean accessConfirmed;
@@ -28,8 +27,8 @@ public final class AptoideAccount implements Account {
   private String token;
 
   public AptoideAccount(String id, String email, String nickname, String avatar,
-      String refreshToken, String token, String password, Type type, String store,
-      String storeAvatar, boolean adultContentEnabled, Access access, boolean accessConfirmed,
+      String refreshToken, String token, String password, Type type, Store store,
+      boolean adultContentEnabled, Access access, boolean accessConfirmed,
       List<Store> subscribedStores, AccountService accountService) {
     this.id = id;
     this.email = email;
@@ -40,7 +39,6 @@ public final class AptoideAccount implements Account {
     this.password = password;
     this.type = type;
     this.store = store;
-    this.storeAvatar = storeAvatar;
     this.adultContentEnabled = adultContentEnabled;
     this.access = access;
     this.accessConfirmed = accessConfirmed;
@@ -72,14 +70,6 @@ public final class AptoideAccount implements Account {
 
   @Override public String getAvatar() {
     return avatar;
-  }
-
-  @Override public String getStoreName() {
-    return store;
-  }
-
-  @Override public String getStoreAvatar() {
-    return storeAvatar;
   }
 
   @Override public boolean isAdultContentEnabled() {
@@ -121,6 +111,10 @@ public final class AptoideAccount implements Account {
     return type;
   }
 
+  @Override public Store getStore() {
+    return store;
+  }
+
   private void refreshToken(String accessToken) {
     this.token = accessToken;
   }
@@ -151,10 +145,7 @@ public final class AptoideAccount implements Account {
         + ", type="
         + type
         + ", store='"
-        + store
-        + '\''
-        + ", storeAvatar='"
-        + storeAvatar
+        + store.toString()
         + '\''
         + ", adultContentEnabled="
         + adultContentEnabled

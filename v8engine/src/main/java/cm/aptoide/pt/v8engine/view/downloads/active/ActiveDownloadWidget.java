@@ -44,9 +44,8 @@ import rx.schedulers.Schedulers;
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     compositeSubscription.add(RxView.clicks(pauseCancelButton)
-        .subscribe(click -> displayable.pauseInstall(),
-            throwable -> CrashReport.getInstance()
-                .log(throwable)));
+        .subscribe(click -> displayable.pauseInstall(), throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
     compositeSubscription.add(displayable.getInstallationObservable()
         .observeOn(Schedulers.computation())
@@ -60,6 +59,12 @@ import rx.schedulers.Schedulers;
     if (!TextUtils.isEmpty(installation.getIcon())) {
       ImageLoader.with(getContext())
           .load(installation.getIcon(), appIcon);
+    }
+    if (installation.getState()
+        .equals(Install.InstallationStatus.INSTALLING) && installation.isIndeterminate()) {
+      pauseCancelButton.setVisibility(View.INVISIBLE);
+    } else {
+      pauseCancelButton.setVisibility(View.VISIBLE);
     }
 
     progressBar.setIndeterminate(installation.isIndeterminate());

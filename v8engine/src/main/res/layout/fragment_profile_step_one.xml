@@ -69,7 +69,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_buttons"
-        android:fillViewport="true"
         android:padding="@dimen/padding_very_small"
         >
 

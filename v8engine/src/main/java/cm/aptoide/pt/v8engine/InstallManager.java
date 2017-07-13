@@ -297,9 +297,11 @@ public class InstallManager {
         case Download.CONNECTED:
         case Download.BLOCK_COMPLETE:
         case Download.PROGRESS:
-        case Download.IN_QUEUE:
         case Download.PENDING:
           status = Install.InstallationStatus.INSTALLING;
+          break;
+        case Download.IN_QUEUE:
+          status = Install.InstallationStatus.IN_QUEUE;
           break;
       }
     }
@@ -315,11 +317,7 @@ public class InstallManager {
         break;
       case Installed.STATUS_INSTALLING:
       case Installed.STATUS_ROOT_TIMEOUT:
-        if (type == Installed.TYPE_DEFAULT) {
-          isIndeterminate = false;
-        } else {
-          isIndeterminate = true;
-        }
+        isIndeterminate = type != Installed.TYPE_DEFAULT;
         break;
       case Installed.STATUS_WAITING:
         isIndeterminate =

@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import com.jakewharton.rxrelay.PublishRelay;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -24,6 +25,7 @@ import rx.Observable;
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
+  private final Observable<Void> installAppRelay;
   private int versionCode;
   @Getter @Setter private boolean shouldInstall;
   @Getter private MinimalAd minimalAd;
@@ -31,18 +33,20 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private InstallManager installManager;
   private String md5;
   private String packageName;
+  private InstalledRepository installedRepository;
   private Button installButton;
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
 
   public AppViewInstallDisplayable() {
     super();
+    installAppRelay = PublishRelay.empty();
   }
 
   public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
-      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      AppViewAnalytics appViewAnalytics) {
+      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
+      PublishRelay installAppRelay, DownloadFactory downloadFactory) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -62,16 +66,17 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
     this.downloadFactory = downloadFactory;
+    this.installAppRelay = installAppRelay;
+    this.installedRepository = installedRepository;
     this.timelineAnalytics = timelineAnalytics;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      AppViewAnalytics appViewAnalytics) {
-
+      AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics);
+        installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory);
   }
 
   public void startInstallationProcess() {
@@ -102,5 +107,9 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public TimelineAnalytics getTimelineAnalytics() {
     return timelineAnalytics;
+  }
+
+  public Observable<Void> getInstallAppRelay() {
+    return installAppRelay;
   }
 }

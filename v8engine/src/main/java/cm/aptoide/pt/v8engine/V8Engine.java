@@ -121,6 +121,7 @@ import cm.aptoide.pt.v8engine.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.v8engine.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.install.InstallFabricEvents;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.v8engine.install.installer.RootInstallErrorNotificationFactory;
@@ -128,6 +129,7 @@ import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
+import cm.aptoide.pt.v8engine.networking.BasicAuthenticator;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
@@ -160,6 +162,7 @@ import cm.aptoide.pt.v8engine.view.entry.EntryActivity;
 import cm.aptoide.pt.v8engine.view.entry.EntryPointChooser;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -171,6 +174,7 @@ import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import com.seatgeek.sixpack.SixpackBuilder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -180,6 +184,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.Authenticator;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -253,6 +258,8 @@ public abstract class V8Engine extends Application {
   private PackageRepository packageRepository;
   private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   private AdsRepository adsRepository;
+  private ABTestManager abTestManager;
+  private Authenticator webServiceAuthenticator;
 
   /**
    * call after this instance onCreate()
@@ -335,7 +342,12 @@ public abstract class V8Engine extends Application {
     // app synchronous initialization
     //
 
-    sendAppStartToAnalytics();
+    sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences())))
+        .subscribe(() -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -584,8 +596,9 @@ public abstract class V8Engine extends Application {
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
-          new InstallerFactory(new MinimalAdMapper()).create(this, installerType),
-          getRootAvailabilityManager(), getDefaultSharedPreferences(),
+          new InstallerFactory(new MinimalAdMapper(),
+              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance())).create(this,
+              installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()));
       installManagers.put(installerType, installManager);
@@ -678,6 +691,16 @@ public abstract class V8Engine extends Application {
       preferences = new Preferences(getDefaultSharedPreferences());
     }
     return preferences;
+  }
+
+  public ABTestManager getABTestManager() {
+    if (abTestManager == null) {
+      abTestManager = new ABTestManager(new SixpackBuilder(),
+          new OkHttpClient.Builder().authenticator(
+              new BasicAuthenticator(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD))
+              .build(), BuildConfig.SIXPACK_URL);
+    }
+    return abTestManager;
   }
 
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
@@ -873,8 +896,11 @@ public abstract class V8Engine extends Application {
         .build(context, flurryKey);
   }
 
-  private void sendAppStartToAnalytics() {
-    Analytics.Lifecycle.Application.onCreate(this);
+  private Completable sendAppStartToAnalytics() {
+    return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
+        getDefaultClient(), getBaseBodyInterceptorV7(),
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences()), getTokenInvalidator());
   }
 
   private Completable checkAppSecurity() {
@@ -911,9 +937,9 @@ public abstract class V8Engine extends Application {
   }
 
   private Completable initAbTestManager() {
-    return Completable.defer(() -> ABTestManager.getInstance()
-        .initialize(getIdsRepository().getUniqueIdentifier())
-        .toCompletable());
+    return Completable.defer(
+        () -> getABTestManager().initialize(getIdsRepository().getUniqueIdentifier())
+            .toCompletable());
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
@@ -939,9 +965,6 @@ public abstract class V8Engine extends Application {
   // todo re-factor all this code to proper Rx
   private Completable setupFirstRun(final AptoideAccountManager accountManager) {
     return Completable.defer(() -> {
-      SecurePreferences.setFirstRun(false,
-          SecurePreferencesImplementation.getInstance(getApplicationContext(),
-              getDefaultSharedPreferences()));
 
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 

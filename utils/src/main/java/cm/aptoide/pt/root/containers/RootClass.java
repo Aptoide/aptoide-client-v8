@@ -66,10 +66,8 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
     }
   }
 
-  ;
-
   enum READ_STATE {
-    STARTING, FOUND_ANNOTATION;
+    STARTING, FOUND_ANNOTATION
   }
 
   public @interface Candidate {

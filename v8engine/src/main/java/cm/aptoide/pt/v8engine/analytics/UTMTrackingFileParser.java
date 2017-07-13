@@ -8,18 +8,12 @@ import java.io.InputStreamReader;
 /**
  * Created by jdandrade on 01/08/16.
  */
-public class UTMFileParser {
+public class UTMTrackingFileParser {
 
-  public static final String UTM_SOURCE = "utm_source";
-  public static final String UTM_MEDIUM = "utm_medium";
-  public static final String UTM_CAMPAIGN = "utm_campaign";
-  public static final String UTM_CONTENT = "utm_content";
-  public static final String ENTRY_POINT = "entry_point";
-  public static final String TAG = UTMFileParser.class.getName();
   private BufferedReader bufferedReader;
   private String utm_line;
 
-  public UTMFileParser(InputStream inputStreamToParse) {
+  public UTMTrackingFileParser(InputStream inputStreamToParse) {
     this.bufferedReader = new BufferedReader(new InputStreamReader(inputStreamToParse));
     try {
       utm_line = bufferedReader.readLine();

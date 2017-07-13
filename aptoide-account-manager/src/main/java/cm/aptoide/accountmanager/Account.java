@@ -50,16 +50,6 @@ public interface Account {
   String getAvatar();
 
   /**
-   * Returns the user's store name.
-   */
-  String getStoreName();
-
-  /**
-   * Returns the user's store avatar URL.
-   */
-  String getStoreAvatar();
-
-  /**
    * Returns whether adult content should be displayed for account.
    */
   boolean isAdultContentEnabled();
@@ -116,6 +106,8 @@ public interface Account {
    */
   Account.Type getType();
 
+  Store getStore();
+
   /**
    * Account information access level.
    */
@@ -138,7 +130,7 @@ public interface Account {
   /**
    * Account type.
    */
-  public enum Type {
+  enum Type {
     /**
      * Default account when user did not login yet.
      */

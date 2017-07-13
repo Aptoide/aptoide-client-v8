@@ -88,17 +88,27 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
   @Override public void bindView(AggregatedSocialArticleDisplayable displayable) {
     super.bindView(displayable);
-
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(0)
-            .getUser()
-            .getAvatar(), headerAvatar1);
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(1)
-            .getUser()
-            .getAvatar(), headerAvatar2);
+    if (displayable.getSharers()
+        .get(0)
+        .getUser() != null) {
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(displayable.getSharers()
+              .get(0)
+              .getUser()
+              .getAvatar(), headerAvatar1);
+    }
+    if (displayable.getSharers()
+        .size() > 1) {
+      if (displayable.getSharers()
+          .get(1)
+          .getUser() != null) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(displayable.getSharers()
+                .get(1)
+                .getUser()
+                .getAvatar(), headerAvatar2);
+      }
+    }
     headerNames.setText(displayable.getCardHeaderNames());
     headerTime.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
@@ -194,19 +204,27 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
       int marginOfTheNextLikePreview = 0;
 
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(minimalCard.getSharers()
-              .get(0)
-              .getUser()
-              .getAvatar(), minimalCardHeaderMainAvatar);
-
       if (minimalCard.getSharers()
-          .size() > 1) {
+          .get(0)
+          .getUser() != null) {
         ImageLoader.with(getContext())
             .loadWithShadowCircleTransform(minimalCard.getSharers()
-                .get(1)
+                .get(0)
                 .getUser()
-                .getAvatar(), minimalCardHeaderMainAvatar2);
+                .getAvatar(), minimalCardHeaderMainAvatar);
+      }
+
+      if (displayable.getSharers()
+          .size() > 1) {
+        if (displayable.getSharers()
+            .get(1)
+            .getUser() != null) {
+          ImageLoader.with(getContext())
+              .loadWithShadowCircleTransform(minimalCard.getSharers()
+                  .get(1)
+                  .getUser()
+                  .getAvatar(), minimalCardHeaderMainAvatar2);
+        }
       } else {
         plusFrame.setVisibility(View.GONE);
         minimalCardHeaderMainAvatar2.setVisibility(View.GONE);
@@ -353,7 +371,8 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
                     .isLiked()) {
                   UserTimeline user = new UserTimeline();
                   Store store = new Store();
-                  store.setAvatar(account.getStoreAvatar());
+                  store.setAvatar(account.getStore()
+                      .getAvatar());
                   user.setAvatar(account.getAvatar());
                   user.setStore(store);
                   addUserToPreview(marginOfTheNextLikePreview, user, likePreviewContainer,
