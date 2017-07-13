@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 public class InstalledRepositoryDummy {
-  public final String NO_OBBS = "no_obbs";
+  public static final String NO_OBBS = "no_obbs";
   private PackageManager packageManager;
 
   public InstalledRepositoryDummy(PackageManager packageManager) {

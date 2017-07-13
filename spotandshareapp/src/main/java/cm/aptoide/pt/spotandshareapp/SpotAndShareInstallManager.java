@@ -44,8 +44,8 @@ public class SpotAndShareInstallManager {
     FileUtils fileUtils = new FileUtils();
     String obbsFilePath =
         Environment.getExternalStoragePublicDirectory("/") + "/Android/Obb/" + packageName + "/";
-    String appFolderPath = getAppFolder(filePath);
-    File appFolder = new File(appFolderPath);
+    String appFolderPath = filePath + "/";
+    File appFolder = new File(filePath);
     File[] filesList = appFolder.listFiles();
 
     for (File file : filesList) {

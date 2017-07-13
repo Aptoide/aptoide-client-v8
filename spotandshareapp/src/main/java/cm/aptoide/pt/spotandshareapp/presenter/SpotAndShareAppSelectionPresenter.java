@@ -5,6 +5,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
+import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppSelectionManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -30,36 +31,22 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private InstalledRepositoryDummy installedRepositoryDummy;
   private List<AppModel> selectedApps;
   private SpotAndShareAppSelectionManager spotAndShareAppSelectionManager;
+  private ObbsProvider obbsProvider;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
       boolean shouldCreateGroup, InstalledRepositoryDummy installedRepositoryDummy,
-      SpotAndShare spotAndShare, SpotAndShareAppSelectionManager spotAndShareAppSelectionManager) {
+      SpotAndShare spotAndShare, SpotAndShareAppSelectionManager spotAndShareAppSelectionManager,
+      ObbsProvider obbsProvider) {
     this.view = view;
     this.shouldCreateGroup = shouldCreateGroup;
     this.installedRepositoryDummy = installedRepositoryDummy;
     this.spotAndShare = spotAndShare;
     this.spotAndShareAppSelectionManager = spotAndShareAppSelectionManager;
+    this.obbsProvider = obbsProvider;
     selectedApps = new LinkedList<>();
   }
 
   @Override public void present() {
-
-    //Observable<List<AppModel>> compose = view.getLifecycle()
-    //    .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-    //    .doOnNext(lifecycleEvent -> view.showLoading())
-    //    .observeOn(Schedulers.io())
-    //    .map(lifecycleEvent -> installedRepositoryDummy.getInstalledApps())
-    //    .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
-    //
-    //getInstaledAppsObservable();
-    //getCreateGroupObservable();
-
-    //Observable<View.LifecycleEvent> compose1 = view.getLifecycle()
-    //    .filter(lifecycleEvent -> shouldCreateGroup && lifecycleEvent.equals(
-    //        View.LifecycleEvent.CREATE))
-    //    .doOnNext(lifecycleEvent -> view.showLoading())
-    //    .doOnNext(created -> createGroup())
-    //    .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
 
     Observable.zip(getInstaledAppsObservable(), getCreateGroupObservable(),
         (appModels, s) -> appModels)
@@ -140,12 +127,21 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
       String appName = appModel.getAppName();
       String packageName = appModel.getPackageName();
       File apk = new File(appModel.getFilePath());
-
       byte[] bitmapdata =
           spotAndShareAppSelectionManager.convertDrawableToBitmap(appModel.getAppIcon());
 
-      AndroidAppInfo androidAppInfo =
-          new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata);
+      AndroidAppInfo androidAppInfo;
+      if (!appModel.getObbsFilePath()
+          .equals(InstalledRepositoryDummy.NO_OBBS)) {
+
+        File[] obbsList = obbsProvider.getObbsList(appModel.getObbsFilePath());
+
+        androidAppInfo =
+            new AndroidAppInfo(appName, packageName, apk, obbsList[0], obbsList[1], bitmapdata);
+      } else {
+        androidAppInfo = new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata);
+      }
+
       AptoideUtils.ThreadU.runOnIoThread(
           () -> spotAndShare.sendApps(Collections.singletonList(androidAppInfo)));
 
