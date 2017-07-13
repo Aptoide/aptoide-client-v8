@@ -69,7 +69,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
     try {
       while (true) {
         Object o = objectInputStream.readObject();
-        Print.d(TAG, "startListening: " + Thread.currentThread()
+        Print.d(getClass().getSimpleName(), "startListening: " + Thread.currentThread()
             .getId() + ": Received input object. " + o.getClass()
             .getSimpleName());
         Message message = (Message) o;
@@ -141,9 +141,6 @@ public abstract class AptoideMessageController implements Sender<Message> {
 
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
 
-    Print.d(TAG, "sendWithAck() called with: message = [" + message + "], " + message.getClass()
-        .getSimpleName());
-
     if (!isConnected()) {
       Print.d(TAG, "sendWithAck: " + message.getClass()
           .getSimpleName() + " not connected!");
@@ -173,7 +170,6 @@ public abstract class AptoideMessageController implements Sender<Message> {
   }
 
   @Override public synchronized void send(Message message) {
-    Print.d(TAG, "send() called with: message = [" + message + "]");
 
     if (!isConnected()) {
       Print.d(TAG, "send: " + message.getClass()
