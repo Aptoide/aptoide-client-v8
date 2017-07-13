@@ -81,6 +81,8 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
     this.errorText.setVisibility(View.GONE);
     this.appUpdate.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new AppUpdateCardTouchEvent(card, CardTouchEvent.Type.BODY, position)));
+    this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.HEADER)));
     if (card.isLiked()) {

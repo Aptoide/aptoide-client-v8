@@ -124,6 +124,8 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new SocialHeaderCardTouchEvent(card, card.getPoster().getStore().getName(),
             card.getPoster().getStore().getStoreTheme(), card.getPoster().getUser().getId(),

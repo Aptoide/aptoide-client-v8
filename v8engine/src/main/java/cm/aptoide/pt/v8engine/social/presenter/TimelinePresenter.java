@@ -283,7 +283,7 @@ public class TimelinePresenter implements Presenter {
           } else if (cardTouchEvent.getCard().getType().equals(CardType.RECOMMENDATION)) {
             Recommendation card = (Recommendation) cardTouchEvent.getCard();
             Analytics.AppsTimeline.clickOnCard(card.getType().name(), card.getPackageName(),
-                card.getPublisherName(), card.getPublisherName(),
+                Analytics.AppsTimeline.BLANK, card.getPublisherName(),
                 Analytics.AppsTimeline.OPEN_APP_VIEW);
             timelineAnalytics.sendRecommendationCardClickEvent(card.getType().name(),
                 Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
@@ -336,33 +336,48 @@ public class TimelinePresenter implements Presenter {
             }
           } else if (cardTouchEvent.getCard().getType().equals(CardType.UPDATE)) {
             AppUpdate card = (AppUpdate) cardTouchEvent.getCard();
-            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),
-                card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
-                Analytics.AppsTimeline.UPDATE_APP);
-            timelineAnalytics.sendAppUpdateCardClickEvent(card.getType().name(),
-                Analytics.AppsTimeline.UPDATE_APP, "(blank)", card.getPackageName(),
-                card.getStoreName());
-            timelineAnalytics.sendUpdateAppEvent(card.getType().name(),
-                TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
-            permissionManager.requestExternalStoragePermission(permissionRequest)
-                .flatMap(success -> {
-                  if (installManager.showWarning()) {
-                    view.showRootAccessDialog();
-                  }
-                  return timeline.updateApp(cardTouchEvent);
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .distinctUntilChanged(install -> install.getState())
-                .doOnNext(install -> {
-                  // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
-                  ((AppUpdate) cardTouchEvent.getCard()).setInstallationStatus(install.getState());
-                  view.updateInstallProgress(cardTouchEvent.getCard(),
-                      ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
-                })
-                .subscribe(downloadProgress -> {
-                }, throwable -> Logger.d(this.getClass()
-                    // TODO: 26/06/2017 error handling
-                    .getName(), "error"));
+            if (cardTouchEvent instanceof AppUpdateCardTouchEvent) {
+              Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),
+                  card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
+                  Analytics.AppsTimeline.UPDATE_APP);
+              timelineAnalytics.sendAppUpdateCardClickEvent(card.getType().name(),
+                  Analytics.AppsTimeline.UPDATE_APP, "(blank)", card.getPackageName(),
+                  card.getStoreName());
+              timelineAnalytics.sendUpdateAppEvent(card.getType().name(),
+                  TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
+              permissionManager.requestExternalStoragePermission(permissionRequest)
+                  .flatMap(success -> {
+                    if (installManager.showWarning()) {
+                      view.showRootAccessDialog();
+                    }
+                    return timeline.updateApp(cardTouchEvent);
+                  })
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .distinctUntilChanged(install -> install.getState())
+                  .doOnNext(install -> {
+                    // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
+                    ((AppUpdate) cardTouchEvent.getCard()).setInstallationStatus(
+                        install.getState());
+                    view.updateInstallProgress(cardTouchEvent.getCard(),
+                        ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
+                  })
+                  .subscribe(downloadProgress -> {
+                  }, throwable -> Logger.d(this.getClass()
+                      // TODO: 26/06/2017 error handling
+                      .getName(), "error"));
+            } else {
+              Analytics.AppsTimeline.clickOnCard(card.getType().name(), card.getPackageName(),
+                  Analytics.AppsTimeline.BLANK, card.getStoreName(),
+                  Analytics.AppsTimeline.OPEN_APP_VIEW);
+              timelineAnalytics.sendRecommendationCardClickEvent(card.getType().name(),
+                  Analytics.AppsTimeline.OPEN_APP_VIEW, Analytics.AppsTimeline.BLANK,
+                  card.getPackageName(), card.getStoreName());
+              timelineAnalytics.sendRecommendedOpenAppEvent(card.getType().name(),
+                  TimelineAnalytics.SOURCE_APTOIDE, Analytics.AppsTimeline.BLANK,
+                  card.getPackageName());
+              timelineNavigation.navigateToAppView(card.getAppUpdateId(), card.getPackageName(),
+                  AppViewFragment.OpenType.OPEN_ONLY);
+            }
           } else if (cardTouchEvent.getCard().getType().equals(CardType.POPULAR_APP)) {
             PopularApp card = (PopularApp) cardTouchEvent.getCard();
             Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),

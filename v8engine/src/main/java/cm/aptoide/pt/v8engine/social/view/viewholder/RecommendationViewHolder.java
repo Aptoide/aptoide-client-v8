@@ -84,6 +84,8 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {
       likeButton.setHeartState(true);
     } else {
