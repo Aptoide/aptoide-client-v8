@@ -17,6 +17,7 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.NewFriendMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
@@ -155,6 +156,7 @@ public class HandlersFactoryV1 {
 
     @Override public void handleMessage(HostLeftMessage message, Sender<Message> messageSender) {
       sendAck(messageSender);
+      aptoideMessageClientSocket.onFriendLeft(message.getHostThatLeft());
     }
   }
 
@@ -186,6 +188,21 @@ public class HandlersFactoryV1 {
     @Override public void handleMessage(WelcomeMessage message, Sender<Message> messageSender) {
       sendAck(messageSender);
       aptoideMessageServerSocket.onNewFriend(message.getFriend(), message.getLocalHost());
+    }
+  }
+
+  static class NewFriendMessageHandler extends MessageHandler<NewFriendMessage> {
+
+    private final AptoideMessageClientSocket aptoideMessageClientSocket;
+
+    public NewFriendMessageHandler(AptoideMessageClientSocket aptoideMessageClientSocket) {
+      super(NewFriendMessage.class);
+      this.aptoideMessageClientSocket = aptoideMessageClientSocket;
+    }
+
+    @Override public void handleMessage(NewFriendMessage message, Sender<Message> messageSender) {
+      sendAck(messageSender);
+      aptoideMessageClientSocket.onNewFriend(message.getFriend(), message.getLocalHost());
     }
   }
 }

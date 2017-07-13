@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFactoryV1.HostLeftMessageHandler;
+import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFactoryV1.NewFriendMessageHandler;
 import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFactoryV1.ReceiveApkHandler;
 import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFactoryV1.SendApkHandler;
 import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFactoryV1.ServerLeftHandler;
@@ -19,7 +20,6 @@ import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFact
 /**
  * Created by neuro on 02-02-2017.
  */
-
 public class DefaultClientHandlersListV1 {
 
   public static List<MessageHandler<? extends Message>> create(String rootDir,
@@ -34,6 +34,7 @@ public class DefaultClientHandlersListV1 {
             androidAppInfoAccepter));
     messageHandlers.add(new HostLeftMessageHandler(aptoideMessageClientController));
     messageHandlers.add(new ServerLeftHandler(aptoideMessageClientController));
+    messageHandlers.add(new NewFriendMessageHandler(aptoideMessageClientController));
 
     return messageHandlers;
   }

@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.FriendsManager;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.NewFriendMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
@@ -178,5 +179,6 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   public void onNewFriend(Friend friend, Host host) {
     friendsManager.addFriend(friend, host);
+    sendToOthers(host, new NewFriendMessage(getHost(), friend));
   }
 }

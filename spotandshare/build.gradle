@@ -13,6 +13,8 @@ dependencies {
   compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
   // Just for lombok not to complain
   compileOnly "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+
+  compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
 }
 
 sourceCompatibility = "1.8"

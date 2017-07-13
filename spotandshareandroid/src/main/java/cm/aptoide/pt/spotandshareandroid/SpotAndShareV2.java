@@ -9,7 +9,6 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.TransferManager;
-import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
 import cm.aptoide.pt.spotandshareandroid.util.service.ServiceProvider;
 import java.util.List;
 import rx.Completable;
@@ -29,7 +28,6 @@ class SpotAndShareV2 {
 
   private final String PASSWORD_APTOIDE = "passwordAptoide";
   private final HotspotManager hotspotManager;
-  private final SpotAndShareMessageServer spotAndShareMessageServer;
   private final TransferManager transferManager;
   private final String DUMMY_UUID = "dummy_uuid";
   private final Context applicationContext;
@@ -43,9 +41,8 @@ class SpotAndShareV2 {
     serviceProvider = new ServiceProvider(context);
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
         .getSystemService(Context.WIFI_SERVICE), serviceProvider.getWifiManager());
-    spotAndShareMessageServer = new SpotAndShareMessageServer(55555);
     applicationContext = context.getApplicationContext();
-    transferManager = new TransferManager();
+    transferManager = new TransferManager(new SpotAndShareMessageServer(55555));
     this.friend = friend;
   }
 
@@ -84,14 +81,12 @@ class SpotAndShareV2 {
 
   private void startSpotAndShareMessageClient(ConnectivityManager connectivityManager,
       Friend friend) {
-    spotAndShareMessageServer.startClient(
-        new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-            transferManager.getAndroidAppInfoAccepter(), connectivityManager), friend);
+    transferManager.startClient(applicationContext, connectivityManager, friend);
   }
 
   private void startSpotAndShareMessageServer(OnError onError) {
     // TODO: 10-07-2017 neuro
-    spotAndShareMessageServer.startServer(createHostsChangedCallback(onError));
+    transferManager.startServer(createHostsChangedCallback(onError));
     startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), friend);
   }
 
@@ -145,14 +140,14 @@ class SpotAndShareV2 {
 
   public void exit(Action0 onSuccess, Action1<? super Throwable> onError) {
     if (isHotspot) {
-      Completable.fromAction(spotAndShareMessageServer::exit)
+      Completable.fromAction(transferManager::shutdown)
           .andThen(hotspotManager.resetHotspot()
               .andThen(hotspotManager.restoreNetworkState()
                   .toCompletable()))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(onSuccess, onError);
     } else {
-      Completable.fromAction(spotAndShareMessageServer::exit)
+      Completable.fromAction(transferManager::shutdown)
           .andThen(hotspotManager.restoreNetworkState()
               .toCompletable())
           .andThen(hotspotManager.forgetSpotAndShareNetworks())
@@ -162,11 +157,11 @@ class SpotAndShareV2 {
   }
 
   public void sendApp(AndroidAppInfo androidAppInfo) {
-    spotAndShareMessageServer.sendApp(androidAppInfo);
+    transferManager.sendApp(androidAppInfo);
   }
 
   public void sendApps(List<AndroidAppInfo> appsList) {
-    spotAndShareMessageServer.sendApps(appsList);
+    transferManager.sendApps(appsList);
   }
 
   public Observable<List<Transfer>> observeTransfers() {

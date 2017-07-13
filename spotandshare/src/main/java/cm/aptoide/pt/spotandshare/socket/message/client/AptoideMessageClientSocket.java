@@ -8,6 +8,7 @@ import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
+import cm.aptoide.pt.spotandshare.socket.message.FriendsManager;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
@@ -22,6 +23,8 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
 
   protected final AptoideMessageClientController aptoideMessageController;
 
+  private final FriendsManager friendsManager;
+
   public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       SocketBinder socketBinder, OnError<IOException> onError, int timeout,
@@ -31,6 +34,7 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
             socketBinder, onError, androidAppInfoAccepter, friend);
     this.onError = onError;
+    this.friendsManager = new FriendsManager();
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
@@ -42,6 +46,7 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
             socketBinder, onError, androidAppInfoAccepter, friend);
     this.onError = onError;
+    this.friendsManager = new FriendsManager();
   }
 
   @Override public void shutdown() {
@@ -93,5 +98,13 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
       onError.onError(new ServerLeftException("Server Left"));
     }
     disable();
+  }
+
+  public void onNewFriend(Friend friend, Host host) {
+    friendsManager.addFriend(friend, host);
+  }
+
+  public void onFriendLeft(Host hostThatLeft) {
+    friendsManager.removeFriend(hostThatLeft);
   }
 }
