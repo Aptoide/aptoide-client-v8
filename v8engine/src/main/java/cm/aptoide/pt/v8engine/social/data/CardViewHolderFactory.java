@@ -7,9 +7,9 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AppUpdateViewHolder;
-import cm.aptoide.pt.v8engine.social.view.viewholder.CardViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PopularAppViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.PostViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.ProgressViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.RecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialMediaViewHolder;
@@ -42,7 +42,7 @@ public class CardViewHolderFactory {
     this.spannableFactory = spannableFactory;
   }
 
-  public CardViewHolder createViewHolder(int cardViewType, ViewGroup parent) {
+  public PostViewHolder createViewHolder(int cardViewType, ViewGroup parent) {
     if (cardViewType > CardType.values().length) {
       throw new IllegalStateException("Wrong card type " + cardViewType);
     }

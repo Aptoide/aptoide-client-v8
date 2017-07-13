@@ -52,14 +52,46 @@ public class Timeline {
     return installManager.install(downloadFactory.create(
         (cm.aptoide.pt.v8engine.social.data.AppUpdate) cardTouchEvent.getCard(),
         Download.ACTION_UPDATE))
-        .andThen(installManager.getInstall(card.getFile()
-            .getMd5sum(), card.getPackageName(), card.getFile()
-            .getVercode()));
+        .andThen(installManager.getInstall(card.getFile().getMd5sum(), card.getPackageName(),
+            card.getFile().getVercode()));
   }
 
   public Completable like(Post post, String cardId) {
     sendSocialAnalyticsEvent(post, "Like");
     return service.like(cardId);
+  }
+
+  private void sendSocialAnalyticsEvent(Post post, String like) {
+    String blank = "(blank)";
+    if (post instanceof Media) {
+      timelineAnalytics.sendSocialActionEvent(
+          new TimelineSocialActionData(post.getType().name(), blank, like,
+              ((Media) post).getRelatedApp().getPackageName(), ((Media) post).getPublisherName(),
+              ((Media) post).getMediaTitle()));
+    } else if (post instanceof AppPost) {
+      if (post instanceof Recommendation) {
+        timelineAnalytics.sendSocialActionEvent(
+            new TimelineSocialActionData(post.getType().name(), blank, like,
+                ((AppPost) post).packageName, Application.getConfiguration().getMarketName(),
+                blank));
+      } else if (post instanceof RatedRecommendation) {
+        timelineAnalytics.sendSocialActionEvent(
+            new TimelineSocialActionData(post.getType().name(), blank, like,
+                ((AppPost) post).packageName,
+                ((RatedRecommendation) post).getPoster().getPrimaryName(), blank));
+      } else if (post instanceof AggregatedRecommendation) {
+        timelineAnalytics.sendSocialActionEvent(
+            new TimelineSocialActionData(post.getType().name(), blank, like,
+                ((AppPost) post).packageName, blank, blank));
+      }
+    } else if (post instanceof StoreLatestApps) {
+      timelineAnalytics.sendSocialActionEvent(
+          new TimelineSocialActionData(post.getType().name(), blank, like, blank, blank, blank));
+    } else if (post instanceof AppUpdate) {
+      timelineAnalytics.sendSocialActionEvent(
+          new TimelineSocialActionData(post.getType().name(), blank, like,
+              ((AppUpdate) post).getPackageName(), ((AppUpdate) post).getStoreName(), blank));
+    }
   }
 
   public Single<Post> getTimelineStats() {
@@ -92,54 +124,18 @@ public class Timeline {
 
     OkHttpClient client = new OkHttpClient();
 
-    Request click = new Request.Builder().url(url)
-        .addHeader("authorization", credential)
-        .build();
+    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
 
-    client.newCall(click)
-        .enqueue(new Callback() {
-          @Override public void onFailure(Call call, IOException e) {
-            Logger.d(this.getClass()
-                .getSimpleName(), "sixpack request fail " + call.toString());
-          }
-
-          @Override public void onResponse(Call call, Response response) throws IOException {
-            Logger.d(this.getClass()
-                .getSimpleName(), "sixpack knock success");
-            response.body()
-                .close();
-          }
-        });
-  }
-
-  private void sendSocialAnalyticsEvent(Post post, String like) {
-    String blank = "(blank)";
-    if (post instanceof Media) {
-      timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
-          .name(), blank, like, ((Media) post).getRelatedApp()
-          .getPackageName(), ((Media) post).getPublisherName(), ((Media) post).getMediaTitle()));
-    } else if (post instanceof AppPost) {
-      if (post instanceof Recommendation) {
-        timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
-            .name(), blank, like, ((AppPost) post).packageName, Application.getConfiguration()
-            .getMarketName(), blank));
-      } else if (post instanceof RatedRecommendation) {
-        timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
-            .name(), blank, like, ((AppPost) post).packageName,
-            ((RatedRecommendation) post).getPoster()
-                .getPrimaryName(), blank));
-      } else if (post instanceof AggregatedRecommendation) {
-        timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
-            .name(), blank, like, ((AppPost) post).packageName, blank, blank));
+    client.newCall(click).enqueue(new Callback() {
+      @Override public void onFailure(Call call, IOException e) {
+        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
       }
-    } else if (post instanceof StoreLatestApps) {
-      timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
-          .name(), blank, like, blank, blank, blank));
-    } else if (post instanceof AppUpdate) {
-      timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
-          .name(), blank, like, ((AppUpdate) post).getPackageName(),
-          ((AppUpdate) post).getStoreName(), blank));
-    }
+
+      @Override public void onResponse(Call call, Response response) throws IOException {
+        Logger.d(this.getClass().getSimpleName(), "sixpack knock success");
+        response.body().close();
+      }
+    });
   }
 }
 

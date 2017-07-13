@@ -33,8 +33,7 @@ public class Media implements Post {
     this.relatedApp = app;
     this.abTestURL = abTestURL;
     this.publisherLink = publisherLink;
-    this.publisherAvatarURL = publisher.getPublisherAvatar()
-        .getAvatarUrl();
+    this.publisherAvatarURL = publisher.getPublisherAvatar().getAvatarUrl();
     this.publisherName = publisher.getPublisherName();
     this.mediaLink = mediaLink;
     this.isLiked = isLiked;
@@ -47,6 +46,10 @@ public class Media implements Post {
 
   @Override public CardType getType() {
     return this.cardType;
+  }
+
+  public String getAbUrl() {
+    return abTestURL;
   }
 
   public String getMediaTitle() {
@@ -63,10 +66,6 @@ public class Media implements Post {
 
   public App getRelatedApp() {
     return relatedApp;
-  }
-
-  public String getAbUrl() {
-    return abTestURL;
   }
 
   public String getPublisherAvatarURL() {

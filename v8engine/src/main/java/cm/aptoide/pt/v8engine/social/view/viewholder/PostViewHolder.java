@@ -8,10 +8,10 @@ import cm.aptoide.pt.v8engine.social.data.Post;
  * Created by jdandrade on 08/06/2017.
  */
 
-public abstract class CardViewHolder<T extends Post> extends RecyclerView.ViewHolder {
-  public CardViewHolder(View itemView) {
+public abstract class PostViewHolder<T extends Post> extends RecyclerView.ViewHolder {
+  public PostViewHolder(View itemView) {
     super(itemView);
   }
 
-  public abstract void setCard(T card, int position);
+  public abstract void setPost(T card, int position);
 }

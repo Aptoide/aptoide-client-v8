@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
 import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;

@@ -23,7 +23,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 26/06/2017.
  */
 
-public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
+public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
   private final LayoutInflater inflater;
   private final DateCalculator dateCalculator;
   private final TextView headerSubTitle;
@@ -60,11 +60,10 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
     this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
   }
 
-  @Override public void setCard(PopularApp card, int position) {
+  @Override public void setPost(PopularApp card, int position) {
     this.headerSubTitle.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
-    ImageLoader.with(itemView.getContext())
-        .load(card.getAppIcon(), appIcon);
+    ImageLoader.with(itemView.getContext()).load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
     this.appRating.setRating(card.getAppAverageRating());
     showFriendsAvatars(card, itemView.getContext());
@@ -92,8 +91,7 @@ public class PopularAppViewHolder extends CardViewHolder<PopularApp> {
     for (UserSharerTimeline.User friend : card.getUsers()) {
       friendView = inflater.inflate(R.layout.social_timeline_friend, headerUsersContainer, false);
       friendAvatar = (ImageView) friendView.findViewById(R.id.social_timeline_friend_avatar);
-      ImageLoader.with(context)
-          .loadWithShadowCircleTransform(friend.getAvatar(), friendAvatar);
+      ImageLoader.with(context).loadWithShadowCircleTransform(friend.getAvatar(), friendAvatar);
 
       friendView.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new PopularAppTouchEvent(card, friend.getId(), "DEFAULT", CardTouchEvent.Type.HEADER)));

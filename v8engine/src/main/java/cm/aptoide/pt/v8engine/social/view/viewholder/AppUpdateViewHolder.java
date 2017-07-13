@@ -26,7 +26,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 22/06/2017.
  */
 
-public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
+public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
   private final DateCalculator dateCalculator;
   private final ImageView headerIcon;
   private final TextView headerTitle;
@@ -69,14 +69,13 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
     this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
   }
 
-  @Override public void setCard(AppUpdate card, int position) {
+  @Override public void setPost(AppUpdate card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
     this.headerSubTitle.setText(
         getTimeSinceLastUpdate(itemView.getContext(), card.getUpdateAddedDate()));
-    ImageLoader.with(itemView.getContext())
-        .load(card.getAppUpdateIcon(), appIcon);
+    ImageLoader.with(itemView.getContext()).load(card.getAppUpdateIcon(), appIcon);
     this.appName.setText(getAppTitle(itemView.getContext(), card.getAppUpdateName()));
     setAppUpdateButtonText(card);
     this.errorText.setVisibility(View.GONE);
@@ -99,26 +98,35 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
   }
 
+  private Spannable getStyledTitle(Context context, String storeName) {
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.store_has_an_update, storeName),
+        ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
+  }
+
+  public String getTimeSinceLastUpdate(Context context, Date updatedDate) {
+    return dateCalculator.getTimeSinceDate(context, updatedDate);
+  }
+
+  private Spannable getAppTitle(Context context, String appUpdateName) {
+    return spannableFactory.createColorSpan(appUpdateName,
+        ContextCompat.getColor(context, R.color.black), appUpdateName);
+  }
+
   private void setAppUpdateButtonText(AppUpdate card) {
-    if (card.getInstallationStatus()
-        .equals(Install.InstallationStatus.UNINSTALLED) || card.getInstallationStatus()
-        .equals(Install.InstallationStatus.PAUSED)) {
-      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
-          .toUpperCase());
-    } else if (card.getInstallationStatus()
-        .equals(Install.InstallationStatus.INSTALLING)) {
+    if (card.getInstallationStatus().equals(Install.InstallationStatus.UNINSTALLED)
+        || card.getInstallationStatus().equals(Install.InstallationStatus.PAUSED)) {
+      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString().toUpperCase());
+    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.INSTALLING)) {
       this.appUpdate.setText(itemView.getContext()
           .getString(R.string.displayable_social_timeline_app_update_updating));
-    } else if (card.getInstallationStatus()
-        .equals(Install.InstallationStatus.INSTALLED)) {
-      this.appUpdate.setText(itemView.getContext()
-          .getString(R.string.displayable_social_timeline_app_update_updated));
-    } else if (card.getInstallationStatus()
-        .equals(Install.InstallationStatus.GENERIC_ERROR)) {
+    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.INSTALLED)) {
+      this.appUpdate.setText(
+          itemView.getContext().getString(R.string.displayable_social_timeline_app_update_updated));
+    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.GENERIC_ERROR)) {
       this.errorText.setText(R.string.displayable_social_timeline_app_update_error);
       this.errorText.setVisibility(View.VISIBLE);
-      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
-          .toUpperCase());
+      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString().toUpperCase());
     }
   }
 
@@ -127,20 +135,5 @@ public class AppUpdateViewHolder extends CardViewHolder<AppUpdate> {
     return spannableFactory.createStyleSpan(
         context.getString(R.string.displayable_social_timeline_app_update_button, application),
         Typeface.NORMAL, application);
-  }
-
-  private Spannable getAppTitle(Context context, String appUpdateName) {
-    return spannableFactory.createColorSpan(appUpdateName,
-        ContextCompat.getColor(context, R.color.black), appUpdateName);
-  }
-
-  public String getTimeSinceLastUpdate(Context context, Date updatedDate) {
-    return dateCalculator.getTimeSinceDate(context, updatedDate);
-  }
-
-  private Spannable getStyledTitle(Context context, String storeName) {
-    return spannableFactory.createColorSpan(
-        context.getString(R.string.store_has_an_update, storeName),
-        ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
   }
 }

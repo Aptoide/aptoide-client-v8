@@ -11,7 +11,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/07/2017.
  */
 
-public class TimelineLoginPostViewHolder extends CardViewHolder<TimelineLoginPost> {
+public class TimelineLoginPostViewHolder extends PostViewHolder<TimelineLoginPost> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private Button button;
 
@@ -22,7 +22,7 @@ public class TimelineLoginPostViewHolder extends CardViewHolder<TimelineLoginPos
     this.button = (Button) itemView.findViewById(R.id.login_button);
   }
 
-  @Override public void setCard(TimelineLoginPost card, int position) {
+  @Override public void setPost(TimelineLoginPost card, int position) {
     this.button.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.LOGIN)));
   }

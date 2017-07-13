@@ -16,7 +16,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/07/2017.
  */
 
-public class TimelineStatsViewHolder extends CardViewHolder<TimelineStatsPost> {
+public class TimelineStatsViewHolder extends PostViewHolder<TimelineStatsPost> {
   private final SpannableFactory spannableFactory;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private Button followers;
@@ -35,13 +35,13 @@ public class TimelineStatsViewHolder extends CardViewHolder<TimelineStatsPost> {
     this.rightSeparator = itemView.findViewById(R.id.rightSeparator);
   }
 
-  @Override public void setCard(TimelineStatsPost card, int position) {
-    followers.setText(spannableFactory.createSpan(itemView.getContext()
-            .getString(R.string.timeline_followers, card.getFollowers()),
+  @Override public void setPost(TimelineStatsPost card, int position) {
+    followers.setText(spannableFactory.createSpan(
+        itemView.getContext().getString(R.string.timeline_followers, card.getFollowers()),
         new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(card.getFollowers()), String.valueOf(card.getFollowers())));
-    following.setText(spannableFactory.createSpan(itemView.getContext()
-            .getString(R.string.timeline_followed, card.getFollowing()),
+    following.setText(spannableFactory.createSpan(
+        itemView.getContext().getString(R.string.timeline_followed, card.getFollowing()),
         new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(card.getFollowing()), String.valueOf(card.getFollowing())));
 

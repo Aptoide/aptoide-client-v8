@@ -27,7 +27,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 21/06/2017.
  */
 
-public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
+public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
   private final DateCalculator dateCalculator;
   private final ImageView headerIcon;
   private final TextView headerTitle;
@@ -63,7 +63,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
     this.shareButton = (TextView) view.findViewById(R.id.social_share);
   }
 
-  @Override public void setCard(StoreLatestApps card, int position) {
+  @Override public void setPost(StoreLatestApps card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
 
@@ -85,14 +85,14 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
   }
 
-  public String getTimeSinceLastUpdate(Context context, Date latestUpdate) {
-    return dateCalculator.getTimeSinceDate(context, latestUpdate);
-  }
-
   public Spannable getStyledTitle(Context context, String storeName) {
     return spannableFactory.createColorSpan(
         context.getString(R.string.store_has_new_apps, storeName),
         ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
+  }
+
+  public String getTimeSinceLastUpdate(Context context, Date latestUpdate) {
+    return dateCalculator.getTimeSinceDate(context, latestUpdate);
   }
 
   private void showStoreLatestApps(StoreLatestApps card) {
@@ -107,8 +107,7 @@ public class StoreLatestAppsViewHolder extends CardViewHolder<StoreLatestApps> {
       latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContainer, false);
       latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
       latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
-      ImageLoader.with(itemView.getContext())
-          .load(latestApp.getIcon(), latestAppIcon);
+      ImageLoader.with(itemView.getContext()).load(latestApp.getIcon(), latestAppIcon);
       latestAppName.setText(latestApp.getName());
       appsContainer.addView(latestAppView);
       apps.put(latestAppView, latestApp.getId());

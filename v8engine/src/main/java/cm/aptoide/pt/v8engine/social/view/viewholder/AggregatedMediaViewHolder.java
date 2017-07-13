@@ -22,7 +22,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 28/06/2017.
  */
 
-public class AggregatedMediaViewHolder extends CardViewHolder<AggregatedMedia> {
+public class AggregatedMediaViewHolder extends PostViewHolder<AggregatedMedia> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
@@ -64,33 +64,27 @@ public class AggregatedMediaViewHolder extends CardViewHolder<AggregatedMedia> {
         (FrameLayout) itemView.findViewById(R.id.timeline_sub_minimal_card_container);
   }
 
-  @Override public void setCard(AggregatedMedia card, int position) {
-    if (card.getType()
-        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
+  @Override public void setPost(AggregatedMedia card, int position) {
+    if (card.getType().equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
       this.playIcon.setVisibility(View.GONE);
-    } else if (card.getType()
-        .equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
+    } else if (card.getType().equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
       this.playIcon.setVisibility(View.VISIBLE);
     }
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPosters()
-            .get(0)
-            .getPrimaryAvatar(), this.headerAvatar1);
+        .loadWithShadowCircleTransform(card.getPosters().get(0).getPrimaryAvatar(),
+            this.headerAvatar1);
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPosters()
-            .get(1)
-            .getPrimaryAvatar(), this.headerAvatar2);
+        .loadWithShadowCircleTransform(card.getPosters().get(1).getPrimaryAvatar(),
+            this.headerAvatar2);
     this.headerNames.setText(getCardHeaderNames(card));
     this.headerTimestamp.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
     this.mediaTitle.setText(card.getMediaTitle());
-    String appName = card.getRelatedApp()
-        .getName();
+    String appName = card.getRelatedApp().getName();
     this.relatedTo.setText(spannableFactory.createStyleSpan(itemView.getContext()
             .getString(R.string.displayable_social_timeline_article_related_to, appName), Typeface.BOLD,
         appName));
-    ImageLoader.with(itemView.getContext())
-        .load(card.getMediaThumbnailUrl(), mediaThumbnail);
+    ImageLoader.with(itemView.getContext()).load(card.getMediaThumbnailUrl(), mediaThumbnail);
 
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
@@ -102,27 +96,24 @@ public class AggregatedMediaViewHolder extends CardViewHolder<AggregatedMedia> {
         itemView.getContext()));
   }
 
+  public String getCardHeaderNames(AggregatedMedia card) {
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    List<Poster> posters = card.getPosters().subList(0, 2);
+    for (Poster poster : posters) {
+      headerNamesStringBuilder.append(poster.getPrimaryName()).append(", ");
+    }
+    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    return headerNamesStringBuilder.toString();
+  }
+
   private void showMorePostersLabel(AggregatedMedia card) {
-    if (card.getPosters()
-        .size() > 2) {
-      morePostersLabel.setText(String.format(itemView.getContext()
-          .getString(R.string.timeline_short_plus), String.valueOf(card.getPosters()
-          .size() - 2)));
+    if (card.getPosters().size() > 2) {
+      morePostersLabel.setText(
+          String.format(itemView.getContext().getString(R.string.timeline_short_plus),
+              String.valueOf(card.getPosters().size() - 2)));
       morePostersLabel.setVisibility(View.VISIBLE);
     } else {
       morePostersLabel.setVisibility(View.INVISIBLE);
     }
-  }
-
-  public String getCardHeaderNames(AggregatedMedia card) {
-    StringBuilder headerNamesStringBuilder = new StringBuilder();
-    List<Poster> posters = card.getPosters()
-        .subList(0, 2);
-    for (Poster poster : posters) {
-      headerNamesStringBuilder.append(poster.getPrimaryName())
-          .append(", ");
-    }
-    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
-    return headerNamesStringBuilder.toString();
   }
 }
