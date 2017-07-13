@@ -3,6 +3,7 @@ package cm.aptoide.pt.spotandshare.socket.message.server;
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
 import cm.aptoide.pt.spotandshare.socket.Print;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
+import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
@@ -30,8 +31,9 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   private AptoideMessageServerController aptoideMessageServerController;
   private int availablePort = 10000;
 
-  public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout) {
-    super(port, serverSocketTimeout, timeout);
+  public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout,
+      HostsChangedCallback hostsChangedCallback) {
+    super(port, serverSocketTimeout, timeout, hostsChangedCallback);
   }
 
   @Override public void shutdown() {

@@ -217,8 +217,8 @@ public class ServerService extends Service {
         }
 
         aptoideMessageServerSocket =
-            new AptoideMessageServerSocket(55555, Integer.MAX_VALUE, Integer.MAX_VALUE);
-        aptoideMessageServerSocket.setHostsChangedCallbackCallback(hostsCallbackManager);
+            new AptoideMessageServerSocket(55555, Integer.MAX_VALUE, Integer.MAX_VALUE,
+                hostsCallbackManager);
         aptoideMessageServerSocket.startAsync();
 
         StorageCapacity storageCapacity = new StorageCapacity() {

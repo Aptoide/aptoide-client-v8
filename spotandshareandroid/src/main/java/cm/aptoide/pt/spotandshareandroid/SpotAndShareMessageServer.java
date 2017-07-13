@@ -37,8 +37,8 @@ public class SpotAndShareMessageServer {
       throw new IllegalStateException("Server Already started!");
     } else {
       aptoideMessageServerSocket =
-          new AptoideMessageServerSocket(port, Integer.MAX_VALUE, Integer.MAX_VALUE);
-      aptoideMessageServerSocket.setHostsChangedCallbackCallback(hostsCallbackManager);
+          new AptoideMessageServerSocket(port, Integer.MAX_VALUE, Integer.MAX_VALUE,
+              hostsCallbackManager);
       aptoideMessageServerSocket.startAsync();
     }
   }
