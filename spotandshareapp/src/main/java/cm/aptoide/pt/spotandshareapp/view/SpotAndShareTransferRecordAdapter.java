@@ -71,20 +71,23 @@ public class SpotAndShareTransferRecordAdapter
     }
 
     public void setTransferItem(TransferAppModel transferItem) {
+      System.out.println("item:"
+          + transferItem.getAppName()
+          + " transfer state: "
+          + transferItem.getTransferState());
       senderName.setText(transferItem.getSenderName());
       appIcon.setImageDrawable(transferItem.getAppIcon());
       acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
       installButton.setOnClickListener(accept -> installSubject.onNext(transferItem));
       if (transferItem.getTransferState() == Transfer.State.PENDING_ACCEPTION) {
         acceptButton.setVisibility(View.VISIBLE);
+      } else if (transferItem.getTransferState() == Transfer.State.RECEIVING
+          || transferItem.getTransferState() == Transfer.State.SERVING) {
+        transferProgressBar.setIndeterminate(true);
       } else {
         acceptButton.setVisibility(View.GONE);
         transferProgressBar.setIndeterminate(false);
         installButton.setVisibility(View.GONE);
-        if (transferItem.getTransferState() == Transfer.State.RECEIVING
-            || transferItem.getTransferState() == Transfer.State.SERVING) {
-          transferProgressBar.setIndeterminate(true);
-        }
         if (transferItem.getTransferState() == Transfer.State.RECEIVED) {
           installButton.setVisibility(View.VISIBLE);
         }
