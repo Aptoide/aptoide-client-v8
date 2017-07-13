@@ -161,7 +161,7 @@ public class PostFragment extends FragmentView implements PostView {
       ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setHomeButtonEnabled(true);
-      actionBar.setTitle(R.string.timeline_title_post);
+      actionBar.setTitle(R.string.timeline_title_new_post);
     }
   }
 

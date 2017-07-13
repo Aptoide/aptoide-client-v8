@@ -84,7 +84,7 @@
   <string name="store_meta_following">Following</string>
   <string name="store_meta_followers">Followers</string>
   <string name="addressbook_about">About Address Book</string>
-  <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
+  <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to connect you</string>
 
   <string name="x_liked_it">%s liked it</string>
   <string name="related_to">Related to</string>
@@ -97,9 +97,10 @@
   <string name="timeline_short_shared">shared</string>
   <string name="timeline_short_plus" translatable="false">%s+</string>
   <string name="timeline_title_shared_card_preview">Shared Card Preview</string>
-  <string name="timeline_title_post">New Post</string>
 
   <!--post-->
+  <string name="timeline_title_new_post">New Post</string>
+  <string name="timeline_button_post">Post</string>
   <string name="timeline_message_share_on_timeline">Write something or share a link related to an app</string>
   <string name="timeline_title_related_app">Related app</string>
   <string name="timeline_message_write_something">Write something</string>
