@@ -252,7 +252,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter.addPosts(cards);
   }
 
-  @Override public void showGenericError() {
+  @Override public void showGenericViewError() {
     this.genericError.setVisibility(View.VISIBLE);
     this.list.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
@@ -373,6 +373,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void showCommentSuccess() {
     ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+  }
+
+  @Override public void showGenericError() {
+    ShowMessage.asSnack(getView(),
+        getContext().getString(R.string.fragment_social_timeline_general_error));
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp

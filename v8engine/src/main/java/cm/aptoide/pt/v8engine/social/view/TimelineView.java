@@ -23,7 +23,7 @@ public interface TimelineView extends View {
 
   void showMoreCards(List<Post> cards);
 
-  void showGenericError();
+  void showGenericViewError();
 
   Observable<Void> refreshes();
 
@@ -58,4 +58,6 @@ public interface TimelineView extends View {
   void showCommentDialog(String cardId);
 
   void showCommentSuccess();
+
+  void showGenericError();
 }

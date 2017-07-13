@@ -152,8 +152,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
-          throwable.printStackTrace();
-          view.showGenericError();
+          crashReport.log(throwable);
+          view.showGenericViewError();
         });
   }
 
@@ -170,8 +170,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
-          throwable.printStackTrace();
-          view.showGenericError();
+          crashReport.log(throwable);
+          view.showGenericViewError();
         });
   }
 
@@ -186,7 +186,10 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
-        }, throwable -> throwable.printStackTrace());
+        }, throwable -> {
+          crashReport.log(throwable);
+          view.showGenericError();
+        });
   }
 
   private void onRetryShowPosts() {
@@ -201,8 +204,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
-          throwable.printStackTrace();
-          view.showGenericError();
+          crashReport.log(throwable);
+          view.showGenericViewError();
         });
   }
 
@@ -264,8 +267,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(touchEvent -> {
         }, throwable -> {
-          throwable.printStackTrace();
           crashReport.log(throwable);
+          view.showGenericError();
         });
   }
 
@@ -410,8 +413,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articleUrl -> {
         }, throwable -> {
-          throwable.printStackTrace();
           crashReport.log(throwable);
+          view.showGenericError();
         });
   }
 
@@ -426,8 +429,7 @@ public class TimelinePresenter implements Presenter {
                 cardTouchEvent.getCard().getCardId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> {
-        });
+            cardTouchEvent.getCard().getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
   private void clickOnLikeNonSocialPost() {
@@ -444,8 +446,7 @@ public class TimelinePresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> {
-        });
+            cardTouchEvent.getCard().getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
   private void clickOnCommentSocialPost() {
@@ -460,8 +461,7 @@ public class TimelinePresenter implements Presenter {
             cardTouchEvent.getCard().getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> {
-        });
+            cardTouchEvent.getCard().getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
   private void clickOnCommentNonSocialPost() {
@@ -488,6 +488,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
             cardTouchEvent.getCard().getAbUrl()), throwable -> {
+          crashReport.log(throwable);
+          view.showGenericError();
         });
   }
 
@@ -500,6 +502,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
             cardTouchEvent.getCard().getAbUrl()), throwable -> {
+          crashReport.log(throwable);
+          view.showGenericError();
         });
   }
 
@@ -513,7 +517,10 @@ public class TimelinePresenter implements Presenter {
             .doOnCompleted(() -> view.showCommentSuccess()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
-        }, throwable -> throwable.printStackTrace());
+        }, throwable -> {
+          crashReport.log(throwable);
+          view.showGenericError();
+        });
   }
 
   private void sharePostConfirmation() {
@@ -526,7 +533,10 @@ public class TimelinePresenter implements Presenter {
             TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
-        }, throwable -> throwable.printStackTrace());
+        }, throwable -> {
+          crashReport.log(throwable);
+          view.showGenericError();
+        });
   }
 
   private void clickOnTimelineStats() {
@@ -581,6 +591,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
+          crashReport.log(throwable);
+          view.showGenericError();
         });
   }
 
@@ -596,6 +608,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
             cardTouchEvent.getCard().getAbUrl()), throwable -> {
+          crashReport.log(throwable);
+          view.showGenericError();
         });
   }
 
@@ -608,6 +622,8 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
+          crashReport.log(throwable);
+          view.showGenericError();
         });
   }
 
