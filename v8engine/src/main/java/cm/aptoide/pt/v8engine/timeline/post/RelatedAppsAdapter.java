@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
+import android.animation.ObjectAnimator;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,22 +79,25 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
 
   public PostRemoteAccessor.RelatedApp getCurrentSelected() {
     for (PostRemoteAccessor.RelatedApp relatedApp : relatedAppList) {
-      if(relatedApp.isSelected()) return relatedApp;
+      if (relatedApp.isSelected()) return relatedApp;
     }
     return null;
   }
 
   private static class RelatedAppViewHolder extends RecyclerView.ViewHolder {
-    private final View highlight;
+    public static final int SELECTED_ELEVATION = 20;
+    public static final int UNSELECTED_ELEVATION = 0;
     private final ImageView image;
     private final TextView name;
+    private final ImageView checkIndicator;
     private PostRemoteAccessor.RelatedApp app;
 
-    RelatedAppViewHolder(View itemView, PublishRelay<PostRemoteAccessor.RelatedApp> relatedAppPublisher) {
+    RelatedAppViewHolder(View itemView,
+        PublishRelay<PostRemoteAccessor.RelatedApp> relatedAppPublisher) {
       super(itemView);
       image = (ImageView) itemView.findViewById(R.id.app_image);
       name = (TextView) itemView.findViewById(R.id.app_name);
-      highlight = itemView.findViewById(R.id.background_highlight);
+      checkIndicator = ((ImageView) itemView.findViewById(R.id.check_indicator));
       itemView.setOnClickListener(view -> relatedAppPublisher.call(app));
     }
 
@@ -101,7 +106,20 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
       ImageLoader.with(image.getContext())
           .load(app.getImage(), image);
       this.name.setText(app.getName());
-      highlight.setVisibility(app.isSelected() ? View.VISIBLE : View.GONE);
+
+      // TODO: 13/07/2017 trinkes support pre lollipop devices
+      ObjectAnimator animator;
+      if (app.isSelected()) {
+        animator = ObjectAnimator.ofFloat(itemView, "elevation", ViewCompat.getElevation(itemView),
+            SELECTED_ELEVATION);
+      } else {
+        animator = ObjectAnimator.ofFloat(itemView, "elevation", ViewCompat.getElevation(itemView),
+            UNSELECTED_ELEVATION);
+      }
+      checkIndicator.setVisibility(app.isSelected() ? View.VISIBLE : View.GONE);
+
+      animator.setDuration(200);
+      animator.start();
     }
   }
 }

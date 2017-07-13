@@ -27,6 +27,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -136,7 +137,9 @@ public class PostFragment extends FragmentView implements PostView {
     relatedApps.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     final RelatedAppsAdapter adapter = new RelatedAppsAdapter();
+    relatedApps.addItemDecoration(new SimpleDividerItemDecoration(getContext(), 10));
     relatedApps.setAdapter(adapter);
+    relatedApps.setHorizontalScrollBarEnabled(false);
 
     V8Engine v8Engine = (V8Engine) getContext().getApplicationContext();
 

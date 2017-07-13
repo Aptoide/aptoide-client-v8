@@ -5,33 +5,41 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="8dp"
     style="?attr/backgroundCard"
     >
 
-  <View
-      android:id="@+id/background_highlight"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@color/orange_700"
-      android:visibility="gone"
-      />
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      >
+    <ImageView
+        android:id="@+id/app_image"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        tools:src="@drawable/icon_check"
+        />
+    <ImageView
+        android:id="@+id/check_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/app_image"
+        android:src="@drawable/icon_check"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
 
-  <ImageView
-      android:id="@+id/app_image"
-      android:layout_width="96dp"
-      android:layout_height="96dp"
-      android:layout_centerHorizontal="true"
-      android:layout_gravity="center_horizontal"
-      android:adjustViewBounds="true"
-      android:contentDescription="@null"
-      />
 
+  </RelativeLayout>
 
   <TextView
       android:id="@+id/app_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/padding_tiny"
+      android:layout_marginTop="@dimen/padding_tiny"
       android:ellipsize="end"
       android:lines="2"
       android:paddingEnd="@dimen/padding_smaller"
