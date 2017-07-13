@@ -14,9 +14,12 @@ import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.store.MetaStoresBaseWidget;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -32,9 +35,12 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   private Button exploreButton;
   private TextView suggestionMessage;
   private TextView createStoreText;
+  private StoreAnalytics storeAnalytics;
 
   public MyStoreWidget(View itemView) {
     super(itemView);
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -77,9 +83,13 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
-        .subscribe(click -> getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-            .newStoreFragment(store.getName(), storeTheme))));
-
+        .subscribe(click -> {
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newStoreFragment(store.getName(), storeTheme));
+          storeAnalytics.sendStoreInteractEvent("View Store", store.getStats()
+              .getApps(), store.getStats()
+              .getSubscribers());
+        }));
     setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
   }
 
