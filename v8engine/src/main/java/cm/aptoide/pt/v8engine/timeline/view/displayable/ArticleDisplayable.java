@@ -152,7 +152,7 @@ public class ArticleDisplayable extends CardDisplayable {
   }
 
   public void sendArticleWidgetCardClickEvent(String action, String socialAction) {
-    timelineAnalytics.sendArticleWidgetCardClickEvent(CARD_TYPE_NAME, getArticleTitle(), getTitle(),
+    timelineAnalytics.sendMediaCardClickEvent(CARD_TYPE_NAME, getArticleTitle(), getTitle(),
         action, socialAction);
   }
 

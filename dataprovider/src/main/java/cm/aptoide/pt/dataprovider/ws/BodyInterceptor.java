@@ -4,5 +4,5 @@ import rx.Single;
 
 public interface BodyInterceptor<T> {
 
-  public Single<T> intercept(T body);
+  Single<T> intercept(T body);
 }

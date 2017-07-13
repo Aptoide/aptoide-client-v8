@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -53,7 +53,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
       long numberOfComments, SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
-      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      AppsTimelineNavigator timelineNavigator, Resources resources, String marketName,
       WindowManager windowManager) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
         socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
@@ -86,7 +86,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   public static Displayable from(SocialRecommendation socialRecommendation,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
-      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      AppsTimelineNavigator timelineNavigator, Resources resources, String marketName,
       WindowManager windowManager) {
 
     String abTestingURL = null;

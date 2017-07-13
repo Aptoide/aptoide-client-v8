@@ -47,12 +47,14 @@
           android:layout_width="18dp"
           android:layout_height="18dp"
           android:background="@drawable/grey_circular_placeholder_store"
+          android:visibility="gone"
           tools:ignore="contentDescription"
           />
       <TextView
           android:id="@+id/timeline_header_aditional_number_of_shares_circular"
           android:layout_width="18dp"
           android:layout_height="18dp"
+          android:background="@drawable/grey_circular_placeholder_store"
           android:gravity="center"
           tools:text="5+"
           style="@style/Aptoide.TextView.Regular.XXS"

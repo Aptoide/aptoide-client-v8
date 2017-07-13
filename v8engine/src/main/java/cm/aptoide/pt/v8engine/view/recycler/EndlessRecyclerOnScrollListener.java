@@ -91,15 +91,18 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     int firstVisibleItemPosition = mRecyclerViewHelper.findFirstVisibleItemPosition();
     firstVisibleItem = (firstVisibleItemPosition == -1 ? 0 : firstVisibleItemPosition);
 
-    if (shouldLoadMore()) {
+    if (shouldLoadMore(totalItemCount, visibleItemCount, firstVisibleItem, mRecyclerViewHelper,
+        mRecyclerViewHelper.recyclerView, visibleThreshold)) {
       onLoadMore(bypassCache);
     }
   }
 
-  private boolean shouldLoadMore() {
+  private boolean shouldLoadMore(int totalItemCount, int visibleItemCount, int firstVisibleItem,
+      RecyclerViewPositionHelper mRecyclerViewHelper, RecyclerView recyclerView,
+      int visibleThreshold) {
     return !loading
         && mRecyclerViewHelper != null
-        && mRecyclerViewHelper.recyclerView.isAttachedToWindow()
+        && recyclerView.isAttachedToWindow()
         && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)
         && hasMoreElements();
   }
@@ -146,7 +149,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
             loading = false;
 
-            if (shouldLoadMore()) {
+            if (shouldLoadMore(totalItemCount, visibleItemCount, firstVisibleItem,
+                mRecyclerViewHelper, mRecyclerViewHelper.recyclerView, visibleThreshold)) {
               onLoadMore(bypassCache);
             }
           }, error -> {

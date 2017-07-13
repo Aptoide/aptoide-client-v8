@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       String storeName, String avatarUrl, List<LatestApp> latestApps, String abTestingUrl,
       long likes, long comments, DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, SpannableFactory spannableFactory,
-      StoreCredentialsProvider storeCredentialsProvider, TimelineNavigator timelineNavigator,
+      StoreCredentialsProvider storeCredentialsProvider, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
         socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
@@ -77,7 +77,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
   public static SocialStoreLatestAppsDisplayable from(SocialStoreLatestApps socialStoreLatestApps,
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, SpannableFactory spannableFactory,
-      StoreCredentialsProvider storeCredentialsProvider, TimelineNavigator timelineNavigator,
+      StoreCredentialsProvider storeCredentialsProvider, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     final List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps = new ArrayList<>();
     for (App app : socialStoreLatestApps.getApps()) {

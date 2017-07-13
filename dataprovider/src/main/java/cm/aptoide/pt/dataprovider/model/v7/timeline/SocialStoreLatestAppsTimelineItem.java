@@ -16,6 +16,10 @@ import lombok.EqualsAndHashCode;
     this.latestApps = latestApps;
   }
 
+  @Override public Ab getAb() {
+    return this.latestApps.getAb();
+  }
+
   @Override public SocialStoreLatestApps getData() {
     return latestApps;
   }

@@ -19,7 +19,7 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -51,7 +51,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   private SocialRepository socialRepository;
   private List<MinimalCard> minimalCardList;
   private List<UserSharerTimeline> sharers;
-  private TimelineNavigator timelineNavigator;
+  private AppsTimelineNavigator timelineNavigator;
 
   public AggregatedSocialArticleDisplayable() {
   }
@@ -60,7 +60,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
       String publisherName, String thumbnailUrl, String abTestingURL, List<App> relatedToAppsList,
       Date date, DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     super(card, timelineAnalytics, windowManager);
     this.link = link;
     this.title = title;
@@ -81,7 +81,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   public static Displayable from(AggregatedSocialArticle card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     String abTestingURL = null;
 
     if (card.getAb() != null
