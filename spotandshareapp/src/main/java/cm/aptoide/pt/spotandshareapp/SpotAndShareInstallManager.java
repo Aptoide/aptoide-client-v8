@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 public class SpotAndShareInstallManager {
 
   private final ExecutorService singleThreadedExecutorService = Executors.newSingleThreadExecutor();
+  private static final String APK_FILE_NAME = "base.apk";
   private Context context;
 
   public SpotAndShareInstallManager(Context context) {
@@ -34,7 +35,8 @@ public class SpotAndShareInstallManager {
   }
 
   private void install(String filePath) {
-    startInstallIntent(context, new File(filePath));
+    String apkFilePath = filePath + "/" + APK_FILE_NAME;
+    startInstallIntent(context, new File(apkFilePath));
   }
 
   private void moveObbs(String filePath, String packageName) {

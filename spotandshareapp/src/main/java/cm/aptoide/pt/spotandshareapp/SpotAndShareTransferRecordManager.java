@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,9 @@ import java.util.List;
 
 public class SpotAndShareTransferRecordManager {
 
+  private final String downloadsPath =
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+          .toString();
   private Context context;
   private List<Transfer> transferList;
 
@@ -27,7 +31,8 @@ public class SpotAndShareTransferRecordManager {
     for (Transfer transfer : transferList) {
       appModelList.add(new TransferAppModel(transfer.getAndroidAppInfo()
           .getAppName(), transfer.getAndroidAppInfo()
-          .getPackageName(), "", convertByteToDrawable(transfer.getAndroidAppInfo()
+          .getPackageName(), downloadsPath + "/" + transfer.getAndroidAppInfo()
+          .getPackageName(), convertByteToDrawable(transfer.getAndroidAppInfo()
           .getIcon()), transfer.getState(), transfer.getAndroidAppInfo()
           .getSenderName(), transfer.hashCode()));
     }

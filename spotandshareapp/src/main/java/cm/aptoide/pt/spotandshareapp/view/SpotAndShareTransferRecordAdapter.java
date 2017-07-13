@@ -25,8 +25,11 @@ public class SpotAndShareTransferRecordAdapter
 
   private List<TransferAppModel> appsTransfered;
   private PublishSubject<TransferAppModel> acceptSubject;
+  private PublishSubject<TransferAppModel> installSubject;
 
-  public SpotAndShareTransferRecordAdapter(PublishSubject<TransferAppModel> acceptSubject) {
+  public SpotAndShareTransferRecordAdapter(PublishSubject<TransferAppModel> acceptSubject,
+      PublishSubject<TransferAppModel> installApp) {
+    this.installSubject = installApp;
     this.appsTransfered = new LinkedList<>();
     this.acceptSubject = acceptSubject;
   }
@@ -70,9 +73,10 @@ public class SpotAndShareTransferRecordAdapter
     public void setTransferItem(TransferAppModel transferItem) {
       senderName.setText(transferItem.getSenderName());
       appIcon.setImageDrawable(transferItem.getAppIcon());
+      acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
+      installButton.setOnClickListener(accept -> installSubject.onNext(transferItem));
       if (transferItem.getTransferState() == Transfer.State.PENDING_ACCEPTION) {
         acceptButton.setVisibility(View.VISIBLE);
-        acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
       } else {
         acceptButton.setVisibility(View.GONE);
         transferProgressBar.setIndeterminate(false);
@@ -83,7 +87,6 @@ public class SpotAndShareTransferRecordAdapter
         }
         if (transferItem.getTransferState() == Transfer.State.RECEIVED) {
           installButton.setVisibility(View.VISIBLE);
-          //// TODO: 12-07-2017 filipe set up install listener
         }
       }
     }

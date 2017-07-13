@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
@@ -41,6 +42,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private RecyclerView transferRecordRecyclerView;
   private SpotAndShareTransferRecordAdapter adapter;
   private PublishSubject<TransferAppModel> acceptApp;
+  private PublishSubject<TransferAppModel> installApp;
   private Button shareAppButton;
 
   public static Fragment newInstance() {
@@ -52,6 +54,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     super.onCreate(savedInstanceState);
     backRelay = PublishRelay.create();
     acceptApp = PublishSubject.create();
+    installApp = PublishSubject.create();
   }
 
   @Nullable @Override
@@ -81,13 +84,15 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     shareAppButton = (Button) view.findViewById(R.id.transfer_record_share_an_app_button);
     attachPresenter(
         new SpotAndShareTransferRecordPresenter(this, SpotAndShare.getInstance(getContext()),
-            new SpotAndShareTransferRecordManager(getContext())), savedInstanceState);
+            new SpotAndShareTransferRecordManager(getContext()),
+            new SpotAndShareInstallManager(getActivity().getApplicationContext())),
+        savedInstanceState);
   }
 
   private void setupRecyclerView() {
     transferRecordRecyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-    adapter = new SpotAndShareTransferRecordAdapter(acceptApp);
+    adapter = new SpotAndShareTransferRecordAdapter(acceptApp, installApp);
     transferRecordRecyclerView.setAdapter(adapter);
   }
 
@@ -112,6 +117,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   @Override public void onDestroy() {
     backRelay = null;
     acceptApp = null;
+    installApp = null;
     super.onDestroy();
   }
 
@@ -157,6 +163,10 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
     getFragmentNavigator().navigateToWithoutBackSave(
         SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
+  }
+
+  @Override public Observable<TransferAppModel> installApp() {
+    return installApp;
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

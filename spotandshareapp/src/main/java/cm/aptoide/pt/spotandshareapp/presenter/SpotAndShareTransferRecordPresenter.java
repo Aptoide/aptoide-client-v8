@@ -3,6 +3,7 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 import android.os.Bundle;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
@@ -20,12 +21,15 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
   private final SpotAndShareTransferRecordView view;
   private SpotAndShare spotAndShare;
   private SpotAndShareTransferRecordManager transferRecordManager;
+  private SpotAndShareInstallManager spotAndShareInstallManager;
 
   public SpotAndShareTransferRecordPresenter(SpotAndShareTransferRecordView view,
-      SpotAndShare spotAndShare, SpotAndShareTransferRecordManager transferRecordManager) {
+      SpotAndShare spotAndShare, SpotAndShareTransferRecordManager transferRecordManager,
+      SpotAndShareInstallManager spotAndShareInstallManager) {
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.transferRecordManager = transferRecordManager;
+    this.spotAndShareInstallManager = spotAndShareInstallManager;
   }
 
   @Override public void present() {
@@ -43,6 +47,14 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.acceptApp())
         .doOnNext(transferAppModel -> acceptedApp(transferAppModel))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.installApp())
+        .doOnNext(transferAppModel -> installApp(transferAppModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
@@ -81,9 +93,14 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
   }
 
   private void acceptedApp(TransferAppModel transferAppModel) {
-    //// TODO: 07-07-2017 filipe inform spot and share accepted app
-    transferRecordManager.acceptApp(transferAppModel);
     System.out.println("accepted : " + transferAppModel.getAppName());
+    transferRecordManager.acceptApp(transferAppModel);
+  }
+
+  private void installApp(TransferAppModel transferAppModel) {
+    System.out.println("install : " + transferAppModel.getAppName());
+    spotAndShareInstallManager.installAppAsync(transferAppModel.getFilePath(),
+        transferAppModel.getPackageName());
   }
 
   @Override public void saveState(Bundle state) {
