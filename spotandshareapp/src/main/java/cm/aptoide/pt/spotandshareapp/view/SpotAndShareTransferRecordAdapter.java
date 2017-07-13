@@ -53,6 +53,12 @@ public class SpotAndShareTransferRecordAdapter
     notifyDataSetChanged();
   }
 
+  public void onDestroy() {
+    acceptSubject = null;
+    installSubject = null;
+    appsTransfered = null;
+  }
+
   class TransferViewHolder extends ViewHolder {
 
     private TextView senderName;

@@ -109,6 +109,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     unregisterClickHandler(clickHandler);
     clickHandler = null;
     backDialog = null;
+    adapter.onDestroy();
+    adapter = null;
     transferRecordRecyclerView = null;
     shareAppButton = null;
     super.onDestroyView();
