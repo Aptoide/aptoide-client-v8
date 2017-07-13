@@ -18,4 +18,9 @@ import lombok.ToString;
   public AckMessage(Host localhost) {
     super(localhost);
   }
+
+  public AckMessage(Host localHost, boolean success) {
+    super(localHost);
+    this.success = success;
+  }
 }

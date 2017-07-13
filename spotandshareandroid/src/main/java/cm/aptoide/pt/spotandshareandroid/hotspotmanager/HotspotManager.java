@@ -8,8 +8,6 @@ import lombok.experimental.Delegate;
 
 public class HotspotManager {
 
-  static final int ERROR_UNKNOWN = 3;
-
   private static final String TAG = HotspotManager.class.getSimpleName();
 
   @Delegate private final JoinHotspotManager joinHotspotManager;
@@ -19,13 +17,14 @@ public class HotspotManager {
 
   private final TaskQueue taskQueue;
 
-  public HotspotManager(Context context, WifiManager wifimanager) {
+  public HotspotManager(Context context, WifiManager wifimanager, WifiManager wifiManager) {
     taskQueue = new TaskQueue();
 
     this.joinHotspotManager = new JoinHotspotManager(context, wifimanager);
     this.createHotspotManager = new CreateHotspotManager(wifimanager, taskQueue);
     this.networkStateManager = new NetworkStateManager(wifimanager);
-    this.hotspotScanner = new SsidHotspotScanner(context, taskQueue, SpotAndShare.DUMMY_HOTSPOT);
+    this.hotspotScanner =
+        new SsidHotspotScanner(context, taskQueue, SpotAndShare.DUMMY_HOTSPOT, wifiManager);
   }
 
   public void shutdown() {

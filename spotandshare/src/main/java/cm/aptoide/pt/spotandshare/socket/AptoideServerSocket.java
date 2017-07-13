@@ -17,7 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Created by neuro on 27-01-2017.
@@ -36,19 +35,23 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   private LinkedBlockingQueue<ServerAction> queuedServerActions = new LinkedBlockingQueue<>();
   @Getter private Host host;
   private int serverSocketTimeout;
-  @Setter private HostsChangedCallback hostsChangedCallbackCallback;
+  private final HostsChangedCallback hostsChangedCallback;
 
-  public AptoideServerSocket(int port, int serverSocketTimeout, int timeout) {
+  public AptoideServerSocket(int port, int serverSocketTimeout, int timeout,
+      HostsChangedCallback hostsChangedCallback) {
     this.port = port;
     this.serverSocketTimeout = serverSocketTimeout;
     this.timeout = timeout;
+    this.hostsChangedCallback = hostsChangedCallback;
   }
 
-  public AptoideServerSocket(int bufferSize, int port, int serverSocketTimeout, int timeout) {
+  public AptoideServerSocket(int bufferSize, int port, int serverSocketTimeout, int timeout,
+      HostsChangedCallback hostsChangedCallback) {
     super(bufferSize);
     this.port = port;
     this.serverSocketTimeout = serverSocketTimeout;
     this.timeout = timeout;
+    this.hostsChangedCallback = hostsChangedCallback;
   }
 
   @Override public AptoideSocket start() {
@@ -74,8 +77,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
         Socket socket = ss.accept();
         socket.setSoTimeout(timeout);
         connectedSockets.add(socket);
-        if (hostsChangedCallbackCallback != null) {
-          hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
+        if (hostsChangedCallback != null) {
+          hostsChangedCallback.hostsChanged(getConnectedHosts());
         }
 
         executorService.execute(() -> {
@@ -222,7 +225,9 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
           .getHostAddress()
           .equals(host.getIp())) {
         connectedSockets.remove(socket);
-        hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
+        if (hostsChangedCallback != null) {
+          hostsChangedCallback.hostsChanged(getConnectedHosts());
+        }
         Print.d(TAG, "removeHost: AptoideServerSocket: Host " + host + " removed from the server.");
       }
     }

@@ -25,4 +25,8 @@ public class AptoideMessageServerController extends AptoideMessageController
     this.localHost = localHost;
     this.host = host;
   }
+
+  @Override protected void doOnConnect() {
+
+  }
 }

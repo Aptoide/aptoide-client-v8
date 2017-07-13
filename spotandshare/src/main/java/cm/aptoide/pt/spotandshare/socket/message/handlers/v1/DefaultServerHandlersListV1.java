@@ -10,6 +10,7 @@ import java.util.List;
 
 import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFactoryV1.ExitMessageHandler;
 import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFactoryV1.RequestPermissionToSendHandler;
+import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFactoryV1.WelcomeMessageHandler;
 
 /**
  * Created by neuro on 02-02-2017.
@@ -31,6 +32,7 @@ public class DefaultServerHandlersListV1 {
     messageHandlers.add(messageHandler);
     messageHandlers.add(new RequestPermissionToSendHandler(aptoideMessageServerSocket));
     messageHandlers.add(new ExitMessageHandler(aptoideMessageServerSocket));
+    messageHandlers.add(new WelcomeMessageHandler(aptoideMessageServerSocket));
 
     return messageHandlers;
   }

@@ -15,6 +15,7 @@ import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
@@ -217,7 +218,6 @@ public class ServerService extends Service {
 
         aptoideMessageServerSocket =
             new AptoideMessageServerSocket(55555, Integer.MAX_VALUE, Integer.MAX_VALUE);
-        aptoideMessageServerSocket.setHostsChangedCallbackCallback(hostsCallbackManager);
         aptoideMessageServerSocket.startAsync();
 
         StorageCapacity storageCapacity = new StorageCapacity() {
@@ -234,7 +234,7 @@ public class ServerService extends Service {
             new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
                 storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
                 androidAppInfoAccepter -> androidAppInfoAccepter.accept(
-                    fileLifecycleProvider.newFileClientLifecycle()));
+                    fileLifecycleProvider.newFileClientLifecycle()), new Friend("username"));
         aptoideMessageClientSocket.startAsync();
       } else if (intent.getAction() != null && intent.getAction()
           .equals("SEND")) {

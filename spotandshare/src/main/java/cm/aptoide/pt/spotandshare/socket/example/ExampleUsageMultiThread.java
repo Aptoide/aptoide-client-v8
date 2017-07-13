@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshare.socket.example;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
@@ -37,7 +38,7 @@ public class ExampleUsageMultiThread {
 
   private static AptoideMessageClientSocket newAptoideMessageClientSocket() {
     return new AptoideMessageClientSocket("localhost", MESSAGE_SERVER_PORT, null, null, null, null,
-        null, Integer.MAX_VALUE, null) {
+        null, Integer.MAX_VALUE, null, new Friend("username")) {
 
       @Override protected void onConnected(Socket socket) throws IOException {
 

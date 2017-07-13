@@ -2,6 +2,7 @@ package cm.aptoide.pt.spotandshareandroid.hotspotmanager;
 
 import android.content.Context;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshareandroid.util.TaskQueue;
 import java.util.Collections;
 import java.util.List;
@@ -12,8 +13,9 @@ import java.util.List;
 
 public class SsidHotspotScanner extends HotspotScanner {
 
-  public SsidHotspotScanner(Context context, TaskQueue taskQueue, String ssid) {
-    super(context, taskQueue, createSsidValidators(ssid));
+  public SsidHotspotScanner(Context context, TaskQueue taskQueue, String ssid,
+      WifiManager wifiManager) {
+    super(context, taskQueue, createSsidValidators(ssid), wifiManager);
   }
 
   private static List<Validator<ScanResult>> createSsidValidators(String ssid) {

@@ -41,6 +41,7 @@ public class Transfer {
     state = State.RECEIVING;
     androidAppInfoAccepter.accept(new TransferLifecycleRelay(this, transferManager));
     behaviorRelay.call(this);
+    transferManager.callRelay();
 
     return behaviorRelay;
   }

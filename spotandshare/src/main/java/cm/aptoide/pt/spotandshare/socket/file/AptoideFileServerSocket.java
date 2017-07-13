@@ -29,13 +29,13 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
 
   public AptoideFileServerSocket(int port, List<FileInfo> fileInfos, int serverSocketTimeout,
       int timeout) {
-    super(port, serverSocketTimeout, timeout);
+    super(port, serverSocketTimeout, timeout, null);
     this.fileInfos = fileInfos;
   }
 
   public AptoideFileServerSocket(int bufferSize, int port, List<FileInfo> fileInfos,
       int serverSocketTimeout, int timeout) {
-    super(bufferSize, port, serverSocketTimeout, timeout);
+    super(bufferSize, port, serverSocketTimeout, timeout, null);
     this.fileInfos = fileInfos;
   }
 

@@ -3,10 +3,12 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
+import cm.aptoide.pt.spotandshareandroid.util.service.ServiceProvider;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +29,13 @@ public class SpotAndShare {
   private final String DUMMY_UUID = "dummy_uuid";
   private final SpotAndShareV2 spotAndShareV2;
   private Map<AndroidAppInfo, Accepter<AndroidAppInfo>> androidAppInfoAccepterMap = new HashMap<>();
+  private final ServiceProvider serviceProvider;
 
-  public SpotAndShare(Context context) {
+  public SpotAndShare(Context context, Friend friend) {
+    serviceProvider = new ServiceProvider(context);
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
-        .getSystemService(Context.WIFI_SERVICE));
-    spotAndShareV2 = new SpotAndShareV2(context);
+        .getSystemService(Context.WIFI_SERVICE), serviceProvider.getWifiManager());
+    spotAndShareV2 = new SpotAndShareV2(context, friend);
   }
 
   public Completable createGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,

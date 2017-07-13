@@ -13,6 +13,7 @@ import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
@@ -221,7 +222,8 @@ public class ClientService extends Service {
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
                 storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
-                androidAppInfoAccepter -> androidAppInfoAccepter.accept(null));
+                androidAppInfoAccepter -> androidAppInfoAccepter.accept(null),
+                new Friend("username"));
         aptoideMessageClientSocket.setSocketBinder(socketBinder);
         aptoideMessageClientSocket.startAsync();
 

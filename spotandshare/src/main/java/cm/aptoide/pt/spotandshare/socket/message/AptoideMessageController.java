@@ -59,8 +59,11 @@ public abstract class AptoideMessageController implements Sender<Message> {
     localhost = Host.fromLocalhost(socket);
     host = Host.from(socket);
     connected = true;
+    doOnConnect();
     startListening(objectInputStream);
   }
+
+  protected abstract void doOnConnect();
 
   private void startListening(ObjectInputStream objectInputStream) {
     try {
