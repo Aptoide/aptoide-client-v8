@@ -75,8 +75,8 @@ public class SpotAndShareInstallManager {
     Uri photoURI = null;
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
-      photoURI = FileProvider.getUriForFile(context, "cm.aptoide.pt.provider", file);
-      //todo only works on release this is the package name + provider
+      photoURI = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
+
     } else {
       //file://....apk for < nougat
       photoURI = Uri.fromFile(file);
