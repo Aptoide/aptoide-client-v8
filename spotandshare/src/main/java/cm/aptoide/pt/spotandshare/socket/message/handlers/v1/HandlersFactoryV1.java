@@ -179,12 +179,16 @@ public class HandlersFactoryV1 {
 
   static class WelcomeMessageHandler extends MessageHandler<WelcomeMessage> {
 
-    public WelcomeMessageHandler() {
+    private final AptoideMessageServerSocket aptoideMessageServerSocket;
+
+    public WelcomeMessageHandler(AptoideMessageServerSocket aptoideMessageServerSocket) {
       super(WelcomeMessage.class);
+      this.aptoideMessageServerSocket = aptoideMessageServerSocket;
     }
 
     @Override public void handleMessage(WelcomeMessage message, Sender<Message> messageSender) {
       messageSender.send(new AckMessage(messageSender.getHost(), true));
+      aptoideMessageServerSocket.onNewFriend(message.getFriend(), message.getLocalHost());
     }
   }
 }

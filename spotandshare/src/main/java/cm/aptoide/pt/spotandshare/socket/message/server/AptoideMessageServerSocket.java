@@ -2,8 +2,9 @@ package cm.aptoide.pt.spotandshare.socket.message.server;
 
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
 import cm.aptoide.pt.spotandshare.socket.Print;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
-import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
+import cm.aptoide.pt.spotandshare.socket.message.FriendsManager;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
@@ -28,12 +29,13 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   @Getter private final ConcurrentLinkedQueue<AptoideMessageServerController>
       aptoideMessageControllers = new ConcurrentLinkedQueue<>();
+  private final FriendsManager friendsManager;
   private AptoideMessageServerController aptoideMessageServerController;
   private int availablePort = 10000;
 
-  public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout,
-      HostsChangedCallback hostsChangedCallback) {
-    super(port, serverSocketTimeout, timeout, hostsChangedCallback);
+  public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout) {
+    super(port, serverSocketTimeout, timeout, null);
+    this.friendsManager = new FriendsManager();
   }
 
   @Override public void shutdown() {
@@ -71,6 +73,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   @Override public void removeHost(Host host) {
     super.removeHost(host);
+
+    friendsManager.removeFriend(host);
 
     Iterator<AptoideMessageServerController> iterator = aptoideMessageControllers.iterator();
     while (iterator.hasNext()) {
@@ -170,5 +174,9 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
         }
       }
     });
+  }
+
+  public void onNewFriend(Friend friend, Host host) {
+    friendsManager.addFriend(friend, host);
   }
 }

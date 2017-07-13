@@ -32,7 +32,7 @@ public class DefaultServerHandlersListV1 {
     messageHandlers.add(messageHandler);
     messageHandlers.add(new RequestPermissionToSendHandler(aptoideMessageServerSocket));
     messageHandlers.add(new ExitMessageHandler(aptoideMessageServerSocket));
-    messageHandlers.add(new WelcomeMessageHandler());
+    messageHandlers.add(new WelcomeMessageHandler(aptoideMessageServerSocket));
 
     return messageHandlers;
   }
