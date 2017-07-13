@@ -8,12 +8,13 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
+import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class CreateTransactionRequest extends V3<BaseV3Response> {
+public class CreateTransactionRequest extends V3<TransactionResponse> {
 
   private CreateTransactionRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -74,7 +75,7 @@ public class CreateTransactionRequest extends V3<BaseV3Response> {
   }
 
   @Override
-  protected Observable<BaseV3Response> loadDataFromNetwork(Service service, boolean bypassCache) {
+  protected Observable<TransactionResponse> loadDataFromNetwork(Service service, boolean bypassCache) {
     return service.createTransaction(map, bypassCache);
   }
 }

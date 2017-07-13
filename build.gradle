@@ -115,6 +115,9 @@ ext {
 
   LEAK_CANARY_VERSION = '1.5'
   PARCELER_VERSION = '1.1.6'
+
+  BRAINTREE_VERSION = '2.5.4'
+  BRAINTREE_CARD_FORM_VERSION = '3.0.6'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

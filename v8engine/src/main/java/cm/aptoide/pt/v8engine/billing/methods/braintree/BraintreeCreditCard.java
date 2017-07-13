@@ -1,13 +1,16 @@
 package cm.aptoide.pt.v8engine.billing.methods.braintree;
 
-import cm.aptoide.pt.v8engine.billing.PaymentMethod;
+import cm.aptoide.pt.v8engine.billing.LocalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodAlreadyAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import rx.Completable;
+import rx.Observable;
+import rx.Single;
 
-public class BraintreeCreditCard implements PaymentMethod {
+public class BraintreeCreditCard implements LocalPaymentMethod {
 
   private final int id;
   private final String name;
@@ -49,5 +52,10 @@ public class BraintreeCreditCard implements PaymentMethod {
 
           return Completable.complete();
         });
+  }
+
+  @Override public Completable processLocal(Product product, String localMetadata) {
+    return transactionRepository.createTransaction(getId(), product, localMetadata)
+        .toCompletable();
   }
 }

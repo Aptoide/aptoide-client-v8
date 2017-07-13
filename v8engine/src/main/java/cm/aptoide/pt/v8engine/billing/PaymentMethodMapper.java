@@ -6,8 +6,8 @@
 package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.v8engine.billing.methods.braintree.BraintreeCreditCard;
 import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompra;
+import cm.aptoide.pt.v8engine.billing.methods.braintree.BraintreeCreditCard;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolPoints;
 import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPal;
 import cm.aptoide.pt.v8engine.billing.methods.sandbox.Sandbox;

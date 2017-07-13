@@ -39,7 +39,7 @@
 
   <uses-sdk
       android:minSdkVersion="15"
-      tools:overrideLibrary="com.paypal.android.sdk.payments"
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.braintreepayments.api.core, com.braintreepayments.api, com.braintreepayments.cardform"
       />
 
   <application

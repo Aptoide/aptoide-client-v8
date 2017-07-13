@@ -18,7 +18,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.search.websocket.SearchAppsWebSocket;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
-import cm.aptoide.pt.v8engine.view.search.SearchActivity;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -42,9 +41,10 @@ public class SearchUtils {
         .getApplicationContext()
         .getSystemService(Context.SEARCH_SERVICE);
     final SearchView searchView = (SearchView) searchItem.getActionView();
-    ComponentName cn = new ComponentName(fragmentView.getContext()
-        .getApplicationContext(), SearchActivity.class);
-    searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(
+        fragmentView.getContext()
+            .getApplicationContext(), fragmentView.getActivity()
+        .getLocalClassName())));
     SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
 
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

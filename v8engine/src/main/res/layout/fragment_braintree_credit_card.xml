@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_margin="16dp"
+    android:background="@drawable/dialog_bg"
+    android:minHeight="300dp"
+    android:theme="@style/AptoideThemeDefault"
+    >
+
+  <com.braintreepayments.cardform.view.CardForm
+      android:id="@+id/fragment_braintree_credit_card_form"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:layout_margin="16dp"
+      />
+
+  <Button
+      android:id="@+id/fragment_braintree_buy_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_below="@id/fragment_braintree_credit_card_form"
+      android:layout_margin="16dp"
+      android:text="@string/buy"
+      style="@style/Widget.AppCompat.Button"
+      />
+
+  <LinearLayout
+      android:id="@+id/fragment_braintree_progress_bar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/white"
+      android:clickable="true"
+      android:elevation="10dp"
+      android:focusable="true"
+      android:gravity="center"
+      android:minHeight="300dp"
+      android:orientation="vertical"
+      android:visibility="gone"
+      tools:visibility="visible"
+      >
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+  </LinearLayout>
+</RelativeLayout>

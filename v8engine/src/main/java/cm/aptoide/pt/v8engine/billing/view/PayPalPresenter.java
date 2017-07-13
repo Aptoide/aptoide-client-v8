@@ -22,15 +22,18 @@ public class PayPalPresenter implements Presenter {
   private final BillingAnalytics analytics;
   private final BillingNavigator billingNavigator;
   private final Scheduler viewScheduler;
+  private final int paymentId;
 
   public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
-      BillingAnalytics analytics, BillingNavigator billingNavigator, Scheduler viewScheduler) {
+      BillingAnalytics analytics, BillingNavigator billingNavigator, Scheduler viewScheduler,
+      int paymentId) {
     this.view = view;
     this.billing = billing;
     this.productProvider = productProvider;
     this.analytics = analytics;
     this.billingNavigator = billingNavigator;
     this.viewScheduler = viewScheduler;
+    this.paymentId = paymentId;
   }
 
   @Override public void present() {
@@ -73,7 +76,7 @@ public class PayPalPresenter implements Presenter {
             .flatMapCompletable(result -> processPayPalPayment(result).observeOn(viewScheduler)
                 .doOnCompleted(() -> {
                   view.hideLoading();
-                  billingNavigator.popLocalPaymentView();
+                  billingNavigator.popTransactionAuthorizationView();
                 })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -84,7 +87,7 @@ public class PayPalPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismisses())
-        .doOnNext(product -> billingNavigator.popLocalPaymentView())
+        .doOnNext(product -> billingNavigator.popTransactionAuthorizationView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> hideLoadingAndShowError(throwable));
@@ -94,7 +97,7 @@ public class PayPalPresenter implements Presenter {
     switch (result.getStatus()) {
       case BillingNavigator.PayPalResult.SUCCESS:
         return productProvider.getProduct()
-            .flatMapCompletable(product -> billing.processPayPalPayment(product,
+            .flatMapCompletable(product -> billing.processLocalPayment(paymentId, product,
                 result.getPaymentConfirmationId()));
       case BillingNavigator.PayPalResult.CANCELLED:
       case BillingNavigator.PayPalResult.ERROR:

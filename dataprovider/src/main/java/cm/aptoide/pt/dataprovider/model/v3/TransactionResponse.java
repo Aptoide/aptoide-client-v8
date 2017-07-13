@@ -16,4 +16,5 @@ import lombok.EqualsAndHashCode;
   @JsonProperty("paymentId") private int paymentMethodId;
   @JsonProperty("confirmationUrl") private String confirmationUrl;
   @JsonProperty("successUrl") private String successUrl;
+  @JsonProperty("clientToken") private String clientToken;
 }

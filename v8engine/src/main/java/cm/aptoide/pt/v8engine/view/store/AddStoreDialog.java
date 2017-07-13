@@ -44,7 +44,6 @@ import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.dialog.BaseDialog;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.v8engine.view.search.StoreSearchActivity;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
@@ -222,9 +221,9 @@ public class AddStoreDialog extends BaseDialog {
   private void setupStoreSearch(SearchView searchView) {
     final SearchManager searchManager = (SearchManager) getContext().getApplicationContext()
         .getSystemService(Context.SEARCH_SERVICE);
-    ComponentName cn =
-        new ComponentName(getContext().getApplicationContext(), StoreSearchActivity.class);
-    searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(
+        new ComponentName(getContext().getApplicationContext(),
+            getActivity().getLocalClassName())));
     storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
 
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

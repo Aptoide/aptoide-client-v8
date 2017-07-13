@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.spotandshare.view;
 
 import cm.aptoide.pt.v8engine.view.AnalyticsActivity;
 
-public class SpotAndShareActivityView extends AnalyticsActivity {
+public abstract class SpotAndShareActivityView extends AnalyticsActivity {
 
   private Presenter presenter;
 

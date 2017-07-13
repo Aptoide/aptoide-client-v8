@@ -14,17 +14,21 @@ import rx.Single;
 public class RealmTransactionPersistence implements TransactionPersistence {
 
   private final Database realm;
-  private final TransactionFactory transactionMapper;
+  private final TransactionMapper transactionMapper;
+  private final TransactionFactory transactionFactory;
 
-  public RealmTransactionPersistence(Database realm, TransactionFactory transactionMapper) {
+  public RealmTransactionPersistence(Database realm, TransactionMapper transactionMapper,
+      TransactionFactory transactionFactory) {
     this.realm = realm;
     this.transactionMapper = transactionMapper;
+    this.transactionFactory = transactionFactory;
   }
 
   @Override public Single<Transaction> createTransaction(int productId, String metadata,
       Transaction.Status status, String payerId, int paymentMethodId) {
     final Transaction transaction =
-        transactionMapper.create(productId, status, payerId, paymentMethodId, metadata);
+        transactionFactory.create(productId, payerId, status, paymentMethodId, metadata, null,
+            null, null);
     return saveTransaction(transaction).andThen(Single.just(transaction));
   }
 
@@ -36,7 +40,9 @@ public class RealmTransactionPersistence implements TransactionPersistence {
         .flatMap(query -> realm.findAsList(query))
         .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
             .map(paymentConfirmation -> transactionMapper.map(paymentConfirmation))
-            .defaultIfEmpty(transactionMapper.createNewTransaction(productId, payerId)));
+            .defaultIfEmpty(
+                transactionFactory.create(productId, payerId, Transaction.Status.NEW, -1, null,
+                    null, null, null)));
   }
 
   @Override public Completable removeTransaction(int productId) {

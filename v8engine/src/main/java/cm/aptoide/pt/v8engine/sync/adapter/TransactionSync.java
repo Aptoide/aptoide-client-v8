@@ -7,13 +7,16 @@ package cm.aptoide.pt.v8engine.sync.adapter;
 
 import android.content.SyncResult;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.LocalTransaction;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Transaction;
 import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.TransactionService;
-import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPalTransaction;
-import java.io.IOException;
+import java.net.HttpRetryException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import org.apache.http.conn.ConnectTimeoutException;
 import rx.Observable;
 import rx.Single;
 
@@ -37,7 +40,7 @@ public class TransactionSync extends ScheduledSync {
   @Override public void sync(SyncResult syncResult) {
     try {
       payer.getId()
-          .flatMapObservable(payerId -> syncPayPalTransaction(payerId).switchIfEmpty(
+          .flatMapObservable(payerId -> syncLocalTransaction(payerId).switchIfEmpty(
               syncTransaction(payerId).toObservable())
               .doOnNext(transaction -> {
                 analytics.sendPurchaseStatusEvent(transaction, product);
@@ -54,15 +57,15 @@ public class TransactionSync extends ScheduledSync {
     }
   }
 
-  public Observable<Transaction> syncPayPalTransaction(String payerId) {
+  public Observable<Transaction> syncLocalTransaction(String payerId) {
     return transactionPersistence.getTransaction(product.getId(), payerId)
         .first()
         .filter(transaction -> transaction.isPending())
-        .filter(transaction -> transaction instanceof PayPalTransaction)
-        .cast(PayPalTransaction.class)
-        .flatMapSingle(payPalTransaction -> transactionService.createTransaction(product,
-            payPalTransaction.getPaymentMethodId(), payPalTransaction.getPayerId(),
-            payPalTransaction.getPayPalConfirmationId())
+        .filter(transaction -> transaction instanceof LocalTransaction)
+        .cast(LocalTransaction.class)
+        .flatMapSingle(localTransaction -> transactionService.createTransaction(product,
+            localTransaction.getPaymentMethodId(), localTransaction.getPayerId(),
+            localTransaction.getLocalMetadata())
             .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
                 .andThen(Single.just(transaction))));
   }
@@ -80,7 +83,10 @@ public class TransactionSync extends ScheduledSync {
   }
 
   private void rescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
-    if (throwable instanceof IOException) {
+    if (throwable instanceof UnknownHostException
+        || throwable instanceof ConnectTimeoutException
+        || throwable instanceof SocketTimeoutException
+        || throwable instanceof HttpRetryException) {
       analytics.sendPurchaseNetworkRetryEvent(product);
       rescheduleSync(syncResult);
     }

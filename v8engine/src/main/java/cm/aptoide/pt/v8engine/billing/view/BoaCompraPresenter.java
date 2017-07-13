@@ -137,7 +137,7 @@ public class BoaCompraPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popAuthorizedPaymentView())
+        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

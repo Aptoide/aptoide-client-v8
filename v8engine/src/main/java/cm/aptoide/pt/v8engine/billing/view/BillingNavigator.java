@@ -8,6 +8,7 @@ import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompra;
+import cm.aptoide.pt.v8engine.billing.methods.braintree.BraintreeCreditCard;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolPoints;
 import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPal;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
@@ -38,7 +39,8 @@ public class BillingNavigator {
   public void navigateToTransactionAuthorizationView(PaymentMethod paymentMethod, Product product) {
 
     if (paymentMethod instanceof PayPal) {
-      fragmentNavigator.navigateTo(PayPalFragment.create(getProductBundle(product)));
+      fragmentNavigator.navigateTo(
+          PayPalFragment.create(getProductBundle(product), paymentMethod.getId()));
       return;
     }
 
@@ -52,16 +54,17 @@ public class BillingNavigator {
           BoaCompraFragment.create(getProductBundle(product), paymentMethod.getId()));
     }
 
+    if (paymentMethod instanceof BraintreeCreditCard) {
+      fragmentNavigator.navigateTo(
+          BraintreeCreditCardFragment.create(getProductBundle(product), paymentMethod.getId()));
+    }
+
     throw new IllegalArgumentException("Invalid payment method id "
         + paymentMethod.getId()
         + " can not navigate to authorization view");
   }
 
-  public void popAuthorizedPaymentView() {
-    fragmentNavigator.popBackStack();
-  }
-
-  public void popLocalPaymentView() {
+  public void popTransactionAuthorizationView() {
     fragmentNavigator.popBackStack();
   }
 

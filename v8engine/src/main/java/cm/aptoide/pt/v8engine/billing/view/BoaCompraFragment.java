@@ -11,7 +11,7 @@ import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 
 public class BoaCompraFragment extends WebViewFragment implements WebView {
 
-  public static final String EXTRA_PAYMENT_ID =
+  private static final String EXTRA_PAYMENT_ID =
       "cm.aptoide.pt.v8engine.view.payment.intent.extra.PAYMENT_ID";
 
   private Billing billing;

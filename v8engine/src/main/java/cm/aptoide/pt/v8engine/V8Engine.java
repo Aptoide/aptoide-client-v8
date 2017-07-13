@@ -94,9 +94,11 @@ import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
+import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.RealmTransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.TransactionFactory;
+import cm.aptoide.pt.v8engine.billing.TransactionMapper;
 import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.TransactionService;
 import cm.aptoide.pt.v8engine.billing.V3TransactionService;
@@ -105,7 +107,6 @@ import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingProductRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaidAppProductRepository;
-import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
@@ -201,9 +202,6 @@ import rx.schedulers.Schedulers;
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
-/**
- * Created by neuro on 14-04-2016.
- */
 public abstract class V8Engine extends Application {
 
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
@@ -264,7 +262,8 @@ public abstract class V8Engine extends Application {
   private TransactionPersistence transactionPersistence;
   private Database database;
   private TransactionFactory transactionFactory;
-  private V3TransactionService transactionService;
+  private TransactionService v3TransactionService;
+  private TransactionMapper transactionMapper;
 
   /**
    * call after this instance onCreate()
@@ -796,13 +795,20 @@ public abstract class V8Engine extends Application {
   }
 
   public TransactionService getV3TransactionService() {
-    if (transactionService == null) {
-      transactionService =
-          new V3TransactionService(getTransactionFactory(), getBaseBodyInterceptorV3(),
+    if (v3TransactionService == null) {
+      v3TransactionService =
+          new V3TransactionService(getTransactionMapper(), getBaseBodyInterceptorV3(),
               WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-              getDefaultSharedPreferences());
+              getDefaultSharedPreferences(), getTransactionFactory());
     }
-    return transactionService;
+    return v3TransactionService;
+  }
+
+  public TransactionMapper getTransactionMapper() {
+    if (transactionMapper == null) {
+      transactionMapper = new TransactionMapper(getTransactionFactory());
+    }
+    return transactionMapper;
   }
 
   public TransactionFactory getTransactionFactory() {
@@ -815,7 +821,8 @@ public abstract class V8Engine extends Application {
   public TransactionPersistence getTransactionPersistence() {
     if (transactionPersistence == null) {
       transactionPersistence =
-          new RealmTransactionPersistence(getDatabase(), getTransactionFactory());
+          new RealmTransactionPersistence(getDatabase(), getTransactionMapper(),
+              getTransactionFactory());
     }
     return transactionPersistence;
   }

@@ -18,6 +18,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class PayPalFragment extends PermissionServiceFragment implements PayPalView {
 
+  private static final String EXTRA_PAYMENT_ID =
+      "cm.aptoide.pt.v8engine.billing.view.extra.PAYMENT_ID";
   private ProgressBar progressBar;
   private RxAlertDialog unknownErrorDialog;
   private RxAlertDialog networkErrorDialog;
@@ -25,9 +27,11 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
   private Billing billing;
   private ProductProvider productProvider;
   private BillingAnalytics billingAnalytics;
+  private int paymentId;
 
-  public static Fragment create(Bundle bundle) {
+  public static Fragment create(Bundle bundle, int paymentId) {
     final PayPalFragment fragment = new PayPalFragment();
+    bundle.putInt(EXTRA_PAYMENT_ID, paymentId);
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -37,6 +41,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     productProvider = ProductProvider.fromBundle(billing, getArguments());
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
+    paymentId = getArguments().getInt(EXTRA_PAYMENT_ID);
   }
 
   @Nullable @Override
@@ -59,9 +64,9 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
             .build();
 
     attachPresenter(new PayPalPresenter(this, billing, productProvider, billingAnalytics,
-            new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-                getActivityNavigator(), getFragmentNavigator()), AndroidSchedulers.mainThread()),
-        savedInstanceState);
+        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+            getActivityNavigator(), getFragmentNavigator()), AndroidSchedulers.mainThread(),
+        paymentId), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

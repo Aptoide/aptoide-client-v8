@@ -5,7 +5,8 @@ import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import rx.Observable;
 
-public class TabNavigatorActivity extends LoginBottomSheetActivity implements TabNavigator {
+public abstract class TabNavigatorActivity extends LoginBottomSheetActivity
+    implements TabNavigator {
 
   private BehaviorRelay<TabNavigation> navigatorSubject;
 

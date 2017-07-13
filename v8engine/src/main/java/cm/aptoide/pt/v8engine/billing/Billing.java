@@ -7,11 +7,11 @@ package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
-import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
 import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompra;
+import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
+import cm.aptoide.pt.v8engine.billing.methods.braintree.BraintreeCreditCard;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolPoints;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolTransaction;
-import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPal;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
@@ -109,16 +109,12 @@ public class Billing {
         payment -> payment.process(product));
   }
 
-  public Completable processPayPalPayment(Product product, String payPalConfirmationId) {
-    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
-        .filter(payment -> payment instanceof PayPal)
-        .first()
-        .cast(PayPal.class)
-        .toSingle()
-        .flatMapCompletable(payment -> payment.processLocal(product, payPalConfirmationId));
+  public Completable processLocalPayment(int paymentId, Product product, String localMetadata) {
+    return getPaymentMethod(paymentId, product).flatMapCompletable(
+        payment -> ((LocalPaymentMethod) payment).processLocal(product, localMetadata));
   }
 
-  public Observable<Transaction> getTransaction(Product product) {
+  public Observable<? extends Transaction> getTransaction(Product product) {
     return transactionRepository.getTransaction(product)
         .distinctUntilChanged(transaction -> transaction.getStatus());
   }

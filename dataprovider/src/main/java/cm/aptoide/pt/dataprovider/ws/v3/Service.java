@@ -53,7 +53,7 @@ public interface Service {
   Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-  @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createTransaction(
+  @POST("payProduct") @FormUrlEncoded Observable<TransactionResponse> createTransaction(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("createPurchaseAuthorization") @FormUrlEncoded

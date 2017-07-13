@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
@@ -57,9 +56,5 @@ public abstract class AnalyticsActivity extends PermissionProviderActivity {
   @Override protected void onStop() {
     super.onStop();
     Analytics.Lifecycle.Activity.onStop(this);
-  }
-
-  @Override protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
   }
 }

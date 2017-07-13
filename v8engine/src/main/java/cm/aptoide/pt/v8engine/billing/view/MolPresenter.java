@@ -73,7 +73,7 @@ public class MolPresenter implements Presenter {
             .doOnNext(backToStorePressed -> view.showLoading())
             .flatMapSingle(loading -> productProvider.getProduct())
             .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product))
-            .doOnNext(sent -> navigator.popLocalPaymentView()))
+            .doOnNext(sent -> navigator.popTransactionAuthorizationView()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -115,7 +115,7 @@ public class MolPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popLocalPaymentView())
+        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

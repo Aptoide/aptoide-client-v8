@@ -6,13 +6,13 @@
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical"
+    android:theme="@style/AptoideThemeDefault"
     >
 
   <ProgressBar
       android:id="@+id/fragment_paypal_progress_bar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:theme="@style/AptoideThemeDefault"
       android:visibility="gone"
       tools:visibility="visible"
       />

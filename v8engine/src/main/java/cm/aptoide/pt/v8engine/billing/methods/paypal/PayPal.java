@@ -5,14 +5,14 @@
 
 package cm.aptoide.pt.v8engine.billing.methods.paypal;
 
-import cm.aptoide.pt.v8engine.billing.PaymentMethod;
+import cm.aptoide.pt.v8engine.billing.LocalPaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import rx.Completable;
 
-public class PayPal implements PaymentMethod {
+public class PayPal implements LocalPaymentMethod {
 
   private final int id;
   private final String name;
@@ -55,8 +55,8 @@ public class PayPal implements PaymentMethod {
         });
   }
 
-  public Completable processLocal(Product product, String payPalConfirmationId) {
-    return transactionRepository.createTransaction(getId(), product, payPalConfirmationId)
+  @Override public Completable processLocal(Product product, String localMetadata) {
+    return transactionRepository.createTransaction(getId(), product, localMetadata)
         .toCompletable();
   }
 }

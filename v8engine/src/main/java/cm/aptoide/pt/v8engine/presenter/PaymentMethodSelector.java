@@ -28,7 +28,7 @@ public class PaymentMethodSelector {
     return getSelectedPaymentMethodId().flatMap(
         selectedPaymentId -> paymentMethod(paymentMethods, selectedPaymentId).switchIfEmpty(
             paymentMethod(paymentMethods, defaultPaymentId))
-            .switchIfEmpty(Observable.error(new IllegalStateException("No payment selected.")))
+            .switchIfEmpty(Observable.just(paymentMethods.get(0)))
             .toSingle());
   }
 
@@ -40,13 +40,13 @@ public class PaymentMethodSelector {
   }
 
   private Single<Integer> getSelectedPaymentMethodId() {
-    return Single.fromCallable(() -> preferences.getInt(SELECTED_PAYMENT_ID, 0))
+    return Single.fromCallable(() -> preferences.getInt(SELECTED_PAYMENT_ID, -1))
         .subscribeOn(Schedulers.io());
   }
 
   private Observable<PaymentMethod> paymentMethod(List<PaymentMethod> paymentMethods,
       int paymentId) {
     return Observable.from(paymentMethods)
-        .filter(payment -> paymentId != 0 && paymentId == payment.getId());
+        .filter(payment -> paymentId != -1 && paymentId == payment.getId());
   }
 }
