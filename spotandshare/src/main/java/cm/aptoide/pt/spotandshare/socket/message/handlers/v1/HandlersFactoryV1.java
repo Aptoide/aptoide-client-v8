@@ -15,7 +15,6 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
-import cm.aptoide.pt.spotandshare.socket.message.messages.v1.AckMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
@@ -63,7 +62,7 @@ public class HandlersFactoryV1 {
       shareAppsFileServerSocket.setTransferLifecycle(sendApkMessage.getAndroidAppInfo(),
           fileLifecycleProvider.newFileServerLifecycle());
       shareAppsFileServerSocket.startAsync();
-      messageSender.send(new AckMessage(messageSender.getHost()));
+      sendAck(messageSender);
       // TODO: 03-02-2017 neuro maybe a good ideia to stop the server somewhat :)
     }
   }
@@ -126,9 +125,7 @@ public class HandlersFactoryV1 {
         }
       });
 
-      AckMessage ackMessage = new AckMessage(messageSender.getHost());
-      ackMessage.setSuccess(false);
-      messageSender.send(ackMessage);
+      sendAck(messageSender, false);
     }
   }
 
@@ -143,7 +140,7 @@ public class HandlersFactoryV1 {
 
     @Override public void handleMessage(ExitMessage message, Sender<Message> messageSender) {
       aptoideMessageServerSocket.removeHost(message.getLocalHost());
-      messageSender.send(new AckMessage(messageSender.getHost()));
+      sendAck(messageSender);
     }
   }
 
@@ -157,7 +154,7 @@ public class HandlersFactoryV1 {
     }
 
     @Override public void handleMessage(HostLeftMessage message, Sender<Message> messageSender) {
-      messageSender.send(new AckMessage(messageSender.getHost()));
+      sendAck(messageSender);
     }
   }
 
@@ -172,7 +169,7 @@ public class HandlersFactoryV1 {
 
     @Override public void handleMessage(ServerLeftMessage message, Sender<Message> messageSender) {
       aptoideMessageClientSocket.serverLeft();
-      messageSender.send(new AckMessage(messageSender.getHost()));
+      sendAck(messageSender);
       aptoideMessageClientSocket.shutdown();
     }
   }
@@ -187,7 +184,7 @@ public class HandlersFactoryV1 {
     }
 
     @Override public void handleMessage(WelcomeMessage message, Sender<Message> messageSender) {
-      messageSender.send(new AckMessage(messageSender.getHost(), true));
+      sendAck(messageSender);
       aptoideMessageServerSocket.onNewFriend(message.getFriend(), message.getLocalHost());
     }
   }
