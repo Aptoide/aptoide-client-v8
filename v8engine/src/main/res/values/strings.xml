@@ -308,8 +308,8 @@
   <string name="social_timeline_recommends">توصیه می‌کند</string>
   <string name="private_profile_create_store">با ساخت یک فروشگاه، پروفایل خود را شخصی کنید</string>
   <string name="social_timeline_shared_by">به اشتراک گذاشته شده توسط %1$s</string>
-  <string name="social_timeline_who_liked">Who liked</string>
-  <string name="social_timeline_users_private">%d are private</string>
+  <string name="social_timeline_who_liked">کسانی که لایک کرده‌اند</string>
+  <string name="social_timeline_users_private">%d خصوصی هستند</string>
 
   <string name="edit_store">ویرایش</string>
 
@@ -332,9 +332,9 @@
   <string name="comment_store_title">نظرهای کاربران درباره این فروشگاه</string>
   <string name="remote_install_help_url">http://blog.aptoide.com/remote-tv-install</string>
 
-  <string name="reviews_expand_button">%d Replies</string>
-  <string name="out_of_space_dialog_title">Out of space</string>
-  <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
+  <string name="reviews_expand_button">%d پاسخ‌ها</string>
+  <string name="out_of_space_dialog_title">حجم حافظه‌ی دستگاه شما کافی نیست</string>
+  <string name="out_of_space_dialog_message">برای ادامه کار، باید بخشی از حافظه دستگاه خود را پاک کنید.</string>
 
   <string name="languages">Languages</string>
   <string name="language_dialog">Select a language</string>

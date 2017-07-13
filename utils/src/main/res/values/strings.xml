@@ -19,7 +19,7 @@
   <string name="more_info">اطلاعات بیش‌تر</string>
 
   <!-- Share options -->
-  <string name="share_options_share_external">Share via...</string>
-  <string name="share_options_share_in_timeline">Share in Apps Timeline</string>
+  <string name="share_options_share_external">اشتراک گذاری از طریق...</string>
+  <string name="share_options_share_in_timeline">اشتراک گذاری در خط زمانی اپلیکیشن ها</string>
 
 </resources>
