@@ -21,6 +21,8 @@ public class FriendsManager {
   public FriendsManager() {
     this.map = new HashMap<>();
     this.behaviorRelay = BehaviorRelay.create();
+
+    behaviorRelay.call(Collections.emptyList());
   }
 
   public void addFriend(Friend friend, Host host) {
