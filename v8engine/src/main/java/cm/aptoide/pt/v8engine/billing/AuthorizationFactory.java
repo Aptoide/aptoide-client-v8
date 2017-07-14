@@ -5,36 +5,45 @@
 
 package cm.aptoide.pt.v8engine.billing;
 
+import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationResponse;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
-import cm.aptoide.pt.v8engine.billing.Authorization;
 import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AuthorizationFactory {
 
-  public Authorization create(int paymentId, Authorization.Status status, String payerId) {
-    return new BoaCompraAuthorization(paymentId, "", "", status, payerId);
+  public Authorization create(int paymentMethodId, Authorization.Status status, String payerId,
+      String url, String redirectUrl) {
+    switch (paymentMethodId) {
+      case PaymentMethodMapper.BOA_COMPRA:
+      case PaymentMethodMapper.BOA_COMPRA_GOLD:
+        return new BoaCompraAuthorization(paymentMethodId, url, redirectUrl, status, payerId);
+      case PaymentMethodMapper.PAYPAL:
+      case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
+      case PaymentMethodMapper.MOL_POINTS:
+      case PaymentMethodMapper.SANDBOX:
+      default:
+        return new Authorization(paymentMethodId, payerId, status);
+    }
   }
 
-  public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
-      Authorization authorization) {
+  public cm.aptoide.pt.database.realm.PaymentAuthorization map(Authorization authorization) {
     return new cm.aptoide.pt.database.realm.PaymentAuthorization(authorization.getPaymentId(),
         ((BoaCompraAuthorization) authorization).getUrl(),
         ((BoaCompraAuthorization) authorization).getRedirectUrl(), authorization.getStatus()
         .name(), authorization.getPayerId());
   }
 
-  public Authorization convertToPaymentAuthorization(
-      cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return new BoaCompraAuthorization(paymentAuthorization.getPaymentId(),
-        paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
+  public Authorization map(cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
+    return create(paymentAuthorization.getPaymentId(),
         Authorization.Status.valueOf(paymentAuthorization.getStatus()),
-        paymentAuthorization.getPayerId());
+        paymentAuthorization.getPayerId(), paymentAuthorization.getUrl(),
+        paymentAuthorization.getRedirectUrl());
   }
 
-  public List<Authorization> convertToPaymentAuthorizations(PaymentAuthorizationsResponse response,
-      String payerId, int paymentId) {
+  public List<Authorization> map(PaymentAuthorizationsResponse response, String payerId,
+      int paymentId) {
 
     final List<Authorization> authorizations = new ArrayList<>();
     if (response != null
@@ -43,14 +52,29 @@ public class AuthorizationFactory {
         && !response.getAuthorizations()
         .isEmpty()) {
 
-      for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse authorizationResponse : response.getAuthorizations()) {
-        authorizations.add(convertToPaymentAuthorization(authorizationResponse, payerId));
+      for (PaymentAuthorizationResponse authorizationResponse : response.getAuthorizations()) {
+        authorizations.add(create(authorizationResponse.getPaymentId(),
+            Authorization.Status.valueOf(authorizationResponse.getAuthorizationStatus()), payerId,
+            authorizationResponse.getUrl(), authorizationResponse.getSuccessUrl()));
       }
     } else {
-      authorizations.add(create(paymentId, getStatus(response), payerId));
+      authorizations.add(create(paymentId, getStatus(response), payerId, "", ""));
     }
 
     return authorizations;
+  }
+
+  public Authorization map(PaymentAuthorizationResponse response,
+      String payerId, int paymentId) {
+
+    if (response != null && response.isOk()) {
+
+      return create(response.getPaymentId(),
+          Authorization.Status.valueOf(response.getAuthorizationStatus()), payerId,
+          response.getUrl(), response.getSuccessUrl());
+    } else {
+      return create(paymentId, Authorization.Status.UNKNOWN_ERROR, payerId, "", "");
+    }
   }
 
   private Authorization.Status getStatus(PaymentAuthorizationsResponse response) {
@@ -61,13 +85,5 @@ public class AuthorizationFactory {
     }
 
     return Authorization.Status.UNKNOWN_ERROR;
-  }
-
-  private Authorization convertToPaymentAuthorization(
-      PaymentAuthorizationsResponse.PaymentAuthorizationResponse response, String payerId) {
-
-    return new BoaCompraAuthorization(response.getPaymentId(), response.getUrl(),
-        response.getSuccessUrl(), Authorization.Status.valueOf(response.getAuthorizationStatus()),
-        payerId);
   }
 }

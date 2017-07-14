@@ -29,6 +29,7 @@ public class PaymentMethodSelector {
         selectedPaymentId -> paymentMethod(paymentMethods, selectedPaymentId).switchIfEmpty(
             paymentMethod(paymentMethods, defaultPaymentId))
             .switchIfEmpty(Observable.just(paymentMethods.get(0)))
+            .first()
             .toSingle());
   }
 

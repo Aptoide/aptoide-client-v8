@@ -9,7 +9,6 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
 import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompra;
 import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
-import cm.aptoide.pt.v8engine.billing.methods.braintree.BraintreeCreditCard;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolPoints;
 import cm.aptoide.pt.v8engine.billing.methods.mol.MolTransaction;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
@@ -91,17 +90,20 @@ public class Billing {
         .toSingle();
   }
 
-  public Completable processBoaCompraPayment(Product product) {
-    return getBoaCompraPaymentMethod(product).flatMapCompletable(
-        payment -> payment.processAuthorized(product));
+  public Completable processBoaCompraPayment(int paymentMethodId, Product product) {
+    return getPaymentMethod(paymentMethodId, product).flatMapCompletable(
+        payment -> ((BoaCompra) payment).processAuthorized(product));
   }
 
-  public Single<BoaCompraAuthorization> getBoaCompraAuthorization(Product product) {
-    return getBoaCompraPaymentMethod(product).flatMap(payment -> payment.getAuthorization());
+  public Single<BoaCompraAuthorization> getBoaCompraAuthorization(int paymentMethodId,
+      Product product) {
+    return getPaymentMethod(paymentMethodId, product).flatMap(
+        payment -> ((BoaCompra) payment).getAuthorization());
   }
 
-  public Single<MolTransaction> getMolTransaction(Product product) {
-    return getMolPaymentMethod(product).flatMap(payment -> payment.getTransaction(product));
+  public Single<MolTransaction> getMolTransaction(int paymentMethodId, Product product) {
+    return getPaymentMethod(paymentMethodId, product).flatMap(
+        payment -> ((MolPoints) payment).getTransaction(product));
   }
 
   public Completable processPayment(int paymentId, Product product) {
@@ -114,7 +116,7 @@ public class Billing {
         payment -> ((LocalPaymentMethod) payment).processLocal(product, localMetadata));
   }
 
-  public Observable<? extends Transaction> getTransaction(Product product) {
+  public Observable<Transaction> getTransaction(Product product) {
     return transactionRepository.getTransaction(product)
         .distinctUntilChanged(transaction -> transaction.getStatus());
   }
@@ -129,21 +131,5 @@ public class Billing {
           }
           return Single.error(throwable);
         });
-  }
-
-  private Single<BoaCompra> getBoaCompraPaymentMethod(Product product) {
-    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
-        .filter(payment -> payment instanceof BoaCompra)
-        .first()
-        .cast(BoaCompra.class)
-        .toSingle();
-  }
-
-  private Single<MolPoints> getMolPaymentMethod(Product product) {
-    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments))
-        .filter(payment -> payment instanceof MolPoints)
-        .first()
-        .cast(MolPoints.class)
-        .toSingle();
   }
 }

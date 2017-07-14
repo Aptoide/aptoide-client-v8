@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationResponse;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
@@ -50,15 +51,15 @@ public interface Service {
   Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
 
   @POST("productPurchaseAuthorization") @FormUrlEncoded
-  Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args,
-      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+  Observable<PaymentAuthorizationResponse> createPaymentAuthorizationWithCode(
+      @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("payProduct") @FormUrlEncoded Observable<TransactionResponse> createTransaction(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("createPurchaseAuthorization") @FormUrlEncoded
-  Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args,
-      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+  Observable<PaymentAuthorizationResponse> createPaymentAuthorization(
+      @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

@@ -11,25 +11,25 @@ import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 
 public class BoaCompraFragment extends WebViewFragment implements WebView {
 
-  private static final String EXTRA_PAYMENT_ID =
-      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PAYMENT_ID";
+  private static final String EXTRA_PAYMENT_METHOD_ID =
+      "cm.aptoide.pt.v8engine.billing.view.extra.PAYMENT_METHOD_ID";
 
   private Billing billing;
   private BillingAnalytics billingAnalytics;
   private BillingSyncScheduler billingSyncScheduler;
   private ProductProvider productProvider;
-  private int paymentId;
+  private int paymentMethodId;
 
-  public static Fragment create(Bundle bundle, int paymentId) {
+  public static Fragment create(Bundle bundle, int paymentMethodId) {
     final BoaCompraFragment fragment = new BoaCompraFragment();
-    bundle.putInt(EXTRA_PAYMENT_ID, paymentId);
+    bundle.putInt(EXTRA_PAYMENT_METHOD_ID, paymentMethodId);
     fragment.setArguments(bundle);
     return fragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    paymentId = getArguments().getInt(BoaCompraFragment.EXTRA_PAYMENT_ID);
+    paymentMethodId = getArguments().getInt(BoaCompraFragment.EXTRA_PAYMENT_METHOD_ID);
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     billingSyncScheduler =
@@ -42,6 +42,6 @@ public class BoaCompraFragment extends WebViewFragment implements WebView {
     attachPresenter(new BoaCompraPresenter(this, billing, billingAnalytics, billingSyncScheduler,
         productProvider,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator()), paymentId), savedInstanceState);
+            getActivityNavigator(), getFragmentNavigator()), paymentMethodId), savedInstanceState);
   }
 }

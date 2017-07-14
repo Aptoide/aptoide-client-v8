@@ -5,77 +5,40 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import android.content.SharedPreferences;
-import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Authorization;
-import cm.aptoide.pt.v8engine.billing.AuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.AuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
-import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public class AuthorizationRepository {
 
-  private final PaymentAuthorizationAccessor authotizationAccessor;
-  private final BillingSyncScheduler backgroundSync;
-  private final AuthorizationFactory authorizationFactory;
-  private final BodyInterceptor<BaseBody> bodyInterceptorV3;
-  private final OkHttpClient httpClient;
-  private final Converter.Factory converterFactory;
+  private final BillingSyncScheduler syncScheduler;
   private final Payer payer;
-  private final TokenInvalidator tokenInvalidator;
-  private final SharedPreferences sharedPreferences;
+  private final AuthorizationService authorizationService;
+  private final AuthorizationPersistence authorizationPersistence;
 
-  public AuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
-      BillingSyncScheduler backgroundSync, AuthorizationFactory authorizationFactory,
-      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, Payer payer, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    this.authotizationAccessor = authorizationAccessor;
-    this.backgroundSync = backgroundSync;
-    this.authorizationFactory = authorizationFactory;
-    this.bodyInterceptorV3 = bodyInterceptorV3;
-    this.httpClient = httpClient;
-    this.converterFactory = converterFactory;
+  public AuthorizationRepository(BillingSyncScheduler syncScheduler, Payer payer,
+      AuthorizationService authorizationService,
+      AuthorizationPersistence authorizationPersistence) {
+    this.authorizationPersistence = authorizationPersistence;
+    this.syncScheduler = syncScheduler;
+    this.authorizationService = authorizationService;
     this.payer = payer;
-    this.tokenInvalidator = tokenInvalidator;
-    this.sharedPreferences = sharedPreferences;
   }
 
-  public Completable createAuthorization(int paymentId) {
-    return CreatePaymentAuthorizationRequest.of(paymentId, bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Observable.just(null);
-          }
-          return Observable.<Void>error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        })
-        .toCompletable()
-        .andThen(syncAuthorization(paymentId));
+  public Single<Authorization> createAuthorization(int paymentId) {
+    return payer.getId()
+        .flatMap(payerId -> authorizationService.createAuthorization(payerId, paymentId)
+            .flatMap(authorization -> authorizationPersistence.saveAuthorization(authorization)
+                .andThen(Single.just(authorization))));
   }
 
   public Observable<Authorization> getAuthorization(int paymentId) {
     return payer.getId()
-        .flatMapObservable(
-            payerId -> authotizationAccessor.getPaymentAuthorization(payerId, paymentId))
-        .flatMap(authorizations -> Observable.from(authorizations)
-            .map(paymentAuthorization -> authorizationFactory.convertToPaymentAuthorization(
-                paymentAuthorization))
-            .switchIfEmpty(syncAuthorization(paymentId).toObservable()));
-  }
-
-  private Completable syncAuthorization(int paymentId) {
-    return backgroundSync.scheduleAuthorizationSync(paymentId);
+        .flatMapObservable(payerId -> syncScheduler.scheduleAuthorizationSync(paymentId)
+            .andThen(authorizationPersistence.getAuthorization(paymentId, payerId)));
   }
 }

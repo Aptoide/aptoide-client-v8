@@ -17,18 +17,18 @@ public class BraintreePresenter implements Presenter {
   private final Billing billing;
   private final BillingNavigator navigator;
   private final Scheduler viewScheduler;
-  private final int paymentId;
+  private final int paymentMethodId;
 
   public BraintreePresenter(BraintreeCreditCardView view, Braintree braintree,
       ProductProvider productProvider, Billing billing, BillingNavigator navigator,
-      Scheduler viewScheduler, int paymentId) {
+      Scheduler viewScheduler, int paymentMethodId) {
     this.view = view;
     this.braintree = braintree;
     this.productProvider = productProvider;
     this.billing = billing;
     this.navigator = navigator;
     this.viewScheduler = viewScheduler;
-    this.paymentId = paymentId;
+    this.paymentMethodId = paymentMethodId;
   }
 
   @Override public void present() {
@@ -83,7 +83,7 @@ public class BraintreePresenter implements Presenter {
             .flatMapCompletable(product -> {
               switch (nonce.getStatus()) {
                 case Braintree.NonceResult.SUCCESS:
-                  return billing.processLocalPayment(paymentId, product, nonce.getNonce())
+                  return billing.processLocalPayment(paymentMethodId, product, nonce.getNonce())
                       .observeOn(viewScheduler)
                       .doOnCompleted(() -> {
                         view.hideLoading();

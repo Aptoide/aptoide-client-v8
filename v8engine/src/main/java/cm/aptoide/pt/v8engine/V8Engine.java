@@ -42,7 +42,6 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
-import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -90,17 +89,21 @@ import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.AuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.AuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.PurchaseFactory;
+import cm.aptoide.pt.v8engine.billing.RealmAuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.RealmTransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.TransactionMapper;
 import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.TransactionService;
+import cm.aptoide.pt.v8engine.billing.V3AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.V3TransactionService;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
@@ -259,11 +262,13 @@ public abstract class V8Engine extends Application {
   private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   private AdsRepository adsRepository;
   private ABTestManager abTestManager;
-  private TransactionPersistence transactionPersistence;
+  private TransactionPersistence realmTransactionPersistence;
   private Database database;
   private TransactionFactory transactionFactory;
   private TransactionService v3TransactionService;
   private TransactionMapper transactionMapper;
+  private AuthorizationService v3AuthorizationService;
+  private AuthorizationPersistence realmAuthorizationPersistence;
 
   /**
    * call after this instance onCreate()
@@ -765,7 +770,7 @@ public abstract class V8Engine extends Application {
     if (billing == null) {
 
       final TransactionRepository transactionRepository =
-          new TransactionRepository(getTransactionPersistence(), getBillingSyncScheduler(),
+          new TransactionRepository(getRealmTransactionPersistence(), getBillingSyncScheduler(),
               getAccountPayer(), getV3TransactionService());
 
       final ProductFactory productFactory = new ProductFactory();
@@ -774,11 +779,8 @@ public abstract class V8Engine extends Application {
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
 
       final PaymentMethodMapper paymentMethodMapper = new PaymentMethodMapper(transactionRepository,
-          new AuthorizationRepository(AccessorFactory.getAccessorFor(
-              ((V8Engine) this.getApplicationContext()).getDatabase(), PaymentAuthorization.class),
-              getBillingSyncScheduler(), getAuthorizationFactory(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer(),
-              getTokenInvalidator(), getDefaultSharedPreferences()));
+          new AuthorizationRepository(getBillingSyncScheduler(), getAccountPayer(),
+              getV3AuthorizationService(), getRealmAuthorizationPersistence()));
 
       final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
           new PaidAppProductRepository(purchaseFactory, paymentMethodMapper,
@@ -794,6 +796,14 @@ public abstract class V8Engine extends Application {
     return billing;
   }
 
+  public AuthorizationPersistence getRealmAuthorizationPersistence() {
+    if (realmAuthorizationPersistence == null) {
+      realmAuthorizationPersistence =
+          new RealmAuthorizationPersistence(getDatabase(), getAuthorizationFactory());
+    }
+    return realmAuthorizationPersistence;
+  }
+
   public TransactionService getV3TransactionService() {
     if (v3TransactionService == null) {
       v3TransactionService =
@@ -802,6 +812,16 @@ public abstract class V8Engine extends Application {
               getDefaultSharedPreferences(), getTransactionFactory());
     }
     return v3TransactionService;
+  }
+
+  public AuthorizationService getV3AuthorizationService() {
+    if (v3AuthorizationService == null) {
+      v3AuthorizationService =
+          new V3AuthorizationService(getAuthorizationFactory(), getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences());
+    }
+    return v3AuthorizationService;
   }
 
   public TransactionMapper getTransactionMapper() {
@@ -818,13 +838,13 @@ public abstract class V8Engine extends Application {
     return transactionFactory;
   }
 
-  public TransactionPersistence getTransactionPersistence() {
-    if (transactionPersistence == null) {
-      transactionPersistence =
+  public TransactionPersistence getRealmTransactionPersistence() {
+    if (realmTransactionPersistence == null) {
+      realmTransactionPersistence =
           new RealmTransactionPersistence(getDatabase(), getTransactionMapper(),
               getTransactionFactory());
     }
-    return transactionPersistence;
+    return realmTransactionPersistence;
   }
 
   public Database getDatabase() {
@@ -880,7 +900,7 @@ public abstract class V8Engine extends Application {
   public InAppBillingRepository getInAppBillingRepository() {
     if (inAppBillingRepository == null) {
       inAppBillingRepository =
-          new InAppBillingRepository(getTransactionPersistence(), getBaseBodyInterceptorV3(),
+          new InAppBillingRepository(getRealmTransactionPersistence(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences());
     }

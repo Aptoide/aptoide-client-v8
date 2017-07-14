@@ -59,7 +59,6 @@ public class BoaCompra implements PaymentMethod {
 
   public Single<BoaCompraAuthorization> getAuthorization() {
     return authorizationRepository.getAuthorization(getId())
-        .cast(BoaCompraAuthorization.class)
         .flatMap(authorization -> {
           if (authorization.isInitialized()) {
             return Observable.just(authorization);
@@ -70,8 +69,10 @@ public class BoaCompra implements PaymentMethod {
           }
 
           return authorizationRepository.createAuthorization(getId())
+              .toCompletable()
               .toObservable();
         })
+        .cast(BoaCompraAuthorization.class)
         .first()
         .toSingle();
   }

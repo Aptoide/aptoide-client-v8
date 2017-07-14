@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing;
 
-public abstract class Authorization {
+public class Authorization {
 
   private final int paymentId;
   private final String payerId;

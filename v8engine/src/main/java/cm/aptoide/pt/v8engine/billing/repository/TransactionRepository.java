@@ -34,6 +34,7 @@ public class TransactionRepository {
     return payer.getId()
         .flatMap(payerId -> transactionService.createTransaction(product, paymentMethodId, payerId))
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
+            .andThen(syncTransaction(product))
             .andThen(Single.just(transaction)));
   }
 

@@ -23,18 +23,18 @@ public class BoaCompraPresenter implements Presenter {
   private final BillingSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
   private final BillingNavigator navigator;
-  private final int paymentId;
+  private final int paymentMethodId;
 
   public BoaCompraPresenter(WebView view, Billing billing, BillingAnalytics analytics,
       BillingSyncScheduler syncScheduler, ProductProvider productProvider,
-      BillingNavigator navigator, int paymentId) {
+      BillingNavigator navigator, int paymentMethodId) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
     this.syncScheduler = syncScheduler;
     this.productProvider = productProvider;
     this.navigator = navigator;
-    this.paymentId = paymentId;
+    this.paymentMethodId = paymentMethodId;
   }
 
   @Override public void present() {
@@ -64,19 +64,22 @@ public class BoaCompraPresenter implements Presenter {
         .flatMapSingle(__ -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(product -> view.showLoading())
-        .flatMapCompletable(product -> billing.getBoaCompraAuthorization(product)
+        .flatMapCompletable(product -> billing.getBoaCompraAuthorization(paymentMethodId, product)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess(authorization -> view.loadWebsite(authorization.getUrl(),
                 authorization.getRedirectUrl()))
-            .flatMapCompletable(__ -> billing.processBoaCompraPayment(product))
+            .flatMapCompletable(__ -> billing.processBoaCompraPayment(paymentMethodId, product))
             .onErrorResumeNext(throwable -> {
               if (throwable instanceof PaymentMethodAlreadyAuthorizedException) {
-                return billing.processBoaCompraPayment(product);
+                return billing.processBoaCompraPayment(paymentMethodId, product);
               }
               return Completable.error(throwable);
             })
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.hideLoading()))
+            .doOnCompleted(() -> {
+              view.hideLoading();
+              navigator.popTransactionAuthorizationView();
+            }))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -95,7 +98,8 @@ public class BoaCompraPresenter implements Presenter {
             .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product)))
         // Optimization to accelerate authorization sync once user interacts with the UI, should
         // be removed once we have a better sync implementation
-        .flatMapCompletable(analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentId))
+        .flatMapCompletable(
+            analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentMethodId))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

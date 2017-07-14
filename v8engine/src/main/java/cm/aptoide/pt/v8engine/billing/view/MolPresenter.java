@@ -14,14 +14,16 @@ public class MolPresenter implements Presenter {
   private final BillingAnalytics analytics;
   private final ProductProvider productProvider;
   private final BillingNavigator navigator;
+  private final int paymentMethodId;
 
   public MolPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      ProductProvider productProvider, BillingNavigator navigator) {
+      ProductProvider productProvider, BillingNavigator navigator, int paymentMethodId) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
     this.productProvider = productProvider;
     this.navigator = navigator;
+    this.paymentMethodId = paymentMethodId;
   }
 
   @Override public void present() {
@@ -51,7 +53,7 @@ public class MolPresenter implements Presenter {
         .flatMapSingle(__ -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(product -> view.showLoading())
-        .flatMapSingle(product -> billing.getMolTransaction(product)
+        .flatMapSingle(product -> billing.getMolTransaction(paymentMethodId, product)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess(transaction -> view.loadWebsite(transaction.getConfirmationUrl(),
                 transaction.getSuccessUrl()))

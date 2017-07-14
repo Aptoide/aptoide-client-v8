@@ -22,18 +22,18 @@ public class PayPalPresenter implements Presenter {
   private final BillingAnalytics analytics;
   private final BillingNavigator billingNavigator;
   private final Scheduler viewScheduler;
-  private final int paymentId;
+  private final int paymentMethodId;
 
   public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
       BillingAnalytics analytics, BillingNavigator billingNavigator, Scheduler viewScheduler,
-      int paymentId) {
+      int paymentMethodId) {
     this.view = view;
     this.billing = billing;
     this.productProvider = productProvider;
     this.analytics = analytics;
     this.billingNavigator = billingNavigator;
     this.viewScheduler = viewScheduler;
-    this.paymentId = paymentId;
+    this.paymentMethodId = paymentMethodId;
   }
 
   @Override public void present() {
@@ -97,7 +97,7 @@ public class PayPalPresenter implements Presenter {
     switch (result.getStatus()) {
       case BillingNavigator.PayPalResult.SUCCESS:
         return productProvider.getProduct()
-            .flatMapCompletable(product -> billing.processLocalPayment(paymentId, product,
+            .flatMapCompletable(product -> billing.processLocalPayment(paymentMethodId, product,
                 result.getPaymentConfirmationId()));
       case BillingNavigator.PayPalResult.CANCELLED:
       case BillingNavigator.PayPalResult.ERROR:

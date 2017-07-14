@@ -9,10 +9,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.database.realm.PaymentAuthorization;
-import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.database.AccessorFactory;
 
 public class AptoideSyncService extends Service {
 
@@ -23,21 +20,14 @@ public class AptoideSyncService extends Service {
     super.onCreate();
     synchronized (lock) {
       if (syncAdapter == null) {
-        syncAdapter = new AptoideSyncAdapter(getApplicationContext(), true, false,
-            ((V8Engine) getApplicationContext()).getAuthorizationFactory(),
-            new ProductBundleMapper(),
-            ((V8Engine) getApplicationContext()).getTransactionPersistence(),
-            AccessorFactory.getAccessorFor(
-                ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
-                PaymentAuthorization.class),
-            ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(),
-            ((V8Engine) getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            ((V8Engine) getApplicationContext()).getBillingAnalytics(),
-            ((V8Engine) getApplicationContext()).getAccountPayer(),
-            ((V8Engine) getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getApplicationContext()).getDefaultSharedPreferences(),
-            ((V8Engine) getApplicationContext()).getV3TransactionService());
+        syncAdapter =
+            new AptoideSyncAdapter(getApplicationContext(), true, false, new ProductBundleMapper(),
+                ((V8Engine) getApplicationContext()).getBillingAnalytics(),
+                ((V8Engine) getApplicationContext()).getAccountPayer(),
+                ((V8Engine) getApplicationContext()).getV3TransactionService(),
+                ((V8Engine) getApplicationContext()).getRealmTransactionPersistence(),
+                ((V8Engine) getApplicationContext()).getV3AuthorizationService(),
+                ((V8Engine) getApplicationContext()).getRealmAuthorizationPersistence());
       }
     }
   }

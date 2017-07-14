@@ -28,8 +28,8 @@ import rx.android.schedulers.AndroidSchedulers;
 public class BraintreeCreditCardFragment extends PermissionServiceFragment
     implements BraintreeCreditCardView {
 
-  private static final String EXTRA_PAYMENT_ID =
-      "cm.aptoide.pt.v8engine.billing.view.extra.PAYMENT_ID";
+  private static final String EXTRA_PAYMENT_METHOD_ID =
+      "cm.aptoide.pt.v8engine.billing.view.extra.PAYMENT_METHOD_ID";
   private Braintree braintree;
   private PublishRelay<CardBuilder> cardBuilderRelay;
   private View progressBar;
@@ -41,9 +41,9 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private Button buyButton;
   private int paymentId;
 
-  public static Fragment create(Bundle bundle, int paymentId) {
+  public static Fragment create(Bundle bundle, int paymentMethodId) {
     final BraintreeCreditCardFragment fragment = new BraintreeCreditCardFragment();
-    bundle.putInt(EXTRA_PAYMENT_ID, paymentId);
+    bundle.putInt(EXTRA_PAYMENT_METHOD_ID, paymentMethodId);
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -62,7 +62,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     cardBuilderRelay = PublishRelay.create();
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     productProvider = ProductProvider.fromBundle(billing, getArguments());
-    paymentId = getArguments().getInt(EXTRA_PAYMENT_ID);
+    paymentId = getArguments().getInt(EXTRA_PAYMENT_METHOD_ID);
   }
 
   @Nullable @Override

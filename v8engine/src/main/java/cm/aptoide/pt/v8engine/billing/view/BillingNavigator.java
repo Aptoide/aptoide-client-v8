@@ -45,7 +45,8 @@ public class BillingNavigator {
     }
 
     if (paymentMethod instanceof MolPoints) {
-      fragmentNavigator.navigateTo(MolFragment.create(getProductBundle(product)));
+      fragmentNavigator.navigateTo(
+          MolFragment.create(getProductBundle(product), paymentMethod.getId()));
       return;
     }
 

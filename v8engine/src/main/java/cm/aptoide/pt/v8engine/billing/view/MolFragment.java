@@ -13,12 +13,16 @@ import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 
 public class MolFragment extends WebViewFragment {
 
+  private static final String EXTRA_PAYMENT_METHOD_ID =
+      "cm.aptoide.pt.v8engine.billing.view.extra.PAYMENT_METHOD_ID";
   private Billing billing;
   private BillingAnalytics billingAnalytics;
   private ProductProvider productProvider;
+  private int paymentMethodId;
 
-  public static Fragment create(Bundle bundle) {
+  public static Fragment create(Bundle bundle, int paymentMethodId) {
     final MolFragment fragment = new MolFragment();
+    bundle.putInt(EXTRA_PAYMENT_METHOD_ID, paymentMethodId);
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -28,6 +32,7 @@ public class MolFragment extends WebViewFragment {
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     productProvider = ProductProvider.fromBundle(billing, getArguments());
+    paymentMethodId = getArguments().getInt(EXTRA_PAYMENT_METHOD_ID);
   }
 
   @Nullable @Override
@@ -40,6 +45,6 @@ public class MolFragment extends WebViewFragment {
     super.onViewCreated(view, savedInstanceState);
     attachPresenter(new MolPresenter(this, billing, billingAnalytics, productProvider,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator())), savedInstanceState);
+            getActivityNavigator(), getFragmentNavigator()), paymentMethodId), savedInstanceState);
   }
 }
