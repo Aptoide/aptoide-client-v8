@@ -17,4 +17,8 @@ public interface SpotAndShareWaitingToSendView extends View {
   void navigateBack();
 
   void onLeaveGroupError();
+
+  Observable<Void> clickedRefresh();
+
+  void openTransferRecord();
 }

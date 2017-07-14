@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.R;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToSendPresente
 import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
+import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
@@ -34,6 +36,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   private PublishRelay<Void> backRelay;
   private BackButton.ClickHandler clickHandler;
   private RxAlertDialog backDialog;
+  private ImageView refreshButton;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareWaitingToSendFragment();
@@ -59,6 +62,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
       return true;
     };
     registerClickHandler(clickHandler);
+    refreshButton = (ImageView) view.findViewById(R.id.sync_image);
 
     SpotAndShareUserManager spotAndShareUserManager = new SpotAndShareUserManager(
         new SpotAndShareUserPersister(
@@ -83,6 +87,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     unregisterClickHandler(clickHandler);
     clickHandler = null;
     backDialog = null;
+    refreshButton = null;
     super.onDestroyView();
   }
 
@@ -126,5 +131,14 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     Toast.makeText(getContext(), "There was an error while trying to leave the group",
         Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<Void> clickedRefresh() {
+    return RxView.clicks(refreshButton);
+  }
+
+  @Override public void openTransferRecord() {
+    getFragmentNavigator().navigateToWithoutBackSave(
+        SpotAndShareTransferRecordFragment.newInstance());
   }
 }
