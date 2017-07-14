@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.animation.ObjectAnimator;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,12 +18,16 @@ import rx.Completable;
 import rx.Observable;
 
 class RelatedAppsAdapter extends RecyclerView.Adapter {
+  public static final int SPINNER = 0;
+  public static final int RELATED_APP = 1;
   private final ArrayList<PostRemoteAccessor.RelatedApp> relatedAppList;
   private final PublishRelay<PostRemoteAccessor.RelatedApp> relatedAppPublisher;
+  private boolean loading;
 
   public RelatedAppsAdapter() {
     relatedAppList = new ArrayList<>();
     relatedAppPublisher = PublishRelay.create();
+    loading = false;
   }
 
   public Observable<PostRemoteAccessor.RelatedApp> getClickedView() {
@@ -64,24 +69,54 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View itemView = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.item_view_post_related_app, parent, false);
-    return new RelatedAppViewHolder(itemView, relatedAppPublisher);
+    View itemView;
+    if (viewType == RELATED_APP) {
+      itemView = LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.item_view_post_related_app, parent, false);
+      return new RelatedAppViewHolder(itemView, relatedAppPublisher);
+    } else if (viewType == SPINNER) {
+      itemView = LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.simple_spinner_item, parent, false);
+      return new RecyclerView.ViewHolder(itemView) {
+      };
+    } else {
+      throw new IllegalArgumentException("viewType " + viewType + " not supported");
+    }
   }
 
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-    ((RelatedAppViewHolder) holder).bind(relatedAppList.get(position));
+    if (holder instanceof RelatedAppViewHolder) {
+      ((RelatedAppViewHolder) holder).bind(relatedAppList.get(loading ? position - 1 : position));
+    }
+  }
+
+  @Override public int getItemViewType(int position) {
+    if (loading && position == 0) {
+      return SPINNER;
+    } else {
+      return RELATED_APP;
+    }
   }
 
   @Override public int getItemCount() {
-    return relatedAppList.size();
+    return loading ? relatedAppList.size() + 1 : relatedAppList.size();
   }
 
-  public PostRemoteAccessor.RelatedApp getCurrentSelected() {
+  public @Nullable PostRemoteAccessor.RelatedApp getCurrentSelected() {
     for (PostRemoteAccessor.RelatedApp relatedApp : relatedAppList) {
       if (relatedApp.isSelected()) return relatedApp;
     }
     return null;
+  }
+
+  public void showLoading() {
+    loading = true;
+    notifyItemInserted(0);
+  }
+
+  public void hideLoading() {
+    loading = false;
+    notifyItemRemoved(0);
   }
 
   private static class RelatedAppViewHolder extends RecyclerView.ViewHolder {

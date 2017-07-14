@@ -95,15 +95,6 @@
           android:visibility="gone"
           tools:visibility="visible"
           />
-      <ProgressBar
-          android:id="@+id/related_apps_progress_bar"
-          android:layout_width="match_parent"
-          android:layout_height="10dp"
-          android:indeterminate="true"
-          android:visibility="gone"
-          tools:visibility="visible"
-          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-          />
       <android.support.v7.widget.RecyclerView
           android:id="@+id/related_apps_list"
           android:layout_width="match_parent"

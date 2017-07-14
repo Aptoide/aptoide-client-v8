@@ -42,13 +42,8 @@
       android:layout_marginTop="@dimen/padding_tiny"
       android:ellipsize="end"
       android:lines="2"
-      android:paddingEnd="@dimen/padding_smaller"
-      android:paddingLeft="@dimen/padding_smaller"
-      android:paddingRight="@dimen/padding_smaller"
-      android:paddingStart="@dimen/padding_smaller"
-      android:textColor="@color/black_87_alpha"
-      android:textSize="14sp"
       tools:text="He as compliment unreserved projecting."
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
 </LinearLayout>

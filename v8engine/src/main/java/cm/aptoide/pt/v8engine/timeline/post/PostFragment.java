@@ -39,7 +39,6 @@ public class PostFragment extends FragmentView implements PostView {
   private static final int MAX_CHARACTERS = 200;
   private static final String DATA_TO_SHARE = "data_to_share";
   private ProgressBar previewLoading;
-  private ProgressBar relatedAppsLoading;
   private RecyclerView relatedApps;
   private EditText userInput;
   private ImageView previewImage;
@@ -49,6 +48,7 @@ public class PostFragment extends FragmentView implements PostView {
   private Toolbar toolbar;
   private PublishRelay<Void> cancelClick;
   private PublishRelay<Void> postClick;
+  private RelatedAppsAdapter adapter;
 
   public static PostFragment newInstance(String toShare) {
     Bundle args = new Bundle();
@@ -101,15 +101,11 @@ public class PostFragment extends FragmentView implements PostView {
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
     relatedAppsHeader = (TextView) view.findViewById(R.id.related_apps_header);
     previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
-    relatedAppsLoading = (ProgressBar) view.findViewById(R.id.related_apps_progress_bar);
     relatedApps = (RecyclerView) view.findViewById(R.id.related_apps_list);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 
   @Override public void onDestroyView() {
-    destroyLoading(relatedAppsLoading);
-    relatedAppsLoading = null;
-
     destroyLoading(previewLoading);
     previewLoading = null;
 
@@ -136,7 +132,7 @@ public class PostFragment extends FragmentView implements PostView {
 
     relatedApps.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-    final RelatedAppsAdapter adapter = new RelatedAppsAdapter();
+    adapter = new RelatedAppsAdapter();
     relatedApps.addItemDecoration(new SimpleDividerItemDecoration(getContext(), 10));
     relatedApps.setAdapter(adapter);
     relatedApps.setHorizontalScrollBarEnabled(false);
@@ -203,12 +199,13 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public void showRelatedAppsLoading() {
-    relatedAppsLoading.setVisibility(View.VISIBLE);
+    adapter.showLoading();
+    relatedApps.smoothScrollToPosition(0);
     relatedAppsHeader.setVisibility(View.GONE);
   }
 
   @Override public void hideRelatedAppsLoading() {
-    relatedAppsLoading.setVisibility(View.GONE);
+    adapter.hideLoading();
     relatedAppsHeader.setVisibility(View.VISIBLE);
   }
 
