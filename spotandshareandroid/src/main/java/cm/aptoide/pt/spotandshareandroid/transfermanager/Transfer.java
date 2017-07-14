@@ -1,59 +1,28 @@
 package cm.aptoide.pt.spotandshareandroid.transfermanager;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
-import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import com.jakewharton.rxrelay.BehaviorRelay;
-import java.io.IOException;
 import lombok.Getter;
-import rx.Observable;
 
 /**
  * Created by neuro on 11-07-2017.
  */
-public class Transfer {
+public abstract class Transfer<T extends Transfer> {
 
-  private final Accepter<AndroidAppInfo> androidAppInfoAccepter;
-  private final BehaviorRelay<Transfer> behaviorRelay;
+  protected final BehaviorRelay<T> behaviorRelay;
 
-  @Getter private State state;
-  @Getter private float progress;
-  private TransferManager transferManager;
+  @Getter protected State state;
+  @Getter protected float progress;
+  TransferManager transferManager;
 
-  private Transfer(Accepter<AndroidAppInfo> androidAppInfoAccepter, State state,
-      TransferManager transferManager) {
-    this.androidAppInfoAccepter = androidAppInfoAccepter;
+  protected Transfer(State state, TransferManager transferManager) {
     this.state = state;
     this.transferManager = transferManager;
 
     behaviorRelay = BehaviorRelay.create();
   }
 
-  Transfer(Accepter<AndroidAppInfo> androidAppInfoAccepter, TransferManager transferManager) {
-    this(androidAppInfoAccepter, State.PENDING_ACCEPTION, transferManager);
-  }
-
-  public Observable<Transfer> accept() {
-    if (state != State.PENDING_ACCEPTION) {
-      throw new IllegalStateException("Transfer not pending acception!");
-    }
-
-    state = State.RECEIVING;
-    androidAppInfoAccepter.accept(new TransferLifecycleRelay(this, transferManager));
-    behaviorRelay.call(this);
-    transferManager.callRelay();
-
-    return behaviorRelay;
-  }
-
-  public AndroidAppInfo getAndroidAppInfo() {
-    return androidAppInfoAccepter.getMeta();
-  }
-
-  public Observable<Float> getProgressObservable() {
-    return behaviorRelay.filter(transfer -> transfer.getState() == State.RECEIVING)
-        .map(Transfer::getProgress);
-  }
+  public abstract AndroidAppInfo getAndroidAppInfo();
 
   public enum State {
     PENDING_ACCEPTION, PENDING, RECEIVING, RECEIVED, ERROR, SERVING,

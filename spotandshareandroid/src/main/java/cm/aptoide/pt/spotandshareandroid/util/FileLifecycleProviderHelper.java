@@ -1,7 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid.util;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import java.io.IOException;
 
@@ -52,18 +51,6 @@ public class FileLifecycleProviderHelper {
       @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
         System.out.println(
             TAG + ": onProgressChanged: " + androidAppInfo.getAppName() + " : " + progress);
-      }
-    };
-  }
-
-  public FileLifecycleProvider<AndroidAppInfo> newFileLifecycleProvider() {
-    return new FileLifecycleProvider<AndroidAppInfo>() {
-      @Override public TransferLifecycle<AndroidAppInfo> newFileServerLifecycle() {
-        return FileLifecycleProviderHelper.this.newFileServerLifecycle();
-      }
-
-      @Override public TransferLifecycle<AndroidAppInfo> newFileClientLifecycle() {
-        return FileLifecycleProviderHelper.this.newFileClientLifecycle();
       }
     };
   }

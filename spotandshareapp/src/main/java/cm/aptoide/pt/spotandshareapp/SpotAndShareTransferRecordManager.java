@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
+import cm.aptoide.pt.spotandshareandroid.transfermanager.TransferReceiving;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,8 +48,8 @@ public class SpotAndShareTransferRecordManager {
   public void acceptApp(TransferAppModel transferAppModel) {
     for (int i = 0; i < transferList.size(); i++) {
       if (transferAppModel.getHashcode() == transferList.get(i)
-          .hashCode()) {
-        transferList.get(i)
+          .hashCode() && transferList.get(i) instanceof TransferReceiving) {
+        ((TransferReceiving) transferList.get(i))
             .accept();
         break;
       }

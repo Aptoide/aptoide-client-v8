@@ -14,11 +14,8 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
-import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
-import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
@@ -44,7 +41,6 @@ public class ClientService extends Service {
   private int port;
   private ArrayList<App> listOfApps;
   private NotificationManagerCompat mNotifyManager;
-  private FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
   private boolean serverLeftOnError;
   private OnError<IOException> onError = e -> {
@@ -64,138 +60,6 @@ public class ClientService extends Service {
     if (mNotifyManager == null) {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
-
-    fileLifecycleProvider = new FileLifecycleProvider<AndroidAppInfo>() {
-      @Override public TransferLifecycle<AndroidAppInfo> newFileServerLifecycle() {
-        return new TransferLifecycle<AndroidAppInfo>() {
-
-          private ProgressFilter progressFilter;
-          private AndroidAppInfo androidAppInfo;
-
-          @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
-            Logger.d(TAG, " Started sending ");
-            this.androidAppInfo = androidAppInfo;
-            progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
-
-            Intent i = new Intent();
-            i.putExtra("isSent", false);
-            i.putExtra("needReSend",
-                false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
-            i.putExtra("appName", androidAppInfo.getAppName());
-            i.putExtra("packageName", androidAppInfo.getPackageName());
-            i.putExtra("positionToReSend", 100000);
-            i.setAction("SENDAPP");
-            sendBroadcast(i);
-
-            createSendNotification();
-          }
-
-          @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
-            Logger.d(TAG, " Finished sending " + androidAppInfo);
-
-            finishSendNotification(androidAppInfo);
-
-            Intent i = new Intent();
-            i.putExtra("isSent", true);
-            i.putExtra("needReSend", false);
-            i.putExtra("appName", androidAppInfo.getAppName());
-            i.putExtra("packageName", androidAppInfo.getPackageName());
-            i.putExtra("positionToReSend", 100000);
-            i.setAction("SENDAPP");
-            sendBroadcast(i);
-          }
-
-          @Override public void onError(IOException e) {
-            e.printStackTrace();
-
-            if (!serverLeftOnError) {
-              if (mNotifyManager != null && androidAppInfo != null) {
-                mNotifyManager.cancel(androidAppInfo.getPackageName()
-                    .hashCode());
-              }
-
-              Intent i = new Intent();
-              i.setAction("ERRORSENDING");
-              sendBroadcast(i);
-            }
-          }
-
-          @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-
-            if (progressFilter.shouldUpdate(progress)) {
-              int actualProgress = Math.round(progress * 100);
-              showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
-            }
-          }
-        };
-      }
-
-      @Override public TransferLifecycle<AndroidAppInfo> newFileClientLifecycle() {
-        return new TransferLifecycle<AndroidAppInfo>() {
-
-          private ProgressFilter progressFilter;
-          private AndroidAppInfo androidAppInfo;
-
-          @Override public void onStartTransfer(AndroidAppInfo androidAppInfo) {
-            Logger.d(TAG, " Started receiving ");
-            this.androidAppInfo = androidAppInfo;
-            progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
-
-            //show notification
-            createReceiveNotification(androidAppInfo.getAppName());
-
-            Intent i = new Intent();
-            i.putExtra("FinishedReceiving", false);
-            i.putExtra("appName", androidAppInfo.getAppName());
-            i.setAction("RECEIVEAPP");
-            sendBroadcast(i);
-          }
-
-          @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
-            Logger.d(TAG, " Finished receiving " + androidAppInfo);
-
-            finishReceiveNotification(androidAppInfo.getApk()
-                .getFilePath(), androidAppInfo.getPackageName(), androidAppInfo);
-
-            Intent i = new Intent();
-            i.putExtra("FinishedReceiving", true);
-            i.putExtra("needReSend", false);
-            i.putExtra("appName", androidAppInfo.getAppName());
-            i.putExtra("packageName", androidAppInfo.getPackageName());
-            i.putExtra("filePath", androidAppInfo.getApk()
-                .getFilePath());
-            i.setAction("RECEIVEAPP");
-            sendBroadcast(i);
-          }
-
-          @Override public void onError(IOException e) {
-            Logger.d(TAG, "Fell on error  Client !! ");
-
-            if (!serverLeftOnError) {
-              if (mNotifyManager != null && androidAppInfo != null) {
-                mNotifyManager.cancel(androidAppInfo.getPackageName()
-                    .hashCode());
-              }
-
-              Intent i = new Intent();
-              if (e instanceof ServerLeftException) {
-                i.setAction("SERVER_LEFT");
-              } else {
-                i.setAction("ERRORRECEIVING");
-              }
-              sendBroadcast(i);
-            }
-          }
-
-          @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-            if (progressFilter.shouldUpdate(progress)) {
-              int actualProgress = Math.round(progress * PROGRESS_SPLIT_SIZE);
-              showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
-            }
-          }
-        };
-      }
-    };
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -221,7 +85,7 @@ public class ClientService extends Service {
         // TODO: 07-04-2017 asdsadefeqf neuro Filipe onError sff lol
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
-                storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
+                storageCapacity, null, socketBinder, onError, Integer.MAX_VALUE,
                 androidAppInfoAccepter -> androidAppInfoAccepter.accept(null),
                 new Friend("username"));
         aptoideMessageClientSocket.setSocketBinder(socketBinder);

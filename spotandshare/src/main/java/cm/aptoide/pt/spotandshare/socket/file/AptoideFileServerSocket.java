@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshare.socket.file;
 
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
+import cm.aptoide.pt.spotandshare.socket.AptoideSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.ProgressAccumulator;
 import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
@@ -39,12 +40,16 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
     this.fileInfos = fileInfos;
   }
 
-  @Override protected void onNewClient(Socket socket) {
-
+  @Override public AptoideSocket start() {
     if (!startedSending && TransferLifecycle != null) {
       TransferLifecycle.onStartTransfer(fileDescriptor);
       startedSending = true;
     }
+
+    return super.start();
+  }
+
+  @Override protected void onNewClient(Socket socket) {
 
     if (progressAccumulator == null) {
       progressAccumulator =
@@ -127,7 +132,6 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
           TransferLifecycle.onFinishTransfer(t);
         }
       }
-      System.out.println("Filipe: " + progress + ", " + (progress > 0.9999999999999999999999999));
     }
   }
 }

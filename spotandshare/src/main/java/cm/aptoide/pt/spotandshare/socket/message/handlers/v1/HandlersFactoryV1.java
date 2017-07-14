@@ -5,9 +5,9 @@ import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileServerSocket;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.MessageHandler;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
@@ -49,11 +49,11 @@ public class HandlersFactoryV1 {
 
   static class SendApkHandler extends MessageHandler<SendApk> {
 
-    private final FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
+    private final TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider;
 
-    public SendApkHandler(FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider) {
+    public SendApkHandler(TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider) {
       super(SendApk.class);
-      this.fileLifecycleProvider = fileLifecycleProvider;
+      this.transferLifecycleProvider = transferLifecycleProvider;
     }
 
     @Override public void handleMessage(SendApk sendApkMessage, Sender<Message> messageSender) {
@@ -61,7 +61,7 @@ public class HandlersFactoryV1 {
           new ShareAppsFileServerSocket(sendApkMessage.getServerPort(),
               sendApkMessage.getAndroidAppInfo());
       shareAppsFileServerSocket.setTransferLifecycle(sendApkMessage.getAndroidAppInfo(),
-          fileLifecycleProvider.newFileServerLifecycle());
+          transferLifecycleProvider.newTransferLifecycle());
       shareAppsFileServerSocket.startAsync();
       sendAck(messageSender);
       // TODO: 03-02-2017 neuro maybe a good ideia to stop the server somewhat :)
@@ -72,17 +72,15 @@ public class HandlersFactoryV1 {
 
     private final String root;
     private final StorageCapacity storageCapacity;
-    private final FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
     private final SocketBinder socketBinder;
     private final AndroidAppInfoAccepter androidAppInfoAccepter;
 
     public ReceiveApkHandler(String root, StorageCapacity storageCapacity,
-        FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
+        SocketBinder socketBinder,
         AndroidAppInfoAccepter androidAppInfoAccepter) {
       super(ReceiveApk.class);
       this.root = root;
       this.storageCapacity = storageCapacity;
-      this.fileLifecycleProvider = fileLifecycleProvider;
       this.socketBinder = socketBinder;
       this.androidAppInfoAccepter = androidAppInfoAccepter;
     }
@@ -117,9 +115,7 @@ public class HandlersFactoryV1 {
                 new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
                     receiveApkServerHost.getPort(), androidAppInfo.getFileInfos());
 
-            shareAppsFileClientSocket.setTransferLifecycle(androidAppInfo,
-                fileClientLifecycle != null ? fileClientLifecycle
-                    : fileLifecycleProvider.newFileClientLifecycle());
+            shareAppsFileClientSocket.setTransferLifecycle(androidAppInfo, fileClientLifecycle);
             shareAppsFileClientSocket.setSocketBinder(socketBinder);
             shareAppsFileClientSocket.startAsync();
           }

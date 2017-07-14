@@ -2,6 +2,9 @@ package cm.aptoide.pt.spotandshare.socket.message;
 
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
+import com.jakewharton.rxrelay.BehaviorRelay;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,14 +14,17 @@ import java.util.Map;
 
 public class FriendsManager {
 
+  private final BehaviorRelay<Collection<Friend>> behaviorRelay;
   private final Map<Host, Friend> map;
 
   public FriendsManager() {
-    map = new HashMap<>();
+    this.map = new HashMap<>();
+    this.behaviorRelay = BehaviorRelay.create();
   }
 
   public void addFriend(Friend friend, Host host) {
     map.put(host, friend);
+    behaviorRelay.call(Collections.unmodifiableCollection(map.values()));
   }
 
   public void removeFriend(Host host) {

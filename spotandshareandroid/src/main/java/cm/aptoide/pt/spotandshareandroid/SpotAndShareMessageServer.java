@@ -2,10 +2,10 @@ package cm.aptoide.pt.spotandshareandroid;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
@@ -42,14 +42,14 @@ public class SpotAndShareMessageServer {
     }
   }
 
-  public void startClient(MessageServerConfiguration messageServerConfiguration, Friend friend) {
+  public void startClient(MessageServerConfiguration messageServerConfiguration, Friend friend,
+      TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
       aptoideMessageClientSocket = new AptoideMessageClientSocket(HOTSPOT_DEFAULT_ADDRESS, port,
           messageServerConfiguration.getExternalStoragepath(),
-          messageServerConfiguration.getStorageCapacity(),
-          messageServerConfiguration.getFileLifecycleProvider(),
+          messageServerConfiguration.getStorageCapacity(), transferLifecycleProvider,
           messageServerConfiguration.getSocketBinder(), messageServerConfiguration.getOnError(),
           Integer.MAX_VALUE, messageServerConfiguration.getAndroidAppInfoAccepter(), friend);
       aptoideMessageClientSocket.startAsync();
@@ -57,14 +57,15 @@ public class SpotAndShareMessageServer {
   }
 
   public void startClient(String externalStoragepath, StorageCapacity storageCapacity,
-      FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
+      TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider,
+      SocketBinder socketBinder,
       OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
       aptoideMessageClientSocket =
           new AptoideMessageClientSocket(HOTSPOT_DEFAULT_ADDRESS, port, externalStoragepath,
-              storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
+              storageCapacity, transferLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
               androidAppInfoAccepter, friend);
       aptoideMessageClientSocket.startAsync();
     }
