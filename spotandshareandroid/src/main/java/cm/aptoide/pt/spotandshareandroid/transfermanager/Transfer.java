@@ -1,7 +1,9 @@
 package cm.aptoide.pt.spotandshareandroid.transfermanager;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import com.jakewharton.rxrelay.BehaviorRelay;
+import java.io.IOException;
 import lombok.Getter;
 
 /**

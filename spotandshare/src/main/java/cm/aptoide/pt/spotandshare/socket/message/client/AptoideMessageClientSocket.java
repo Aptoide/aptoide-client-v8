@@ -5,7 +5,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.FriendsManager;
@@ -26,7 +26,7 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   private final FriendsManager friendsManager;
 
   public AptoideMessageClientSocket(String host, int port, String rootDir,
-      StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
+      StorageCapacity storageCapacity, TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       SocketBinder socketBinder, OnError<IOException> onError, int timeout,
       AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
     super(host, port, timeout);
@@ -38,7 +38,7 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
-      StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
+      StorageCapacity storageCapacity, TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       SocketBinder socketBinder, OnError<IOException> onError, int timeout,
       AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
     super(host, fallbackHostName, port, timeout);
