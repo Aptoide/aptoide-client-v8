@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToSendPresenter;
 import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
@@ -55,9 +59,15 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
       return true;
     };
     registerClickHandler(clickHandler);
-    attachPresenter(
-        new SpotAndShareWaitingToSendPresenter(this, SpotAndShare.getInstance(getContext(), null)),
-        savedInstanceState);
+
+    SpotAndShareUserManager spotAndShareUserManager = new SpotAndShareUserManager(
+        new SpotAndShareUserPersister(
+            getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE)));
+    //// TODO: 14-07-2017 remove this after putting spot&share on Application
+    attachPresenter(new SpotAndShareWaitingToSendPresenter(this,
+        SpotAndShare.getInstance(getContext(), new Friend(spotAndShareUserManager.getUser()
+            .getUsername()))), savedInstanceState);
   }
 
   private void setupToolbar() {

@@ -49,8 +49,7 @@ public class SpotAndShareTransferRecordManager {
     for (int i = 0; i < transferList.size(); i++) {
       if (transferAppModel.getHashcode() == transferList.get(i)
           .hashCode() && transferList.get(i) instanceof TransferReceiving) {
-        ((TransferReceiving) transferList.get(i))
-            .accept();
+        ((TransferReceiving) transferList.get(i)).accept();
         break;
       }
     }
