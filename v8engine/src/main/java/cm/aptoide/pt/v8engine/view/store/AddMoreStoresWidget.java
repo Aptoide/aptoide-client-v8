@@ -31,7 +31,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   @Override public void bindView(AddMoreStoresDisplayable displayable) {
     addMoreStores.setOnClickListener(v -> {
       if (itemView.getContext() instanceof FragmentActivity) {
-        new AddStoreDialog().attachFragmentManager(getFragmentNavigator())
+        new AddStoreDialog()
             .show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(),
                 "addStoreDialog");
       }

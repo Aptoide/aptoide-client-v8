@@ -43,20 +43,24 @@ public class Poster {
     }
   }
 
+  private boolean doesUserHasStore() {
+    return store != null;
+  }
+
+  private boolean isUserPublic() {
+    return user != null;
+  }
+
+  private String getUserName(UserSharerTimeline.User user) {
+    return TextUtils.isEmpty(user.getName()) ? "no-user" : user.getName();
+  }
+
   public UserSharerTimeline.User getUser() {
     return user;
   }
 
   public UserSharerTimeline.Store getStore() {
     return store;
-  }
-
-  private boolean doesUserHasStore() {
-    return store != null;
-  }
-
-  private String getUserName(UserSharerTimeline.User user) {
-    return TextUtils.isEmpty(user.getName()) ? "no-user" : user.getName();
   }
 
   public String getPrimaryName() {
@@ -73,9 +77,5 @@ public class Poster {
 
   public String getSecondaryName() {
     return secondaryName;
-  }
-
-  private boolean isUserPublic() {
-    return user != null;
   }
 }

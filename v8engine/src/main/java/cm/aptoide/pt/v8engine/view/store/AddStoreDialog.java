@@ -41,6 +41,7 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.dialog.BaseDialog;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.search.StoreSearchActivity;
@@ -81,28 +82,14 @@ public class AddStoreDialog extends BaseDialog {
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
 
-  public AddStoreDialog attachFragmentManager(FragmentNavigator navigator) {
-    this.navigator = navigator;
-    return this;
-  }
-
-  @Override public void show(FragmentManager manager, String tag) {
-    if (navigator == null) {
-      Logger.w(TAG, FragmentNavigator.class.getName() + " is null.");
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof MainActivity) {
+      navigator = ((MainActivity) activity).getFragmentNavigator();
+    } else {
+      Logger.e(TAG, "Launched AddStoreDialog from invalid Activity");
+      throw new IllegalStateException();
     }
-    super.show(manager, tag);
-  }
-
-  @Override public int show(FragmentTransaction transaction, String tag) {
-    if (navigator == null) {
-      Logger.w(TAG, FragmentNavigator.class.getName() + " is null.");
-    }
-    return super.show(transaction, tag);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(BundleArgs.STORE_NAME.name(), storeName);
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -148,6 +135,25 @@ public class AddStoreDialog extends BaseDialog {
     if (storeAutoCompleteWebSocket != null) {
       storeAutoCompleteWebSocket.disconnect();
     }
+  }
+
+  @Override public void show(FragmentManager manager, String tag) {
+    if (navigator == null) {
+      Logger.w(TAG, FragmentNavigator.class.getName() + " is null.");
+    }
+    super.show(manager, tag);
+  }
+
+  @Override public int show(FragmentTransaction transaction, String tag) {
+    if (navigator == null) {
+      Logger.w(TAG, FragmentNavigator.class.getName() + " is null.");
+    }
+    return super.show(transaction, tag);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(BundleArgs.STORE_NAME.name(), storeName);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -82,74 +82,58 @@ public class TimelineService {
     return getPackages().doOnSuccess(packages -> loading = true)
         .flatMap(packages -> GetUserTimelineRequest.of(url, limit, initialOffset, packages,
             bodyInterceptor, okhttp, converterFactory, cardIdPriority, tokenInvalidator,
-            sharedPreferences)
-            .observe()
-            .toSingle()
-            .flatMap(timelineResponse -> {
-              if (timelineResponse.isOk()) {
-                this.currentOffset = timelineResponse.getNextSize();
-                this.total = timelineResponse.getTotal();
-                loading = false;
-                return Single.just(timelineResponse);
-              }
-              return Single.error(
-                  new IllegalStateException("Could not obtain timeline from server."));
-            }))
+            sharedPreferences).observe().toSingle().flatMap(timelineResponse -> {
+          if (timelineResponse.isOk()) {
+            this.currentOffset = timelineResponse.getNextSize();
+            this.total = timelineResponse.getTotal();
+            loading = false;
+            return Single.just(timelineResponse);
+          }
+          return Single.error(new IllegalStateException("Could not obtain timeline from server."));
+        }))
         .map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
   }
 
   private Single<List<String>> getPackages() {
     return Observable.concat(packageRepository.getLatestInstalledPackages(latestPackagesCount),
-        packageRepository.getRandomInstalledPackages(randomPackagesCount))
-        .toList()
-        .toSingle();
+        packageRepository.getRandomInstalledPackages(randomPackagesCount)).toList().toSingle();
   }
 
   public Single<List<Post>> getCards() {
+    mapper.clearCachedPostsIds();
     return getCards(limit, initialOffset);
   }
 
   public Completable like(String postId) {
     return LikeCardRequest.of(postId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
-        sharedPreferences)
-        .observe()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new IllegalStateException(V7.getErrorMessage(response)));
-          }
-        })
-        .toCompletable();
+        sharedPreferences).observe().flatMapCompletable(response -> {
+      if (response.isOk()) {
+        return Completable.complete();
+      } else {
+        return Completable.error(new IllegalStateException(V7.getErrorMessage(response)));
+      }
+    }).toCompletable();
   }
 
   public Single<Post> getTimelineStats() {
     return GetTimelineStatsRequest.of(bodyInterceptor, userId, okhttp, converterFactory,
-        tokenInvalidator, sharedPreferences)
-        .observe()
-        .toSingle()
-        .flatMap(timelineResponse -> {
-          if (timelineResponse.isOk()) {
-            return Single.just(timelineResponse);
-          }
-          return Single.error(
-              new IllegalStateException("Could not obtain timeline stats from server."));
-        })
-        .map(timelineStats -> mapper.map(timelineStats));
+        tokenInvalidator, sharedPreferences).observe().toSingle().flatMap(timelineResponse -> {
+      if (timelineResponse.isOk()) {
+        return Single.just(timelineResponse);
+      }
+      return Single.error(
+          new IllegalStateException("Could not obtain timeline stats from server."));
+    }).map(timelineStats -> mapper.map(timelineStats));
   }
 
   public Single<String> share(String cardId) {
     return ShareCardRequest.of(cardId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
-        sharedPreferences)
-        .observe()
-        .toSingle()
-        .flatMap(response -> {
-          if (response.isOk()) {
-            return Single.just(response.getData()
-                .getCardUid());
-          }
-          return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
-        });
+        sharedPreferences).observe().toSingle().flatMap(response -> {
+      if (response.isOk()) {
+        return Single.just(response.getData().getCardUid());
+      }
+      return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+    });
   }
 
   public Completable postComment(String cardId, String commentText) {

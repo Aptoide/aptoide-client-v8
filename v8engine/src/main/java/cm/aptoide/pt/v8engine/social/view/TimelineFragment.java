@@ -24,6 +24,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -87,8 +88,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private final int visibleThreshold = 5;
-  private CardAdapter adapter;
-  private PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private boolean bottomAlreadyReached;
+  private PostAdapter adapter;
+  private PublishSubject<CardTouchEvent> postTouchEventPublishSubject;
   private PublishSubject<Post> sharePreviewPublishSubject;
   private PublishSubject<PostComment> commentPostResponseSubject;
   private RecyclerView list;
@@ -112,7 +114,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private SharePreviewFactory sharePreviewFactory;
   private SpannableFactory spannableFactory;
   private TabNavigator tabNavigator;
-  private String cardIdPriority;
+  private String postIdForTimelineRequest;
   private TimelineAnalytics timelineAnalytics;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
@@ -147,9 +149,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     tabNavigator.navigation()
         .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(tabNavigation -> cardIdPriority = tabNavigation.getBundle()
-            .getString(AppsTimelineTabNavigation.CARD_ID_KEY), err -> CrashReport.getInstance()
-            .log(err));
+        .subscribe(tabNavigation -> postIdForTimelineRequest =
+                tabNavigation.getBundle().getString(AppsTimelineTabNavigation.CARD_ID_KEY),
+            err -> CrashReport.getInstance().log(err));
     newRefresh = true;
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
@@ -160,17 +162,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     sharePreviewFactory = new SharePreviewFactory(accountManager);
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    cardTouchEventPublishSubject = PublishSubject.create();
+    postTouchEventPublishSubject = PublishSubject.create();
     sharePreviewPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
-        getContext().getApplicationContext()
-            .getResources());
+        getContext().getApplicationContext().getResources());
     spannableFactory = new SpannableFactory();
-    adapter = new CardAdapter(Collections.emptyList(),
-        new CardViewHolderFactory(cardTouchEventPublishSubject, dateCalculator, spannableFactory,
+    adapter = new PostAdapter(Collections.emptyList(),
+        new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                cardTouchEventPublishSubject)), new ProgressCard());
+                postTouchEventPublishSubject)), new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
   }
@@ -205,7 +206,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .getAppId(), sharedPreferences);
 
     attachPresenter(new TimelinePresenter(this, new Timeline(
-        new TimelineService(getArguments().getString(ACTION_KEY), cardIdPriority, userId,
+        new TimelineService(getArguments().getString(ACTION_KEY), postIdForTimelineRequest, userId,
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
@@ -227,8 +228,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
   }
 
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    hideLoadMoreProgressIndicator();
+  }
+
   @Override public void showCards(List<Post> cards) {
-    adapter.updateCards(cards);
+    adapter.updatePosts(cards);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     list.setVisibility(View.VISIBLE);
@@ -252,10 +258,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showMoreCards(List<Post> cards) {
-    adapter.addCards(cards);
+    adapter.addPosts(cards);
   }
 
-  @Override public void showGenericError() {
+  @Override public void showGenericViewError() {
     this.genericError.setVisibility(View.VISIBLE);
     this.list.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
@@ -272,18 +278,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
-        .filter(event -> helper != null
-            && event.view()
-            .isAttachedToWindow()
-            && (helper.getItemCount() - event.view()
-            .getChildCount()) <= ((helper.findFirstVisibleItemPosition() == -1 ? 0
-            : helper.findFirstVisibleItemPosition()) + visibleThreshold))
+        .filter(event -> !bottomAlreadyReached
+            && helper != null
+            && event.view().isAttachedToWindow()
+            && (helper.getItemCount() - event.view().getChildCount()) <= ((
+            helper.findFirstVisibleItemPosition() == -1 ? 0 : helper.findFirstVisibleItemPosition())
+            + visibleThreshold))
         .map(event -> null)
+        .doOnNext(__ -> bottomAlreadyReached = true)
         .cast(Void.class);
   }
 
   @Override public Observable<CardTouchEvent> postClicked() {
-    return cardTouchEventPublishSubject;
+    return postTouchEventPublishSubject;
   }
 
   @Override public Observable<Post> shareConfirmation() {
@@ -299,10 +306,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showLoadMoreProgressIndicator() {
+    Logger.d(this.getClass().getName(), "show indicator called");
     adapter.addLoadMoreProgress();
   }
 
   @Override public void hideLoadMoreProgressIndicator() {
+    Logger.d(this.getClass().getName(), "hide indicator called");
+    bottomAlreadyReached = false;
     adapter.removeLoadMoreProgress();
   }
 
@@ -340,21 +350,20 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void showRootAccessDialog() {
     GenericDialogs.createGenericYesNoCancelMessage(getContext(), null,
         AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog,
-            getContext().getResources()))
-        .subscribe(eResponse -> {
-          switch (eResponse) {
-            case YES:
-              installManager.rootInstallAllowed(true);
-              break;
-            case NO:
-              installManager.rootInstallAllowed(false);
-              break;
-          }
-        });
+            getContext().getResources())).subscribe(eResponse -> {
+      switch (eResponse) {
+        case YES:
+          installManager.rootInstallAllowed(true);
+          break;
+        case NO:
+          installManager.rootInstallAllowed(false);
+          break;
+      }
+    });
   }
 
   @Override public void updateInstallProgress(Post card, int cardPosition) {
-    adapter.updateCard(card, cardPosition);
+    adapter.updatePost(card, cardPosition);
   }
 
   @Override public void showStoreSubscribedMessage(String storeName) {
@@ -399,6 +408,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void showCommentSuccess() {
     ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+  }
+
+  @Override public void showGenericError() {
+    ShowMessage.asSnack(getView(),
+        getContext().getString(R.string.fragment_social_timeline_general_error));
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp

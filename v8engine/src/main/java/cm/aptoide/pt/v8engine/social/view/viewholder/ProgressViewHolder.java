@@ -7,12 +7,12 @@ import cm.aptoide.pt.v8engine.social.data.Post;
  * Created by jdandrade on 19/06/2017.
  */
 
-public class ProgressViewHolder extends CardViewHolder {
+public class ProgressViewHolder extends PostViewHolder {
   public ProgressViewHolder(View view) {
     super(view);
   }
 
-  @Override public void setCard(Post card, int position) {
+  @Override public void setPost(Post card, int position) {
     //ignore
   }
 }

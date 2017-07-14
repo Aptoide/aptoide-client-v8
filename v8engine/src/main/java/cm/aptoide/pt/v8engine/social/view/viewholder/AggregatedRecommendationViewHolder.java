@@ -22,7 +22,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 29/06/2017.
  */
 
-public class AggregatedRecommendationViewHolder extends CardViewHolder<AggregatedRecommendation> {
+public class AggregatedRecommendationViewHolder extends PostViewHolder<AggregatedRecommendation> {
   private final LayoutInflater inflater;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
@@ -65,25 +65,23 @@ public class AggregatedRecommendationViewHolder extends CardViewHolder<Aggregate
         (FrameLayout) itemView.findViewById(R.id.timeline_sub_minimal_card_container);
   }
 
-  @Override public void setCard(AggregatedRecommendation card, int position) {
+  @Override public void setPost(AggregatedRecommendation card, int position) {
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPosters()
-            .get(0)
-            .getPrimaryAvatar(), this.headerAvatar1);
+        .loadWithShadowCircleTransform(card.getPosters().get(0).getPrimaryAvatar(),
+            this.headerAvatar1);
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPosters()
-            .get(1)
-            .getPrimaryAvatar(), this.headerAvatar2);
+        .loadWithShadowCircleTransform(card.getPosters().get(1).getPrimaryAvatar(),
+            this.headerAvatar2);
     this.headerNames.setText(getCardHeaderNames(card));
     this.headerTimestamp.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
-    ImageLoader.with(itemView.getContext())
-        .load(card.getAppIcon(), appIcon);
+    ImageLoader.with(itemView.getContext()).load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
     this.appRating.setRating(card.getAppAverageRating());
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
-
+    this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     showMorePostersLabel(card);
     minimalCardContainer.removeAllViews();
     minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalPosts(),
@@ -91,27 +89,24 @@ public class AggregatedRecommendationViewHolder extends CardViewHolder<Aggregate
         itemView.getContext()));
   }
 
+  public String getCardHeaderNames(AggregatedRecommendation card) {
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    List<Poster> posters = card.getPosters().subList(0, 2);
+    for (Poster poster : posters) {
+      headerNamesStringBuilder.append(poster.getPrimaryName()).append(", ");
+    }
+    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    return headerNamesStringBuilder.toString();
+  }
+
   private void showMorePostersLabel(AggregatedRecommendation card) {
-    if (card.getPosters()
-        .size() > 2) {
-      morePostersLabel.setText(String.format(itemView.getContext()
-          .getString(R.string.timeline_short_plus), String.valueOf(card.getPosters()
-          .size() - 2)));
+    if (card.getPosters().size() > 2) {
+      morePostersLabel.setText(
+          String.format(itemView.getContext().getString(R.string.timeline_short_plus),
+              String.valueOf(card.getPosters().size() - 2)));
       morePostersLabel.setVisibility(View.VISIBLE);
     } else {
       morePostersLabel.setVisibility(View.INVISIBLE);
     }
-  }
-
-  public String getCardHeaderNames(AggregatedRecommendation card) {
-    StringBuilder headerNamesStringBuilder = new StringBuilder();
-    List<Poster> posters = card.getPosters()
-        .subList(0, 2);
-    for (Poster poster : posters) {
-      headerNamesStringBuilder.append(poster.getPrimaryName())
-          .append(", ");
-    }
-    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
-    return headerNamesStringBuilder.toString();
   }
 }

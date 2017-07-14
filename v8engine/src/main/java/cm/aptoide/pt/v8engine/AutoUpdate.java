@@ -158,6 +158,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                   != Install.InstallationStatus.INSTALLING)
               .first(progress -> progress.getState() != Install.InstallationStatus.INSTALLING)
               .subscribe(install -> {
+                // TODO: 12/07/2017 this code doesn't run
                 if (install.isFailed()) {
                   ShowMessage.asSnack(activity, R.string.error_SYS_1);
                 }

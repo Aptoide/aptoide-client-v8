@@ -46,8 +46,9 @@ public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithA
   }
 
   public void itemClicked() {
-    fragmentNavigator.navigateTo(fragmentProvider.newStoreFragment(getPojo().getReview()
-        .getUser()
-        .getId(), "DEFAULT", StoreFragment.OpenType.GetHome));
+    //TODO AN-1492 - revert - waiting for api change
+    //fragmentNavigator.navigateTo(fragmentProvider.newStoreFragment(getPojo().getReview()
+    //    .getUser()
+    //    .getId(), "DEFAULT", StoreFragment.OpenType.GetHome));
   }
 }

@@ -29,7 +29,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 27/06/2017.
  */
 
-public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
+public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final ImageView headerPrimaryAvatar;
@@ -101,41 +101,33 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   }
 
-  @Override public void setCard(SocialMedia card, int position) {
-    if (card.getType()
-        .equals(CardType.SOCIAL_ARTICLE)) {
+  @Override public void setPost(SocialMedia card, int position) {
+    if (card.getType().equals(CardType.SOCIAL_ARTICLE)) {
       this.playIcon.setVisibility(View.GONE);
-    } else if (card.getType()
-        .equals(CardType.SOCIAL_VIDEO)) {
+    } else if (card.getType().equals(CardType.SOCIAL_VIDEO)) {
       this.playIcon.setVisibility(View.VISIBLE);
     }
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPoster()
-            .getPrimaryAvatar(), headerPrimaryAvatar);
+        .loadWithShadowCircleTransform(card.getPoster().getPrimaryAvatar(), headerPrimaryAvatar);
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPoster()
-            .getSecondaryAvatar(), headerSecondaryAvatar);
-    this.headerPrimaryName.setText(getStyledTitle(itemView.getContext(), card.getPoster()
-        .getPrimaryName()));
+        .loadWithShadowCircleTransform(card.getPoster().getSecondaryAvatar(),
+            headerSecondaryAvatar);
+    this.headerPrimaryName.setText(
+        getStyledTitle(itemView.getContext(), card.getPoster().getPrimaryName()));
     showHeaderSecondaryName(card);
     this.timestamp.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
     this.mediaTitle.setText(card.getMediaTitle());
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(card.getMediaThumbnailUrl(), mediaThumbnail);
     this.relatedTo.setText(spannableFactory.createStyleSpan(itemView.getContext()
-        .getString(R.string.displayable_social_timeline_article_related_to, card.getRelatedApp()
-            .getName()), Typeface.BOLD, card.getRelatedApp()
-        .getName()));
+        .getString(R.string.displayable_social_timeline_article_related_to,
+            card.getRelatedApp().getName()), Typeface.BOLD, card.getRelatedApp().getName()));
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new SocialHeaderCardTouchEvent(card, card.getPoster()
-            .getStore()
-            .getName(), card.getPoster()
-            .getStore()
-            .getStoreTheme(), card.getPoster()
-            .getUser()
-            .getId(), CardTouchEvent.Type.HEADER)));
+        new SocialHeaderCardTouchEvent(card, card.getPoster().getStore().getName(),
+            card.getPoster().getStore().getStoreTheme(), card.getPoster().getUser().getId(),
+            CardTouchEvent.Type.HEADER)));
     if (card.isLiked()) {
       likeButton.setHeartState(true);
     } else {
@@ -159,13 +151,16 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
+  public Spannable getStyledTitle(Context context, String title) {
+    return spannableFactory.createColorSpan(context.getString(R.string.x_shared, title),
+        ContextCompat.getColor(context, R.color.black_87_alpha), title);
+  }
+
   private void showHeaderSecondaryName(SocialMedia card) {
-    if (TextUtils.isEmpty(card.getPoster()
-        .getSecondaryName())) {
+    if (TextUtils.isEmpty(card.getPoster().getSecondaryName())) {
       this.headerSecondaryName.setVisibility(View.GONE);
     } else {
-      this.headerSecondaryName.setText(card.getPoster()
-          .getSecondaryName());
+      this.headerSecondaryName.setText(card.getPoster().getSecondaryName());
       this.headerSecondaryName.setVisibility(View.VISIBLE);
     }
   }
@@ -182,33 +177,40 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
     handleCommentsInformation(card);
   }
 
+  private void showLikesPreview(SocialMedia post) {
+    likePreviewContainer.removeAllViews();
+    marginOfTheNextLikePreview = 60;
+    for (int j = 0; j < post.getLikesNumber(); j++) {
+
+      UserTimeline user = null;
+      if (post.getLikes() != null && j < post.getLikes().size()) {
+        user = post.getLikes().get(j);
+      }
+      addUserToPreview(marginOfTheNextLikePreview, user);
+      if (marginOfTheNextLikePreview < 0) {
+        break;
+      }
+    }
+  }
+
   private void handleLikesInformation(SocialMedia card) {
     if (card.getLikesNumber() > 0) {
       if (card.getLikesNumber() > 1) {
         showNumberOfLikes(card.getLikesNumber());
-      } else if (card.getLikes() != null
-          && card.getLikes()
-          .size() != 0) {
-        String firstLikeName = card.getLikes()
-            .get(0)
-            .getName();
+      } else if (card.getLikes() != null && card.getLikes().size() != 0) {
+        String firstLikeName = card.getLikes().get(0).getName();
         if (firstLikeName != null) {
-          numberLikesOneLike.setText(spannableFactory.createColorSpan(itemView.getContext()
-                  .getString(R.string.x_liked_it, firstLikeName),
+          numberLikesOneLike.setText(spannableFactory.createColorSpan(
+              itemView.getContext().getString(R.string.x_liked_it, firstLikeName),
               ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
               firstLikeName));
           numberLikes.setVisibility(View.INVISIBLE);
           numberLikesOneLike.setVisibility(View.VISIBLE);
         } else {
-          String firstStoreName = card.getLikes()
-              .get(0)
-              .getStore()
-              .getName();
-          if (card.getLikes()
-              .get(0)
-              .getStore() != null && firstStoreName != null) {
-            numberLikesOneLike.setText(spannableFactory.createColorSpan(itemView.getContext()
-                    .getString(R.string.x_liked_it, firstStoreName),
+          String firstStoreName = card.getLikes().get(0).getStore().getName();
+          if (card.getLikes().get(0).getStore() != null && firstStoreName != null) {
+            numberLikesOneLike.setText(spannableFactory.createColorSpan(
+                itemView.getContext().getString(R.string.x_liked_it, firstStoreName),
                 ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
                 firstStoreName));
             numberLikes.setVisibility(View.INVISIBLE);
@@ -228,49 +230,16 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
     if (post.getCommentsNumber() > 0) {
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(String.format("%s %s", String.valueOf(post.getCommentsNumber()),
-          itemView.getContext()
-              .getString(R.string.comments)
-              .toLowerCase()));
+          itemView.getContext().getString(R.string.comments).toLowerCase()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(itemView.getContext())
-          .loadWithShadowCircleTransform(post.getComments()
-              .get(0)
-              .getAvatar(), latestCommentMainAvatar);
-      socialCommentUsername.setText(post.getComments()
-          .get(0)
-          .getName());
-      socialCommentBody.setText(post.getComments()
-          .get(0)
-          .getBody());
+          .loadWithShadowCircleTransform(post.getComments().get(0).getAvatar(),
+              latestCommentMainAvatar);
+      socialCommentUsername.setText(post.getComments().get(0).getName());
+      socialCommentBody.setText(post.getComments().get(0).getBody());
     } else {
       numberComments.setVisibility(View.INVISIBLE);
       socialCommentBar.setVisibility(View.GONE);
-    }
-  }
-
-  private void showNumberOfLikes(long likesNumber) {
-    numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber), itemView.getContext()
-        .getString(R.string.likes)
-        .toLowerCase()));
-    numberLikesOneLike.setVisibility(View.INVISIBLE);
-  }
-
-  private void showLikesPreview(SocialMedia post) {
-    likePreviewContainer.removeAllViews();
-    marginOfTheNextLikePreview = 60;
-    for (int j = 0; j < post.getLikesNumber(); j++) {
-
-      UserTimeline user = null;
-      if (post.getLikes() != null && j < post.getLikes()
-          .size()) {
-        user = post.getLikes()
-            .get(j);
-      }
-      addUserToPreview(marginOfTheNextLikePreview, user);
-      if (marginOfTheNextLikePreview < 0) {
-        break;
-      }
     }
   }
 
@@ -290,11 +259,9 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
       if (user.getAvatar() != null) {
         ImageLoader.with(itemView.getContext())
             .loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
-      } else if (user.getStore()
-          .getAvatar() != null) {
+      } else if (user.getStore().getAvatar() != null) {
         ImageLoader.with(itemView.getContext())
-            .loadWithShadowCircleTransform(user.getStore()
-                .getAvatar(), likeUserPreviewIcon);
+            .loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
       }
       likePreviewContainer.addView(likeUserPreviewView);
       marginOfTheNextLikePreview -= 20;
@@ -302,8 +269,10 @@ public class SocialMediaViewHolder extends CardViewHolder<SocialMedia> {
   }
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
-  public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_shared, title),
-        ContextCompat.getColor(context, R.color.black_87_alpha), title);
+  private void showNumberOfLikes(long likesNumber) {
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber),
+        itemView.getContext().getString(R.string.likes).toLowerCase()));
+    numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 }

@@ -345,7 +345,9 @@ public abstract class V8Engine extends Application {
     sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
             getDefaultSharedPreferences())))
-        .subscribe();
+        .subscribe(() -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -894,7 +896,7 @@ public abstract class V8Engine extends Application {
         .build(context, flurryKey);
   }
 
-  private Observable sendAppStartToAnalytics() {
+  private Completable sendAppStartToAnalytics() {
     return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
         getDefaultClient(), getBaseBodyInterceptorV7(),
         SecurePreferencesImplementation.getInstance(getApplicationContext(),

@@ -49,6 +49,18 @@ public class MinimalCardViewFactory {
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
+  public View getView(Post originalPost, List<MinimalPost> minimalPosts, LayoutInflater inflater,
+      Context context) {
+    LinearLayout minimalCardContainer = new LinearLayout(context);
+    minimalCardContainer.setOrientation(LinearLayout.VERTICAL);
+
+    for (MinimalPost post : minimalPosts) {
+      minimalCardContainer.addView(
+          getMinimalCardView(originalPost, post, inflater, context, minimalCardContainer));
+    }
+    return minimalCardContainer;
+  }
+
   private View getMinimalCardView(Post originalPost, MinimalPost post, LayoutInflater inflater,
       Context context, ViewGroup minimalCardContainer) {
     this.inflater = inflater;
@@ -67,9 +79,8 @@ public class MinimalCardViewFactory {
     TextView commentButton = (TextView) subCardView.findViewById(R.id.social_comment);
     TextView shareButton = (TextView) subCardView.findViewById(R.id.social_share);
     ImageLoader.with(context)
-        .loadWithShadowCircleTransform(post.getMinimalPostPosters()
-            .get(0)
-            .getPrimaryAvatar(), minimalCardHeaderMainAvatar);
+        .loadWithShadowCircleTransform(post.getMinimalPostPosters().get(0).getPrimaryAvatar(),
+            minimalCardHeaderMainAvatar);
 
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
@@ -87,18 +98,15 @@ public class MinimalCardViewFactory {
         (ImageView) subCardView.findViewById(R.id.card_last_comment_main_icon);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
-    if (post.getMinimalPostPosters()
-        .size() > 1) {
+    if (post.getMinimalPostPosters().size() > 1) {
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(post.getMinimalPostPosters()
-              .get(1)
-              .getPrimaryAvatar(), minimalCardHeaderMainAvatar2);
+          .loadWithShadowCircleTransform(post.getMinimalPostPosters().get(1).getPrimaryAvatar(),
+              minimalCardHeaderMainAvatar2);
     } else {
       minimalCardHeaderMainAvatar2.setVisibility(View.GONE);
     }
 
-    showMorePostersLabel(post.getMinimalPostPosters()
-        .size(), context);
+    showMorePostersLabel(post.getMinimalPostPosters().size(), context);
 
     minimalCardHeaderMainName.setText(getCardHeaderNames(post.getMinimalPostPosters()));
 
@@ -130,6 +138,29 @@ public class MinimalCardViewFactory {
     return subCardView;
   }
 
+  private void showMorePostersLabel(int posters, Context context) {
+    if (posters > 2) {
+      morePostersLabel.setText(String.format(context.getString(R.string.timeline_short_plus),
+          String.valueOf(posters - 2)));
+      morePostersLabel.setVisibility(View.VISIBLE);
+    } else {
+      morePostersLabel.setVisibility(View.INVISIBLE);
+    }
+  }
+
+  public String getCardHeaderNames(List<Poster> sharers) {
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    if (sharers.size() == 1) {
+      return headerNamesStringBuilder.append(sharers.get(0).getStore().getName()).toString();
+    }
+    List<Poster> firstSharers = sharers.subList(0, 2);
+    for (Poster poster : firstSharers) {
+      headerNamesStringBuilder.append(poster.getPrimaryName()).append(", ");
+    }
+    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    return headerNamesStringBuilder.toString();
+  }
+
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   private void showSocialInformationBar(MinimalPost card, Context context) {
     if (card.getLikesNumber() > 0 || card.getCommentsNumber() > 0) {
@@ -142,16 +173,28 @@ public class MinimalCardViewFactory {
     handleCommentsInformation(card, context);
   }
 
+  private void showLikesPreview(MinimalPost post, Context context) {
+    likePreviewContainer.removeAllViews();
+    marginOfTheNextLikePreview = 60;
+    for (int j = 0; j < post.getLikesNumber(); j++) {
+
+      UserTimeline user = null;
+      if (post.getLikes() != null && j < post.getLikes().size()) {
+        user = post.getLikes().get(j);
+      }
+      addUserToPreview(marginOfTheNextLikePreview, user, context);
+      if (marginOfTheNextLikePreview < 0) {
+        break;
+      }
+    }
+  }
+
   private void handleLikesInformation(MinimalPost card, Context context) {
     if (card.getLikesNumber() > 0) {
       if (card.getLikesNumber() > 1) {
         showNumberOfLikes(card.getLikesNumber(), context);
-      } else if (card.getLikes() != null
-          && card.getLikes()
-          .size() != 0) {
-        String firstLikeName = card.getLikes()
-            .get(0)
-            .getName();
+      } else if (card.getLikes() != null && card.getLikes().size() != 0) {
+        String firstLikeName = card.getLikes().get(0).getName();
         if (firstLikeName != null) {
           numberLikesOneLike.setText(spannableFactory.createColorSpan(
               context.getString(R.string.x_liked_it, firstLikeName),
@@ -159,13 +202,8 @@ public class MinimalCardViewFactory {
           numberLikes.setVisibility(View.INVISIBLE);
           numberLikesOneLike.setVisibility(View.VISIBLE);
         } else {
-          String firstStoreName = card.getLikes()
-              .get(0)
-              .getStore()
-              .getName();
-          if (card.getLikes()
-              .get(0)
-              .getStore() != null && firstStoreName != null) {
+          String firstStoreName = card.getLikes().get(0).getStore().getName();
+          if (card.getLikes().get(0).getStore() != null && firstStoreName != null) {
             numberLikesOneLike.setText(spannableFactory.createColorSpan(
                 context.getString(R.string.x_liked_it, firstStoreName),
                 ContextCompat.getColor(context, R.color.black_87_alpha), firstStoreName));
@@ -181,53 +219,22 @@ public class MinimalCardViewFactory {
       numberLikesOneLike.setVisibility(View.INVISIBLE);
     }
   }
+  /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
   private void handleCommentsInformation(MinimalPost post, Context context) {
     if (post.getCommentsNumber() > 0) {
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(String.format("%s %s", String.valueOf(post.getCommentsNumber()),
-          context.getString(R.string.comments)
-              .toLowerCase()));
+          context.getString(R.string.comments).toLowerCase()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(post.getComments()
-              .get(0)
-              .getAvatar(), latestCommentMainAvatar);
-      socialCommentUsername.setText(post.getComments()
-          .get(0)
-          .getName());
-      socialCommentBody.setText(post.getComments()
-          .get(0)
-          .getBody());
+          .loadWithShadowCircleTransform(post.getComments().get(0).getAvatar(),
+              latestCommentMainAvatar);
+      socialCommentUsername.setText(post.getComments().get(0).getName());
+      socialCommentBody.setText(post.getComments().get(0).getBody());
     } else {
       numberComments.setVisibility(View.INVISIBLE);
       socialCommentBar.setVisibility(View.GONE);
-    }
-  }
-
-  private void showNumberOfLikes(long likesNumber, Context context) {
-    numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber),
-        context.getString(R.string.likes)
-            .toLowerCase()));
-    numberLikesOneLike.setVisibility(View.INVISIBLE);
-  }
-
-  private void showLikesPreview(MinimalPost post, Context context) {
-    likePreviewContainer.removeAllViews();
-    marginOfTheNextLikePreview = 60;
-    for (int j = 0; j < post.getLikesNumber(); j++) {
-
-      UserTimeline user = null;
-      if (post.getLikes() != null && j < post.getLikes()
-          .size()) {
-        user = post.getLikes()
-            .get(j);
-      }
-      addUserToPreview(marginOfTheNextLikePreview, user, context);
-      if (marginOfTheNextLikePreview < 0) {
-        break;
-      }
     }
   }
 
@@ -247,55 +254,20 @@ public class MinimalCardViewFactory {
       if (user.getAvatar() != null) {
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
-      } else if (user.getStore()
-          .getAvatar() != null) {
+      } else if (user.getStore().getAvatar() != null) {
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(user.getStore()
-                .getAvatar(), likeUserPreviewIcon);
+            .loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
       }
       likePreviewContainer.addView(likeUserPreviewView);
       marginOfTheNextLikePreview -= 20;
     }
   }
-  /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
-  private void showMorePostersLabel(int posters, Context context) {
-    if (posters > 2) {
-      morePostersLabel.setText(String.format(context.getString(R.string.timeline_short_plus),
-          String.valueOf(posters - 2)));
-      morePostersLabel.setVisibility(View.VISIBLE);
-    } else {
-      morePostersLabel.setVisibility(View.INVISIBLE);
-    }
-  }
-
-  public String getCardHeaderNames(List<Poster> sharers) {
-    StringBuilder headerNamesStringBuilder = new StringBuilder();
-    if (sharers.size() == 1) {
-      return headerNamesStringBuilder.append(sharers.get(0)
-          .getStore()
-          .getName())
-          .toString();
-    }
-    List<Poster> firstSharers = sharers.subList(0, 2);
-    for (Poster poster : firstSharers) {
-      headerNamesStringBuilder.append(poster.getPrimaryName())
-          .append(", ");
-    }
-    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
-    return headerNamesStringBuilder.toString();
-  }
-
-  public View getView(Post originalPost, List<MinimalPost> minimalPosts, LayoutInflater inflater,
-      Context context) {
-    LinearLayout minimalCardContainer = new LinearLayout(context);
-    minimalCardContainer.setOrientation(LinearLayout.VERTICAL);
-
-    for (MinimalPost post : minimalPosts) {
-      minimalCardContainer.addView(
-          getMinimalCardView(originalPost, post, inflater, context, minimalCardContainer));
-    }
-    return minimalCardContainer;
+  private void showNumberOfLikes(long likesNumber, Context context) {
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber),
+        context.getString(R.string.likes).toLowerCase()));
+    numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
   public View getView(Post originalPost, List<Post> minimalCards, int numberOfCardsToShow,

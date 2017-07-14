@@ -25,7 +25,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 19/06/2017.
  */
 
-public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
+public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final ImageView headerIcon;
@@ -71,21 +71,20 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
     this.shareButton = (TextView) view.findViewById(R.id.social_share);
   }
 
-  @Override public void setCard(Recommendation card, int position) {
+  @Override public void setPost(Recommendation card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPublisherDrawableId(), headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), card));
     this.headerSubTitle.setText(
         getTimeSinceRecommendation(itemView.getContext(), card.getTimestamp()));
-    ImageLoader.with(itemView.getContext())
-        .load(card.getAppIcon(), appIcon);
+    ImageLoader.with(itemView.getContext()).load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
-    this.relatedToText.setText(itemView.getContext()
-        .getString(R.string.related_to)
-        .toLowerCase());
+    this.relatedToText.setText(itemView.getContext().getString(R.string.related_to).toLowerCase());
     this.relatedToApp.setText(card.getRelatedToAppName());
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {
       likeButton.setHeartState(true);
@@ -102,20 +101,19 @@ public class RecommendationViewHolder extends CardViewHolder<Recommendation> {
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
   }
 
-  public String getTimeSinceRecommendation(Context context, Date timestamp) {
-    return dateCalculator.getTimeSinceDate(context, timestamp);
-  }
-
   private Spannable getStyledTitle(Context context, Recommendation card) {
     return spannableFactory.createColorSpan(getTitle(context.getResources()),
         ContextCompat.getColor(context, R.color.appstimeline_recommends_title),
         card.getPublisherName());
   }
 
+  public String getTimeSinceRecommendation(Context context, Date timestamp) {
+    return dateCalculator.getTimeSinceDate(context, timestamp);
+  }
+
   public String getTitle(Resources resources) {
     return AptoideUtils.StringU.getFormattedString(
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, resources,
-        Application.getConfiguration()
-            .getMarketName());
+        Application.getConfiguration().getMarketName());
   }
 }
