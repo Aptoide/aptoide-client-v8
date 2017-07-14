@@ -83,16 +83,19 @@ public class AndroidAccountDataMigration {
       //storeMetaProvider.getStore(userRepo, null, null).subscribe(getStoreMeta -> {
       //
       //}, Throwable::printStackTrace);
-      final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
-      final Account oldAccount = accounts[0];
+      return Completable.defer(() -> Completable.fromCallable(() -> {
+        final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
+        final Account oldAccount = accounts[0];
 
-      for (String key : NEW_STORE_MIGRATION_KEYS) {
-        if (key.equals("account_store_download_count") || key.equals("account_store_id")) {
-          accountManager.setUserData(oldAccount, key, "0");
-        } else {
-          accountManager.setUserData(oldAccount, key, "");
+        for (String key : NEW_STORE_MIGRATION_KEYS) {
+          if (key.equals("account_store_download_count") || key.equals("account_store_id")) {
+            accountManager.setUserData(oldAccount, key, "0");
+          } else {
+            accountManager.setUserData(oldAccount, key, "");
+          }
         }
-      }
+        return Completable.complete();
+      }));
     }
     return Completable.complete();
   }
