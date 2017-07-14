@@ -76,6 +76,7 @@ public class TransferReceiving extends Transfer<TransferReceiving> {
     }
 
     @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
+      transferReceiving.state = State.RECEIVING;
       transferReceiving.progress = progress;
       notifyListeners();
     }
