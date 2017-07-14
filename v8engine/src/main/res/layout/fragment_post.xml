@@ -48,26 +48,32 @@
             style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
             />
       </android.support.design.widget.TextInputLayout>
-      <ImageView
-          android:id="@+id/preview_image"
+      <FrameLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="25dp"
-          android:visibility="gone"
-          tools:background="@color/orange_700"
-          tools:scaleType="centerInside"
-          tools:src="@drawable/wizard_community"
-          tools:visibility="visible"
-          />
-      <ProgressBar
-          android:id="@+id/preview_progress_bar"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@color/white"
-          android:indeterminate="true"
-          android:visibility="gone"
-          tools:visibility="visible"
-          />
+          >
+        <ImageView
+            android:id="@+id/preview_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"
+            tools:background="@color/orange_700"
+            tools:src="@drawable/wizard_community"
+            tools:visibility="visible"
+            />
+        <ProgressBar
+            android:id="@+id/preview_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:indeterminate="true"
+            android:paddingBottom="75dp"
+            android:paddingTop="75dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+      </FrameLayout>
       <TextView
           android:id="@+id/preview_title"
           android:layout_width="match_parent"
@@ -75,7 +81,8 @@
           android:layout_marginLeft="@dimen/label_padding"
           android:layout_marginStart="@dimen/label_padding"
           android:layout_marginTop="@dimen/label_padding"
-          android:gravity="center_horizontal"
+          android:ellipsize="end"
+          android:lines="2"
           android:textColor="@color/black_87_alpha"
           android:textSize="@dimen/timeline_post_post_title_title"
           android:visibility="gone"
@@ -87,6 +94,7 @@
           android:id="@+id/related_apps_header"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/label_padding"
           android:layout_marginTop="@dimen/label_padding"
           android:text="@string/timeline_title_related_app"
           android:textAppearance="@style/Aptoide.TextView.Medium.S"
@@ -99,6 +107,7 @@
           android:id="@+id/related_apps_list"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/label_padding"
           android:scrollbars="horizontal"
           />
 

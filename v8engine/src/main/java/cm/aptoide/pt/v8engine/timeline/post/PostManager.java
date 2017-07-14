@@ -26,6 +26,7 @@ public class PostManager {
 
     Single<List<PostRemoteAccessor.RelatedApp>> remoteSuggestions =
         !TextUtils.isEmpty(url) ? postRemoteRepository.getRelatedApps(url)
+            .onErrorReturn(throwable -> Collections.emptyList())
             : Single.just(Collections.emptyList());
 
     Single<List<PostRemoteAccessor.RelatedApp>> installedApps =

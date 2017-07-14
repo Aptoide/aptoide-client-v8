@@ -372,10 +372,15 @@ public class ImageLoader {
   }
 
   public Target<GlideDrawable> loadWithCenterCrop(String url, ImageView imageView) {
+    return loadWithoutResizeCenterCrop(
+        AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager), imageView);
+  }
+
+  public Target<GlideDrawable> loadWithoutResizeCenterCrop(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager))
+          .load(url)
           .centerCrop()
           .into(imageView);
     } else {

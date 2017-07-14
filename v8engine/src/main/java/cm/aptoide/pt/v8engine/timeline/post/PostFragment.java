@@ -184,9 +184,8 @@ public class PostFragment extends FragmentView implements PostView {
   @Override public void showCardPreview(PostPreview suggestion) {
     previewImage.setVisibility(View.VISIBLE);
     previewTitle.setVisibility(View.VISIBLE);
-
     ImageLoader.with(getContext())
-        .loadWithoutResizing(suggestion.getImage(), previewImage);
+        .loadWithoutResizeCenterCrop(suggestion.getImage(), previewImage);
     previewTitle.setText(suggestion.getTitle());
   }
 
