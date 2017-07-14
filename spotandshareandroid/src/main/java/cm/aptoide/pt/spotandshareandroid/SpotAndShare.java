@@ -62,7 +62,7 @@ public class SpotAndShare {
   }
 
   public boolean canSend() {
-    return true;
+    return spotAndShareV2.canSend();
   }
 
   public Observable<List<Transfer>> observeTransfers() {

@@ -173,6 +173,12 @@ class SpotAndShareV2 {
     return transferManager.observeTransfers();
   }
 
+  public boolean canSend() {
+    return observeFriends().map(friends -> friends.size() > 0)
+        .toBlocking()
+        .first();
+  }
+
   public interface OnError {
     void onError(Throwable throwable);
   }
