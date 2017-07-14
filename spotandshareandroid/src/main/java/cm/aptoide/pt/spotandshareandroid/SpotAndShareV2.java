@@ -43,7 +43,7 @@ class SpotAndShareV2 {
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
         .getSystemService(Context.WIFI_SERVICE), serviceProvider.getWifiManager());
     applicationContext = context.getApplicationContext();
-    transferManager = new TransferManager(new SpotAndShareMessageServer(55555));
+    transferManager = new TransferManager(new SpotAndShareMessageServer(55555, friend));
     this.friend = friend;
   }
 
@@ -86,7 +86,7 @@ class SpotAndShareV2 {
 
   private void startSpotAndShareMessageClient(ConnectivityManager connectivityManager,
       Friend friend) {
-    transferManager.startClient(applicationContext, connectivityManager, friend);
+    transferManager.startClient(applicationContext, connectivityManager);
   }
 
   private void startSpotAndShareMessageServer(OnError onError) {

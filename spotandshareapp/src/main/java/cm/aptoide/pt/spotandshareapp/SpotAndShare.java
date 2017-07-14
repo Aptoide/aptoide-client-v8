@@ -13,9 +13,10 @@ public class SpotAndShare {
 
   private static final Friend FRIEND = new Friend("dummy_username");
 
-  public static cm.aptoide.pt.spotandshareandroid.SpotAndShare getInstance(Context context) {
+  public static cm.aptoide.pt.spotandshareandroid.SpotAndShare getInstance(Context context,
+      Friend friend) {
     if (instance == null) {
-      instance = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(context, FRIEND);
+      instance = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(context, friend);
     }
     return instance;
   }

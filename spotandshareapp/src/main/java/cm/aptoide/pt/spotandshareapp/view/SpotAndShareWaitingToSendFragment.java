@@ -56,7 +56,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     };
     registerClickHandler(clickHandler);
     attachPresenter(
-        new SpotAndShareWaitingToSendPresenter(this, SpotAndShare.getInstance(getContext())),
+        new SpotAndShareWaitingToSendPresenter(this, SpotAndShare.getInstance(getContext(), null)),
         savedInstanceState);
   }
 

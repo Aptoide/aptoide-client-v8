@@ -17,8 +17,8 @@ import lombok.experimental.Accessors;
   private final String packageName;
   private final List<FileInfo> fileInfos;
   private FileInfo apk, mainObb, patchObb;
-  private String senderName;
   private byte[] icon;
+  private Friend friend;
 
   public AndroidAppInfo(String appName, String packageName, File apk, File mainObb, File patchObb,
       byte[] icon, String senderName) {
@@ -34,7 +34,6 @@ import lombok.experimental.Accessors;
       this.patchObb = new FileInfo(patchObb);
     }
 
-    this.senderName = senderName;
     this.icon = icon;
 
     fileInfos = buildFileInfos();

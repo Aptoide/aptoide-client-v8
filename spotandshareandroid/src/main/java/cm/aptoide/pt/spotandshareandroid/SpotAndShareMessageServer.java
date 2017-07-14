@@ -27,10 +27,12 @@ public class SpotAndShareMessageServer {
 
   private AptoideMessageServerSocket aptoideMessageServerSocket;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
+  private final Friend friend;
 
   private final int port;
 
-  public SpotAndShareMessageServer(int port) {
+  public SpotAndShareMessageServer(int port, Friend friend) {
+    this.friend = friend;
     this.port = port;
   }
 
@@ -48,7 +50,7 @@ public class SpotAndShareMessageServer {
     }
   }
 
-  public void startClient(MessageServerConfiguration messageServerConfiguration, Friend friend,
+  public void startClient(MessageServerConfiguration messageServerConfiguration,
       TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
@@ -64,8 +66,8 @@ public class SpotAndShareMessageServer {
 
   public void startClient(String externalStoragepath, StorageCapacity storageCapacity,
       TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider,
-      SocketBinder socketBinder,
-      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
+      SocketBinder socketBinder, OnError<IOException> onError,
+      AndroidAppInfoAccepter androidAppInfoAccepter) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
@@ -78,6 +80,7 @@ public class SpotAndShareMessageServer {
   }
 
   public void sendApp(AndroidAppInfo androidAppInfo) {
+    androidAppInfo.setFriend(friend);
     aptoideMessageClientSocket.send(
         new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), androidAppInfo));
   }

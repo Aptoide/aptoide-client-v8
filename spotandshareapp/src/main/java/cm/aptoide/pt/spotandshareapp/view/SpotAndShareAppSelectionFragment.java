@@ -161,7 +161,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
         new InstalledRepositoryDummy(getContext().getPackageManager()),
-        SpotAndShare.getInstance(getContext()), new SpotAndShareAppSelectionManager(),
+        SpotAndShare.getInstance(getContext(), null), new SpotAndShareAppSelectionManager(),
         new ObbsProvider()), savedInstanceState);
   }
 

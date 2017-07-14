@@ -83,7 +83,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         .build();
     shareAppButton = (Button) view.findViewById(R.id.transfer_record_share_an_app_button);
     attachPresenter(
-        new SpotAndShareTransferRecordPresenter(this, SpotAndShare.getInstance(getContext()),
+        new SpotAndShareTransferRecordPresenter(this, SpotAndShare.getInstance(getContext(), null),
             new SpotAndShareTransferRecordManager(getContext()),
             new SpotAndShareInstallManager(getActivity().getApplicationContext())),
         savedInstanceState);

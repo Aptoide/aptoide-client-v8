@@ -19,7 +19,6 @@ import rx.Observable;
 /**
  * Created by neuro on 11-07-2017.
  */
-
 public class TransferManager {
 
   private final TransferListRelay transferListRelay;
@@ -42,12 +41,10 @@ public class TransferManager {
     transferListRelay.callRelay();
   }
 
-  public void startClient(Context applicationContext, ConnectivityManager connectivityManager,
-      Friend friend) {
+  public void startClient(Context applicationContext, ConnectivityManager connectivityManager) {
     spotAndShareMessageServer.startClient(
         new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-            getAndroidAppInfoAccepter(), connectivityManager), friend,
-        createTransferLifecycleProvider());
+            getAndroidAppInfoAccepter(), connectivityManager), createTransferLifecycleProvider());
   }
 
   private TransferLifecycleProvider<AndroidAppInfo> createTransferLifecycleProvider() {

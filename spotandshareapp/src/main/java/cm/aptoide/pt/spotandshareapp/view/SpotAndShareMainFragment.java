@@ -136,7 +136,8 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     username = (TextView) view.findViewById(R.id.username);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
-    presenter = new SpotAndShareMainFragmentPresenter(this, SpotAndShare.getInstance(getContext()),
+    presenter =
+        new SpotAndShareMainFragmentPresenter(this, SpotAndShare.getInstance(getContext(), null),
         new SpotAndShareUserManager(new SpotAndShareUserPersister(
             getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE))));

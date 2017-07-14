@@ -60,9 +60,8 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
     //// TODO: 11-07-2017 filipe FIX THIS DIALOG.
-    attachPresenter(
-        new SpotAndShareWaitingToReceivePresenter(this, SpotAndShare.getInstance(getContext())),
-        savedInstanceState);
+    attachPresenter(new SpotAndShareWaitingToReceivePresenter(this,
+        SpotAndShare.getInstance(getContext(), null)), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
