@@ -11,13 +11,13 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.billing.AuthorizationPersistence;
-import cm.aptoide.pt.v8engine.billing.AuthorizationService;
+import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
-import cm.aptoide.pt.v8engine.billing.TransactionService;
+import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
+import cm.aptoide.pt.v8engine.billing.transaction.TransactionService;
 
 public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
 

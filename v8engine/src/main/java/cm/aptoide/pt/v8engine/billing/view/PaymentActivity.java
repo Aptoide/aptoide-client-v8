@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.billing.view.braintree.BraintreeActivity;
 
 public class PaymentActivity extends BraintreeActivity {
 

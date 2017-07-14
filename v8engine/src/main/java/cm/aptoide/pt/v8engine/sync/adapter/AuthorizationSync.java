@@ -6,9 +6,9 @@
 package cm.aptoide.pt.v8engine.sync.adapter;
 
 import android.content.SyncResult;
-import cm.aptoide.pt.v8engine.billing.Authorization;
-import cm.aptoide.pt.v8engine.billing.AuthorizationPersistence;
-import cm.aptoide.pt.v8engine.billing.AuthorizationService;
+import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
+import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import java.io.IOException;

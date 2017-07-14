@@ -7,12 +7,12 @@ package cm.aptoide.pt.v8engine.sync.adapter;
 
 import android.content.SyncResult;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
-import cm.aptoide.pt.v8engine.billing.LocalTransaction;
+import cm.aptoide.pt.v8engine.billing.transaction.LocalTransaction;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.Transaction;
-import cm.aptoide.pt.v8engine.billing.TransactionPersistence;
-import cm.aptoide.pt.v8engine.billing.TransactionService;
+import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
+import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
+import cm.aptoide.pt.v8engine.billing.transaction.TransactionService;
 import java.net.HttpRetryException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;

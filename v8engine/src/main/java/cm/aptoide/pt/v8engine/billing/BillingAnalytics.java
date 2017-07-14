@@ -4,7 +4,9 @@ import android.os.Bundle;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.Event;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
+import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
+import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
 import com.facebook.appevents.AppEventsLogger;
 
