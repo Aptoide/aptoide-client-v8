@@ -45,10 +45,11 @@ public class TransferManager {
       Friend friend) {
     spotAndShareMessageServer.startClient(
         new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-            getAndroidAppInfoAccepter(), connectivityManager), friend, teste());
+            getAndroidAppInfoAccepter(), connectivityManager), friend,
+        createTransferLifecycleProvider());
   }
 
-  private TransferLifecycleProvider<AndroidAppInfo> teste() {
+  private TransferLifecycleProvider<AndroidAppInfo> createTransferLifecycleProvider() {
     return () -> new TransferLifecycle<AndroidAppInfo>() {
 
       private TransferSending transferSending;
