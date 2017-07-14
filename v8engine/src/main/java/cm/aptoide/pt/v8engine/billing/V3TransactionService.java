@@ -92,6 +92,12 @@ public class V3TransactionService implements TransactionService {
 
   @Override public Single<Transaction> createTransaction(Product product, int paymentMethodId,
       String payerId) {
+
+    if (paymentMethodId == PaymentMethodMapper.PAYPAL) {
+      return Single.just(transactionFactory.create(product.getId(), payerId,
+          Transaction.Status.PENDING_USER_AUTHORIZATION, paymentMethodId, null, null, null, null));
+    }
+
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {

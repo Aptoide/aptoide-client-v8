@@ -15,14 +15,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.presenter.PaymentMethodSelector;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -59,7 +57,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private Billing billing;
   private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
-  private PaymentMethodSelector paymentMethodSelector;
   private AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
 
@@ -75,8 +72,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productProvider = ProductProvider.fromBundle(billing, getArguments());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
-    paymentMethodSelector = new PaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     billingNavigator =
@@ -122,8 +117,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .build();
 
     attachPresenter(
-        new PaymentPresenter(this, billing, accountManager, paymentMethodSelector, accountNavigator,
-            billingNavigator, billingAnalytics, productProvider), savedInstanceState);
+        new PaymentPresenter(this, billing, accountManager, accountNavigator, billingNavigator,
+            billingAnalytics, productProvider), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

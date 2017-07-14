@@ -6,11 +6,9 @@
 package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
-import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompra;
-import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompraAuthorization;
-import cm.aptoide.pt.v8engine.billing.methods.mol.MolPoints;
-import cm.aptoide.pt.v8engine.billing.methods.mol.MolTransaction;
+import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
@@ -26,12 +24,18 @@ public class Billing {
   private final ProductRepositoryFactory productRepositoryFactory;
   private final TransactionRepository transactionRepository;
   private final InAppBillingRepository inAppBillingRepository;
+  private final AuthorizationRepository authorizationRepository;
+  private final PaymentMethodSelector paymentMethodSelector;
 
   public Billing(ProductRepositoryFactory productRepositoryFactory,
-      TransactionRepository transactionRepository, InAppBillingRepository inAppBillingRepository) {
+      TransactionRepository transactionRepository, InAppBillingRepository inAppBillingRepository,
+      AuthorizationRepository authorizationRepository,
+      PaymentMethodSelector paymentMethodSelector) {
     this.productRepositoryFactory = productRepositoryFactory;
     this.transactionRepository = transactionRepository;
     this.inAppBillingRepository = inAppBillingRepository;
+    this.authorizationRepository = authorizationRepository;
+    this.paymentMethodSelector = paymentMethodSelector;
   }
 
   public Single<Boolean> isSupported(String packageName, int apiVersion, String type) {
@@ -81,39 +85,27 @@ public class Billing {
         .getPaymentMethods(product);
   }
 
-  public Single<PaymentMethod> getPaymentMethod(int paymentId, Product product) {
-    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments)
-        .filter(payment -> payment.getId() == paymentId)
-        .switchIfEmpty(Observable.error(
-            new PaymentFailureException("Payment " + paymentId + " not available"))))
-        .first()
-        .toSingle();
-  }
-
-  public Completable processBoaCompraPayment(int paymentMethodId, Product product) {
-    return getPaymentMethod(paymentMethodId, product).flatMapCompletable(
-        payment -> ((BoaCompra) payment).processAuthorized(product));
-  }
-
-  public Single<BoaCompraAuthorization> getBoaCompraAuthorization(int paymentMethodId,
-      Product product) {
-    return getPaymentMethod(paymentMethodId, product).flatMap(
-        payment -> ((BoaCompra) payment).getAuthorization());
-  }
-
-  public Single<MolTransaction> getMolTransaction(int paymentMethodId, Product product) {
-    return getPaymentMethod(paymentMethodId, product).flatMap(
-        payment -> ((MolPoints) payment).getTransaction(product));
-  }
-
   public Completable processPayment(int paymentId, Product product) {
-    return getPaymentMethod(paymentId, product).flatMapCompletable(
-        payment -> payment.process(product));
+    return transactionRepository.createTransaction(paymentId, product)
+        .flatMapCompletable(transaction -> {
+          if (transaction.isPendingAuthorization()) {
+            return Completable.error(
+                new PaymentMethodNotAuthorizedException("Pending payment method authorization."));
+          }
+
+          if (transaction.isFailed()) {
+            return Completable.error(new PaymentFailureException("Payment failed."));
+          }
+
+          return Completable.complete();
+        });
   }
 
-  public Completable processLocalPayment(int paymentId, Product product, String localMetadata) {
-    return getPaymentMethod(paymentId, product).flatMapCompletable(
-        payment -> ((LocalPaymentMethod) payment).processLocal(product, localMetadata));
+  public Completable processLocalPayment(int paymentMethodId, Product product,
+      String localMetadata) {
+    return getPaymentMethod(paymentMethodId, product).flatMapCompletable(
+        payment -> transactionRepository.createTransaction(paymentMethodId, product, localMetadata)
+            .toCompletable());
   }
 
   public Observable<Transaction> getTransaction(Product product) {
@@ -131,5 +123,33 @@ public class Billing {
           }
           return Single.error(throwable);
         });
+  }
+
+  public Observable<Authorization> getAuthorization(int paymentMethodId) {
+    return authorizationRepository.getAuthorization(paymentMethodId);
+  }
+
+  public Completable authorize(int paymentMethodId) {
+    return authorizationRepository.createAuthorization(paymentMethodId)
+        .toCompletable();
+  }
+
+  public Completable selectPaymentMethod(int paymentMethodId, Product product) {
+    return getPaymentMethod(paymentMethodId, product).flatMapCompletable(
+        paymentMethod -> paymentMethodSelector.selectPaymentMethod(paymentMethod));
+  }
+
+  public Single<PaymentMethod> getSelectedPaymentMethod(Product product) {
+    return getPaymentMethods(product).flatMap(
+        paymentMethods -> paymentMethodSelector.selectedPaymentMethod(paymentMethods));
+  }
+
+  private Single<PaymentMethod> getPaymentMethod(int paymentId, Product product) {
+    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments)
+        .filter(payment -> payment.getId() == paymentId)
+        .switchIfEmpty(
+            Observable.error(new PaymentFailureException("Payment " + paymentId + " not found."))))
+        .first()
+        .toSingle();
   }
 }

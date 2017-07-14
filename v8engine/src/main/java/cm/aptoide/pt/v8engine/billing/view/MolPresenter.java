@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.methods.mol.MolTransaction;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,6 +31,8 @@ public class MolPresenter implements Presenter {
 
     onViewCreatedAuthorizeMolPayment();
 
+    onViewCreatedShowMolPaymentError();
+
     handleWebsiteLoadedEvent();
 
     handleBackButtonEvent();
@@ -53,12 +56,34 @@ public class MolPresenter implements Presenter {
         .flatMapSingle(__ -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(product -> view.showLoading())
-        .flatMapSingle(product -> billing.getMolTransaction(paymentMethodId, product)
+        .flatMap(product -> billing.getTransaction(product)
+            .first(transaction -> transaction.isPendingAuthorization())
+            .cast(MolTransaction.class)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(transaction -> view.loadWebsite(transaction.getConfirmationUrl(),
-                transaction.getSuccessUrl()))
+            .doOnNext(transaction -> view.loadWebsite(transaction.getConfirmationUrl(),
+                transaction.getSuccessUrl())))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.showError();
+          view.hideLoading();
+        });
+  }
+
+  private void onViewCreatedShowMolPaymentError() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(__ -> productProvider.getProduct())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(product -> view.showLoading())
+        .flatMap(product -> billing.getTransaction(product)
+            .first(transaction -> !transaction.isPendingAuthorization())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(__ -> view.hideLoading()))
+            .doOnNext(transaction -> {
+              view.showError();
+              view.hideLoading();
+            }))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -75,6 +100,7 @@ public class MolPresenter implements Presenter {
             .doOnNext(backToStorePressed -> view.showLoading())
             .flatMapSingle(loading -> productProvider.getProduct())
             .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product))
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(sent -> navigator.popTransactionAuthorizationView()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

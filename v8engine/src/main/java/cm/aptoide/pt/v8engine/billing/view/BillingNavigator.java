@@ -5,12 +5,9 @@ import android.os.Bundle;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
+import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.methods.boacompra.BoaCompra;
-import cm.aptoide.pt.v8engine.billing.methods.braintree.BraintreeCreditCard;
-import cm.aptoide.pt.v8engine.billing.methods.mol.MolPoints;
-import cm.aptoide.pt.v8engine.billing.methods.paypal.PayPal;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
@@ -37,32 +34,30 @@ public class BillingNavigator {
   }
 
   public void navigateToTransactionAuthorizationView(PaymentMethod paymentMethod, Product product) {
-
-    if (paymentMethod instanceof PayPal) {
-      fragmentNavigator.navigateTo(
-          PayPalFragment.create(getProductBundle(product), paymentMethod.getId()));
-      return;
+    switch (paymentMethod.getId()) {
+      case PaymentMethodMapper.PAYPAL:
+        fragmentNavigator.navigateTo(
+            PayPalFragment.create(getProductBundle(product), paymentMethod.getId()));
+        break;
+      case PaymentMethodMapper.MOL_POINTS:
+        fragmentNavigator.navigateTo(
+            MolFragment.create(getProductBundle(product), paymentMethod.getId()));
+        break;
+      case PaymentMethodMapper.BOA_COMPRA:
+      case PaymentMethodMapper.BOA_COMPRA_GOLD:
+        fragmentNavigator.navigateTo(
+            BoaCompraFragment.create(getProductBundle(product), paymentMethod.getId()));
+        break;
+      case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
+        fragmentNavigator.navigateTo(
+            BraintreeCreditCardFragment.create(getProductBundle(product), paymentMethod.getId()));
+        break;
+      case PaymentMethodMapper.SANDBOX:
+      default:
+        throw new IllegalArgumentException("Invalid payment method id "
+            + paymentMethod.getId()
+            + " can not navigate to authorization view");
     }
-
-    if (paymentMethod instanceof MolPoints) {
-      fragmentNavigator.navigateTo(
-          MolFragment.create(getProductBundle(product), paymentMethod.getId()));
-      return;
-    }
-
-    if (paymentMethod instanceof BoaCompra) {
-      fragmentNavigator.navigateTo(
-          BoaCompraFragment.create(getProductBundle(product), paymentMethod.getId()));
-    }
-
-    if (paymentMethod instanceof BraintreeCreditCard) {
-      fragmentNavigator.navigateTo(
-          BraintreeCreditCardFragment.create(getProductBundle(product), paymentMethod.getId()));
-    }
-
-    throw new IllegalArgumentException("Invalid payment method id "
-        + paymentMethod.getId()
-        + " can not navigate to authorization view");
   }
 
   public void popTransactionAuthorizationView() {

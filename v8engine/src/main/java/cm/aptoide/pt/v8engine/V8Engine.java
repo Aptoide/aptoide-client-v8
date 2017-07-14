@@ -149,6 +149,7 @@ import cm.aptoide.pt.v8engine.notification.NotificationsCleaner;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
+import cm.aptoide.pt.v8engine.billing.SharedPreferencesPaymentMethodSelector;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
@@ -778,9 +779,11 @@ public abstract class V8Engine extends Application {
       final PurchaseFactory purchaseFactory =
           new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
 
-      final PaymentMethodMapper paymentMethodMapper = new PaymentMethodMapper(transactionRepository,
+      final AuthorizationRepository authorizationRepository =
           new AuthorizationRepository(getBillingSyncScheduler(), getAccountPayer(),
-              getV3AuthorizationService(), getRealmAuthorizationPersistence()));
+              getV3AuthorizationService(), getRealmAuthorizationPersistence());
+
+      final PaymentMethodMapper paymentMethodMapper = new PaymentMethodMapper();
 
       final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
           new PaidAppProductRepository(purchaseFactory, paymentMethodMapper,
@@ -791,7 +794,10 @@ public abstract class V8Engine extends Application {
               getTokenInvalidator(), getDefaultSharedPreferences(), getPackageRepository()));
 
       billing =
-          new Billing(productRepositoryFactory, transactionRepository, getInAppBillingRepository());
+          new Billing(productRepositoryFactory, transactionRepository, getInAppBillingRepository(),
+              authorizationRepository,
+              new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
+                  getDefaultSharedPreferences()));
     }
     return billing;
   }

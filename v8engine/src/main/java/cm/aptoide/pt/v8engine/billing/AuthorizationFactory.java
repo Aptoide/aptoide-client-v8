@@ -64,8 +64,7 @@ public class AuthorizationFactory {
     return authorizations;
   }
 
-  public Authorization map(PaymentAuthorizationResponse response,
-      String payerId, int paymentId) {
+  public Authorization map(PaymentAuthorizationResponse response, String payerId, int paymentId) {
 
     if (response != null && response.isOk()) {
 

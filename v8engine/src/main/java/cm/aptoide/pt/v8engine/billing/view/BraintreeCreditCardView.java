@@ -18,5 +18,4 @@ public interface BraintreeCreditCardView extends View {
   void showError();
 
   Observable<Void> errorDismissedEvent();
-
 }

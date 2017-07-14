@@ -56,13 +56,7 @@ public class TransactionRepository {
     return transactionPersistence.removeTransaction(productId);
   }
 
-  protected Completable syncTransaction(Product product) {
+  private Completable syncTransaction(Product product) {
     return syncScheduler.scheduleTransactionSync(product);
-  }
-
-  public Single<Transaction> createLocalTransaction(int paymentMethodId, int productId) {
-    return payer.getId()
-        .flatMap(payerId -> transactionPersistence.createTransaction(productId, null,
-            Transaction.Status.PENDING_USER_AUTHORIZATION, payerId, paymentMethodId));
   }
 }

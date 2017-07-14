@@ -27,8 +27,8 @@ public class RealmTransactionPersistence implements TransactionPersistence {
   @Override public Single<Transaction> createTransaction(int productId, String metadata,
       Transaction.Status status, String payerId, int paymentMethodId) {
     final Transaction transaction =
-        transactionFactory.create(productId, payerId, status, paymentMethodId, metadata, null,
-            null, null);
+        transactionFactory.create(productId, payerId, status, paymentMethodId, metadata, null, null,
+            null);
     return saveTransaction(transaction).andThen(Single.just(transaction));
   }
 
