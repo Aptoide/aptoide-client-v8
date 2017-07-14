@@ -278,10 +278,6 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       schema.get("PaymentConfirmation")
           .addField("paymentMethodId", int.class);
 
-      oldVersion++;
-    }
-
-    if (oldVersion == 8085) {
       schema.get("Installed")
           .removePrimaryKey()
           .addField("packageAndVersionCode", String.class)
@@ -292,6 +288,7 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .transform(obj -> obj.setInt("status", Installed.STATUS_COMPLETED))
           .addField("type", int.class)
           .transform(obj -> obj.setInt("type", Installed.TYPE_UNKNOWN));
+
       oldVersion++;
     }
   }

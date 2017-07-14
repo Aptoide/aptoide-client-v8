@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+
 public class UserSharerTimeline {
   private User user;
   private Store store;
@@ -10,6 +12,13 @@ public class UserSharerTimeline {
   public UserSharerTimeline(User user, Store store) {
     this.user = user;
     this.store = store;
+  }
+
+  public UserSharerTimeline(Comment.User user,
+      cm.aptoide.pt.dataprovider.model.v7.store.Store store) {
+    this.user = new User(user.getId(), user.getName(), user.getAvatar());
+    this.store = new Store(store.getName(), store.getAvatar(), store.getAppearance()
+        .getTheme());
   }
 
   public User getUser() {
@@ -28,7 +37,8 @@ public class UserSharerTimeline {
     this.store = store;
   }
 
-  public class User {
+  public static class User {
+    private Long id;
     private String name;
     private String avatar;
 
@@ -36,7 +46,8 @@ public class UserSharerTimeline {
 
     }
 
-    public User(String name, String avatar) {
+    public User(long id, String name, String avatar) {
+      this.id = id;
       this.name = name;
       this.avatar = avatar;
     }
@@ -56,9 +67,14 @@ public class UserSharerTimeline {
     public void setAvatar(String avatar) {
       this.avatar = avatar;
     }
+
+    public Long getId() {
+      return id;
+    }
   }
 
   public class Store {
+    private String storeTheme;
     private String name;
     private String avatar;
 
@@ -66,9 +82,10 @@ public class UserSharerTimeline {
 
     }
 
-    public Store(String name, String avatar) {
+    public Store(String name, String avatar, String storeTheme) {
       this.name = name;
       this.avatar = avatar;
+      this.storeTheme = storeTheme;
     }
 
     public String getName() {
@@ -85,6 +102,10 @@ public class UserSharerTimeline {
 
     public void setAvatar(String avatar) {
       this.avatar = avatar;
+    }
+
+    public String getStoreTheme() {
+      return storeTheme;
     }
   }
 }

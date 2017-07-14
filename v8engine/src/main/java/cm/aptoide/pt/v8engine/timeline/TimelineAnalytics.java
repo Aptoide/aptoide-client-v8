@@ -105,7 +105,7 @@ public class TimelineAnalytics {
     return bundle;
   }
 
-  public void sendArticleWidgetCardClickEvent(String cardType, String title, String publisher,
+  public void sendMediaCardClickEvent(String cardType, String title, String publisher,
       String action, String socialAction) {
     analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
         createArticleCardData(cardType, title, publisher, action, socialAction)));
@@ -378,5 +378,11 @@ public class TimelineAnalytics {
     final Bundle data = new Bundle();
     data.putString(key, value);
     return data;
+  }
+
+  public void sendPopularAppOpenUserStoreEvent(String cardType, String source, String packageName,
+      String store) {
+    analytics.sendEvent(
+        createEvent(OPEN_STORE, createStoreAppData(cardType, source, packageName, store)));
   }
 }

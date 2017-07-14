@@ -24,5 +24,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = AggregatedSocialStoreLatestAppsTimelineItem.class, name = "AGGREGATED_SOCIAL_STORE")
 }) public interface TimelineItem<T> {
 
+  Ab getAb();
+
   T getData();
 }

@@ -17,6 +17,10 @@ import lombok.EqualsAndHashCode;
     this.article = article;
   }
 
+  @Override public Ab getAb() {
+    return this.article.getAb();
+  }
+
   @Override public Article getData() {
     return article;
   }

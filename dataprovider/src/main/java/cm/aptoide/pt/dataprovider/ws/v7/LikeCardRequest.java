@@ -36,12 +36,11 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
         + "/api/7/";
   }
 
-  public static LikeCardRequest of(String timelineCardId, String cardType, String ownerHash,
-      int rating, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+  public static LikeCardRequest of(String timelineCardId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final BaseBody body = new BaseBody();
-    return new LikeCardRequest(body, timelineCardId, rating, bodyInterceptor, httpClient,
+    return new LikeCardRequest(body, timelineCardId, 1, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
