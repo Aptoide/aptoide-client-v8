@@ -155,6 +155,7 @@ class SpotAndShareV2 {
       Completable.fromAction(spotAndShareMessageServer::exit)
           .andThen(hotspotManager.restoreNetworkState()
               .toCompletable())
+          .andThen(hotspotManager.forgetSpotAndShareNetworks())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(onSuccess, onError);
     }

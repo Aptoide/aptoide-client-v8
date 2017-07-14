@@ -1,6 +1,9 @@
 package cm.aptoide.pt.spotandshareandroid.hotspotmanager;
 
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.util.Log;
+import java.util.List;
 import rx.Completable;
 import rx.Single;
 
@@ -9,6 +12,8 @@ import rx.Single;
  */
 
 class NetworkStateManager {
+
+  private final String TAG = getClass().getSimpleName();
 
   private final WifiManager wifimanager;
 
@@ -32,5 +37,21 @@ class NetworkStateManager {
 
   public Single<Boolean> setWifiEnabled(boolean enabled) {
     return Single.fromCallable(() -> wifimanager.setWifiEnabled(enabled));
+  }
+
+  public Completable forgetSpotAndShareNetworks() {
+    return Completable.fromAction(() -> cleanNetworks());
+  }
+
+  private void cleanNetworks() {
+    List<WifiConfiguration> list = wifimanager.getConfiguredNetworks();
+    if (list != null) {
+      for (WifiConfiguration i : list) {
+        if (i.SSID.contains("DummyHotspot")) {
+          boolean remove = wifimanager.removeNetwork(i.networkId);
+          Log.i(TAG, "Removed network " + i.SSID + " :" + remove);
+        }
+      }
+    }
   }
 }
