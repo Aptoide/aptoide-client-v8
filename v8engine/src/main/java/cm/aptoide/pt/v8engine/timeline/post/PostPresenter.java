@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -40,6 +41,7 @@ class PostPresenter implements Presenter {
     showRelatedAppsAfterTextChanges();
     handleCancelButtonClick();
     handleRelatedAppClick();
+    handleNoUrlInserted();
   }
 
   @Override public void saveState(Bundle state) {
@@ -50,16 +52,23 @@ class PostPresenter implements Presenter {
     // does nothing
   }
 
+  private void handleNoUrlInserted() {
+    getUrlFromInsertedText().debounce(1, TimeUnit.SECONDS)
+        .distinctUntilChanged()
+        .filter(url -> url == null)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(emptyUrl -> view.hideCardPreview())
+        .flatMapCompletable(emptyUrl -> loadRelatedApps(null))
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(viewHidden -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
   private void showInstalledAppsOnStart() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .doOnNext(__ -> view.showRelatedAppsLoading())
-        .observeOn(Schedulers.io())
-        .flatMapSingle(__ -> postManager.getAppSuggestions(null))
-        .filter(apps -> apps != null && !apps.isEmpty())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> view.hideRelatedAppsLoading())
-        .flatMapCompletable(relatedApps -> adapter.setRelatedApps(relatedApps))
+        .flatMapCompletable(lifecycleEvent -> loadRelatedApps(null))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -109,18 +118,23 @@ class PostPresenter implements Presenter {
   }
 
   @NonNull private Observable<String> getInsertedUrl() {
-    return view.onInputTextChanged()
-        .skip(1)
-        .map(text -> findUrlOrNull(text))
+    return getUrlFromInsertedText().debounce(1, TimeUnit.SECONDS)
         .distinctUntilChanged()
         .filter(url -> !TextUtils.isEmpty(url))
-        .debounce(1, TimeUnit.SECONDS)
-        .map(url -> {
-          if (!url.contains("http://")) {
-            url = "http://".concat(url);
-          }
-          return url;
-        });
+        .map(url -> addProtocolIfNeeded(url));
+  }
+
+  @NonNull private String addProtocolIfNeeded(String url) {
+    if (!url.contains("http://")) {
+      url = "http://".concat(url);
+    }
+    return url;
+  }
+
+  @NonNull private Observable<String> getUrlFromInsertedText() {
+    return view.onInputTextChanged()
+        .skip(1)
+        .map(text -> findUrlOrNull(text));
   }
 
   private String findUrlOrNull(String text) {
@@ -138,20 +152,25 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> getInsertedUrl().flatMap(inputUrl -> Observable.just(inputUrl)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(__2 -> view.showRelatedAppsLoading())
-            .observeOn(Schedulers.io())
-            .flatMapSingle(url -> postManager.getAppSuggestions(url))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(__2 -> view.hideRelatedAppsLoading())
-            .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
-            .flatMapCompletable(relatedApps -> adapter.setRelatedApps(relatedApps)))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(throwable -> view.hideRelatedAppsLoading())
-            .doOnError(throwable -> Logger.w(TAG, "showRelatedAppsAfterTextChanges: ", throwable))
-            .retry())
+            .flatMapCompletable(url -> loadRelatedApps(url))
+            .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
+  }
+
+  Completable loadRelatedApps(String url) {
+    return Completable.fromAction(() -> view.showRelatedAppsLoading())
+        .observeOn(Schedulers.io())
+        .andThen(postManager.getAppSuggestions(url))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSuccess(__2 -> view.hideRelatedAppsLoading())
+        .toObservable()
+        .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
+        .flatMapCompletable(relatedApps -> adapter.setRelatedApps(relatedApps))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnError(throwable -> view.hideRelatedAppsLoading())
+        .toCompletable();
   }
 
   private void postOnTimelineOnButtonClick() {

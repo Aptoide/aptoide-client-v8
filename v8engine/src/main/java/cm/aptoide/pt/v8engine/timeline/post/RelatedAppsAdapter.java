@@ -35,6 +35,10 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
   }
 
   public Completable setRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedApps) {
+
+    if (relatedAppList.equals(relatedApps)) {
+      return Completable.complete();
+    }
     return Completable.fromAction(() -> {
       PostRemoteAccessor.RelatedApp selected = null;
       for (PostRemoteAccessor.RelatedApp relatedApp : relatedAppList) {
@@ -110,13 +114,17 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
   }
 
   public void showLoading() {
-    loading = true;
-    notifyItemInserted(0);
+    if (!loading) {
+      loading = true;
+      notifyItemInserted(0);
+    }
   }
 
   public void hideLoading() {
-    loading = false;
-    notifyItemRemoved(0);
+    if (loading) {
+      loading = false;
+      notifyItemRemoved(0);
+    }
   }
 
   private static class RelatedAppViewHolder extends RecyclerView.ViewHolder {

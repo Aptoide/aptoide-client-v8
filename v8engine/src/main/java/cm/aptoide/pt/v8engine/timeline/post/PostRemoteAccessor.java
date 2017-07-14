@@ -107,7 +107,6 @@ public class PostRemoteAccessor implements PostAccessor {
     private final PostManager.Origin origin;
     private boolean selected;
     private String packageName;
-
     RelatedApp(String image, String name, PostManager.Origin origin, boolean selected,
         String packageName) {
       this.image = image;
@@ -115,6 +114,32 @@ public class PostRemoteAccessor implements PostAccessor {
       this.origin = origin;
       this.selected = selected;
       this.packageName = packageName;
+    }
+
+    @Override public int hashCode() {
+      int result = image.hashCode();
+      result = 31 * result + name.hashCode();
+      result = 31 * result + origin.hashCode();
+      result = 31 * result + (selected ? 1 : 0);
+      result = 31 * result + packageName.hashCode();
+      return result;
+    }
+
+    @Override public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      RelatedApp that = (RelatedApp) o;
+
+      if (selected != that.selected) return false;
+      if (!image.equals(that.image)) return false;
+      if (!name.equals(that.name)) return false;
+      if (origin != that.origin) return false;
+      return packageName.equals(that.packageName);
+    }
+
+    @Override public String toString() {
+      return "{name='" + name + '\'' + '}';
     }
 
     public String getImage() {
@@ -135,10 +160,6 @@ public class PostRemoteAccessor implements PostAccessor {
 
     public void setSelected(boolean selected) {
       this.selected = selected;
-    }
-
-    @Override public String toString() {
-      return "{name='" + name + '\'' + '}';
     }
 
     public String getPackageName() {
