@@ -10,6 +10,7 @@ import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.TransferManager;
 import cm.aptoide.pt.spotandshareandroid.util.service.ServiceProvider;
+import java.util.Collection;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -54,6 +55,10 @@ class SpotAndShareV2 {
         throw new IllegalStateException("Spot and Share not connected!");
       }
     };
+  }
+
+  public Observable<Collection<Friend>> observeFriends() {
+    return transferManager.observeFriends();
   }
 
   Completable send(Action1<SpotAndShareSender> onSuccess, OnError onError) {

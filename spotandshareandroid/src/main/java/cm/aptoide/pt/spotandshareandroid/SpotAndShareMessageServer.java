@@ -13,7 +13,9 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionTo
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
+import rx.Observable;
 
 /**
  * Created by neuro on 10-07-2017.
@@ -30,6 +32,10 @@ public class SpotAndShareMessageServer {
 
   public SpotAndShareMessageServer(int port) {
     this.port = port;
+  }
+
+  public Observable<Collection<Friend>> observeFriends() {
+    return aptoideMessageClientSocket.observeFriends();
   }
 
   public void startServer(HostsChangedCallback hostsCallbackManager) {

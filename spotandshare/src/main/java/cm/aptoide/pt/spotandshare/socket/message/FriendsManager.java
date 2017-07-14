@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import rx.Observable;
 
 /**
  * Created by neuro on 13-07-2017.
@@ -34,5 +35,9 @@ public class FriendsManager {
     }
 
     map.remove(host);
+  }
+
+  public Observable<Collection<Friend>> observe() {
+    return behaviorRelay;
   }
 }

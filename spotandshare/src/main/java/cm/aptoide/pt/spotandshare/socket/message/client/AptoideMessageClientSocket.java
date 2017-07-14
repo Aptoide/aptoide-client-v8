@@ -5,15 +5,17 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
-import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
+import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.message.FriendsManager;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
+import rx.Observable;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -24,6 +26,10 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   protected final AptoideMessageClientController aptoideMessageController;
 
   private final FriendsManager friendsManager;
+
+  public Observable<Collection<Friend>> observeFriends() {
+    return friendsManager.observe();
+  }
 
   public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity, TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,

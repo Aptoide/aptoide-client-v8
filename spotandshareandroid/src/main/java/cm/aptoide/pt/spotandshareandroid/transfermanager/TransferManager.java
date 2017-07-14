@@ -11,6 +11,7 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccept
 import cm.aptoide.pt.spotandshareandroid.SpotAndShareMessageServer;
 import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
 import rx.Observable;
@@ -90,5 +91,9 @@ public class TransferManager {
 
   public void shutdown() {
     spotAndShareMessageServer.exit();
+  }
+
+  public Observable<Collection<Friend>> observeFriends() {
+    return spotAndShareMessageServer.observeFriends();
   }
 }
