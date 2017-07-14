@@ -2,7 +2,6 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
 import android.util.Log;
-import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareMainFragmentView;
@@ -18,14 +17,12 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class SpotAndShareMainFragmentPresenter implements Presenter {
 
-  private final SpotAndShare spotAndShare;
   private SpotAndShareUserManager spotAndShareUserManager;
   private SpotAndShareMainFragmentView view;
 
   public SpotAndShareMainFragmentPresenter(SpotAndShareMainFragmentView view,
-      SpotAndShare spotAndShare, SpotAndShareUserManager spotAndShareUserManager) {
+      SpotAndShareUserManager spotAndShareUserManager) {
     this.view = view;
-    this.spotAndShare = spotAndShare;
     this.spotAndShareUserManager = spotAndShareUserManager;
   }
 
