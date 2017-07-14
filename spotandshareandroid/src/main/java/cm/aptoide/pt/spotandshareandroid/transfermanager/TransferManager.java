@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
+import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
@@ -41,10 +42,12 @@ public class TransferManager {
     transferListRelay.callRelay();
   }
 
-  public void startClient(Context applicationContext, ConnectivityManager connectivityManager) {
+  public void startClient(Context applicationContext, ConnectivityManager connectivityManager,
+      OnError onError) {
     spotAndShareMessageServer.startClient(
         new MessageServerConfiguration(applicationContext, Throwable::printStackTrace,
-            getAndroidAppInfoAccepter(), connectivityManager), createTransferLifecycleProvider());
+            getAndroidAppInfoAccepter(), connectivityManager), createTransferLifecycleProvider(),
+        onError);
   }
 
   private TransferLifecycleProvider<AndroidAppInfo> createTransferLifecycleProvider() {
@@ -74,8 +77,8 @@ public class TransferManager {
     };
   }
 
-  public void startServer(HostsChangedCallback hostsChangedCallback) {
-    spotAndShareMessageServer.startServer(hostsChangedCallback);
+  public void startServer(HostsChangedCallback hostsChangedCallback, OnError onError) {
+    spotAndShareMessageServer.startServer(hostsChangedCallback, onError);
   }
 
   public void sendApp(AndroidAppInfo androidAppInfo) {

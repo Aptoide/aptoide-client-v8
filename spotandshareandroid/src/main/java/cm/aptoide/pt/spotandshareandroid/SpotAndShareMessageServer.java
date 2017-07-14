@@ -40,25 +40,26 @@ public class SpotAndShareMessageServer {
     return aptoideMessageClientSocket.observeFriends();
   }
 
-  public void startServer(HostsChangedCallback hostsCallbackManager) {
+  public void startServer(HostsChangedCallback hostsCallbackManager, OnError onError) {
     if (aptoideMessageServerSocket != null && !aptoideMessageServerSocket.isShutdown()) {
       throw new IllegalStateException("Server Already started!");
     } else {
       aptoideMessageServerSocket =
           new AptoideMessageServerSocket(port, Integer.MAX_VALUE, Integer.MAX_VALUE);
+      aptoideMessageServerSocket.setOnError(onError);
       aptoideMessageServerSocket.startAsync();
     }
   }
 
   public void startClient(MessageServerConfiguration messageServerConfiguration,
-      TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider) {
+      TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider, OnError onError) {
     if (aptoideMessageClientSocket != null && aptoideMessageClientSocket.isEnabled()) {
       throw new IllegalStateException("Client Already started!");
     } else {
       aptoideMessageClientSocket = new AptoideMessageClientSocket(HOTSPOT_DEFAULT_ADDRESS, port,
           messageServerConfiguration.getExternalStoragepath(),
           messageServerConfiguration.getStorageCapacity(), transferLifecycleProvider,
-          messageServerConfiguration.getSocketBinder(), messageServerConfiguration.getOnError(),
+          messageServerConfiguration.getSocketBinder(), onError,
           Integer.MAX_VALUE, messageServerConfiguration.getAndroidAppInfoAccepter(), friend);
       aptoideMessageClientSocket.startAsync();
     }

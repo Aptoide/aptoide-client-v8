@@ -74,7 +74,7 @@ class SpotAndShareV2 {
       } else {
         return joinHotspot(() -> {
           enabled = true;
-          startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), friend);
+          startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), onError);
           onSuccess.call(createSpotAndShareSender());
         }, throwable -> {
           enabled = false;
@@ -85,14 +85,14 @@ class SpotAndShareV2 {
   }
 
   private void startSpotAndShareMessageClient(ConnectivityManager connectivityManager,
-      Friend friend) {
-    transferManager.startClient(applicationContext, connectivityManager);
+      OnError onError) {
+    transferManager.startClient(applicationContext, connectivityManager, onError::onError);
   }
 
   private void startSpotAndShareMessageServer(OnError onError) {
     // TODO: 10-07-2017 neuro
-    transferManager.startServer(createHostsChangedCallback(onError));
-    startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), friend);
+    transferManager.startServer(createHostsChangedCallback(onError), onError::onError);
+    startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), onError);
   }
 
   void receive(Action1<SpotAndShareSender> onSuccess, OnError onError) {
@@ -103,7 +103,7 @@ class SpotAndShareV2 {
         .flatMapCompletable(aBoolean -> hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled1 -> {
           if (enabled1) {
             enabled = true;
-            startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), friend);
+            startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), onError);
             onSuccess.call(createSpotAndShareSender());
           } else {
             onError.onError(new Throwable("Failed to join hotspot"));
