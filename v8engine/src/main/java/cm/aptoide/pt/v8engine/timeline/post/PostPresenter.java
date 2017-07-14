@@ -125,7 +125,7 @@ class PostPresenter implements Presenter {
   }
 
   @NonNull private String addProtocolIfNeeded(String url) {
-    if (!url.contains("http://")) {
+    if (!url.contains("http://") && !url.contains("https://")) {
       url = "http://".concat(url);
     }
     return url;
@@ -180,8 +180,8 @@ class PostPresenter implements Presenter {
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
             .flatMapCompletable(
-                textToShare -> postManager.post(findUrlOrNull(textToShare), textToShare,
-                    adapter.getCurrentSelected()
+                textToShare -> postManager.post(addProtocolIfNeeded(findUrlOrNull(textToShare)),
+                    textToShare, adapter.getCurrentSelected()
                         .getPackageName())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> view.showSuccessMessage())
