@@ -9,6 +9,7 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccept
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareandroid.util.service.ServiceProvider;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,10 @@ public class SpotAndShare {
 
   public Observable<List<Transfer>> observeTransfers() {
     return spotAndShareV2.observeTransfers();
+  }
+
+  public Observable<Collection<Friend>> observeFriends() {
+    return spotAndShareV2.observeFriends();
   }
 
   public interface GroupCreated {
