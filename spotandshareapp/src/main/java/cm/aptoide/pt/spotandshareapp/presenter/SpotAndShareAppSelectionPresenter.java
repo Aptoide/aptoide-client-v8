@@ -137,9 +137,11 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         File[] obbsList = obbsProvider.getObbsList(appModel.getObbsFilePath());
 
         androidAppInfo =
-            new AndroidAppInfo(appName, packageName, apk, obbsList[0], obbsList[1], bitmapdata);
+            new AndroidAppInfo(appName, packageName, apk, obbsList[0], obbsList[1], bitmapdata,
+                null);
       } else {
-        androidAppInfo = new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata);
+        androidAppInfo =
+            new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata, null);
       }
 
       AptoideUtils.ThreadU.runOnIoThread(
