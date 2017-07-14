@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareapp;
 
 import android.graphics.drawable.Drawable;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 
 /**
@@ -16,17 +17,17 @@ public class TransferAppModel {
 
   private Transfer.State transferState;
   private boolean finishedTransference;
-  private String senderName;
+  private Friend senderFriend;
   private int hashcode;
 
   public TransferAppModel(String appName, String packageName, String filePath, Drawable appIcon,
-      Transfer.State transferState, String senderName, int hashcode) {
+      Transfer.State transferState, Friend senderFriend, int hashcode) {
     this.appName = appName;
     this.packageName = packageName;
     this.filePath = filePath;
     this.appIcon = appIcon;
     this.transferState = transferState;
-    this.senderName = senderName;
+    this.senderFriend = senderFriend;
     this.hashcode = hashcode;
   }
 
@@ -50,8 +51,8 @@ public class TransferAppModel {
     return transferState;
   }
 
-  public String getSenderName() {
-    return senderName;
+  public Friend getFriend() {
+    return senderFriend;
   }
 
   public boolean isTransferenceFinished() {

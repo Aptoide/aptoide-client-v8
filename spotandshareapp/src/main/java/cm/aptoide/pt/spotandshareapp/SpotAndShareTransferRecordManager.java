@@ -35,7 +35,7 @@ public class SpotAndShareTransferRecordManager {
           .getPackageName(), downloadsPath + "/" + transfer.getAndroidAppInfo()
           .getPackageName(), convertByteToDrawable(transfer.getAndroidAppInfo()
           .getIcon()), transfer.getState(), transfer.getAndroidAppInfo()
-          .getSenderName(), transfer.hashCode()));
+          .getFriend(), transfer.hashCode()));
     }
     return appModelList;
   }

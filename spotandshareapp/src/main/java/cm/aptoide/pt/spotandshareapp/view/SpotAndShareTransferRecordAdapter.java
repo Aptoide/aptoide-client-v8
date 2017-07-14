@@ -81,7 +81,8 @@ public class SpotAndShareTransferRecordAdapter
           + transferItem.getAppName()
           + " transfer state: "
           + transferItem.getTransferState());
-      senderName.setText(transferItem.getSenderName());
+      senderName.setText(transferItem.getFriend()
+          .getUsername());
       appIcon.setImageDrawable(transferItem.getAppIcon());
       acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
       installButton.setOnClickListener(accept -> installSubject.onNext(transferItem));
