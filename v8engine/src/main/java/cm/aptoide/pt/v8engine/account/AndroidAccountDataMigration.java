@@ -22,6 +22,11 @@ public class AndroidAccountDataMigration {
       "userId", "username", "useravatar", "refresh_token", "access_token",
       "aptoide_account_manager_login_mode", "userRepo", "access"
   };
+
+  private static final String[] NEW_STORE_MIGRATION_KEYS = {
+      "storeAvatar", "account_store_download_count", "account_store_id", "account_store_theme",
+      "account_store_username", "account_store_password"
+  };
   private static final Object MIGRATION_LOCK = new Object();
 
   private final SharedPreferences secureSharedPreferences;
@@ -74,7 +79,20 @@ public class AndroidAccountDataMigration {
 
   private Completable migrateAccountFromVersion59To60() {
     if (oldVersion >= 59) {
-      // TODO: 13/07/2017 Pedro
+      //String userRepo = defaultSharedPreferences.getString("userRepo", null);
+      //storeMetaProvider.getStore(userRepo, null, null).subscribe(getStoreMeta -> {
+      //
+      //}, Throwable::printStackTrace);
+      final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
+      final Account oldAccount = accounts[0];
+
+      for (String key : NEW_STORE_MIGRATION_KEYS) {
+        if (key.equals("account_store_download_count") || key.equals("account_store_id")) {
+          accountManager.setUserData(oldAccount, key, "0");
+        } else {
+          accountManager.setUserData(oldAccount, key, "");
+        }
+      }
     }
     return Completable.complete();
   }
