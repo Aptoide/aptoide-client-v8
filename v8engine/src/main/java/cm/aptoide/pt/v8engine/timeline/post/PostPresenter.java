@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Patterns;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -125,7 +126,7 @@ class PostPresenter implements Presenter {
   }
 
   @NonNull private String addProtocolIfNeeded(String url) {
-    if (!url.contains("http://") && !url.contains("https://")) {
+    if (url != null && !url.contains("http://") && !url.contains("https://")) {
       url = "http://".concat(url);
     }
     return url;
@@ -186,7 +187,16 @@ class PostPresenter implements Presenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> view.showSuccessMessage())
                     .doOnCompleted(() -> fragmentNavigator.popBackStack()))
-            .doOnError(throwable -> Logger.w(TAG, "postOnTimelineOnButtonClick: ", throwable))
+            .doOnError(throwable -> {
+              if (throwable instanceof AptoideWsV7Exception) {
+                view.showError(((AptoideWsV7Exception) throwable).getBaseResponse()
+                    .getErrors()
+                    .get(0)
+                    .getCode());
+              }
+
+              Logger.w(TAG, "postOnTimelineOnButtonClick: ", throwable);
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

@@ -26,6 +26,8 @@ interface PostView extends View {
 
   void hideCardPreview();
 
+  void showError(String error);
+
   class PostPreview {
     private final String image;
     private final String title;

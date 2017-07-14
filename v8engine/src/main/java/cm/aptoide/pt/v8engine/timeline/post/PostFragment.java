@@ -213,6 +213,10 @@ public class PostFragment extends FragmentView implements PostView {
     previewTitle.setVisibility(View.GONE);
   }
 
+  @Override public void showError(String error) {
+    ShowMessage.asSnack(this, error);
+  }
+
   private String getInputText() {
     return userInput.getText()
         .toString();
