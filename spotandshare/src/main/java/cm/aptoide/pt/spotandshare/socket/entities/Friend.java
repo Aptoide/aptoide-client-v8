@@ -21,4 +21,12 @@ public class Friend implements Serializable {
   public Friend(String username) {
     this(username, null);
   }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public byte[] getAvatar() {
+    return avatar;
+  }
 }
