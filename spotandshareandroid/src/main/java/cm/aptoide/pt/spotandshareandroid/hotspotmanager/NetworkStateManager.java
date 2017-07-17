@@ -51,6 +51,9 @@ class NetworkStateManager {
         if (i.SSID.contains("DummyHotspot")) {
           boolean remove = wifimanager.removeNetwork(i.networkId);
           Log.i(TAG, "Removed network " + i.SSID + " :" + remove);
+          if (!remove) {
+            wifimanager.disableNetwork(i.networkId);
+          }
         }
       }
     }
