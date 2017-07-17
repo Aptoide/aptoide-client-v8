@@ -148,16 +148,16 @@ class SpotAndShareV2 {
           .andThen(hotspotManager.resetHotspot()
               .andThen(hotspotManager.restoreNetworkState()
                   .toCompletable()))
-          .doOnError(onError)
-          .subscribe();
+          .subscribe(() -> {
+          }, onError);
       isHotspot = false;
     } else {
       Completable.fromAction(transferManager::shutdown)
           .andThen(hotspotManager.restoreNetworkState()
               .toCompletable())
           .andThen(hotspotManager.forgetSpotAndShareNetworks())
-          .doOnError(onError)
-          .subscribe();
+          .subscribe(() -> {
+          }, onError);
     }
   }
 
