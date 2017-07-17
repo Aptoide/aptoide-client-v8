@@ -51,7 +51,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
 
   public SocialInstallDisplayable(SocialInstall socialInstall, int icon, Store store,
       int titleResource, Comment.User user, long appId, String packageName, String appName,
-      String appIcon, String abTestingURL, long likes, long comments, Date date,
+      String appIcon, String abTestingURL, String content, long likes, long comments, Date date,
       TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator,
       AppsTimelineNavigator timelineNavigator, Resources resources, String marketName,
@@ -59,8 +59,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     super(socialInstall, likes, comments, store, socialInstall.getUser(),
         socialInstall.getUserSharer(), socialInstall.getMy()
             .isLiked(), socialInstall.getLikes(), socialInstall.getComments(), date,
-        spannableFactory, dateCalculator, abTestingURL, timelineAnalytics, timelineNavigator,
-        windowManager);
+        spannableFactory, dateCalculator, abTestingURL, content, timelineAnalytics,
+        timelineNavigator, windowManager);
     this.avatarResource = icon;
     this.titleResource = titleResource;
     this.user = user;
@@ -107,7 +107,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         .getId(), socialInstall.getApp()
         .getPackageName(), socialInstall.getApp()
         .getName(), socialInstall.getApp()
-        .getIcon(), abTestingURL, socialInstall.getStats()
+        .getIcon(), abTestingURL, socialInstall.getContent(), socialInstall.getStats()
         .getLikes(), socialInstall.getStats()
         .getComments(), socialInstall.getDate(), timelineAnalytics, spannableFactory,
         socialRepository, dateCalculator, timelineNavigator, resources, marketName, windowManager);

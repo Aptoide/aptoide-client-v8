@@ -61,15 +61,15 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
 
   public SocialArticleDisplayable(SocialArticle socialArticle, String articleTitle, Link link,
       Link developerLink, String title, String thumbnailUrl, String avatarUrl, long appId,
-      String abUrl, Store store, Comment.User user, long numberOfLikes, long numberOfComments,
-      List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
+      String abUrl, String content, Store store, Comment.User user, long numberOfLikes,
+      long numberOfComments, List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, InstalledRepository installedRepository,
       AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     super(socialArticle, numberOfLikes, numberOfComments, store, user,
         socialArticle.getUserSharer(), socialArticle.getMy()
             .isLiked(), socialArticle.getLikes(), socialArticle.getComments(), date,
-        spannableFactory, dateCalculator, abUrl, timelineAnalytics, timelineNavigator,
+        spannableFactory, dateCalculator, abUrl, content, timelineAnalytics, timelineNavigator,
         windowManager);
     this.articleTitle = articleTitle;
     this.link = link;
@@ -115,7 +115,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
             socialArticle.getPublisher()
                 .getBaseUrl()), socialArticle.getPublisher()
         .getName(), socialArticle.getThumbnailUrl(), socialArticle.getPublisher()
-        .getLogoUrl(), appId, abTestingURL, socialArticle.getStore(), socialArticle.getUser(),
+        .getLogoUrl(), appId, abTestingURL, socialArticle.getContent(), socialArticle.getStore(), socialArticle.getUser(),
         socialArticle.getStats()
             .getLikes(), socialArticle.getStats()
         .getComments(), socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
