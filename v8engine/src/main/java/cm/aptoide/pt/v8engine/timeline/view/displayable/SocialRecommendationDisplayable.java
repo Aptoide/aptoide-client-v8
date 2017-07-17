@@ -50,17 +50,17 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
 
   public SocialRecommendationDisplayable(SocialRecommendation socialRecommendation,
       int avatarResource, Store store, int titleResource, Comment.User user, long appId,
-      String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
-      long numberOfComments, SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
-      AppsTimelineNavigator timelineNavigator, Resources resources, String marketName,
-      WindowManager windowManager) {
+      String packageName, String appName, String appIcon, String abUrl, String content,
+      long numberOfLikes, long numberOfComments, SpannableFactory spannableFactory,
+      SocialRepository socialRepository, DateCalculator dateCalculator,
+      TimelineAnalytics timelineAnalytics, AppsTimelineNavigator timelineNavigator,
+      Resources resources, String marketName, WindowManager windowManager) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
         socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
         socialRecommendation.getMy()
             .isLiked(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
-        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl, timelineAnalytics,
-        timelineNavigator, windowManager);
+        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl, content,
+        timelineAnalytics, timelineNavigator, windowManager);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.user = user;
@@ -109,7 +109,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         .getId(), socialRecommendation.getApp()
         .getPackageName(), socialRecommendation.getApp()
         .getName(), socialRecommendation.getApp()
-        .getIcon(), abTestingURL, socialRecommendation.getStats()
+        .getIcon(), abTestingURL, socialRecommendation.getContent(), socialRecommendation.getStats()
         .getLikes(), socialRecommendation.getStats()
         .getComments(), spannableFactory, socialRepository, dateCalculator, timelineAnalytics,
         timelineNavigator, resources, marketName, windowManager);

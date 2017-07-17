@@ -15,11 +15,13 @@ import lombok.Getter;
   @Getter private final List<UserTimeline> likes;
   @Getter private final List<CardComment> comments;
   @Getter private final My my;
+  @Getter private final String content;
 
-  public SocialCard(List<UserTimeline> likes, List<CardComment> comments, My my) {
+  public SocialCard(List<UserTimeline> likes, List<CardComment> comments, My my, String content) {
     this.likes = likes;
     this.comments = comments;
     this.my = my;
+    this.content = content;
   }
 
   public static class CardComment {

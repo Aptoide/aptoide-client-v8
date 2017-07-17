@@ -59,15 +59,15 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
 
   private SocialVideoDisplayable(SocialVideo socialVideo, String videoTitle, Link link,
       Link baseLink, String publisherName, String thumbnailUrl, String publisherAvatarUrl,
-      long appId, String abUrl, Comment.User user, long numberOfLikes, long numberOfComments,
-      List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
+      long appId, String abUrl, String content, Comment.User user, long numberOfLikes,
+      long numberOfComments, List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, InstalledRepository installedRepository,
       AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
         socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy()
             .isLiked(), socialVideo.getLikes(), socialVideo.getComments(), date, spannableFactory,
-        dateCalculator, abUrl, timelineAnalytics, timelineNavigator, windowManager);
+        dateCalculator, abUrl, content, timelineAnalytics, timelineNavigator, windowManager);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
@@ -113,8 +113,9 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
             socialVideo.getPublisher()
                 .getBaseUrl()), socialVideo.getPublisher()
         .getName(), socialVideo.getThumbnailUrl(), socialVideo.getPublisher()
-        .getLogoUrl(), appId, abTestingURL, socialVideo.getUser(), socialVideo.getStats()
-        .getLikes(), socialVideo.getStats()
+        .getLogoUrl(), appId, abTestingURL, socialVideo.getContent(), socialVideo.getUser(),
+        socialVideo.getStats()
+            .getLikes(), socialVideo.getStats()
         .getComments(), socialVideo.getApps(), socialVideo.getDate(), dateCalculator,
         spannableFactory, timelineAnalytics, socialRepository, installedRepository,
         timelineNavigator, windowManager);

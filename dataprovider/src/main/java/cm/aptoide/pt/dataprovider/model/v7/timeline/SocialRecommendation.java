@@ -33,7 +33,7 @@ import lombok.Getter;
       @JsonProperty("comments") List<CardComment> comments, @JsonProperty("user") Comment.User user,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store) {
-    super(likes, comments, my);
+    super(likes, comments, my, "");
     this.ab = ab;
     this.date = date;
     this.cardId = cardId;

@@ -39,8 +39,9 @@ import lombok.Getter;
       @JsonProperty("store") Store store, @JsonProperty("likes") List<UserTimeline> likes,
       @JsonProperty("comments") List<CardComment> comments,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
-      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
-    super(likes, comments, my);
+      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
+      @JsonProperty("content") String content) {
+    super(likes, comments, my, content);
     this.publisher = publisher;
     this.store = store;
     this.user = user;
