@@ -153,10 +153,10 @@ public class CommentDialogFragment
 
     switch (commentType) {
       case REVIEW:
-        titleTextView.setText(getString(R.string.comment));
+        titleTextView.setText(getString(R.string.dialog_button_comment));
         break;
       case TIMELINE:
-        titleTextView.setText(getString(R.string.comment));
+        titleTextView.setText(getString(R.string.dialog_button_comment));
         break;
       case STORE:
         titleTextView.setText(

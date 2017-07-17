@@ -65,7 +65,7 @@
         android:layout_alignParentRight="true"
         android:background="@null"
         android:padding="6dp"
-        android:text="@string/comment"
+        android:text="@string/dialog_button_comment"
         android:textAllCaps="true"
         android:textColor="?colorPrimary"
         android:textSize="@dimen/text_size_medium"
