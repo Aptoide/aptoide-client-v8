@@ -42,7 +42,7 @@ import lombok.Data;
     }
 
     public enum Status {
-      OK, QUEUED, FAIL
+      OK, QUEUED, FAIL, PROCESSING
     }
 
     @Data public static class Time {

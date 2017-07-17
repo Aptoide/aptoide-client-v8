@@ -32,6 +32,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
+import cm.aptoide.pt.dataprovider.util.ProcessingException;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
@@ -122,10 +123,29 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
   @Override public Observable<U> observe(boolean bypassCache) {
     return bodyInterceptor.intercept(body)
-        .flatMapObservable(
-            body -> handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache));
+        .flatMapObservable(body -> handleProcessingState(
+            handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache)));
   }
 
+  private Observable<U> handleProcessingState(Observable<U> observable) {
+    return observable.subscribeOn(Schedulers.io())
+        .flatMap(t -> {
+          if (((BaseV7Response) t).getInfo() != null
+              && BaseV7Response.Info.Status.PROCESSING.equals(((BaseV7Response) t).getInfo()
+              .getStatus())) {
+            return Observable.error(new ProcessingException());
+          } else {
+            return Observable.just(t);
+          }
+        })
+        .retryWhen(errObservable -> errObservable.flatMap(throwable -> {
+          if (throwable instanceof ProcessingException) {
+            return Observable.timer(1, TimeUnit.SECONDS);
+          } else {
+            throw new RuntimeException(throwable);
+          }
+        }));
+  }
   private Observable<U> retryOnTicket(Observable<U> observable) {
     return observable.subscribeOn(Schedulers.io())
         .flatMap(t -> {
