@@ -121,6 +121,14 @@ public class ManageStorePresenter implements Presenter {
       } else {
         return view.showError(R.string.ws_error_WOP_2);
       }
+    } else if (err instanceof StoreValidationException) {
+      StoreValidationException ex = (StoreValidationException) err;
+      if(ex.getErrorCode()==StoreValidationException.EMPTY_NAME){
+        return view.showError(R.string.ws_error_WOP_2);
+      }
+      if (ex.getErrorCode() == StoreValidationException.EMPTY_AVATAR) {
+        return view.showError(R.string.ws_error_API_1);
+      }
     }
 
     crashReport.log(err);
