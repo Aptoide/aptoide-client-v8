@@ -40,7 +40,8 @@ public class CommentDisplayable extends Displayable {
   }
 
   public void itemClicked() {
-    fragmentNavigator.navigateTo(fragmentProvider.newStoreFragment(comment.getUser()
-        .getId(), "DEFAULT", StoreFragment.OpenType.GetHome));
+    //TODO AN-1492 - revert - waiting for api change
+    //fragmentNavigator.navigateTo(fragmentProvider.newStoreFragment(comment.getUser()
+    //    .getId(), "DEFAULT", StoreFragment.OpenType.GetHome));
   }
 }

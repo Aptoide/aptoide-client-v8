@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.zip.ZipFile;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -221,8 +222,8 @@ public class Analytics {
       private static final String UTM_CAMPAIGN = "utm_campaign";
       private static final String UTM_CONTENT = "utm_content";
       private static final String ENTRY_POINT = "entry_point";
-      private static final String URL = "url";
-      private static final String PACKAGE = "package";
+      private static final String URL = "app_url";
+      private static final String PACKAGE = "app_package";
       private static final String COUNTRY = "country";
       private static final String BROWSER = "browser";
       private static final String SITE_VERSION = "site_version";
@@ -234,7 +235,7 @@ public class Analytics {
       private static String utmContent = UNKNOWN;
       private static String entryPoint = UNKNOWN;
 
-      public static Observable onCreate(android.app.Application application,
+      public static Completable onCreate(android.app.Application application,
           Converter.Factory converterFactory, OkHttpClient okHttpClient,
           BodyInterceptor bodyInterceptor, SharedPreferences sharedPreferences,
           TokenInvalidator tokenInvalidator) {
@@ -263,6 +264,7 @@ public class Analytics {
                   okHttpClient, converterFactory, sharedPreferences, tokenInvalidator)
                   .observe();
             })
+            .toCompletable()
             .subscribeOn(Schedulers.io());
       }
 
