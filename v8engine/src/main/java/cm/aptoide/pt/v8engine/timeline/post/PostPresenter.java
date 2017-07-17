@@ -152,7 +152,7 @@ class PostPresenter implements Presenter {
   private void showRelatedAppsAfterTextChanges() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> getInsertedUrl().flatMap(inputUrl -> Observable.just(inputUrl)
+        .flatMap(__ -> getInsertedUrl().switchMap(inputUrl -> Observable.just(inputUrl)
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(url -> loadRelatedApps(url))
             .retry()))
