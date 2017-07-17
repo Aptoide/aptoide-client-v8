@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
+import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +20,19 @@ public class PostManager {
   }
 
   public Completable post(String url, String content, String packageName) {
-    return postRemoteRepository.postOnTimeline(url, content, packageName);
+    return validateInsertedText(content, packageName).flatMapCompletable(
+        validPost -> postRemoteRepository.postOnTimeline(url, content, packageName));
+  }
+
+  private Single<Boolean> validateInsertedText(String textToShare, String packageName) {
+    if (textToShare == null || textToShare.isEmpty()) {
+      return Single.error(
+          new InvalidPostDataException(InvalidPostDataException.ErrorCode.INVALID_TEXT));
+    } else if (packageName == null || packageName.isEmpty()) {
+      return Single.error(
+          new InvalidPostDataException(InvalidPostDataException.ErrorCode.INVALID_PACKAGE));
+    }
+    return Single.just(true);
   }
 
   public Single<List<RelatedApp>> getAppSuggestions(String url) {

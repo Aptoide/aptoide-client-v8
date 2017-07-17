@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -49,6 +50,7 @@ public class PostFragment extends FragmentView implements PostView {
   private PublishRelay<Void> cancelClick;
   private PublishRelay<Void> postClick;
   private RelatedAppsAdapter adapter;
+  private ScrollView scrollView;
 
   public static PostFragment newInstance(String toShare) {
     Bundle args = new Bundle();
@@ -103,6 +105,7 @@ public class PostFragment extends FragmentView implements PostView {
     previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
     relatedApps = (RecyclerView) view.findViewById(R.id.related_apps_list);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
   }
 
   @Override public void onDestroyView() {
@@ -215,6 +218,15 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void showError(String error) {
     ShowMessage.asSnack(this, error);
+  }
+
+  @Override public void showInvalidTextError() {
+    ShowMessage.asSnack(this, R.string.timeline_message_write_something);
+  }
+
+  @Override public void showInvalidPackageError() {
+    ShowMessage.asSnack(this, R.string.timeline_message_pick_an_app);
+    scrollView.smoothScrollTo(scrollView.getLeft(), scrollView.getBottom());
   }
 
   private String getInputText() {

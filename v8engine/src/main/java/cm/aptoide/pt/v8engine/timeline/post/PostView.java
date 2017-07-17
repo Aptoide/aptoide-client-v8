@@ -28,6 +28,10 @@ interface PostView extends View {
 
   void showError(String error);
 
+  void showInvalidTextError();
+
+  void showInvalidPackageError();
+
   class PostPreview {
     private final String image;
     private final String title;

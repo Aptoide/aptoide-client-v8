@@ -9,6 +9,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -182,21 +183,13 @@ class PostPresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapCompletable(
                 textToShare -> postManager.post(addProtocolIfNeeded(findUrlOrNull(textToShare)),
-                    textToShare, adapter.getCurrentSelected()
-                        .getPackageName())
+                    textToShare, adapter.getCurrentSelected() == null ? null
+                        : adapter.getCurrentSelected()
+                            .getPackageName())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> view.showSuccessMessage())
                     .doOnCompleted(() -> fragmentNavigator.popBackStack()))
-            .doOnError(throwable -> {
-              if (throwable instanceof AptoideWsV7Exception) {
-                view.showError(((AptoideWsV7Exception) throwable).getBaseResponse()
-                    .getErrors()
-                    .get(0)
-                    .getCode());
-              }
-
-              Logger.w(TAG, "postOnTimelineOnButtonClick: ", throwable);
-            })
+            .doOnError(throwable -> handleError(throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -204,5 +197,24 @@ class PostPresenter implements Presenter {
           crashReport.log(err);
           fragmentNavigator.popBackStack();
         });
+  }
+
+  private void handleError(Throwable throwable) {
+    Logger.e(TAG, throwable);
+    if (throwable instanceof AptoideWsV7Exception) {
+      view.showError(((AptoideWsV7Exception) throwable).getBaseResponse()
+          .getErrors()
+          .get(0)
+          .getCode());
+    } else if (throwable instanceof InvalidPostDataException) {
+      switch (((InvalidPostDataException) throwable).getErrorCode()) {
+        case INVALID_TEXT:
+          view.showInvalidTextError();
+          break;
+        case INVALID_PACKAGE:
+          view.showInvalidPackageError();
+          break;
+      }
+    }
   }
 }
