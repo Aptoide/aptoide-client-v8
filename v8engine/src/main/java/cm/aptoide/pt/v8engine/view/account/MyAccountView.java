@@ -1,8 +1,9 @@
-package cm.aptoide.pt.v8engine.presenter;
+package cm.aptoide.pt.v8engine.view.account;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.notification.AptoideNotification;
+import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
 import rx.Observable;
 

@@ -181,6 +181,10 @@ public class AptoideAccountManager {
   }
 
   public Completable updateAccount(String username) {
+    if (TextUtils.isEmpty(username)) {
+      return Completable.error(
+          new AccountValidationException(AccountValidationException.EMPTY_NAME));
+    }
     return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccountUsername(username, this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
@@ -194,16 +198,16 @@ public class AptoideAccountManager {
                 account.getPassword(), account.getType())));
   }
 
-  public Completable updateAccount(String nickname, String avatarPath) {
+  public Completable updateAccount(String username, String avatarPath) {
     return singleAccountStatus().flatMapCompletable(account -> {
-      if (TextUtils.isEmpty(nickname) && TextUtils.isEmpty(avatarPath)) {
+      if (TextUtils.isEmpty(username) && TextUtils.isEmpty(avatarPath)) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME_AND_AVATAR));
-      } else if (TextUtils.isEmpty(nickname)) {
+      } else if (TextUtils.isEmpty(username)) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
-      return accountManagerService.updateAccount(nickname,
+      return accountManagerService.updateAccount(username,
           TextUtils.isEmpty(avatarPath) ? "" : avatarPath, this)
           .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
               account.getPassword(), account.getType()));

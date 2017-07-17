@@ -3,6 +3,6 @@
     >
   <item
       android:id="@+id/post_button"
-      android:title="@string/post"
+      android:title="@string/timeline_button_post"
       app:showAsAction="always"/>
 </menu>
