@@ -122,9 +122,12 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
   }
 
   private void showErrorJoiningGroupMessage() {
-    Toast.makeText(getContext(), "There was an error while trying to join the group",
-        Toast.LENGTH_SHORT)
-        .show();
+    getActivity().runOnUiThread(new Runnable() {
+      @Override public void run() {
+        Toast.makeText(getContext(), "There was an error inside the group", Toast.LENGTH_SHORT)
+            .show();
+      }
+    });
   }
 
   @Override public Observable<Void> backButtonEvent() {
