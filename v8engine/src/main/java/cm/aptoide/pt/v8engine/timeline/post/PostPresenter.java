@@ -99,7 +99,7 @@ class PostPresenter implements Presenter {
   private void showCardPreviewAfterTextChanges() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> getInsertedUrl().flatMap(insertedUrl -> Observable.just(insertedUrl)
+        .flatMap(__ -> getInsertedUrl().switchMap(insertedUrl -> Observable.just(insertedUrl)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(__2 -> view.showCardPreviewLoading())
             .doOnNext(__2 -> view.hideCardPreview())

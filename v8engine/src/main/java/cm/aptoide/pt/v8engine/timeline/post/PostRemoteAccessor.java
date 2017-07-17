@@ -2,7 +2,9 @@ package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
+import cm.aptoide.pt.dataprovider.util.ProcessingException;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
@@ -12,6 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
 import cm.aptoide.pt.v8engine.timeline.response.StillProcessingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -55,11 +58,8 @@ public class PostRemoteAccessor implements PostAccessor {
    * the request.
    */
   @Override public Single<List<RelatedApp>> getRelatedApps(String url) {
-    return RelatedAppRequest.of(url, preferences, client, converter, bodyInterceptor,
-        tokenInvalidator)
-        .observe()
-        .filter(response -> response.getDataList()
-            .getCount() > 0)
+    return getRelatedAppsFromNetwork(url).filter(response -> response.getDataList()
+        .getCount() > 0)
         .map(response -> {
           List<RelatedAppResponse.RelatedApp> remoteList = response.getDataList()
               .getList();
@@ -87,6 +87,29 @@ public class PostRemoteAccessor implements PostAccessor {
         .map(response -> convertToLocalCardPreview(response));
   }
 
+  private Observable<RelatedAppResponse> getRelatedAppsFromNetwork(String url) {
+
+    return RelatedAppRequest.of(url, preferences, client, converter, bodyInterceptor,
+        tokenInvalidator)
+        .observe()
+        .flatMap(relatedAppResponse -> {
+          if (relatedAppResponse.getInfo()
+              .getStatus()
+              .equals(BaseV7Response.Info.Status.Processing)) {
+            return Observable.error(new ProcessingException());
+          } else {
+            return Observable.just(relatedAppResponse);
+          }
+        })
+        .retryWhen(observable -> observable.flatMap(throwable -> {
+          if (throwable instanceof ProcessingException) {
+            return Observable.timer(1, TimeUnit.SECONDS);
+          } else {
+            return Observable.<Long>error(throwable);
+          }
+        }));
+  }
+
   private RelatedApp convertToLocalRelatedApp(RelatedAppResponse.RelatedApp remoteRelatedApp,
       boolean isSelected) {
     return new RelatedApp(remoteRelatedApp.getIcon(), remoteRelatedApp.getName(),
@@ -107,6 +130,7 @@ public class PostRemoteAccessor implements PostAccessor {
     private final PostManager.Origin origin;
     private boolean selected;
     private String packageName;
+
     RelatedApp(String image, String name, PostManager.Origin origin, boolean selected,
         String packageName) {
       this.image = image;
