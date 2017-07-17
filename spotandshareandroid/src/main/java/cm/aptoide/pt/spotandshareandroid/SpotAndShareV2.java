@@ -15,7 +15,6 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -143,21 +142,22 @@ class SpotAndShareV2 {
                 .map(hotspots -> !hotspots.isEmpty())));
   }
 
-  public void exit(Action0 onSuccess, Action1<? super Throwable> onError) {
+  public void exit(Action1<? super Throwable> onError) {
     if (isHotspot) {
       Completable.fromAction(transferManager::shutdown)
           .andThen(hotspotManager.resetHotspot()
               .andThen(hotspotManager.restoreNetworkState()
                   .toCompletable()))
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(onSuccess, onError);
+          .doOnError(onError)
+          .subscribe();
+      isHotspot = false;
     } else {
       Completable.fromAction(transferManager::shutdown)
           .andThen(hotspotManager.restoreNetworkState()
               .toCompletable())
           .andThen(hotspotManager.forgetSpotAndShareNetworks())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(onSuccess, onError);
+          .doOnError(onError)
+          .subscribe();
     }
   }
 

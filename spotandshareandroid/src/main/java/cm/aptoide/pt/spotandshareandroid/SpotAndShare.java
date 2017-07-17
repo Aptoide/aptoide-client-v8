@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import rx.Completable;
 import rx.Observable;
-import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
@@ -53,8 +52,8 @@ public class SpotAndShare {
     spotAndShareV2.receive(onSuccess, onError::onError);
   }
 
-  public void leaveGroup(Action0 onSuccess, Action1<? super Throwable> onError) {
-    spotAndShareV2.exit(onSuccess, onError);
+  public void leaveGroup(Action1<? super Throwable> onError) {
+    spotAndShareV2.exit(onError);
   }
 
   public void sendApps(List<AndroidAppInfo> appsList) {
