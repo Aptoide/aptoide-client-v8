@@ -1,11 +1,13 @@
-package cm.aptoide.pt.v8engine.presenter;
+package cm.aptoide.pt.v8engine.view.account;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.presenter.LoginSignUpView;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.BackButton;
-import cm.aptoide.pt.v8engine.view.account.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 
 public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallback

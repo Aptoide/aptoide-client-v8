@@ -14,7 +14,7 @@ public interface ManageUserView extends ImagePickerView {
 
   void showProgressDialog();
 
-  void dismissProgressDialog();
+  void hideProgressDialog();
 
   Completable showErrorMessage(String error);
 
