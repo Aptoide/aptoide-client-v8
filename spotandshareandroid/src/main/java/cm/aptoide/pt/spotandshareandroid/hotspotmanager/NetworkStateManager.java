@@ -28,6 +28,7 @@ class NetworkStateManager {
   }
 
   public Single<Boolean> restoreNetworkState() {
+    wifimanager.disconnect();
     return setWifiEnabled(wifiEnabledOnStart);
   }
 
