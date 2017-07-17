@@ -52,7 +52,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         (appModels, s) -> appModels)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(installedApps -> view.setupRecyclerView(installedApps))
-        .subscribe(o -> view.hideLoading());
+        .subscribe(o -> view.hideLoading(), throwable -> throwable.printStackTrace());
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
