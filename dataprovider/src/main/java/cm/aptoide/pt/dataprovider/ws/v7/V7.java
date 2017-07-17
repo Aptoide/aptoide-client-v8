@@ -142,10 +142,11 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
           if (throwable instanceof ProcessingException) {
             return Observable.timer(1, TimeUnit.SECONDS);
           } else {
-            throw new RuntimeException(throwable);
+            return Observable.<Long>error(throwable);
           }
         }));
   }
+
   private Observable<U> retryOnTicket(Observable<U> observable) {
     return observable.subscribeOn(Schedulers.io())
         .flatMap(t -> {
