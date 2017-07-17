@@ -136,6 +136,16 @@ public class TimelineService {
     });
   }
 
+  public Single<String> shareApp(String cardId, Long storeId) {
+    return ShareCardRequest.of(cardId, storeId, okhttp, converterFactory, bodyInterceptor,
+        tokenInvalidator, sharedPreferences).observe().toSingle().flatMap(response -> {
+      if (response.isOk()) {
+        return Single.just(response.getData().getCardUid());
+      }
+      return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+    });
+  }
+
   public Completable postComment(String cardId, String commentText) {
     return PostCommentForTimelineArticle.of(cardId, commentText, bodyInterceptor, okhttp,
         converterFactory, tokenInvalidator, sharedPreferences)

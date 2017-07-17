@@ -104,6 +104,9 @@ public class Timeline {
 
   public Single<String> sharePost(Post post) {
     sendSocialAnalyticsEvent(post, "Share");
+    if (post instanceof AppPost) {
+      return service.shareApp(post.getCardId(), ((AppPost) post).getStoreId());
+    }
     return service.share(post.getCardId());
   }
 

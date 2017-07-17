@@ -105,6 +105,7 @@ public class TimelineResponseCardMapper {
               recommendation.getRecommendedApp().getName(),
               recommendation.getRecommendedApp().getIcon(),
               recommendation.getRecommendedApp().getStats().getRating().getAvg(),
+              recommendation.getRecommendedApp().getStore().getId(),
               recommendation.getSimilarApps().get(0).getName(),
               recommendation.getSimilarApps().get(0).getPackageName(), new AptoidePublisher(),
               recommendation.getTimestamp(), abUrl, false, CardType.RECOMMENDATION));
@@ -121,8 +122,9 @@ public class TimelineResponseCardMapper {
           ((AppUpdateTimelineItem) item).getData();
       cards.add(new AppUpdate(appUpdate.getCardId(), appUpdate.getStore().getName(),
           appUpdate.getStore().getAvatar(), appUpdate.getStore().getAppearance().getTheme(),
-          appUpdate.getIcon(), appUpdate.getName(), appUpdate.getId(), appUpdate.getPackageName(),
-          appUpdate.getStats().getRating().getAvg(), appUpdate.getAdded(), abUrl, false,
+          appUpdate.getStore().getId(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getId(),
+          appUpdate.getPackageName(), appUpdate.getStats().getRating().getAvg(),
+          appUpdate.getAdded(), abUrl, false,
           // TODO: 26/06/2017 probably should get progress state someway because the download might be happening already.
           CardType.UPDATE, appUpdate.getFile(), appUpdate.getObb(),
           Install.InstallationStatus.UNINSTALLED));
@@ -137,6 +139,7 @@ public class TimelineResponseCardMapper {
           popularApp.getPopularApplication().getPackageName(),
           popularApp.getPopularApplication().getName(),
           popularApp.getPopularApplication().getIcon(),
+          popularApp.getPopularApplication().getStore().getId(),
           popularApp.getPopularApplication().getStats().getRating().getAvg(), users,
           popularApp.getDate(), abUrl, false, CardType.POPULAR_APP));
     } else if (item instanceof SocialRecommendationTimelineItem) {
@@ -148,7 +151,7 @@ public class TimelineResponseCardMapper {
       cards.add(new RatedRecommendation(socialRecommendation.getCardId(),
           new Poster(user.getUser(), user.getStore()), socialRecommendation.getApp().getId(),
           socialRecommendation.getApp().getPackageName(), socialRecommendation.getApp().getName(),
-          socialRecommendation.getApp().getIcon(),
+          socialRecommendation.getApp().getIcon(), socialRecommendation.getApp().getStore().getId(),
           socialRecommendation.getApp().getStats().getRating().getAvg(),
           socialRecommendation.getDate(), abUrl, socialRecommendation.getMy().isLiked(),
           socialRecommendation.getStats().getComments(), socialRecommendation.getStats().getLikes(),
@@ -161,10 +164,11 @@ public class TimelineResponseCardMapper {
       cards.add(new RatedRecommendation(socialInstall.getCardId(),
           new Poster(user.getUser(), user.getStore()), socialInstall.getApp().getId(),
           socialInstall.getApp().getPackageName(), socialInstall.getApp().getName(),
-          socialInstall.getApp().getIcon(), socialInstall.getApp().getStats().getRating().getAvg(),
-          socialInstall.getDate(), abUrl, socialInstall.getMy().isLiked(),
-          socialInstall.getStats().getComments(), socialInstall.getStats().getLikes(),
-          socialInstall.getLikes(), socialInstall.getComments(), CardType.SOCIAL_INSTALL));
+          socialInstall.getApp().getIcon(), socialInstall.getApp().getStore().getId(),
+          socialInstall.getApp().getStats().getRating().getAvg(), socialInstall.getDate(), abUrl,
+          socialInstall.getMy().isLiked(), socialInstall.getStats().getComments(),
+          socialInstall.getStats().getLikes(), socialInstall.getLikes(),
+          socialInstall.getComments(), CardType.SOCIAL_INSTALL));
     } else if (item instanceof SocialArticleTimelineItem) {
       final SocialArticle socialArticle = ((SocialArticleTimelineItem) item).getData();
       UserSharerTimeline user =
@@ -297,6 +301,7 @@ public class TimelineResponseCardMapper {
           aggregatedSocialInstall.getApp().getIcon(), aggregatedSocialInstall.getApp().getName(),
           aggregatedSocialInstall.getApp().getId(),
           aggregatedSocialInstall.getApp().getStats().getRating().getAvg(),
+          aggregatedSocialInstall.getApp().getStore().getId(),
           aggregatedSocialInstall.getApp().getPackageName(), aggregatedSocialInstall.getDate(),
           abUrl, CardType.AGGREGATED_SOCIAL_INSTALL));
     } else if (item instanceof AggregatedSocialStoreLatestAppsTimelineItem) {
