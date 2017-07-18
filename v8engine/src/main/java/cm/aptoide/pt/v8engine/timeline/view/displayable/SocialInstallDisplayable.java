@@ -102,9 +102,9 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
 
     return new SocialInstallDisplayable(socialInstall, Application.getConfiguration()
         .getIcon(), socialInstall.getStore(),
-        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
-        socialInstall.getUser(), socialInstall.getApp()
-        .getId(), socialInstall.getApp()
+        R.string.timeline_title_card_title_recommend_present_singular, socialInstall.getUser(),
+        socialInstall.getApp()
+            .getId(), socialInstall.getApp()
         .getPackageName(), socialInstall.getApp()
         .getName(), socialInstall.getApp()
         .getIcon(), abTestingURL, socialInstall.getStats()

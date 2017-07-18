@@ -116,7 +116,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
 
   public String getTitle(Resources resources) {
     return AptoideUtils.StringU.getFormattedString(
-        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, resources,
+        R.string.timeline_title_card_title_recommend_present_singular, resources,
         Application.getConfiguration()
             .getMarketName());
   }
