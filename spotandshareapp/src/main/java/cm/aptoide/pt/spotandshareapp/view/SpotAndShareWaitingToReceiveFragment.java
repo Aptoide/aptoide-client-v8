@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+import cm.aptoide.pt.spotandshareapp.JoinGroupView;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
@@ -36,10 +38,21 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
   private PublishRelay<Void> backRelay;
   private ClickHandler clickHandler;
   private RxAlertDialog backDialog;
+  private JoinGroupView joinGroupView;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareWaitingToReceiveFragment();
     return fragment;
+  }
+
+  @Override public void onAttach(Activity activity) {
+    if (activity instanceof JoinGroupView) {
+      joinGroupView = (JoinGroupView) activity;
+    } else {
+      throw new IllegalArgumentException(
+          "In order to use this framgent, you need to implement JoinGroupView");
+    }
+    super.onAttach(activity);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +75,10 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
         .setPositiveButton(R.string.spotandshare_button_leave_group)
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
+
+    joinGroupView.registerJoinGroupSuccessCallback(
+        onSuccess -> openSpotandShareTransferRecordFragment());
+
     //// TODO: 11-07-2017 filipe FIX THIS DIALOG.
     SpotAndShareUserManager spotAndShareUserManager = new SpotAndShareUserManager(
         new SpotAndShareUserPersister(
@@ -79,6 +96,7 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
     unregisterClickHandler(clickHandler);
     clickHandler = null;
     backDialog = null;
+    joinGroupView.unregisterJoinGroupSuccessCallback();
     super.onDestroyView();
   }
 
@@ -148,6 +166,10 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
 
   @Override public void onLeaveGroupError() {
     showLeaveGroupErrorMessage();
+  }
+
+  @Override public void joinGroup() {
+    joinGroupView.joinGroup();
   }
 
   private void showLeaveGroupErrorMessage() {
