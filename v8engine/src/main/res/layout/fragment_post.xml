@@ -109,8 +109,6 @@
           android:textAppearance="@style/Aptoide.TextView.Medium.S"
           android:textColor="@color/black"
           android:textSize="@dimen/text_size_huge"
-          android:visibility="gone"
-          tools:visibility="visible"
           />
       <android.support.v7.widget.RecyclerView
           android:id="@+id/related_apps_list"

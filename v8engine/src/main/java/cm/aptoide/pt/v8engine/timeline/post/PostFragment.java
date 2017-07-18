@@ -207,7 +207,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void showRelatedAppsLoading() {
     adapter.showLoading();
-    relatedApps.smoothScrollToPosition(0);
+    scrollRelatedToStart(true);
   }
 
   @Override public void hideRelatedAppsLoading() {
@@ -234,10 +234,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void addRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedAppsList) {
     adapter.addRelatedApps(relatedAppsList);
-    if (relatedAppsList.size() > 10) {
-      relatedApps.scrollToPosition(10);
-    }
-    relatedApps.smoothScrollToPosition(0);
+    scrollRelatedToStart(relatedAppsList.size() > 10);
   }
 
   @Override public PostRemoteAccessor.RelatedApp getCurrentSelected() {
@@ -254,6 +251,13 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public Completable setRelatedAppSelected(PostRemoteAccessor.RelatedApp app) {
     return adapter.setRelatedAppSelected(app);
+  }
+
+  private void scrollRelatedToStart(boolean shouldFastForward) {
+    if (shouldFastForward) {
+      relatedApps.scrollToPosition(10);
+    }
+    relatedApps.smoothScrollToPosition(0);
   }
 
   private void hidePreviewLayout() {

@@ -108,6 +108,8 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> getInsertedUrl().switchMap(insertedUrl -> Observable.just(insertedUrl)
             .observeOn(AndroidSchedulers.mainThread())
+            .flatMapSingle(url -> view.clearRemoteRelated()
+                .toSingleDefault(url))
             .doOnNext(__2 -> view.showCardPreviewLoading())
             .observeOn(Schedulers.io())
             .flatMapSingle(url -> postManager.getPreview(url))
