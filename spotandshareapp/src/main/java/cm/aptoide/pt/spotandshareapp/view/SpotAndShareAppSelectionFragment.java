@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
@@ -171,11 +170,9 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     //// TODO: 14-07-2017 push spot and share to application class and remove this dependence.
 
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
-            new InstalledRepositoryDummy(getContext().getPackageManager()),
-            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(
-                getContext(), new Friend(spotAndShareUserManager.getUser()
-                    .getUsername())), new SpotAndShareAppSelectionManager(), new ObbsProvider()),
-        savedInstanceState);
+        new InstalledRepositoryDummy(getContext().getPackageManager()),
+        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        new SpotAndShareAppSelectionManager(), new ObbsProvider()), savedInstanceState);
   }
 
   private void setupToolbar() {

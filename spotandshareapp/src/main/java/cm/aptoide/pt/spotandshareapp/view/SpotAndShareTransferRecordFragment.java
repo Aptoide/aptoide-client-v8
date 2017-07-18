@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
@@ -93,9 +92,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
                 Context.MODE_PRIVATE)));
     //// TODO: 14-07-2017 remove this after putting spot&share on Application
     attachPresenter(new SpotAndShareTransferRecordPresenter(this,
-        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(
-            getContext(), new Friend(spotAndShareUserManager.getUser()
-                .getUsername())), new SpotAndShareTransferRecordManager(getContext()),
+        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        new SpotAndShareTransferRecordManager(getContext()),
         new SpotAndShareInstallManager(getActivity().getApplicationContext())), savedInstanceState);
   }
 

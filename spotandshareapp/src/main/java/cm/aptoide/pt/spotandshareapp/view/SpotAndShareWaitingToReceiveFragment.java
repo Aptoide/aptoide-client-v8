@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
-import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
@@ -70,9 +69,8 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
                 Context.MODE_PRIVATE)));
     //// TODO: 14-07-2017 remove this after putting this on Application
     attachPresenter(new SpotAndShareWaitingToReceivePresenter(this,
-        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(
-            getContext(), new Friend(spotAndShareUserManager.getUser()
-                .getUsername()))), savedInstanceState);
+            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare()),
+        savedInstanceState);
   }
 
   @Override public void onDestroyView() {

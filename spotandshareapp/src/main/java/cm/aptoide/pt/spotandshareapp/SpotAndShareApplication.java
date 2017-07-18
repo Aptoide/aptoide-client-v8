@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 public class SpotAndShareApplication extends V8Engine {
 
   private cm.aptoide.pt.spotandshareandroid.SpotAndShare spotAndShare;
+  public SpotAndShareUserManager spotAndShareUserManager;
 
   @Override public void onCreate() {
     setupCrashReports(BuildConfig.CRASH_REPORTS_DISABLED);
@@ -22,10 +23,20 @@ public class SpotAndShareApplication extends V8Engine {
     return new VanillaConfiguration(getDefaultSharedPreferences());
   }
 
-  public cm.aptoide.pt.spotandshareandroid.SpotAndShare getSpotAndShare(Context context,
-      Friend friend) {
+  public SpotAndShareUserManager getSpotAndShareUserManager() {
+    if (spotAndShareUserManager == null) {
+      spotAndShareUserManager = new SpotAndShareUserManager(new SpotAndShareUserPersister(
+          getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
+              Context.MODE_PRIVATE)));
+    }
+    return spotAndShareUserManager;
+  }
+
+  public cm.aptoide.pt.spotandshareandroid.SpotAndShare getSpotAndShare() {
     if (spotAndShare == null) {
-      spotAndShare = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(context, friend);
+      Friend friend = new Friend(getSpotAndShareUserManager().getUser()
+          .getUsername());
+      spotAndShare = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(this, friend);
     }
     return spotAndShare;
   }
