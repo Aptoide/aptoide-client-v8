@@ -26,6 +26,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -172,25 +173,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
       usernameTextView.setText(account.getEmail());
     }
 
-    if (!TextUtils.isEmpty(account.getAvatar())) {
-      userAvatarUrl = account.getAvatar();
-      userAvatarUrl = userAvatarUrl.replace("50", "150");
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar, STROKE_SIZE,
-              R.drawable.my_account_placeholder);
-    }
+    setUserAvatar(account);
 
-    if (!TextUtils.isEmpty(account.getStore()
-        .getName())) {
-      storeNameTextView.setText(account.getStore()
-          .getName());
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransformWithPlaceholder(account.getStore()
-              .getAvatar(), storeAvatar, STROKE_SIZE, R.drawable.my_account_placeholder);
-    } else {
-      separator.setVisibility(View.GONE);
-      storeLayout.setVisibility(View.GONE);
-    }
+    setOrHideUserStore(account.getStore()
+        .getName(), account.getStore()
+        .getAvatar());
   }
 
   @Override public Observable<Void> signOutClick() {
@@ -249,6 +236,34 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void hideHeader() {
     header.setVisibility(View.INVISIBLE);
+  }
+
+  @Override public void refreshUI(Store store) {
+    storeNameTextView.setText(store.
+        getName());
+    setOrHideUserStore(store.getName(), store.getAvatar());
+  }
+
+  private void setOrHideUserStore(String storeName, String storeAvatar) {
+    if (!TextUtils.isEmpty(storeName)) {
+      storeNameTextView.setText(storeName);
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransformWithPlaceholder(storeAvatar, this.storeAvatar, STROKE_SIZE,
+              R.drawable.my_account_placeholder);
+    } else {
+      separator.setVisibility(View.GONE);
+      storeLayout.setVisibility(View.GONE);
+    }
+  }
+
+  private void setUserAvatar(Account account) {
+    if (!TextUtils.isEmpty(account.getAvatar())) {
+      userAvatarUrl = account.getAvatar();
+      userAvatarUrl = userAvatarUrl.replace("50", "150");
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar, STROKE_SIZE,
+              R.drawable.my_account_placeholder);
+    }
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
