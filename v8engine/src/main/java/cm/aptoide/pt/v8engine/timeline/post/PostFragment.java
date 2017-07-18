@@ -32,6 +32,7 @@ import cm.aptoide.pt.v8engine.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
@@ -151,7 +152,7 @@ public class PostFragment extends FragmentView implements PostView {
 
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
-        new PostManager(postRemoteAccessor, postLocalAccessor), adapter, getFragmentNavigator());
+        new PostManager(postRemoteAccessor, postLocalAccessor), getFragmentNavigator());
     attachPresenter(presenter, null);
   }
 
@@ -227,6 +228,30 @@ public class PostFragment extends FragmentView implements PostView {
   @Override public void showInvalidPackageError() {
     ShowMessage.asSnack(this, R.string.timeline_message_pick_an_app);
     scrollView.smoothScrollTo(scrollView.getLeft(), scrollView.getBottom());
+  }
+
+  @Override public void addRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedAppsList) {
+    adapter.addRelatedApps(relatedAppsList);
+    if (relatedAppsList.size() > 10) {
+      relatedApps.scrollToPosition(10);
+    }
+    relatedApps.smoothScrollToPosition(0);
+  }
+
+  @Override public PostRemoteAccessor.RelatedApp getCurrentSelected() {
+    return adapter.getCurrentSelected();
+  }
+
+  @Override public Completable clearRemoteRelated() {
+    return adapter.clearRemoteRelated();
+  }
+
+  @Override public Observable<PostRemoteAccessor.RelatedApp> getClickedView() {
+    return adapter.getClickedView();
+  }
+
+  @Override public Completable setRelatedAppSelected(PostRemoteAccessor.RelatedApp app) {
+    return adapter.setRelatedAppSelected(app);
   }
 
   private String getInputText() {

@@ -24,15 +24,13 @@ class PostPresenter implements Presenter {
   private final PostView view;
   private final CrashReport crashReport;
   private final PostManager postManager;
-  private final RelatedAppsAdapter adapter;
   private final FragmentNavigator fragmentNavigator;
 
   public PostPresenter(PostView view, CrashReport crashReport, PostManager postManager,
-      RelatedAppsAdapter adapter, FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
-    this.adapter = adapter;
     this.fragmentNavigator = fragmentNavigator;
   }
 
@@ -60,7 +58,7 @@ class PostPresenter implements Presenter {
         .filter(url -> url == null)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(emptyUrl -> view.hideCardPreview())
-        .flatMapCompletable(emptyUrl -> adapter.clearRemoteRelated())
+        .flatMapCompletable(emptyUrl -> view.clearRemoteRelated())
         .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(viewHidden -> {
@@ -70,7 +68,16 @@ class PostPresenter implements Presenter {
   private void showInstalledAppsOnStart() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMapCompletable(lifecycleEvent -> loadRelatedApps(null))
+        .doOnNext(lifecycleEvent -> view.showRelatedAppsLoading())
+        .observeOn(Schedulers.io())
+        .flatMapSingle(lifecycleEvent -> postManager.getLocalAppSuggestions())
+        .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(relatedApps -> {
+          view.addRelatedApps(relatedApps);
+          view.hideRelatedAppsLoading();
+        })
+        .doOnError(throwable -> view.hideRelatedAppsLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -79,8 +86,8 @@ class PostPresenter implements Presenter {
   private void handleRelatedAppClick() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> adapter.getClickedView()
-            .flatMapCompletable(app -> adapter.setRelatedAppSelected(app)))
+        .flatMap(__ -> view.getClickedView()
+            .flatMapCompletable(app -> view.setRelatedAppSelected(app)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -164,12 +171,14 @@ class PostPresenter implements Presenter {
   Completable loadRelatedApps(String url) {
     return Completable.fromAction(() -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
-        .andThen(postManager.getAppSuggestions(url))
+        .andThen(postManager.getRemoteAppSuggestions(url))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSuccess(__2 -> view.hideRelatedAppsLoading())
         .toObservable()
         .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
-        .flatMapCompletable(relatedApps -> adapter.setRelatedApps(relatedApps))
+        .doOnNext(relatedApps -> {
+          view.addRelatedApps(relatedApps);
+          view.hideRelatedAppsLoading();
+        })
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.hideRelatedAppsLoading())
         .toCompletable();
@@ -183,8 +192,8 @@ class PostPresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapCompletable(
                 textToShare -> postManager.post(addProtocolIfNeeded(findUrlOrNull(textToShare)),
-                    textToShare, adapter.getCurrentSelected() == null ? null
-                        : adapter.getCurrentSelected()
+                    textToShare,
+                    view.getCurrentSelected() == null ? null : view.getCurrentSelected()
                             .getPackageName())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> view.showSuccessMessage())

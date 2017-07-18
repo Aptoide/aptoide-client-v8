@@ -34,18 +34,13 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
     return relatedAppPublisher;
   }
 
-  public Completable setRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedApps) {
-
-    if (relatedAppList.equals(relatedApps)) {
-      return Completable.complete();
-    }
-    return Completable.fromAction(() -> {
+  public void addRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedApps) {
+    if (!relatedAppList.equals(relatedApps)) {
       PostRemoteAccessor.RelatedApp selected = getCurrentSelected();
       setRelatedAppSelected(selected, relatedApps);
-      relatedAppList.clear();
-      relatedAppList.addAll(relatedApps);
-      notifyDataSetChanged();
-    });
+      relatedAppList.addAll(0, relatedApps);
+      notifyItemRangeInserted(0, relatedApps.size());
+    }
   }
 
   private void setRelatedAppSelected(PostRemoteAccessor.RelatedApp relatedApp,

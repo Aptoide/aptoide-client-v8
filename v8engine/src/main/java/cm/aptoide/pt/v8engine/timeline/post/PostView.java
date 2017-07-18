@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import cm.aptoide.pt.v8engine.presenter.View;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
@@ -31,6 +32,16 @@ interface PostView extends View {
   void showInvalidTextError();
 
   void showInvalidPackageError();
+
+  void addRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedApps);
+
+  PostRemoteAccessor.RelatedApp getCurrentSelected();
+
+  Completable clearRemoteRelated();
+
+  Observable<PostRemoteAccessor.RelatedApp> getClickedView();
+
+  Completable setRelatedAppSelected(PostRemoteAccessor.RelatedApp app);
 
   class PostPreview {
     private final String image;
