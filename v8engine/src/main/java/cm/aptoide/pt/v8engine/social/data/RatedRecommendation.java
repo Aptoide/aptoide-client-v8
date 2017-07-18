@@ -21,7 +21,6 @@ public class RatedRecommendation extends AppPost {
   private final List<SocialCard.CardComment> comments;
   private final String userContent;
 
-
   public RatedRecommendation(String cardId, Poster poster, long appId, String packageName,
       String appName, String appIcon, float ratingAverage, Date timestamp, String abUrl,
       boolean isLiked, long commentsNumber, long likesNumber, List<UserTimeline> likes,

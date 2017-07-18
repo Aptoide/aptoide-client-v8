@@ -49,5 +49,4 @@ interface PostView extends View {
       return title;
     }
   }
-
 }

@@ -37,5 +37,4 @@ public class BaseV7Response {
   public boolean isOk() {
     return info != null && info.getStatus() == Info.Status.OK;
   }
-
 }

@@ -50,11 +50,13 @@ public class SharePreviewFactory {
       ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
       TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
       ImageView playIcon = (ImageView) view.findViewById(R.id.play_button);
-      if (post.getType().equals(CardType.ARTICLE)
-          || post.getType().equals(CardType.SOCIAL_ARTICLE)
-          || post.getType().equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
+      if (post.getType()
+          .equals(CardType.ARTICLE) || post.getType()
+          .equals(CardType.SOCIAL_ARTICLE) || post.getType()
+          .equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
         playIcon.setVisibility(View.GONE);
-      } else if (post.getType().equals(CardType.VIDEO) || post.getType()
+      } else if (post.getType()
+          .equals(CardType.VIDEO) || post.getType()
           .equals(CardType.SOCIAL_VIDEO) || post.getType()
           .equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
         playIcon.setVisibility(View.VISIBLE);
@@ -62,7 +64,8 @@ public class SharePreviewFactory {
       mediaTitle.setMaxLines(1);
       mediaTitle.setText(((Media) post).getMediaTitle());
       relatedTo.setVisibility(View.GONE);
-      ImageLoader.with(context).load(((Media) post).getMediaThumbnailUrl(), thumbnail);
+      ImageLoader.with(context)
+          .load(((Media) post).getMediaThumbnailUrl(), thumbnail);
     } else if (post instanceof StoreLatestApps) {
       view = factory.inflate(R.layout.timeline_store_preview, null);
 
@@ -88,7 +91,8 @@ public class SharePreviewFactory {
         latestAppIcon =
             (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
         latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
-        ImageLoader.with(context).load(latestApp.getIcon(), latestAppIcon);
+        ImageLoader.with(context)
+            .load(latestApp.getIcon(), latestAppIcon);
         latestAppName.setMaxLines(1);
         latestAppName.setText(latestApp.getName());
         latestAppsContainer.addView(latestAppView);
@@ -103,7 +107,8 @@ public class SharePreviewFactory {
           R.id.displayable_social_timeline_recommendation_get_app_button);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
-      ImageLoader.with(context).load(((Recommendation) post).getAppIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((Recommendation) post).getAppIcon(), appIcon);
       appName.setText(((Recommendation) post).getAppName());
       ratingBar.setRating(((Recommendation) post).getAppAverageRating());
       SpannableFactory spannableFactory = new SpannableFactory();
@@ -121,7 +126,8 @@ public class SharePreviewFactory {
           R.id.displayable_social_timeline_recommendation_get_app_button);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
-      ImageLoader.with(context).load(((AppUpdate) post).getAppUpdateIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((AppUpdate) post).getAppUpdateIcon(), appIcon);
       appName.setText(((AppUpdate) post).getAppUpdateName());
       ratingBar.setRating(((AppUpdate) post).getAppUpdateAverageRating());
 
@@ -139,7 +145,8 @@ public class SharePreviewFactory {
 
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.with(context).load(((RatedRecommendation) post).getAppIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((RatedRecommendation) post).getAppIcon(), appIcon);
       appName.setText(((RatedRecommendation) post).getAppName());
 
       SpannableFactory spannableFactory = new SpannableFactory();
@@ -157,7 +164,8 @@ public class SharePreviewFactory {
           R.id.displayable_social_timeline_recommendation_get_app_button);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
-      ImageLoader.with(context).load(((PopularApp) post).getAppIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((PopularApp) post).getAppIcon(), appIcon);
       appName.setText(((PopularApp) post).getAppName());
       ratingBar.setRating(((PopularApp) post).getAppAverageRating());
 
@@ -176,7 +184,8 @@ public class SharePreviewFactory {
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-      ImageLoader.with(context).load(((AggregatedRecommendation) post).getAppIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((AggregatedRecommendation) post).getAppIcon(), appIcon);
       appName.setText(((AggregatedRecommendation) post).getAppName());
       ratingBar.setRating(((AggregatedRecommendation) post).getAppAverageRating());
       SpannableFactory spannableFactory = new SpannableFactory();
@@ -224,28 +233,40 @@ public class SharePreviewFactory {
 
   private void setPreviewHeader(TextView storeName, ImageView storeAvatar, ImageView userAvatar,
       TextView userName, Context context) {
-    if (accountManager.getAccount().getStore().getName() != null) {
+    if (accountManager.getAccount()
+        .getStore()
+        .getName() != null) {
       storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
       if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(accountManager.getAccount().getStore().getAvatar(),
-                storeAvatar);
+            .loadWithShadowCircleTransform(accountManager.getAccount()
+                .getStore()
+                .getAvatar(), storeAvatar);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), userAvatar);
-        storeName.setText(accountManager.getAccount().getStore().getName());
-        userName.setText(accountManager.getAccount().getNickname());
+            .loadWithShadowCircleTransform(accountManager.getAccount()
+                .getAvatar(), userAvatar);
+        storeName.setText(accountManager.getAccount()
+            .getStore()
+            .getName());
+        userName.setText(accountManager.getAccount()
+            .getNickname());
       } else {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.INVISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(accountManager.getAccount().getStore().getAvatar(),
-                storeAvatar);
+            .loadWithShadowCircleTransform(accountManager.getAccount()
+                .getStore()
+                .getAvatar(), storeAvatar);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), userAvatar);
-        storeName.setText(accountManager.getAccount().getStore().getName());
-        userName.setText(accountManager.getAccount().getNickname());
+            .loadWithShadowCircleTransform(accountManager.getAccount()
+                .getAvatar(), userAvatar);
+        storeName.setText(accountManager.getAccount()
+            .getStore()
+            .getName());
+        userName.setText(accountManager.getAccount()
+            .getNickname());
         userName.setVisibility(View.GONE);
       }
     }

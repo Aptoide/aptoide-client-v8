@@ -79,7 +79,8 @@ public class ProductBundleMapper {
 
       if (developerPayload != null
           && sku != null
-          && packageName != null && applicationName != null
+          && packageName != null
+          && applicationName != null
           && type != null
           && apiVersion != -1) {
         return new InAppProduct(id, icon, title, description, apiVersion, sku, packageName,

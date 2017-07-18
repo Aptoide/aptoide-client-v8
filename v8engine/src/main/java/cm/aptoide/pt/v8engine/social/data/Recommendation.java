@@ -21,7 +21,8 @@ public class Recommendation extends AppPost {
         appAverageRating);
     this.relatedToPackageName = relatedToPackageName;
     this.publisherName = publisher.getPublisherName();
-    this.publisherDrawableId = publisher.getPublisherAvatar().getDrawableId();
+    this.publisherDrawableId = publisher.getPublisherAvatar()
+        .getDrawableId();
     this.relatedToAppName = relatedToAppName;
     this.isLiked = isLiked;
   }

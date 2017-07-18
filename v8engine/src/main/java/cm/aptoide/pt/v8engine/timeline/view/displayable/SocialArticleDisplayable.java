@@ -115,9 +115,9 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
             socialArticle.getPublisher()
                 .getBaseUrl()), socialArticle.getPublisher()
         .getName(), socialArticle.getThumbnailUrl(), socialArticle.getPublisher()
-        .getLogoUrl(), appId, abTestingURL, socialArticle.getContent(), socialArticle.getStore(), socialArticle.getUser(),
-        socialArticle.getStats()
-            .getLikes(), socialArticle.getStats()
+        .getLogoUrl(), appId, abTestingURL, socialArticle.getContent(), socialArticle.getStore(),
+        socialArticle.getUser(), socialArticle.getStats()
+        .getLikes(), socialArticle.getStats()
         .getComments(), socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
         spannableFactory, timelineAnalytics, socialRepository, installedRepository,
         timelineNavigator, windowManager);

@@ -107,7 +107,8 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
       latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContainer, false);
       latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
       latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
-      ImageLoader.with(itemView.getContext()).load(latestApp.getIcon(), latestAppIcon);
+      ImageLoader.with(itemView.getContext())
+          .load(latestApp.getIcon(), latestAppIcon);
       latestAppName.setText(latestApp.getName());
       appsContainer.addView(latestAppView);
       apps.put(latestAppView, latestApp.getId());

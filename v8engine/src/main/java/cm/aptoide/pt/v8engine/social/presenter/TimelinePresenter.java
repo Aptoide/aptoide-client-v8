@@ -262,51 +262,65 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
-        .filter(cardTouchEvent -> cardTouchEvent.getActionType().equals(CardTouchEvent.Type.HEADER))
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.HEADER))
         .doOnNext(cardTouchEvent -> {
-          timeline.knockWithSixpackCredentials(cardTouchEvent.getCard().getAbUrl());
-          if (cardTouchEvent.getCard().getType().equals(CardType.VIDEO) || cardTouchEvent.getCard()
+          timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+              .getAbUrl());
+          if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.VIDEO) || cardTouchEvent.getCard()
               .getType()
               .equals(CardType.ARTICLE)) {
             Media card = (Media) cardTouchEvent.getCard();
             sendClickOnMediaHeaderEvent(card);
-            card.getPublisherLink().launch();
+            card.getPublisherLink()
+                .launch();
           } else if (isSocialPost(cardTouchEvent.getCard())) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
-            Analytics.AppsTimeline.clickOnCard(
-                socialHeaderCardTouchEvent.getCard().getType().name(), Analytics.AppsTimeline.BLANK,
-                Analytics.AppsTimeline.BLANK, socialHeaderCardTouchEvent.getStoreName(),
-                Analytics.AppsTimeline.OPEN_STORE);
+            Analytics.AppsTimeline.clickOnCard(socialHeaderCardTouchEvent.getCard()
+                    .getType()
+                    .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+                socialHeaderCardTouchEvent.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.STORE)) {
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) cardTouchEvent.getCard());
-            Analytics.AppsTimeline.clickOnCard(card.getType().name(), Analytics.AppsTimeline.BLANK,
-                Analytics.AppsTimeline.BLANK, card.getStoreName(),
-                Analytics.AppsTimeline.OPEN_STORE);
-            timelineAnalytics.sendStoreLatestAppsClickEvent(card.getType().name(),
-                Analytics.AppsTimeline.OPEN_STORE, "(blank)", Analytics.AppsTimeline.BLANK,
+            Analytics.AppsTimeline.clickOnCard(card.getType()
+                    .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+                card.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
+            timelineAnalytics.sendStoreLatestAppsClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", Analytics.AppsTimeline.BLANK,
                 card.getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.UPDATE)) {
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) cardTouchEvent.getCard());
-            Analytics.AppsTimeline.clickOnCard(card.getType().name(), card.getPackageName(),
-                Analytics.AppsTimeline.BLANK, card.getStoreName(),
+            Analytics.AppsTimeline.clickOnCard(card.getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
                 Analytics.AppsTimeline.OPEN_STORE);
-            timelineAnalytics.sendAppUpdateCardClickEvent(card.getType().name(),
-                Analytics.AppsTimeline.OPEN_STORE, "(blank)", card.getPackageName(),
+            timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.OPEN_STORE, "(blank)", card.getPackageName(),
                 card.getStoreName());
-            timelineAnalytics.sendAppUpdateOpenStoreEvent(card.getType().name(),
-                TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName(), card.getStoreName());
+            timelineAnalytics.sendAppUpdateOpenStoreEvent(card.getType()
+                    .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName(),
+                card.getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.POPULAR_APP)) {
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.POPULAR_APP)) {
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
-            Analytics.AppsTimeline.clickOnCard(popularAppTouchEvent.getCard().getType().name(),
-                ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
+            Analytics.AppsTimeline.clickOnCard(popularAppTouchEvent.getCard()
+                    .getType()
+                    .name(), ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
                 Analytics.AppsTimeline.BLANK, String.valueOf(popularAppTouchEvent.getUserId()),
                 Analytics.AppsTimeline.OPEN_STORE);
-            timelineAnalytics.sendPopularAppOpenUserStoreEvent(
-                cardTouchEvent.getCard().getType().name(), TimelineAnalytics.SOURCE_APTOIDE,
+            timelineAnalytics.sendPopularAppOpenUserStoreEvent(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), TimelineAnalytics.SOURCE_APTOIDE,
                 ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
                 String.valueOf(popularAppTouchEvent.getUserId()));
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
@@ -325,44 +339,57 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
-        .filter(cardTouchEvent -> cardTouchEvent.getActionType().equals(CardTouchEvent.Type.BODY))
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.BODY))
         .doOnNext(cardTouchEvent -> {
-          timeline.knockWithSixpackCredentials(cardTouchEvent.getCard().getAbUrl());
+          timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+              .getAbUrl());
           if (isMediaPost(cardTouchEvent.getCard())) {
             Media card = (Media) cardTouchEvent.getCard();
             sendClickOnMediaBodyEvent(card);
-            card.getMediaLink().launch();
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.RECOMMENDATION)) {
+            card.getMediaLink()
+                .launch();
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.RECOMMENDATION)) {
             Recommendation card = (Recommendation) cardTouchEvent.getCard();
-            Analytics.AppsTimeline.clickOnCard(card.getType().name(), card.getPackageName(),
-                Analytics.AppsTimeline.BLANK, card.getPublisherName(),
-                Analytics.AppsTimeline.OPEN_APP_VIEW);
-            timelineAnalytics.sendRecommendationCardClickEvent(card.getType().name(),
-                Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
+            Analytics.AppsTimeline.clickOnCard(card.getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK,
+                card.getPublisherName(), Analytics.AppsTimeline.OPEN_APP_VIEW);
+            timelineAnalytics.sendRecommendationCardClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
                 card.getPublisherName());
-            timelineAnalytics.sendRecommendedOpenAppEvent(card.getType().name(),
-                TimelineAnalytics.SOURCE_APTOIDE, card.getRelatedToPackageName(),
+            timelineAnalytics.sendRecommendedOpenAppEvent(card.getType()
+                    .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getRelatedToPackageName(),
                 card.getPackageName());
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.STORE)) {
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.STORE)) {
             StoreAppCardTouchEvent storeAppCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
             if (storeAppCardTouchEvent.getCard() instanceof StoreLatestApps) {
-              Analytics.AppsTimeline.clickOnCard(storeAppCardTouchEvent.getCard().getType().name(),
-                  storeAppCardTouchEvent.getPackageName(), Analytics.AppsTimeline.BLANK,
+              Analytics.AppsTimeline.clickOnCard(storeAppCardTouchEvent.getCard()
+                      .getType()
+                      .name(), storeAppCardTouchEvent.getPackageName(), Analytics.AppsTimeline.BLANK,
                   ((StoreLatestApps) storeAppCardTouchEvent.getCard()).getStoreName(),
                   Analytics.AppsTimeline.OPEN_APP_VIEW);
             }
-            timelineAnalytics.sendStoreLatestAppsClickEvent(
-                cardTouchEvent.getCard().getType().name(), Analytics.AppsTimeline.OPEN_APP_VIEW,
-                "(blank)", storeAppCardTouchEvent.getPackageName(),
+            timelineAnalytics.sendStoreLatestAppsClickEvent(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)",
+                storeAppCardTouchEvent.getPackageName(),
                 ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName());
             navigateToAppView(storeAppCardTouchEvent);
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.SOCIAL_STORE)
-              || cardTouchEvent.getCard().getType().equals(CardType.AGGREGATED_SOCIAL_STORE)) {
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_STORE) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.AGGREGATED_SOCIAL_STORE)) {
             if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
-              Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),
-                  ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName(),
+              Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                      .getType()
+                      .name(), ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName(),
                   Analytics.AppsTimeline.BLANK,
                   ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
                   Analytics.AppsTimeline.OPEN_APP_VIEW);
@@ -375,28 +402,33 @@ public class TimelinePresenter implements Presenter {
             } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
               StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
               if (cardTouchEvent.getCard() instanceof StoreLatestApps) {
-                Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),
-                    Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+                Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                        .getType()
+                        .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
                     ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
                     Analytics.AppsTimeline.OPEN_STORE);
-                timelineAnalytics.sendOpenStoreEvent(cardTouchEvent.getCard().getType().name(),
-                    TimelineAnalytics.SOURCE_APTOIDE,
+                timelineAnalytics.sendOpenStoreEvent(cardTouchEvent.getCard()
+                        .getType()
+                        .name(), TimelineAnalytics.SOURCE_APTOIDE,
                     ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName());
               }
               timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
                   storeCardTouchEvent.getStoreTheme());
             }
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.UPDATE)) {
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.UPDATE)) {
             AppUpdate card = (AppUpdate) cardTouchEvent.getCard();
             if (cardTouchEvent instanceof AppUpdateCardTouchEvent) {
-              Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),
-                  card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
+              Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                      .getType()
+                      .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
                   Analytics.AppsTimeline.UPDATE_APP);
-              timelineAnalytics.sendAppUpdateCardClickEvent(card.getType().name(),
-                  Analytics.AppsTimeline.UPDATE_APP, "(blank)", card.getPackageName(),
+              timelineAnalytics.sendAppUpdateCardClickEvent(card.getType()
+                      .name(), Analytics.AppsTimeline.UPDATE_APP, "(blank)", card.getPackageName(),
                   card.getStoreName());
-              timelineAnalytics.sendUpdateAppEvent(card.getType().name(),
-                  TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
+              timelineAnalytics.sendUpdateAppEvent(card.getType()
+                  .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
               permissionManager.requestExternalStoragePermission(permissionRequest)
                   .flatMap(success -> {
                     if (installManager.showWarning()) {
@@ -418,43 +450,52 @@ public class TimelinePresenter implements Presenter {
                       // TODO: 26/06/2017 error handling
                       .getName(), "error"));
             } else {
-              Analytics.AppsTimeline.clickOnCard(card.getType().name(), card.getPackageName(),
-                  Analytics.AppsTimeline.BLANK, card.getStoreName(),
+              Analytics.AppsTimeline.clickOnCard(card.getType()
+                      .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getStoreName(),
                   Analytics.AppsTimeline.OPEN_APP_VIEW);
-              timelineAnalytics.sendRecommendationCardClickEvent(card.getType().name(),
-                  Analytics.AppsTimeline.OPEN_APP_VIEW, Analytics.AppsTimeline.BLANK,
+              timelineAnalytics.sendRecommendationCardClickEvent(card.getType()
+                      .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, Analytics.AppsTimeline.BLANK,
                   card.getPackageName(), card.getStoreName());
-              timelineAnalytics.sendRecommendedOpenAppEvent(card.getType().name(),
-                  TimelineAnalytics.SOURCE_APTOIDE, Analytics.AppsTimeline.BLANK,
+              timelineAnalytics.sendRecommendedOpenAppEvent(card.getType()
+                      .name(), TimelineAnalytics.SOURCE_APTOIDE, Analytics.AppsTimeline.BLANK,
                   card.getPackageName());
               timelineNavigation.navigateToAppView(card.getAppUpdateId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
             }
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.POPULAR_APP)) {
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.POPULAR_APP)) {
             PopularApp card = (PopularApp) cardTouchEvent.getCard();
-            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),
-                card.getPackageName(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
-                Analytics.AppsTimeline.OPEN_APP_VIEW);
+            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK,
+                Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_APP_VIEW);
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
-          } else if (cardTouchEvent.getCard().getType().equals(CardType.SOCIAL_RECOMMENDATION)
-              || cardTouchEvent.getCard().getType().equals(CardType.SOCIAL_INSTALL)) {
+          } else if (cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_RECOMMENDATION) || cardTouchEvent.getCard()
+              .getType()
+              .equals(CardType.SOCIAL_INSTALL)) {
             RatedRecommendation card = (RatedRecommendation) cardTouchEvent.getCard();
-            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),
-                card.getPackageName(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
-                Analytics.AppsTimeline.OPEN_APP_VIEW);
-            timelineAnalytics.sendSocialRecommendationClickEvent(card.getType().name(),
-                Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
-                card.getPoster().getPrimaryName());
+            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK,
+                Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_APP_VIEW);
+            timelineAnalytics.sendSocialRecommendationClickEvent(card.getType()
+                    .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
+                card.getPoster()
+                    .getPrimaryName());
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
           } else if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
             AggregatedRecommendation card = (AggregatedRecommendation) cardTouchEvent.getCard();
-            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),
-                card.getPackageName(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
-                Analytics.AppsTimeline.OPEN_APP_VIEW);
+            Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard()
+                    .getType()
+                    .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK,
+                Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_APP_VIEW);
             timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                 AppViewFragment.OpenType.OPEN_ONLY);
           }
@@ -471,58 +512,60 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
-            .filter(
-                cardTouchEvent -> cardTouchEvent.getActionType().equals(CardTouchEvent.Type.LIKE)
-                    && isSocialPost(cardTouchEvent.getCard()))
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.LIKE) && isSocialPost(cardTouchEvent.getCard()))
             .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard(),
-                cardTouchEvent.getCard().getCardId())))
+                cardTouchEvent.getCard()
+                    .getCardId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> crashReport.log(throwable));
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
   private void clickOnLikeNonSocialPost() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
-            .filter(
-                cardTouchEvent -> cardTouchEvent.getActionType().equals(CardTouchEvent.Type.LIKE)
-                    && isNormalPost(cardTouchEvent.getCard()))
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.LIKE) && isNormalPost(cardTouchEvent.getCard()))
             .flatMapCompletable(cardTouchEvent -> timeline.sharePost(cardTouchEvent.getCard())
                 .flatMapCompletable(cardId -> timeline.like(cardTouchEvent.getCard(), cardId))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> view.showShareSuccessMessage()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> crashReport.log(throwable));
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
   private void clickOnCommentSocialPost() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
-        .filter(cardTouchEvent -> cardTouchEvent.getActionType().equals(CardTouchEvent.Type.COMMENT)
-            && (isSocialPost(cardTouchEvent.getCard()) || cardTouchEvent.getCard()
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.COMMENT) && (isSocialPost(cardTouchEvent.getCard())
+            || cardTouchEvent.getCard()
             .getType()
             .equals(CardType.MINIMAL_CARD)))
         .doOnNext(cardTouchEvent -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
-            cardTouchEvent.getCard().getCardId()))
+            cardTouchEvent.getCard()
+                .getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> crashReport.log(throwable));
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
   private void clickOnCommentNonSocialPost() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
-        .filter(cardTouchEvent -> cardTouchEvent.getActionType().equals(CardTouchEvent.Type.COMMENT)
-            && (isNormalPost(cardTouchEvent.getCard())))
-        .doOnNext(cardTouchEvent -> view.showCommentDialog(cardTouchEvent.getCard().getCardId()))
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.COMMENT) && (isNormalPost(cardTouchEvent.getCard())))
+        .doOnNext(cardTouchEvent -> view.showCommentDialog(cardTouchEvent.getCard()
+            .getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
         });
   }
 
@@ -532,11 +575,11 @@ public class TimelinePresenter implements Presenter {
         .flatMap(create -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.COMMENT_NUMBER))
-        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToComments(
-            cardTouchEvent.getCard().getCardId()))
+        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToComments(cardTouchEvent.getCard()
+            .getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
         });
@@ -546,11 +589,12 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
-        .filter(cardTouchEvent -> cardTouchEvent.getActionType().equals(CardTouchEvent.Type.SHARE))
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.SHARE))
         .doOnNext(cardTouchEvent -> view.showSharePreview(cardTouchEvent.getCard()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
         });
@@ -651,12 +695,11 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.LIKES_PREVIEW))
-        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(
-            cardTouchEvent.getCard().getCardId(),
-            ((LikesCardTouchEvent) cardTouchEvent).getLikesNumber()))
+        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(cardTouchEvent.getCard()
+            .getCardId(), ((LikesCardTouchEvent) cardTouchEvent).getLikesNumber()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(
-            cardTouchEvent.getCard().getAbUrl()), throwable -> {
+        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()), throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
         });
@@ -666,7 +709,8 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
-        .filter(cardTouchEvent -> cardTouchEvent.getActionType().equals(CardTouchEvent.Type.LOGIN))
+        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+            .equals(CardTouchEvent.Type.LOGIN))
         .doOnNext(cardTouchEvent -> timelineNavigation.navigateToAccountView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
@@ -699,31 +743,40 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void sendClickOnMediaHeaderEvent(Media card) {
-    if (card.getType().equals(CardType.ARTICLE)) {
-      timelineAnalytics.sendOpenBlogEvent(card.getType().name(), card.getMediaTitle(),
-          card.getPublisherLink().getUrl(), card.getRelatedApp().getPackageName());
-      timelineAnalytics.sendMediaCardClickEvent(card.getType().name(), card.getMediaTitle(),
-          card.getPublisherName(), Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
-      Analytics.AppsTimeline.clickOnCard(card.getType().name(), Analytics.AppsTimeline.BLANK,
-          card.getMediaTitle(), card.getPublisherName(),
+    if (card.getType()
+        .equals(CardType.ARTICLE)) {
+      timelineAnalytics.sendOpenBlogEvent(card.getType()
+          .name(), card.getMediaTitle(), card.getPublisherLink()
+          .getUrl(), card.getRelatedApp()
+          .getPackageName());
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-    } else if (card.getType().equals(CardType.VIDEO)) {
-      timelineAnalytics.sendOpenChannelEvent(card.getType().name(), card.getMediaTitle(),
-          card.getPublisherLink().getUrl(), card.getRelatedApp().getPackageName());
-      timelineAnalytics.sendMediaCardClickEvent(card.getType().name(), card.getMediaTitle(),
-          card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
-      Analytics.AppsTimeline.clickOnCard(card.getType().name(), Analytics.AppsTimeline.BLANK,
-          card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
+    } else if (card.getType()
+        .equals(CardType.VIDEO)) {
+      timelineAnalytics.sendOpenChannelEvent(card.getType()
+          .name(), card.getMediaTitle(), card.getPublisherLink()
+          .getUrl(), card.getRelatedApp()
+          .getPackageName());
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
     }
   }
 
   private boolean isSocialPost(Post post) {
-    return post.getType().equals(CardType.SOCIAL_ARTICLE)
-        || post.getType()
-        .equals(CardType.SOCIAL_VIDEO)
-        || post.getType().equals(CardType.SOCIAL_STORE)
-        || post.getType().equals(CardType.SOCIAL_RECOMMENDATION)
-        || post.getType().equals(CardType.SOCIAL_INSTALL);
+    return post.getType()
+        .equals(CardType.SOCIAL_ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_VIDEO) || post.getType()
+        .equals(CardType.SOCIAL_STORE) || post.getType()
+        .equals(CardType.SOCIAL_RECOMMENDATION) || post.getType()
+        .equals(CardType.SOCIAL_INSTALL);
   }
 
   private void navigateToStoreTimeline(SocialHeaderCardTouchEvent socialHeaderCardTouchEvent) {
@@ -737,33 +790,44 @@ public class TimelinePresenter implements Presenter {
   }
 
   private boolean isMediaPost(Post post) {
-    return post.getType().equals(CardType.VIDEO)
-        || post.getType().equals(CardType.ARTICLE)
-        || post.getType().equals(CardType.SOCIAL_ARTICLE)
-        || post.getType().equals(CardType.SOCIAL_VIDEO)
-        || post.getType().equals(CardType.AGGREGATED_SOCIAL_ARTICLE)
-        || post.getType().equals(CardType.AGGREGATED_SOCIAL_VIDEO);
+    return post.getType()
+        .equals(CardType.VIDEO) || post.getType()
+        .equals(CardType.ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_ARTICLE) || post.getType()
+        .equals(CardType.SOCIAL_VIDEO) || post.getType()
+        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE) || post.getType()
+        .equals(CardType.AGGREGATED_SOCIAL_VIDEO);
   }
 
   private void sendClickOnMediaBodyEvent(Media card) {
-    if (card.getType().equals(CardType.ARTICLE)
-        || card.getType().equals(CardType.SOCIAL_ARTICLE)
-        || card.getType().equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
-      Analytics.AppsTimeline.clickOnCard(card.getType().name(), Analytics.AppsTimeline.BLANK,
-          card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_ARTICLE);
-      timelineAnalytics.sendOpenArticleEvent(card.getType().name(), card.getMediaTitle(),
-          card.getMediaLink().getUrl(), card.getRelatedApp().getPackageName());
-      timelineAnalytics.sendMediaCardClickEvent(card.getType().name(), card.getMediaTitle(),
-          card.getPublisherName(), Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
-    } else if (card.getType().equals(CardType.VIDEO)
-        || card.getType().equals(CardType.SOCIAL_VIDEO)
-        || card.getType().equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
-      Analytics.AppsTimeline.clickOnCard(card.getType().name(), Analytics.AppsTimeline.BLANK,
-          card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO);
-      timelineAnalytics.sendOpenVideoEvent(card.getType().name(), card.getMediaTitle(),
-          card.getMediaLink().getUrl(), card.getRelatedApp().getPackageName());
-      timelineAnalytics.sendMediaCardClickEvent(card.getType().name(), card.getMediaTitle(),
-          card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO, "(blank)");
+    if (card.getType()
+        .equals(CardType.ARTICLE) || card.getType()
+        .equals(CardType.SOCIAL_ARTICLE) || card.getType()
+        .equals(CardType.AGGREGATED_SOCIAL_ARTICLE)) {
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE);
+      timelineAnalytics.sendOpenArticleEvent(card.getType()
+          .name(), card.getMediaTitle(), card.getMediaLink()
+          .getUrl(), card.getRelatedApp()
+          .getPackageName());
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
+    } else if (card.getType()
+        .equals(CardType.VIDEO) || card.getType()
+        .equals(CardType.SOCIAL_VIDEO) || card.getType()
+        .equals(CardType.AGGREGATED_SOCIAL_VIDEO)) {
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO);
+      timelineAnalytics.sendOpenVideoEvent(card.getType()
+          .name(), card.getMediaTitle(), card.getMediaLink()
+          .getUrl(), card.getRelatedApp()
+          .getPackageName());
+      timelineAnalytics.sendMediaCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(), Analytics.AppsTimeline.OPEN_VIDEO,
+          "(blank)");
     }
   }
 
@@ -789,11 +853,12 @@ public class TimelinePresenter implements Presenter {
   }
 
   private boolean isNormalPost(Post post) {
-    return post.getType().equals(CardType.RECOMMENDATION)
-        || post.getType().equals(CardType.ARTICLE)
-        || post.getType().equals(CardType.VIDEO)
-        || post.getType().equals(CardType.POPULAR_APP)
-        || post.getType().equals(CardType.STORE)
-        || post.getType().equals(CardType.UPDATE);
+    return post.getType()
+        .equals(CardType.RECOMMENDATION) || post.getType()
+        .equals(CardType.ARTICLE) || post.getType()
+        .equals(CardType.VIDEO) || post.getType()
+        .equals(CardType.POPULAR_APP) || post.getType()
+        .equals(CardType.STORE) || post.getType()
+        .equals(CardType.UPDATE);
   }
 }

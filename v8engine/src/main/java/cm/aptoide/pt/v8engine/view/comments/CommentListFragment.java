@@ -275,7 +275,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<ListComments> listCommentsAction = (listComments -> {
-      if (listComments != null && listComments.getDataList() != null && listComments.getDataList()
+      if (listComments != null
+          && listComments.getDataList() != null
+          && listComments.getDataList()
           .getList() != null) {
         comments = commentOperations.flattenByDepth(commentOperations.transform(
             listComments.getDataList()
@@ -326,7 +328,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     final String storeName = storeCredentials.getName();
 
     Action1<ListComments> listCommentsAction = (listComments -> {
-      if (listComments != null && listComments.getDataList() != null && listComments.getDataList()
+      if (listComments != null
+          && listComments.getDataList() != null
+          && listComments.getDataList()
           .getList() != null) {
         comments = commentOperations.flattenByDepth(commentOperations.transform(
             listComments.getDataList()

@@ -123,7 +123,7 @@ public class ManageStorePresenter implements Presenter {
       }
     } else if (err instanceof StoreValidationException) {
       StoreValidationException ex = (StoreValidationException) err;
-      if(ex.getErrorCode()==StoreValidationException.EMPTY_NAME){
+      if (ex.getErrorCode() == StoreValidationException.EMPTY_NAME) {
         return view.showError(R.string.ws_error_WOP_2);
       }
       if (ex.getErrorCode() == StoreValidationException.EMPTY_AVATAR) {

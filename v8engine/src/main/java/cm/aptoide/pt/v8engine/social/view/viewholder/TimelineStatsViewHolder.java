@@ -36,12 +36,12 @@ public class TimelineStatsViewHolder extends PostViewHolder<TimelineStatsPost> {
   }
 
   @Override public void setPost(TimelineStatsPost card, int position) {
-    followers.setText(spannableFactory.createSpan(
-        itemView.getContext().getString(R.string.timeline_followers, card.getFollowers()),
+    followers.setText(spannableFactory.createSpan(itemView.getContext()
+            .getString(R.string.timeline_followers, card.getFollowers()),
         new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(card.getFollowers()), String.valueOf(card.getFollowers())));
-    following.setText(spannableFactory.createSpan(
-        itemView.getContext().getString(R.string.timeline_followed, card.getFollowing()),
+    following.setText(spannableFactory.createSpan(itemView.getContext()
+            .getString(R.string.timeline_followed, card.getFollowing()),
         new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(card.getFollowing()), String.valueOf(card.getFollowing())));
 

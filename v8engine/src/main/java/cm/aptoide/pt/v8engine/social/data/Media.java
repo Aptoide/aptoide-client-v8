@@ -47,16 +47,16 @@ public class Media implements Post {
     return cardId;
   }
 
-  public String getUserContent() {
-    return userContent;
-  }
-
   @Override public CardType getType() {
     return this.cardType;
   }
 
   public String getAbUrl() {
     return abTestURL;
+  }
+
+  public String getUserContent() {
+    return userContent;
   }
 
   public String getMediaTitle() {

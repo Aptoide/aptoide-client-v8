@@ -77,9 +77,12 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), card));
     this.headerSubTitle.setText(
         getTimeSinceRecommendation(itemView.getContext(), card.getTimestamp()));
-    ImageLoader.with(itemView.getContext()).load(card.getAppIcon(), appIcon);
+    ImageLoader.with(itemView.getContext())
+        .load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
-    this.relatedToText.setText(itemView.getContext().getString(R.string.related_to).toLowerCase());
+    this.relatedToText.setText(itemView.getContext()
+        .getString(R.string.related_to)
+        .toLowerCase());
     this.relatedToApp.setText(card.getRelatedToAppName());
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
@@ -114,6 +117,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
   public String getTitle(Resources resources) {
     return AptoideUtils.StringU.getFormattedString(
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, resources,
-        Application.getConfiguration().getMarketName());
+        Application.getConfiguration()
+            .getMarketName());
   }
 }

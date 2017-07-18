@@ -316,7 +316,9 @@ public class DisplayablesFactory {
     List<Displayable> displayables = new LinkedList<>();
 
     ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
-    if (reviewsList != null && reviewsList.getDataList() != null && reviewsList.getDataList()
+    if (reviewsList != null
+        && reviewsList.getDataList() != null
+        && reviewsList.getDataList()
         .getList()
         .size() > 0) {
       displayables.add(new StoreGridHeaderDisplayable(wsWidget));
@@ -370,7 +372,9 @@ public class DisplayablesFactory {
         (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
     ListComments comments = data.first;
     displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-    if (comments != null && comments.getDataList() != null && comments.getDataList()
+    if (comments != null
+        && comments.getDataList() != null
+        && comments.getDataList()
         .getList()
         .size() > 0) {
       displayables.add(
