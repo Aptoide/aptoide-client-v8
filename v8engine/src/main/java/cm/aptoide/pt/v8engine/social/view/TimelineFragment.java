@@ -145,9 +145,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     tabNavigator.navigation()
         .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(tabNavigation -> postIdForTimelineRequest =
-                tabNavigation.getBundle().getString(AppsTimelineTabNavigation.CARD_ID_KEY),
-            err -> CrashReport.getInstance().log(err));
+        .subscribe(tabNavigation -> postIdForTimelineRequest = tabNavigation.getBundle()
+            .getString(AppsTimelineTabNavigation.CARD_ID_KEY), err -> CrashReport.getInstance()
+            .log(err));
     newRefresh = true;
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
@@ -162,7 +162,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     sharePreviewPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
-        getContext().getApplicationContext().getResources());
+        getContext().getApplicationContext()
+            .getResources());
     spannableFactory = new SpannableFactory();
     adapter = new PostAdapter(Collections.emptyList(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
@@ -195,8 +196,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration().getAppId(),
-        sharedPreferences);
+        WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId(), sharedPreferences);
     attachPresenter(new TimelinePresenter(this, new Timeline(
         new TimelineService(getArguments().getString(ACTION_KEY), postIdForTimelineRequest, userId,
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
@@ -270,10 +271,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return RxRecyclerView.scrollEvents(list)
         .filter(event -> !bottomAlreadyReached
             && helper != null
-            && event.view().isAttachedToWindow()
-            && (helper.getItemCount() - event.view().getChildCount()) <= ((
-            helper.findFirstVisibleItemPosition() == -1 ? 0 : helper.findFirstVisibleItemPosition())
-            + visibleThreshold))
+            && event.view()
+            .isAttachedToWindow()
+            && (helper.getItemCount() - event.view()
+            .getChildCount()) <= ((helper.findFirstVisibleItemPosition() == -1 ? 0
+            : helper.findFirstVisibleItemPosition()) + visibleThreshold))
         .map(event -> null)
         .doOnNext(__ -> bottomAlreadyReached = true)
         .cast(Void.class);
@@ -296,12 +298,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showLoadMoreProgressIndicator() {
-    Logger.d(this.getClass().getName(), "show indicator called");
+    Logger.d(this.getClass()
+        .getName(), "show indicator called");
     adapter.addLoadMoreProgress();
   }
 
   @Override public void hideLoadMoreProgressIndicator() {
-    Logger.d(this.getClass().getName(), "hide indicator called");
+    Logger.d(this.getClass()
+        .getName(), "hide indicator called");
     bottomAlreadyReached = false;
     adapter.removeLoadMoreProgress();
   }
@@ -315,16 +319,17 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void showRootAccessDialog() {
     GenericDialogs.createGenericYesNoCancelMessage(getContext(), null,
         AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog,
-            getContext().getResources())).subscribe(eResponse -> {
-      switch (eResponse) {
-        case YES:
-          installManager.rootInstallAllowed(true);
-          break;
-        case NO:
-          installManager.rootInstallAllowed(false);
-          break;
-      }
-    });
+            getContext().getResources()))
+        .subscribe(eResponse -> {
+          switch (eResponse) {
+            case YES:
+              installManager.rootInstallAllowed(true);
+              break;
+            case NO:
+              installManager.rootInstallAllowed(false);
+              break;
+          }
+        });
   }
 
   @Override public void updateInstallProgress(Post card, int cardPosition) {
