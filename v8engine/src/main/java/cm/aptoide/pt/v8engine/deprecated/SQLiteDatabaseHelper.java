@@ -24,7 +24,7 @@ import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
-  public static final int DATABASE_VERSION = 59;
+  public static final int DATABASE_VERSION = 60;
   public static final String DATABASE_NAME = "aptoide.db";
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
