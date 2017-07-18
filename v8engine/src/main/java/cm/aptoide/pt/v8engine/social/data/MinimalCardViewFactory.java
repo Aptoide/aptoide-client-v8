@@ -211,7 +211,7 @@ public class MinimalCardViewFactory {
             .getName();
         if (firstLikeName != null) {
           numberLikesOneLike.setText(spannableFactory.createColorSpan(
-              context.getString(R.string.x_liked_it, firstLikeName),
+              context.getString(R.string.timeline_short_like_present_singular, firstLikeName),
               ContextCompat.getColor(context, R.color.black_87_alpha), firstLikeName));
           numberLikes.setVisibility(View.INVISIBLE);
           numberLikesOneLike.setVisibility(View.VISIBLE);
@@ -224,7 +224,7 @@ public class MinimalCardViewFactory {
               .get(0)
               .getStore() != null && firstStoreName != null) {
             numberLikesOneLike.setText(spannableFactory.createColorSpan(
-                context.getString(R.string.x_liked_it, firstStoreName),
+                context.getString(R.string.timeline_short_like_present_singular, firstStoreName),
                 ContextCompat.getColor(context, R.color.black_87_alpha), firstStoreName));
             numberLikes.setVisibility(View.INVISIBLE);
             numberLikesOneLike.setVisibility(View.VISIBLE);
@@ -293,7 +293,7 @@ public class MinimalCardViewFactory {
   private void showNumberOfLikes(long likesNumber, Context context) {
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber),
-        context.getString(R.string.likes)
+        context.getString(R.string.timeline_short_like_present_plural)
             .toLowerCase()));
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }

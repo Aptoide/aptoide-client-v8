@@ -111,7 +111,7 @@ public class ManageUserPresenter implements Presenter {
 
   @NonNull private Completable saveUserData(ManageUserFragment.ViewModel userData) {
     return updateUserAccount(userData).observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> view.dismissProgressDialog())
+        .doOnCompleted(() -> view.hideProgressDialog())
         .doOnCompleted(() -> sendAnalytics(userData))
         .doOnCompleted(() -> navigateAway())
         .onErrorResumeNext(err -> handleSaveUserDataError(err));
@@ -131,15 +131,13 @@ public class ManageUserPresenter implements Presenter {
     final String message = errorMapper.map(throwable);
     Completable errorHandler;
     if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {
-      // navigate away
       errorHandler = view.showErrorMessage(message)
           .doOnCompleted(() -> navigateAway());
     } else {
-      // show message but do not navigate
       errorHandler = view.showErrorMessage(message);
     }
 
-    return Completable.fromAction(() -> view.dismissProgressDialog())
+    return Completable.fromAction(() -> view.hideProgressDialog())
         .andThen(errorHandler);
   }
 

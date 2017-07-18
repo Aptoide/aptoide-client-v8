@@ -45,7 +45,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="6dp"
-          android:text="@string/like"
+          android:text="@string/timeline_button_like"
           style="@style/Aptoide.TextView.Regular.XXS.GreyFog.AllCaps"
           />
 
@@ -76,7 +76,7 @@
         android:drawableTop="@drawable/timeline_comment"
         android:gravity="center"
         android:orientation="vertical"
-        android:text="@string/comment"
+        android:text="@string/timeline_button_comment"
         android:visibility="visible"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
@@ -108,7 +108,7 @@
         android:drawableTop="@drawable/timeline_share"
         android:gravity="center"
         android:orientation="vertical"
-        android:text="@string/share"
+        android:text="@string/timeline_button_share"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
         style="@style/Aptoide.TextView.Regular.XXS.GreyFog.AllCaps"

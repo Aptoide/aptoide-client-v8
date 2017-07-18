@@ -250,7 +250,7 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
             .getName();
         if (firstLikeName != null) {
           numberLikesOneLike.setText(spannableFactory.createColorSpan(itemView.getContext()
-                  .getString(R.string.x_liked_it, firstLikeName),
+                  .getString(R.string.timeline_short_like_present_singular, firstLikeName),
               ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
               firstLikeName));
           numberLikes.setVisibility(View.INVISIBLE);
@@ -264,7 +264,7 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
               .get(0)
               .getStore() != null && firstStoreName != null) {
             numberLikesOneLike.setText(spannableFactory.createColorSpan(itemView.getContext()
-                    .getString(R.string.x_liked_it, firstStoreName),
+                    .getString(R.string.timeline_short_like_present_singular, firstStoreName),
                 ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
                 firstStoreName));
             numberLikes.setVisibility(View.INVISIBLE);
@@ -335,7 +335,7 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
   private void showNumberOfLikes(long likesNumber) {
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber), itemView.getContext()
-        .getString(R.string.likes)
+        .getString(R.string.timeline_short_like_present_plural)
         .toLowerCase()));
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }

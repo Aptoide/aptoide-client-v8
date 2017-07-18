@@ -261,7 +261,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private void showNumberOfLikes(long numberOfLikes) {
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
-        getContext().getString(R.string.likes)
+        getContext().getString(R.string.timeline_short_like_present_plural)
             .toLowerCase()));
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
