@@ -28,8 +28,7 @@ import rx.CompletableSubscriber;
  * Using this class with an activity can yield problems if the active component
  * is a view inside a fragment that is only partially visible
  */
-@Deprecated
-public class ShowMessage {
+@Deprecated public class ShowMessage {
 
   private static final String TAG = ShowMessage.class.getSimpleName();
 
