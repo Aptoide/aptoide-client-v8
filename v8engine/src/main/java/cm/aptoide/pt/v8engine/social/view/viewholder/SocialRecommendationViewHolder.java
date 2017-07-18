@@ -249,10 +249,9 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
   private void handleCommentsInformation(RatedRecommendation post) {
     if (post.getCommentsNumber() > 0) {
       numberComments.setVisibility(View.VISIBLE);
-      numberComments.setText(String.format("%s %s", String.valueOf(post.getCommentsNumber()),
-          itemView.getContext()
-              .getString(R.string.comments)
-              .toLowerCase()));
+      numberComments.setText(itemView.getContext()
+          .getResources()
+          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(itemView.getContext())
           .loadWithShadowCircleTransform(post.getComments()
@@ -300,9 +299,9 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
 
   private void showNumberOfLikes(long likesNumber) {
     numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber), itemView.getContext()
-        .getString(R.string.timeline_short_like_present_plural)
-        .toLowerCase()));
+    numberLikes.setText(itemView.getContext()
+        .getString(R.string.timeline_short_like_present_plural, likesNumber)
+        .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 }
