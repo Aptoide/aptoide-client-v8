@@ -97,12 +97,15 @@
   <string name="timeline_short_plus" translatable="false">%s+</string>
   <string name="timeline_title_shared_card_preview">Shared Card Preview</string>
 
+
+  <string name="timeline_title_likes">Likes</string>
+
   <string name="timeline_short_like_present_singular">%s likes it</string>
   <string name="timeline_short_like_present_plural">%d likes</string>
 
   <plurals
       name="timeline_short_comment">
-    <item quantity="one">%d comment</item>
+    <item quantity="one">1 comment</item>
     <item quantity="other">%d  comments</item>
   </plurals>
   <string name="timeline_button_like">Like</string>

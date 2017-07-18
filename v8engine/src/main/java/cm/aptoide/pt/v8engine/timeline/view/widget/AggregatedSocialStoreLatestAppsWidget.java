@@ -431,9 +431,9 @@ public class AggregatedSocialStoreLatestAppsWidget
           && minimalCard.getComments()
           .size() > 0) {
         numberComments.setVisibility(View.VISIBLE);
-        numberComments.setText(String.format("%s %s", String.valueOf(minimalCard.getStats()
-            .getComments()), getContext().getString(R.string.comments)
-            .toLowerCase()));
+        numberComments.setText(getContext().getResources()
+            .getQuantityString(R.plurals.timeline_short_comment, (int) minimalCard.getStats()
+                .getComments()));
         socialCommentBar.setVisibility(View.VISIBLE);
         ImageLoader.with(getContext())
             .loadWithShadowCircleTransform(minimalCard.getComments()
@@ -603,9 +603,9 @@ public class AggregatedSocialStoreLatestAppsWidget
   private void showNumberOfLikes(long numberOfLikes, TextView numberLikes,
       TextView numberLikesOneLike) {
     numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
-        getContext().getString(R.string.timeline_short_like_present_plural)
-            .toLowerCase()));
+    numberLikes.setText(
+        getContext().getString(R.string.timeline_short_like_present_plural, numberOfLikes)
+            .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
