@@ -114,7 +114,13 @@ public class InAppBillingProductRepository extends ProductRepository {
   public Single<List<Purchase>> getPurchases(int apiVersion, String packageName, String type) {
     return getServerInAppPurchase(apiVersion, packageName, type, true).first()
         .toSingle()
-        .flatMap(purchaseInformation -> convertToPurchases(purchaseInformation, apiVersion));
+        .flatMap(purchaseInformation -> convertToPurchases(purchaseInformation, apiVersion))
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof RepositoryIllegalArgumentException) {
+            return Single.just(Collections.emptyList());
+          }
+          return Single.error(throwable);
+        });
   }
 
   private Single<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(int apiVersion,
