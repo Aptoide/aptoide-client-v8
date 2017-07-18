@@ -20,4 +20,6 @@ public interface ManageStoreView extends ImagePickerView {
   void showWaitProgressBar();
 
   void dismissWaitProgressBar();
+
+  void hideKeyboard();
 }
