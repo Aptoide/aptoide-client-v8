@@ -37,6 +37,28 @@ public class MyAccountPresenter implements Presenter {
 
   @Override public void present() {
 
+    showAndPopulateAccountViews();
+    handleSignOutButtonClick();
+    handleMoreNotificationsClick();
+    handleEditStoreClick();
+    handleHeaderVisibility();
+    hangleGetNotifications();
+    handleNotificationClick();
+    handleUserEditClick();
+    handleUserLayoutClick();
+    handleStoreLayoutClick();
+    accountSync();
+  }
+
+  @Override public void saveState(Bundle state) {
+    // does nothing
+  }
+
+  @Override public void restoreState(Bundle state) {
+    // does nothing
+  }
+
+  private void showAndPopulateAccountViews() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> accountManager.accountStatus()
@@ -46,13 +68,18 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+  }
 
+  private void handleSignOutButtonClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(signOutClick -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleMoreNotificationsClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.moreNotificationsClick()
@@ -60,6 +87,9 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(moreClick -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleEditStoreClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(click -> view.editStoreClick()
@@ -70,6 +100,9 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(store -> navigator.navigateToEditStoreView(store),
             throwable -> crashReport.log(throwable));
+  }
+
+  private void handleHeaderVisibility() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.haveNotifications())
@@ -84,6 +117,9 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void hangleGetNotifications() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
@@ -92,6 +128,9 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notifications -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleNotificationClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.notificationSelection())
@@ -101,6 +140,9 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleUserEditClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.editUserProfileClick()
@@ -109,7 +151,9 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
+  }
 
+  private void handleUserLayoutClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.userClick())
@@ -120,7 +164,9 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
+  }
 
+  private void handleStoreLayoutClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.storeClick())
@@ -132,6 +178,9 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void accountSync() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> accountManager.accountStatus())
@@ -143,19 +192,11 @@ public class MyAccountPresenter implements Presenter {
                 .getMeta()
                 .getData())
             .doOnNext(store -> view.refreshUI(store)))
-        .doOnNext(__ -> accountManager.syncCurrentAccount())
+        .doOnNext(__ -> accountManager.updateAccount())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void navigateToUser(String id, String storeTheme) {

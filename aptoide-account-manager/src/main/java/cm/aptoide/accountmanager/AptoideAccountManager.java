@@ -167,12 +167,6 @@ public class AptoideAccountManager {
     return getAccount().getAccess();
   }
 
-  @Deprecated public Completable syncCurrentAccount() {
-    return singleAccountStatus().flatMapCompletable(
-        account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
-            account.getPassword(), account.getType()));
-  }
-
   public Completable updateAccount(boolean adultContentEnabled) {
     return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccount(adultContentEnabled, this)
@@ -212,6 +206,18 @@ public class AptoideAccountManager {
           .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
               account.getPassword(), account.getType()));
     });
+  }
+
+  /**
+   * This method was created to solve the need to save store information on the account which the
+   * syncAccount takes care of
+   *
+   * @return
+   */
+  public Completable updateAccount() {
+    return singleAccountStatus().flatMapCompletable(
+        account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
+            account.getPassword(), account.getType()));
   }
 
   public static class Builder {
