@@ -33,7 +33,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   }
 
   @Override public int getItemViewType(int position) {
-    return posts.get(position).getType().ordinal();
+    return posts.get(position)
+        .getType()
+        .ordinal();
   }
 
   @Override public int getItemCount() {

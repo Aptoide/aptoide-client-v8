@@ -266,7 +266,7 @@
   <string name="downloads_count">Downloads: %1$s</string>
   <string name="version_number">Version: %1$s</string>
   <string name="app_size">Size: %1$s</string>
-  <string name="comment_on_store">Comment %1$s store</string>
+  <string name="commentlist_title_comment_on_store">Comment %1$s store</string>
 
   <!-- Store Meta widget -->
   <string name="edit_store">Edit</string>
@@ -356,7 +356,7 @@
   <string name="results_subscribed">Subscribed Stores</string>
   <string name="results_in_store">Search results in %s store</string>
   <string name="other_stores">Not subscribed Stores</string>
-  <string name="comments">Comments</string>
+  <string name="comments_title_comments">Comments</string>
   <string name="reviews">Reviews</string>
   <string name="store">Store</string>
   <string name="title_caps">TITLE</string>
@@ -400,6 +400,8 @@
 
 
   <!-- Comments -->
+  <string name="commentlist_title_comment">Comment</string>
+  <string name="dialog_button_comment">Comment</string>
   <string name="reply_to">Reply to %s</string>
   <string name="comment_submitted">Your comment was successfully submitted</string>
   <string name="write_your_comment">Write your comment</string>
@@ -546,12 +548,7 @@
   <string name="button_more">More</string>
   <string name="unhide_post">UNHIDE</string>
   <string name="hide_post">HIDE</string>
-  <string name="like">Like</string>
-  <string name="comment">Comment</string>
   <string name="hide_post_info">Your friends won\'t see this post</string>
-  <string name="timeline_like">Like</string>
-  <string name="likes">Likes</string>
-  <string name="unlike">Unlike</string>
   <string name="timeline_empty_no_friends_send_email">It seems that your friends did not log in to Aptoide with their Facebook account. Send them an email to login with their Facebook Account</string>
   <string name="timeline_empty_send_email_to_friends">Email Friends</string>
   <string name="aptoide_timeline">Aptoide Timeline</string>
@@ -639,7 +636,6 @@
   <string name="edit_profile_save_button">Save</string>
   <string name="edit_profile_title">Edit Your Profile</string>
   <string name="user_edited">User Edited</string>
-  <string name="post">post</string>
   <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root install is not responding</string>
   <string name="generalscreen_short_root_install_timeout_error_message">%d apps failed to root install</string>
   <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>

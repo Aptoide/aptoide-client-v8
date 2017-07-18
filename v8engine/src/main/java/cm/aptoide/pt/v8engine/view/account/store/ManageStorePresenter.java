@@ -55,7 +55,10 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
-            .doOnNext(__2 -> navigate()))
+            .doOnNext(__2 -> {
+              view.hideKeyboard();
+              navigate();
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -73,7 +76,10 @@ public class ManageStorePresenter implements Presenter {
   }
 
   private Completable handleSaveClick(ManageStoreFragment.ViewModel storeModel) {
-    return Completable.fromAction(() -> view.showWaitProgressBar())
+    return Completable.fromAction(() -> {
+      view.hideKeyboard();
+      view.showWaitProgressBar();
+    })
         .andThen(saveData(storeModel))
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> navigate())
@@ -120,6 +126,14 @@ public class ManageStorePresenter implements Presenter {
                 applicationPackageName, resources));
       } else {
         return view.showError(R.string.ws_error_WOP_2);
+      }
+    } else if (err instanceof StoreValidationException) {
+      StoreValidationException ex = (StoreValidationException) err;
+      if (ex.getErrorCode() == StoreValidationException.EMPTY_NAME) {
+        return view.showError(R.string.ws_error_WOP_2);
+      }
+      if (ex.getErrorCode() == StoreValidationException.EMPTY_AVATAR) {
+        return view.showError(R.string.ws_error_API_1);
       }
     }
 

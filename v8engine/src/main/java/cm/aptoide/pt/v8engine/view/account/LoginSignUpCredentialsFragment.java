@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -22,7 +23,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.LoginPreferences;
@@ -175,7 +175,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showError(Throwable throwable) {
-    ShowMessage.asToast(getContext(), errorMapper.map(throwable));
+    Snackbar.make(getRootView(), errorMapper.map(throwable), Snackbar.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showFacebookLogin() {
@@ -325,7 +326,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {
-    ShowMessage.asToast(getContext(), errorRes);
+    Snackbar.make(getRootView(), errorRes, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   private void setAptoideSignUpLoginAreaVisible() {
@@ -358,7 +360,12 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override protected void showGoogleLoginError() {
-    ShowMessage.asToast(getContext(), R.string.google_login_cancelled);
+    Snackbar.make(getRootView(), R.string.google_login_cancelled, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  private View getRootView() {
+    return getActivity().findViewById(android.R.id.content);
   }
 
   private void bindViews(View view) {

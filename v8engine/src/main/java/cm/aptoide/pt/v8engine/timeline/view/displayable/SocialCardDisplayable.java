@@ -78,7 +78,8 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   }
 
   public Spannable getBlackHighlightedLike(Context context, String string) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_short_like_present_singular, string),
         ContextCompat.getColor(context, R.color.black_87_alpha), string);
   }
 

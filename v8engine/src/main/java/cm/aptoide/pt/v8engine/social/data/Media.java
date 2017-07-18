@@ -33,7 +33,8 @@ public class Media implements Post {
     this.relatedApp = app;
     this.abTestURL = abTestURL;
     this.publisherLink = publisherLink;
-    this.publisherAvatarURL = publisher.getPublisherAvatar().getAvatarUrl();
+    this.publisherAvatarURL = publisher.getPublisherAvatar()
+        .getAvatarUrl();
     this.publisherName = publisher.getPublisherName();
     this.mediaLink = mediaLink;
     this.isLiked = isLiked;

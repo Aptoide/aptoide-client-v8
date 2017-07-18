@@ -112,7 +112,7 @@ public class RecommendationDisplayable extends CardDisplayable {
     }
 
     return new RecommendationDisplayable(recommendation, Application.getConfiguration()
-        .getIcon(), R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
+        .getIcon(), R.string.timeline_title_card_title_recommend_present_singular,
         recommendation.getRecommendedApp()
             .getId(), recommendation.getRecommendedApp()
         .getPackageName(), recommendation.getRecommendedApp()

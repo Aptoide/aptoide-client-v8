@@ -292,7 +292,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
                 tokenInvalidator, V8Engine.getConfiguration()
                 .getAppId(), sharedPreferences, connectivityManager, telephonyManager),
             new AppsTimelineNavigator(getFragmentNavigator(),
-                getContext().getString(R.string.likes)), getContext().getResources(),
+                getContext().getString(R.string.timeline_title_likes)), getContext().getResources(),
             Application.getConfiguration()
                 .getMarketName(), windowManager, installedRepository);
 

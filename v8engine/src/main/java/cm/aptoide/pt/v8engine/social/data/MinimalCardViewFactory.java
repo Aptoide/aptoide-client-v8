@@ -79,8 +79,9 @@ public class MinimalCardViewFactory {
     TextView commentButton = (TextView) subCardView.findViewById(R.id.social_comment);
     TextView shareButton = (TextView) subCardView.findViewById(R.id.social_share);
     ImageLoader.with(context)
-        .loadWithShadowCircleTransform(post.getMinimalPostPosters().get(0).getPrimaryAvatar(),
-            minimalCardHeaderMainAvatar);
+        .loadWithShadowCircleTransform(post.getMinimalPostPosters()
+            .get(0)
+            .getPrimaryAvatar(), minimalCardHeaderMainAvatar);
 
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
@@ -98,15 +99,18 @@ public class MinimalCardViewFactory {
         (ImageView) subCardView.findViewById(R.id.card_last_comment_main_icon);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
-    if (post.getMinimalPostPosters().size() > 1) {
+    if (post.getMinimalPostPosters()
+        .size() > 1) {
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(post.getMinimalPostPosters().get(1).getPrimaryAvatar(),
-              minimalCardHeaderMainAvatar2);
+          .loadWithShadowCircleTransform(post.getMinimalPostPosters()
+              .get(1)
+              .getPrimaryAvatar(), minimalCardHeaderMainAvatar2);
     } else {
       minimalCardHeaderMainAvatar2.setVisibility(View.GONE);
     }
 
-    showMorePostersLabel(post.getMinimalPostPosters().size(), context);
+    showMorePostersLabel(post.getMinimalPostPosters()
+        .size(), context);
 
     minimalCardHeaderMainName.setText(getCardHeaderNames(post.getMinimalPostPosters()));
 
@@ -151,11 +155,15 @@ public class MinimalCardViewFactory {
   public String getCardHeaderNames(List<Poster> sharers) {
     StringBuilder headerNamesStringBuilder = new StringBuilder();
     if (sharers.size() == 1) {
-      return headerNamesStringBuilder.append(sharers.get(0).getStore().getName()).toString();
+      return headerNamesStringBuilder.append(sharers.get(0)
+          .getStore()
+          .getName())
+          .toString();
     }
     List<Poster> firstSharers = sharers.subList(0, 2);
     for (Poster poster : firstSharers) {
-      headerNamesStringBuilder.append(poster.getPrimaryName()).append(", ");
+      headerNamesStringBuilder.append(poster.getPrimaryName())
+          .append(", ");
     }
     headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
     return headerNamesStringBuilder.toString();
@@ -179,8 +187,10 @@ public class MinimalCardViewFactory {
     for (int j = 0; j < post.getLikesNumber(); j++) {
 
       UserTimeline user = null;
-      if (post.getLikes() != null && j < post.getLikes().size()) {
-        user = post.getLikes().get(j);
+      if (post.getLikes() != null && j < post.getLikes()
+          .size()) {
+        user = post.getLikes()
+            .get(j);
       }
       addUserToPreview(marginOfTheNextLikePreview, user, context);
       if (marginOfTheNextLikePreview < 0) {
@@ -193,19 +203,28 @@ public class MinimalCardViewFactory {
     if (card.getLikesNumber() > 0) {
       if (card.getLikesNumber() > 1) {
         showNumberOfLikes(card.getLikesNumber(), context);
-      } else if (card.getLikes() != null && card.getLikes().size() != 0) {
-        String firstLikeName = card.getLikes().get(0).getName();
+      } else if (card.getLikes() != null
+          && card.getLikes()
+          .size() != 0) {
+        String firstLikeName = card.getLikes()
+            .get(0)
+            .getName();
         if (firstLikeName != null) {
           numberLikesOneLike.setText(spannableFactory.createColorSpan(
-              context.getString(R.string.x_liked_it, firstLikeName),
+              context.getString(R.string.timeline_short_like_present_singular, firstLikeName),
               ContextCompat.getColor(context, R.color.black_87_alpha), firstLikeName));
           numberLikes.setVisibility(View.INVISIBLE);
           numberLikesOneLike.setVisibility(View.VISIBLE);
         } else {
-          String firstStoreName = card.getLikes().get(0).getStore().getName();
-          if (card.getLikes().get(0).getStore() != null && firstStoreName != null) {
+          String firstStoreName = card.getLikes()
+              .get(0)
+              .getStore()
+              .getName();
+          if (card.getLikes()
+              .get(0)
+              .getStore() != null && firstStoreName != null) {
             numberLikesOneLike.setText(spannableFactory.createColorSpan(
-                context.getString(R.string.x_liked_it, firstStoreName),
+                context.getString(R.string.timeline_short_like_present_singular, firstStoreName),
                 ContextCompat.getColor(context, R.color.black_87_alpha), firstStoreName));
             numberLikes.setVisibility(View.INVISIBLE);
             numberLikesOneLike.setVisibility(View.VISIBLE);
@@ -224,14 +243,19 @@ public class MinimalCardViewFactory {
   private void handleCommentsInformation(MinimalPost post, Context context) {
     if (post.getCommentsNumber() > 0) {
       numberComments.setVisibility(View.VISIBLE);
-      numberComments.setText(String.format("%s %s", String.valueOf(post.getCommentsNumber()),
-          context.getString(R.string.comments).toLowerCase()));
+      numberComments.setText(context.getResources()
+          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(post.getComments().get(0).getAvatar(),
-              latestCommentMainAvatar);
-      socialCommentUsername.setText(post.getComments().get(0).getName());
-      socialCommentBody.setText(post.getComments().get(0).getBody());
+          .loadWithShadowCircleTransform(post.getComments()
+              .get(0)
+              .getAvatar(), latestCommentMainAvatar);
+      socialCommentUsername.setText(post.getComments()
+          .get(0)
+          .getName());
+      socialCommentBody.setText(post.getComments()
+          .get(0)
+          .getBody());
     } else {
       numberComments.setVisibility(View.INVISIBLE);
       socialCommentBar.setVisibility(View.GONE);
@@ -254,9 +278,11 @@ public class MinimalCardViewFactory {
       if (user.getAvatar() != null) {
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
-      } else if (user.getStore().getAvatar() != null) {
+      } else if (user.getStore()
+          .getAvatar() != null) {
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
+            .loadWithShadowCircleTransform(user.getStore()
+                .getAvatar(), likeUserPreviewIcon);
       }
       likePreviewContainer.addView(likeUserPreviewView);
       marginOfTheNextLikePreview -= 20;
@@ -265,8 +291,8 @@ public class MinimalCardViewFactory {
 
   private void showNumberOfLikes(long likesNumber, Context context) {
     numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber),
-        context.getString(R.string.likes).toLowerCase()));
+    numberLikes.setText(context.getString(R.string.timeline_short_like_present_plural, likesNumber)
+        .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 

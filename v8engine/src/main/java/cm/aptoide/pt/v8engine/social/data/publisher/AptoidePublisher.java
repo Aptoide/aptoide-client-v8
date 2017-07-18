@@ -8,10 +8,12 @@ import cm.aptoide.pt.preferences.Application;
 
 public class AptoidePublisher implements Publisher {
   @Override public String getPublisherName() {
-    return Application.getConfiguration().getMarketName();
+    return Application.getConfiguration()
+        .getMarketName();
   }
 
   @Override public PublisherAvatar getPublisherAvatar() {
-    return new PublisherAvatar(Application.getConfiguration().getIcon());
+    return new PublisherAvatar(Application.getConfiguration()
+        .getIcon());
   }
 }

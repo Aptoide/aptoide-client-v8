@@ -11,7 +11,6 @@ import cm.aptoide.pt.v8engine.comments.ReviewWithAppName;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
-import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import lombok.Getter;
 
 public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithAppName> {
