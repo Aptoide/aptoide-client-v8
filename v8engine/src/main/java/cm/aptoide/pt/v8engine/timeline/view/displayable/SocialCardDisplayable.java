@@ -32,7 +32,6 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   @Getter private SocialCard.CardComment latestComment;
   @Getter private boolean liked;
   @Getter private String abUrl;
-  @Getter private String content;
   private AppsTimelineNavigator timelineNavigator;
 
   SocialCardDisplayable() {
@@ -44,7 +43,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
       Store store, Comment.User user, Comment.User userSharer, boolean liked,
       List<UserTimeline> userLikes, List<SocialCard.CardComment> comments, Date date,
       SpannableFactory spannableFactory, DateCalculator dateCalculator, String abUrl,
-      String content, TimelineAnalytics timelineAnalytics, AppsTimelineNavigator timelineNavigator,
+      TimelineAnalytics timelineAnalytics, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     super(timelineCard, timelineAnalytics, windowManager);
     this.date = date;
@@ -58,7 +57,6 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
     this.spannableFactory = spannableFactory;
     this.store = store;
     this.abUrl = abUrl;
-    this.content = content;
     this.timelineNavigator = timelineNavigator;
     if (comments.size() > 0) {
       this.latestComment = comments.get(0);

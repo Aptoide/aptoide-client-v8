@@ -50,15 +50,15 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
   // TODO: 22/12/2016 Date latestUpdate,
   private SocialStoreLatestAppsDisplayable(SocialStoreLatestApps socialStoreLatestApps,
       String storeName, String avatarUrl, List<LatestApp> latestApps, String abTestingUrl,
-      String content, long likes, long comments, DateCalculator dateCalculator,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      SpannableFactory spannableFactory, StoreCredentialsProvider storeCredentialsProvider,
-      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
+      long likes, long comments, DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
+      SocialRepository socialRepository, SpannableFactory spannableFactory,
+      StoreCredentialsProvider storeCredentialsProvider, AppsTimelineNavigator timelineNavigator,
+      WindowManager windowManager) {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
         socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
         socialStoreLatestApps.getMy()
             .isLiked(), socialStoreLatestApps.getLikes(), socialStoreLatestApps.getComments(),
-        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator, abTestingUrl, content,
+        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator, abTestingUrl,
         timelineAnalytics, timelineNavigator, windowManager);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;
@@ -109,9 +109,8 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
 
     // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate()
     return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps, ownerStoreName,
-        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getContent(),
-        socialStoreLatestApps.getStats()
-            .getLikes(), socialStoreLatestApps.getStats()
+        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats()
+        .getLikes(), socialStoreLatestApps.getStats()
         .getComments(), dateCalculator, timelineAnalytics, socialRepository, spannableFactory,
         storeCredentialsProvider, timelineNavigator, windowManager);
   }
