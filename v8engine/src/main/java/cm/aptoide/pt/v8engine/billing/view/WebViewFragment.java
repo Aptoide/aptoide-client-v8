@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,11 +49,8 @@ public class WebViewFragment extends PermissionServiceFragment
     webView.setWebChromeClient(new WebChromeClient());
     progressBarContainer = view.findViewById(R.id.activity_web_authorization_preogress_bar);
 
-    final ContextThemeWrapper dialogTheme =
-        new ContextThemeWrapper(getContext(), R.style.AptoideThemeDefault);
-
     unknownErrorDialog =
-        new RxAlertDialog.Builder(dialogTheme).setMessage(R.string.all_message_general_error)
+        new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
             .setPositiveButton(R.string.ok)
             .build();
     clickHandler = () -> {

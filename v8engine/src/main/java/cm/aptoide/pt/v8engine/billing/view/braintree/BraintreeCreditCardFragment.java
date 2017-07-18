@@ -4,19 +4,22 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
+import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.braintreepayments.api.models.CardBuilder;
@@ -37,12 +40,18 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private Braintree braintree;
   private PublishRelay<CardBuilder> cardBuilderRelay;
   private View progressBar;
+  private View overlay;
   private CardForm cardForm;
   private CardType cardType;
   private RxAlertDialog unknownErrorDialog;
   private ProductProvider productProvider;
   private Billing billing;
   private Button buyButton;
+  private Button cancelButton;
+  private ImageView productIcon;
+  private TextView productName;
+  private TextView productDescription;
+  private TextView productPrice;
   private int paymentId;
 
   public static Fragment create(Bundle bundle, int paymentMethodId) {
@@ -78,15 +87,20 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    final ContextThemeWrapper dialogTheme =
-        new ContextThemeWrapper(getContext(), R.style.AptoideThemeDefault);
+    overlay = view.findViewById(R.id.fragment_payment_overlay);
+    productIcon = (ImageView) view.findViewById(R.id.include_payment_product_icon);
+    productName = (TextView) view.findViewById(R.id.include_payment_product_name);
+    productDescription = (TextView) view.findViewById(R.id.include_payment_product_description);
+    productPrice = (TextView) view.findViewById(R.id.include_payment_product_price);
 
     unknownErrorDialog =
-        new RxAlertDialog.Builder(dialogTheme).setMessage(R.string.having_some_trouble)
+        new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
             .setPositiveButton(R.string.ok)
             .build();
 
-    buyButton = (Button) view.findViewById(R.id.fragment_braintree_buy_button);
+    cancelButton = (Button) view.findViewById(R.id.include_payment_buttons_cancel_button);
+    buyButton = (Button) view.findViewById(R.id.include_payment_buttons_buy_button);
+    buyButton.setVisibility(View.GONE);
     progressBar = view.findViewById(R.id.fragment_braintree_progress_bar);
     cardForm = (CardForm) view.findViewById(R.id.fragment_braintree_credit_card_form);
     cardForm.setOnFormFieldFocusedListener(field -> {
@@ -95,6 +109,13 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
         if (cardType != computedCardType) {
           cardType = computedCardType;
         }
+      }
+    });
+    cardForm.setOnCardFormValidListener(valid -> {
+      if (valid) {
+        buyButton.setVisibility(View.VISIBLE);
+      } else {
+        buyButton.setVisibility(View.GONE);
       }
     });
     cardForm.setOnCardFormSubmitListener(() -> {
@@ -107,9 +128,17 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   }
 
   @Override public void onDestroyView() {
+    overlay = null;
+    productIcon = null;
+    productName = null;
+    productDescription = null;
+    productPrice = null;
+    cancelButton = null;
+    buyButton = null;
+    progressBar = null;
     cardForm.setOnFormFieldFocusedListener(null);
     cardForm.setOnCardFormSubmitListener(null);
-    progressBar = null;
+    cardForm.setOnCardFormValidListener(null);
     cardForm = null;
     super.onDestroyView();
   }
@@ -144,6 +173,28 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   @Override public Observable<Void> errorDismissedEvent() {
     return unknownErrorDialog.dismisses()
         .map(dialogInterface -> null);
+  }
+
+  @Override public void showProduct(Product product) {
+    ImageLoader.with(getContext())
+        .load(product.getIcon(), productIcon);
+    productName.setText(product.getTitle());
+    productDescription.setText(product.getDescription());
+    productPrice.setText(product.getPrice()
+        .getCurrencySymbol() + " " + product.getPrice()
+        .getAmount());
+  }
+
+  @Override public Observable<Void> cancellationEvent() {
+    return RxView.clicks(cancelButton)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
+  }
+
+  @Override public Observable<Void> tapOutsideSelection() {
+    return RxView.clicks(overlay)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
   private CardBuilder createCard() {

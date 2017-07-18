@@ -6,7 +6,6 @@
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical"
-    android:theme="@style/AptoideThemeDefault"
     >
 
   <ProgressBar

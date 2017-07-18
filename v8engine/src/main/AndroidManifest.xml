@@ -76,7 +76,7 @@
 
     <activity
         android:name=".billing.view.PaymentActivity"
-        android:theme="@style/AppBaseTheme.NoTitle.Transparent.WhiteGreen"/>
+        android:theme="@style/AppBaseTheme.NoTitle.Transparent"/>
 
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.view.SpotSharePreviewActivity"/>

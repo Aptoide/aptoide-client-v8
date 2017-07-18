@@ -35,48 +35,39 @@ public class BraintreePresenter implements Presenter {
 
   @Override public void present() {
 
+    onViewCreatedValidatePendingTransaction();
+
+    onViewCreatedShowProduct();
+
+    onViewCreatedProcessCreditCardPayment();
+
+    handleCreditCardEvent();
+
+    handleErrorDismissEvent();
+
+    handleCancellationEvent();
+  }
+
+  private void handleCancellationEvent() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMapSingle(__ -> productProvider.getProduct())
-        .flatMapSingle(product -> billing.getTransaction(product)
-            .first()
-            .toSingle())
-        .cast(BraintreeTransaction.class)
-        .flatMap(transaction -> {
-          if (transaction.isPendingAuthorization()) {
-            return Observable.just(transaction);
-          }
-          return Observable.error(
-              new IllegalArgumentException("Transaction must be pending authorization."));
-        })
-        .observeOn(viewScheduler)
-        .doOnNext(transaction -> braintree.createConfiguration(transaction.getToken()))
+        .filter(event -> View.LifecycleEvent.CREATE.equals(event))
+        .flatMap(product -> Observable.merge(view.cancellationEvent(), view.tapOutsideSelection()))
+        .doOnNext(__ -> navigator.popTransactionAuthorizationView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> view.showError());
+        }, throwable -> navigator.popTransactionAuthorizationView());
+  }
 
+  private void handleErrorDismissEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> braintree.getConfiguration())
-        .doOnNext(configuration -> view.showCreditCardForm(configuration))
-        .doOnNext(__ -> view.hideLoading())
+        .flatMap(created -> view.errorDismissedEvent())
+        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+  }
 
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.creditCardEvent())
-        .doOnNext(__ -> view.showLoading())
-        .doOnNext(card -> braintree.createNonce(card))
-        .observeOn(viewScheduler)
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
-
+  private void onViewCreatedProcessCreditCardPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> braintree.getNonce())
@@ -106,13 +97,63 @@ public class BraintreePresenter implements Presenter {
           view.hideLoading();
           view.showError();
         });
+  }
 
+  private void handleCreditCardEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
+        .flatMap(__ -> view.creditCardEvent())
+        .doOnNext(__ -> view.showLoading())
+        .doOnNext(card -> braintree.createNonce(card))
+        .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.hideLoading();
+          view.showError();
+        });
+  }
+
+  private void onViewCreatedShowProduct() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> view.showLoading())
+        .flatMap(__ -> braintree.getConfiguration()
+            .flatMapSingle(configuration -> productProvider.getProduct()
+                .observeOn(viewScheduler)
+                .doOnSuccess(product -> {
+                  view.showCreditCardForm(configuration);
+                  view.showProduct(product);
+                })))
+        .doOnNext(__ -> view.hideLoading())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.hideLoading();
+          view.showError();
+        });
+  }
+
+  private void onViewCreatedValidatePendingTransaction() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .flatMapSingle(__ -> productProvider.getProduct())
+        .flatMapSingle(product -> billing.getTransaction(product)
+            .first()
+            .toSingle())
+        .cast(BraintreeTransaction.class)
+        .flatMap(transaction -> {
+          if (transaction.isPendingAuthorization()) {
+            return Observable.just(transaction);
+          }
+          return Observable.error(
+              new IllegalArgumentException("Transaction must be pending authorization."));
+        })
+        .observeOn(viewScheduler)
+        .doOnNext(transaction -> braintree.createConfiguration(transaction.getToken()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> view.showError());
   }
 
   @Override public void saveState(Bundle state) {

@@ -9,4 +9,5 @@
     tools:checked="true"
     tools:text="Boa Compra"
     style="@style/TextAppearance.Aptoide.Title.Inverse"
+    android:theme="@style/AppBaseTheme.NoTitle.Transparent.Green"
     />

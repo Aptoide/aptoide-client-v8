@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -92,27 +91,25 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     progressView = view.findViewById(R.id.fragment_payment_global_progress_bar);
     noPaymentsText = (TextView) view.findViewById(R.id.fragment_payment_no_payments_text);
 
-    productIcon = (ImageView) view.findViewById(R.id.fragment_payment_product_icon);
-    productName = (TextView) view.findViewById(R.id.fragment_payment_product_name);
-    productDescription = (TextView) view.findViewById(R.id.fragment_payment_product_description);
+    productIcon = (ImageView) view.findViewById(R.id.include_payment_product_icon);
+    productName = (TextView) view.findViewById(R.id.include_payment_product_name);
+    productDescription = (TextView) view.findViewById(R.id.include_payment_product_description);
 
     body = view.findViewById(R.id.fragment_payment_body);
-    productPrice = (TextView) view.findViewById(R.id.fragment_product_price);
+    productPrice = (TextView) view.findViewById(R.id.include_payment_product_price);
     paymentRadioGroup = (RadioGroup) view.findViewById(R.id.fragment_payment_list);
 
-    cancelButton = (Button) view.findViewById(R.id.fragment_payment_cancel_button);
-    buyButton = (Button) view.findViewById(R.id.fragment_payment_buy_button);
+    cancelButton = (Button) view.findViewById(R.id.include_payment_buttons_cancel_button);
+    buyButton = (Button) view.findViewById(R.id.include_payment_buttons_buy_button);
 
     paymentMap = new SparseArray<>();
-    final ContextThemeWrapper dialogTheme =
-        new ContextThemeWrapper(getContext(), R.style.AptoideThemeDefault);
 
     networkErrorDialog =
-        new RxAlertDialog.Builder(dialogTheme).setMessage(R.string.connection_error)
+        new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
             .setPositiveButton(android.R.string.ok)
             .build();
     unknownErrorDialog =
-        new RxAlertDialog.Builder(dialogTheme).setMessage(R.string.all_message_general_error)
+        new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
             .setPositiveButton(android.R.string.ok)
             .build();
 
