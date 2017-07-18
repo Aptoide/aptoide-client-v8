@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.presenter;
+package cm.aptoide.pt.v8engine.view.account;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 

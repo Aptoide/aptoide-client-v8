@@ -22,8 +22,13 @@ import rx.CompletableSubscriber;
 
 /**
  * Created by trinkes on 5/9/16.
+ *
+ * Use a Snackbar without this syntactic sugar to avoid errors down the road.
+ *
+ * Using this class with an activity can yield problems if the active component
+ * is a view inside a fragment that is only partially visible
  */
-public class ShowMessage {
+@Deprecated public class ShowMessage {
 
   private static final String TAG = ShowMessage.class.getSimpleName();
 
@@ -112,6 +117,14 @@ public class ShowMessage {
     asSnackInternal(activity, msg, Snackbar.LENGTH_LONG).show();
   }
 
+  public static void asLongSnack(Fragment fragment, String msg) {
+    asLongSnackInternal(fragment, msg).show();
+  }
+
+  public static void asLongSnack(Fragment fragment, @StringRes int msg) {
+    asLongSnackInternal(fragment, msg).show();
+  }
+
   @NonNull private static Snackbar asSnackInternal(Activity activity, String msg, int duration) {
     View view = getViewFromActivity(activity);
     return Snackbar.make(view, msg, duration);
@@ -179,6 +192,10 @@ public class ShowMessage {
   }
 
   private static Snackbar asLongSnackInternal(Fragment fragment, @StringRes int msg) {
+    return asLongSnackInternal(fragment.getView(), msg);
+  }
+
+  private static Snackbar asLongSnackInternal(Fragment fragment, String msg) {
     return asLongSnackInternal(fragment.getView(), msg);
   }
 
@@ -274,10 +291,6 @@ public class ShowMessage {
     Toast.makeText(context, msg, Toast.LENGTH_SHORT)
         .show();
   }
-
-  //
-  // trash
-  //
 
   @Deprecated public static void asToast(Context context, @StringRes int msg) {
     Toast.makeText(context, msg, Toast.LENGTH_SHORT)

@@ -6,16 +6,9 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpView;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 
-/**
- * This fragment has too much code equal to {@link LoginSignUpCredentialsFragment} due to Google /
- * Facebook
- * login functionality. Further code refactoring is needed to migrate external source login into
- * their own fragment and include the fragment inside the necessary login / sign up views.
- */
 public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSignUpView {
 
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
