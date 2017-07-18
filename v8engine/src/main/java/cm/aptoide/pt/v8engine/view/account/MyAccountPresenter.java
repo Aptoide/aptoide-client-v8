@@ -46,7 +46,7 @@ public class MyAccountPresenter implements Presenter {
     handleUserEditClick();
     handleUserLayoutClick();
     handleStoreLayoutClick();
-    accountSync();
+    checkIfStoreIsInvalidAndRefresh();
   }
 
   @Override public void saveState(Bundle state) {
@@ -179,7 +179,7 @@ public class MyAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void accountSync() {
+  private void checkIfStoreIsInvalidAndRefresh() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> accountManager.accountStatus())
