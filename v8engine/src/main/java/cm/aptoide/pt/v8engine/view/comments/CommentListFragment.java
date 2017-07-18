@@ -177,10 +177,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     if (commentType == CommentType.STORE && !TextUtils.isEmpty(storeName)) {
-      String title = String.format(getString(R.string.comment_on_store), storeName);
+      String title =
+          String.format(getString(R.string.commentlist_title_comment_on_store), storeName);
       toolbar.setTitle(title);
     } else {
-      toolbar.setTitle(R.string.comments);
+      toolbar.setTitle(R.string.comments_title_comments);
     }
   }
 

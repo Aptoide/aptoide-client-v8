@@ -132,6 +132,22 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(lifecycleEvent -> accountManager.accountStatus())
+        .filter(account -> account.getStore() //checking if a store exists in account manager
+            .getId() == 0)
+        .flatMap(account -> view.getStore()
+            .observeOn(AndroidSchedulers.mainThread())
+            .map(store -> store.getNodes()
+                .getMeta()
+                .getData())
+            .doOnNext(store -> view.refreshUI(store)))
+        .doOnNext(__ -> accountManager.syncCurrentAccount())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(account -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   @Override public void saveState(Bundle state) {

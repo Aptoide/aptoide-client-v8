@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.account;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.notification.AptoideNotification;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
@@ -34,4 +35,6 @@ public interface MyAccountView extends View {
   void showHeader();
 
   void hideHeader();
+
+  void refreshUI(Store store);
 }

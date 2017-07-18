@@ -74,7 +74,7 @@ public class CardViewHolderFactory {
         return new SocialRecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_social_recommendation_item, parent, false),
             cardType.equals(CardType.SOCIAL_RECOMMENDATION)
-                ? R.string.displayable_social_timeline_recommendation_atptoide_team_recommends
+                ? R.string.timeline_title_card_title_recommend_present_singular
                 : R.string.x_installed_and_recommended, cardTouchEventPublishSubject,
             dateCalculator, spannableFactory);
       case SOCIAL_ARTICLE:
