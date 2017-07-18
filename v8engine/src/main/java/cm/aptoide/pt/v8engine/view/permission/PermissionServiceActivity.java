@@ -256,12 +256,12 @@ import rx.functions.Action0;
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(boolean forceShowRationale,
       @StringRes int rationaleMessage, @Nullable Action0 toRunWhenAccessIsGranted,
-      @Nullable Action0 toRunWhenAccessIsDennied) {
+      @Nullable Action0 toRunWhenAccessIsDenied) {
     int hasPermission =
         ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     if (hasPermission != PackageManager.PERMISSION_GRANTED) {
       this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
-      this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDennied;
+      this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDenied;
 
       if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this,
           Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

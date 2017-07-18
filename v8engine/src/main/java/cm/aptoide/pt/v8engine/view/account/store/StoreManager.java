@@ -64,7 +64,7 @@ public class StoreManager {
       String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
     return Completable.defer(() -> {
       if (storeExists) {
-        return updateStore(storeId, storeName, storeDescription, storeImagePath, hasNewAvatar,
+        return updateStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
             storeThemeName);
       }
       return createStore(storeId, storeName, storeDescription, storeImagePath, hasNewAvatar,
@@ -94,16 +94,21 @@ public class StoreManager {
         });
   }
 
-  /**
-   * To create a store we need to call WS CheckUserCredentials so we can associate a
-   * user to a newly created store.
-   *
-   * Then, if we have more data we either use a SetStore with multi-part request if we have
-   * a store image, or a SetStore without image. This is the edit store use case {@link
-   * #updateStore}.
-   */
   private Completable createStore(long storeId, String storeName, String storeDescription,
       String storeImage, boolean hasNewAvatar, String storeThemeName) {
+
+    if (TextUtils.isEmpty(storeName)) {
+      return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
+    }
+
+    /*
+     * To create a store we need to call WS CheckUserCredentials so we can associate a
+     * user to a newly created store.
+     *
+     * Then, if we have more data we either use a SetStore with multi-part request if we have
+     * a store image, or a SetStore without image. This is the edit store use case {@link
+     * #updateStore}.
+     */
     return accountManager.accountStatus()
         .first()
         .toSingle()
@@ -123,12 +128,9 @@ public class StoreManager {
               return Single.just(data);
             }))
         .flatMapCompletable(data -> {
-          // TODO use response store ID to upload image
-
           final Completable syncAccount = accountManager.syncCurrentAccount();
-
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
-            return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
+            return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
                 storeThemeName).andThen(syncAccount);
           }
           return syncAccount;
@@ -140,13 +142,19 @@ public class StoreManager {
     return !TextUtils.isEmpty(storeDescription) || (hasNewAvatar && !TextUtils.isEmpty(storeImage));
   }
 
-  /**
-   * If we have more data we either use a SetStore with multi-part request if we have
-   * a store image, or a SetStore without image.
-   */
-  private Completable updateStore(long storeId, String storeName, String storeDescription,
-      String storeImage, boolean hasNewAvatar, String storeThemeName) {
+  private Completable updateStore(String storeName, String storeDescription, String storeImage,
+      boolean hasNewAvatar, String storeThemeName) {
 
+    if (TextUtils.isEmpty(storeName)) {
+      return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
+    } else if (hasNewAvatar && TextUtils.isEmpty(storeImage)) {
+      return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_AVATAR));
+    }
+
+    /*
+     * If we have more data we either use a SetStore with multi-part request if we have
+     * a store image, or a SetStore without image.
+     */
     if (hasNewAvatar) {
       return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage);
     }

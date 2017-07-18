@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -54,7 +54,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       String appIcon, String abTestingURL, long likes, long comments, Date date,
       TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator,
-      TimelineNavigator timelineNavigator, Resources resources, String marketName,
+      AppsTimelineNavigator timelineNavigator, Resources resources, String marketName,
       WindowManager windowManager) {
     super(socialInstall, likes, comments, store, socialInstall.getUser(),
         socialInstall.getUserSharer(), socialInstall.getMy()
@@ -84,7 +84,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
 
   public static Displayable from(SocialInstall socialInstall, TimelineAnalytics timelineAnalytics,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator, TimelineNavigator timelineNavigator, Resources resources,
+      DateCalculator dateCalculator, AppsTimelineNavigator timelineNavigator, Resources resources,
       String marketName, WindowManager windowManager) {
 
     String abTestingURL = null;
@@ -102,9 +102,9 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
 
     return new SocialInstallDisplayable(socialInstall, Application.getConfiguration()
         .getIcon(), socialInstall.getStore(),
-        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
-        socialInstall.getUser(), socialInstall.getApp()
-        .getId(), socialInstall.getApp()
+        R.string.timeline_title_card_title_recommend_present_singular, socialInstall.getUser(),
+        socialInstall.getApp()
+            .getId(), socialInstall.getApp()
         .getPackageName(), socialInstall.getApp()
         .getName(), socialInstall.getApp()
         .getIcon(), abTestingURL, socialInstall.getStats()

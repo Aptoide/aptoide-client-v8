@@ -7,12 +7,12 @@ import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
  * Created by marcelobenites on 16/06/17.
  */
 
-public class TimelineNavigator {
+public class AppsTimelineNavigator {
 
   private final FragmentNavigator fragmentNavigator;
   private final String title;
 
-  public TimelineNavigator(FragmentNavigator fragmentNavigator, String likesTitle) {
+  public AppsTimelineNavigator(FragmentNavigator fragmentNavigator, String likesTitle) {
     this.fragmentNavigator = fragmentNavigator;
     this.title = likesTitle;
   }

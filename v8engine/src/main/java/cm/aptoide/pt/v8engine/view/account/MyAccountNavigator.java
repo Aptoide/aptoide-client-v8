@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.presenter;
+package cm.aptoide.pt.v8engine.view.account;
 
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.notification.view.InboxFragment;

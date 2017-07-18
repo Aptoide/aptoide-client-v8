@@ -24,7 +24,7 @@ import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
-  public static final int DATABASE_VERSION = 59;
+  public static final int DATABASE_VERSION = 60;
   public static final String DATABASE_NAME = "aptoide.db";
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
@@ -38,15 +38,18 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   public SQLiteDatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
     this.context = context;
+    sharedPreferences = ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences();
+    securePreferences = SecurePreferencesImplementation.getInstance(context.getApplicationContext(),
+        sharedPreferences);
+
+    Logger.w(TAG,
+        "SQLiteDatabaseHelper() sharedPreferences is null: " + (sharedPreferences == null));
   }
 
   @Override public void onCreate(SQLiteDatabase db) {
     Logger.w(TAG, "onCreate() called");
 
     // do nothing here.
-    sharedPreferences = ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences();
-    securePreferences = SecurePreferencesImplementation.getInstance(context.getApplicationContext(),
-        sharedPreferences);
     packageManager = context.getPackageManager();
     ManagerPreferences.setNeedsSqliteDbMigration(false, sharedPreferences);
   }

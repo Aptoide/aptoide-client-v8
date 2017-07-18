@@ -17,6 +17,10 @@ import lombok.EqualsAndHashCode;
     this.video = video;
   }
 
+  @Override public Ab getAb() {
+    return this.video.getAb();
+  }
+
   @Override public Video getData() {
     return video;
   }

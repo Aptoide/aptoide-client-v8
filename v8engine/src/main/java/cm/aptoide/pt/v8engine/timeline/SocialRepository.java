@@ -58,7 +58,7 @@ public class SocialRepository {
               shareCardCallback.onCardShared(response.getData()
                   .getCardUid());
             }
-            return accountManager.updateAccount(getAccountAccess(privacy));
+            return accountManager.syncCurrentAccount(getAccountAccess(privacy));
           }
           return Completable.error(
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
@@ -105,7 +105,7 @@ public class SocialRepository {
               shareCardCallback.onCardShared(response.getData()
                   .getCardUid());
             }
-            return accountManager.updateAccount(getAccountAccess(privacy));
+            return accountManager.syncCurrentAccount(getAccountAccess(privacy));
           }
           return Completable.error(
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
@@ -138,8 +138,8 @@ public class SocialRepository {
 
   public void like(String timelineCardId, String cardType, String ownerHash, int rating,
       TimelineSocialActionData timelineSocialActionData) {
-    LikeCardRequest.of(timelineCardId, cardType, ownerHash, rating, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
+    LikeCardRequest.of(timelineCardId, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {
@@ -156,7 +156,7 @@ public class SocialRepository {
         .toSingle()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
-            return accountManager.updateAccount(getAccountAccess(privacy));
+            return accountManager.syncCurrentAccount(getAccountAccess(privacy));
           }
           return Completable.error(
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));

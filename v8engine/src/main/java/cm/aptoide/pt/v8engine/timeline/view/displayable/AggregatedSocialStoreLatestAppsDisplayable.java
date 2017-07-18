@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -42,7 +42,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private TimelineNavigator timelineNavigator;
+  private AppsTimelineNavigator timelineNavigator;
 
   public AggregatedSocialStoreLatestAppsDisplayable() {
   }
@@ -52,7 +52,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, SpannableFactory spannableFactory,
       StoreCredentialsProvider storeCredentialsProvider, List<MinimalCard> minimalCards,
-      List<UserSharerTimeline> sharers, TimelineNavigator timelineNavigator,
+      List<UserSharerTimeline> sharers, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     super(card, timelineAnalytics, windowManager);
     this.latestApps = apps;
@@ -73,7 +73,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
   public static Displayable from(AggregatedSocialStoreLatestApps card,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      StoreCredentialsProvider storeCredentialsProvider, TimelineNavigator timelineNavigator,
+      StoreCredentialsProvider storeCredentialsProvider, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
 
     String abTestingURL = null;
@@ -169,7 +169,8 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
   }
 
   public Spannable getBlackHighlightedLike(Context context, String string) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_short_like_present_singular, string),
         ContextCompat.getColor(context, R.color.black_87_alpha), string);
   }
 

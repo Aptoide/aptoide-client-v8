@@ -5,7 +5,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 
 /**
  * Created by trinkes on 8/4/16.

@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, InstalledRepository installedRepository,
-      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
         socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy()
             .isLiked(), socialVideo.getLikes(), socialVideo.getComments(), date, spannableFactory,
@@ -90,7 +90,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
   public static SocialVideoDisplayable from(SocialVideo socialVideo, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      InstalledRepository installedRepository, TimelineNavigator timelineNavigator,
+      InstalledRepository installedRepository, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     long appId = 0;
 

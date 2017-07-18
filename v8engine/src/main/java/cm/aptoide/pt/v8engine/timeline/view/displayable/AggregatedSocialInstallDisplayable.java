@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -42,7 +42,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   private String abTestingURL;
   private TimelineAnalytics timelineAnalytics;
   private SpannableFactory spannableFactory;
-  private TimelineNavigator timelineNavigator;
+  private AppsTimelineNavigator timelineNavigator;
 
   public AggregatedSocialInstallDisplayable() {
   }
@@ -51,7 +51,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
       String packageName, String appName, String appIcon, String abTestingURL, Date date,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     super(card, timelineAnalytics, windowManager);
     this.minimalCardList = card.getMinimalCardList();
     this.sharers = card.getSharers();
@@ -78,7 +78,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   public static Displayable from(AggregatedSocialInstall aggregatedSocialInstall,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
 
     String abTestingURL = null;
 
@@ -186,7 +186,8 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   }
 
   public Spannable getBlackHighlightedLike(Context context, String string) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_short_like_present_singular, string),
         ContextCompat.getColor(context, R.color.black_87_alpha), string);
   }
 

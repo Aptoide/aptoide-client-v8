@@ -13,7 +13,6 @@
   <string name="displayable_social_timeline_app_update_error">Update Error</string>
   <string name="displayable_social_timeline_recommendation_similar_to">based on %1$s</string>
   <string name="displayable_social_timeline_recommendation_similar_and">and</string>
-  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s recommends</string>
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
   <string name="appstimeline_update_app">app</string>
   <string name="customtabs_open_native_app">Open in App</string>
@@ -86,8 +85,6 @@
   <string name="addressbook_about">About Address Book</string>
   <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to connect you</string>
 
-  <string name="x_liked_it">%s likes it</string>
-  <string name="x_likes_it">%s likes it</string>
   <string name="related_to">Related to</string>
   <string name="store_has_an_update">%1$s has an update</string>
   <string name="store_has_new_apps">%1$s store has new apps</string>
@@ -97,4 +94,45 @@
   <string name="popular_app_among_friends">Popular app among friends</string>
   <string name="timeline_short_shared">shared</string>
   <string name="timeline_short_plus" translatable="false">%s+</string>
+  <string name="timeline_title_shared_card_preview">Shared Card Preview</string>
+
+
+  <string name="timeline_title_likes">Likes</string>
+
+  <string name="timeline_short_like_present_singular">%s likes it</string>
+  <string name="timeline_short_like_present_plural">%d likes</string>
+
+  <plurals
+      name="timeline_short_comment">
+    <item quantity="one">1 comment</item>
+    <item quantity="other">%d  comments</item>
+  </plurals>
+  <string name="timeline_button_like">Like</string>
+  <string name="timeline_button_comment">Comment</string>
+  <string name="timeline_button_share">Share</string>
+
+
+  <string name="timeline_title_card_title_recommend_present_singular">%s recommends</string>
+  <string name="timeline_title_card_title_has_update_present_singular">%s has an update</string>
+
+  <string name="timeline_title_card_title_post_past_singular">%s posted</string>
+  <string name="timeline_title_card_title_post_past_plural">%s posted</string>
+
+  <string name="timeline_title_card_title_share_past_singular">%s shared</string>
+  <string name="timeline_title_card_title_share_past_plural">%s shared</string>
+
+  <string name="timeline_title_card_title_install_past_singular">%s installed</string>
+  <string name="timeline_title_card_title_install_past_plural">%s installed</string>
+
+  <string name="timeline_title_card_title_has_new_apps_present_singular">%s has new apps</string>
+
+  <!--post-->
+  <string name="timeline_title_new_post">New Post</string>
+  <string name="timeline_button_post">Post</string>
+  <string name="timeline_message_share_on_timeline">Write something or share a link related to an app</string>
+  <string name="timeline_title_related_app">Related app</string>
+  <string name="timeline_message_write_something">Write something</string>
+  <string name="timeline_message_pick_an_app">Pick an app related to your post</string>
+
+
 </resources>

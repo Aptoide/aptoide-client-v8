@@ -43,12 +43,12 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.store.StoreAnalytics;
+import cm.aptoide.pt.v8engine.social.view.TimelineFragment;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.fragment.BasePagerToolbarFragment;
@@ -231,8 +231,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
         //should buffer calls if there is no listener registered and deliver them
         //after registration happens.
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
-          if (fragment != null && fragment instanceof AppsTimelineFragment) {
-            ((AppsTimelineFragment) fragment).goToTop();
+          if (fragment != null && fragment instanceof TimelineFragment) {
+            ((TimelineFragment) fragment).goToTop();
           }
         }
       }

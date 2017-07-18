@@ -7,13 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by jdandrade on 18/05/2017.
  */
 
-class AggregatedSocialStoreLatestAppsTimelineItem implements TimelineItem<TimelineCard> {
+public class AggregatedSocialStoreLatestAppsTimelineItem implements TimelineItem<TimelineCard> {
 
   private final AggregatedSocialStoreLatestApps aggregatedSocialStoreLatestApps;
 
   @JsonCreator public AggregatedSocialStoreLatestAppsTimelineItem(
       @JsonProperty("data") AggregatedSocialStoreLatestApps aggregatedSocialStoreLatestApps) {
     this.aggregatedSocialStoreLatestApps = aggregatedSocialStoreLatestApps;
+  }
+
+  @Override public Ab getAb() {
+    return this.aggregatedSocialStoreLatestApps.getAb();
   }
 
   @Override public AggregatedSocialStoreLatestApps getData() {

@@ -19,7 +19,7 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -52,7 +52,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   private SpannableFactory spannableFactory;
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
-  private TimelineNavigator timelineNavigator;
+  private AppsTimelineNavigator timelineNavigator;
 
   public AggregatedSocialVideoDisplayable() {
   }
@@ -61,7 +61,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
       String publisherName, String thumbnailUrl, long appId, String abTestingURL,
       List<App> relatedToApps, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository, TimelineNavigator timelineNavigator,
+      SocialRepository socialRepository, AppsTimelineNavigator timelineNavigator,
       WindowManager windowManager) {
     super(card, timelineAnalytics, windowManager);
     this.title = title;
@@ -84,7 +84,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   public static Displayable from(AggregatedSocialVideo card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      TimelineNavigator timelineNavigator, WindowManager windowManager) {
+      AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
     long appId = 0;
 
     String abTestingURL = null;
@@ -234,7 +234,8 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   }
 
   public Spannable getBlackHighlightedLike(Context context, String string) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_short_like_present_singular, string),
         ContextCompat.getColor(context, R.color.black_87_alpha), string);
   }
 

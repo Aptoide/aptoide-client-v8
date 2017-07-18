@@ -47,7 +47,7 @@ import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDis
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.VideoDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.TimelineNavigator;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineNavigator;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -66,19 +66,19 @@ public class CardToDisplayableConverter implements CardToDisplayable {
   private final InstallEventConverter installEventConverter;
   private final Analytics analytics;
   private final DownloadEventConverter downloadEventConverter;
-  private final TimelineNavigator timelineNavigator;
+  private final AppsTimelineNavigator timelineNavigator;
   private final Resources resources;
   private final String marketName;
   private final WindowManager windowManager;
-  private InstalledRepository installedRepository;
+  private final InstalledRepository installedRepository;
 
   public CardToDisplayableConverter(SocialRepository socialRepository,
       TimelineAnalytics timelineAnalytics, InstallManager installManager,
       PermissionManager permissionManager, StoreCredentialsProvider storeCredentialsProvider,
       InstallEventConverter installEventConverter, Analytics analytics,
-      DownloadEventConverter downloadEventConverter, InstalledRepository installedRepository,
-      TimelineNavigator timelineNavigator, Resources resources, String marketName,
-      WindowManager windowManager) {
+      DownloadEventConverter downloadEventConverter, AppsTimelineNavigator timelineNavigator,
+      Resources resources, String marketName, WindowManager windowManager,
+      InstalledRepository installedRepository) {
     this.socialRepository = socialRepository;
     this.timelineAnalytics = timelineAnalytics;
     this.installManager = installManager;

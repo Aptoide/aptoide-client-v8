@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
@@ -62,31 +61,118 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   @Override public void present() {
+    handleClickOnFacebookLogin();
+    handleClickOnGoogleLogin();
+    handleAptoideShowLoginClick();
+    handleAptoideLoginClick();
+    handleAptoideShowSignUpClick();
+    handleAptoideSignUpClick();
+    handleAccountStatusChangeWhileShowingView();
+    handleForgotPasswordClick();
+    handleTogglePasswordVisibility();
+  }
+
+  @Override public void saveState(Bundle state) {
+    // does nothing
+  }
+
+  @Override public void restoreState(Bundle state) {
+    // does nothing
+  }
+
+  private void handleTogglePasswordVisibility() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .flatMap(resumed -> togglePasswordVisibility())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleForgotPasswordClick() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .flatMap(resumed -> forgotPasswordSelection())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleAptoideLoginClick() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> aptoideLoginClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
+  private void handleAptoideSignUpClick() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> aptoideSignUpClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
+  private void handleAptoideShowLoginClick() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> aptoideShowLoginClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.hideLoading();
+          view.showError(err);
+          crashReport.log(err);
+        });
+  }
+
+  private void handleAptoideShowSignUpClick() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> aptoideShowSignUpClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.hideLoading();
+          view.showError(err);
+          crashReport.log(err);
+        });
+  }
+
+  private void handleClickOnGoogleLogin() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> showOrHideGoogleLogin())
+        .flatMap(__ -> googleLoginClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.hideLoading();
+          view.showError(err);
+          crashReport.log(err);
+        });
+  }
+
+  private void handleClickOnFacebookLogin() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> {
           Context appContext = view.getApplicationContext();
           FacebookSdk.sdkInitialize(appContext);
         })
-        .doOnNext(__ -> showOrHideLogin())
-        .flatMap(
-            __ -> Observable.merge(googleLoginClick(), facebookLoginClick(), aptoideLoginClick(),
-                aptoideSignUpClick(), aptoideShowLoginClick(), aptoideShowSignUpClick()))
-        .retry()
+        .doOnNext(__ -> showOrHideFacebookLogin())
+        .flatMap(__ -> facebookLoginClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance()
-            .log(err));
+        }, err -> {
+          view.hideLoading();
+          view.showError(err);
+          crashReport.log(err);
+        });
+  }
 
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), togglePasswordVisibility()))
-        .retry()
-        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
-        .subscribe(__ -> {
-        }, err -> CrashReport.getInstance()
-            .log(err));
-
+  private void handleAccountStatusChangeWhileShowingView() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMapSingle(__ -> accountManager.accountStatus()
@@ -101,19 +187,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
-  }
-
-  private void showOrHideLogin() {
-    showOrHideFacebookLogin();
-    showOrHideGoogleLogin();
   }
 
   private Observable<Void> googleLoginClick() {
@@ -174,59 +247,61 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private Observable<Void> aptoideLoginClick() {
-    return view.aptoideLoginClick().<Void>flatMap(credentials -> {
-      view.hideKeyboard();
-      view.showLoading();
-      lockScreenRotation();
-      return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
-          credentials.getPassword(), null)
-          .observeOn(AndroidSchedulers.mainThread())
-          .doOnCompleted(() -> {
-            Logger.d(TAG, "aptoide login successful");
-            unlockScreenRotation();
-            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-                Analytics.Account.SignUpLoginStatus.SUCCESS,
-                Analytics.Account.LoginStatusDetail.SUCCESS);
-            navigateToMainView();
-          })
-          .doOnTerminate(() -> view.hideLoading())
-          .doOnError(throwable -> {
-            view.showError(throwable);
-            crashReport.log(throwable);
-            unlockScreenRotation();
-            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-                Analytics.Account.SignUpLoginStatus.FAILED,
-                Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
-          })
-          .toObservable();
-    }).retry();
+    return view.aptoideLoginClick()
+        .doOnNext(__ -> {
+          view.hideKeyboard();
+          view.showLoading();
+          lockScreenRotation();
+        }).<Void>flatMapCompletable(
+            credentials -> accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
+                credentials.getPassword(), null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  Logger.d(TAG, "aptoide login successful");
+                  unlockScreenRotation();
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                      Analytics.Account.SignUpLoginStatus.SUCCESS,
+                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  navigateToMainView();
+                  view.hideLoading();
+                })
+                .doOnError(throwable -> {
+                  view.showError(throwable);
+                  view.hideLoading();
+                  crashReport.log(throwable);
+                  unlockScreenRotation();
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                      Analytics.Account.SignUpLoginStatus.FAILED,
+                      Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
+                })).retry()
+        .map(__ -> null);
   }
 
   private Observable<Void> aptoideSignUpClick() {
-    return view.aptoideSignUpClick().<Void>flatMap(credentials -> {
-      view.hideKeyboard();
-      view.showLoading();
-      lockScreenRotation();
-
-      final Completable signUp =
-          accountManager.signUp(credentials.getUsername(), credentials.getPassword());
-
-      return signUp.observeOn(AndroidSchedulers.mainThread())
-          .doOnCompleted(() -> {
-            Logger.d(TAG, "aptoide sign up successful");
-            Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
-            navigateToCreateProfile();
-            unlockScreenRotation();
-          })
-          .doOnTerminate(() -> view.hideLoading())
-          .doOnError(throwable -> {
-            Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
-            view.showError(throwable);
-            crashReport.log(throwable);
-            unlockScreenRotation();
-          })
-          .toObservable();
-    }).retry();
+    return view.aptoideSignUpClick()
+        .doOnNext(__ -> {
+          view.hideKeyboard();
+          view.showLoading();
+          lockScreenRotation();
+        })
+        .flatMapCompletable(credentials -> accountManager.signUp(credentials.getUsername(),
+            credentials.getPassword())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> {
+              Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
+              navigateToCreateProfile();
+              unlockScreenRotation();
+              view.hideLoading();
+            })
+            .doOnError(throwable -> {
+              Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
+              view.showError(throwable);
+              crashReport.log(throwable);
+              unlockScreenRotation();
+              view.hideLoading();
+            }))
+        .retry()
+        .map(__ -> null);
   }
 
   private Observable<Void> aptoideShowLoginClick() {
