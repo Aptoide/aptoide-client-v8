@@ -27,6 +27,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:clipChildren="false"
         android:orientation="vertical"
         android:paddingBottom="50dp"
@@ -50,48 +51,54 @@
             style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
             />
       </android.support.design.widget.TextInputLayout>
-      <FrameLayout
+      <LinearLayout
+          android:id="@+id/preview_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="25dp"
+          android:animateLayoutChanges="true"
+          android:background="@color/white"
+          android:orientation="vertical"
+          android:visibility="gone"
+          tools:visibility="visible"
           >
-        <ImageView
-            android:id="@+id/preview_image"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:visibility="gone"
-            tools:background="@color/orange_700"
-            tools:src="@drawable/wizard_community"
-            tools:visibility="visible"
-            />
-        <ProgressBar
-            android:id="@+id/preview_progress_bar"
+            android:animateLayoutChanges="true"
+            >
+          <ImageView
+              android:id="@+id/preview_image"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:background="@color/orange_700"
+              tools:src="@drawable/wizard_community"
+              tools:visibility="visible"
+              />
+          <ProgressBar
+              android:id="@+id/preview_progress_bar"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:indeterminate="true"
+              tools:visibility="visible"
+              />
+        </FrameLayout>
+        <TextView
+            android:id="@+id/preview_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:indeterminate="true"
-            android:paddingBottom="75dp"
-            android:paddingTop="75dp"
-            android:visibility="gone"
+            android:layout_marginLeft="@dimen/label_padding"
+            android:layout_marginStart="@dimen/label_padding"
+            android:layout_marginTop="@dimen/label_padding"
+            android:ellipsize="end"
+            android:lines="2"
+            android:textColor="@color/black_87_alpha"
+            android:textSize="@dimen/timeline_post_post_title_title"
+            android:visibility="invisible"
+            tools:text="Preview Title"
             tools:visibility="visible"
             />
-      </FrameLayout>
-      <TextView
-          android:id="@+id/preview_title"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="@dimen/label_padding"
-          android:layout_marginStart="@dimen/label_padding"
-          android:layout_marginTop="@dimen/label_padding"
-          android:ellipsize="end"
-          android:lines="2"
-          android:textColor="@color/black_87_alpha"
-          android:textSize="@dimen/timeline_post_post_title_title"
-          android:visibility="gone"
-          tools:text="Preview Title"
-          tools:visibility="visible"
-          />
-
+      </LinearLayout>
       <TextView
           android:id="@+id/related_apps_header"
           android:layout_width="match_parent"

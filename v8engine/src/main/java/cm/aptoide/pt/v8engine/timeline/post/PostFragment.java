@@ -5,6 +5,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -40,18 +40,19 @@ public class PostFragment extends FragmentView implements PostView {
 
   private static final int MAX_CHARACTERS = 200;
   private static final String DATA_TO_SHARE = "data_to_share";
+  private static final String TAG = PostFragment.class.getSimpleName();
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
-  private EditText userInput;
+  private AppCompatEditText userInput;
   private ImageView previewImage;
   private TextView previewTitle;
-  private TextView relatedAppsHeader;
   private InstalledRepository installedRepository;
   private Toolbar toolbar;
   private PublishRelay<Void> cancelClick;
   private PublishRelay<Void> postClick;
   private RelatedAppsAdapter adapter;
   private ScrollView scrollView;
+  private View previewLayout;
 
   public static PostFragment newInstance(String toShare) {
     Bundle args = new Bundle();
@@ -99,14 +100,14 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   private void bindViews(@Nullable View view) {
-    userInput = (EditText) view.findViewById(R.id.input_text);
+    userInput = (AppCompatEditText) view.findViewById(R.id.input_text);
     previewImage = (ImageView) view.findViewById(R.id.preview_image);
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
-    relatedAppsHeader = (TextView) view.findViewById(R.id.related_apps_header);
     previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
     relatedApps = (RecyclerView) view.findViewById(R.id.related_apps_list);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
+    previewLayout = view.findViewById(R.id.preview_layout);
   }
 
   @Override public void onDestroyView() {
@@ -187,34 +188,35 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void showCardPreview(PostPreview suggestion) {
     previewImage.setVisibility(View.VISIBLE);
+    previewTitle.setText(suggestion.getTitle());
     previewTitle.setVisibility(View.VISIBLE);
+    previewLayout.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
         .loadWithoutResizeCenterCrop(suggestion.getImage(), previewImage);
-    previewTitle.setText(suggestion.getTitle());
   }
 
   @Override public void showCardPreviewLoading() {
+    previewLayout.setVisibility(View.VISIBLE);
     previewLoading.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideCardPreviewLoading() {
     previewLoading.setVisibility(View.GONE);
+    hidePreviewLayout();
   }
 
   @Override public void showRelatedAppsLoading() {
     adapter.showLoading();
     relatedApps.smoothScrollToPosition(0);
-    relatedAppsHeader.setVisibility(View.GONE);
   }
 
   @Override public void hideRelatedAppsLoading() {
     adapter.hideLoading();
-    relatedAppsHeader.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideCardPreview() {
     previewImage.setVisibility(View.GONE);
-    previewTitle.setVisibility(View.GONE);
+    hidePreviewLayout();
   }
 
   @Override public void showError(String error) {
@@ -252,6 +254,12 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public Completable setRelatedAppSelected(PostRemoteAccessor.RelatedApp app) {
     return adapter.setRelatedAppSelected(app);
+  }
+
+  private void hidePreviewLayout() {
+    if (previewImage.getVisibility() == View.GONE && previewLoading.getVisibility() == View.GONE) {
+      previewLayout.setVisibility(View.GONE);
+    }
   }
 
   private String getInputText() {
