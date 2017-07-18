@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.R;
-import cm.aptoide.pt.spotandshareapp.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToSendPresenter;
@@ -70,8 +70,9 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
                 Context.MODE_PRIVATE)));
     //// TODO: 14-07-2017 remove this after putting spot&share on Application
     attachPresenter(new SpotAndShareWaitingToSendPresenter(this,
-        SpotAndShare.getInstance(getContext(), new Friend(spotAndShareUserManager.getUser()
-            .getUsername()))), savedInstanceState);
+        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(
+            getContext(), new Friend(spotAndShareUserManager.getUser()
+                .getUsername()))), savedInstanceState);
   }
 
   private void setupToolbar() {

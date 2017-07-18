@@ -20,8 +20,8 @@ import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.R;
-import cm.aptoide.pt.spotandshareapp.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppSelectionManager;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
@@ -169,10 +169,12 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
             getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE)));
     //// TODO: 14-07-2017 push spot and share to application class and remove this dependence.
+
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
-        new InstalledRepositoryDummy(getContext().getPackageManager()),
-            SpotAndShare.getInstance(getContext(), new Friend(spotAndShareUserManager.getUser()
-                .getUsername())), new SpotAndShareAppSelectionManager(), new ObbsProvider()),
+            new InstalledRepositoryDummy(getContext().getPackageManager()),
+            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(
+                getContext(), new Friend(spotAndShareUserManager.getUser()
+                    .getUsername())), new SpotAndShareAppSelectionManager(), new ObbsProvider()),
         savedInstanceState);
   }
 
