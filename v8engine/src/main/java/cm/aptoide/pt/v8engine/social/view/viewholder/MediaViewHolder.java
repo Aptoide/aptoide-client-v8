@@ -62,21 +62,24 @@ public class MediaViewHolder extends PostViewHolder<Media> {
   }
 
   @Override public void setPost(Media media, int position) {
-    if (media.getType().equals(CardType.ARTICLE)) {
+    if (media.getType()
+        .equals(CardType.ARTICLE)) {
       setIcon(R.drawable.appstimeline_article_icon);
       playIcon.setVisibility(View.GONE);
-    } else if (media.getType().equals(CardType.VIDEO)) {
+    } else if (media.getType()
+        .equals(CardType.VIDEO)) {
       setIcon(R.drawable.appstimeline_video_play_icon);
       playIcon.setVisibility(View.VISIBLE);
     }
-    publisherName.setText(spannableFactory.createColorSpan(
-        itemView.getContext().getString(R.string.x_posted, media.getPublisherName()),
+    publisherName.setText(spannableFactory.createColorSpan(itemView.getContext()
+            .getString(R.string.x_posted, media.getPublisherName()),
         ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
         media.getPublisherName()));
     articleTitle.setText(media.getMediaTitle());
     relatedTo.setText(spannableFactory.createStyleSpan(itemView.getContext()
-        .getString(R.string.displayable_social_timeline_article_related_to,
-            media.getRelatedApp().getName()), Typeface.BOLD, media.getRelatedApp().getName()));
+        .getString(R.string.displayable_social_timeline_article_related_to, media.getRelatedApp()
+            .getName()), Typeface.BOLD, media.getRelatedApp()
+        .getName()));
     date.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), media.getDate()));
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(media.getPublisherAvatarURL(), publisherAvatar);
@@ -104,9 +107,11 @@ public class MediaViewHolder extends PostViewHolder<Media> {
 
   private void setIcon(int drawableId) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      cardIcon.setImageDrawable(itemView.getContext().getDrawable(drawableId));
+      cardIcon.setImageDrawable(itemView.getContext()
+          .getDrawable(drawableId));
     } else {
-      cardIcon.setImageDrawable(itemView.getResources().getDrawable(drawableId));
+      cardIcon.setImageDrawable(itemView.getResources()
+          .getDrawable(drawableId));
     }
   }
 }

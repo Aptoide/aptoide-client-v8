@@ -39,8 +39,8 @@ public class TimelineNavigator implements TimelineNavigation {
   }
 
   @Override public void navigateToStoreHome(String storeName, String storeTheme) {
-    fragmentNavigator.navigateTo(
-        V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(storeName, storeTheme));
   }
 
   @Override public void navigateToStoreTimeline(long userId, String storeTheme) {
@@ -56,7 +56,8 @@ public class TimelineNavigator implements TimelineNavigation {
   }
 
   @Override public void navigateToAddressBook() {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider().newAddressBookFragment());
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAddressBookFragment());
   }
 
   @Override public void navigateToAccountView() {
@@ -77,8 +78,8 @@ public class TimelineNavigator implements TimelineNavigation {
       fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title));
     } else {
-      fragmentNavigator.navigateTo(
-          V8Engine.getFragmentProvider().newTimeLineFollowersFragment("DEFAULT", title));
+      fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+          .newTimeLineFollowersFragment("DEFAULT", title));
     }
   }
 

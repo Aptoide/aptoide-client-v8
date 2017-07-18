@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,7 +23,6 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -40,12 +40,14 @@ import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import cm.aptoide.pt.v8engine.view.dialog.ImagePickerDialog;
 import cm.aptoide.pt.v8engine.view.permission.AccountPermissionProvider;
 import cm.aptoide.pt.v8engine.view.permission.PermissionProvider;
+import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -221,12 +223,17 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     uploadWaitDialog.show();
   }
 
-  @Override public void dismissProgressDialog() {
+  @Override public void hideProgressDialog() {
     uploadWaitDialog.dismiss();
   }
 
   @Override public Completable showErrorMessage(String error) {
-    return ShowMessage.asLongObservableSnack(createUserButton, error);
+    return Single.fromCallable(() -> Snackbar.make(createUserButton, error, Snackbar.LENGTH_LONG))
+        .flatMapCompletable(snackbar -> {
+          snackbar.show();
+          return RxSnackbar.dismisses(snackbar)
+              .toCompletable();
+        });
   }
 
   @Override public void loadImageStateless(String pictureUri) {

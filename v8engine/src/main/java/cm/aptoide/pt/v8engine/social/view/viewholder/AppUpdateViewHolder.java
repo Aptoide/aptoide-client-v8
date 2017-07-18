@@ -75,7 +75,8 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
     this.headerSubTitle.setText(
         getTimeSinceLastUpdate(itemView.getContext(), card.getUpdateAddedDate()));
-    ImageLoader.with(itemView.getContext()).load(card.getAppUpdateIcon(), appIcon);
+    ImageLoader.with(itemView.getContext())
+        .load(card.getAppUpdateIcon(), appIcon);
     this.appName.setText(getAppTitle(itemView.getContext(), card.getAppUpdateName()));
     setAppUpdateButtonText(card);
     this.errorText.setVisibility(View.GONE);
@@ -116,19 +117,25 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
   }
 
   private void setAppUpdateButtonText(AppUpdate card) {
-    if (card.getInstallationStatus().equals(Install.InstallationStatus.UNINSTALLED)
-        || card.getInstallationStatus().equals(Install.InstallationStatus.PAUSED)) {
-      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString().toUpperCase());
-    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.INSTALLING)) {
+    if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.UNINSTALLED) || card.getInstallationStatus()
+        .equals(Install.InstallationStatus.PAUSED)) {
+      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
+          .toUpperCase());
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.INSTALLING)) {
       this.appUpdate.setText(itemView.getContext()
           .getString(R.string.displayable_social_timeline_app_update_updating));
-    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.INSTALLED)) {
-      this.appUpdate.setText(
-          itemView.getContext().getString(R.string.displayable_social_timeline_app_update_updated));
-    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.GENERIC_ERROR)) {
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.INSTALLED)) {
+      this.appUpdate.setText(itemView.getContext()
+          .getString(R.string.displayable_social_timeline_app_update_updated));
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.GENERIC_ERROR)) {
       this.errorText.setText(R.string.displayable_social_timeline_app_update_error);
       this.errorText.setVisibility(View.VISIBLE);
-      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString().toUpperCase());
+      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
+          .toUpperCase());
     }
   }
 

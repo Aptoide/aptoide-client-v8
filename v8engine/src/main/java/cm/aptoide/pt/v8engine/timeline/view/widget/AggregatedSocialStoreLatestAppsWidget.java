@@ -604,7 +604,7 @@ public class AggregatedSocialStoreLatestAppsWidget
       TextView numberLikesOneLike) {
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
-        getContext().getString(R.string.likes)
+        getContext().getString(R.string.timeline_short_like_present_plural)
             .toLowerCase()));
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
