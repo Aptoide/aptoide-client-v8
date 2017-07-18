@@ -60,7 +60,7 @@ class PostPresenter implements Presenter {
         .filter(url -> url == null)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(emptyUrl -> view.hideCardPreview())
-        .flatMapCompletable(emptyUrl -> loadRelatedApps(null))
+        .flatMapCompletable(emptyUrl -> adapter.clearRemoteRelated())
         .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(viewHidden -> {

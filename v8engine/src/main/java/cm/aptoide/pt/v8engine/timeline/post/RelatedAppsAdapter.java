@@ -119,6 +119,24 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
     }
   }
 
+  public Completable clearRemoteRelated() {
+    return Completable.fromAction(() -> {
+      int numberOfRemoves = 0;
+      for (int i = 0; i < relatedAppList.size(); i++) {
+        PostRemoteAccessor.RelatedApp relatedApp = relatedAppList.get(i);
+        if (relatedApp.getOrigin()
+            .equals(PostManager.Origin.Remote)) {
+          relatedAppList.remove(i);
+          i--;
+          numberOfRemoves++;
+        } else {
+          break;
+        }
+      }
+      notifyItemRangeRemoved(0, numberOfRemoves);
+    });
+  }
+
   private static class RelatedAppViewHolder extends RecyclerView.ViewHolder {
     public static final int SELECTED_ELEVATION = 20;
     public static final int UNSELECTED_ELEVATION = 0;
