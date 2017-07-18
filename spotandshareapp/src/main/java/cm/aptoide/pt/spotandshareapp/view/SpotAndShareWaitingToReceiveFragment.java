@@ -1,7 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +16,6 @@ import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.JoinGroupView;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToReceivePresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -79,12 +76,6 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
     joinGroupView.registerJoinGroupSuccessCallback(
         onSuccess -> openSpotandShareTransferRecordFragment());
 
-    //// TODO: 11-07-2017 filipe FIX THIS DIALOG.
-    SpotAndShareUserManager spotAndShareUserManager = new SpotAndShareUserManager(
-        new SpotAndShareUserPersister(
-            getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE)));
-    //// TODO: 14-07-2017 remove this after putting this on Application
     attachPresenter(new SpotAndShareWaitingToReceivePresenter(this,
             ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare()),
         savedInstanceState);
@@ -131,20 +122,6 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
   @Override public void openSpotandShareTransferRecordFragment() {
     getFragmentNavigator().navigateToWithoutBackSave(
         SpotAndShareTransferRecordFragment.newInstance());
-  }
-
-  @Override public void onJoinGroupError(Throwable throwable) {
-    showErrorJoiningGroupMessage();
-    navigateBack();
-  }
-
-  private void showErrorJoiningGroupMessage() {
-    getActivity().runOnUiThread(new Runnable() {
-      @Override public void run() {
-        Toast.makeText(getContext(), "There was an error inside the group", Toast.LENGTH_SHORT)
-            .show();
-      }
-    });
   }
 
   @Override public Observable<Void> backButtonEvent() {

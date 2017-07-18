@@ -62,10 +62,6 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
   }
 
   private void joinGroup() {
-    //spotAndShare.joinGroup(andShareSender -> {
-    //  // TODO: 10-07-2017 filipe
-    //  view.openSpotandShareTransferRecordFragment();
-    //}, view::onJoinGroupError);
     view.joinGroup();
   }
 

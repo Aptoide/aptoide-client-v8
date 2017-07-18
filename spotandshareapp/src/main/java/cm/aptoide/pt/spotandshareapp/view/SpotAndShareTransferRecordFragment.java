@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,8 +18,6 @@ import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
@@ -86,11 +83,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         .build();
     shareAppButton = (Button) view.findViewById(R.id.transfer_record_share_an_app_button);
 
-    SpotAndShareUserManager spotAndShareUserManager = new SpotAndShareUserManager(
-        new SpotAndShareUserPersister(
-            getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE)));
-    //// TODO: 14-07-2017 remove this after putting spot&share on Application
     attachPresenter(new SpotAndShareTransferRecordPresenter(this,
         ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
         new SpotAndShareTransferRecordManager(getContext()),

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,8 +20,6 @@ import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppSelectionManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -114,7 +111,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void openWaitingToSendScreen() {
-    //// TODO: 07-07-2017 filipe create waiting to send screen
     getFragmentNavigator().navigateToWithoutBackSave(
         SpotAndShareWaitingToSendFragment.newInstance());
   }
@@ -162,12 +158,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
     progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
-
-    SpotAndShareUserManager spotAndShareUserManager = new SpotAndShareUserManager(
-        new SpotAndShareUserPersister(
-            getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE)));
-    //// TODO: 14-07-2017 push spot and share to application class and remove this dependence.
 
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
         new InstalledRepositoryDummy(getContext().getPackageManager()),
