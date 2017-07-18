@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
@@ -285,26 +284,22 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
           view.showLoading();
           lockScreenRotation();
         })
-        .flatMapCompletable(credentials -> {
-          final Completable signUp =
-              accountManager.signUp(credentials.getUsername(), credentials.getPassword());
-
-          return signUp.observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> {
-                Logger.d(TAG, "aptoide sign up successful");
-                Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
-                navigateToCreateProfile();
-                unlockScreenRotation();
-                view.hideLoading();
-              })
-              .doOnError(throwable -> {
-                Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
-                view.showError(throwable);
-                crashReport.log(throwable);
-                unlockScreenRotation();
-                view.hideLoading();
-              });
-        })
+        .flatMapCompletable(credentials -> accountManager.signUp(credentials.getUsername(),
+            credentials.getPassword())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> {
+              Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
+              navigateToCreateProfile();
+              unlockScreenRotation();
+              view.hideLoading();
+            })
+            .doOnError(throwable -> {
+              Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
+              view.showError(throwable);
+              crashReport.log(throwable);
+              unlockScreenRotation();
+              view.hideLoading();
+            }))
         .retry()
         .map(__ -> null);
   }
