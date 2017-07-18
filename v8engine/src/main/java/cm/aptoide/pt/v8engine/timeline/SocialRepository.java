@@ -58,7 +58,7 @@ public class SocialRepository {
               shareCardCallback.onCardShared(response.getData()
                   .getCardUid());
             }
-            return accountManager.updateAccount(getAccountAccess(privacy));
+            return accountManager.syncCurrentAccount(getAccountAccess(privacy));
           }
           return Completable.error(
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
@@ -105,7 +105,7 @@ public class SocialRepository {
               shareCardCallback.onCardShared(response.getData()
                   .getCardUid());
             }
-            return accountManager.updateAccount(getAccountAccess(privacy));
+            return accountManager.syncCurrentAccount(getAccountAccess(privacy));
           }
           return Completable.error(
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
@@ -156,7 +156,7 @@ public class SocialRepository {
         .toSingle()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
-            return accountManager.updateAccount(getAccountAccess(privacy));
+            return accountManager.syncCurrentAccount(getAccountAccess(privacy));
           }
           return Completable.error(
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));

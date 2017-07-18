@@ -955,7 +955,7 @@ public abstract class V8Engine extends Application {
 
             return setupFirstRun(accountManager).andThen(
                 getRootAvailabilityManager().updateRootAvailability())
-                .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
+                .andThen(Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
           }
 
           return Completable.complete();

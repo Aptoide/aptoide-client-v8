@@ -128,7 +128,7 @@ public class StoreManager {
               return Single.just(data);
             }))
         .flatMapCompletable(data -> {
-          final Completable syncAccount = accountManager.updateAccount();
+          final Completable syncAccount = accountManager.syncCurrentAccount();
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
             return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
                 storeThemeName).andThen(syncAccount);

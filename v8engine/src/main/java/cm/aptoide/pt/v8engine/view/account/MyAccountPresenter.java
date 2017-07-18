@@ -36,7 +36,6 @@ public class MyAccountPresenter implements Presenter {
   }
 
   @Override public void present() {
-
     showAndPopulateAccountViews();
     handleSignOutButtonClick();
     handleMoreNotificationsClick();
@@ -192,7 +191,8 @@ public class MyAccountPresenter implements Presenter {
                 .getMeta()
                 .getData())
             .doOnNext(store -> view.refreshUI(store)))
-        .doOnNext(__ -> accountManager.updateAccount())
+        .flatMap(__ -> accountManager.syncCurrentAccount()
+            .toObservable())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> CrashReport.getInstance()
