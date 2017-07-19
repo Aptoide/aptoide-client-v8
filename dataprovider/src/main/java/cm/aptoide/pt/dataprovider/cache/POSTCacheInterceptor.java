@@ -21,11 +21,13 @@ public class POSTCacheInterceptor implements Interceptor {
   @Override public Response intercept(Chain chain) throws IOException {
     final Request request = chain.request();
 
+    // we only intercept and cache POST requests
     if (!request.method()
         .equalsIgnoreCase("POST")) {
       return chain.proceed(request);
     }
 
+    // we shouldn't cache the response if the client explicitly asked us not to
     Headers headers = request.headers();
     if (headers.size() > 0) {
       for (String bypassCacheHeaderValue : headers.values(WebService.BYPASS_HEADER_KEY)) {
@@ -35,6 +37,7 @@ public class POSTCacheInterceptor implements Interceptor {
       }
     }
 
+    // hit the cache to get the response
     if (cache.contains(request)) {
       Response cachedResponse = cache.get(request);
       if (cachedResponse != null) {
@@ -45,10 +48,12 @@ public class POSTCacheInterceptor implements Interceptor {
       Logger.v(TAG, String.format("cache hit but with null result '%s'", request.url()));
     }
 
+    // in case of a cache miss, go to the network
     Logger.v(TAG, String.format("cache miss '%s'", request.url()));
     Response response = chain.proceed(request);
 
-    if (response.code() == 200) {
+    // we only cache successful responses
+    if (response.isSuccessful()) {
       cache.put(request, response);
     }
     return response;
