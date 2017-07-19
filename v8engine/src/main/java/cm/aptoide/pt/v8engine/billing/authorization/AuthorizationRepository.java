@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.repository;
+package cm.aptoide.pt.v8engine.billing.authorization;
 
 import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;

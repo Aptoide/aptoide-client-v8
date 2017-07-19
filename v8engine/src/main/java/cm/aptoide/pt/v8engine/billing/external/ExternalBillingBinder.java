@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.inapp;
+package cm.aptoide.pt.v8engine.billing.external;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import rx.Single;
 
-public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
+public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
   // Response result codes
   public static final int RESULT_OK = 0;
@@ -56,12 +56,12 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
   public static final String SERVICES_LIST = "SERVICES_LIST";
 
   private final Context context;
-  private final InAppBillingSerializer serializer;
+  private final ExternalBillingSerializer serializer;
   private final PaymentThrowableCodeMapper errorCodeFactory;
   private final Billing billing;
   private final CrashReport crashReport;
 
-  public InAppBillingBinder(Context context, InAppBillingSerializer serializer,
+  public ExternalBillingBinder(Context context, ExternalBillingSerializer serializer,
       PaymentThrowableCodeMapper errorCodeFactory, Billing billing, CrashReport crashReport) {
     this.context = context;
     this.serializer = serializer;
@@ -103,7 +103,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       final List<String> serializedProducts =
-          billing.getInAppProducts(apiVersion, packageName, itemIdList, type)
+          billing.getProducts(packageName, apiVersion, type, itemIdList)
               .flatMap(products -> {
                 try {
                   return Single.just(serializer.serializeProducts(products));
@@ -147,7 +147,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
     final Bundle result = new Bundle();
     try {
 
-      final List<Purchase> purchases = billing.getInAppPurchases(apiVersion, packageName, type)
+      final List<Purchase> purchases = billing.getPurchases(packageName, apiVersion, type)
           .toBlocking()
           .value();
 
@@ -176,7 +176,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
   @Override public int consumePurchase(int apiVersion, String packageName, String purchaseToken)
       throws RemoteException {
     try {
-      return billing.consumeInAppPurchase(apiVersion, packageName, purchaseToken)
+      return billing.consumePurchase(packageName, apiVersion, purchaseToken)
           .andThen(Single.just(RESULT_OK))
           .toBlocking()
           .value();

@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 24/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.inapp;
+package cm.aptoide.pt.v8engine.billing.external;
 
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.billing.Product;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class InAppBillingSerializer {
+public class ExternalBillingSerializer {
 
   public List<String> serializeProducts(List<Product> products) throws IOException {
     final List<String> serializedProducts = new ArrayList<>();

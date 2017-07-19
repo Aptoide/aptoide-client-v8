@@ -88,31 +88,31 @@ import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
-import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationFactory;
-import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
-import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingService;
 import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
+import cm.aptoide.pt.v8engine.billing.PaymentMethodSelector;
 import cm.aptoide.pt.v8engine.billing.PurchaseFactory;
+import cm.aptoide.pt.v8engine.billing.SharedPreferencesPaymentMethodSelector;
+import cm.aptoide.pt.v8engine.billing.V3BillingService;
+import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
+import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.authorization.RealmAuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.authorization.V3AuthorizationService;
+import cm.aptoide.pt.v8engine.billing.external.ExternalBillingSerializer;
+import cm.aptoide.pt.v8engine.billing.product.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.transaction.RealmTransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionMapper;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
+import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionService;
-import cm.aptoide.pt.v8engine.billing.authorization.V3AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.transaction.V3TransactionService;
-import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
-import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
-import cm.aptoide.pt.v8engine.billing.repository.InAppBillingProductRepository;
-import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
-import cm.aptoide.pt.v8engine.billing.repository.PaidAppProductRepository;
-import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
-import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
-import cm.aptoide.pt.v8engine.billing.repository.TransactionRepository;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
@@ -149,7 +149,6 @@ import cm.aptoide.pt.v8engine.notification.NotificationsCleaner;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
-import cm.aptoide.pt.v8engine.billing.SharedPreferencesPaymentMethodSelector;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
@@ -240,9 +239,8 @@ public abstract class V8Engine extends Application {
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
   private BillingSyncScheduler billingSyncScheduler;
-  private InAppBillingRepository inAppBillingRepository;
   private Payer accountPayer;
-  private InAppBillingSerializer inAppBillingSerialzer;
+  private ExternalBillingSerializer inAppBillingSerialzer;
   private AuthorizationFactory authorizationFactory;
   private Billing billing;
   private PurchaseBundleMapper purchaseBundleMapper;
@@ -774,30 +772,23 @@ public abstract class V8Engine extends Application {
           new TransactionRepository(getRealmTransactionPersistence(), getBillingSyncScheduler(),
               getAccountPayer(), getV3TransactionService());
 
-      final ProductFactory productFactory = new ProductFactory();
-
-      final PurchaseFactory purchaseFactory =
-          new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
-
       final AuthorizationRepository authorizationRepository =
           new AuthorizationRepository(getBillingSyncScheduler(), getAccountPayer(),
               getV3AuthorizationService(), getRealmAuthorizationPersistence());
 
-      final PaymentMethodMapper paymentMethodMapper = new PaymentMethodMapper();
+      final BillingService billingService =
+          new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
+              WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences(), new PurchaseFactory(getInAppBillingSerializer()),
+              new ProductFactory(), getPackageRepository(), new PaymentMethodMapper(),
+              getResources());
 
-      final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
-          new PaidAppProductRepository(purchaseFactory, paymentMethodMapper,
-              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              productFactory, getTokenInvalidator(), getDefaultSharedPreferences(), getResources()),
-          new InAppBillingProductRepository(purchaseFactory, paymentMethodMapper, productFactory,
-              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              getTokenInvalidator(), getDefaultSharedPreferences(), getPackageRepository()));
+      final PaymentMethodSelector paymentMethodSelector =
+          new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
+              getDefaultSharedPreferences());
 
-      billing =
-          new Billing(productRepositoryFactory, transactionRepository, getInAppBillingRepository(),
-              authorizationRepository,
-              new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
-                  getDefaultSharedPreferences()));
+      billing = new Billing(transactionRepository, billingService, authorizationRepository,
+          paymentMethodSelector, getRealmTransactionPersistence());
     }
     return billing;
   }
@@ -882,9 +873,9 @@ public abstract class V8Engine extends Application {
     return purchaseBundleMapper;
   }
 
-  public InAppBillingSerializer getInAppBillingSerializer() {
+  public ExternalBillingSerializer getInAppBillingSerializer() {
     if (inAppBillingSerialzer == null) {
-      inAppBillingSerialzer = new InAppBillingSerializer();
+      inAppBillingSerialzer = new ExternalBillingSerializer();
     }
     return inAppBillingSerialzer;
   }
@@ -901,16 +892,6 @@ public abstract class V8Engine extends Application {
       accountPayer = new AccountPayer(getAccountManager());
     }
     return accountPayer;
-  }
-
-  public InAppBillingRepository getInAppBillingRepository() {
-    if (inAppBillingRepository == null) {
-      inAppBillingRepository =
-          new InAppBillingRepository(getRealmTransactionPersistence(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences());
-    }
-    return inAppBillingRepository;
   }
 
   public NetworkOperatorManager getNetworkOperatorManager() {

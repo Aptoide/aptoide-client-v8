@@ -77,13 +77,13 @@ public class ProductProvider {
   public Single<Product> getProduct() {
 
     if (storeName != null) {
-      return billing.getPaidAppProduct(appId, storeName, sponsored);
+      return billing.getProduct(appId, storeName, sponsored);
     }
 
     if (sku != null) {
-      return billing.getInAppProduct(apiVersion, packageName, sku, type, developerPayload);
+      return billing.getProduct(packageName, apiVersion, type, sku, developerPayload);
     }
 
-    return Single.error(new IllegalStateException("No product information provided to presenter."));
+    return Single.error(new IllegalStateException("Invalid product information."));
   }
 }

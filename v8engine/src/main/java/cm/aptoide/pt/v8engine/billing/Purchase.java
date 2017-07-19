@@ -9,5 +9,4 @@ import rx.Completable;
 
 public interface Purchase {
 
-  public Completable consume();
 }

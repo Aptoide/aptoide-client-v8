@@ -7,27 +7,24 @@ package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
-import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
+import cm.aptoide.pt.v8engine.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
-import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class PurchaseFactory {
 
-  private final InAppBillingSerializer serializer;
-  private final InAppBillingRepository repository;
+  private final ExternalBillingSerializer serializer;
 
-  public PurchaseFactory(InAppBillingSerializer serializer, InAppBillingRepository repository) {
+  public PurchaseFactory(ExternalBillingSerializer serializer) {
     this.serializer = serializer;
-    this.repository = repository;
   }
 
   public Purchase create(InAppBillingPurchasesResponse.InAppBillingPurchase purchase,
       String purchaseSignature, int apiVersion, String sku) {
     try {
       return new InAppPurchase(apiVersion, purchase.getPackageName(), purchase.getPurchaseToken(),
-          purchaseSignature, serializer.serializePurchase(purchase), repository, sku);
+          purchaseSignature, serializer.serializePurchase(purchase), sku);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
