@@ -2,8 +2,6 @@ package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.util.Patterns;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -13,14 +11,12 @@ import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 class PostPresenter implements Presenter {
-  private static final Pattern URL_PATTERN = Patterns.WEB_URL;
   private static final String TAG = PostPresenter.class.getSimpleName();
   private final PostView view;
   private final CrashReport crashReport;
@@ -95,17 +91,20 @@ class PostPresenter implements Presenter {
   private void showCardPreviewAfterTextChanges() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> getInsertedUrl().switchMap(insertedUrl -> Observable.just(insertedUrl)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(url -> view.clearRemoteRelated())
-            .doOnNext(__2 -> view.showCardPreviewLoading())
-            .doOnNext(__2 -> view.hideCardPreview())
-            .observeOn(Schedulers.io())
-            .flatMapSingle(url -> postManager.getPreview(url))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(suggestion -> view.showCardPreview(suggestion))
-            .doOnNext(__2 -> view.hideCardPreviewLoading())
-            .doOnError(throwable -> view.hideCardPreviewLoading()))
+        .flatMap(viewCreated -> view.onInputTextChanged()
+            .filter(insertedText -> urlValidator.containsUrl(insertedText))
+            .debounce(1, TimeUnit.SECONDS)
+            .switchMap(insertedUrl -> Observable.just(insertedUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(url -> view.clearRemoteRelated())
+                .doOnNext(__2 -> view.showCardPreviewLoading())
+                .doOnNext(__2 -> view.hideCardPreview())
+                .observeOn(Schedulers.io())
+                .flatMapSingle(url -> postManager.getPreview(url))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(suggestion -> view.showCardPreview(suggestion))
+                .doOnNext(__2 -> view.hideCardPreviewLoading())
+                .doOnError(throwable -> view.hideCardPreviewLoading()))
             .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -114,28 +113,6 @@ class PostPresenter implements Presenter {
           view.hideCardPreviewLoading();
           crashReport.log(err);
         });
-  }
-
-  @NonNull private Observable<String> getInsertedUrl() {
-    return getUrlFromInsertedText().debounce(1, TimeUnit.SECONDS)
-        .distinctUntilChanged()
-        .filter(url -> !TextUtils.isEmpty(url));
-  }
-
-  @NonNull private Observable<String> getUrlFromInsertedText() {
-    return view.onInputTextChanged()
-        .skip(1)
-        .map(text -> findUrlOrNull(text));
-  }
-
-  private String findUrlOrNull(String text) {
-    for (String textPart : text.split(" ")) {
-      if (URL_PATTERN.matcher(textPart)
-          .matches()) {
-        return textPart;
-      }
-    }
-    return null;
   }
 
   private void showRelatedAppsAfterTextChanges() {

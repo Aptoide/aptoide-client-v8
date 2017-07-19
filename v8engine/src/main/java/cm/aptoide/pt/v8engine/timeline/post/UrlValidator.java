@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
-import android.util.Patterns;
 import java.util.regex.Pattern;
 
 /**
@@ -8,7 +7,11 @@ import java.util.regex.Pattern;
  */
 
 public class UrlValidator {
-  private static final Pattern URL_PATTERN = Patterns.WEB_URL;
+  private final Pattern urlPattern;
+
+  public UrlValidator(Pattern url_pattern) {
+    urlPattern = url_pattern;
+  }
 
   public boolean containsUrl(String text) {
     try {
@@ -21,7 +24,7 @@ public class UrlValidator {
 
   public String getUrl(String text) throws IllegalArgumentException {
     for (String textPart : text.split(" ")) {
-      if (URL_PATTERN.matcher(textPart)
+      if (urlPattern.matcher(textPart)
           .matches()) {
         return textPart;
       }
