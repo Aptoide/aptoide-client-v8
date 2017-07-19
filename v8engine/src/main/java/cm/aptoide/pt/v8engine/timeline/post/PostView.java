@@ -37,7 +37,7 @@ interface PostView extends View {
 
   PostRemoteAccessor.RelatedApp getCurrentSelected();
 
-  Completable clearRemoteRelated();
+  void clearRemoteRelated();
 
   Observable<PostRemoteAccessor.RelatedApp> getClickedView();
 

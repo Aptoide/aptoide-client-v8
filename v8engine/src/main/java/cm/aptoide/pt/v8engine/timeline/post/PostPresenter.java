@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import rx.Completable;
@@ -25,13 +26,15 @@ class PostPresenter implements Presenter {
   private final CrashReport crashReport;
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
+  private UrlValidator urlValidator;
 
   public PostPresenter(PostView view, CrashReport crashReport, PostManager postManager,
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, UrlValidator urlValidator) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
     this.fragmentNavigator = fragmentNavigator;
+    this.urlValidator = urlValidator;
   }
 
   @Override public void present() {
@@ -41,7 +44,6 @@ class PostPresenter implements Presenter {
     showRelatedAppsAfterTextChanges();
     handleCancelButtonClick();
     handleRelatedAppClick();
-    handleNoUrlInserted();
   }
 
   @Override public void saveState(Bundle state) {
@@ -50,19 +52,6 @@ class PostPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
-  }
-
-  private void handleNoUrlInserted() {
-    getUrlFromInsertedText().debounce(1, TimeUnit.SECONDS)
-        .distinctUntilChanged()
-        .filter(url -> url == null)
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(emptyUrl -> view.hideCardPreview())
-        .flatMapCompletable(emptyUrl -> view.clearRemoteRelated())
-        .retry()
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(viewHidden -> {
-        }, throwable -> crashReport.log(throwable));
   }
 
   private void showInstalledAppsOnStart() {
@@ -108,8 +97,7 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> getInsertedUrl().switchMap(insertedUrl -> Observable.just(insertedUrl)
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMapSingle(url -> view.clearRemoteRelated()
-                .toSingleDefault(url))
+            .doOnNext(url -> view.clearRemoteRelated())
             .doOnNext(__2 -> view.showCardPreviewLoading())
             .doOnNext(__2 -> view.hideCardPreview())
             .observeOn(Schedulers.io())
@@ -131,15 +119,7 @@ class PostPresenter implements Presenter {
   @NonNull private Observable<String> getInsertedUrl() {
     return getUrlFromInsertedText().debounce(1, TimeUnit.SECONDS)
         .distinctUntilChanged()
-        .filter(url -> !TextUtils.isEmpty(url))
-        .map(url -> addProtocolIfNeeded(url));
-  }
-
-  @NonNull private String addProtocolIfNeeded(String url) {
-    if (url != null && !url.contains("http://") && !url.contains("https://")) {
-      url = "http://".concat(url);
-    }
-    return url;
+        .filter(url -> !TextUtils.isEmpty(url));
   }
 
   @NonNull private Observable<String> getUrlFromInsertedText() {
@@ -161,31 +141,43 @@ class PostPresenter implements Presenter {
   private void showRelatedAppsAfterTextChanges() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> getInsertedUrl().switchMap(inputUrl -> Observable.just(inputUrl)
+        .flatMap(viewCreated -> view.onInputTextChanged()
+            .debounce(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMapCompletable(url -> loadRelatedApps(url))
-            .retry()))
+            .switchMap(insertedText -> {
+              if (urlValidator.containsUrl(insertedText)) {
+                return loadRelatedApps(urlValidator.getUrl(insertedText));
+              } else {
+                return resetState();
+              }
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
 
-  private Completable loadRelatedApps(String url) {
+  @NonNull private Observable<Integer> resetState() {
+    return Observable.fromCallable(() -> {
+      view.hideCardPreview();
+      view.clearRemoteRelated();
+      return -1;
+    });
+  }
+
+  private Observable<List<PostRemoteAccessor.RelatedApp>> loadRelatedApps(String url) {
     return Completable.fromAction(() -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
         .andThen(postManager.getRemoteAppSuggestions(url))
         .observeOn(AndroidSchedulers.mainThread())
         .toObservable()
-        .doOnNext(relatedApps -> {
-          view.addRelatedApps(relatedApps);
-          view.hideRelatedAppsLoading();
-        })
+        .doOnNext(relatedApps -> view.addRelatedApps(relatedApps))
+        .doOnCompleted(() -> view.hideRelatedAppsLoading())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> {
           throwable.printStackTrace();
           view.hideRelatedAppsLoading();
-        })
-        .toCompletable();
+        });
   }
 
   private void postOnTimelineOnButtonClick() {
@@ -194,14 +186,12 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
-            .flatMapCompletable(
-                textToShare -> postManager.post(addProtocolIfNeeded(findUrlOrNull(textToShare)),
-                    textToShare,
-                    view.getCurrentSelected() == null ? null : view.getCurrentSelected()
-                            .getPackageName())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnCompleted(() -> view.showSuccessMessage())
-                    .doOnCompleted(() -> fragmentNavigator.popBackStack()))
+            .flatMapCompletable(textToShare -> postManager.post(textToShare, textToShare,
+                view.getCurrentSelected() == null ? null : view.getCurrentSelected()
+                    .getPackageName())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> view.showSuccessMessage())
+                .doOnCompleted(() -> fragmentNavigator.popBackStack()))
             .doOnError(throwable -> handleError(throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

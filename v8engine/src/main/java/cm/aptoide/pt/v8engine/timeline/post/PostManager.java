@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
 import java.util.List;
@@ -18,7 +19,8 @@ public class PostManager {
 
   public Completable post(String url, String content, String packageName) {
     return validateInsertedText(content, packageName).flatMapCompletable(
-        validPost -> postRemoteRepository.postOnTimeline(url, content, packageName));
+        validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url), content,
+            packageName));
   }
 
   private Single<Boolean> validateInsertedText(String textToShare, String packageName) {
@@ -37,11 +39,18 @@ public class PostManager {
   }
 
   public Single<List<RelatedApp>> getRemoteAppSuggestions(String url) {
-    return postRemoteRepository.getRelatedApps(url);
+    return postRemoteRepository.getRelatedApps(addProtocolIfNeeded(url));
+  }
+
+  @NonNull private String addProtocolIfNeeded(String url) {
+    if (url != null && !url.contains("http://") && !url.contains("https://")) {
+      url = "http://".concat(url);
+    }
+    return url;
   }
 
   public Single<PostView.PostPreview> getPreview(String url) {
-    return postRemoteRepository.getCardPreview(url);
+    return postRemoteRepository.getCardPreview(addProtocolIfNeeded(url));
   }
 
   enum Origin {

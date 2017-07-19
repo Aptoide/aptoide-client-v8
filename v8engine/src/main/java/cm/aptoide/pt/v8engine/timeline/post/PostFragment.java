@@ -152,7 +152,8 @@ public class PostFragment extends FragmentView implements PostView {
 
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
-        new PostManager(postRemoteAccessor, postLocalAccessor), getFragmentNavigator());
+        new PostManager(postRemoteAccessor, postLocalAccessor), getFragmentNavigator(),
+        new UrlValidator());
     attachPresenter(presenter, null);
   }
 
@@ -241,8 +242,8 @@ public class PostFragment extends FragmentView implements PostView {
     return adapter.getCurrentSelected();
   }
 
-  @Override public Completable clearRemoteRelated() {
-    return adapter.clearRemoteRelated();
+  @Override public void clearRemoteRelated() {
+    adapter.clearRemoteRelated();
   }
 
   @Override public Observable<PostRemoteAccessor.RelatedApp> getClickedView() {
