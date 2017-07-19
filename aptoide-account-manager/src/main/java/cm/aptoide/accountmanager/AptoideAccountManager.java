@@ -167,20 +167,14 @@ public class AptoideAccountManager {
     return getAccount().getAccess();
   }
 
-  @Deprecated public Completable syncCurrentAccount() {
-    return singleAccountStatus().flatMapCompletable(
-        account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
-            account.getPassword(), account.getType()));
-  }
-
-  public Completable updateAccount(boolean adultContentEnabled) {
+  public Completable syncCurrentAccount(boolean adultContentEnabled) {
     return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccount(adultContentEnabled, this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }
 
-  public Completable updateAccount(String username) {
+  public Completable syncCurrentAccount(String username) {
     if (TextUtils.isEmpty(username)) {
       return Completable.error(
           new AccountValidationException(AccountValidationException.EMPTY_NAME));
@@ -191,14 +185,14 @@ public class AptoideAccountManager {
                 account.getPassword(), account.getType())));
   }
 
-  public Completable updateAccount(Account.Access access) {
+  public Completable syncCurrentAccount(Account.Access access) {
     return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccount(access.name(), this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }
 
-  public Completable updateAccount(String username, String avatarPath) {
+  public Completable syncCurrentAccount(String username, String avatarPath) {
     return singleAccountStatus().flatMapCompletable(account -> {
       if (TextUtils.isEmpty(username) && TextUtils.isEmpty(avatarPath)) {
         return Completable.error(
@@ -212,6 +206,12 @@ public class AptoideAccountManager {
           .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
               account.getPassword(), account.getType()));
     });
+  }
+
+  @Deprecated public Completable syncCurrentAccount() {
+    return singleAccountStatus().flatMapCompletable(
+        account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
+            account.getPassword(), account.getType()));
   }
 
   public static class Builder {

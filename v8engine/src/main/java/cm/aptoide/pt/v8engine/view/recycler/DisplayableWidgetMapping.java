@@ -54,7 +54,6 @@ import cm.aptoide.pt.v8engine.view.app.GridAppWidget;
 import cm.aptoide.pt.v8engine.view.app.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.app.OfficialAppWidget;
 import cm.aptoide.pt.v8engine.view.app.OtherVersionDisplayable;
-import cm.aptoide.pt.v8engine.view.app.displayable.AppViewCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewFlagThisDisplayable;
@@ -66,7 +65,6 @@ import cm.aptoide.pt.v8engine.view.app.displayable.AppViewScreenshotsDisplayable
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewSuggestedAppsDisplayable;
-import cm.aptoide.pt.v8engine.view.app.widget.AppViewCommentsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewDescriptionWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewDeveloperWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewFlagThisWidget;
@@ -291,9 +289,6 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(ProgressBarWidget.class, ProgressBarDisplayable.class));
 
     // appView widgets / displayables
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewCommentsWidget.class,
-        AppViewCommentsDisplayable.class));
-
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewDescriptionWidget.class,
         AppViewDescriptionDisplayable.class));
 
