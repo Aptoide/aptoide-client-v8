@@ -114,6 +114,8 @@ import rx.functions.Action1;
     Action1<Void> openStore = __ -> {
       displayable.getAppViewAnalytics()
           .sendOpenStoreEvent();
+      displayable.getStoreAnalytics()
+          .sendStoreOpenEvent("App View", storeName);
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(storeName, storeTheme));
     };

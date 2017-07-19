@@ -27,6 +27,7 @@ import rx.functions.Action1;
  */
 
 public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStores> {
+  //// TODO(pedro): 19/07/17 More recommended store events here
 
   private AptoideAccountManager accountManager;
   private StoreUtilsProxy storeUtilsProxy;
@@ -55,7 +56,7 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
         .flatMapIterable(getStoreWidgets -> getStoreWidgets.getDatalist()
             .getList())
         .map(store -> new RecommendedStoreDisplayable(store, storeRepository, accountManager,
-            storeUtilsProxy, storeCredentialsProvider))
+            storeUtilsProxy, storeCredentialsProvider, "Recommended Stores More"))
         .toList()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(disp -> addDisplayables(new ArrayList<>(disp), true));

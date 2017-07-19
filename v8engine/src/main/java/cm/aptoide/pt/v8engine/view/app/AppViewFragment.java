@@ -81,6 +81,7 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
@@ -187,6 +188,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private StoreAnalytics storeAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
 
@@ -295,9 +297,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
-    appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
-
     installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
@@ -306,6 +305,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     downloadFactory = new DownloadFactory();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -757,7 +759,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
             installAppRelay);
     displayables.add(installDisplayable);
-    displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
+    displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
             installedRepository));

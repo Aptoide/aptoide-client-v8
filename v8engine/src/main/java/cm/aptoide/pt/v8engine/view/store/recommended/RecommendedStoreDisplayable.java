@@ -23,6 +23,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   private StoreRepository storeRepository;
   private StoreUtilsProxy storeUtilsProxy;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private String origin = "";
 
   public RecommendedStoreDisplayable() {
   }
@@ -35,6 +36,17 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     this.accountManager = accountManager;
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeCredentialsProvider = storeCredentialsProvider;
+  }
+
+  public RecommendedStoreDisplayable(Store store, StoreRepository storeRepository,
+      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
+      StoreCredentialsProvider storeCredentialsProvider, String origin) {
+    super(store);
+    this.storeRepository = storeRepository;
+    this.accountManager = accountManager;
+    this.storeUtilsProxy = storeUtilsProxy;
+    this.storeCredentialsProvider = storeCredentialsProvider;
+    this.origin = origin;
   }
 
   @Override protected Configs getConfig() {
@@ -67,5 +79,9 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     navigator.navigateTo(V8Engine.getFragmentProvider()
         .newStoreFragment(getPojo().getName(), getPojo().getAppearance()
             .getTheme()));
+  }
+
+  public String getOrigin() {
+    return origin;
   }
 }

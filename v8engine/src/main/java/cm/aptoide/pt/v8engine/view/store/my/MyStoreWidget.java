@@ -89,6 +89,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
           storeAnalytics.sendStoreInteractEvent("View Store", store.getStats()
               .getApps(), store.getStats()
               .getSubscribers());
+          storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
         }));
     setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
   }

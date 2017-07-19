@@ -9,10 +9,13 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -28,9 +31,13 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
   private TextView numberStoreApps;
   private ImageView storeIcon;
   private AppCompatButton followButton;
+  private StoreAnalytics storeAnalytics;
 
   public RecommendedStoreWidget(View itemView) {
     super(itemView);
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -55,15 +62,29 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(click -> displayable.openStoreFragment(getFragmentNavigator()),
-            throwable -> CrashReport.getInstance()
-                .log(throwable)));
+        .subscribe(click -> {
+          displayable.openStoreFragment(getFragmentNavigator());
+          if (!displayable.getOrigin()
+              .isEmpty()) {
+            storeAnalytics.sendStoreOpenEvent(displayable.getOrigin(), store.getName());
+            storeAnalytics.sendStoreInteractEvent("More Recommended Stores");
+          } else {
+            storeAnalytics.sendStoreOpenEvent("Recommended Stores", store.getName());
+            storeAnalytics.sendStoreInteractEvent("Open a Recommended Store");
+          }
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void setFollowButtonListener(RecommendedStoreDisplayable displayable) {
     compositeSubscription.add(RxView.clicks(followButton)
         .flatMap(click -> {
           followButton.setEnabled(false);
+          storeAnalytics.sendStoreInteractEvent("Follow a Recommended Store", displayable.getPojo()
+              .getStats()
+              .getApps(), displayable.getPojo()
+              .getStats()
+              .getSubscribers());
           return displayable.isFollowing()
               .first()
               .observeOn(Schedulers.computation())
