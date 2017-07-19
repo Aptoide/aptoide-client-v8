@@ -264,6 +264,11 @@ public class PostFragment extends FragmentView implements PostView {
     return adapter.setRelatedAppSelected(app);
   }
 
+  @Override public void hideCardPreviewTitle() {
+    previewTitle.setVisibility(View.GONE);
+    hideCardPreview();
+  }
+
   private void hidePreviewLayout() {
     if (previewImage.getVisibility() == View.GONE
         && previewLoading.getVisibility() == View.GONE

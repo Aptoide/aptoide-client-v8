@@ -43,6 +43,8 @@ interface PostView extends View {
 
   Completable setRelatedAppSelected(PostRemoteAccessor.RelatedApp app);
 
+  void hideCardPreviewTitle();
+
   class PostPreview {
     private final String image;
     private final String title;

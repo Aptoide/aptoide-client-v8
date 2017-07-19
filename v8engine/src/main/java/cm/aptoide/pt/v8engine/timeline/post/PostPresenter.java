@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -92,20 +93,33 @@ class PostPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.onInputTextChanged()
-            .filter(insertedText -> urlValidator.containsUrl(insertedText))
             .debounce(1, TimeUnit.SECONDS)
-            .switchMap(insertedUrl -> Observable.just(insertedUrl)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(url -> view.clearRemoteRelated())
-                .doOnNext(__2 -> view.showCardPreviewLoading())
-                .doOnNext(__2 -> view.hideCardPreview())
-                .observeOn(Schedulers.io())
-                .flatMapSingle(url -> postManager.getPreview(urlValidator.getUrl(url)))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(suggestion -> view.showCardPreview(suggestion))
-                .doOnNext(__2 -> view.hideCardPreviewLoading())
-                .doOnError(throwable -> view.hideCardPreviewLoading())
-                .onErrorReturn(throwable -> null))
+            .flatMap(
+                insertedText -> Observable.fromCallable(() -> urlValidator.getUrl(insertedText))
+                    .onErrorReturn(throwable -> ""))
+            .distinctUntilChanged()
+            .observeOn(AndroidSchedulers.mainThread())
+            .switchMap(url -> {
+              if (url.isEmpty()) {
+                return hidePreview();
+              }
+              return Observable.just(url)
+                  .doOnNext(__2 -> view.clearRemoteRelated())
+                  .doOnNext(__2 -> view.showCardPreviewLoading())
+                  .doOnNext(__2 -> view.hideCardPreview())
+                  .observeOn(Schedulers.io())
+                  .flatMapSingle(__2 -> postManager.getPreview(url))
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .doOnNext(suggestion -> view.showCardPreview(suggestion))
+                  .doOnNext(__2 -> view.hideCardPreviewLoading())
+                  .doOnError(throwable -> view.hideCardPreviewLoading())
+                  .onErrorReturn(throwable -> {
+                    Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable);
+                    view.hideCardPreview();
+                    view.hideCardPreviewLoading();
+                    return null;
+                  });
+            })
             .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -115,18 +129,31 @@ class PostPresenter implements Presenter {
         });
   }
 
+  @NonNull private Observable<String> hidePreview() {
+    return Observable.fromCallable(() -> {
+      view.hideCardPreviewTitle();
+      view.hideCardPreview();
+      view.hideCardPreviewLoading();
+      return "";
+    });
+  }
+
   private void showRelatedAppsAfterTextChanges() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.onInputTextChanged()
             .debounce(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
+            .flatMap(
+                insertedText -> Observable.fromCallable(() -> urlValidator.getUrl(insertedText))
+                    .onErrorReturn(throwable -> ""))
+            .distinctUntilChanged()
             .switchMap(insertedText -> {
               if (urlValidator.containsUrl(insertedText)) {
                 return loadRelatedApps(urlValidator.getUrl(insertedText));
               } else {
                 return Observable.fromCallable(() -> {
-                  resetState();
+                  view.clearRemoteRelated();
                   return null;
                 });
               }
@@ -134,11 +161,6 @@ class PostPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
-  }
-
-  private void resetState() {
-    view.hideCardPreview();
-    view.clearRemoteRelated();
   }
 
   private Observable<List<PostRemoteAccessor.RelatedApp>> loadRelatedApps(String url) {
