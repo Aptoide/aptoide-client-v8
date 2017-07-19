@@ -220,7 +220,7 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
             .get(1)
             .getUser() != null) {
           ImageLoader.with(getContext())
-              .loadWithShadowCircleTransform(minimalCard.getSharers()
+              .loadWithShadowCircleTransform(displayable.getSharers()
                   .get(1)
                   .getUser()
                   .getAvatar(), minimalCardHeaderMainAvatar2);
