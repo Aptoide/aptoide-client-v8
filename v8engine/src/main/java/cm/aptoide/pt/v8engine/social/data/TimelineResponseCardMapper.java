@@ -17,6 +17,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.PopularAppTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.RecommendationTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SimilarTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstall;
@@ -124,6 +125,24 @@ public class TimelineResponseCardMapper {
           .get(0)
           .getPackageName(), new AptoidePublisher(), recommendation.getTimestamp(), abUrl, false,
           CardType.RECOMMENDATION));
+    } else if (item instanceof SimilarTimelineItem) {
+      final cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation recommendation =
+          ((SimilarTimelineItem) item).getData();
+      cards.add(new Recommendation(recommendation.getCardId(), recommendation.getRecommendedApp()
+          .getId(), recommendation.getRecommendedApp()
+          .getPackageName(), recommendation.getRecommendedApp()
+          .getName(), recommendation.getRecommendedApp()
+          .getIcon(), recommendation.getRecommendedApp()
+          .getStats()
+          .getRating()
+          .getAvg(), recommendation.getSimilarApps()
+          .get(0)
+          .getId(), recommendation.getSimilarApps()
+          .get(0)
+          .getName(), recommendation.getSimilarApps()
+          .get(0)
+          .getPackageName(), new AptoidePublisher(), recommendation.getTimestamp(), abUrl, false,
+          CardType.SIMILAR));
     } else if (item instanceof StoreLatestAppsTimelineItem) {
       final cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestApps store =
           ((StoreLatestAppsTimelineItem) item).getData();

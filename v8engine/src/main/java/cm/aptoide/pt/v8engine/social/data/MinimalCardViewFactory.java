@@ -243,9 +243,8 @@ public class MinimalCardViewFactory {
   private void handleCommentsInformation(MinimalPost post, Context context) {
     if (post.getCommentsNumber() > 0) {
       numberComments.setVisibility(View.VISIBLE);
-      numberComments.setText(String.format("%s %s", String.valueOf(post.getCommentsNumber()),
-          context.getString(R.string.comments)
-              .toLowerCase()));
+      numberComments.setText(context.getResources()
+          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(post.getComments()
@@ -292,9 +291,8 @@ public class MinimalCardViewFactory {
 
   private void showNumberOfLikes(long likesNumber, Context context) {
     numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.format("%s %s", String.valueOf(likesNumber),
-        context.getString(R.string.timeline_short_like_present_plural)
-            .toLowerCase()));
+    numberLikes.setText(context.getString(R.string.timeline_short_like_present_plural, likesNumber)
+        .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 

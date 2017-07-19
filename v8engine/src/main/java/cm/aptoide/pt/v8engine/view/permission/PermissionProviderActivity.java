@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import rx.Observable;
 
-public class PermissionProviderActivity extends PermissionServiceActivity
+public abstract class PermissionProviderActivity extends PermissionServiceActivity
     implements PermissionProvider {
 
   private PublishRelay<Set<Permission>> permissionRelay;
@@ -28,8 +28,9 @@ public class PermissionProviderActivity extends PermissionServiceActivity
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissionNames,
       @NonNull int[] grantResults) {
-    Set<Permission> permissions = new HashSet<>();
+    super.onRequestPermissionsResult(requestCode, permissionNames, grantResults);
 
+    Set<Permission> permissions = new HashSet<>();
     for (int i = 0; i < permissionNames.length; ++i) {
       permissions.add(new Permission(requestCode, permissionNames[i],
           grantResults[i] == PackageManager.PERMISSION_GRANTED));

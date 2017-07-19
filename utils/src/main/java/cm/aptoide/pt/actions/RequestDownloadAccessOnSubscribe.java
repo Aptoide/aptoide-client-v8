@@ -1,6 +1,5 @@
 package cm.aptoide.pt.actions;
 
-import cm.aptoide.pt.logger.Logger;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -21,6 +20,6 @@ public class RequestDownloadAccessOnSubscribe implements Observable.OnSubscribe<
         subscriber.onNext(null);
         subscriber.onCompleted();
       }
-    }, () -> Logger.d(getClass().getSimpleName(), "Permission denied to download file"));
+    }, () -> subscriber.onError(new SecurityException("Permission denied to download file")));
   }
 }

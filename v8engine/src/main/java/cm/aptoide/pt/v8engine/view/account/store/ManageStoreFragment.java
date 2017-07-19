@@ -333,6 +333,10 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
   }
 
+  @Override public void hideKeyboard() {
+    super.hideKeyboard();
+  }
+
   private String getViewTitle(ViewModel storeModel) {
     if (!storeModel.storeExists()) {
       return getString(R.string.create_store_title);

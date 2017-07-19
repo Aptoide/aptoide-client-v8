@@ -55,7 +55,10 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
-            .doOnNext(__2 -> navigate()))
+            .doOnNext(__2 -> {
+              view.hideKeyboard();
+              navigate();
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -73,7 +76,10 @@ public class ManageStorePresenter implements Presenter {
   }
 
   private Completable handleSaveClick(ManageStoreFragment.ViewModel storeModel) {
-    return Completable.fromAction(() -> view.showWaitProgressBar())
+    return Completable.fromAction(() -> {
+      view.hideKeyboard();
+      view.showWaitProgressBar();
+    })
         .andThen(saveData(storeModel))
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> navigate())

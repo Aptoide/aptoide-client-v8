@@ -85,7 +85,7 @@ public class ProfileStepOnePresenter implements Presenter {
   }
 
   private Completable makeUserProfilePublic() {
-    return accountManager.updateAccount(Account.Access.PUBLIC)
+    return accountManager.syncCurrentAccount(Account.Access.PUBLIC)
         .onErrorResumeNext(err -> {
           crashReport.log(err);
           return view.showGenericErrorMessage();

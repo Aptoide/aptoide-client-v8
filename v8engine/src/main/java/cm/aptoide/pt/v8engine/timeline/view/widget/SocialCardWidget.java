@@ -216,10 +216,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
     if (displayable.getNumberOfComments() > 0) {
       numberComments.setVisibility(View.VISIBLE);
-      numberComments.setText(
-          String.format("%s %s", String.valueOf(displayable.getNumberOfComments()),
-              getContext().getString(R.string.comments)
-                  .toLowerCase()));
+      numberComments.setText(getContext().getResources()
+          .getQuantityString(R.plurals.timeline_short_comment,
+              (int) displayable.getNumberOfComments()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(displayable.getLatestComment()
@@ -260,9 +259,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   private void showNumberOfLikes(long numberOfLikes) {
     numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
-        getContext().getString(R.string.timeline_short_like_present_plural)
-            .toLowerCase()));
+    numberLikes.setText(
+        getContext().getString(R.string.timeline_short_like_present_plural, numberOfLikes)
+            .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 

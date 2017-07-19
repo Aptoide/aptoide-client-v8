@@ -48,7 +48,6 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.fragment.BasePagerToolbarFragment;

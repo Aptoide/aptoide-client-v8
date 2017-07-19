@@ -9,7 +9,6 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
 import cm.aptoide.pt.v8engine.social.view.TimelineFragment;
 import cm.aptoide.pt.v8engine.spotandshare.view.SpotSharePreviewFragment;
-import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.timeline.view.SocialFragment;
 import cm.aptoide.pt.v8engine.timeline.view.TimeLineLikesFragment;
 import cm.aptoide.pt.v8engine.timeline.view.follow.TimeLineFollowersFragment;

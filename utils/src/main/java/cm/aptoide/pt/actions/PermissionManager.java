@@ -12,15 +12,15 @@ import rx.Observable;
  */
 public class PermissionManager {
 
-  public Observable<Void> requestExternalStoragePermission(PermissionService permissionRequest) {
-    return Observable.create(new RequestAccessToExternalFileSystemOnSubscribe(permissionRequest));
+  public Observable<Void> requestExternalStoragePermission(PermissionService permissionService) {
+    return Observable.create(new RequestAccessToExternalFileSystemOnSubscribe(permissionService));
   }
 
-  public Observable<Void> requestDownloadAccess(PermissionService permissionRequest) {
-    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionRequest));
+  public Observable<Void> requestDownloadAccess(PermissionService permissionService) {
+    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService));
   }
 
-  public Observable<Boolean> requestContactsAccess(PermissionService permissionRequest) {
-    return Observable.create(new RequestContactsAccessOnSubscribe(permissionRequest));
+  public Observable<Boolean> requestContactsAccess(PermissionService permissionService) {
+    return Observable.create(new RequestContactsAccessOnSubscribe(permissionService));
   }
 }

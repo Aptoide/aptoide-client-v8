@@ -467,7 +467,7 @@ public abstract class V8Engine extends Application {
           new NotificationSyncScheduler.Schedule(
               NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY),
           new NotificationSyncScheduler.Schedule(
-              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION,
+              NotificationSyncService.NOTIFICATIONS_SOCIAL_ACTION,
               pushNotificationSocialPeriodicity));
 
       notificationSyncScheduler =
