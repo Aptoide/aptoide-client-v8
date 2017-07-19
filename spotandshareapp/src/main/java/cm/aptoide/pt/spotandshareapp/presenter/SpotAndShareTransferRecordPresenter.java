@@ -2,14 +2,13 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
-import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import java.util.List;
+import java.util.LinkedList;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -37,9 +36,11 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> spotAndShare.observeTransfers())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(transfers -> updateTransferRecord(transfers))
+        .switchMap(created -> spotAndShare.observeTransfers()
+            .map(transfers -> new LinkedList<>(transfers))
+            .map(transfers -> transferRecordManager.getTransferAppModelList(transfers))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(transferAppModels -> view.updateReceivedAppsList(transferAppModels)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> err.printStackTrace());
@@ -85,10 +86,6 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
-  }
-
-  private void updateTransferRecord(List<Transfer> transferList) {
-    view.updateReceivedAppsList(transferRecordManager.getTransferAppModelList(transferList));
   }
 
   private void leaveGroup() {
