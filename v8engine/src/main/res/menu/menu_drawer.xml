@@ -65,5 +65,11 @@
       android:orderInCategory="8"
       android:title="@string/feedback_send_button"/>
 
+  <item
+      android:id="@+id/logout"
+
+      android:orderInCategory="9"
+      android:title="@string/logout"/>
+
 
 </menu>

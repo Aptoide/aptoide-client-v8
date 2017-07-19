@@ -5,6 +5,8 @@
 
 <resources>
 
+  <string name="logout">Logout</string>
+
   <string name="dark">Dark</string>
   <string name="light">Light</string>
 
