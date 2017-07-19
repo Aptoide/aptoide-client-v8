@@ -36,7 +36,7 @@ public class StoreAnalytics {
     analytics.sendEvent(new FlurryEvent(STORES_TAB_OPEN));
   }
 
-  //// TODO: 19/07/1 "view store" and "open a recommended store" event implemented (according to sunil the information about how many apps/subscribers only needs to be sent when comming from a "follow a recommended store" event
+  //// TODO: 19/07/1 "view store", "open a recommended store", "more recommended stores", "add store" event implemented (according to sunil the information about how many apps/subscribers only needs to be sent when comming from a "follow a recommended store" event
   public void sendStoreInteractEvent(String action) {
     analytics.sendEvent(
         new FacebookEvent(facebook, STORES_TAB_INTERACT, createStoreInteractBundle(action)));
