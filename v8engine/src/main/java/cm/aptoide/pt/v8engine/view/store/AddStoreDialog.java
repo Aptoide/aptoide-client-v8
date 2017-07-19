@@ -36,7 +36,9 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.search.websocket.StoreAutoCompleteWebSocket;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
@@ -45,6 +47,7 @@ import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.dialog.BaseDialog;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.search.StoreSearchActivity;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
@@ -81,6 +84,7 @@ public class AddStoreDialog extends BaseDialog {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private StoreAnalytics storeAnalytics;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -101,10 +105,12 @@ public class AddStoreDialog extends BaseDialog {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
     }
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -116,6 +122,7 @@ public class AddStoreDialog extends BaseDialog {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(click -> {
           addStoreAction();
+          storeAnalytics.sendStoreInteractEvent("Add Store");
         });
     RxView.clicks(topStoresButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
