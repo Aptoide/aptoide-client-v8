@@ -70,6 +70,7 @@
               android:id="@+id/preview_image"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:visibility="gone"
               tools:background="@color/orange_700"
               tools:src="@drawable/wizard_community"
               tools:visibility="visible"
@@ -80,6 +81,7 @@
               android:layout_height="wrap_content"
               android:layout_gravity="center"
               android:indeterminate="true"
+              android:visibility="gone"
               tools:visibility="visible"
               />
         </FrameLayout>

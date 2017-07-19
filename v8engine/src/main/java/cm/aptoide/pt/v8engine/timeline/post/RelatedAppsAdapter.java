@@ -35,7 +35,7 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
   }
 
   public void addRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedApps) {
-    if (!relatedAppList.equals(relatedApps)) {
+    if (!relatedAppList.equals(relatedApps) && !relatedApps.isEmpty()) {
       PostRemoteAccessor.RelatedApp selected = getCurrentSelected();
       setRelatedAppSelected(selected, relatedApps);
       relatedAppList.addAll(0, relatedApps);

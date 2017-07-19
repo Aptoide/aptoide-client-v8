@@ -40,7 +40,6 @@ public class PostFragment extends FragmentView implements PostView {
 
   private static final int MAX_CHARACTERS = 200;
   private static final String DATA_TO_SHARE = "data_to_share";
-  private static final String TAG = PostFragment.class.getSimpleName();
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
   private AppCompatEditText userInput;
@@ -207,7 +206,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void showRelatedAppsLoading() {
     adapter.showLoading();
-    scrollRelatedToStart(true);
+    relatedApps.scrollToPosition(0);
   }
 
   @Override public void hideRelatedAppsLoading() {
@@ -234,7 +233,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void addRelatedApps(List<PostRemoteAccessor.RelatedApp> relatedAppsList) {
     adapter.addRelatedApps(relatedAppsList);
-    scrollRelatedToStart(relatedAppsList.size() > 10);
+    relatedApps.scrollToPosition(0);
   }
 
   @Override public PostRemoteAccessor.RelatedApp getCurrentSelected() {
@@ -251,13 +250,6 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public Completable setRelatedAppSelected(PostRemoteAccessor.RelatedApp app) {
     return adapter.setRelatedAppSelected(app);
-  }
-
-  private void scrollRelatedToStart(boolean shouldFastForward) {
-    if (shouldFastForward) {
-      relatedApps.scrollToPosition(10);
-    }
-    relatedApps.smoothScrollToPosition(0);
   }
 
   private void hidePreviewLayout() {

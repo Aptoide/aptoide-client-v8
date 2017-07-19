@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
 import cm.aptoide.pt.v8engine.timeline.response.StillProcessingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -58,23 +59,21 @@ public class PostRemoteAccessor implements PostAccessor {
    * the request.
    */
   @Override public Single<List<RelatedApp>> getRelatedApps(String url) {
-    return getRelatedAppsFromNetwork(url).filter(response -> response.getDataList()
-        .getCount() > 0)
-        .map(response -> {
-          List<RelatedAppResponse.RelatedApp> remoteList = response.getDataList()
-              .getList();
+    return getRelatedAppsFromNetwork(url).map(response -> {
+      if (response.getDataList()
+          .getCount() <= 0) {
+        return Collections.<RelatedApp>emptyList();
+      }
+      List<RelatedAppResponse.RelatedApp> remoteList = response.getDataList()
+          .getList();
 
-          List<RelatedApp> localList = new ArrayList<>(remoteList.size());
-          localList.add(convertToLocalRelatedApp(remoteList.get(0), true));
-          for (int i = 1; i < remoteList.size(); i++) {
-            localList.add(convertToLocalRelatedApp(remoteList.get(i), false));
-          }
-          return localList;
-        })
-        .onErrorResumeNext(err -> {
-          // TODO handle StillProcessingException
-          return Observable.error(err);
-        })
+      List<RelatedApp> localList = new ArrayList<>(remoteList.size());
+      localList.add(convertToLocalRelatedApp(remoteList.get(0), true));
+      for (int i = 1; i < remoteList.size(); i++) {
+        localList.add(convertToLocalRelatedApp(remoteList.get(i), false));
+      }
+      return localList;
+    })
         .first()
         .toSingle();
   }

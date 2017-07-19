@@ -169,19 +169,21 @@ class PostPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  Completable loadRelatedApps(String url) {
+  private Completable loadRelatedApps(String url) {
     return Completable.fromAction(() -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
         .andThen(postManager.getRemoteAppSuggestions(url))
         .observeOn(AndroidSchedulers.mainThread())
         .toObservable()
-        .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
         .doOnNext(relatedApps -> {
           view.addRelatedApps(relatedApps);
           view.hideRelatedAppsLoading();
         })
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnError(throwable -> view.hideRelatedAppsLoading())
+        .doOnError(throwable -> {
+          throwable.printStackTrace();
+          view.hideRelatedAppsLoading();
+        })
         .toCompletable();
   }
 
