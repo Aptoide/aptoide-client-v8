@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.CheckResult;
 import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
 import java.util.List;
@@ -42,7 +42,7 @@ public class PostManager {
     return postRemoteRepository.getRelatedApps(addProtocolIfNeeded(url));
   }
 
-  @NonNull private String addProtocolIfNeeded(String url) {
+  @CheckResult private String addProtocolIfNeeded(String url) {
     if (url != null && !url.contains("http://") && !url.contains("https://")) {
       url = "http://".concat(url);
     }
@@ -50,7 +50,8 @@ public class PostManager {
   }
 
   public Single<PostView.PostPreview> getPreview(String url) {
-    return postRemoteRepository.getCardPreview(addProtocolIfNeeded(url));
+    return postRemoteRepository.getCardPreview(addProtocolIfNeeded(url))
+        .onErrorReturn(throwable -> new PostView.PostPreview(null, url));
   }
 
   enum Origin {

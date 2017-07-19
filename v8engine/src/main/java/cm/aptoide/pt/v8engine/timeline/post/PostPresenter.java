@@ -100,7 +100,7 @@ class PostPresenter implements Presenter {
                 .doOnNext(__2 -> view.showCardPreviewLoading())
                 .doOnNext(__2 -> view.hideCardPreview())
                 .observeOn(Schedulers.io())
-                .flatMapSingle(url -> postManager.getPreview(url))
+                .flatMapSingle(url -> postManager.getPreview(urlValidator.getUrl(url)))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(suggestion -> view.showCardPreview(suggestion))
                 .doOnNext(__2 -> view.hideCardPreviewLoading())
@@ -137,8 +137,8 @@ class PostPresenter implements Presenter {
   }
 
   private void resetState() {
-      view.hideCardPreview();
-      view.clearRemoteRelated();
+    view.hideCardPreview();
+    view.clearRemoteRelated();
   }
 
   private Observable<List<PostRemoteAccessor.RelatedApp>> loadRelatedApps(String url) {
@@ -160,8 +160,9 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
-            .flatMapCompletable(textToShare -> postManager.post(textToShare, textToShare,
-                view.getCurrentSelected() == null ? null : view.getCurrentSelected()
+            .flatMapCompletable(textToShare -> postManager.post(
+                urlValidator.containsUrl(textToShare) ? urlValidator.getUrl(textToShare) : null,
+                textToShare, view.getCurrentSelected() == null ? null : view.getCurrentSelected()
                     .getPackageName())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> view.showSuccessMessage())

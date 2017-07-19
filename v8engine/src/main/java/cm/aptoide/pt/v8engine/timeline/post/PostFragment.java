@@ -113,7 +113,14 @@ public class PostFragment extends FragmentView implements PostView {
   @Override public void onDestroyView() {
     destroyLoading(previewLoading);
     previewLoading = null;
-
+    userInput = null;
+    previewImage = null;
+    previewTitle = null;
+    previewLoading = null;
+    relatedApps = null;
+    toolbar = null;
+    scrollView = null;
+    previewLayout = null;
     super.onDestroyView();
   }
 
@@ -188,12 +195,14 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public void showCardPreview(PostPreview suggestion) {
-    previewImage.setVisibility(View.VISIBLE);
+    if (suggestion.getImage() != null) {
+      previewImage.setVisibility(View.VISIBLE);
+      ImageLoader.with(getContext())
+          .loadWithoutResizeCenterCrop(suggestion.getImage(), previewImage);
+    }
     previewTitle.setText(suggestion.getTitle());
     previewTitle.setVisibility(View.VISIBLE);
     previewLayout.setVisibility(View.VISIBLE);
-    ImageLoader.with(getContext())
-        .loadWithoutResizeCenterCrop(suggestion.getImage(), previewImage);
   }
 
   @Override public void showCardPreviewLoading() {
@@ -256,7 +265,9 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   private void hidePreviewLayout() {
-    if (previewImage.getVisibility() == View.GONE && previewLoading.getVisibility() == View.GONE) {
+    if (previewImage.getVisibility() == View.GONE
+        && previewLoading.getVisibility() == View.GONE
+        && previewTitle.getVisibility() == View.INVISIBLE) {
       previewLayout.setVisibility(View.GONE);
     }
   }
