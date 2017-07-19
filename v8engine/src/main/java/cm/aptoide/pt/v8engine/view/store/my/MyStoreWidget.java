@@ -86,9 +86,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
         .subscribe(click -> {
           getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
               .newStoreFragment(store.getName(), storeTheme));
-          storeAnalytics.sendStoreInteractEvent("View Store", store.getStats()
-              .getApps(), store.getStats()
-              .getSubscribers());
+          storeAnalytics.sendStoreInteractEvent("View Store");
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
         }));
     setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
