@@ -159,6 +159,7 @@ class SpotAndShareV2 {
           .subscribe(() -> {
           }, onError);
     }
+    transferManager.clearTransfers();
   }
 
   public void sendApp(AndroidAppInfo androidAppInfo) {

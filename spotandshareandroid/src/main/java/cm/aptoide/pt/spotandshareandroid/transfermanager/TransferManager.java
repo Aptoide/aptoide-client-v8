@@ -96,4 +96,8 @@ public class TransferManager {
   public Observable<Collection<Friend>> observeFriends() {
     return spotAndShareMessageServer.observeFriends();
   }
+
+  public void clearTransfers() {
+    transferListRelay.clearTransfers();
+  }
 }

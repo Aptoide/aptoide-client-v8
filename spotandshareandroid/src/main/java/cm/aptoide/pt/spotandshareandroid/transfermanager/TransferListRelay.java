@@ -29,4 +29,8 @@ class TransferListRelay {
   BehaviorRelay<List<Transfer>> asObservable() {
     return transferListRelay;
   }
+
+  public void clearTransfers() {
+    transfers.clear();
+  }
 }
