@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -9,6 +8,7 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
@@ -104,9 +104,9 @@ class PostPresenter implements Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(suggestion -> view.showCardPreview(suggestion))
                 .doOnNext(__2 -> view.hideCardPreviewLoading())
-                .doOnError(throwable -> view.hideCardPreviewLoading()))
-            .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable))
-            .retry())
+                .doOnError(throwable -> view.hideCardPreviewLoading())
+                .onErrorReturn(throwable -> null))
+            .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
@@ -125,21 +125,20 @@ class PostPresenter implements Presenter {
               if (urlValidator.containsUrl(insertedText)) {
                 return loadRelatedApps(urlValidator.getUrl(insertedText));
               } else {
-                return resetState();
+                return Observable.fromCallable(() -> {
+                  resetState();
+                  return null;
+                });
               }
-            })
-            .retry())
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
 
-  @NonNull private Observable<Integer> resetState() {
-    return Observable.fromCallable(() -> {
+  private void resetState() {
       view.hideCardPreview();
       view.clearRemoteRelated();
-      return -1;
-    });
   }
 
   private Observable<List<PostRemoteAccessor.RelatedApp>> loadRelatedApps(String url) {
@@ -151,10 +150,8 @@ class PostPresenter implements Presenter {
         .doOnNext(relatedApps -> view.addRelatedApps(relatedApps))
         .doOnCompleted(() -> view.hideRelatedAppsLoading())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnError(throwable -> {
-          throwable.printStackTrace();
-          view.hideRelatedAppsLoading();
-        });
+        .doOnError(throwable -> view.hideRelatedAppsLoading())
+        .onErrorReturn(throwable -> Collections.emptyList());
   }
 
   private void postOnTimelineOnButtonClick() {
