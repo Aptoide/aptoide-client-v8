@@ -23,7 +23,6 @@ import rx.Single;
 
 public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
-  // Response result codes
   public static final int RESULT_OK = 0;
   public static final int RESULT_USER_CANCELLED = 1;
   public static final int RESULT_SERVICE_UNAVAILABLE = 2;
@@ -34,7 +33,6 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
   public static final int RESULT_ITEM_ALREADY_OWNED = 7;
   public static final int RESULT_ITEM_NOT_OWNED = 8;
 
-  // Keys for the responses
   public static final String RESPONSE_CODE = "RESPONSE_CODE";
   public static final String DETAILS_LIST = "DETAILS_LIST";
   public static final String BUY_INTENT = "BUY_INTENT";
@@ -46,11 +44,9 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
   public static final String INAPP_DATA_SIGNATURE_LIST = "INAPP_DATA_SIGNATURE_LIST";
   public static final String INAPP_CONTINUATION_TOKEN = "INAPP_CONTINUATION_TOKEN";
 
-  // Param keys
   public static final String ITEM_ID_LIST = "ITEM_ID_LIST";
   public static final String ITEM_TYPE_LIST = "ITEM_TYPE_LIST";
 
-  // Item types
   public static final String ITEM_TYPE_INAPP = "inapp";
   public static final String ITEM_TYPE_SUBS = "subs";
   public static final String SERVICES_LIST = "SERVICES_LIST";

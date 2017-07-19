@@ -84,6 +84,6 @@ public class ProductProvider {
       return billing.getProduct(packageName, apiVersion, type, sku, developerPayload);
     }
 
-    return Single.error(new IllegalStateException("Invalid product information."));
+    return Single.error(new IllegalArgumentException("Invalid product information."));
   }
 }

@@ -5,20 +5,15 @@ import cm.aptoide.pt.v8engine.billing.Purchase;
 public class InAppPurchase implements Purchase {
 
   private final String signature;
-  private final int apiVersion;
   private final String signatureData;
-  private final String packageName;
-  private final String purchaseToken;
   private final String sku;
+  private final boolean completed;
 
-  public InAppPurchase(int apiVersion, String packageName, String purchaseToken, String signature,
-      String signatureData, String sku) {
+  public InAppPurchase(String signature, String signatureData, String sku, boolean completed) {
     this.signature = signature;
-    this.apiVersion = apiVersion;
     this.signatureData = signatureData;
-    this.packageName = packageName;
-    this.purchaseToken = purchaseToken;
     this.sku = sku;
+    this.completed = completed;
   }
 
   public String getSignature() {
@@ -33,15 +28,7 @@ public class InAppPurchase implements Purchase {
     return sku;
   }
 
-  public int getApiVersion() {
-    return apiVersion;
-  }
-
-  public String getPackageName() {
-    return packageName;
-  }
-
-  public String getPurchaseToken() {
-    return purchaseToken;
+  @Override public boolean isCompleted() {
+    return completed;
   }
 }

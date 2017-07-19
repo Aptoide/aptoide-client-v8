@@ -7,10 +7,12 @@ package cm.aptoide.pt.v8engine.billing.exception;
 
 import cm.aptoide.pt.utils.BaseException;
 
-public class PaymentException extends BaseException {
+public class BillingException extends BaseException {
 
-  public PaymentException(String message) {
+  public BillingException(String message) {
     super(message);
   }
 
+  public BillingException() {
+  }
 }

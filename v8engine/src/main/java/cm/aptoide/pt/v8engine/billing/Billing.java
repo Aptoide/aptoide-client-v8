@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedExcept
 import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -105,8 +105,14 @@ public class Billing {
 
   public Single<Purchase> getPurchase(Product product) {
     return billingService.getPurchase(product)
+        .flatMap(purchase -> {
+          if (purchase.isCompleted()) {
+            return Single.just(purchase);
+          }
+          return Single.error(new IllegalArgumentException("Purchase is not completed"));
+        })
         .onErrorResumeNext(throwable -> {
-          if (throwable instanceof RepositoryIllegalArgumentException) {
+          if (throwable instanceof IllegalArgumentException) {
             return transactionRepository.remove(product.getId())
                 .andThen(Single.error(throwable));
           }
@@ -137,7 +143,7 @@ public class Billing {
     return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == paymentMethodId)
         .switchIfEmpty(Observable.error(
-            new PaymentFailureException("Payment " + paymentMethodId + " not found."))))
+            new IllegalArgumentException("Payment " + paymentMethodId + " not found."))))
         .first()
         .toSingle();
   }

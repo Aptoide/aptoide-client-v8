@@ -69,7 +69,7 @@ import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentException;
+import cm.aptoide.pt.v8engine.billing.exception.BillingException;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
@@ -455,7 +455,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
         fragmentActivity.sendBroadcast(installApp);
       } catch (Throwable throwable) {
-        if (throwable instanceof PaymentException) {
+        if (throwable instanceof BillingException) {
           ShowMessage.asSnack(header.badge, R.string.user_cancelled);
         } else {
           ShowMessage.asSnack(header.badge, R.string.unknown_error);

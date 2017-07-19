@@ -5,8 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing;
 
-import rx.Completable;
-
 public interface Purchase {
 
+  boolean isCompleted();
 }

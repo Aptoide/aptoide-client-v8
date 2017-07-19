@@ -95,7 +95,7 @@ import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodSelector;
-import cm.aptoide.pt.v8engine.billing.PurchaseFactory;
+import cm.aptoide.pt.v8engine.billing.PurchaseMapper;
 import cm.aptoide.pt.v8engine.billing.SharedPreferencesPaymentMethodSelector;
 import cm.aptoide.pt.v8engine.billing.V3BillingService;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationFactory;
@@ -779,7 +779,7 @@ public abstract class V8Engine extends Application {
       final BillingService billingService =
           new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), new PurchaseFactory(getInAppBillingSerializer()),
+              getDefaultSharedPreferences(), new PurchaseMapper(getInAppBillingSerializer()),
               new ProductFactory(), getPackageRepository(), new PaymentMethodMapper(),
               getResources());
 

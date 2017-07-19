@@ -51,7 +51,7 @@ public class PurchaseBundleMapper {
       if (resultCode == Activity.RESULT_OK) {
 
         if (intent.containsKey(APK_PATH)) {
-          return new PaidAppPurchase(intent.getString(APK_PATH));
+          return new PaidAppPurchase(intent.getString(APK_PATH), true);
         }
 
         throw new IllegalArgumentException("Intent does not contain paid app apk path");

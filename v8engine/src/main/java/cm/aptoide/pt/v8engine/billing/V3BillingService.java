@@ -21,11 +21,11 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.PackageRepository;
+import cm.aptoide.pt.v8engine.billing.exception.ProductNotFoundException;
+import cm.aptoide.pt.v8engine.billing.exception.PurchaseNotFoundException;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.ProductFactory;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -42,7 +42,7 @@ public class V3BillingService implements BillingService {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final PurchaseFactory purchaseFactory;
+  private final PurchaseMapper purchaseMapper;
   private final ProductFactory productFactory;
   private final PackageRepository packageRepository;
   private final PaymentMethodMapper paymentMethodMapper;
@@ -50,7 +50,7 @@ public class V3BillingService implements BillingService {
 
   public V3BillingService(BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, PurchaseFactory purchaseFactory,
+      SharedPreferences sharedPreferences, PurchaseMapper purchaseMapper,
       ProductFactory productFactory, PackageRepository packageRepository,
       PaymentMethodMapper paymentMethodMapper, Resources resources) {
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -58,7 +58,7 @@ public class V3BillingService implements BillingService {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.purchaseFactory = purchaseFactory;
+    this.purchaseMapper = purchaseMapper;
     this.productFactory = productFactory;
     this.packageRepository = packageRepository;
     this.paymentMethodMapper = paymentMethodMapper;
@@ -119,7 +119,7 @@ public class V3BillingService implements BillingService {
             return Completable.complete();
           }
           if (isDeletionItemNotFound(response.getErrors())) {
-            return Completable.error(new IllegalArgumentException(V3.getErrorMessage(response)));
+            return Completable.error(new PurchaseNotFoundException(V3.getErrorMessage(response)));
           }
           return Completable.error(new IllegalArgumentException(V3.getErrorMessage(response)));
         });
@@ -129,9 +129,10 @@ public class V3BillingService implements BillingService {
   public Single<List<Purchase>> getPurchases(int apiVersion, String packageName, String type) {
     return getServerInAppPurchase(apiVersion, packageName, type, true).first()
         .toSingle()
-        .flatMap(purchaseInformation -> convertToPurchases(purchaseInformation, apiVersion))
+        .map(purchaseInformation -> purchaseMapper.map(purchaseInformation))
         .onErrorResumeNext(throwable -> {
-          if (throwable instanceof RepositoryIllegalArgumentException) {
+          if (throwable instanceof IllegalArgumentException) {
+            // If user not logged in return a empty purchase list.
             return Single.just(Collections.emptyList());
           }
           return Single.error(throwable);
@@ -148,23 +149,17 @@ public class V3BillingService implements BillingService {
   @Override public Single<Purchase> getPurchase(Product product) {
     if (product instanceof InAppProduct) {
       return getServerInAppPurchase(((InAppProduct) product).getApiVersion(),
-          ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(),
-          true).flatMap(
-          purchaseInformation -> convertToPurchase(purchaseInformation, ((InAppProduct) product)))
+          ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(), true).map(
+          purchaseInformation -> purchaseMapper.map(purchaseInformation,
+              ((InAppProduct) product).getSku()))
           .toSingle()
           .subscribeOn(Schedulers.io());
     }
 
     if (product instanceof PaidAppProduct) {
       return getServerPaidApp(true, ((PaidAppProduct) product).getAppId(),
-          ((PaidAppProduct) product).isSponsored(),
-          ((PaidAppProduct) product).getStoreName()).flatMap(app -> {
-        if (app.getPayment()
-            .isPaid()) {
-          return Single.just(purchaseFactory.create(app));
-        }
-        return Single.error(new IllegalArgumentException("Product is not paid."));
-      });
+          ((PaidAppProduct) product).isSponsored(), ((PaidAppProduct) product).getStoreName()).map(
+          app -> purchaseMapper.map(app));
     }
 
     throw new IllegalArgumentException("Invalid product. Must be "
@@ -181,8 +176,7 @@ public class V3BillingService implements BillingService {
         response -> mapToProducts(apiVersion, packageName, developerPayload, response))
         .flatMap(products -> {
           if (products.isEmpty()) {
-            return Single.error(
-                new RepositoryItemNotFoundException("No product found for sku: " + sku));
+            return Single.error(new ProductNotFoundException("No product found for sku: " + sku));
           }
           return Single.just(products.get(0));
         });
@@ -204,48 +198,13 @@ public class V3BillingService implements BillingService {
           if (response != null && response.isOk()) {
             return Single.just(response);
           } else {
-            final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList =
-                response.getPublisherResponse()
-                    .getDetailList();
-            if (detailList.isEmpty()) {
-              return Single.error(
-                  new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-            }
-            return Single.error(
-                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+            return Single.error(new IllegalArgumentException(V3.getErrorMessage(response)));
           }
         });
   }
 
-  private Observable<Purchase> convertToPurchase(
-      InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, InAppProduct product) {
-    return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
-        Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          if (purchase.getProductId()
-              .equals(product.getSku()) && purchase.getPurchaseState() == 0) {
-            return purchaseFactory.create(purchase, signature, product.getApiVersion(),
-                purchase.getProductId());
-          }
-          return null;
-        })
-        .filter(purchase -> purchase != null)
-        .switchIfEmpty(Observable.error(
-            new RepositoryItemNotFoundException("No purchase found for SKU " + product)))
-        .first();
-  }
-
-  private Single<List<Purchase>> convertToPurchases(
-      InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, int apiVersion) {
-    return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
-        Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          return purchaseFactory.create(purchase, signature, apiVersion, purchase.getProductId());
-        })
-        .toList()
-        .toSingle();
-  }
-
-  private Observable<InAppBillingPurchasesResponse.PurchaseInformation> getServerInAppPurchase(
-      int apiVersion, String packageName, String type, boolean bypassCache) {
+  private Observable<InAppBillingPurchasesResponse> getServerInAppPurchase(int apiVersion,
+      String packageName, String type, boolean bypassCache) {
     return packageRepository.getPackageVersionCode(packageName)
         .flatMapObservable(
             packageVersionCode -> InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
@@ -254,10 +213,10 @@ public class V3BillingService implements BillingService {
                 .observe(bypassCache)
                 .flatMap(response -> {
                   if (response != null && response.isOk()) {
-                    return Observable.just(response.getPurchaseInformation());
+                    return Observable.just(response);
                   }
                   return Observable.error(
-                      new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+                      new IllegalArgumentException(V3.getErrorMessage(response)));
                 }));
   }
 
@@ -279,8 +238,7 @@ public class V3BillingService implements BillingService {
           if (response != null && response.isOk() && response.isPaid()) {
             return Observable.just(response);
           } else {
-            return Observable.error(
-                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+            return Observable.error(new IllegalArgumentException(V3.getErrorMessage(response)));
           }
         })
         .first()
