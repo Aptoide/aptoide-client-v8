@@ -89,18 +89,25 @@ public class SpotAndShareTransferRecordAdapter
       appIcon.setImageDrawable(transferItem.getAppIcon());
       acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
       installButton.setOnClickListener(accept -> installSubject.onNext(transferItem));
+
       if (transferItem.getTransferState() == Transfer.State.PENDING_ACCEPTION) {
         acceptButton.setVisibility(View.VISIBLE);
-      } else if (transferItem.getTransferState() == Transfer.State.RECEIVING
-          || transferItem.getTransferState() == Transfer.State.SERVING) {
+      } else if (transferItem.getTransferState() == Transfer.State.RECEIVING) {
+        acceptButton.setVisibility(View.VISIBLE);
+        transferProgressBar.setVisibility(View.VISIBLE);
+        transferProgressBar.setIndeterminate(true);
+      } else if (transferItem.getTransferState() == Transfer.State.RECEIVED) {
+        //// TODO: 19-07-2017 filipe consultar installed apps to check if it is installed and remove the button
+        acceptButton.setVisibility(View.GONE);
+        installButton.setVisibility(View.VISIBLE);
+        transferProgressBar.setVisibility(View.INVISIBLE);
+      } else if (transferItem.getTransferState() == Transfer.State.SERVING) {
+        acceptButton.setVisibility(View.GONE);
         transferProgressBar.setIndeterminate(true);
       } else {
         acceptButton.setVisibility(View.GONE);
-        transferProgressBar.setIndeterminate(false);
+        transferProgressBar.setVisibility(View.GONE);
         installButton.setVisibility(View.GONE);
-        if (transferItem.getTransferState() == Transfer.State.RECEIVED) {
-          installButton.setVisibility(View.VISIBLE);
-        }
       }
     }
   }
