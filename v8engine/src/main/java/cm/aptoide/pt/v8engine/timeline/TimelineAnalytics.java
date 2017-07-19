@@ -9,6 +9,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.events.AptoideEvent;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
+import cm.aptoide.pt.v8engine.social.data.CardType;
+import cm.aptoide.pt.v8engine.social.data.Media;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
@@ -384,5 +386,38 @@ public class TimelineAnalytics {
       String store) {
     analytics.sendEvent(
         createEvent(OPEN_STORE, createStoreAppData(cardType, source, packageName, store)));
+  }
+
+  public void sendClickOnMediaHeaderEvent(Media card) {
+    if (card.getType()
+        .equals(CardType.ARTICLE)) {
+
+      sendOpenBlogEvent(card.getType()
+          .name(), card.getMediaTitle(), card.getPublisherLink()
+          .getUrl(), card.getRelatedApp()
+          .getPackageName());
+
+      sendMediaCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
+
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+
+    } else if (card.getType()
+        .equals(CardType.VIDEO)) {
+
+      sendOpenChannelEvent(card.getType()
+          .name(), card.getMediaTitle(), card.getPublisherLink()
+          .getUrl(), card.getRelatedApp()
+          .getPackageName());
+      sendMediaCardClickEvent(card.getType()
+              .name(), card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
+      Analytics.AppsTimeline.clickOnCard(card.getType()
+              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
+    }
   }
 }

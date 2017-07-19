@@ -218,13 +218,14 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> {
           timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
               .getAbUrl());
+
           if (cardTouchEvent.getCard()
               .getType()
               .equals(CardType.VIDEO) || cardTouchEvent.getCard()
               .getType()
               .equals(CardType.ARTICLE)) {
             Media card = (Media) cardTouchEvent.getCard();
-            sendClickOnMediaHeaderEvent(card);
+            timelineAnalytics.sendClickOnMediaHeaderEvent(card);
             card.getPublisherLink()
                 .launch();
           } else if (isSocialPost(cardTouchEvent.getCard())) {
@@ -603,7 +604,7 @@ public class TimelinePresenter implements Presenter {
                   R.string.social_timeline_followers_fragment_title, resources,
                   timelineStatsPost.getFollowers());
               if (storeContext.equals(StoreContext.home)) {
-                timelineNavigation.navigateToFollowersViewStore(0L, title);
+                timelineNavigation.navigateToFollowersViewStore(title);
               } else {
                 if (userId == null || userId <= 0) {
                   timelineNavigation.navigateToFollowersViewStore(storeId, title);
@@ -660,7 +661,16 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.LOGIN))
-        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToAccountView())
+        .flatMapSingle(__ -> accountManager.accountStatus()
+            .first()
+            .toSingle())
+        .doOnNext(account -> {
+          if (account.isLoggedIn()) {
+            timelineNavigation.navigateToMyAccountView();
+          } else {
+            timelineNavigation.navigateToLoginView();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
@@ -689,34 +699,6 @@ public class TimelinePresenter implements Presenter {
   private void showMoreCardsAndHideLoadMoreProgress(List<Post> cards) {
     view.hideLoadMoreProgressIndicator();
     view.showMoreCards(cards);
-  }
-
-  private void sendClickOnMediaHeaderEvent(Media card) {
-    if (card.getType()
-        .equals(CardType.ARTICLE)) {
-      timelineAnalytics.sendOpenBlogEvent(card.getType()
-          .name(), card.getMediaTitle(), card.getPublisherLink()
-          .getUrl(), card.getRelatedApp()
-          .getPackageName());
-      timelineAnalytics.sendMediaCardClickEvent(card.getType()
-              .name(), card.getMediaTitle(), card.getPublisherName(),
-          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER, "(blank)");
-      Analytics.AppsTimeline.clickOnCard(card.getType()
-              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
-          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-    } else if (card.getType()
-        .equals(CardType.VIDEO)) {
-      timelineAnalytics.sendOpenChannelEvent(card.getType()
-          .name(), card.getMediaTitle(), card.getPublisherLink()
-          .getUrl(), card.getRelatedApp()
-          .getPackageName());
-      timelineAnalytics.sendMediaCardClickEvent(card.getType()
-              .name(), card.getMediaTitle(), card.getPublisherName(),
-          Analytics.AppsTimeline.OPEN_VIDEO_HEADER, "(blank)");
-      Analytics.AppsTimeline.clickOnCard(card.getType()
-              .name(), Analytics.AppsTimeline.BLANK, card.getMediaTitle(), card.getPublisherName(),
-          Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
-    }
   }
 
   private boolean isSocialPost(Post post) {

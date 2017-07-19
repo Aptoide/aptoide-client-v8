@@ -214,9 +214,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics);
 
-    TimelineNavigator timelineNavigation =
-        new TimelineNavigator(getFragmentNavigator(), accountManager,
-            getContext().getString(R.string.timeline_title_likes));
+    TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
+        getContext().getString(R.string.timeline_title_likes));
 
     StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),

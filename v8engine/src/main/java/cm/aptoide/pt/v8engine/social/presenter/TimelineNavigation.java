@@ -20,11 +20,15 @@ public interface TimelineNavigation {
 
   void navigateToAddressBook();
 
-  void navigateToAccountView();
+  void navigateToLoginView();
+
+  void navigateToMyAccountView();
 
   void navigateToCommentsWithCommentDialogOpen(String cardId);
 
   void navigateToFollowersViewStore(Long storeId, String title);
+
+  void navigateToFollowersViewStore(String title);
 
   void navigateToFollowersViewUser(Long userId, String title);
 
