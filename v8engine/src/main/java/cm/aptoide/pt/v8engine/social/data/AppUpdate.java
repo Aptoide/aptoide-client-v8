@@ -15,6 +15,7 @@ public class AppUpdate implements Post {
   private final String storeName;
   private final String storeAvatar;
   private final String storeTheme;
+  private final Long storeId;
   private final String appUpdateIcon;
   private final String appUpdateName;
   private final long appUpdateId;
@@ -29,13 +30,15 @@ public class AppUpdate implements Post {
   private Install.InstallationStatus installationStatus;
 
   public AppUpdate(String cardId, String storeName, String storeAvatar, String storeTheme,
-      String appUpdateIcon, String appUpdateName, long appUpdateId, String packageName,
-      float appUpdateAverageRating, Date updateAddedDate, String abUrl, boolean isLiked,
-      CardType cardType, File file, Obb obb, Install.InstallationStatus installationStatus) {
+      Long storeId, String appUpdateIcon, String appUpdateName, long appUpdateId,
+      String packageName, float appUpdateAverageRating, Date updateAddedDate, String abUrl,
+      boolean isLiked, CardType cardType, File file, Obb obb,
+      Install.InstallationStatus installationStatus) {
     this.cardId = cardId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;
     this.storeTheme = storeTheme;
+    this.storeId = storeId;
     this.appUpdateIcon = appUpdateIcon;
     this.appUpdateName = appUpdateName;
     this.appUpdateId = appUpdateId;
@@ -48,6 +51,10 @@ public class AppUpdate implements Post {
     this.file = file;
     this.obb = obb;
     this.installationStatus = installationStatus;
+  }
+
+  public Long getStoreId() {
+    return storeId;
   }
 
   public String getStoreTheme() {
