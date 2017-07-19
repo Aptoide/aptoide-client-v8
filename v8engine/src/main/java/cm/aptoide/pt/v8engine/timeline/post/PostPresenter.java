@@ -111,6 +111,7 @@ class PostPresenter implements Presenter {
             .flatMapSingle(url -> view.clearRemoteRelated()
                 .toSingleDefault(url))
             .doOnNext(__2 -> view.showCardPreviewLoading())
+            .doOnNext(__2 -> view.hideCardPreview())
             .observeOn(Schedulers.io())
             .flatMapSingle(url -> postManager.getPreview(url))
             .observeOn(AndroidSchedulers.mainThread())

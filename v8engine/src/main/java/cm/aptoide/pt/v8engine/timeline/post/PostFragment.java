@@ -215,6 +215,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void hideCardPreview() {
     previewImage.setVisibility(View.GONE);
+    previewTitle.setVisibility(View.INVISIBLE);
     hidePreviewLayout();
   }
 
