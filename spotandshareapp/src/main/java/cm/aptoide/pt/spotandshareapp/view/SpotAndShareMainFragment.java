@@ -19,11 +19,13 @@ import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareMainFragmentPresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.permission.PermissionProvider;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 
@@ -40,6 +42,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
   private TextView username;
   private Toolbar toolbar;
   private SpotAndShareMainFragmentPresenter presenter;
+  private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareMainFragment();
@@ -48,6 +51,8 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    spotAndSharePermissionProvider =
+        new SpotAndSharePermissionProvider((PermissionProvider) getActivity());
   }
 
   @Override public void finish() {
@@ -138,7 +143,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
     presenter = new SpotAndShareMainFragmentPresenter(this,
         new SpotAndShareUserManager(new SpotAndShareUserPersister(
             getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE))));
+                Context.MODE_PRIVATE))), spotAndSharePermissionProvider);
     attachPresenter(presenter, savedInstanceState);
   }
 
