@@ -394,8 +394,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showGenericError() {
-    ShowMessage.asSnack(getView(),
-        getContext().getString(R.string.fragment_social_timeline_general_error));
+    ShowMessage.asSnack(getView(), getContext().getString(R.string.all_message_general_error));
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp

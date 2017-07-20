@@ -40,11 +40,12 @@ public class BoaCompraActivity extends ProductActivity implements BoaCompraView 
         .setJavaScriptEnabled(true);
     webView.setWebChromeClient(new WebChromeClient());
     progressBarContainer = findViewById(R.id.activity_web_authorization_preogress_bar);
-    unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
-        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-          finish();
-        })
-        .create();
+    unknownErrorDialog =
+        new AlertDialog.Builder(this).setMessage(R.string.all_message_general_error)
+            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+              finish();
+            })
+            .create();
     mainUrlSubject = PublishRelay.create();
     redirectUrlSubject = PublishRelay.create();
     backButtonSelectionSubject = PublishRelay.create();

@@ -42,9 +42,10 @@ public class PayPalActivity extends ProductActivity implements PayPalView {
     networkErrorDialog = new RxAlertDialog.Builder(this).setMessage(R.string.connection_error)
         .setPositiveButton(R.string.ok)
         .build();
-    unknownErrorDialog = new RxAlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
-        .setPositiveButton(R.string.ok)
-        .build();
+    unknownErrorDialog =
+        new RxAlertDialog.Builder(this).setMessage(R.string.all_message_general_error)
+            .setPositiveButton(R.string.ok)
+            .build();
 
     authorizationSubject = PublishRelay.create();
 
