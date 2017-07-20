@@ -79,22 +79,23 @@ public class TimelineService {
     if (loading || (currentOffset >= total)) {
       return Single.just(Collections.emptyList());
     }
-    return getPackages().doOnSuccess(packages -> loading = true)
-        .flatMap(packages -> GetUserTimelineRequest.of(url, limit, initialOffset, packages,
-            bodyInterceptor, okhttp, converterFactory, cardIdPriority, tokenInvalidator,
-            sharedPreferences)
-            .observe()
-            .toSingle()
-            .flatMap(timelineResponse -> {
-              if (timelineResponse.isOk()) {
-                this.currentOffset = timelineResponse.getNextSize();
-                this.total = timelineResponse.getTotal();
-                loading = false;
-                return Single.just(timelineResponse);
-              }
-              return Single.error(
-                  new IllegalStateException("Could not obtain timeline from server."));
-            }))
+    return getPackages().flatMap(packages -> Observable.fromCallable(() -> loading = true)
+        .flatMapSingle(
+            __ -> GetUserTimelineRequest.of(url, limit, initialOffset, packages, bodyInterceptor,
+                okhttp, converterFactory, cardIdPriority, tokenInvalidator, sharedPreferences)
+                .observe(true)
+                .toSingle())
+        .flatMapSingle(timelineResponse -> {
+          if (timelineResponse.isOk()) {
+            this.currentOffset = timelineResponse.getNextSize();
+            this.total = timelineResponse.getTotal();
+            return Single.just(timelineResponse);
+          }
+          return Single.error(new IllegalStateException("Could not obtain timeline from server."));
+        })
+        .toSingle())
+        .doOnError(__ -> loading = false)
+        .doOnSuccess(__ -> loading = false)
         .map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
   }
 
