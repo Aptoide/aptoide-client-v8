@@ -23,14 +23,16 @@ class PostPresenter implements Presenter {
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
   private UrlValidator urlValidator;
+  private boolean externalOpen;
 
   public PostPresenter(PostView view, CrashReport crashReport, PostManager postManager,
-      FragmentNavigator fragmentNavigator, UrlValidator urlValidator) {
+      FragmentNavigator fragmentNavigator, UrlValidator urlValidator, boolean externalOpen) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
     this.fragmentNavigator = fragmentNavigator;
     this.urlValidator = urlValidator;
+    this.externalOpen = externalOpen;
   }
 
   @Override public void present() {
@@ -82,10 +84,18 @@ class PostPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonPressed()
-            .doOnNext(__2 -> fragmentNavigator.popBackStack()))
+            .doOnNext(__2 -> goBack()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
+  }
+
+  private void goBack() {
+    if (externalOpen) {
+      view.exit();
+    } else {
+      fragmentNavigator.popBackStack();
+    }
   }
 
   private void showCardPreviewAfterTextChanges() {
@@ -187,14 +197,14 @@ class PostPresenter implements Presenter {
                     .getPackageName())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> view.showSuccessMessage())
-                .doOnCompleted(() -> fragmentNavigator.popBackStack()))
+                .doOnCompleted(() -> goBack()))
             .doOnError(throwable -> handleError(throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
           crashReport.log(err);
-          fragmentNavigator.popBackStack();
+          goBack();
         });
   }
 

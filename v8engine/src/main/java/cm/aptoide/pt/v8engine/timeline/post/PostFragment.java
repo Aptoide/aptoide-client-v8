@@ -161,7 +161,7 @@ public class PostFragment extends FragmentView implements PostView {
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor), getFragmentNavigator(),
-        new UrlValidator(Patterns.WEB_URL));
+        new UrlValidator(Patterns.WEB_URL), args != null && args.containsKey(DATA_TO_SHARE));
     attachPresenter(presenter, null);
   }
 
@@ -267,6 +267,10 @@ public class PostFragment extends FragmentView implements PostView {
   @Override public void hideCardPreviewTitle() {
     previewTitle.setVisibility(View.GONE);
     hideCardPreview();
+  }
+
+  @Override public void exit() {
+    getActivity().onBackPressed();
   }
 
   private void hidePreviewLayout() {
