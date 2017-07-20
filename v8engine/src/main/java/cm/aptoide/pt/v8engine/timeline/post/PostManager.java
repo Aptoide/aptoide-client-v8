@@ -19,8 +19,12 @@ public class PostManager {
 
   public Completable post(String url, String content, String packageName) {
     return validateInsertedText(content, packageName).flatMapCompletable(
-        validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url), content,
-            packageName));
+        validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
+            getContent(url, content), packageName));
+  }
+
+  private String getContent(String url, String content) {
+    return content.replace(url + " ", "");
   }
 
   private Single<Boolean> validateInsertedText(String textToShare, String packageName) {
