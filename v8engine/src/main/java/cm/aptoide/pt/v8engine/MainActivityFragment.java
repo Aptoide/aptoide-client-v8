@@ -52,6 +52,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   @Partners @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Analytics.Lifecycle.Activity.onCreate(this);
     new ApkFy().run(this);
 
     if (savedInstanceState == null) {
@@ -275,5 +276,6 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   @Override protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
+    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
   }
 }

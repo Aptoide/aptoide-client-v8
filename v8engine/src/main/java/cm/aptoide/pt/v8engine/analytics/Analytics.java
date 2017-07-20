@@ -45,9 +45,11 @@ public class Analytics {
   public static final String ACTION = "Action";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
+  private static final boolean ACTIVATE_FACEBOOK = true;
   private static final int ALL = Integer.MAX_VALUE;
   private static final int FLURRY = 1 << 1;
   private static final int FABRIC = 1 << 2;
+  private static final int FACEBOOK = 1 << 3;
   private static final String[] unwantedValuesList = {
       "ads-highlighted", "apps-group-trending", "apps-group-local-top-apps",
       "timeline-your-friends-installs", "apps-group-latest-applications",
@@ -78,7 +80,9 @@ public class Analytics {
   private static void track(String event, String key, String attr, int flags) {
 
     try {
-      if (!ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_FACEBOOK && !ACTIVATE_FLURRY) {
+        return;
+      }
 
       HashMap stringObjectHashMap = new HashMap<>();
 
@@ -94,8 +98,12 @@ public class Analytics {
 
   private static void track(String event, HashMap map, int flags) {
     try {
-      if (!ACTIVATE_FLURRY) {
+      if (!ACTIVATE_FACEBOOK && !ACTIVATE_FLURRY) {
         return;
+      }
+      if (checkAcceptability(flags, FACEBOOK)) {
+        logFacebookEvents(event, map);
+        Logger.d(TAG, "Facebook Event: " + event + ", Map: " + map);
       }
 
       if (checkAcceptability(flags, FLURRY)) {
@@ -115,6 +123,10 @@ public class Analytics {
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
+    if (accepted == FACEBOOK && !ACTIVATE_FACEBOOK) {
+      Logger.d(TAG, "Facebook Disabled");
+      return false;
+    }
     if (accepted == FLURRY && !ACTIVATE_FLURRY) {
       Logger.d(TAG, "Flurry Disabled");
       return false;
@@ -156,9 +168,16 @@ public class Analytics {
   private static void track(String event, int flags) {
 
     try {
-      if (!ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_FACEBOOK && !ACTIVATE_FLURRY) {
+        return;
+      }
 
-      if (checkAcceptability(flags, FLURRY)) FlurryAgent.logEvent(event);
+      if (checkAcceptability(flags, FACEBOOK)) {
+        facebookLogger.logEvent(event);
+      }
+      if (checkAcceptability(flags, FLURRY)) {
+        FlurryAgent.logEvent(event);
+      }
 
       Logger.d(TAG, "Event: " + event);
     } catch (Exception e) {
@@ -277,19 +296,15 @@ public class Analytics {
     public static class Activity {
 
       public static void onCreate(android.app.Activity activity) {
-
       }
 
       public static void onDestroy(android.app.Activity activity) {
-
       }
 
       public static void onResume(android.app.Activity activity) {
-
       }
 
       public static void onPause(android.app.Activity activity) {
-
       }
 
       public static void onStart(android.app.Activity activity) {
@@ -309,7 +324,7 @@ public class Analytics {
       }
 
       public static void onNewIntent(android.app.Activity activity, Intent intent) {
-
+        // TODO: 19/07/2017
       }
     }
   }
@@ -526,6 +541,7 @@ public class Analytics {
 
         map.put(ACTION, "Enter");
         map.put(STORE_NAME, storeName);
+        track(EVENT_NAME, map, FACEBOOK);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -537,6 +553,7 @@ public class Analytics {
 
         map.put(ACTION, "Subscribe");
         map.put(STORE_NAME, storeName);
+        track(EVENT_NAME, map, FACEBOOK);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -551,15 +568,15 @@ public class Analytics {
     public static final String CLICKED_ON_UPDATE_ALL = "Update All";
 
     public static void update() {
-
+      track(EVENT_NAME, ACTION, CLICKED_ON_UPDATE, FACEBOOK);
     }
 
     public static void updateAll() {
-
+      track(EVENT_NAME, ACTION, CLICKED_ON_UPDATE_ALL, FACEBOOK);
     }
 
     public static void createReview() {
-
+      track(EVENT_NAME, ACTION, CLICKED_ON_CREATE_REVIEW, FACEBOOK);
     }
   }
 
@@ -589,7 +606,7 @@ public class Analytics {
     public static final String QUERY = "Query";
 
     public static void searchTerm(String query) {
-
+      track(EVENT_NAME_SEARCH_TERM, QUERY, query, FACEBOOK);
     }
 
     public static void noSearchResults(String query) {
@@ -655,7 +672,7 @@ public class Analytics {
     public static final String URI = "Uri";
 
     public static void launcher() {
-
+      track(EVENT_NAME, SOURCE, LAUNCHER, FACEBOOK);
     }
 
     public static void website(String uri) {
@@ -787,7 +804,13 @@ public class Analytics {
       map.put(TITLE, title);
       map.put(PUBLISHER, publisher);
 
+      facebookTrack(map, cardType);
       flurryTrack(map, cardType);
+    }
+
+    private static void facebookTrack(HashMap<String, String> map, String cardType) {
+      map.put(CARD_TYPE, cardType);
+      track(EVENT_NAME, map, FACEBOOK);
     }
 
     private static void flurryTrack(HashMap<String, String> map, String cardType) {
@@ -826,6 +849,7 @@ public class Analytics {
         map.put(TRUSTED_BADGE, trustedBadge);
         //TODO MISSING POP_UP AB TESTING
 
+        track(EVENT_NAME, map, FACEBOOK);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -977,7 +1001,24 @@ public class Analytics {
     //        }
 
     private static void ltv(String eventName, String packageName) {
+      if (!ACTIVATE_FACEBOOK) {
+        return;
+      }
 
+      try {
+        HashMap<String, String> map = new HashMap<>();
+
+        //                Double revenueDouble = Double.valueOf(revenue);
+        //                Long value = revenueDouble.longValue();
+
+        map.put("packageName", packageName);
+
+        Logger.d(TAG, "LTV: " + eventName + ": " + packageName);
+
+        track(eventName, map, FACEBOOK);
+      } catch (NumberFormatException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -1044,11 +1085,11 @@ public class Analytics {
     public static final String USER_REGISTERED = "User Registered";
 
     public static void login(String action) {
-
+      track(LOGGED_IN_EVENT, ACTION, action, FACEBOOK);
     }
 
     public static void signUp() {
-
+      track(USER_REGISTERED, FACEBOOK);
     }
   }
 
@@ -1158,6 +1199,13 @@ public class Analytics {
       map.put(ISADPLAYABLE, String.valueOf(isAdPlayable));
       logFacebookEvents(ON_VIDEO_AD_PLAYABLE_CHANGED, map);
       track(ON_VIDEO_AD_PLAYABLE_CHANGED, map, FLURRY);
+    }
+  }
+
+  public static class SessionControl {
+
+    public static void firstSession(SharedPreferences sPref) {
+
     }
   }
 }
