@@ -2,7 +2,6 @@
   <!-- Timeline Fragment -->
   <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
   <string name="fragment_social_timeline_no_connection">No network connection</string>
-  <string name="fragment_social_timeline_general_error">Something went wrong. Try again.</string>
   <string name="displayable_social_timeline_store_latest_apps_headline">This store has new Apps</string>
   <string name="displayable_social_timeline_app_update_name">App %1$s</string>
   <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>

@@ -399,7 +399,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showGenericError() {
-    Snackbar.make(getView(), R.string.fragment_social_timeline_general_error, Snackbar.LENGTH_LONG)
+    Snackbar.make(getView(), R.string.all_message_general_error, Snackbar.LENGTH_LONG)
         .show();
   }
 
