@@ -57,7 +57,7 @@ public class TimelineNavigator implements TimelineNavigation {
   }
 
   @Override public void navigateToLoginView() {
-    fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, true));
+    fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false));
   }
 
   @Override public void navigateToMyAccountView() {

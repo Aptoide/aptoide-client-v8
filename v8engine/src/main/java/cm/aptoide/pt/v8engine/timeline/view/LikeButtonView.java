@@ -9,21 +9,16 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.custom.CircleView;
 import cm.aptoide.pt.v8engine.view.custom.DotsView;
-import rx.subscriptions.CompositeSubscription;
 
-public class LikeButtonView extends FrameLayout implements View.OnClickListener {
+public class LikeButtonView extends FrameLayout {
   private static final DecelerateInterpolator DECELERATE_INTERPOLATOR =
       new DecelerateInterpolator();
   private static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE_INTERPOLATOR =
@@ -33,11 +28,8 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
   private ImageView vHeart;
   private DotsView vDotsView;
   private CircleView vCircle;
-
-  private boolean isChecked;
   private AnimatorSet animatorSet;
-  private OnClickListener onClickListener;
-  private CompositeSubscription compositeSubscription;
+  private boolean iconEnabled;
 
   public LikeButtonView(Context context) {
     super(context);
@@ -66,86 +58,30 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     vHeart = (ImageView) findViewById(R.id.vHeart);
     vDotsView = (DotsView) findViewById(R.id.vDotsView);
     vCircle = (CircleView) findViewById(R.id.vCircle);
-    setOnClickListener(this);
+    iconEnabled = false;
+    setupAnimation();
   }
 
-  @Override protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    compositeSubscription = new CompositeSubscription();
-  }
-
-  @Override protected void onDetachedFromWindow() {
-    if(compositeSubscription!=null && compositeSubscription.hasSubscriptions()){
-      compositeSubscription.unsubscribe();
-    }
-    super.onDetachedFromWindow();
-  }
-
-  @Override public void setOnClickListener(OnClickListener onClickListener) {
-    this.onClickListener = onClickListener;
-    if (onClickListener != null) {
-      super.setOnClickListener(this);
-    } else {
-      super.setOnClickListener(null);
-    }
-  }
-
-  @Override public boolean onTouchEvent(MotionEvent event) {
-    switch (event.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        vHeart.animate()
-            .scaleX(0.7f)
-            .scaleY(0.7f)
-            .setDuration(150)
-            .setInterpolator(DECELERATE_INTERPOLATOR);
-        setPressed(true);
-        break;
-      case MotionEvent.ACTION_MOVE:
-        float x = event.getX();
-        float y = event.getY();
-        boolean isInside = (x > 0 && x < getWidth() && y > 0 && y < getHeight());
-        if (isPressed() != isInside) {
-          setPressed(isInside);
-        }
-        break;
-      case MotionEvent.ACTION_CANCEL:
-        vHeart.animate()
-            .scaleX(1)
-            .scaleY(1)
-            .setInterpolator(DECELERATE_INTERPOLATOR);
-        setPressed(false);
-        break;
-      case MotionEvent.ACTION_UP:
-        vHeart.animate()
-            .scaleX(1)
-            .scaleY(1)
-            .setInterpolator(DECELERATE_INTERPOLATOR);
-        if (isPressed()) {
-          performClick();
-          setPressed(false);
-        }
-        break;
-    }
-    return true;
-  }
-
-  @Override public void onClick(View v) {
-    if (animatorSet != null) {
+  public void setHeartState(boolean iconEnabled) {
+    if (animatorSet != null && animatorSet.isRunning()) {
       animatorSet.cancel();
     }
 
-    compositeSubscription.add(((V8Engine) getContext().getApplicationContext()).getAccountManager()
-        .accountStatus()
-        .filter(account -> account.isLoggedIn())
-        .first()
-        .toSingle()
-        .subscribe(account -> {
-          if (!isChecked) {
-            setHeartIconOnWithAnimation();
-            onClickListener.onClick(v);
-          }
-        }, err -> CrashReport.getInstance()
-            .log(err)));
+    if (iconEnabled) {
+      setHeartIconOnWithAnimation();
+    } else {
+      setHeartOffWithoutAnimation();
+    }
+    this.iconEnabled = iconEnabled;
+  }
+
+  public boolean isIconEnabled() {
+    return iconEnabled;
+  }
+
+  private void setHeartOffWithoutAnimation() {
+    vHeart.setImageResource(R.drawable.heart_off);
+    vHeart.invalidate();
   }
 
   private void setHeartIconOnWithAnimation() {
@@ -158,6 +94,10 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     vCircle.setOuterCircleRadiusProgress(0);
     vDotsView.setCurrentProgress(0);
 
+    animatorSet.start();
+  }
+
+  private void setupAnimation() {
     animatorSet = new AnimatorSet();
 
     ObjectAnimator outerCircleAnimator =
@@ -198,24 +138,5 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
         vHeart.setScaleY(1);
       }
     });
-
-    animatorSet.start();
-    isChecked = true;
-  }
-
-  public void setHeartState(boolean state) {
-    if (state) {
-      vHeart.setImageResource(R.drawable.heart_on);
-      vHeart.invalidate();
-      setChecked(true);
-    } else {
-      vHeart.setImageResource(R.drawable.heart_off);
-      vHeart.invalidate();
-      setChecked(false);
-    }
-  }
-
-  private void setChecked(boolean checked) {
-    this.isChecked = checked;
   }
 }

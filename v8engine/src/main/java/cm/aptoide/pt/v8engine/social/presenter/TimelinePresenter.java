@@ -43,6 +43,7 @@ import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -144,9 +145,12 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .filter(__ -> view.isNewRefresh())
-        .doOnNext(created -> view.showProgressIndicator())
-        .flatMapSingle(created -> Single.zip(
-            accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+        .doOnNext(__ -> view.showProgressIndicator())
+        .flatMapSingle(__ -> accountManager.accountStatus()
+            .first()
+            .toSingle())
+        .flatMapSingle(account -> Single.zip(
+            account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                 : timeline.getTimelineLoginPost(), timeline.getCards(),
             (post, posts) -> mergeStatsPostWithPosts(post, posts)))
         .observeOn(AndroidSchedulers.mainThread())
@@ -162,9 +166,13 @@ public class TimelinePresenter implements Presenter {
   private void onPullToRefreshRefreshPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.refreshes())
-        .flatMapSingle(created -> Single.zip(
-            accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+        .flatMap(created -> Observable.merge(accountManager.accountStatus(), view.refreshes())
+            .map(__ -> null))
+        .flatMapSingle(__ -> accountManager.accountStatus()
+            .first()
+            .toSingle())
+        .flatMapSingle(account -> Single.zip(
+            account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                 : timeline.getTimelineLoginPost(), timeline.getCards(),
             (post, posts) -> mergeStatsPostWithPosts(post, posts)))
         .observeOn(AndroidSchedulers.mainThread())
@@ -305,7 +313,7 @@ public class TimelinePresenter implements Presenter {
                     .doOnNext(install -> {
                       // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
                       ((AppUpdate) post).setInstallationStatus(install.getState());
-                      view.updateInstallProgress(post,
+                      view.updatePost(post,
                           ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
                     })
                     .subscribe(downloadProgress -> {
@@ -352,8 +360,10 @@ public class TimelinePresenter implements Presenter {
                 .toSingle()
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
-                    return timeline.like(cardTouchEvent.getCard(), cardTouchEvent.getCard()
-                        .getCardId());
+                    final Post post = cardTouchEvent.getCard();
+                    return timeline.like(post, post.getCardId())
+                        .doOnCompleted(() -> view.updatePost(post,
+                            ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition()));
                   }
                   return Completable.fromAction(() -> view.showLoginPromptWithAction());
                 })))
@@ -384,11 +394,14 @@ public class TimelinePresenter implements Presenter {
                 .toSingle()
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
-                    return timeline.sharePost(cardTouchEvent.getCard())
-                        .flatMapCompletable(
-                            cardId -> timeline.like(cardTouchEvent.getCard(), cardId));
+                    final Post post = cardTouchEvent.getCard();
+                    return timeline.sharePost(post)
+                        .flatMapCompletable(cardId -> timeline.like(post, cardId))
+                        .doOnCompleted(() -> view.updatePost(post,
+                            ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition()));
+                  } else {
+                    return Completable.fromAction(() -> view.showLoginPromptWithAction());
                   }
-                  return Completable.fromAction(() -> view.showLoginPromptWithAction());
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
