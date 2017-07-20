@@ -5,7 +5,6 @@ import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareWaitingToSendView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by filipe on 07-07-2017.
@@ -34,9 +33,8 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.exitEvent())
-        .doOnNext(__ -> view.navigateBack())
-        .observeOn(Schedulers.io())
         .doOnNext(clicked -> leaveGroup())
+        .doOnNext(__ -> view.navigateBack())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());

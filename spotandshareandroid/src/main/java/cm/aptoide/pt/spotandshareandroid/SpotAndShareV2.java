@@ -17,6 +17,7 @@ import rx.Observable;
 import rx.Single;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 19-06-2017.
@@ -148,6 +149,7 @@ class SpotAndShareV2 {
           .andThen(hotspotManager.resetHotspot()
               .andThen(hotspotManager.restoreNetworkState()
                   .toCompletable()))
+          .subscribeOn(Schedulers.io())
           .subscribe(() -> {
           }, onError);
       isHotspot = false;
@@ -156,6 +158,7 @@ class SpotAndShareV2 {
           .andThen(hotspotManager.restoreNetworkState()
               .toCompletable())
           .andThen(hotspotManager.forgetSpotAndShareNetworks())
+          .subscribeOn(Schedulers.io())
           .subscribe(() -> {
           }, onError);
     }

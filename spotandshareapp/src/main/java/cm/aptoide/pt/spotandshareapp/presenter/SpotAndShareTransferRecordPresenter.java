@@ -10,7 +10,6 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.LinkedList;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by filipe on 12-06-2017.
@@ -80,9 +79,8 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.exitEvent())
-        .doOnNext(__ -> view.navigateBack())
-        .observeOn(Schedulers.io())
         .doOnNext(clicked -> leaveGroup())
+        .doOnNext(__ -> view.navigateBack())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
