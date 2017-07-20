@@ -106,13 +106,13 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void openTransferRecord() {
-    getFragmentNavigator().navigateToWithoutBackSave(
-        SpotAndShareTransferRecordFragment.newInstance());
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance());
   }
 
   @Override public void openWaitingToSendScreen() {
-    getFragmentNavigator().navigateToWithoutBackSave(
-        SpotAndShareWaitingToSendFragment.newInstance());
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(SpotAndShareWaitingToSendFragment.newInstance());
   }
 
   @Override public void hideLoading() {

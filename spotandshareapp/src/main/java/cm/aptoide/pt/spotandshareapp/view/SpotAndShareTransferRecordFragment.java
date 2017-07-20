@@ -163,7 +163,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
-    getFragmentNavigator().navigateToWithoutBackSave(
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(
         SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
   }
 
