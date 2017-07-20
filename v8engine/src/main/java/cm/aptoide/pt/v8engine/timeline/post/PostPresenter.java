@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -201,12 +200,7 @@ class PostPresenter implements Presenter {
 
   private void handleError(Throwable throwable) {
     Logger.e(TAG, throwable);
-    if (throwable instanceof AptoideWsV7Exception) {
-      view.showError(((AptoideWsV7Exception) throwable).getBaseResponse()
-          .getErrors()
-          .get(0)
-          .getCode());
-    } else if (throwable instanceof InvalidPostDataException) {
+    if (throwable instanceof InvalidPostDataException) {
       switch (((InvalidPostDataException) throwable).getErrorCode()) {
         case INVALID_TEXT:
           view.showInvalidTextError();
@@ -215,6 +209,8 @@ class PostPresenter implements Presenter {
           view.showInvalidPackageError();
           break;
       }
+    } else {
+      view.showGenericError();
     }
   }
 }

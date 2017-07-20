@@ -27,7 +27,7 @@ interface PostView extends View {
 
   void hideCardPreview();
 
-  void showError(String error);
+  void showGenericError();
 
   void showInvalidTextError();
 

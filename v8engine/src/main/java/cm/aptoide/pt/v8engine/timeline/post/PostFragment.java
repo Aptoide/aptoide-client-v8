@@ -230,8 +230,8 @@ public class PostFragment extends FragmentView implements PostView {
     hidePreviewLayout();
   }
 
-  @Override public void showError(String error) {
-    ShowMessage.asSnack(this, error);
+  @Override public void showGenericError() {
+    ShowMessage.asSnack(this, R.string.all_message_general_error);
   }
 
   @Override public void showInvalidTextError() {
