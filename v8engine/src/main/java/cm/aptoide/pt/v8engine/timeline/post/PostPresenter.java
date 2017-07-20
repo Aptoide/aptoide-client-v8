@@ -103,9 +103,7 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.onInputTextChanged()
             .debounce(1, TimeUnit.SECONDS)
-            .flatMap(
-                insertedText -> Observable.fromCallable(() -> urlValidator.getUrl(insertedText))
-                    .onErrorReturn(throwable -> ""))
+            .map(insertedText -> urlValidator.getUrl(insertedText))
             .distinctUntilChanged()
             .observeOn(AndroidSchedulers.mainThread())
             .switchMap(url -> {
@@ -153,9 +151,7 @@ class PostPresenter implements Presenter {
         .flatMap(viewCreated -> view.onInputTextChanged()
             .debounce(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap(
-                insertedText -> Observable.fromCallable(() -> urlValidator.getUrl(insertedText))
-                    .onErrorReturn(throwable -> ""))
+            .map(insertedText -> urlValidator.getUrl(insertedText))
             .distinctUntilChanged()
             .switchMap(insertedText -> {
               if (urlValidator.containsUrl(insertedText)) {

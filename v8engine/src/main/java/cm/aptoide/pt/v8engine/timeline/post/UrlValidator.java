@@ -14,21 +14,16 @@ public class UrlValidator {
   }
 
   public boolean containsUrl(String text) {
-    try {
-      getUrl(text);
-      return true;
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
+    return !getUrl(text).equals("");
   }
 
-  public String getUrl(String text) throws IllegalArgumentException {
+  public String getUrl(String text) {
     for (String textPart : text.split(" ")) {
       if (urlPattern.matcher(textPart)
           .matches()) {
         return textPart;
       }
     }
-    throw new IllegalArgumentException(text + " doesn't have any url");
+    return "";
   }
 }
