@@ -42,6 +42,7 @@ import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -127,6 +128,8 @@ public class TimelinePresenter implements Presenter {
     clickOnLikesPreview();
 
     clickOnLogin();
+
+    handleLoginMessageClick();
   }
 
   @Override public void saveState(Bundle state) {
@@ -219,22 +222,22 @@ public class TimelinePresenter implements Presenter {
             .getAbUrl()))
         .doOnNext(cardTouchEvent -> {
           final Post post = cardTouchEvent.getCard();
-          final CardType postType = post.getType();
-          if (postType.equals(CardType.VIDEO) || postType.equals(CardType.ARTICLE)) {
+          final CardType cardType = post.getType();
+          if (cardType.equals(CardType.VIDEO) || cardType.equals(CardType.ARTICLE)) {
             Media card = (Media) post;
             card.getPublisherLink()
                 .launch();
-          } else if (CardType.isSocial(post)) {
+          } else if (CardType.isSocial(cardType)) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
-          } else if (postType.equals(CardType.STORE)) {
+          } else if (cardType.equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) post);
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-          } else if (postType.equals(CardType.UPDATE)) {
+          } else if (cardType.equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) post);
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-          } else if (postType.equals(CardType.POPULAR_APP)) {
+          } else if (cardType.equals(CardType.POPULAR_APP)) {
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
                 popularAppTouchEvent.getStoreTheme());
@@ -259,21 +262,21 @@ public class TimelinePresenter implements Presenter {
             .getAbUrl()))
         .doOnNext(cardTouchEvent -> {
           final Post post = cardTouchEvent.getCard();
-          final CardType type = post.getType();
-          if (CardType.isMedia(post)) {
+          final CardType cardType = post.getType();
+          if (CardType.isMedia(cardType)) {
             Media card = (Media) post;
             card.getMediaLink()
                 .launch();
           } else {
-            if (type.equals(CardType.RECOMMENDATION)) {
+            if (cardType.equals(CardType.RECOMMENDATION)) {
               Recommendation card = (Recommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (type.equals(CardType.STORE)) {
+            } else if (cardType.equals(CardType.STORE)) {
               StoreAppCardTouchEvent storeAppCardTouchEvent =
                   (StoreAppCardTouchEvent) cardTouchEvent;
               navigateToAppView(storeAppCardTouchEvent);
-            } else if (type.equals(CardType.SOCIAL_STORE) || type.equals(
+            } else if (cardType.equals(CardType.SOCIAL_STORE) || cardType.equals(
                 CardType.AGGREGATED_SOCIAL_STORE)) {
               if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
                 navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
@@ -287,7 +290,7 @@ public class TimelinePresenter implements Presenter {
                 timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
                     storeCardTouchEvent.getStoreTheme());
               }
-            } else if (type.equals(CardType.UPDATE)) {
+            } else if (cardType.equals(CardType.UPDATE)) {
               AppUpdate card = (AppUpdate) post;
               if (cardTouchEvent instanceof AppUpdateCardTouchEvent) {
                 permissionManager.requestExternalStoragePermission(permissionRequest)
@@ -313,16 +316,16 @@ public class TimelinePresenter implements Presenter {
                 timelineNavigation.navigateToAppView(card.getAppUpdateId(), card.getPackageName(),
                     AppViewFragment.OpenType.OPEN_ONLY);
               }
-            } else if (type.equals(CardType.POPULAR_APP)) {
+            } else if (cardType.equals(CardType.POPULAR_APP)) {
               PopularApp card = (PopularApp) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (type.equals(CardType.SOCIAL_RECOMMENDATION) || type.equals(
+            } else if (cardType.equals(CardType.SOCIAL_RECOMMENDATION) || cardType.equals(
                 CardType.SOCIAL_INSTALL)) {
               RatedRecommendation card = (RatedRecommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+            } else if (cardType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
               AggregatedRecommendation card = (AggregatedRecommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
@@ -342,13 +345,31 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-                .equals(CardTouchEvent.Type.LIKE) && CardType.isSocial(cardTouchEvent.getCard()))
-            .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard(),
-                cardTouchEvent.getCard()
-                    .getCardId())))
+                .equals(CardTouchEvent.Type.LIKE) && CardType.isSocial(cardTouchEvent.getCard()
+                .getType()))
+            .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
+                .first()
+                .toSingle()
+                .flatMapCompletable(account -> {
+                  if (account.isLoggedIn()) {
+                    return timeline.like(cardTouchEvent.getCard(), cardTouchEvent.getCard()
+                        .getCardId());
+                  }
+                  return Completable.fromAction(() -> view.showLoginPromptWithAction());
+                })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
+  }
+
+  private void handleLoginMessageClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.loginActionClick())
+        .doOnNext(__ -> timelineNavigation.navigateToLoginView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void clickOnLikeNonSocialPost() {
@@ -356,9 +377,19 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-                .equals(CardTouchEvent.Type.LIKE) && CardType.isNormal(cardTouchEvent.getCard()))
-            .flatMapCompletable(cardTouchEvent -> timeline.sharePost(cardTouchEvent.getCard())
-                .flatMapCompletable(cardId -> timeline.like(cardTouchEvent.getCard(), cardId)))
+                .equals(CardTouchEvent.Type.LIKE) && CardType.isNormal(cardTouchEvent.getCard()
+                .getType()))
+            .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
+                .first()
+                .toSingle()
+                .flatMapCompletable(account -> {
+                  if (account.isLoggedIn()) {
+                    return timeline.sharePost(cardTouchEvent.getCard())
+                        .flatMapCompletable(
+                            cardId -> timeline.like(cardTouchEvent.getCard(), cardId));
+                  }
+                  return Completable.fromAction(() -> view.showLoginPromptWithAction());
+                }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
@@ -370,13 +401,22 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-            .equals(CardTouchEvent.Type.COMMENT) && (CardType.isSocial(cardTouchEvent.getCard())
-            || cardTouchEvent.getCard()
+            .equals(CardTouchEvent.Type.COMMENT) && (CardType.isSocial(cardTouchEvent.getCard()
+            .getType()) || cardTouchEvent.getCard()
             .getType()
             .equals(CardType.MINIMAL_CARD)))
-        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
-            cardTouchEvent.getCard()
-                .getCardId()))
+        .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .flatMapCompletable(account -> {
+              if (account.isLoggedIn()) {
+                return Completable.fromAction(
+                    () -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
+                        cardTouchEvent.getCard()
+                            .getCardId()));
+              }
+              return Completable.fromAction(() -> view.showLoginPromptWithAction());
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
@@ -387,9 +427,18 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-            .equals(CardTouchEvent.Type.COMMENT) && (CardType.isNormal(cardTouchEvent.getCard())))
-        .doOnNext(cardTouchEvent -> view.showCommentDialog(cardTouchEvent.getCard()
-            .getCardId()))
+            .equals(CardTouchEvent.Type.COMMENT) && (CardType.isNormal(cardTouchEvent.getCard()
+            .getType())))
+        .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .flatMapCompletable(account -> {
+              if (account.isLoggedIn()) {
+                return Completable.fromAction(() -> view.showCommentDialog(cardTouchEvent.getCard()
+                    .getCardId()));
+              }
+              return Completable.fromAction(() -> view.showLoginPromptWithAction());
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
@@ -402,8 +451,17 @@ public class TimelinePresenter implements Presenter {
         .flatMap(create -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.COMMENT_NUMBER))
-        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToComments(cardTouchEvent.getCard()
-            .getCardId()))
+        .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .flatMapCompletable(account -> {
+              if (account.isLoggedIn()) {
+                return Completable.fromAction(() -> timelineNavigation.navigateToComments(
+                    cardTouchEvent.getCard()
+                        .getCardId()));
+              }
+              return Completable.fromAction(() -> view.showLoginPromptWithAction());
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
@@ -418,7 +476,16 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.SHARE))
-        .doOnNext(cardTouchEvent -> view.showSharePreview(cardTouchEvent.getCard()))
+        .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .flatMapCompletable(account -> {
+              if (account.isLoggedIn()) {
+                return Completable.fromAction(
+                    () -> view.showSharePreview(cardTouchEvent.getCard()));
+              }
+              return Completable.fromAction(() -> view.showLoginPromptWithAction());
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {

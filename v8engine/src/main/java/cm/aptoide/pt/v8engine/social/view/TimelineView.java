@@ -60,4 +60,8 @@ public interface TimelineView extends View {
   void showCommentSuccess();
 
   void showGenericError();
+
+  void showLoginPromptWithAction();
+
+  Observable<Void> loginActionClick();
 }

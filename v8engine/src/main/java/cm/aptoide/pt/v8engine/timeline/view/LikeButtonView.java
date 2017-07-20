@@ -18,11 +18,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.custom.CircleView;
 import cm.aptoide.pt.v8engine.view.custom.DotsView;
+import rx.subscriptions.CompositeSubscription;
 
 public class LikeButtonView extends FrameLayout implements View.OnClickListener {
-  private static final DecelerateInterpolator DECCELERATE_INTERPOLATOR =
+  private static final DecelerateInterpolator DECELERATE_INTERPOLATOR =
       new DecelerateInterpolator();
   private static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE_INTERPOLATOR =
       new AccelerateDecelerateInterpolator();
@@ -35,6 +37,7 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
   private boolean isChecked;
   private AnimatorSet animatorSet;
   private OnClickListener onClickListener;
+  private CompositeSubscription compositeSubscription;
 
   public LikeButtonView(Context context) {
     super(context);
@@ -66,6 +69,18 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     setOnClickListener(this);
   }
 
+  @Override protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    compositeSubscription = new CompositeSubscription();
+  }
+
+  @Override protected void onDetachedFromWindow() {
+    if(compositeSubscription!=null && compositeSubscription.hasSubscriptions()){
+      compositeSubscription.unsubscribe();
+    }
+    super.onDetachedFromWindow();
+  }
+
   @Override public void setOnClickListener(OnClickListener onClickListener) {
     this.onClickListener = onClickListener;
     if (onClickListener != null) {
@@ -82,10 +97,9 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
             .scaleX(0.7f)
             .scaleY(0.7f)
             .setDuration(150)
-            .setInterpolator(DECCELERATE_INTERPOLATOR);
+            .setInterpolator(DECELERATE_INTERPOLATOR);
         setPressed(true);
         break;
-
       case MotionEvent.ACTION_MOVE:
         float x = event.getX();
         float y = event.getY();
@@ -98,14 +112,14 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
         vHeart.animate()
             .scaleX(1)
             .scaleY(1)
-            .setInterpolator(DECCELERATE_INTERPOLATOR);
+            .setInterpolator(DECELERATE_INTERPOLATOR);
         setPressed(false);
         break;
       case MotionEvent.ACTION_UP:
         vHeart.animate()
             .scaleX(1)
             .scaleY(1)
-            .setInterpolator(DECCELERATE_INTERPOLATOR);
+            .setInterpolator(DECELERATE_INTERPOLATOR);
         if (isPressed()) {
           performClick();
           setPressed(false);
@@ -120,68 +134,73 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
       animatorSet.cancel();
     }
 
-    if (!isChecked) {
-      if (((V8Engine) getContext().getApplicationContext()).getAccountManager()
-          .isLoggedIn()) {
-        vHeart.setImageResource(R.drawable.heart_on);
-        vHeart.animate()
-            .cancel();
-        vHeart.setScaleX(0);
-        vHeart.setScaleY(0);
+    compositeSubscription.add(((V8Engine) getContext().getApplicationContext()).getAccountManager()
+        .accountStatus()
+        .filter(account -> account.isLoggedIn())
+        .first()
+        .toSingle()
+        .subscribe(account -> {
+          if (!isChecked) {
+            setHeartIconOnWithAnimation();
+            onClickListener.onClick(v);
+          }
+        }, err -> CrashReport.getInstance()
+            .log(err)));
+  }
+
+  private void setHeartIconOnWithAnimation() {
+    vHeart.setImageResource(R.drawable.heart_on);
+    vHeart.animate()
+        .cancel();
+    vHeart.setScaleX(0);
+    vHeart.setScaleY(0);
+    vCircle.setInnerCircleRadiusProgress(0);
+    vCircle.setOuterCircleRadiusProgress(0);
+    vDotsView.setCurrentProgress(0);
+
+    animatorSet = new AnimatorSet();
+
+    ObjectAnimator outerCircleAnimator =
+        ObjectAnimator.ofFloat(vCircle, CircleView.OUTER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f);
+    outerCircleAnimator.setDuration(250);
+    outerCircleAnimator.setInterpolator(DECELERATE_INTERPOLATOR);
+
+    ObjectAnimator innerCircleAnimator =
+        ObjectAnimator.ofFloat(vCircle, CircleView.INNER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f);
+    innerCircleAnimator.setDuration(200);
+    innerCircleAnimator.setStartDelay(200);
+    innerCircleAnimator.setInterpolator(DECELERATE_INTERPOLATOR);
+
+    ObjectAnimator starScaleYAnimator = ObjectAnimator.ofFloat(vHeart, ImageView.SCALE_Y, 0.2f, 1f);
+    starScaleYAnimator.setDuration(350);
+    starScaleYAnimator.setStartDelay(250);
+    starScaleYAnimator.setInterpolator(OVERSHOOT_INTERPOLATOR);
+
+    ObjectAnimator starScaleXAnimator = ObjectAnimator.ofFloat(vHeart, ImageView.SCALE_X, 0.2f, 1f);
+    starScaleXAnimator.setDuration(350);
+    starScaleXAnimator.setStartDelay(250);
+    starScaleXAnimator.setInterpolator(OVERSHOOT_INTERPOLATOR);
+
+    ObjectAnimator dotsAnimator = ObjectAnimator.ofFloat(vDotsView, DotsView.DOTS_PROGRESS, 0, 1f);
+    dotsAnimator.setDuration(900);
+    dotsAnimator.setStartDelay(50);
+    dotsAnimator.setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
+
+    animatorSet.playTogether(outerCircleAnimator, innerCircleAnimator, starScaleYAnimator,
+        starScaleXAnimator, dotsAnimator);
+
+    animatorSet.addListener(new AnimatorListenerAdapter() {
+      @Override public void onAnimationCancel(Animator animation) {
         vCircle.setInnerCircleRadiusProgress(0);
         vCircle.setOuterCircleRadiusProgress(0);
-        vDotsView.setCurrentProgress(0);
-
-        animatorSet = new AnimatorSet();
-
-        ObjectAnimator outerCircleAnimator =
-            ObjectAnimator.ofFloat(vCircle, CircleView.OUTER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f);
-        outerCircleAnimator.setDuration(250);
-        outerCircleAnimator.setInterpolator(DECCELERATE_INTERPOLATOR);
-
-        ObjectAnimator innerCircleAnimator =
-            ObjectAnimator.ofFloat(vCircle, CircleView.INNER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f);
-        innerCircleAnimator.setDuration(200);
-        innerCircleAnimator.setStartDelay(200);
-        innerCircleAnimator.setInterpolator(DECCELERATE_INTERPOLATOR);
-
-        ObjectAnimator starScaleYAnimator =
-            ObjectAnimator.ofFloat(vHeart, ImageView.SCALE_Y, 0.2f, 1f);
-        starScaleYAnimator.setDuration(350);
-        starScaleYAnimator.setStartDelay(250);
-        starScaleYAnimator.setInterpolator(OVERSHOOT_INTERPOLATOR);
-
-        ObjectAnimator starScaleXAnimator =
-            ObjectAnimator.ofFloat(vHeart, ImageView.SCALE_X, 0.2f, 1f);
-        starScaleXAnimator.setDuration(350);
-        starScaleXAnimator.setStartDelay(250);
-        starScaleXAnimator.setInterpolator(OVERSHOOT_INTERPOLATOR);
-
-        ObjectAnimator dotsAnimator =
-            ObjectAnimator.ofFloat(vDotsView, DotsView.DOTS_PROGRESS, 0, 1f);
-        dotsAnimator.setDuration(900);
-        dotsAnimator.setStartDelay(50);
-        dotsAnimator.setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
-
-        animatorSet.playTogether(outerCircleAnimator, innerCircleAnimator, starScaleYAnimator,
-            starScaleXAnimator, dotsAnimator);
-
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-          @Override public void onAnimationCancel(Animator animation) {
-            vCircle.setInnerCircleRadiusProgress(0);
-            vCircle.setOuterCircleRadiusProgress(0);
-            vDotsView.setCurrentProgress(50);
-            vHeart.setScaleX(1);
-            vHeart.setScaleY(1);
-          }
-        });
-
-        animatorSet.start();
-
-        isChecked = true;
-        onClickListener.onClick(v);
+        vDotsView.setCurrentProgress(50);
+        vHeart.setScaleX(1);
+        vHeart.setScaleY(1);
       }
-    }
+    });
+
+    animatorSet.start();
+    isChecked = true;
   }
 
   public void setHeartState(boolean state) {

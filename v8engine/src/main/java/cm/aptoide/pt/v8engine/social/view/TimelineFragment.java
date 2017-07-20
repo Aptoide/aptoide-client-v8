@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -63,6 +64,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
 import java.util.List;
@@ -112,6 +114,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TabNavigator tabNavigator;
   private String postIdForTimelineRequest;
   private TimelineAnalytics timelineAnalytics;
+  private PublishRelay<View> loginPrompt;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -187,6 +190,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
+    loginPrompt = PublishRelay.create();
     helper = RecyclerViewPositionHelper.createHelper(list);
     // Pull-to-refresh
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
@@ -390,12 +394,23 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showCommentSuccess() {
-    ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showGenericError() {
-    ShowMessage.asSnack(getView(),
-        getContext().getString(R.string.fragment_social_timeline_general_error));
+    Snackbar.make(getView(), R.string.fragment_social_timeline_general_error, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showLoginPromptWithAction() {
+    Snackbar.make(getView(), R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
+        .setAction(R.string.login, view -> loginPrompt.call(view))
+        .show();
+  }
+
+  @Override public Observable<Void> loginActionClick() {
+    return loginPrompt.map(__ -> null);
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp
