@@ -115,7 +115,8 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   }
 
   @Override public void navigateBack() {
-    getFragmentNavigator().popBackStack();
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance());
   }
 
   @Override public void onLeaveGroupError() {
