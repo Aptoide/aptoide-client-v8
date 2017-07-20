@@ -80,7 +80,7 @@
 
   <string name="recoveringWifiState">Recovering the Wifi state, from when you joined the app</string>
 
-  <string name="generalError">Having some trouble. Can you retry later?</string>
+  <string name="generalError">Something went wrong. Try again.</string>
 
   <string name="groupCreatorLeft">Your friend that created the group left</string>
 

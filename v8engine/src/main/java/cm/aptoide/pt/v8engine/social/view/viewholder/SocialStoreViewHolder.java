@@ -170,8 +170,9 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
 
   @NonNull private Spannable getStyledStoreName(SocialStore card) {
     return spannableFactory.createColorSpan(itemView.getContext()
-            .getString(R.string.store_has_new_apps, card.getPoster()
-                .getPrimaryName()),
+            .getString(R.string.timeline_title_card_title_has_new_apps_present_singular,
+                card.getPoster()
+                    .getPrimaryName()),
         ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha), card.getPoster()
             .getPrimaryName());
   }
