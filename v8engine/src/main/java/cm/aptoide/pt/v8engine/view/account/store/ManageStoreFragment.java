@@ -132,6 +132,10 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
   }
 
+  @Override public void hideKeyboard() {
+    super.hideKeyboard();
+  }
+
   /**
    * @param pictureUri Load image to UI and save image in model to handle configuration changes.
    */
@@ -189,7 +193,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   @Override public Completable showGenericError() {
-    return ShowMessage.asLongObservableSnack(this, R.string.having_some_trouble);
+    return ShowMessage.asLongObservableSnack(this, R.string.all_message_general_error);
   }
 
   @Override public void showWaitProgressBar() {
@@ -331,10 +335,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       saveDataButton.setText(R.string.save_edit_store);
       cancelChangesButton.setText(R.string.cancel);
     }
-  }
-
-  @Override public void hideKeyboard() {
-    super.hideKeyboard();
   }
 
   private String getViewTitle(ViewModel storeModel) {

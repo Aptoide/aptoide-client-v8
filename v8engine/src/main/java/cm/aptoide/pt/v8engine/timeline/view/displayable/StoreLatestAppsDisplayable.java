@@ -138,8 +138,8 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
 
   public Spannable getStyledTitle(Context context) {
     return spannableFactory.createColorSpan(
-        context.getString(R.string.store_has_new_apps, storeName),
-        ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
+        context.getString(R.string.timeline_title_card_title_has_new_apps_present_singular,
+            storeName), ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
   }
 
   @EqualsAndHashCode public static class LatestApp {

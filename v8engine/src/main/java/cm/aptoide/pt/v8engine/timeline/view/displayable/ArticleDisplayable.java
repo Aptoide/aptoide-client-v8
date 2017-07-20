@@ -142,7 +142,8 @@ public class ArticleDisplayable extends CardDisplayable {
   }
 
   public Spannable getStyleText(Context context, String sourceName) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_posted, sourceName),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_title_card_title_post_past_singular, sourceName),
         ContextCompat.getColor(context, R.color.black_87_alpha), sourceName);
   }
 

@@ -2,7 +2,6 @@
   <!-- Timeline Fragment -->
   <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
   <string name="fragment_social_timeline_no_connection">No network connection</string>
-  <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
   <string name="displayable_social_timeline_store_latest_apps_headline">This store has new Apps</string>
   <string name="displayable_social_timeline_app_update_name">App %1$s</string>
   <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
@@ -42,8 +41,8 @@
   <string name="dont_show_this_again">Don\'t show \n again</string>
 
   <!-- Followers and following -->
-  <string name="timeline_followers">Followers %d</string>
-  <string name="timeline_followed">Following %d</string>
+  <string name="timeline_button_followers">Followers %d</string>
+  <string name="timeline_button_followed">Following %d</string>
   <string name="timeline_stats_followers">Followers</string>
   <string name="timeline_login_message">What are your friends installing?</string>
   <string name="private_followers_message">%d followers are private</string>
@@ -85,14 +84,10 @@
   <string name="addressbook_about">About Address Book</string>
   <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to connect you</string>
 
-  <string name="related_to">Related to</string>
-  <string name="store_has_an_update">%1$s has an update</string>
-  <string name="store_has_new_apps">%1$s store has new apps</string>
-  <string name="x_shared">%s shared</string>
-  <string name="x_installed_and_recommended">%1$s installed</string>
-  <string name="x_posted">%s posted</string>
-  <string name="popular_app_among_friends">Popular app among friends</string>
-  <string name="timeline_short_shared">shared</string>
+  <string name="timeline_short_related_to">Related to</string>
+  <string name="timeline_title_popular_app_among_friends">Popular app among friends</string>
+
+  <string name="timeline_short_card_sub_title_share_past_plural">shared</string>
   <string name="timeline_short_plus" translatable="false">%s+</string>
   <string name="timeline_title_shared_card_preview">Shared Card Preview</string>
 
@@ -124,7 +119,7 @@
   <string name="timeline_title_card_title_install_past_singular">%s installed</string>
   <string name="timeline_title_card_title_install_past_plural">%s installed</string>
 
-  <string name="timeline_title_card_title_has_new_apps_present_singular">%s has new apps</string>
+  <string name="timeline_title_card_title_has_new_apps_present_singular">%s store has new apps</string>
 
   <!--post-->
   <string name="timeline_title_new_post">New Post</string>

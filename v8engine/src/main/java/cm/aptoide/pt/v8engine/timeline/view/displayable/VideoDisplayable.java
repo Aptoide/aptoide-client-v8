@@ -140,7 +140,8 @@ public class VideoDisplayable extends CardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_posted, title),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_title_card_title_post_past_singular, title),
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 

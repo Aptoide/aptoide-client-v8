@@ -108,7 +108,7 @@
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:lines="1"
-        android:text="@string/timeline_short_shared"
+        android:text="@string/timeline_short_card_sub_title_share_past_plural"
         style="@style/Aptoide.TextView.Regular.XS.Grey"
         />
 

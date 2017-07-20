@@ -331,7 +331,7 @@ public class TransferRecordActivity extends ActivityView implements TransferReco
   }
 
   @Override public void showGeneralErrorToast() {
-    Toast.makeText(this, R.string.generalError, Toast.LENGTH_LONG)
+    Toast.makeText(this, R.string.all_message_general_error, Toast.LENGTH_LONG)
         .show();
   }
 

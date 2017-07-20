@@ -140,7 +140,8 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_shared, title),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_title_card_title_share_past_plural, title),
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 

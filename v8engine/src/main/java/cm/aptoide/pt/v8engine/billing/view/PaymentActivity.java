@@ -102,7 +102,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
         .setPositiveButton(android.R.string.ok, null)
         .create();
     unknownErrorDialog =
-        new AlertDialog.Builder(dialogTheme).setMessage(R.string.having_some_trouble)
+        new AlertDialog.Builder(dialogTheme).setMessage(R.string.all_message_general_error)
             .setPositiveButton(android.R.string.ok, null)
             .create();
 

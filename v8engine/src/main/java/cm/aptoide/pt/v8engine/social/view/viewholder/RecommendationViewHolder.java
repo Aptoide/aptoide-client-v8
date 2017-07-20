@@ -81,7 +81,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
         .load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
     this.relatedToText.setText(itemView.getContext()
-        .getString(R.string.related_to)
+        .getString(R.string.timeline_short_related_to)
         .toLowerCase());
     this.relatedToApp.setText(card.getRelatedToAppName());
 

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.social.presenter;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -17,13 +16,10 @@ import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 public class TimelineNavigator implements TimelineNavigation {
 
   private final FragmentNavigator fragmentNavigator;
-  private AptoideAccountManager accountManager;
   private String likesTitle;
 
-  public TimelineNavigator(FragmentNavigator fragmentNavigator,
-      AptoideAccountManager accountManager, String likesTitle) {
+  public TimelineNavigator(FragmentNavigator fragmentNavigator, String likesTitle) {
     this.fragmentNavigator = fragmentNavigator;
-    this.accountManager = accountManager;
     this.likesTitle = likesTitle;
   }
 
@@ -60,12 +56,12 @@ public class TimelineNavigator implements TimelineNavigation {
         .newAddressBookFragment());
   }
 
-  @Override public void navigateToAccountView() {
-    if (accountManager.isLoggedIn()) {
-      fragmentNavigator.navigateTo(MyAccountFragment.newInstance());
-    } else {
-      fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, true));
-    }
+  @Override public void navigateToLoginView() {
+    fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, true));
+  }
+
+  @Override public void navigateToMyAccountView() {
+    fragmentNavigator.navigateTo(MyAccountFragment.newInstance());
   }
 
   @Override public void navigateToCommentsWithCommentDialogOpen(String cardId) {
@@ -73,14 +69,17 @@ public class TimelineNavigator implements TimelineNavigation {
         .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId));
   }
 
+  // FIXME what should happen if storeId <= 0 ?
   @Override public void navigateToFollowersViewStore(Long storeId, String title) {
     if (storeId > 0) {
       fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title));
-    } else {
-      fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowersFragment("DEFAULT", title));
     }
+  }
+
+  @Override public void navigateToFollowersViewStore(String title) {
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newTimeLineFollowersFragment("DEFAULT", title));
   }
 
   @Override public void navigateToFollowersViewUser(Long userId, String title) {
@@ -88,6 +87,7 @@ public class TimelineNavigator implements TimelineNavigation {
         .newTimeLineFollowersUsingUserIdFragment(userId, "DEFAULT", title));
   }
 
+  // FIXME what should happen if storeId <= 0 ?
   @Override public void navigateToFollowingViewStore(Long storeId, String title) {
     if (storeId > 0) {
       fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()

@@ -406,7 +406,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     if (ErrorUtils.isNoNetworkConnection(error)) {
       errorString = R.string.fragment_social_timeline_no_connection;
     } else {
-      errorString = R.string.fragment_social_timeline_general_error;
+      errorString = R.string.all_message_general_error;
     }
     ShowMessage.asSnack(getView(), errorString);
   }

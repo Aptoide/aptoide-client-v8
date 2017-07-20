@@ -116,7 +116,9 @@ public class TimelineResponseCardMapper {
           .getIcon(), recommendation.getRecommendedApp()
           .getStats()
           .getRating()
-          .getAvg(), recommendation.getSimilarApps()
+          .getAvg(), recommendation.getRecommendedApp()
+          .getStore()
+          .getId(), recommendation.getSimilarApps()
           .get(0)
           .getName(), recommendation.getSimilarApps()
           .get(0)
@@ -133,6 +135,8 @@ public class TimelineResponseCardMapper {
           .getStats()
           .getRating()
           .getAvg(), recommendation.getSimilarApps()
+          .get(0)
+          .getId(), recommendation.getSimilarApps()
           .get(0)
           .getName(), recommendation.getSimilarApps()
           .get(0)
@@ -158,7 +162,8 @@ public class TimelineResponseCardMapper {
           .getName(), appUpdate.getStore()
           .getAvatar(), appUpdate.getStore()
           .getAppearance()
-          .getTheme(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getId(),
+          .getTheme(), appUpdate.getStore()
+          .getId(), appUpdate.getIcon(), appUpdate.getName(), appUpdate.getId(),
           appUpdate.getPackageName(), appUpdate.getStats()
           .getRating()
           .getAvg(), appUpdate.getAdded(), abUrl, false,
@@ -177,6 +182,8 @@ public class TimelineResponseCardMapper {
           .getPackageName(), popularApp.getPopularApplication()
           .getName(), popularApp.getPopularApplication()
           .getIcon(), popularApp.getPopularApplication()
+          .getStore()
+          .getId(), popularApp.getPopularApplication()
           .getStats()
           .getRating()
           .getAvg(), users, popularApp.getDate(), abUrl, false, CardType.POPULAR_APP));
@@ -192,6 +199,8 @@ public class TimelineResponseCardMapper {
           .getPackageName(), socialRecommendation.getApp()
           .getName(), socialRecommendation.getApp()
           .getIcon(), socialRecommendation.getApp()
+          .getStore()
+          .getId(), socialRecommendation.getApp()
           .getStats()
           .getRating()
           .getAvg(), socialRecommendation.getDate(), abUrl, socialRecommendation.getMy()
@@ -209,6 +218,8 @@ public class TimelineResponseCardMapper {
           .getPackageName(), socialInstall.getApp()
           .getName(), socialInstall.getApp()
           .getIcon(), socialInstall.getApp()
+          .getStore()
+          .getId(), socialInstall.getApp()
           .getStats()
           .getRating()
           .getAvg(), socialInstall.getDate(), abUrl, socialInstall.getMy()
@@ -365,6 +376,8 @@ public class TimelineResponseCardMapper {
           .getStats()
           .getRating()
           .getAvg(), aggregatedSocialInstall.getApp()
+          .getStore()
+          .getId(), aggregatedSocialInstall.getApp()
           .getPackageName(), aggregatedSocialInstall.getDate(), abUrl,
           CardType.AGGREGATED_SOCIAL_INSTALL));
     } else if (item instanceof AggregatedSocialStoreLatestAppsTimelineItem) {

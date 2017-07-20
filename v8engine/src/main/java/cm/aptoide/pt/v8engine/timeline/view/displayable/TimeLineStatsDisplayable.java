@@ -55,7 +55,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   CharSequence getFollowersText(Context context) {
 
-    return spannableFactory.createSpan(context.getString(R.string.timeline_followers,
+    return spannableFactory.createSpan(context.getString(R.string.timeline_button_followers,
         getPojo().getData()
             .getFollowers()), new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(getPojo().getData()
@@ -65,7 +65,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   CharSequence getFollowingText(Context context) {
 
-    return spannableFactory.createSpan(context.getString(R.string.timeline_followed,
+    return spannableFactory.createSpan(context.getString(R.string.timeline_button_followed,
         getPojo().getData()
             .getFollowing()), new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(getPojo().getData()

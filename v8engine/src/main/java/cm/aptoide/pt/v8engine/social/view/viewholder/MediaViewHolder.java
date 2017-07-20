@@ -72,7 +72,7 @@ public class MediaViewHolder extends PostViewHolder<Media> {
       playIcon.setVisibility(View.VISIBLE);
     }
     publisherName.setText(spannableFactory.createColorSpan(itemView.getContext()
-            .getString(R.string.x_posted, media.getPublisherName()),
+            .getString(R.string.timeline_title_card_title_post_past_singular, media.getPublisherName()),
         ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
         media.getPublisherName()));
     articleTitle.setText(media.getMediaTitle());

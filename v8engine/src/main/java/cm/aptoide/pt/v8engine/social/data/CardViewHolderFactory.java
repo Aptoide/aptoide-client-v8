@@ -75,8 +75,8 @@ public class CardViewHolderFactory {
             .inflate(R.layout.timeline_social_recommendation_item, parent, false),
             cardType.equals(CardType.SOCIAL_RECOMMENDATION)
                 ? R.string.timeline_title_card_title_recommend_present_singular
-                : R.string.x_installed_and_recommended, cardTouchEventPublishSubject,
-            dateCalculator, spannableFactory);
+                : R.string.timeline_title_card_title_install_past_singular,
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case SOCIAL_ARTICLE:
       case SOCIAL_VIDEO:
         return new SocialMediaViewHolder(LayoutInflater.from(parent.getContext())

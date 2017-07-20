@@ -22,10 +22,11 @@ public class RatedRecommendation extends AppPost {
   private final String userContent;
 
   public RatedRecommendation(String cardId, Poster poster, long appId, String packageName,
-      String appName, String appIcon, float ratingAverage, Date timestamp, String abUrl,
-      boolean isLiked, long commentsNumber, long likesNumber, List<UserTimeline> likes,
-      List<SocialCard.CardComment> comments, CardType cardType, String userContent) {
-    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage);
+      String appName, String appIcon, Long storeId, float ratingAverage, Date timestamp,
+      String abUrl, boolean isLiked, long commentsNumber, long likesNumber,
+      List<UserTimeline> likes, List<SocialCard.CardComment> comments, CardType cardType, String userContent) {
+    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage,
+        storeId);
     this.poster = poster;
     this.isLiked = isLiked;
     this.commentsNumber = commentsNumber;

@@ -121,7 +121,7 @@ public class PopularAppDisplayable extends CardDisplayable {
   }
 
   public String getCardTitleText(Context context) {
-    return context.getString(R.string.popular_app_among_friends);
+    return context.getString(R.string.timeline_title_popular_app_among_friends);
   }
 
   public String getTimeSinceLastUpdate(Context context) {
