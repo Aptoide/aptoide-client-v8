@@ -96,7 +96,7 @@ public class Timeline {
     return service.getTimelineStats();
   }
 
-  public Single<Post> getTimelineLoginPost() {
+  public Single<Post> getTimelineStatisticsPost() {
     return Single.just(new TimelineLoginPost());
   }
 

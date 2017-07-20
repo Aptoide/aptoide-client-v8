@@ -43,7 +43,6 @@ import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
-import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -151,8 +150,8 @@ public class TimelinePresenter implements Presenter {
             .toSingle())
         .flatMapSingle(account -> Single.zip(
             account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                : timeline.getTimelineLoginPost(), timeline.getCards(),
-            (post, posts) -> mergeStatsPostWithPosts(post, posts)))
+                : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+            (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -166,14 +165,13 @@ public class TimelinePresenter implements Presenter {
   private void onPullToRefreshRefreshPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> Observable.merge(accountManager.accountStatus(), view.refreshes())
-            .map(__ -> null))
+        .flatMap(created -> view.refreshes())
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
             .toSingle())
         .flatMapSingle(account -> Single.zip(
             account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                : timeline.getTimelineLoginPost(), timeline.getCards(),
+                : timeline.getTimelineStatisticsPost(), timeline.getCards(),
             (post, posts) -> mergeStatsPostWithPosts(post, posts)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> showCardsAndHideRefresh(cards))
