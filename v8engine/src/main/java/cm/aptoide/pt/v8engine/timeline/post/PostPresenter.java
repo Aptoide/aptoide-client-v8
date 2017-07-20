@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -23,25 +25,29 @@ class PostPresenter implements Presenter {
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
   private UrlValidator urlValidator;
-  private boolean externalOpen;
+  private String insertedUrl;
 
   public PostPresenter(PostView view, CrashReport crashReport, PostManager postManager,
-      FragmentNavigator fragmentNavigator, UrlValidator urlValidator, boolean externalOpen) {
+      FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
+      @Nullable String insertedUrl) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
     this.fragmentNavigator = fragmentNavigator;
     this.urlValidator = urlValidator;
-    this.externalOpen = externalOpen;
+    this.insertedUrl = insertedUrl;
   }
 
   @Override public void present() {
     showInstalledAppsOnStart();
+    showPreviewAppsOnStart();
     postOnTimelineOnButtonClick();
-    showCardPreviewAfterTextChanges();
-    showRelatedAppsAfterTextChanges();
     handleCancelButtonClick();
     handleRelatedAppClick();
+    if (!isExternalOpen()) {
+      showCardPreviewAfterTextChanges();
+      showRelatedAppsAfterTextChanges();
+    }
   }
 
   @Override public void saveState(Bundle state) {
@@ -52,12 +58,26 @@ class PostPresenter implements Presenter {
     // does nothing
   }
 
+  private void showPreviewAppsOnStart() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .filter(viewCreated -> isExternalOpen())
+        .flatMap(__ -> loadPostPreview(insertedUrl))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private boolean isExternalOpen() {
+    return insertedUrl != null && !insertedUrl.isEmpty();
+  }
+
   private void showInstalledAppsOnStart() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .doOnNext(lifecycleEvent -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
-        .flatMapSingle(lifecycleEvent -> postManager.getLocalAppSuggestions())
+        .flatMapSingle(lifecycleEvent -> getStartSuggestions())
         .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(relatedApps -> {
@@ -68,6 +88,18 @@ class PostPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
+  }
+
+  private Single<List<PostRemoteAccessor.RelatedApp>> getStartSuggestions() {
+    if (isExternalOpen()) {
+      return Single.zip(postManager.getLocalAppSuggestions(),
+          postManager.getRemoteAppSuggestions(insertedUrl)
+              .onErrorReturn(throwable -> Collections.emptyList()), (localApps, remoteApps) -> {
+            remoteApps.addAll(localApps);
+            return remoteApps;
+          });
+    }
+    return postManager.getLocalAppSuggestions();
   }
 
   private void handleRelatedAppClick() {
@@ -91,7 +123,7 @@ class PostPresenter implements Presenter {
   }
 
   private void goBack() {
-    if (externalOpen) {
+    if (isExternalOpen()) {
       view.exit();
     } else {
       fragmentNavigator.popBackStack();
@@ -110,22 +142,7 @@ class PostPresenter implements Presenter {
               if (url.isEmpty()) {
                 return hidePreview();
               }
-              return Observable.just(url)
-                  .doOnNext(__2 -> view.clearRemoteRelated())
-                  .doOnNext(__2 -> view.showCardPreviewLoading())
-                  .doOnNext(__2 -> view.hideCardPreview())
-                  .observeOn(Schedulers.io())
-                  .flatMapSingle(__2 -> postManager.getPreview(url))
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .doOnNext(suggestion -> view.showCardPreview(suggestion))
-                  .doOnNext(__2 -> view.hideCardPreviewLoading())
-                  .doOnError(throwable -> view.hideCardPreviewLoading())
-                  .onErrorReturn(throwable -> {
-                    Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable);
-                    view.hideCardPreview();
-                    view.hideCardPreviewLoading();
-                    return null;
-                  });
+              return loadPostPreview(url);
             })
             .doOnError(throwable -> Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -133,6 +150,24 @@ class PostPresenter implements Presenter {
         }, err -> {
           view.hideCardPreviewLoading();
           crashReport.log(err);
+        });
+  }
+
+  @NonNull private Observable<PostView.PostPreview> loadPostPreview(String url) {
+    return Observable.just(url)
+        .doOnNext(__2 -> view.showCardPreviewLoading())
+        .doOnNext(__2 -> view.hideCardPreview())
+        .observeOn(Schedulers.io())
+        .flatMapSingle(__2 -> postManager.getPreview(url))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(suggestion -> view.showCardPreview(suggestion))
+        .doOnNext(__2 -> view.hideCardPreviewLoading())
+        .doOnError(throwable -> view.hideCardPreviewLoading())
+        .onErrorReturn(throwable -> {
+          Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable);
+          view.hideCardPreview();
+          view.hideCardPreviewLoading();
+          return null;
         });
   }
 
@@ -150,18 +185,15 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.onInputTextChanged()
             .debounce(1, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
             .map(insertedText -> urlValidator.getUrl(insertedText))
             .distinctUntilChanged()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(__ -> view.clearRemoteRelated())
             .switchMap(insertedText -> {
               if (urlValidator.containsUrl(insertedText)) {
                 return loadRelatedApps(urlValidator.getUrl(insertedText));
-              } else {
-                return Observable.fromCallable(() -> {
-                  view.clearRemoteRelated();
-                  return null;
-                });
               }
+              return Observable.just("");
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -187,13 +219,16 @@ class PostPresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
-            .flatMapCompletable(textToShare -> postManager.post(
-                urlValidator.containsUrl(textToShare) ? urlValidator.getUrl(textToShare) : null,
-                textToShare, view.getCurrentSelected() == null ? null : view.getCurrentSelected()
-                    .getPackageName())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> view.showSuccessMessage())
-                .doOnCompleted(() -> goBack()))
+            .flatMapCompletable(textToShare -> {
+              String url;
+              url = getUrl(textToShare);
+              return postManager.post(url, textToShare, view.getCurrentSelected() == null ? null
+                  : view.getCurrentSelected()
+                      .getPackageName())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .doOnCompleted(() -> view.showSuccessMessage())
+                  .doOnCompleted(() -> goBack());
+            })
             .doOnError(throwable -> handleError(throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -202,6 +237,16 @@ class PostPresenter implements Presenter {
           crashReport.log(err);
           goBack();
         });
+  }
+
+  @Nullable private String getUrl(String textToShare) {
+    String url;
+    if (isExternalOpen()) {
+      url = insertedUrl;
+    } else {
+      url = urlValidator.containsUrl(textToShare) ? urlValidator.getUrl(textToShare) : null;
+    }
+    return url;
   }
 
   private void handleError(Throwable throwable) {

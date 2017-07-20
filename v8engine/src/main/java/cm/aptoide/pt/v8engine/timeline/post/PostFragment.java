@@ -133,13 +133,12 @@ public class PostFragment extends FragmentView implements PostView {
   private void setupViews() {
     Bundle args = getArguments();
     userInput.setFilters(new InputFilter[] { new InputFilter.LengthFilter(MAX_CHARACTERS) });
-
+    String toShare = null;
     if (args != null && args.containsKey(DATA_TO_SHARE)) {
-      String toShare = args.getString(DATA_TO_SHARE);
+      toShare = args.getString(DATA_TO_SHARE);
       if (toShare.length() > MAX_CHARACTERS) {
         toShare = toShare.substring(0, MAX_CHARACTERS);
       }
-      userInput.setText(toShare);
     }
 
     relatedApps.setLayoutManager(
@@ -161,7 +160,7 @@ public class PostFragment extends FragmentView implements PostView {
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor), getFragmentNavigator(),
-        new UrlValidator(Patterns.WEB_URL), args != null && args.containsKey(DATA_TO_SHARE));
+        new UrlValidator(Patterns.WEB_URL), toShare);
     attachPresenter(presenter, null);
   }
 
