@@ -74,7 +74,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
 
     appName.setText(displayable.getAppName());
 
-    relatedToText.setText(context.getString(R.string.related_to)
+    relatedToText.setText(context.getString(R.string.timeline_short_related_to)
         .toLowerCase());
     relatedToApp.setText(displayable.getSimilarAppName());
     getApp.setVisibility(View.VISIBLE);

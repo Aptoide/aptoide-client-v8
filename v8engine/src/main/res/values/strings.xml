@@ -444,7 +444,6 @@
   <string name="retry_connection">Retry connection</string>
   <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
   <string name="error503_v2">Could not connect to internet</string>
-  <string name="having_some_trouble">Having some trouble. Can you retry later?</string>
   <string name="having_some_trouble_v2">When offline you can still share apps with friends via Spot&amp;Share</string>
   <string name="could_not_connect_internet">Could not connect to the internet</string>
   <string name="Share_apps_now">Share apps now</string>

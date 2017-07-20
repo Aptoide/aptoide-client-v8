@@ -198,27 +198,40 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
         .getAppId(), sharedPreferences);
-    attachPresenter(new TimelinePresenter(this, new Timeline(
+
+    int limit = 20;
+    int initialOffset = 0;
+
+    TimelineService timelineService =
         new TimelineService(getArguments().getString(ACTION_KEY), postIdForTimelineRequest, userId,
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, 20, 0,
-            Integer.MAX_VALUE, tokenInvalidator, sharedPreferences), installManager,
-        new DownloadFactory(), timelineAnalytics), CrashReport.getInstance(),
-        new TimelineNavigator(getFragmentNavigator(), accountManager,
-            getContext().getString(R.string.timeline_title_likes)), new PermissionManager(),
-        (PermissionService) getContext(), installManager, RepositoryFactory.getStoreRepository(),
+            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, limit,
+            initialOffset, Integer.MAX_VALUE, tokenInvalidator, sharedPreferences);
+
+    Timeline timeline =
+        new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics);
+
+    TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
+        getContext().getString(R.string.timeline_title_likes));
+
+    StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
             new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class),
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-        new StoreCredentialsProviderImpl(), accountManager, timelineAnalytics, userId, storeId,
-        storeContext, getContext().getResources()), savedInstanceState);
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+
+    attachPresenter(
+        new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
+            new PermissionManager(), (PermissionService) getContext(), installManager,
+            RepositoryFactory.getStoreRepository(), storeUtilsProxy,
+            new StoreCredentialsProviderImpl(), accountManager, timelineAnalytics, userId, storeId,
+            storeContext, getContext().getResources()), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -381,8 +394,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showGenericError() {
-    ShowMessage.asSnack(getView(),
-        getContext().getString(R.string.fragment_social_timeline_general_error));
+    ShowMessage.asSnack(getView(), getContext().getString(R.string.all_message_general_error));
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp

@@ -136,7 +136,7 @@
           android:background="@android:color/transparent"
           android:clickable="false"
           android:maxLines="1"
-          android:text="@string/related_to"
+          android:text="@string/timeline_short_related_to"
           style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
       <TextView

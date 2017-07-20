@@ -13,9 +13,10 @@ public class PopularApp extends AppPost {
   private final boolean isLiked;
 
   public PopularApp(String cardId, long appId, String packageName, String appName, String appIcon,
-      float ratingAverage, List<UserSharerTimeline.User> users, Date timestamp, String abUrl,
-      boolean isLiked, CardType cardType) {
-    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage);
+      Long storeId, float ratingAverage, List<UserSharerTimeline.User> users, Date timestamp,
+      String abUrl, boolean isLiked, CardType cardType) {
+    super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage,
+        storeId);
     this.users = users;
     this.isLiked = isLiked;
   }
