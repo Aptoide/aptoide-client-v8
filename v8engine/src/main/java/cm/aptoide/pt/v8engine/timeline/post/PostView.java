@@ -47,6 +47,10 @@ interface PostView extends View {
 
   void exit();
 
+  void showNoLoginError();
+
+  Observable<Void> getLoginClick();
+
   class PostPreview {
     private final String image;
     private final String title;

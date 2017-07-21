@@ -1,8 +1,9 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.support.annotation.CheckResult;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
-import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
+import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -11,29 +12,44 @@ public class PostManager {
 
   private final PostAccessor postRemoteRepository;
   private final PostAccessor postLocalRepository;
+  private AptoideAccountManager accountManager;
 
-  public PostManager(PostRemoteAccessor postRemoteRepository, PostAccessor postLocalRepository) {
+  public PostManager(PostRemoteAccessor postRemoteRepository, PostAccessor postLocalRepository,
+      AptoideAccountManager accountManager) {
     this.postRemoteRepository = postRemoteRepository;
     this.postLocalRepository = postLocalRepository;
+    this.accountManager = accountManager;
   }
 
   public Completable post(String url, String content, String packageName) {
-    return validateInsertedText(content, packageName).flatMapCompletable(
-        validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
-            getContent(url, content), packageName));
+    return validateLogin().flatMap(userLogged -> validateInsertedText(content, packageName))
+        .flatMapCompletable(
+            validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
+                getContent(url, content), packageName));
   }
 
   private String getContent(String url, String content) {
     return content.replace(url + " ", "");
   }
 
+  private Single<Boolean> validateLogin() {
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMap(account -> {
+          if (account.isLoggedIn()) {
+            return Single.just(true);
+          } else {
+            return Single.error(new PostException(PostException.ErrorCode.NO_LOGIN));
+          }
+        });
+  }
+
   private Single<Boolean> validateInsertedText(String textToShare, String packageName) {
     if (textToShare == null || textToShare.isEmpty()) {
-      return Single.error(
-          new InvalidPostDataException(InvalidPostDataException.ErrorCode.INVALID_TEXT));
+      return Single.error(new PostException(PostException.ErrorCode.INVALID_TEXT));
     } else if (packageName == null || packageName.isEmpty()) {
-      return Single.error(
-          new InvalidPostDataException(InvalidPostDataException.ErrorCode.INVALID_PACKAGE));
+      return Single.error(new PostException(PostException.ErrorCode.INVALID_PACKAGE));
     }
     return Single.just(true);
   }

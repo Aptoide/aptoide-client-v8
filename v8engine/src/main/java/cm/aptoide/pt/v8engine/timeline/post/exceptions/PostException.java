@@ -4,10 +4,10 @@ package cm.aptoide.pt.v8engine.timeline.post.exceptions;
  * Created by trinkes on 17/07/2017.
  */
 
-public class InvalidPostDataException extends Exception {
+public class PostException extends Exception {
   private final ErrorCode errorCode;
 
-  public InvalidPostDataException(ErrorCode errorCode) {
+  public PostException(ErrorCode errorCode) {
 
     this.errorCode = errorCode;
   }
@@ -17,6 +17,6 @@ public class InvalidPostDataException extends Exception {
   }
 
   public enum ErrorCode {
-    INVALID_TEXT, INVALID_PACKAGE
+    INVALID_TEXT, INVALID_PACKAGE, NO_LOGIN
   }
 }

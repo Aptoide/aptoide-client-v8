@@ -3,6 +3,8 @@ package cm.aptoide.pt.v8engine.timeline.post;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -29,6 +32,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -53,6 +57,7 @@ public class PostFragment extends FragmentView implements PostView {
   private RelatedAppsAdapter adapter;
   private ScrollView scrollView;
   private View previewLayout;
+  private PublishRelay<Void> loginAction;
 
   public static PostFragment newInstance(String toShare) {
     Bundle args = new Bundle();
@@ -68,6 +73,7 @@ public class PostFragment extends FragmentView implements PostView {
     installedRepository = RepositoryFactory.getInstalledRepository();
     cancelClick = PublishRelay.create();
     postClick = PublishRelay.create();
+    loginAction = PublishRelay.create();
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -86,12 +92,30 @@ public class PostFragment extends FragmentView implements PostView {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    setupViews();
+  }
+
+  @Override public void onDestroyView() {
+    destroyLoading(previewLoading);
+    previewLoading = null;
+    userInput = null;
+    previewImage = null;
+    previewTitle = null;
+    previewLoading = null;
+    relatedApps = null;
+    toolbar = null;
+    scrollView = null;
+    previewLayout = null;
+    super.onDestroyView();
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View root = inflater.inflate(getContentViewId(), container, false);
     bindViews(root);
-    setupViews();
     return root;
   }
 
@@ -108,20 +132,6 @@ public class PostFragment extends FragmentView implements PostView {
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
     previewLayout = view.findViewById(R.id.preview_layout);
-  }
-
-  @Override public void onDestroyView() {
-    destroyLoading(previewLoading);
-    previewLoading = null;
-    userInput = null;
-    previewImage = null;
-    previewTitle = null;
-    previewLoading = null;
-    relatedApps = null;
-    toolbar = null;
-    scrollView = null;
-    previewLayout = null;
-    super.onDestroyView();
   }
 
   private void destroyLoading(ProgressBar progressBar) {
@@ -158,9 +168,11 @@ public class PostFragment extends FragmentView implements PostView {
     setUpToolbar();
 
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
+    AptoideAccountManager accountManager = v8Engine.getAccountManager();
     final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
-        new PostManager(postRemoteAccessor, postLocalAccessor), getFragmentNavigator(),
-        new UrlValidator(Patterns.WEB_URL), toShare);
+        new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
+        getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL), toShare,
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()));
     attachPresenter(presenter, null);
   }
 
@@ -270,6 +282,16 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void exit() {
     getActivity().onBackPressed();
+  }
+
+  @Override public void showNoLoginError() {
+    Snackbar.make(getView(), R.string.you_need_to_be_logged_in, BaseTransientBottomBar.LENGTH_LONG)
+        .setAction(R.string.login, view -> loginAction.call(null))
+        .show();
+  }
+
+  @Override public Observable<Void> getLoginClick() {
+    return loginAction;
   }
 
   private void hidePreviewLayout() {

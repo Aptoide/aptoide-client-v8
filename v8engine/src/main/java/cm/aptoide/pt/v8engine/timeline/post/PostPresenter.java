@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import cm.aptoide.pt.v8engine.timeline.post.exceptions.InvalidPostDataException;
+import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
+import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.Collections;
 import java.util.List;
@@ -26,16 +28,18 @@ class PostPresenter implements Presenter {
   private final FragmentNavigator fragmentNavigator;
   private UrlValidator urlValidator;
   private String insertedUrl;
+  private AccountNavigator accountNavigator;
 
   public PostPresenter(PostView view, CrashReport crashReport, PostManager postManager,
-      FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
-      @Nullable String insertedUrl) {
+      FragmentNavigator fragmentNavigator, UrlValidator urlValidator, @Nullable String insertedUrl,
+      AccountNavigator accountNavigator) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
     this.fragmentNavigator = fragmentNavigator;
     this.urlValidator = urlValidator;
     this.insertedUrl = insertedUrl;
+    this.accountNavigator = accountNavigator;
   }
 
   @Override public void present() {
@@ -44,6 +48,7 @@ class PostPresenter implements Presenter {
     postOnTimelineOnButtonClick();
     handleCancelButtonClick();
     handleRelatedAppClick();
+    onCreateLoginErrorHandle();
     if (!isExternalOpen()) {
       showCardPreviewAfterTextChanges();
       showRelatedAppsAfterTextChanges();
@@ -56,6 +61,17 @@ class PostPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void onCreateLoginErrorHandle() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(viewCreated -> view.getLoginClick())
+        .doOnNext(loginClicked -> accountNavigator.navigateToAccountView(
+            Analytics.Account.AccountOrigins.POST_ON_TIMELINE))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private void showPreviewAppsOnStart() {
@@ -251,13 +267,16 @@ class PostPresenter implements Presenter {
 
   private void handleError(Throwable throwable) {
     Logger.e(TAG, throwable);
-    if (throwable instanceof InvalidPostDataException) {
-      switch (((InvalidPostDataException) throwable).getErrorCode()) {
+    if (throwable instanceof PostException) {
+      switch (((PostException) throwable).getErrorCode()) {
         case INVALID_TEXT:
           view.showInvalidTextError();
           break;
         case INVALID_PACKAGE:
           view.showInvalidPackageError();
+          break;
+        case NO_LOGIN:
+          view.showNoLoginError();
           break;
       }
     } else {
