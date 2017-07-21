@@ -53,6 +53,7 @@ public class CardViewHolderFactory {
         return new MediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_media_item, parent, false), cardTouchEventPublishSubject,
             dateCalculator, spannableFactory);
+      case SIMILAR:
       case RECOMMENDATION:
         return new RecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_recommendation_item, parent, false),
