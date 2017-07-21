@@ -16,8 +16,8 @@ public class Vanilla extends AptoideBase {
 
   @Override public void onCreate() {
     clearAppDataOnNewBuild();
+    activateLogger(true);
     super.onCreate();
-    activateLogger();
   }
 
   private void clearAppDataOnNewBuild() {

@@ -272,8 +272,8 @@ public abstract class V8Engine extends Application {
   /**
    * call after this instance onCreate()
    */
-  protected void activateLogger() {
-    Logger.setDBG(true);
+  protected void activateLogger(boolean enable) {
+    Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || enable);
   }
 
   public LeakTool getLeakTool() {
@@ -324,7 +324,7 @@ public abstract class V8Engine extends Application {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
-    Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
+
 
     //
     // async app initialization
