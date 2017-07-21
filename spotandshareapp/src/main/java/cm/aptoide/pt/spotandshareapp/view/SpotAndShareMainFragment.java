@@ -185,7 +185,7 @@ public class SpotAndShareMainFragment extends FragmentView
 
   @Override public void requestWriteSettingsPermission(int requestCode) {
     if (isWriteSettingsPermissionGranted()) {
-      writeSettingsPermissionRelay.call(null);
+      writeSettingsPermissionRelay.call(requestCode);
     } else {
       Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
       intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
