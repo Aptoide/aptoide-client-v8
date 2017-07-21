@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -167,6 +169,7 @@ public class PostFragment extends FragmentView implements PostView {
             WebService.getDefaultConverter(), v8Engine.getTokenInvalidator());
 
     setUpToolbar();
+    showKeyboard();
 
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     AptoideAccountManager accountManager = v8Engine.getAccountManager();
@@ -175,6 +178,12 @@ public class PostFragment extends FragmentView implements PostView {
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL), toShare,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()));
     attachPresenter(presenter, null);
+  }
+
+  private void showKeyboard() {
+    InputMethodManager imm =
+        (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.showSoftInput(userInput, InputMethodManager.SHOW_IMPLICIT);
   }
 
   private void setUpToolbar() {
