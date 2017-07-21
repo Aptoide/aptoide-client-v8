@@ -244,7 +244,8 @@ public class MinimalCardViewFactory {
     if (post.getCommentsNumber() > 0) {
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(context.getResources()
-          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber()));
+          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber(),
+              (int) post.getCommentsNumber()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(post.getComments()
