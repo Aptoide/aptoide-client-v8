@@ -46,7 +46,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
 
     subscribe(editProfile());
 
-    handleNormalPermissionsResult();
+    handleLocationAndExternalStoragePermissionsResult();
 
     handleWriteSettingsPermissionResult();
   }
@@ -73,7 +73,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            spotAndSharePermissionProvider.requestNormalSpotAndSharePermissions(
+            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
                 EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND);
           } else {
             Log.i(getClass().getName(), "GOING TO START SENDING");
@@ -87,7 +87,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(selection -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            spotAndSharePermissionProvider.requestNormalSpotAndSharePermissions(
+            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
                 EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE);
           } else {
             Log.i(getClass().getName(), "GOING TO START RECEIVING");
@@ -118,13 +118,13 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         }, error -> error.printStackTrace());
   }
 
-  private void handleNormalPermissionsResult() {
+  private void handleLocationAndExternalStoragePermissionsResult() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(
-            spotAndSharePermissionProvider.normalPermissionResultSpotAndShare(
+            spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
                 EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND),
-            spotAndSharePermissionProvider.normalPermissionResultSpotAndShare(
+            spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
                 EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE))
             .filter(permissions -> {
               for (PermissionProvider.Permission permission : permissions) {

@@ -20,13 +20,13 @@ public class SpotAndSharePermissionProvider {
     this.writeSettingsPermissionProvider = writeSettingsPermissionProvider;
   }
 
-  public void requestNormalSpotAndSharePermissions(int requestCode) {
+  public void requestLocationAndExternalStorageSpotAndSharePermissions(int requestCode) {
     permissionProvider.providePermissions(new String[] {
         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE
     }, requestCode);
   }
 
-  public Observable<List<PermissionProvider.Permission>> normalPermissionResultSpotAndShare(
+  public Observable<List<PermissionProvider.Permission>> locationAndExternalStoragePermissionsResultSpotAndShare(
       int requestCode) {
     return permissionProvider.permissionResults(requestCode);
   }
