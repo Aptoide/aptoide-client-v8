@@ -46,11 +46,19 @@
             android:background="@null"
             android:gravity="top|start"
             android:hint="@string/timeline_message_share_on_timeline"
-            android:inputType="textUri|textMultiLine"
-            android:minLines="3"
+            android:inputType="textMultiLine"
+            android:minLines="2"
             style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
             />
       </android.support.design.widget.TextInputLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:layout_marginTop="32dp"
+          android:background="@color/grey_fog_dark"
+          />
+
       <RelativeLayout
           android:id="@+id/preview_layout"
           android:layout_width="match_parent"
@@ -72,9 +80,11 @@
             />
         <ProgressBar
             android:id="@+id/preview_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_centerInParent="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:indeterminate="true"
             android:visibility="gone"
             tools:visibility="visible"
@@ -84,16 +94,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/preview_image"
+            android:layout_marginBottom="@dimen/label_padding"
             android:layout_marginLeft="@dimen/label_padding"
             android:layout_marginStart="@dimen/label_padding"
             android:layout_marginTop="@dimen/label_padding"
             android:ellipsize="end"
-            android:lines="2"
-            android:textColor="@color/black_87_alpha"
-            android:textSize="@dimen/timeline_post_post_title_title"
+            android:maxLines="3"
             android:visibility="invisible"
             tools:text="Preview Title"
             tools:visibility="visible"
+            style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/grey_fog_dark"
             />
       </RelativeLayout>
       <TextView
@@ -103,9 +119,8 @@
           android:layout_marginLeft="@dimen/label_padding"
           android:layout_marginTop="@dimen/label_padding"
           android:text="@string/timeline_title_related_app"
-          android:textAppearance="@style/Aptoide.TextView.Medium.S"
           android:textColor="@color/black"
-          android:textSize="@dimen/text_size_huge"
+          style="@style/Aptoide.TextView.Regular.M"
           />
       <android.support.v7.widget.RecyclerView
           android:id="@+id/related_apps_list"
