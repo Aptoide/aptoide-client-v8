@@ -2,9 +2,9 @@
   <string name="aptoide_downloading">%s is downloading</string>
   <string name="pause_download">Pause</string>
   <string name="resume_download">Resume</string>
-  <string name="general_downloads_dialog_only_mobile_message">"You chose to download only on Mobile 3G/4G. Do you want to change the settings?"</string>
-  <string name="general_downloads_dialog_only_wifi_message">"You chose to download only on WiFi. Do you want to change the settings?"</string>
-  <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Do you want to change the settings?</string>
+  <string name="general_downloads_dialog_only_mobile_message">"You chose to download only on Mobile 3G/4G. Change settings?"</string>
+  <string name="general_downloads_dialog_only_wifi_message">"You chose to download only on Wi-Fi. Change settings?"</string>
+  <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Change settings?</string>
 
   <!-- DownloadManager -->
   <string name="timeout">Network connection timeout</string>
@@ -14,14 +14,14 @@
   <string name="invalid_apk">Invalid apk</string>
   <string name="remote_in_nospace">not enough space on your device.</string>
   <string name="server_error">Server error</string>
-  <string name="paidapp_not_found">Error downloading app. Please try again or contact support.</string>
-  <string name="sd_error">Couldn\'t write to SDCard.</string>
+  <string name="paidapp_not_found">Error downloading app. Try again or contact support.</string>
+  <string name="sd_error">Couldn\'t write to SD Card.</string>
   <string name="sd_error_jolla">Couldn\'t download properly</string>
   <string name="starting_download">Starting download</string>
   <string name="installing">%s is installing…</string>
   <string name="finished_install">%s has been installed.</string>
   <string name="remaining_time">remaining</string>
-  <string name="data_usage_constraint">Download is not allowed in Settings &gt; General Download Rules</string>
+  <string name="data_usage_constraint">Download is not allowed in Settings &gt; Download Options</string>
   <string name="download_pending">Waiting</string>
 
 </resources>

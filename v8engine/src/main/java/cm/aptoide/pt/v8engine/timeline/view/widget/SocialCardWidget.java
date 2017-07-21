@@ -218,7 +218,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(getContext().getResources()
           .getQuantityString(R.plurals.timeline_short_comment,
-              (int) displayable.getNumberOfComments()));
+              (int) displayable.getNumberOfComments(), (int) displayable.getNumberOfComments()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(displayable.getLatestComment()
