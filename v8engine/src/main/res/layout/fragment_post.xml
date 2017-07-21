@@ -32,30 +32,26 @@
         android:orientation="vertical"
         android:paddingBottom="50dp"
         >
-      <android.support.design.widget.TextInputLayout
+      <EditText
+          android:id="@+id/input_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="16dp"
-          >
-        <EditText
-            android:id="@+id/input_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/timeline_post_hint_left_margin"
-            android:layout_marginTop="4dp"
-            android:background="@null"
-            android:gravity="top|start"
-            android:hint="@string/timeline_message_share_on_timeline"
-            android:inputType="textMultiLine"
-            android:minLines="2"
-            style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
-            />
-      </android.support.design.widget.TextInputLayout>
+          android:background="@color/white"
+          android:focusable="true"
+          android:gravity="top|start"
+          android:hint="@string/timeline_message_share_on_timeline"
+          android:inputType="textMultiLine"
+          android:minLines="2"
+          android:paddingBottom="32dp"
+          android:paddingLeft="@dimen/timeline_post_hint_left_margin"
+          android:paddingStart="@dimen/timeline_post_hint_left_margin"
+          android:paddingTop="20dp"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+          />
 
       <View
           android:layout_width="match_parent"
           android:layout_height="1dp"
-          android:layout_marginTop="32dp"
           android:background="@color/grey_fog_dark"
           />
 

@@ -157,6 +157,7 @@ public class PostFragment extends FragmentView implements PostView {
     relatedApps.addItemDecoration(new SimpleDividerItemDecoration(getContext(), 10));
     relatedApps.setAdapter(adapter);
     relatedApps.setHorizontalScrollBarEnabled(false);
+    userInput.requestFocus();
 
     V8Engine v8Engine = (V8Engine) getContext().getApplicationContext();
 
