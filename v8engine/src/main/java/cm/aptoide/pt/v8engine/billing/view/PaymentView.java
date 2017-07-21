@@ -26,6 +26,8 @@ public interface PaymentView extends View {
 
   void showTransactionLoading();
 
+  void showBuyLoading();
+
   void showPayments(List<PaymentMethodViewModel> paymentList);
 
   void showProduct(Product product);
@@ -33,6 +35,8 @@ public interface PaymentView extends View {
   void hidePaymentLoading();
 
   void hideTransactionLoading();
+
+  void hideBuyLoading();
 
   void showPaymentsNotFoundMessage();
 

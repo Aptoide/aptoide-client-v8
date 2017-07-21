@@ -180,18 +180,19 @@ public class PaymentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(__ -> view.buySelection()
-            .doOnNext(buySelection -> view.showTransactionLoading())
+            .doOnNext(buySelection -> view.showBuyLoading())
             .flatMapSingle(selection -> productProvider.getProduct())
             .flatMapCompletable(product -> billing.getSelectedPaymentMethod(product)
                 .doOnSuccess(payment -> billingAnalytics.sendPaymentBuyButtonPressedEvent(product,
                     payment.getName()))
                 .flatMapCompletable(payment -> billing.processPayment(payment.getId(), product)
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doOnCompleted(() -> view.hideBuyLoading())
                     .onErrorResumeNext(
                         throwable -> navigateToAuthorizationView(product, payment, throwable))))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> {
-              view.hideTransactionLoading();
+              view.hideBuyLoading();
               showError(throwable);
             })
             .retry())

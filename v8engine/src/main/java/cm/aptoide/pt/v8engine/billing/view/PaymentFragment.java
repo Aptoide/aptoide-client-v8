@@ -51,6 +51,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private boolean paymentLoading;
   private boolean transactionLoading;
+  private boolean buyLoading;
 
   private ProductProvider productProvider;
   private Billing billing;
@@ -138,6 +139,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     unknownErrorDialog = null;
     paymentLoading = false;
     transactionLoading = false;
+    buyLoading = false;
     super.onDestroyView();
   }
 
@@ -171,6 +173,11 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   @Override public void showPaymentLoading() {
     paymentLoading = true;
+    progressView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void showBuyLoading() {
+    buyLoading = true;
     progressView.setVisibility(View.VISIBLE);
   }
 
@@ -218,14 +225,21 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   @Override public void hidePaymentLoading() {
     paymentLoading = false;
-    if (!transactionLoading) {
+    if (!transactionLoading && !buyLoading) {
       progressView.setVisibility(View.GONE);
     }
   }
 
   @Override public void hideTransactionLoading() {
     transactionLoading = false;
-    if (!paymentLoading) {
+    if (!paymentLoading && !buyLoading) {
+      progressView.setVisibility(View.GONE);
+    }
+  }
+
+  @Override public void hideBuyLoading() {
+    buyLoading = false;
+    if (!paymentLoading && !transactionLoading) {
       progressView.setVisibility(View.GONE);
     }
   }
