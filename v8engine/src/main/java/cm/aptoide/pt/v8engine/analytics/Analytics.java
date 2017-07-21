@@ -223,11 +223,10 @@ public class Analytics {
       }
 
       private static void setupDimensions(SharedPreferences sharedPreferences) {
-        if (!checkForUTMFileInMetaINF()) {
-          Dimensions.setUTMDimensionsToUnknown();
-        }
-
         if (isFirstSession) {
+          if (!checkForUTMFileInMetaINF()) {
+            Dimensions.setUTMDimensionsToUnknown();
+          }
           SharedPreferences.Editor edit = sharedPreferences.edit();
           edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
           edit.apply();
