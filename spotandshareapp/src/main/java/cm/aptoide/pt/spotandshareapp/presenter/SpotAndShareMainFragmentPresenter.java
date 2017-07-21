@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
@@ -71,8 +72,13 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
     return view.startSend()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> {
-          spotAndSharePermissionProvider.requestNormalSpotAndSharePermissions(
-              EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND);
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            spotAndSharePermissionProvider.requestNormalSpotAndSharePermissions(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND);
+          } else {
+            Log.i(getClass().getName(), "GOING TO START SENDING");
+            view.openAppSelectionFragment(true);
+          }
         });
   }
 
@@ -80,8 +86,13 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
     return view.startReceive()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(selection -> {
-          spotAndSharePermissionProvider.requestNormalSpotAndSharePermissions(
-              EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE);
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            spotAndSharePermissionProvider.requestNormalSpotAndSharePermissions(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE);
+          } else {
+            Log.i(getClass().getName(), "GOING TO START RECEIVING");
+            view.openWaitingToReceiveFragment();
+          }
         });
   }
 
