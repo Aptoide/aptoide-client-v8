@@ -18,11 +18,14 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class SpotAndShareMainFragmentPresenter implements Presenter {
+  public static final int EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND = 0;
+  public static final int EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE = 1;
+  public static final int WRITE_SETTINGS_REQUEST_CODE_SEND = 2;
+  public static final int WRITE_SETTINGS_REQUEST_CODE_RECEIVE = 3;
 
   private SpotAndShareUserManager spotAndShareUserManager;
   private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
   private SpotAndShareMainFragmentView view;
-  private static final int SPOT_AND_SHARE_PERMISSIONS_REQUEST_CODE = 0;
 
   public SpotAndShareMainFragmentPresenter(SpotAndShareMainFragmentView view,
       SpotAndShareUserManager spotAndShareUserManager,
@@ -36,14 +39,15 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
 
     loadProfileInformationOnView();
 
-    getSubscribe(startReceive());
+    subscribe(clickedReceive());
 
-    getSubscribe(startSend());
+    subscribe(clickedSend());
 
-    getSubscribe(editProfile());
+    subscribe(editProfile());
 
-    handleSendPermissionsResult();
-    handleReceivePermissionsResult();
+    handleNormalPermissionsResult();
+
+    handleWriteSettingsPermissionResult();
   }
 
   @Override public void saveState(Bundle state) {
@@ -54,7 +58,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
 
   }
 
-  private Subscription getSubscribe(Observable<Void> voidObservable) {
+  private Subscription subscribe(Observable<Void> voidObservable) {
     return view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(created -> voidObservable.compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
@@ -63,21 +67,21 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         }, err -> err.printStackTrace());
   }
 
-  private Observable<Void> startSend() {
+  private Observable<Void> clickedSend() {
     return view.startSend()
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(selection -> {
+        .doOnNext(__ -> {
           spotAndSharePermissionProvider.requestNormalSpotAndSharePermissions(
-              SPOT_AND_SHARE_PERMISSIONS_REQUEST_CODE);
+              EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND);
         });
   }
 
-  private Observable<Void> startReceive() {
+  private Observable<Void> clickedReceive() {
     return view.startReceive()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(selection -> {
           spotAndSharePermissionProvider.requestNormalSpotAndSharePermissions(
-              SPOT_AND_SHARE_PERMISSIONS_REQUEST_CODE);
+              EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE);
         });
   }
 
@@ -103,11 +107,14 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         }, error -> error.printStackTrace());
   }
 
-  private void handleSendPermissionsResult() {
+  private void handleNormalPermissionsResult() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> spotAndSharePermissionProvider.normalPermissionResultSpotAndShare(
-            SPOT_AND_SHARE_PERMISSIONS_REQUEST_CODE)
+        .flatMap(__ -> Observable.merge(
+            spotAndSharePermissionProvider.normalPermissionResultSpotAndShare(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND),
+            spotAndSharePermissionProvider.normalPermissionResultSpotAndShare(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE))
             .filter(permissions -> {
               for (PermissionProvider.Permission permission : permissions) {
                 if (!permission.isGranted()) {
@@ -116,33 +123,38 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
               }
               return true;
             })
-            .doOnNext(selection -> {
-              Log.i(getClass().getName(), "GOING TO START SENDING");
-              view.openAppSelectionFragment(true);
+            .doOnNext(permissions -> {
+              if (permissions.get(0)
+                  .getRequestCode() == EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND) {
+                spotAndSharePermissionProvider.requestWriteSettingsPermission(
+                    WRITE_SETTINGS_REQUEST_CODE_SEND);
+              } else if (permissions.get(0)
+                  .getRequestCode() == EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE) {
+                spotAndSharePermissionProvider.requestWriteSettingsPermission(
+                    WRITE_SETTINGS_REQUEST_CODE_RECEIVE);
+              }
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
   }
 
-  private void handleReceivePermissionsResult() {
+  private void handleWriteSettingsPermissionResult() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> spotAndSharePermissionProvider.normalPermissionResultSpotAndShare(
-            SPOT_AND_SHARE_PERMISSIONS_REQUEST_CODE)
-            .filter(permissions -> {
-              for (PermissionProvider.Permission permission : permissions) {
-                if (!permission.isGranted()) {
-                  return false;
-                }
-              }
-              return true;
-            })
-            .doOnNext(selection -> {
-              Log.i(getClass().getName(), "GOING TO START RECEIVING");
-              view.openWaitingToReceiveFragment();
-            }))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
-  }
+        .flatMap(__ -> spotAndSharePermissionProvider.writeSettingsPermissionResult(
+            WRITE_SETTINGS_REQUEST_CODE_SEND))
+        .doOnNext(requestCode -> {
 
+          if (requestCode == WRITE_SETTINGS_REQUEST_CODE_SEND) {
+            Log.i(getClass().getName(), "GOING TO START SENDING");
+            view.openAppSelectionFragment(true);
+          } else if (requestCode == WRITE_SETTINGS_REQUEST_CODE_RECEIVE) {
+            Log.i(getClass().getName(), "GOING TO START RECEIVING");
+            view.openWaitingToReceiveFragment();
+          }
+        })
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
+  }
 }

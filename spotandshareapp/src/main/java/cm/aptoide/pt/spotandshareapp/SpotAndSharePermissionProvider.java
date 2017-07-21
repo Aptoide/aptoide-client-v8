@@ -12,20 +12,31 @@ import rx.Observable;
 public class SpotAndSharePermissionProvider {
 
   private final PermissionProvider permissionProvider;
+  private final WriteSettingsPermissionProvider writeSettingsPermissionProvider;
 
-  public SpotAndSharePermissionProvider(PermissionProvider permissionProvider) {
+  public SpotAndSharePermissionProvider(PermissionProvider permissionProvider,
+      WriteSettingsPermissionProvider writeSettingsPermissionProvider) {
     this.permissionProvider = permissionProvider;
+    this.writeSettingsPermissionProvider = writeSettingsPermissionProvider;
   }
 
   public void requestNormalSpotAndSharePermissions(int requestCode) {
     permissionProvider.providePermissions(new String[] {
-        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_SETTINGS
+        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE
     }, requestCode);
   }
 
   public Observable<List<PermissionProvider.Permission>> normalPermissionResultSpotAndShare(
       int requestCode) {
     return permissionProvider.permissionResults(requestCode);
+  }
+
+  public Observable<Integer> writeSettingsPermissionResult(int requestCode) {
+    return writeSettingsPermissionProvider.permissionResult(requestCode)
+        .map(__ -> requestCode);
+  }
+
+  public void requestWriteSettingsPermission(int requestCode) {
+    writeSettingsPermissionProvider.requestWriteSettingsPermission(requestCode);
   }
 }

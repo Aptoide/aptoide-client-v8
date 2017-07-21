@@ -1,8 +1,12 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -23,17 +27,20 @@ import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
+import cm.aptoide.pt.spotandshareapp.WriteSettingsPermissionProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareMainFragmentPresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.permission.PermissionProvider;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
 /**
  * Created by filipe on 08-06-2017.
  */
 
-public class SpotAndShareMainFragment extends FragmentView implements SpotAndShareMainFragmentView {
+public class SpotAndShareMainFragment extends FragmentView
+    implements SpotAndShareMainFragmentView, WriteSettingsPermissionProvider {
 
   private Button receiveButton;
   private Button sendButton;
@@ -43,6 +50,7 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
   private Toolbar toolbar;
   private SpotAndShareMainFragmentPresenter presenter;
   private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
+  private PublishRelay<Integer> writeSettingsPermissionRelay;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareMainFragment();
@@ -51,8 +59,9 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    writeSettingsPermissionRelay = PublishRelay.create();
     spotAndSharePermissionProvider =
-        new SpotAndSharePermissionProvider((PermissionProvider) getActivity());
+        new SpotAndSharePermissionProvider((PermissionProvider) getActivity(), this);
   }
 
   @Override public void finish() {
@@ -172,5 +181,39 @@ public class SpotAndShareMainFragment extends FragmentView implements SpotAndSha
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     finish();
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void requestWriteSettingsPermission(int requestCode) {
+    if (isWriteSettingsPermissionGranted()) {
+      writeSettingsPermissionRelay.call(null);
+    } else {
+      Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+      intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+      startActivityForResult(intent, requestCode);
+    }
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    switch (requestCode) {
+      case SpotAndShareMainFragmentPresenter.WRITE_SETTINGS_REQUEST_CODE_RECEIVE:
+      case SpotAndShareMainFragmentPresenter.WRITE_SETTINGS_REQUEST_CODE_SEND:
+        if (isWriteSettingsPermissionGranted()) {
+          writeSettingsPermissionRelay.call(requestCode);
+        }
+        break;
+    }
+    super.onActivityResult(requestCode, resultCode, data);
+  }
+
+  private boolean isWriteSettingsPermissionGranted() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      return Settings.System.canWrite(getContext());
+    } else {
+      return true;
+    }
+  }
+
+  @Override public Observable<Integer> permissionResult(int requestCode) {
+    return writeSettingsPermissionRelay;
   }
 }
