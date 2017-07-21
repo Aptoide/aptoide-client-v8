@@ -95,8 +95,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   }
 
   private void setUpAnalytics() {
-    Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
-    Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
     Analytics.Dimensions.setGmsPresent(
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
   }

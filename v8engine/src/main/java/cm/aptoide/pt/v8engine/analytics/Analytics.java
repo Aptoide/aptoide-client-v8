@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -207,6 +208,7 @@ public class Analytics {
     public static class Application {
 
       static AppEventsLogger facebookLogger;
+      public static final String IS_LOCALYTICS_FIRST_SESSION = "IS_LOCALYTICS_FIRST_SESSION";
 
       public static void onCreate(android.app.Application application) {
 
@@ -216,18 +218,19 @@ public class Analytics {
         facebookLogger = AppEventsLogger.newLogger(application);
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
-        isFirstSession = false;
+        isFirstSession = sPref.getBoolean(IS_LOCALYTICS_FIRST_SESSION, true);
+        setupDimensions(sPref);
       }
 
-      private static void setupDimensions() {
+      private static void setupDimensions(SharedPreferences sharedPreferences) {
         if (!checkForUTMFileInMetaINF()) {
           Dimensions.setUTMDimensionsToUnknown();
         }
 
         if (isFirstSession) {
-          Dimensions.setSamplingTypeDimension("90% sampling");
-        } else {
-          Dimensions.setSamplingTypeDimension("Full-tracking");
+          SharedPreferences.Editor edit = sharedPreferences.edit();
+          edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
+          edit.apply();
         }
       }
 
@@ -250,25 +253,8 @@ public class Analytics {
           String utmContent = utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT);
           String entryPoint = utmFileParser.valueExtracter(UTMFileParser.ENTRY_POINT);
 
-          if (!utmSource.isEmpty()) {
-            Analytics.Dimensions.setUTMSource(utmSource);
-          }
-
-          if (!utmMedium.isEmpty()) {
-            Analytics.Dimensions.setUTMMedium(utmMedium);
-          }
-
-          if (!utmCampaign.isEmpty()) {
-            Analytics.Dimensions.setUTMCampaign(utmCampaign);
-          }
-
-          if (!utmContent.isEmpty()) {
-            Analytics.Dimensions.setUTMContent(utmContent);
-          }
-
-          if (!entryPoint.isEmpty()) {
-            Analytics.Dimensions.setEntryPointDimension(entryPoint);
-          }
+          Analytics.Dimensions.createUserPropertiesBundle(utmSource, utmMedium, utmCampaign,
+              utmContent, entryPoint);
 
           utmInputStream.close();
         } catch (IOException e) {
@@ -296,12 +282,25 @@ public class Analytics {
     public static class Activity {
 
       public static void onCreate(android.app.Activity activity) {
+        if (ACTIVATE_FACEBOOK) {
+          AppEventsLogger.setUserID(BuildConfig.GOOGLE_SENDER_ID);
+        }
       }
 
       public static void onDestroy(android.app.Activity activity) {
       }
 
       public static void onResume(android.app.Activity activity) {
+        Bundle bundle = new Bundle();
+        if (!AptoideAccountManager.isLoggedIn()) {
+          bundle.putString("Logged In", "Not Logged In");
+          AppEventsLogger.updateUserProperties(bundle,
+              response -> Logger.d("Facebook Analytics: ", response.toString()));
+        } else {
+          bundle.putString("Logged In", "Logged In");
+          AppEventsLogger.updateUserProperties(bundle,
+              response -> Logger.d("Facebook Analytics: ", response.toString()));
+        }
       }
 
       public static void onPause(android.app.Activity activity) {
@@ -857,62 +856,68 @@ public class Analytics {
   }
 
   public static class Dimensions {
-    public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
-    public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
+    public static final String VERTICAL = "vertical";
+    public static final String PARTNER = "partner";
     public static final String UNKNOWN = "unknown";
     public static final String APKFY = "Apkfy";
     public static final String WEBSITE = "Website";
     public static final String INSTALLER = "Installer";
+    public static final String GMS = "GMS";
+    public static final String HAS_HGMS = "Has GMS";
+    public static final String NO_GMS = "No GMS";
+    public static final String UTM_SOURCE = "UTM Source";
+    public static final String UTM_MEDIUM = "UTM Medium";
+    public static final String UTM_CONTENT = "UTM Content";
+    public static final String UTM_CAMPAIGN = "UTM Campaign";
+    public static final String ENTRY_POINT = "Entry Point";
 
-    public static void setPartnerDimension(String partner) {
-      setDimension(1, partner);
+    private static void setUserProperties(String key, String value) {
+      Bundle parameters = new Bundle();
+      parameters.putString(key, value);
+      setupPartnerDimensions(parameters);
+      AppEventsLogger.updateUserProperties(parameters,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
 
-    private static void setDimension(int i, String s) {
-
-    }
-
-    public static void setVerticalDimension(String verticalName) {
-      setDimension(2, verticalName);
-    }
-
-    public static void setGmsPresent(boolean b) {
-      if (b) {
-        setDimension(3, "GMS Present");
+    public static void setGmsPresent(boolean isPlayServicesAvailable) {
+      if (isPlayServicesAvailable) {
+        setUserProperties(GMS, HAS_HGMS);
       } else {
-        setDimension(3, "GMS Not Present");
+        setUserProperties(GMS, NO_GMS);
       }
     }
 
-    public static void setUTMSource(String utmSource) {
-      setDimension(4, utmSource);
-    }
-
-    public static void setUTMMedium(String utmMedium) {
-      setDimension(5, utmMedium);
-    }
-
-    public static void setUTMCampaign(String utmCampaign) {
-      setDimension(6, utmCampaign);
-    }
-
-    public static void setUTMContent(String utmContent) {
-      setDimension(7, utmContent);
+    public static Bundle createUserPropertiesBundle(String utmSource, String utmMedium,
+        String utmCampaign, String utmContent, String entryPoint) {
+      Bundle data = new Bundle();
+      data.putString(UTM_SOURCE, utmSource);
+      data.putString(UTM_MEDIUM, utmMedium);
+      data.putString(UTM_CAMPAIGN, utmCampaign);
+      data.putString(UTM_CONTENT, utmContent);
+      data.putString(ENTRY_POINT, entryPoint);
+      setupPartnerDimensions(data);
+      return data;
     }
 
     public static void setUTMDimensionsToUnknown() {
-      setDimension(4, UNKNOWN);
-      setDimension(5, UNKNOWN);
-      setDimension(6, UNKNOWN);
-      setDimension(7, UNKNOWN);
+      Bundle data = new Bundle();
+      data.putString(UTM_SOURCE, UNKNOWN);
+      data.putString(UTM_MEDIUM, UNKNOWN);
+      data.putString(UTM_CAMPAIGN, UNKNOWN);
+      data.putString(UTM_CONTENT, UNKNOWN);
+      data.putString(ENTRY_POINT, UNKNOWN);
+      setupPartnerDimensions(data);
+      setUserPropertiesWithBundle(data);
     }
 
-    public static void setSamplingTypeDimension(String samplingType) {
-      setDimension(8, samplingType);
+    private static void setupPartnerDimensions(Bundle data) {
+      data.putString(VERTICAL, V8Engine.getConfiguration().getVerticalDimension());
+      data.putString(PARTNER, V8Engine.getConfiguration().getPartnerDimension());
     }
 
-    public static void setEntryPointDimension(String entryPoint) {
-      setDimension(9, entryPoint);
+    private static void setUserPropertiesWithBundle(Bundle data) {
+      AppEventsLogger.updateUserProperties(data,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
   }
 
