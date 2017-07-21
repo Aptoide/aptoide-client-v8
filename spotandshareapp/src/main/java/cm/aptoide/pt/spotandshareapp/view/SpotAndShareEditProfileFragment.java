@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,10 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatar;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -162,11 +160,8 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
     buildImageViewList();
 
-    SpotAndShareUserPersister persister = new SpotAndShareUserPersister(
-        getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
-            Context.MODE_PRIVATE));
-    attachPresenter(
-        new SpotAndShareEditProfilePresenter(this, new SpotAndShareUserManager(persister)),
+    attachPresenter(new SpotAndShareEditProfilePresenter(this,
+            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager()),
         savedInstanceState);
   }
 

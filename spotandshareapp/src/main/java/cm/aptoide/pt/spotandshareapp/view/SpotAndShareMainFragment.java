@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -23,10 +22,9 @@ import android.widget.Toast;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.spotandshareapp.WriteSettingsPermissionProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareMainFragmentPresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
@@ -150,9 +148,8 @@ public class SpotAndShareMainFragment extends FragmentView
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
     presenter = new SpotAndShareMainFragmentPresenter(this,
-        new SpotAndShareUserManager(new SpotAndShareUserPersister(
-            getContext().getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE))), spotAndSharePermissionProvider);
+        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
+        spotAndSharePermissionProvider);
     attachPresenter(presenter, savedInstanceState);
   }
 

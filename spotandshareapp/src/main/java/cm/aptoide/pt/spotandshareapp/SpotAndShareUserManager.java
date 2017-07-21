@@ -6,14 +6,18 @@ package cm.aptoide.pt.spotandshareapp;
 
 public class SpotAndShareUserManager {
 
+  private SpotAndShareApplication spotAndShareApplication;
   private SpotAndShareUserPersister persister;
 
-  public SpotAndShareUserManager(SpotAndShareUserPersister persister) {
+  public SpotAndShareUserManager(SpotAndShareApplication spotAndShareApplication,
+      SpotAndShareUserPersister persister) {
+    this.spotAndShareApplication = spotAndShareApplication;
     this.persister = persister;
   }
 
   public void createUser(SpotAndShareUser user) {
     persister.save(user);
+    updateFriendOnSpotAndShare();
   }
 
   public SpotAndShareUser getUser() {
@@ -22,5 +26,10 @@ public class SpotAndShareUserManager {
 
   public void updateUser(SpotAndShareUser user) {
     persister.save(user);
+    updateFriendOnSpotAndShare();
+  }
+
+  private void updateFriendOnSpotAndShare() {
+    spotAndShareApplication.updateFriendProfileOnSpotAndShare();
   }
 }

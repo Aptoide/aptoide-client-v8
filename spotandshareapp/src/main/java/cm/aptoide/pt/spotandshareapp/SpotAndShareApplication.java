@@ -25,7 +25,7 @@ public class SpotAndShareApplication extends V8Engine {
 
   public SpotAndShareUserManager getSpotAndShareUserManager() {
     if (spotAndShareUserManager == null) {
-      spotAndShareUserManager = new SpotAndShareUserManager(new SpotAndShareUserPersister(
+      spotAndShareUserManager = new SpotAndShareUserManager(this, new SpotAndShareUserPersister(
           getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
               Context.MODE_PRIVATE)));
     }
@@ -39,5 +39,10 @@ public class SpotAndShareApplication extends V8Engine {
       spotAndShare = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(this, friend);
     }
     return spotAndShare;
+  }
+
+  public void updateFriendProfileOnSpotAndShare() {
+    spotAndShare = null;
+    getSpotAndShare();
   }
 }
