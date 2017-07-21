@@ -201,6 +201,8 @@ public class SpotAndShareMainFragment extends FragmentView
           writeSettingsPermissionRelay.call(requestCode);
         }
         break;
+      default:
+        break;
     }
     super.onActivityResult(requestCode, resultCode, data);
   }
@@ -213,7 +215,7 @@ public class SpotAndShareMainFragment extends FragmentView
     }
   }
 
-  @Override public Observable<Integer> permissionResult(int requestCode) {
+  @Override public Observable<Integer> permissionResult() {
     return writeSettingsPermissionRelay;
   }
 }

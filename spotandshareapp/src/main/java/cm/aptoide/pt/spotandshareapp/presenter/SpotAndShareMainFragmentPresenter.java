@@ -142,8 +142,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   private void handleWriteSettingsPermissionResult() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> spotAndSharePermissionProvider.writeSettingsPermissionResult(
-            WRITE_SETTINGS_REQUEST_CODE_SEND))
+        .flatMap(__ -> spotAndSharePermissionProvider.writeSettingsPermissionResult())
         .doOnNext(requestCode -> {
 
           if (requestCode == WRITE_SETTINGS_REQUEST_CODE_SEND) {

@@ -10,5 +10,5 @@ public interface WriteSettingsPermissionProvider {
 
   void requestWriteSettingsPermission(int requestCode);
 
-  Observable<Integer> permissionResult(int requestCode);
+  Observable<Integer> permissionResult();
 }

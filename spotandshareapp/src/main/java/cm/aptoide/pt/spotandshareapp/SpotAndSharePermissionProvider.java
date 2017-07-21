@@ -31,9 +31,8 @@ public class SpotAndSharePermissionProvider {
     return permissionProvider.permissionResults(requestCode);
   }
 
-  public Observable<Integer> writeSettingsPermissionResult(int requestCode) {
-    return writeSettingsPermissionProvider.permissionResult(requestCode)
-        .map(__ -> requestCode);
+  public Observable<Integer> writeSettingsPermissionResult() {
+    return writeSettingsPermissionProvider.permissionResult();
   }
 
   public void requestWriteSettingsPermission(int requestCode) {
