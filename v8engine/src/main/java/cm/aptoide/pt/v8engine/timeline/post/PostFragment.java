@@ -60,14 +60,10 @@ public class PostFragment extends FragmentView implements PostView {
   private ScrollView scrollView;
   private View previewLayout;
   private PublishRelay<Void> loginAction;
+  private PostPresenter presenter;
 
-  public static PostFragment newInstance(String toShare) {
-    Bundle args = new Bundle();
-    args.putString(DATA_TO_SHARE, toShare);
-
-    PostFragment fragment = new PostFragment();
-    fragment.setArguments(args);
-    return fragment;
+  public static PostFragment newInstance() {
+    return new PostFragment();
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,15 +139,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   private void setupViews() {
-    Bundle args = getArguments();
     userInput.setFilters(new InputFilter[] { new InputFilter.LengthFilter(MAX_CHARACTERS) });
-    String toShare = null;
-    if (args != null && args.containsKey(DATA_TO_SHARE)) {
-      toShare = args.getString(DATA_TO_SHARE);
-      if (toShare.length() > MAX_CHARACTERS) {
-        toShare = toShare.substring(0, MAX_CHARACTERS);
-      }
-    }
 
     relatedApps.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -170,13 +158,19 @@ public class PostFragment extends FragmentView implements PostView {
 
     setUpToolbar();
     showKeyboard();
-
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
     AptoideAccountManager accountManager = v8Engine.getAccountManager();
-    final PostPresenter presenter = new PostPresenter(this, CrashReport.getInstance(),
+    PostUrlProvider urlProvider;
+    if (getActivity() instanceof PostUrlProvider) {
+      urlProvider = (PostUrlProvider) getActivity();
+    } else {
+      urlProvider = () -> null;
+    }
+    presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
-        getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL), toShare,
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()));
+        getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
+        urlProvider);
     attachPresenter(presenter, null);
   }
 
@@ -315,5 +309,9 @@ public class PostFragment extends FragmentView implements PostView {
   private String getInputText() {
     return userInput.getText()
         .toString();
+  }
+
+  interface PostUrlProvider {
+    String getUrlToShare();
   }
 }

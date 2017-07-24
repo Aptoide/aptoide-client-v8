@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,20 +27,20 @@ class PostPresenter implements Presenter {
   private final CrashReport crashReport;
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
+  private final PostFragment.PostUrlProvider postUrlProvider;
   private UrlValidator urlValidator;
-  private String insertedUrl;
   private AccountNavigator accountNavigator;
 
-  public PostPresenter(PostView view, CrashReport crashReport, PostManager postManager,
-      FragmentNavigator fragmentNavigator, UrlValidator urlValidator, @Nullable String insertedUrl,
-      AccountNavigator accountNavigator) {
+  public PostPresenter(PostFragment view, CrashReport crashReport, PostManager postManager,
+      FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
+      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
     this.fragmentNavigator = fragmentNavigator;
     this.urlValidator = urlValidator;
-    this.insertedUrl = insertedUrl;
     this.accountNavigator = accountNavigator;
+    this.postUrlProvider = postUrlProvider;
   }
 
   @Override public void present() {
@@ -76,25 +77,24 @@ class PostPresenter implements Presenter {
 
   private void showPreviewAppsOnStart() {
     view.getLifecycle()
-        .filter(event -> event == View.LifecycleEvent.CREATE)
-        .filter(viewCreated -> isExternalOpen())
-        .flatMap(__ -> loadPostPreview(insertedUrl))
+        .filter(event -> event == View.LifecycleEvent.RESUME && isExternalOpen())
+        .flatMap(__ -> loadPostPreview(postUrlProvider.getUrlToShare()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
 
   private boolean isExternalOpen() {
-    return insertedUrl != null && !insertedUrl.isEmpty();
+    return postUrlProvider.getUrlToShare() != null && !postUrlProvider.getUrlToShare()
+        .isEmpty();
   }
 
   private void showRelatedAppsOnStart() {
     view.getLifecycle()
-        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .doOnNext(lifecycleEvent -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
-        .flatMapSingle(lifecycleEvent -> getStartSuggestions())
-        .filter(relatedApps -> relatedApps != null && !relatedApps.isEmpty())
+        .switchMap(lifecycleEvent -> getStartSuggestions().toObservable())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(relatedApps -> {
           view.addRelatedApps(relatedApps);
@@ -109,11 +109,13 @@ class PostPresenter implements Presenter {
   private Single<List<PostRemoteAccessor.RelatedApp>> getStartSuggestions() {
     if (isExternalOpen()) {
       return Single.zip(postManager.getLocalAppSuggestions(),
-          postManager.getRemoteAppSuggestions(insertedUrl)
+          postManager.getRemoteAppSuggestions(postUrlProvider.getUrlToShare())
               .onErrorResumeNext(throwable -> Single.just(Collections.emptyList())),
           (localApps, remoteApps) -> {
-            remoteApps.addAll(localApps);
-            return remoteApps;
+            ArrayList<PostRemoteAccessor.RelatedApp> list = new ArrayList<>();
+            list.addAll(remoteApps);
+            list.addAll(localApps);
+            return list;
           });
     }
     return postManager.getLocalAppSuggestions();
@@ -259,7 +261,7 @@ class PostPresenter implements Presenter {
   @Nullable private String getUrl(String textToShare) {
     String url;
     if (isExternalOpen()) {
-      url = insertedUrl;
+      url = postUrlProvider.getUrlToShare();
     } else {
       url = urlValidator.containsUrl(textToShare) ? urlValidator.getUrl(textToShare) : null;
     }
