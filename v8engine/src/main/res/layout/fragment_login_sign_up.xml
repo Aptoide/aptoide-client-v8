@@ -75,7 +75,7 @@ android:fitsSystemWindows="true"
           android:paddingLeft="10dp"
           android:paddingRight="10dp"
           android:paddingStart="10dp"
-          android:text="@string/wizard_sub_sub_title_viewpager_three"
+          android:text="@string/wizard_sub_title_viewpager_three"
           style="@style/OnBoarding.SubTitle.TextView"
           />
 

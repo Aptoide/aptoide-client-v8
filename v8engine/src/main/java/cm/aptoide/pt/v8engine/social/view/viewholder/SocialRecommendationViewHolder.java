@@ -256,7 +256,8 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(itemView.getContext()
           .getResources()
-          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber()));
+          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber(),
+              (int) post.getCommentsNumber()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(itemView.getContext())
           .loadWithShadowCircleTransform(post.getComments()
