@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+import cm.aptoide.pt.spotandshareapp.AppModel;
+import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToSendPresenter;
@@ -28,19 +30,44 @@ import rx.Observable;
 public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     implements SpotAndShareWaitingToSendView {
 
+  private final static String APP_NAME = "appName";
+  private final static String PACKAGE_NAME = "packageName";
+  private final static String FILE_PATH = "filePath";
+  private final static String OBBS_FILEPATH = "obbsFilePath";
+  private final static String APP_ICON = "appIcon";
   private Toolbar toolbar;
   private PublishRelay<Void> backRelay;
   private BackButton.ClickHandler clickHandler;
   private RxAlertDialog backDialog;
   private ImageView refreshButton;
+  private AppModel selectedApp;
 
-  public static Fragment newInstance() {
+  public static Fragment newInstance(AppModel appModel) {
+    Bundle args = new Bundle();
+    args.putString(APP_NAME, appModel.getAppName());
+    args.putString(PACKAGE_NAME, appModel.getPackageName());
+    args.putString(FILE_PATH, appModel.getFilePath());
+    args.putString(OBBS_FILEPATH, appModel.getObbsFilePath());
+    args.putByteArray(APP_ICON, appModel.getAppIconAsByteArray());
     Fragment fragment = new SpotAndShareWaitingToSendFragment();
+    Bundle arguments = fragment.getArguments();
+    if (arguments != null) {
+      args.putAll(arguments);
+    }
+    fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    String appName = getArguments().getString(APP_NAME);
+    String packageName = getArguments().getString(PACKAGE_NAME);
+    String filePath = getArguments().getString(FILE_PATH);
+    String obbsFilePath = getArguments().getString(OBBS_FILEPATH);
+    byte[] appIcon = getArguments().getByteArray(APP_ICON);
+
+    selectedApp = new AppModel(appName, packageName, filePath, obbsFilePath, appIcon,
+        new DrawableBitmapMapper(getActivity().getApplicationContext()));
     backRelay = PublishRelay.create();
   }
 
