@@ -43,7 +43,7 @@ class PostPresenter implements Presenter {
   }
 
   @Override public void present() {
-    showInstalledAppsOnStart();
+    showRelatedAppsOnStart();
     showPreviewAppsOnStart();
     postOnTimelineOnButtonClick();
     handleCancelButtonClick();
@@ -88,7 +88,7 @@ class PostPresenter implements Presenter {
     return insertedUrl != null && !insertedUrl.isEmpty();
   }
 
-  private void showInstalledAppsOnStart() {
+  private void showRelatedAppsOnStart() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .doOnNext(lifecycleEvent -> view.showRelatedAppsLoading())
@@ -110,7 +110,8 @@ class PostPresenter implements Presenter {
     if (isExternalOpen()) {
       return Single.zip(postManager.getLocalAppSuggestions(),
           postManager.getRemoteAppSuggestions(insertedUrl)
-              .onErrorReturn(throwable -> Collections.emptyList()), (localApps, remoteApps) -> {
+              .onErrorResumeNext(throwable -> Single.just(Collections.emptyList())),
+          (localApps, remoteApps) -> {
             remoteApps.addAll(localApps);
             return remoteApps;
           });
