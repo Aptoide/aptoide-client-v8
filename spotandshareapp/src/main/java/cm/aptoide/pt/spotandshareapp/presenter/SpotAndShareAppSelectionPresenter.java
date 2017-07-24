@@ -4,6 +4,7 @@ import android.os.Bundle;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
+import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
@@ -11,7 +12,6 @@ import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,18 +31,19 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private InstalledRepositoryDummy installedRepositoryDummy;
   private List<AppModel> selectedApps;
   private DrawableBitmapMapper drawableBitmapMapper;
+  private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
   private ObbsProvider obbsProvider;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
       boolean shouldCreateGroup, InstalledRepositoryDummy installedRepositoryDummy,
       SpotAndShare spotAndShare, DrawableBitmapMapper drawableBitmapMapper,
-      ObbsProvider obbsProvider) {
+      AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper) {
     this.view = view;
     this.shouldCreateGroup = shouldCreateGroup;
     this.installedRepositoryDummy = installedRepositoryDummy;
     this.spotAndShare = spotAndShare;
     this.drawableBitmapMapper = drawableBitmapMapper;
-    this.obbsProvider = obbsProvider;
+    this.appModelToAndroidAppInfoMapper = appModelToAndroidAppInfoMapper;
     selectedApps = new LinkedList<>();
   }
 
@@ -127,25 +128,27 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
 
     if (canSend()) {
 
-      String appName = appModel.getAppName();
-      String packageName = appModel.getPackageName();
-      File apk = new File(appModel.getFilePath());
-      byte[] bitmapdata = appModel.getAppIconAsByteArray();
+      //String appName = appModel.getAppName();
+      //String packageName = appModel.getPackageName();
+      //File apk = new File(appModel.getFilePath());
+      //byte[] bitmapdata = appModel.getAppIconAsByteArray();
+      //
+      //AndroidAppInfo androidAppInfo;
+      //if (!appModel.getObbsFilePath()
+      //    .equals(InstalledRepositoryDummy.NO_OBBS)) {
+      //
+      //  File[] obbsList = obbsProvider.getObbsList(appModel.getObbsFilePath());
+      //
+      //  androidAppInfo =
+      //      new AndroidAppInfo(appName, packageName, apk, obbsList[0], obbsList[1], bitmapdata,
+      //          null);
+      //} else {
+      //  androidAppInfo =
+      //      new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata, null);
+      //}
 
-      AndroidAppInfo androidAppInfo;
-      if (!appModel.getObbsFilePath()
-          .equals(InstalledRepositoryDummy.NO_OBBS)) {
-
-        File[] obbsList = obbsProvider.getObbsList(appModel.getObbsFilePath());
-
-        androidAppInfo =
-            new AndroidAppInfo(appName, packageName, apk, obbsList[0], obbsList[1], bitmapdata,
-                null);
-      } else {
-        androidAppInfo =
-            new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata, null);
-      }
-
+      AndroidAppInfo androidAppInfo =
+          appModelToAndroidAppInfoMapper.convertAppModelToAndroidAppInfo(appModel);
       AptoideUtils.ThreadU.runOnIoThread(
           () -> spotAndShare.sendApps(Collections.singletonList(androidAppInfo)));
 

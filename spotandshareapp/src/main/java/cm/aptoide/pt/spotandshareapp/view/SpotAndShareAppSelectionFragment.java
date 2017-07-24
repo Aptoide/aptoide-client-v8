@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.AppModel;
+import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
@@ -161,11 +162,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
 
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
-            new InstalledRepositoryDummy(getActivity().getApplicationContext(),
-                getContext().getPackageManager()),
-            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            new DrawableBitmapMapper(getActivity().getApplicationContext()), new ObbsProvider()),
-        savedInstanceState);
+        new InstalledRepositoryDummy(getActivity().getApplicationContext(),
+            getContext().getPackageManager()),
+        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        new DrawableBitmapMapper(getActivity().getApplicationContext()),
+        new AppModelToAndroidAppInfoMapper(new ObbsProvider())), savedInstanceState);
   }
 
   private void setupToolbar() {

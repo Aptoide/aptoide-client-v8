@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
+import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
@@ -21,4 +22,6 @@ public interface SpotAndShareWaitingToSendView extends View {
   Observable<Void> clickedRefresh();
 
   void openTransferRecord();
+
+  AppModel getSelectedApp();
 }

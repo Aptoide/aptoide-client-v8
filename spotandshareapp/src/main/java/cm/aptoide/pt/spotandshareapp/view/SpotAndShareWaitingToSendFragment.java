@@ -10,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.AppModel;
+import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
+import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToSendPresenter;
@@ -40,6 +43,8 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   private BackButton.ClickHandler clickHandler;
   private RxAlertDialog backDialog;
   private ImageView refreshButton;
+  private ImageView appIcon;
+  private TextView appName;
   private AppModel selectedApp;
 
   public static Fragment newInstance(AppModel appModel) {
@@ -74,6 +79,9 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
+    appIcon = (ImageView) view.findViewById(R.id.sending_app_avatar);
+    appName = (TextView) view.findViewById(R.id.sending_app_name);
+    setupSendingAppInfo();
     setupToolbar();
     backDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.spotandshare_message_leave_group_warning)
@@ -88,8 +96,13 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     refreshButton = (ImageView) view.findViewById(R.id.sync_image);
 
     attachPresenter(new SpotAndShareWaitingToSendPresenter(this,
-            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare()),
-        savedInstanceState);
+        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        new AppModelToAndroidAppInfoMapper(new ObbsProvider())), savedInstanceState);
+  }
+
+  private void setupSendingAppInfo() {
+    appIcon.setImageDrawable(selectedApp.getAppIconAsDrawable());
+    appName.setText(selectedApp.getAppName());
   }
 
   private void setupToolbar() {
@@ -157,7 +170,15 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   }
 
   @Override public void openTransferRecord() {
-    getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance());
+    getActivity().runOnUiThread(new Runnable() {
+      @Override public void run() {
+        getFragmentNavigator().cleanBackStack();
+        getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance());
+      }
+    });
+  }
+
+  @Override public AppModel getSelectedApp() {
+    return selectedApp;
   }
 }
