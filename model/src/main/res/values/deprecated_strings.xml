@@ -91,10 +91,10 @@
   <string name="error_410">متاسفانه، برنامه درخواستی شما برروی این سرور پیدا نشد.</string>
   <string name="please_wait">لطفا صبر کنید…</string>
   <string name="simple_error_occured">خطایی رخ داده است.</string>
-  <string name="yes">نعم</string>
-  <string name="no">لا</string>
+  <string name="yes">بله</string>
+  <string name="no">نه</string>
   <string name="feedback_subject">موضوع</string>
-  <string name="feedback_to_write2">نظر خود را در اینجا بنویسید و آن را برای ما ارسال کنید...
+  <string name="feedback_to_write2">نظر خود را در اینجا بنویسید و آن را برای ما ارسال کنید…
     هر جزئیاتی که وارد کنید به ما برای پشتیبانی شما کمک خواهد کرد:
 
     مراحلی که انجام داده‌اید
