@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.AppModel;
-import cm.aptoide.pt.spotandshareapp.DrawableToBitmapMapper;
+import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
@@ -113,7 +113,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
 
   @Override public void openWaitingToSendScreen(AppModel appModel) {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(SpotAndShareWaitingToSendFragment.newInstance());
+    getFragmentNavigator().navigateTo(SpotAndShareWaitingToSendFragment.newInstance(appModel));
   }
 
   @Override public void hideLoading() {
@@ -161,9 +161,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
 
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
-        new InstalledRepositoryDummy(getContext().getPackageManager()),
-        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-        new DrawableToBitmapMapper(), new ObbsProvider()), savedInstanceState);
+            new InstalledRepositoryDummy(getActivity().getApplicationContext(),
+                getContext().getPackageManager()),
+            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            new DrawableBitmapMapper(getActivity().getApplicationContext()), new ObbsProvider()),
+        savedInstanceState);
   }
 
   private void setupToolbar() {

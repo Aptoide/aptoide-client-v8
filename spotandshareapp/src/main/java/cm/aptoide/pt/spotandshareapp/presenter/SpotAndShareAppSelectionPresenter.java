@@ -4,7 +4,7 @@ import android.os.Bundle;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
-import cm.aptoide.pt.spotandshareapp.DrawableToBitmapMapper;
+import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
@@ -30,18 +30,18 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private boolean shouldCreateGroup;
   private InstalledRepositoryDummy installedRepositoryDummy;
   private List<AppModel> selectedApps;
-  private DrawableToBitmapMapper drawableToBitmapMapper;
+  private DrawableBitmapMapper drawableBitmapMapper;
   private ObbsProvider obbsProvider;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
       boolean shouldCreateGroup, InstalledRepositoryDummy installedRepositoryDummy,
-      SpotAndShare spotAndShare, DrawableToBitmapMapper drawableToBitmapMapper,
+      SpotAndShare spotAndShare, DrawableBitmapMapper drawableBitmapMapper,
       ObbsProvider obbsProvider) {
     this.view = view;
     this.shouldCreateGroup = shouldCreateGroup;
     this.installedRepositoryDummy = installedRepositoryDummy;
     this.spotAndShare = spotAndShare;
-    this.drawableToBitmapMapper = drawableToBitmapMapper;
+    this.drawableBitmapMapper = drawableBitmapMapper;
     this.obbsProvider = obbsProvider;
     selectedApps = new LinkedList<>();
   }

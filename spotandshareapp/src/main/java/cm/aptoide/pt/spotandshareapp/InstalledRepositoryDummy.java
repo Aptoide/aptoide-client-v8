@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp;
 
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -14,9 +15,11 @@ import java.util.List;
 
 public class InstalledRepositoryDummy {
   public static final String NO_OBBS = "no_obbs";
+  private Context context;
   private PackageManager packageManager;
 
-  public InstalledRepositoryDummy(PackageManager packageManager) {
+  public InstalledRepositoryDummy(Context context, PackageManager packageManager) {
+    this.context = context;
     this.packageManager = packageManager;
   }
 
@@ -33,7 +36,7 @@ public class InstalledRepositoryDummy {
         AppModel app = new AppModel(applicationInfo.loadLabel(packageManager)
             .toString(), applicationInfo.packageName, applicationInfo.sourceDir,
             getObbFilePath(applicationInfo.packageName), applicationInfo.loadIcon(packageManager),
-            new DrawableToBitmapMapper());
+            new DrawableBitmapMapper(context));
         if (!installedApps.contains(app)) {
           installedApps.add(app);
         }
