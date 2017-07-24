@@ -291,6 +291,7 @@ public class Analytics {
 
       public static void onResume(android.app.Activity activity) {
         Bundle bundle = new Bundle();
+        Dimensions.setupPartnerDimensions(bundle);
         if (!AptoideAccountManager.isLoggedIn()) {
           bundle.putString("Logged In", "Not Logged In");
           AppEventsLogger.updateUserProperties(bundle,
@@ -905,7 +906,6 @@ public class Analytics {
       data.putString(UTM_CAMPAIGN, UNKNOWN);
       data.putString(UTM_CONTENT, UNKNOWN);
       data.putString(ENTRY_POINT, UNKNOWN);
-      setupPartnerDimensions(data);
       setUserPropertiesWithBundle(data);
     }
 
@@ -915,6 +915,7 @@ public class Analytics {
     }
 
     private static void setUserPropertiesWithBundle(Bundle data) {
+      setupPartnerDimensions(data);
       AppEventsLogger.updateUserProperties(data,
           response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
