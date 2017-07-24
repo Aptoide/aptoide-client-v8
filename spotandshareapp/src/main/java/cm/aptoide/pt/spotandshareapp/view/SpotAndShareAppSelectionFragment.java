@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.AppModel;
+import cm.aptoide.pt.spotandshareapp.DrawableToBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.R;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareAppSelectionManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
@@ -163,7 +163,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
         new InstalledRepositoryDummy(getContext().getPackageManager()),
         ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-        new SpotAndShareAppSelectionManager(), new ObbsProvider()), savedInstanceState);
+        new DrawableToBitmapMapper(), new ObbsProvider()), savedInstanceState);
   }
 
   private void setupToolbar() {

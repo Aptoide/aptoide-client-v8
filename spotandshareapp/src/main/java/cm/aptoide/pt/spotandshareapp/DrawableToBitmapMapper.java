@@ -9,7 +9,7 @@ import java.io.ByteArrayOutputStream;
  * Created by filipe on 10-07-2017.
  */
 
-public class SpotAndShareAppSelectionManager {
+public class DrawableToBitmapMapper {
 
   public byte[] convertDrawableToBitmap(Drawable drawable) {
     Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();

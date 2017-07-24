@@ -4,9 +4,9 @@ import android.os.Bundle;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
+import cm.aptoide.pt.spotandshareapp.DrawableToBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareAppSelectionManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -30,18 +30,18 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private boolean shouldCreateGroup;
   private InstalledRepositoryDummy installedRepositoryDummy;
   private List<AppModel> selectedApps;
-  private SpotAndShareAppSelectionManager spotAndShareAppSelectionManager;
+  private DrawableToBitmapMapper drawableToBitmapMapper;
   private ObbsProvider obbsProvider;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
       boolean shouldCreateGroup, InstalledRepositoryDummy installedRepositoryDummy,
-      SpotAndShare spotAndShare, SpotAndShareAppSelectionManager spotAndShareAppSelectionManager,
+      SpotAndShare spotAndShare, DrawableToBitmapMapper drawableToBitmapMapper,
       ObbsProvider obbsProvider) {
     this.view = view;
     this.shouldCreateGroup = shouldCreateGroup;
     this.installedRepositoryDummy = installedRepositoryDummy;
     this.spotAndShare = spotAndShare;
-    this.spotAndShareAppSelectionManager = spotAndShareAppSelectionManager;
+    this.drawableToBitmapMapper = drawableToBitmapMapper;
     this.obbsProvider = obbsProvider;
     selectedApps = new LinkedList<>();
   }
@@ -128,8 +128,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     String appName = appModel.getAppName();
     String packageName = appModel.getPackageName();
     File apk = new File(appModel.getFilePath());
-    byte[] bitmapdata =
-        spotAndShareAppSelectionManager.convertDrawableToBitmap(appModel.getAppIcon());
+    byte[] bitmapdata = drawableToBitmapMapper.convertDrawableToBitmap(appModel.getAppIcon());
 
     AndroidAppInfo androidAppInfo;
     if (!appModel.getObbsFilePath()
