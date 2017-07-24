@@ -41,7 +41,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private ProgressDialog dialog;
   private PermissionManager permissionManager;
 
-  AutoUpdate(AptoideBaseActivity activity, Installer installer, DownloadFactory downloadFactory,
+  public AutoUpdate(AptoideBaseActivity activity, Installer installer, DownloadFactory downloadFactory,
       AptoideDownloadManager downloadManager, PermissionManager permissionManager) {
     this.activity = activity;
     this.installer = installer;
