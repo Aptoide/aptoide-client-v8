@@ -405,7 +405,7 @@ public class TimelineAnalytics {
     final Post post = cardTouchEvent.getCard();
     final CardType postType = post.getType();
 
-    if (CardType.isSocial(cardTouchEvent.getCard())) {
+    if (postType.isSocial()) {
       SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
           ((SocialHeaderCardTouchEvent) cardTouchEvent);
       Analytics.AppsTimeline.clickOnCard(socialHeaderCardTouchEvent.getCard()
@@ -462,8 +462,8 @@ public class TimelineAnalytics {
     final Post post = cardTouchEvent.getCard();
     final CardType postType = post.getType();
 
-    if (CardType.isMedia(post)) {
-      if (isArticle(postType)) {
+    if (postType.isMedia()) {
+      if (postType.isArticle()) {
         Media media = (Media) post;
         Analytics.AppsTimeline.clickOnCard(media.getType()
                 .name(), Analytics.AppsTimeline.BLANK, media.getMediaTitle(), media.getPublisherName(),
@@ -475,7 +475,7 @@ public class TimelineAnalytics {
         sendMediaCardClickEvent(media.getType()
                 .name(), media.getMediaTitle(), media.getPublisherName(),
             Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
-      } else if (isVideo(postType)) {
+      } else if (postType.isVideo()) {
         Media media = (Media) post;
         Analytics.AppsTimeline.clickOnCard(media.getType()
                 .name(), Analytics.AppsTimeline.BLANK, media.getMediaTitle(), media.getPublisherName(),
@@ -569,17 +569,5 @@ public class TimelineAnalytics {
           Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
           Analytics.AppsTimeline.OPEN_APP_VIEW);
     }
-  }
-
-  private boolean isVideo(CardType postType) {
-    return postType.equals(CardType.VIDEO)
-        || postType.equals(CardType.SOCIAL_VIDEO)
-        || postType.equals(CardType.AGGREGATED_SOCIAL_VIDEO);
-  }
-
-  private boolean isArticle(CardType postType) {
-    return postType.equals(CardType.ARTICLE)
-        || postType.equals(CardType.SOCIAL_ARTICLE)
-        || postType.equals(CardType.AGGREGATED_SOCIAL_ARTICLE);
   }
 }
