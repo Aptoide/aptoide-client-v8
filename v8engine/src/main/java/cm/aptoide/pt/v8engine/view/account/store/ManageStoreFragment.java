@@ -132,6 +132,10 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
   }
 
+  @Override public void hideKeyboard() {
+    super.hideKeyboard();
+  }
+
   /**
    * @param pictureUri Load image to UI and save image in model to handle configuration changes.
    */
@@ -263,14 +267,14 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     themeSelectorView.setAdapter(themeSelectorAdapter);
 
     themeSelectorAdapter.storeThemeSelection()
-        .doOnNext(storeTheme -> currentModel.setStoreThemeName(storeTheme.getThemeName()))
+        .doOnNext(storeTheme -> currentModel.setStoreTheme(storeTheme))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe();
 
     themeSelectorView.addItemDecoration(new DividerItemDecoration(getContext(), 8,
         DividerItemDecoration.LEFT | DividerItemDecoration.RIGHT));
 
-    themeSelectorAdapter.selectTheme(currentModel.getStoreThemeName());
+    themeSelectorAdapter.selectTheme(currentModel.getStoreTheme());
   }
 
   public void setupToolbarTitle() {
@@ -302,7 +306,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     currentModel = ViewModel.update(currentModel, storeName.getText()
         .toString(), storeDescription.getText()
         .toString());
-    currentModel.setStoreThemeName(themeSelectorAdapter.getSelectedThemeName());
+    currentModel.setStoreTheme(themeSelectorAdapter.getSelectedTheme());
     return currentModel;
   }
 
@@ -333,10 +337,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
   }
 
-  @Override public void hideKeyboard() {
-    super.hideKeyboard();
-  }
-
   private String getViewTitle(ViewModel storeModel) {
     if (!storeModel.storeExists()) {
       return getString(R.string.create_store_title);
@@ -350,7 +350,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     String storeName;
     String storeDescription;
     String pictureUri;
-    String storeThemeName;
+    StoreTheme storeTheme;
     boolean newAvatar;
 
     public ViewModel() {
@@ -358,17 +358,17 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       this.storeName = "";
       this.storeDescription = "";
       this.pictureUri = "";
-      this.storeThemeName = "";
+      this.storeTheme = StoreTheme.DEFAULT;
       this.newAvatar = false;
     }
 
-    public ViewModel(long storeId, String storeThemeName, String storeName, String storeDescription,
+    public ViewModel(long storeId, StoreTheme storeTheme, String storeName, String storeDescription,
         String pictureUri) {
       this.storeId = storeId;
       this.storeName = storeName;
       this.storeDescription = storeDescription;
       this.pictureUri = pictureUri;
-      this.storeThemeName = storeThemeName;
+      this.storeTheme = storeTheme;
       this.newAvatar = false;
     }
 
@@ -427,12 +427,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       this.storeId = storeId;
     }
 
-    public String getStoreThemeName() {
-      return storeThemeName;
+    public StoreTheme getStoreTheme() {
+      return storeTheme;
     }
 
-    public void setStoreThemeName(String storeTheme) {
-      this.storeThemeName = storeTheme;
+    public void setStoreTheme(StoreTheme storeTheme) {
+      this.storeTheme = storeTheme;
     }
 
     public boolean storeExists() {

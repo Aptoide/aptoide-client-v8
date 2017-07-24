@@ -96,7 +96,8 @@ public class ManageStorePresenter implements Presenter {
     })
         .flatMapCompletable(mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreId(),
             storeModel.getStoreName(), storeModel.getStoreDescription(), mediaStoragePath,
-            storeModel.hasNewAvatar(), storeModel.getStoreThemeName(), storeModel.storeExists()));
+            storeModel.hasNewAvatar(), storeModel.getStoreTheme()
+                .getThemeName(), storeModel.storeExists()));
   }
 
   private void navigate() {
