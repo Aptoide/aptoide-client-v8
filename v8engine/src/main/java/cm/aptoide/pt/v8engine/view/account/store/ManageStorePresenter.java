@@ -13,6 +13,8 @@ import cm.aptoide.pt.v8engine.view.account.exception.InvalidImageException;
 import cm.aptoide.pt.v8engine.view.account.exception.StoreCreationException;
 import rx.Completable;
 import rx.Single;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ManageStorePresenter implements Presenter {
 
@@ -80,7 +82,9 @@ public class ManageStorePresenter implements Presenter {
       view.hideKeyboard();
       view.showWaitProgressBar();
     })
+        .observeOn(Schedulers.io())
         .andThen(saveData(storeModel))
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> navigate())
         .onErrorResumeNext(err -> Completable.fromAction(() -> view.dismissWaitProgressBar())
