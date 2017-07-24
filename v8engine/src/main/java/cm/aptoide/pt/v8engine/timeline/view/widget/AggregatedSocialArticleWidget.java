@@ -330,6 +330,7 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
         numberComments.setVisibility(View.VISIBLE);
         numberComments.setText(getContext().getResources()
             .getQuantityString(R.plurals.timeline_short_comment, (int) minimalCard.getStats()
+                .getComments(), (int) minimalCard.getStats()
                 .getComments()));
         socialCommentBar.setVisibility(View.VISIBLE);
         ImageLoader.with(getContext())

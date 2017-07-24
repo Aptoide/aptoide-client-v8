@@ -2,7 +2,7 @@
   <!-- Timeline Fragment -->
   <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
   <string name="fragment_social_timeline_no_connection">No network connection</string>
-  <string name="displayable_social_timeline_store_latest_apps_headline">This store has new Apps</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">This store has new apps</string>
   <string name="displayable_social_timeline_app_update_name">App %1$s</string>
   <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
   <string name="displayable_social_timeline_app_update_version">Version %1$s</string>
@@ -14,21 +14,21 @@
   <string name="displayable_social_timeline_recommendation_similar_and">and</string>
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
   <string name="appstimeline_update_app">app</string>
-  <string name="customtabs_open_native_app">Open in App</string>
+  <string name="customtabs_open_native_app">Open in app</string>
   <string name="social_timeline_you_will_share">What your followers will see:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
+  <string name="social_timeline_you_will_share_comment">Your followers will see your comment:</string>
+  <string name="social_timeline_you_will_share_like">Your followers will see your like:</string>
   <string name="social_timeline_share_title">Share card preview</string>
-  <string name="social_timeline_share_title_checkbox">Make my user profile private in Apps Timeline. Only show/share my store info.</string>
-  <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
+  <string name="social_timeline_share_title_checkbox">Make my user profile private in timeline. Only show/share my store info.</string>
+  <string name="social_timeline_share_title_checkbox_fb">Allow my user profile to be public on timeline</string>
   <string name="social_timeline_share_dialog_title">Thank you for sharing</string>
   <string name="social_timeline_share_dialog_opt_in_text_1">Your friends will be able to find you and follow you.</string>
-  <string name="social_timeline_share_dialog_opt_in_text_2">If you want your profile to be private on Apps Timeline, edit your privacy settings on <b>www.aptoide.com</b>.</string>
-  <string name="social_timeline_share_dialog_opt_out_text_1">By making your profile hidden, your friends won\'t be able to find and follow you on Apps Timeline.</string>
-  <string name="social_timeline_share_dialog_opt_out_text_2">Access <b>www.aptoide.com</b>, login to your account and go to <b>Settings</b> to change privacy definitions.</string>
-  <string name="social_timeline_share_dialog_installed_and_recommended">Installed and Recommended</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">If you want your profile to be private on timeline, edit your privacy settings on <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">If your profile is private, your friends won\'t be able to find and follow you on timeline.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2">Access <b>www.aptoide.com</b>, login to your account and go to <b>Settings</b> to change privacy settings.</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">Installed and recommended</string>
   <string name="social_timeline_share_bar_login">What are your friends installing?</string>
-  <string name="social_timeline_share_bar_following">Follow more Stores and connect with your friends.</string>
+  <string name="social_timeline_share_bar_following">Follow more stores and connect with your friends.</string>
   <string name="social_timeline_share_bar_followers">Improve your store to have more followers.</string>
   <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
   <string name="social_timeline_following_fragment_title">Following %d person(s)</string>
@@ -52,15 +52,15 @@
   <!-- Address book -->
   <string name="addressbook_increase_network_message">Increase your network.</string>
   <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
-  <string name="addressbook_sync">Sync Address Book</string>
+  <string name="addressbook_sync">Sync address book</string>
   <string name="not_now">Not now</string>
-  <string name="follow_friends">Follow Friends</string>
-  <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
-    \n\n%1$s will search your address book for friends and family that are using our App Store. We\'ll
+  <string name="follow_friends">Follow friends</string>
+  <string name="addressbook_data_about"><b>How %1$s uses your data</b>
+    \n\n%1$s will search in your address book for friends and family that are using our app store. We\'ll
     only use this information to improve your %1$s experience by connecting you to more people
-    that can share apps related content with you.\n\n\nTo protect your privacy, no clear private data
+    that can share apps-related content with you.\n\n\nTo protect your privacy, no clear private data
     will be sent out to %1$s servers. An anonymous signature (hash) will be created with your data
-    and that hash cannot be reversed into the original contact info.
+    and that hash can\'t be reversed into the original contact info.
   </string>
   <string name="addressbook_success">Success!</string>
   <string name="addressbook_allow_friends_find">Allow friends to find you</string>
@@ -73,17 +73,17 @@
   <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
   <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
   <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s will browse your address book for friends and family
-    that are using our App Store. To protect your privacy, no private data will be sent out to %1$s
+  <string name="addressbook_2nd_msg">%1$s will search in your address book for friends and family
+    that are using our app store. To protect your privacy, no private data will be sent out to %1$s
     servers</string>
   <string name="addressbook_3rd_msg">LEARN MORE</string>
   <string name="address_book_twitter_error">Twitter authorization error</string>
-  <string name="follow_my_store">Hello, follow my %1$s Store here %2$s</string>
+  <string name="follow_my_store">Hello, follow my %1$s store here %2$s</string>
   <string name="store_meta_apps">Apps</string>
   <string name="store_meta_following">Following</string>
   <string name="store_meta_followers">Followers</string>
-  <string name="addressbook_about">About Address Book</string>
-  <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to connect you</string>
+  <string name="addressbook_about">About address book</string>
+  <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to make a connection</string>
 
   <string name="timeline_short_related_to">Related to</string>
   <string name="timeline_title_popular_app_among_friends">Popular app among friends</string>
