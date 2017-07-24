@@ -121,30 +121,43 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   private void handleLocationAndExternalStoragePermissionsResult() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> Observable.merge(
-            spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND),
-            spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE))
-            .filter(permissions -> {
-              for (PermissionProvider.Permission permission : permissions) {
-                if (!permission.isGranted()) {
-                  return false;
-                }
-              }
-              return true;
-            })
-            .doOnNext(permissions -> {
-              if (permissions.get(0)
-                  .getRequestCode() == EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND) {
-                spotAndSharePermissionProvider.requestWriteSettingsPermission(
-                    WRITE_SETTINGS_REQUEST_CODE_SEND);
-              } else if (permissions.get(0)
-                  .getRequestCode() == EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE) {
-                spotAndSharePermissionProvider.requestWriteSettingsPermission(
-                    WRITE_SETTINGS_REQUEST_CODE_RECEIVE);
-              }
-            }))
+        .flatMap(
+            __ -> spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND)
+
+                .filter(permissions -> {
+                  for (PermissionProvider.Permission permission : permissions) {
+                    if (!permission.isGranted()) {
+                      return false;
+                    }
+                  }
+                  return true;
+                })
+                .doOnNext(permissions -> {
+                  spotAndSharePermissionProvider.requestWriteSettingsPermission(
+                      WRITE_SETTINGS_REQUEST_CODE_SEND);
+                }))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(
+            __ -> spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE)
+                .filter(permissions -> {
+                  for (PermissionProvider.Permission permission : permissions) {
+                    if (!permission.isGranted()) {
+                      return false;
+                    }
+                  }
+                  return true;
+                })
+                .doOnNext(permissions -> {
+                  spotAndSharePermissionProvider.requestWriteSettingsPermission(
+                      WRITE_SETTINGS_REQUEST_CODE_RECEIVE);
+                }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
@@ -154,15 +167,21 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> spotAndSharePermissionProvider.writeSettingsPermissionResult())
+        .filter(requestCode -> requestCode == WRITE_SETTINGS_REQUEST_CODE_SEND)
         .doOnNext(requestCode -> {
+          Log.i(getClass().getName(), "GOING TO START SENDING");
+          view.openAppSelectionFragment(true);
+        })
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
 
-          if (requestCode == WRITE_SETTINGS_REQUEST_CODE_SEND) {
-            Log.i(getClass().getName(), "GOING TO START SENDING");
-            view.openAppSelectionFragment(true);
-          } else if (requestCode == WRITE_SETTINGS_REQUEST_CODE_RECEIVE) {
-            Log.i(getClass().getName(), "GOING TO START RECEIVING");
-            view.openWaitingToReceiveFragment();
-          }
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> spotAndSharePermissionProvider.writeSettingsPermissionResult())
+        .filter(requestCode -> requestCode == WRITE_SETTINGS_REQUEST_CODE_RECEIVE)
+        .doOnNext(requestCode -> {
+          Log.i(getClass().getName(), "GOING TO START RECEIVING");
+          view.openWaitingToReceiveFragment();
         })
         .subscribe(created -> {
         }, error -> error.printStackTrace());
