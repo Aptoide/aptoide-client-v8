@@ -29,7 +29,7 @@ public interface SpotAndShareAppSelectionView extends View {
 
   void openTransferRecord();
 
-  void openWaitingToSendScreen();
+  void openWaitingToSendScreen(AppModel selectedApp);
 
   void onCreateGroupError(Throwable throwable);
 
