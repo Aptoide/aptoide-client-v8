@@ -101,7 +101,7 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
     }
 
     public void setAppModelItem(AppModel appModel) {
-      appIcon.setImageDrawable(appModel.getAppIcon());
+      appIcon.setImageDrawable(appModel.getAppIconAsDrawable());
       appName.setText(appModel.getAppName());
       frameLayout.setOnClickListener(v -> appSubject.onNext(appModel));
     }

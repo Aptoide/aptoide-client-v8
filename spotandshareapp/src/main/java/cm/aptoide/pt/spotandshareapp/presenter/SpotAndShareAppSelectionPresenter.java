@@ -130,7 +130,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
       String appName = appModel.getAppName();
       String packageName = appModel.getPackageName();
       File apk = new File(appModel.getFilePath());
-      byte[] bitmapdata = drawableToBitmapMapper.convertDrawableToBitmap(appModel.getAppIcon());
+      byte[] bitmapdata = appModel.getAppIconAsByteArray();
 
       AndroidAppInfo androidAppInfo;
       if (!appModel.getObbsFilePath()

@@ -32,7 +32,8 @@ public class InstalledRepositoryDummy {
 
         AppModel app = new AppModel(applicationInfo.loadLabel(packageManager)
             .toString(), applicationInfo.packageName, applicationInfo.sourceDir,
-            getObbFilePath(applicationInfo.packageName), applicationInfo.loadIcon(packageManager));
+            getObbFilePath(applicationInfo.packageName), applicationInfo.loadIcon(packageManager),
+            new DrawableToBitmapMapper());
         if (!installedApps.contains(app)) {
           installedApps.add(app);
         }

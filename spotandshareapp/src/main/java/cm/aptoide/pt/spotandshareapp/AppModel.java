@@ -15,16 +15,18 @@ public class AppModel {
   private String packageName;
   private String filePath;
   private Drawable appIcon;
+  private final DrawableToBitmapMapper mapper;
   private String obbsFilePath;
   private boolean isSelected;
 
   public AppModel(String appName, String packageName, String filePath, String obbsFilePath,
-      Drawable appIcon) {
+      Drawable appIcon, DrawableToBitmapMapper mapper) {
     this.appName = appName;
     this.packageName = packageName;
     this.filePath = filePath;
     this.obbsFilePath = obbsFilePath;
     this.appIcon = appIcon;
+    this.mapper = mapper;
   }
 
   public String getAppName() {
@@ -43,8 +45,12 @@ public class AppModel {
     return obbsFilePath;
   }
 
-  public Drawable getAppIcon() {
+  public Drawable getAppIconAsDrawable() {
     return appIcon;
+  }
+
+  public byte[] getAppIconAsByteArray() {
+    return mapper.convertDrawableToBitmap(appIcon);
   }
 
   public boolean isSelected() {
