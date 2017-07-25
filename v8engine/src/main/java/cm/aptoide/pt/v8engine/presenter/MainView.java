@@ -5,15 +5,22 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Intent;
+import rx.Observable;
+
 /**
  * Created by marcelobenites on 18/01/17.
  */
 
 public interface MainView extends View {
 
-  void showWizard();
+  void showInstallationError(int numberOfErrors);
 
-  void showHome();
+  void dismissInstallationError();
 
-  boolean showDeepLink();
+  void showInstallationSuccessMessage();
+
+  Observable<Void> getInstallErrorsDismiss();
+
+  Intent getIntentAfterCreate();
 }

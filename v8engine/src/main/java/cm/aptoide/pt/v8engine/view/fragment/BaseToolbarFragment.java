@@ -23,7 +23,7 @@ public abstract class BaseToolbarFragment extends UIComponentFragment {
     toolbar = null;
   }
 
-  @Override public void setupViews() {
+  @CallSuper @Override public void setupViews() {
     setupToolbar();
   }
 
@@ -54,7 +54,7 @@ public abstract class BaseToolbarFragment extends UIComponentFragment {
     // does nothing. placeholder method.
   }
 
-  @Override public void bindViews(View view) {
+  @CallSuper @Override public void bindViews(View view) {
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 }

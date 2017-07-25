@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -17,22 +16,21 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
+import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.model.v7.store.HomeUser;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.List;
@@ -40,6 +38,7 @@ import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.OkHttpClient;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
@@ -93,15 +92,17 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final GetHomeMeta getHomeMeta = displayable.getPojo();
-    final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData()
+    final cm.aptoide.pt.dataprovider.model.v7.store.Store store = getHomeMeta.getData()
         .getStore();
     HomeUser user = getHomeMeta.getData()
         .getUser();
 
     if (store != null) {
-      final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance() == null ? "default"
+      final StoreTheme theme = StoreTheme.get(store.getAppearance() == null ? "default"
           : store.getAppearance()
               .getTheme());
       final Context context = itemView.getContext();
@@ -127,7 +128,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                     .log(err);
               }));
 
-      List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
+      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels =
           displayable.getSocialLinks();
       setupSocialLinks(displayable.getSocialLinks(), socialChannelsLayout);
 
@@ -156,26 +157,30 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       }
 
       //check if the user is the store's owner
-      if (accountManager.isLoggedIn()
-          && accountManager.getAccount()
-          .getStoreName() != null
-          && accountManager.getAccount()
-          .getStoreName()
-          .equals(store.getName())) {
-        description.setVisibility(View.VISIBLE);
-        backgroundView.setVisibility(View.VISIBLE);
-        if (TextUtils.isEmpty(store.getAppearance()
-            .getDescription())) {
-          description.setText("Add a description to your store by editing it.");
-        }
-        editStoreButton.setVisibility(View.VISIBLE);
-        compositeSubscription.add(RxView.clicks(editStoreButton)
-            .subscribe(click -> editStore(store.getId(), store.getAppearance()
-                .getTheme(), store.getAppearance()
-                .getDescription(), store.getName(), store.getAvatar())));
-      } else {
-        editStoreButton.setVisibility(View.GONE);
-      }
+      compositeSubscription.add(accountManager.accountStatus()
+          .first()
+          .toSingle()
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnSuccess(account -> {
+            if (!TextUtils.isEmpty(store.getName()) && account.isLoggedIn() && store.getName()
+                .equals(account.getStore()
+                    .getName())) {
+              description.setVisibility(View.VISIBLE);
+              backgroundView.setVisibility(View.VISIBLE);
+              if (TextUtils.isEmpty(store.getAppearance()
+                  .getDescription())) {
+                description.setText("Add a description to your store by editing it.");
+              }
+              editStoreButton.setVisibility(View.VISIBLE);
+              compositeSubscription.add(RxView.clicks(editStoreButton)
+                  .subscribe(click -> editStore(store.getId(), store.getAppearance()
+                      .getTheme(), store.getAppearance()
+                      .getDescription(), store.getName(), store.getAvatar())));
+            } else {
+              editStoreButton.setVisibility(View.GONE);
+            }
+          })
+          .subscribe());
 
       if (user != null) {
         setSecondaryInfoVisibility(true);
@@ -185,8 +190,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       }
     } else {
       followStoreButton.setVisibility(View.INVISIBLE);
-      setupMainInfo(user.getName(), StoreThemeEnum.get("default"), getContext(),
-          getHomeMeta.getData()
+      setupMainInfo(user.getName(), StoreTheme.get("default"), getContext(), getHomeMeta.getData()
               .getStats()
               .getFollowers(), getHomeMeta.getData()
               .getStats()
@@ -218,7 +222,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   /**
    * @param appsVisibility true if number of apps should be displayed, false otherwise
    */
-  private void setupMainInfo(String name, StoreThemeEnum theme, Context context, long appsCount,
+  private void setupMainInfo(String name, StoreTheme theme, Context context, long appsCount,
       long followersCount, long followingCount, boolean appsVisibility, String mainIconUrl,
       @DrawableRes int defaultMainIcon, @DrawableRes int mainNameDrawable) {
 
@@ -267,7 +271,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .getId());
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                storeWrapper.getStore()
+                getContext().getResources(), storeWrapper.getStore()
                     .getName()));
       } else {
         storeWrapper.setStoreSubscribed(true);
@@ -275,7 +279,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .getName(), subscribedStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  subscribedStoreMeta.getData()
+                  getContext().getResources(), subscribedStoreMeta.getData()
                       .getName()));
         }, err -> {
           CrashReport.getInstance()
@@ -286,11 +290,12 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     };
   }
 
-  private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
-      String storeAvatar) {
-    Fragment fragment = CreateStoreFragment.newInstance(
-        new ManageStoreModel(storeId, storeAvatar, false, storeTheme, storeName, storeDescription));
-    getFragmentNavigator().navigateTo(fragment);
+  private void editStore(long storeId, String storeThemeName, String storeDescription,
+      String storeName, String storeImagePath) {
+    ManageStoreFragment.ViewModel viewModel =
+        new ManageStoreFragment.ViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
+            storeDescription, storeImagePath);
+    getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
   }
 
   private void setSecondaryInfoVisibility(boolean userVisibility) {
@@ -304,14 +309,14 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         .loadWithShadowCircleTransform(secondaryIconUrl, secondaryIcon);
   }
 
-  private void setupMainInfo(String name, StoreThemeEnum theme, Context context,
-      long followersCount, long followingCount, String mainIconUrl,
-      @DrawableRes int defaultMainIcon, @DrawableRes int mainNameDrawble) {
+  private void setupMainInfo(String name, StoreTheme theme, Context context, long followersCount,
+      long followingCount, String mainIconUrl, @DrawableRes int defaultMainIcon,
+      @DrawableRes int mainNameDrawble) {
     setupMainInfo(name, theme, context, 0, followersCount, followingCount, false, mainIconUrl,
         defaultMainIcon, mainNameDrawble);
   }
 
-  private void setupTheme(StoreThemeEnum theme, Context context) {
+  private void setupTheme(StoreTheme theme, Context context) {
     @ColorInt int color = getColorOrDefault(theme, context);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
@@ -327,21 +332,21 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     editStoreButton.setTextColor(color);
   }
 
-  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+  private int getColorOrDefault(StoreTheme theme, Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       return context.getResources()
-          .getColor(theme.getStoreHeader(), context.getTheme());
+          .getColor(theme.getPrimaryColor(), context.getTheme());
     } else {
       return context.getResources()
-          .getColor(theme.getStoreHeader());
+          .getColor(theme.getPrimaryColor());
     }
   }
 
   private static class StoreWrapper {
-    @Getter private final cm.aptoide.pt.model.v7.store.Store store;
+    @Getter private final cm.aptoide.pt.dataprovider.model.v7.store.Store store;
     @Getter @Setter private boolean storeSubscribed;
 
-    StoreWrapper(cm.aptoide.pt.model.v7.store.Store store, boolean isStoreSubscribed) {
+    StoreWrapper(cm.aptoide.pt.dataprovider.model.v7.store.Store store, boolean isStoreSubscribed) {
       this.store = store;
       this.storeSubscribed = isStoreSubscribed;
     }

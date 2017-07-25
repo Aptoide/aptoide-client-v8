@@ -5,34 +5,33 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 15/11/16.
- */
 public class GetPaymentAuthorizationsRequest extends V3<PaymentAuthorizationsResponse> {
 
   private GetPaymentAuthorizationsRequest(BaseBody baseBody,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(baseBody, httpClient, converterFactory, bodyInterceptor);
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
+        sharedPreferences);
   }
 
-  public static GetPaymentAuthorizationsRequest of(String accessToken,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    BaseBody args = new BaseBody();
-    args.put("access_token", accessToken);
-    return new GetPaymentAuthorizationsRequest(args, bodyInterceptor, httpClient, converterFactory);
+  public static GetPaymentAuthorizationsRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    return new GetPaymentAuthorizationsRequest(new BaseBody(), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Override
-  protected Observable<PaymentAuthorizationsResponse> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<PaymentAuthorizationsResponse> loadDataFromNetwork(Service service,
       boolean bypassCache) {
-    return interfaces.getPaymentAuthorization(map);
+    return service.getPaymentAuthorization(map);
   }
 }

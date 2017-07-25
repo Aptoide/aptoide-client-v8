@@ -13,12 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.FacebookModel;
+import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.FacebookModel;
-import cm.aptoide.pt.model.v7.TwitterModel;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -94,11 +94,15 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     mActionsListener = new AddressBookPresenter(this,
         new ContactsRepository(baseBodyBodyInterceptor, httpClient, converterFactory,
             ((V8Engine) getContext().getApplicationContext()).getIdsRepository(), new ContactUtils(
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE))),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            getContext().getContentResolver()),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
         analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
         getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
         Application.getConfiguration()
-            .getMarketName())));
+            .getMarketName())),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

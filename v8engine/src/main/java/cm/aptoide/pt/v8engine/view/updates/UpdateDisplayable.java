@@ -6,14 +6,15 @@
 package cm.aptoide.pt.v8engine.view.updates;
 
 import android.content.Context;
+import android.content.res.Resources;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -22,8 +23,10 @@ import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
+import rx.Completable;
 import rx.Observable;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
@@ -55,6 +58,9 @@ public class UpdateDisplayable extends Displayable {
   private Analytics analytics;
   private DownloadEventConverter converter;
   private InstallEventConverter installConverter;
+  private int updateVersionCode;
+  private InstalledRepository installedRepository;
+  private PermissionManager permissionManager;
 
   public UpdateDisplayable() {
   }
@@ -64,8 +70,9 @@ public class UpdateDisplayable extends Displayable {
       String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
       InstallManager installManager, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter,
-      InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
+      int updateVersionCode, InstalledRepository installedRepository,
+      PermissionManager permissionManager) {
     this.packageName = packageName;
     this.appId = appId;
     this.label = label;
@@ -86,37 +93,43 @@ public class UpdateDisplayable extends Displayable {
     this.analytics = analytics;
     this.converter = downloadInstallEventConverter;
     this.installConverter = installConverter;
+    this.updateVersionCode = updateVersionCode;
+    this.installedRepository = installedRepository;
+    this.permissionManager = permissionManager;
   }
 
   public static UpdateDisplayable newInstance(Update update, InstallManager installManager,
       DownloadFactory downloadFactory, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter,
-      InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
+      InstalledRepository installedRepository, PermissionManager permissionManager) {
 
     return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
         update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
         update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
         update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
         update.getPatchObbPath(), update.getPatchObbMd5(), downloadFactory.create(update),
-        installManager, analytics, downloadInstallEventConverter, installConverter);
+        installManager, analytics, downloadInstallEventConverter, installConverter,
+        update.getUpdateVersionCode(), installedRepository, permissionManager);
   }
 
-  public Observable<Progress<Download>> downloadAndInstall(Context context,
-      PermissionService permissionRequest) {
+  public Completable downloadAndInstall(Context context, PermissionService permissionRequest,
+      Resources resources) {
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> {
           if (installManager.showWarning()) {
             return GenericDialogs.createGenericYesNoCancelMessage(context, "",
-                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, resources))
                 .map(answer -> (answer.equals(YES)))
                 .doOnNext(answer -> installManager.rootInstallAllowed(answer));
           }
           return Observable.just(true);
         })
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download)
-            .doOnSubscribe(() -> setupEvents(download)));
+        .flatMap(success -> installManager.install(download)
+            .toObservable()
+            .doOnSubscribe(() -> setupEvents(download)))
+        .toCompletable();
   }
 
   private void setupEvents(Download download) {
@@ -135,5 +148,19 @@ public class UpdateDisplayable extends Displayable {
 
   @Override public int getViewLayout() {
     return R.layout.update_row;
+  }
+
+  public int getUpdateVersionCode() {
+    return updateVersionCode;
+  }
+
+  public Observable<Boolean> shouldShowProgress() {
+    return installManager.getInstall(getMd5(), getPackageName(), getUpdateVersionCode())
+        .map(installationProgress -> installationProgress.getState()
+            == Install.InstallationStatus.INSTALLING || installationProgress.isIndeterminate());
+  }
+
+  public InstalledRepository getInstalledRepository() {
+    return installedRepository;
   }
 }

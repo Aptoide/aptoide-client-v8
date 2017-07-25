@@ -11,7 +11,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.permission.DialogPermissions;

@@ -7,12 +7,12 @@ import rx.Completable;
  */
 
 class NotificationSync {
-  private NotificationProvider notificationProvider;
-  private NotificationNetworkService notificationNetworkService;
+
+  private final NotificationProvider notificationProvider;
+  private final NotificationNetworkService notificationNetworkService;
 
   public NotificationSync(NotificationProvider notificationProvider,
       NotificationNetworkService notificationNetworkService) {
-
     this.notificationProvider = notificationProvider;
     this.notificationNetworkService = notificationNetworkService;
   }

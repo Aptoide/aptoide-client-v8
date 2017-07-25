@@ -27,6 +27,6 @@ public class AptoideBase extends V8Engine {
   }
 
   @Override public AptoidePreferencesConfiguration createConfiguration() {
-    return new VanillaConfiguration();
+    return new VanillaConfiguration(getDefaultSharedPreferences());
   }
 }

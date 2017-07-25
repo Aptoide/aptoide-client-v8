@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -46,7 +47,7 @@ public class Rollback extends BaseTable {
     return NAME;
   }
 
-  @Override public RealmObject convert(Cursor cursor) {
+  @Override public RealmObject convert(Cursor cursor, PackageManager packageManager) {
 
     String oldActionAsString = cursor.getString(cursor.getColumnIndex(COLUMN_ACTION));
     int oldActionMergeCharPosition = oldActionAsString.lastIndexOf('|');

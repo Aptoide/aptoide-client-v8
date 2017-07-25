@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.view.reviews;
 
-import cm.aptoide.pt.model.v7.FullReview;
+import cm.aptoide.pt.dataprovider.model.v7.FullReview;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 

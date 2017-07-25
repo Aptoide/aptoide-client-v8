@@ -1,8 +1,7 @@
 package cm.aptoide.pt.v8engine.filemanager;
 
+import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.FileUtils;
 import rx.Observable;
 
@@ -25,15 +24,6 @@ public class FileManager {
     this.cacheFolders = cacheFolders;
     this.downloadManager = downloadManager;
     this.httpClientCache = httpClientCache;
-  }
-
-  public static FileManager build(AptoideDownloadManager downloadManager, L2Cache httpClientCache) {
-    String[] folders = {
-        Application.getContext()
-            .getCacheDir().getPath(), Application.getConfiguration().getCachePath()
-    };
-    return new FileManager(CacheHelper.build(), new FileUtils(), folders, downloadManager,
-        httpClientCache);
   }
 
   /**

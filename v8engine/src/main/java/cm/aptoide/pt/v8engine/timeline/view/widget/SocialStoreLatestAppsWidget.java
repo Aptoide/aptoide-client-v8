@@ -12,20 +12,20 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -96,7 +96,9 @@ public class SocialStoreLatestAppsWidget
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(),
+            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser()
         .getName());
@@ -215,13 +217,15 @@ public class SocialStoreLatestAppsWidget
                   .getTheme()));
         }));
 
-    StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(displayable.getSharedStore());
+    StoreTheme storeThemeEnum = StoreTheme.get(displayable.getSharedStore());
 
-    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
+    followStore.setBackgroundDrawable(
+        storeThemeEnum.getButtonLayoutDrawable(context.getResources(), context.getTheme()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followStore.setElevation(0);
     }
-    followStore.setTextColor(storeThemeEnum.getStoreHeaderInt());
+    followStore.setTextColor(
+        storeThemeEnum.getStoreHeaderColorResource(context.getResources(), context.getTheme()));
 
     final String storeName = displayable.getSharedStore()
         .getName();
@@ -240,7 +244,7 @@ public class SocialStoreLatestAppsWidget
                       displayable.getStoreCredentialsProvider());
                   ShowMessage.asSnack(itemView,
                       AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                          storeName));
+                          getContext().getResources(), storeName));
                 }, err -> {
                   CrashReport.getInstance()
                       .log(err);
@@ -253,7 +257,8 @@ public class SocialStoreLatestAppsWidget
                 .subscribe(__ -> {
                   storeUtilsProxy.subscribeStore(storeName);
                   ShowMessage.asSnack(itemView,
-                      AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+                      AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                          getContext().getResources(), storeName));
                 }, err -> {
                   CrashReport.getInstance()
                       .log(err);

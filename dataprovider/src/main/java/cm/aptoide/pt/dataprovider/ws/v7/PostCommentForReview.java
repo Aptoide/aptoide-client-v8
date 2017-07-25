@@ -5,12 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -20,21 +21,28 @@ import rx.Observable;
  */
 public class PostCommentForReview extends V7<BaseV7Response, PostCommentForReview.Body> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
-      + "/api/7/";
-
   protected PostCommentForReview(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+        + "/api/7/";
   }
 
   public static PostCommentForReview of(long reviewId, String text,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     final Body body = new Body(reviewId, text);
-    return new PostCommentForReview(body, bodyInterceptor, httpClient, converterFactory);
+    return new PostCommentForReview(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
@@ -42,8 +50,7 @@ public class PostCommentForReview extends V7<BaseV7Response, PostCommentForRevie
     return interfaces.postReviewComment(body, true);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  public static class Body extends BaseBody {
 
     private long reviewId;
     private String body;
@@ -52,6 +59,30 @@ public class PostCommentForReview extends V7<BaseV7Response, PostCommentForRevie
     public Body(long reviewId, String text) {
       this.reviewId = reviewId;
       this.body = text;
+    }
+
+    public long getReviewId() {
+      return reviewId;
+    }
+
+    public void setReviewId(long reviewId) {
+      this.reviewId = reviewId;
+    }
+
+    public String getBody() {
+      return body;
+    }
+
+    public void setBody(String body) {
+      this.body = body;
+    }
+
+    public String getCommentType() {
+      return commentType;
+    }
+
+    public void setCommentType(String commentType) {
+      this.commentType = commentType;
     }
   }
 }

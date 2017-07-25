@@ -10,9 +10,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.preferences.Application;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -29,11 +27,10 @@ public class SecurePreferencesImplementation implements SharedPreferences {
   private static SharedPreferences sFile;
   private static SecureCoderDecoder secureCoderDecoder;
 
-  private SecurePreferencesImplementation(Context context) {
+  private SecurePreferencesImplementation(Context context, SharedPreferences sharedPreferences) {
     // Proxy design pattern
     if (SecurePreferencesImplementation.sFile == null) {
-      SecurePreferencesImplementation.sFile =
-          PreferenceManager.getDefaultSharedPreferences(context);
+      SecurePreferencesImplementation.sFile = sharedPreferences;
     }
 
     if (secureCoderDecoder == null) {
@@ -41,15 +38,12 @@ public class SecurePreferencesImplementation implements SharedPreferences {
     }
   }
 
-  @Partners public static SharedPreferences getInstance() {
-    return getInstance(Application.getContext());
-  }
-
-  public static SharedPreferences getInstance(Context context) {
+  @Partners public static SharedPreferences getInstance(Context context,
+      SharedPreferences sharedPreferences) {
     if (instance == null) {
       synchronized (SecurePreferencesImplementation.class) {
         if (instance == null) {
-          instance = new SecurePreferencesImplementation(context);
+          instance = new SecurePreferencesImplementation(context, sharedPreferences);
         }
       }
     }

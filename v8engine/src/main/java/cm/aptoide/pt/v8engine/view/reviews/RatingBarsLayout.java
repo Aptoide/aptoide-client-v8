@@ -1,9 +1,11 @@
 package cm.aptoide.pt.v8engine.view.reviews;
 
 import android.view.View;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.ProgressAndTextLayout;
 
 public class RatingBarsLayout {
 
@@ -29,6 +31,23 @@ public class RatingBarsLayout {
     final int total = rating.getTotal();
     for (final GetAppMeta.Stats.Rating.Vote vote : rating.getVotes()) {
       progressAndTextLayouts[vote.getValue() - 1].setup(total, vote.getCount());
+    }
+  }
+
+  private static class ProgressAndTextLayout {
+
+    private ProgressBar progressBar;
+    private TextView text;
+
+    public ProgressAndTextLayout(int progressId, int textId, View view) {
+      progressBar = (ProgressBar) view.findViewById(progressId);
+      text = (TextView) view.findViewById(textId);
+    }
+
+    public void setup(int total, int count) {
+      progressBar.setMax(total);
+      progressBar.setProgress(count);
+      text.setText(AptoideUtils.StringU.withSuffix(count));
     }
   }
 }

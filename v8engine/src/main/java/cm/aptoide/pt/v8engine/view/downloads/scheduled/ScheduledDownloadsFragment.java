@@ -1,11 +1,13 @@
 package cm.aptoide.pt.v8engine.view.downloads.scheduled;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,14 +17,15 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -85,8 +88,22 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
-    downloadConverter = new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    downloadConverter =
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+    installConverter =
+        new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     analytics = Analytics.getInstance();
   }
 
@@ -156,10 +173,14 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
         .flatMapIterable(scheduleds -> scheduleds)
         .map(scheduled -> downloadFactory.create(scheduled))
-        .flatMap(downloadItem -> installManager.install(context, downloadItem)
+        .flatMap(downloadItem -> installManager.install(downloadItem)
+            .toObservable()
+            .flatMap(downloadProgress -> installManager.getInstall(downloadItem.getMd5(),
+                downloadItem.getPackageName(), downloadItem.getVersionCode()))
             .doOnSubscribe(() -> setupEvents(downloadItem,
                 isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
-            .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
+            .filter(installationProgress -> installationProgress.getState()
+                == Install.InstallationStatus.INSTALLED)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
                 downloadItem.getMd5())))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

@@ -1,12 +1,25 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
-import cm.aptoide.pt.v8engine.presenter.View;
+import android.support.annotation.StringRes;
+import cm.aptoide.pt.v8engine.view.account.ImagePickerView;
+import rx.Completable;
 import rx.Observable;
 
-public interface ManageStoreView extends View {
-  Observable<Void> selectStoreImageClick();
+public interface ManageStoreView extends ImagePickerView {
 
-  Observable<Void> createStoreClick();
+  void loadImageStateless(String pictureUri);
 
-  Observable<Void> skipToHomeClick();
+  Observable<ManageStoreFragment.ViewModel> saveDataClick();
+
+  Observable<Void> cancelClick();
+
+  Completable showError(@StringRes int errorMessage);
+
+  Completable showGenericError();
+
+  void showWaitProgressBar();
+
+  void dismissWaitProgressBar();
+
+  void hideKeyboard();
 }

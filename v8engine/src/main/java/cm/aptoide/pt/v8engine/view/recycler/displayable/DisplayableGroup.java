@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.content.res.Resources;
+import android.view.WindowManager;
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import java.util.List;
@@ -11,25 +13,31 @@ import lombok.Getter;
 @Ignore public class DisplayableGroup extends Displayable {
 
   @Getter private final List<Displayable> children;
+  private final WindowManager windowManager;
+  private final Resources resources;
 
-  public DisplayableGroup(List<Displayable> children) {
-    this(children, true);
+  public DisplayableGroup(List<Displayable> children, WindowManager windowManager,
+      Resources resources) {
+    this(children, true, windowManager, resources);
   }
 
-  DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
+  DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces,
+      WindowManager windowManager, Resources resources) {
     this.children = children;
+    this.windowManager = windowManager;
+    this.resources = resources;
     if (computeLeftSpaces) computeLeftSpaces();
   }
 
   private void computeLeftSpaces() {
-    int columnSize = WidgetFactory.getColumnSize();
+    int columnSize = WidgetFactory.getColumnSize(resources, windowManager);
     int index = 0;
 
     for (Displayable displayable : children) {
-      if (index + displayable.getSpanSize() > columnSize) {
-        index = displayable.getSpanSize();
+      if (index + displayable.getSpanSize(windowManager, resources) > columnSize) {
+        index = displayable.getSpanSize(windowManager, resources);
       } else {
-        index += displayable.getSpanSize();
+        index += displayable.getSpanSize(windowManager, resources);
       }
     }
 

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.nanohttpd.servers.modular.asset.html;
 
+import android.content.res.AssetManager;
 import cm.aptoide.pt.nanohttpd.servers.modular.asset.html.parser.HtmlParser;
 import java.util.HashMap;
 
@@ -13,8 +14,8 @@ public class HtmlLocalizedAssetServer extends HtmlAssetServer {
   private final HashMap<String, String> tokensMap;
 
   public HtmlLocalizedAssetServer(String accepts, String htmlPath, String startToken,
-      String endToken, HashMap<String, String> tokensMap) {
-    super(accepts, htmlPath);
+      String endToken, HashMap<String, String> tokensMap, AssetManager assetManager) {
+    super(accepts, htmlPath, assetManager);
     this.startToken = startToken;
     this.endToken = endToken;
     this.tokensMap = tokensMap;

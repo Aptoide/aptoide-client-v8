@@ -1,15 +1,16 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import android.view.WindowManager;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.Video;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Video;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
@@ -47,6 +48,7 @@ public class VideoDisplayable extends CardDisplayable {
   private SpannableFactory spannableFactory;
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
+  private InstalledRepository installedRepository;
 
   public VideoDisplayable() {
   }
@@ -54,8 +56,9 @@ public class VideoDisplayable extends CardDisplayable {
   public VideoDisplayable(Video video, String videoTitle, Link link, Link baseLink, String title,
       String thumbnailUrl, String avatarUrl, long appId, String abUrl, List<App> relatedToAppsList,
       Date date, DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(video, timelineAnalytics);
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      InstalledRepository installedRepository, WindowManager windowManager) {
+    super(video, timelineAnalytics, windowManager);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
@@ -70,11 +73,14 @@ public class VideoDisplayable extends CardDisplayable {
     this.spannableFactory = spannableFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
+    this.installedRepository = installedRepository;
   }
 
   public static VideoDisplayable from(Video video, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      InstalledRepository installedRepository, WindowManager windowManager) {
+
     long appId = 0;
 
     String abTestingURL = null;
@@ -96,12 +102,11 @@ public class VideoDisplayable extends CardDisplayable {
             .getBaseUrl()), video.getPublisher()
         .getName(), video.getThumbnailUrl(), video.getPublisher()
         .getLogoUrl(), appId, abTestingURL, video.getApps(), video.getDate(), dateCalculator,
-        spannableFactory, timelineAnalytics, socialRepository);
+        spannableFactory, timelineAnalytics, socialRepository, installedRepository, windowManager);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
     if (relatedToAppsList != null && relatedToAppsList.size() > 0) {
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       List<String> packageNamesList = new ArrayList<String>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
@@ -111,10 +116,8 @@ public class VideoDisplayable extends CardDisplayable {
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
-      if (installedAccessor != null) {
-        return installedAccessor.get(packageNames)
-            .observeOn(Schedulers.computation());
-      }
+      return installedRepository.getInstalled(packageNames)
+          .observeOn(Schedulers.computation());
       //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);
@@ -161,25 +164,28 @@ public class VideoDisplayable extends CardDisplayable {
   }
 
   @Override
-  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback,
+      Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
             getVideoTitle()));
   }
 
-  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
+  @Override
+  public void share(String cardId, ShareCardCallback shareCardCallback, Resources resources) {
     socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
             getVideoTitle()));
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
+  @Override public void like(Context context, String cardType, int rating, Resources resources) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getTitle(),
             getVideoTitle()));
   }
 
-  @Override public void like(Context context, String cardId, String cardType, int rating) {
+  @Override public void like(Context context, String cardId, String cardType, int rating,
+      Resources resources) {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getTitle(),
             getVideoTitle()));

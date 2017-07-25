@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.view.app.widget;
 
 import android.view.View;
-import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewRateResultsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;

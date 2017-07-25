@@ -7,13 +7,13 @@ package cm.aptoide.pt.v8engine.view.search;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
-import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
@@ -74,6 +74,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       };
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
   public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores,
       boolean hasMultipleFragments) {
@@ -100,16 +101,13 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    searchAbTest = ABTestManager.getInstance()
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    searchAbTest = ((V8Engine) getContext().getApplicationContext()).getABTestManager()
         .get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    adsRepository =
-        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory, V8Engine.getQManager());
+    adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
     super.onCreate(savedInstanceState);
   }
 
@@ -147,10 +145,13 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     ListSearchAppsRequest of;
     if (storeName != null) {
       of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-          bodyInterceptor, httpClient, converterFactory);
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     } else {
       of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(),
-          StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory);
+          StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator,
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     }
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

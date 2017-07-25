@@ -6,11 +6,11 @@
 package cm.aptoide.pt.v8engine.view.recycler;
 
 import android.support.v7.widget.RecyclerView;
+import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessResponse;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.ProgressBarDisplayable;
 import lombok.Setter;
 import rx.Subscription;
@@ -27,6 +27,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   protected final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   protected final Action1 successRequestListener;
   protected ErrorRequestListener errorRequestListener;
+  protected int lastTotal;
   protected int total;
   protected int offset;
   protected boolean stableData = false;
@@ -121,7 +122,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
                 total = response.getTotal();
                 offset = response.getNextSize();
               } else {
-                total += response.getTotal();
+                total += (lastTotal = response.getTotal());
                 offset += response.getNextSize();
               }
               v7request.getBody()
@@ -134,7 +135,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
               }
               firstCallbackCalled = true;
             } else {
-              // FIXME: 17/08/16 sithengineer use response.getList() instead
+              // FIXME: 17/08/16 use response.getList() instead
               successRequestListener.call(response);
             }
 
@@ -160,7 +161,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   }
 
   protected boolean hasMoreElements() {
-    return (stableData) ? offset < total : offset <= total;
+    return (stableData) ? offset < total : lastTotal != 0;
   }
 
   public void removeListeners() {

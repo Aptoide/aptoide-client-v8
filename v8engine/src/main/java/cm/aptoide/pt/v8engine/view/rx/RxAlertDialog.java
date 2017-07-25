@@ -33,6 +33,10 @@ public class RxAlertDialog implements DialogInterface {
     dialog.show();
   }
 
+  public boolean isShowing() {
+    return dialog.isShowing();
+  }
+
   @Override public void cancel() {
     dialog.cancel();
   }
@@ -80,6 +84,11 @@ public class RxAlertDialog implements DialogInterface {
 
     public Builder setView(View view) {
       builder.setView(view);
+      return this;
+    }
+
+    public Builder setTitle(@StringRes int titleId) {
+      builder.setTitle(titleId);
       return this;
     }
 

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
 import android.support.annotation.CallSuper;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -11,11 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
@@ -28,8 +28,7 @@ import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -116,7 +115,9 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
             commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
                 (inputText) -> shareCardWithoutPreview(displayable,
                     cardId -> PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor,
-                        httpClient, converterFactory)
+                        httpClient, converterFactory,
+                        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+                        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
                         .observe()
                         .subscribe(setComment -> {
                           if (!setComment.getData()
@@ -152,7 +153,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   protected void shareCardWithoutPreview(T displayable, ShareCardCallback callback) {
     if (hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) {
       displayable.share(displayable.getTimelineCard()
-          .getCardId(), callback);
+          .getCardId(), callback, getContext().getResources());
     }
   }
 
@@ -162,29 +163,31 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView(
-              Analytics.Account.AccountOrigins.SHARE_CARD));
+              Analytics.Account.AccountOrigins.SHARE_CARD), Snackbar.LENGTH_SHORT);
       return;
     }
 
-    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
-        account.getAccess())) {
+    if (TextUtils.isEmpty(account.getStore()
+        .getName()) && !Account.Access.PUBLIC.equals(account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
-                CreateStoreFragment.newInstance(new ManageStoreModel(false)));
-          });
+                ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
+          }, Snackbar.LENGTH_SHORT);
       return;
     }
 
     SharePreviewDialog sharePreviewDialog =
         new SharePreviewDialog(displayable, accountManager, true, openMode,
-            displayable.getTimelineAnalytics());
+            displayable.getTimelineAnalytics(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       if (!accountManager.isAccountAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          displayable.share(cardId, sharePreviewDialog.getPrivacyResult(), callback);
+          displayable.share(cardId, sharePreviewDialog.getPrivacyResult(), callback,
+              getContext().getResources());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         })
@@ -194,7 +197,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
             });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          displayable.share(cardId, callback);
+          displayable.share(cardId, callback, getContext().getResources());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         })
@@ -225,17 +228,18 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   protected boolean hasSocialPermissions(Analytics.Account.AccountOrigins accountOrigins) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> accountNavigator.navigateToAccountView(accountOrigins));
+          snackView -> accountNavigator.navigateToAccountView(accountOrigins),
+          Snackbar.LENGTH_SHORT);
       return false;
     }
 
-    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
-        account.getAccess())) {
+    if (TextUtils.isEmpty(account.getStore()
+        .getName()) && !Account.Access.PUBLIC.equals(account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
-            Fragment fragment = CreateStoreFragment.newInstance(new ManageStoreModel(false));
-            getFragmentNavigator().navigateTo(fragment);
-          });
+            getFragmentNavigator().navigateTo(
+                ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
+          }, Snackbar.LENGTH_SHORT);
       return false;
     }
     return true;
@@ -243,7 +247,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   protected boolean likeCard(T displayable, String cardId, int rating) {
     if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return false;
-    displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating);
+    displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating,
+        getContext().getResources());
 
     return true;
   }

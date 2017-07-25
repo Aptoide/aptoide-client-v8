@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Binder;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,8 +24,8 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.managed.ManagedKeys;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxKeys;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -53,6 +52,7 @@ public class ToolboxContentProvider extends ContentProvider {
   private UriMatcher uriMatcher;
   private ToolboxSecurityManager securityManager;
   private AptoideAccountManager aptoideAccountManager;
+  private SharedPreferences sharedPreferences;
 
   @Override public boolean onCreate() {
     securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
@@ -67,6 +67,8 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
     uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
     aptoideAccountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     return true;
   }
 
@@ -97,7 +99,7 @@ public class ToolboxContentProvider extends ContentProvider {
         case REPO:
           if (account != null) {
             final MatrixCursor userRepoCursor = new MatrixCursor(new String[] { "userRepo" }, 1);
-            userRepoCursor.addRow(new Object[] { account.getStoreName() });
+            userRepoCursor.addRow(new Object[] { account.getStore().getName() });
             return userRepoCursor;
           }
           throw new IllegalStateException("User not logged in.");
@@ -172,24 +174,23 @@ public class ToolboxContentProvider extends ContentProvider {
       if (result == PackageManager.SIGNATURE_MATCH) {
         switch (uriMatcher.match(uri)) {
           case CHANGE_PREFERENCE:
-            SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context)
-                .edit();
+            SharedPreferences.Editor edit = sharedPreferences.edit();
             for (final Map.Entry<String, Object> entry : values.valueSet()) {
               Object value = entry.getValue();
               if (value instanceof String) {
-                if (!ManagerPreferences.isDebug()) {
+                if (!ToolboxManager.isDebug(sharedPreferences)) {
                   AptoideUtils.ThreadU.runOnUiThread(
                       () -> Toast.makeText(context, "Please enable debug mode for toolbox to work.",
                           Toast.LENGTH_LONG)
                           .show());
                 }
                 if (entry.getKey()
-                    .equals(ManagedKeys.FORCE_COUNTRY)) {
-                  ManagerPreferences.setForceCountry((String) value);
+                    .equals(ToolboxKeys.FORCE_COUNTRY)) {
+                  ToolboxManager.setForceCountry((String) value, sharedPreferences);
                   changed++;
                 } else if (entry.getKey()
-                    .equals(ManagedKeys.NOTIFICATION_TYPE)) {
-                  ManagerPreferences.setNotificationType((String) value);
+                    .equals(ToolboxKeys.NOTIFICATION_TYPE)) {
+                  ToolboxManager.setNotificationType((String) value, sharedPreferences);
                   changed++;
                 } else if (entry.getKey()
                     .equals("pullNotificationAction")) {
@@ -206,15 +207,28 @@ public class ToolboxContentProvider extends ContentProvider {
                 }
               } else if (value instanceof Boolean) {
                 if (entry.getKey()
-                    .equals(ManagedKeys.DEBUG)) {
-                  ManagerPreferences.setDebug((Boolean) entry.getValue());
+                    .equals(ToolboxKeys.DEBUG)) {
+                  ToolboxManager.setDebug((Boolean) entry.getValue(), sharedPreferences);
                   Logger.setDBG((Boolean) entry.getValue());
+                  changed++;
+                }
+                if (entry.getKey()
+                    .equals(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME)) {
+                  ToolboxManager.setToolboxEnableHttpScheme((Boolean) entry.getValue(),
+                      sharedPreferences);
+                  changed++;
+                }
+                if (entry.getKey()
+                    .equals(ToolboxKeys.TOOLBOX_RETROFIT_LOGS)) {
+                  ToolboxManager.setToolboxEnableRetrofitLogs((Boolean) entry.getValue(),
+                      sharedPreferences);
                   changed++;
                 }
               } else if (value instanceof Long) {
                 if (entry.getKey()
-                    .equals(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL)) {
-                  ManagerPreferences.setPushNotificationPullingInterval(((Long) value));
+                    .equals(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL)) {
+                  ToolboxManager.setPushNotificationPullingInterval(((Long) value),
+                      sharedPreferences);
                   changed++;
                 }
               }

@@ -1,25 +1,46 @@
 package cm.aptoide.pt.v8engine.view.navigator;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import rx.Observable;
 
-/**
- * Created by marcelobenites on 27/03/17.
- */
+public interface ActivityNavigator {
 
-public class ActivityNavigator {
+  Observable<Result> navigateForResult(Class<? extends AppCompatActivity> activityClass,
+      int requestCode);
 
-  private final Context context;
+  Observable<Result> navigateForResult(String action, Uri uri, int requestCode);
 
-  public ActivityNavigator(Context context) {
-    this.context = context;
-  }
+  Observable<Result> navigateForResultWithOutput(String action, Uri outputUri, int requestCode);
 
-  public void navigateTo(Class<? extends AppCompatActivity> activityClass) {
-    final Intent intent = new Intent();
-    intent.setComponent(new ComponentName(context, activityClass));
-    context.startActivity(intent);
+  void navigateTo(Class<? extends AppCompatActivity> activityClass);
+
+  void navigateTo(Class<? extends AppCompatActivity> activityClass, Bundle bundle);
+
+  class Result {
+
+    private final int requestCode;
+    private final int resultCode;
+    private final Intent data;
+
+    public Result(int requestCode, int resultCode, Intent data) {
+      this.requestCode = requestCode;
+      this.resultCode = resultCode;
+      this.data = data;
+    }
+
+    public int getRequestCode() {
+      return requestCode;
+    }
+
+    public int getResultCode() {
+      return resultCode;
+    }
+
+    public Intent getData() {
+      return data;
+    }
   }
 }

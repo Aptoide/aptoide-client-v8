@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.analytics;
 
-import cm.aptoide.pt.dataprovider.ws.v7.BIUTMAnalyticsRequestBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
 
 /**
  * Created by pedroribeiro on 29/06/17.
@@ -16,18 +16,18 @@ public class UTMTrackingBuilder {
     this.utm = utm;
   }
 
-  public BIUTMAnalyticsRequestBody.Data getUTMTrackingData() {
-    BIUTMAnalyticsRequestBody.Data data = new BIUTMAnalyticsRequestBody.Data();
+  public BiUtmAnalyticsRequestBody.Data getUTMTrackingData() {
+    BiUtmAnalyticsRequestBody.Data data = new BiUtmAnalyticsRequestBody.Data();
     data.setEntryPoint(this.utm.getEntryPoint());
     data.setSiteVersion(tracking.getSiteVersion());
     data.setUserAgent(tracking.getUserAgent());
 
-    BIUTMAnalyticsRequestBody.App app = new BIUTMAnalyticsRequestBody.App();
+    BiUtmAnalyticsRequestBody.App app = new BiUtmAnalyticsRequestBody.App();
     app.setPackageName(tracking.getPackageName());
     app.setUrl(tracking.getUrl());
     data.setApp(app);
 
-    BIUTMAnalyticsRequestBody.UTM utm = new BIUTMAnalyticsRequestBody.UTM();
+    BiUtmAnalyticsRequestBody.UTM utm = new BiUtmAnalyticsRequestBody.UTM();
     utm.setCampaign(this.utm.getUtmCampaign());
     utm.setContent(this.utm.getUtmContent());
     utm.setMedium(this.utm.getUtmMedium());

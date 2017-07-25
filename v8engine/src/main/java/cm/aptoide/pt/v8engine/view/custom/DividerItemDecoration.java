@@ -1,9 +1,12 @@
 package cm.aptoide.pt.v8engine.view.custom;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 
 /**
@@ -22,17 +25,23 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
   /**
    * @param space in pixels for the spacing between items
    */
-  public DividerItemDecoration(int space) {
-    this(space, ALL);
+  public DividerItemDecoration(Context context, int space) {
+    this(context, space, ALL);
   }
 
   /**
-   * @param space in pixels for the spacing between items
+   * @param spaceInDips in dips for the spacing between items
    * @param spacingFlag specifies in which part of the item the spacing is applied
    */
-  public DividerItemDecoration(int space, int spacingFlag) {
-    this.space = space;
+  public DividerItemDecoration(Context context, int spaceInDips, int spacingFlag) {
+    this.space = getPixelsFromDips(context, spaceInDips);
     this.spacingFlag = spacingFlag;
+  }
+
+  private int getPixelsFromDips(Context context, int dipValue) {
+    Resources r = context.getResources();
+    return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue,
+        r.getDisplayMetrics());
   }
 
   @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,

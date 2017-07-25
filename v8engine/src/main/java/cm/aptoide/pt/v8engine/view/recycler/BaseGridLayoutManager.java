@@ -6,7 +6,9 @@
 package cm.aptoide.pt.v8engine.view.recycler;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.GridLayoutManager;
+import android.view.WindowManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
@@ -16,8 +18,14 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
  */
 public class BaseGridLayoutManager extends GridLayoutManager {
 
-  public BaseGridLayoutManager(Context context, BaseAdapter baseAdapter) {
-    super(context, WidgetFactory.getColumnSize());
+  private final Resources resources;
+  private final WindowManager windowManager;
+
+  public BaseGridLayoutManager(Context context, BaseAdapter baseAdapter, Resources resources,
+      WindowManager windowManager) {
+    super(context, WidgetFactory.getColumnSize(resources, windowManager));
+    this.resources = resources;
+    this.windowManager = windowManager;
     setSpanSizeLookup(new SpanSizeLookup(baseAdapter));
   }
 
@@ -35,8 +43,8 @@ public class BaseGridLayoutManager extends GridLayoutManager {
       if (displayable == null) {
         return 1;
       } else {
-        if (displayable.getSpanSize() <= getSpanCount()) {
-          return displayable.getSpanSize();
+        if (displayable.getSpanSize(windowManager, resources) <= getSpanCount()) {
+          return displayable.getSpanSize(windowManager, resources);
         } else {
           CrashReport.getInstance()
               .log(new IllegalArgumentException("Displayable " + displayable.getClass()

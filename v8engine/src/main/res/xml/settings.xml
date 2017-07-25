@@ -140,19 +140,18 @@
   <!--android:title="@string/theme"/>-->
   <!--</PreferenceCategory>-->
 
-  <!--AN-1533 - temporary solution was to remove root installation-->
-  <!--<PreferenceCategory-->
-  <!--android:key="rootCategory"-->
-  <!--android:title="@string/settings_root">-->
-  <!--<CheckBoxPreference-->
-  <!--android:key="allowRoot"-->
-  <!--android:title="@string/settings_allow_root"/>-->
-  <!--<CheckBoxPreference-->
-  <!--android:defaultValue="false"-->
-  <!--android:key="auto_update"-->
-  <!--android:summary="@string/setting_auto_update_sum"-->
-  <!--android:title="@string/setting_auto_update_title"/>-->
-  <!--</PreferenceCategory>-->
+  <PreferenceCategory
+      android:key="rootCategory"
+      android:title="@string/settings_root">
+    <CheckBoxPreference
+        android:key="allowRoot"
+        android:title="@string/settings_allow_root"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="auto_update"
+        android:summary="@string/setting_auto_update_sum"
+        android:title="@string/setting_auto_update_title"/>
+  </PreferenceCategory>
 
   <PreferenceCategory
       android:key="about"

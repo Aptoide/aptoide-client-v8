@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.analytics.events;
 
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.AnalyticsEventRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Event;
 import java.util.Map;
 import okhttp3.OkHttpClient;
@@ -22,10 +24,14 @@ public class AptoideEvent implements Event {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final String appId;
+  private final SharedPreferences sharedPreferences;
 
   public AptoideEvent(Map<String, Object> data, String eventName, String action, String context,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences) {
     this.data = data;
     this.eventName = eventName;
     this.action = action;
@@ -33,11 +39,14 @@ public class AptoideEvent implements Event {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.appId = appId;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override public void send() {
     AnalyticsEventRequest.of(eventName, context, action, data, bodyInterceptor, httpClient,
-        converterFactory)
+        converterFactory, tokenInvalidator, appId, sharedPreferences)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {
