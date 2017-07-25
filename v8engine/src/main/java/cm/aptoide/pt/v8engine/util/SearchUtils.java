@@ -17,7 +17,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.search.websocket.SearchAppsWebSocket;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.search.SearchActivity;
 
 /**
@@ -28,22 +28,22 @@ public class SearchUtils {
 
   private static String SEARCH_WEBSOCKET = "9000";
 
-  public static void setupGlobalSearchView(Menu menu, FragmentView fragmentView) {
-    setupSearchView(menu.findItem(R.id.action_search), fragmentView,
+  public static void setupGlobalSearchView(Menu menu, Context context,
+      FragmentNavigator fragmentNavigator) {
+    setupSearchView(menu.findItem(R.id.action_search), context, fragmentNavigator,
         s -> V8Engine.getFragmentProvider()
             .newSearchFragment(s));
   }
 
-  private static void setupSearchView(MenuItem searchItem, FragmentView fragmentView,
+  private static void setupSearchView(MenuItem searchItem, Context context,
+      FragmentNavigator fragmentNavigator,
       CreateQueryFragmentInterface createSearchFragmentInterface) {
 
     // Get the SearchView and set the searchable configuration
-    final SearchManager searchManager = (SearchManager) fragmentView.getContext()
-        .getApplicationContext()
-        .getSystemService(Context.SEARCH_SERVICE);
+    final SearchManager searchManager =
+        (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
     final SearchView searchView = (SearchView) searchItem.getActionView();
-    ComponentName cn = new ComponentName(fragmentView.getContext()
-        .getApplicationContext(), SearchActivity.class);
+    ComponentName cn = new ComponentName(context.getApplicationContext(), SearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
     SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
 
@@ -54,11 +54,9 @@ public class SearchUtils {
         boolean validQueryLength = s.length() > 1;
 
         if (validQueryLength) {
-          fragmentView.getFragmentNavigator()
-              .navigateTo(createSearchFragmentInterface.create(s));
+          fragmentNavigator.navigateTo(createSearchFragmentInterface.create(s));
         } else {
-          ShowMessage.asToast(fragmentView.getContext()
-              .getApplicationContext(), R.string.search_minimum_chars);
+          ShowMessage.asToast(context.getApplicationContext(), R.string.search_minimum_chars);
         }
 
         return true;
@@ -78,8 +76,7 @@ public class SearchUtils {
         Cursor item = (Cursor) searchView.getSuggestionsAdapter()
             .getItem(position);
 
-        fragmentView.getFragmentNavigator()
-            .navigateTo(createSearchFragmentInterface.create(item.getString(1)));
+        fragmentNavigator.navigateTo(createSearchFragmentInterface.create(item.getString(1)));
 
         return true;
       }
@@ -94,9 +91,9 @@ public class SearchUtils {
     searchView.setOnSearchClickListener(v -> searchAppsWebSocket.connect(SEARCH_WEBSOCKET));
   }
 
-  public static void setupInsideStoreSearchView(Menu menu, FragmentView fragmentView,
-      String storeName) {
-    setupSearchView(menu.findItem(R.id.action_search), fragmentView,
+  public static void setupInsideStoreSearchView(Menu menu, Context context,
+      FragmentNavigator fragmentNavigator, String storeName) {
+    setupSearchView(menu.findItem(R.id.action_search), context, fragmentNavigator,
         s -> V8Engine.getFragmentProvider()
             .newSearchFragment(s, storeName));
   }

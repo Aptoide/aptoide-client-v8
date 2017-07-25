@@ -217,7 +217,7 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, this);
+    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
   }
 
   @Override public void setupViews() {
