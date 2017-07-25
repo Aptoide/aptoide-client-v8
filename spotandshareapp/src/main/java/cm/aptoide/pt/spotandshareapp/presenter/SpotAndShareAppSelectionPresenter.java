@@ -127,26 +127,6 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     }
 
     if (canSend()) {
-
-      //String appName = appModel.getAppName();
-      //String packageName = appModel.getPackageName();
-      //File apk = new File(appModel.getFilePath());
-      //byte[] bitmapdata = appModel.getAppIconAsByteArray();
-      //
-      //AndroidAppInfo androidAppInfo;
-      //if (!appModel.getObbsFilePath()
-      //    .equals(InstalledRepositoryDummy.NO_OBBS)) {
-      //
-      //  File[] obbsList = obbsProvider.getObbsList(appModel.getObbsFilePath());
-      //
-      //  androidAppInfo =
-      //      new AndroidAppInfo(appName, packageName, apk, obbsList[0], obbsList[1], bitmapdata,
-      //          null);
-      //} else {
-      //  androidAppInfo =
-      //      new AndroidAppInfo(appName, packageName, apk, null, null, bitmapdata, null);
-      //}
-
       AndroidAppInfo androidAppInfo =
           appModelToAndroidAppInfoMapper.convertAppModelToAndroidAppInfo(appModel);
       AptoideUtils.ThreadU.runOnIoThread(
