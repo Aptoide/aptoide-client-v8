@@ -18,10 +18,12 @@ public class UrlValidator {
   }
 
   public String getUrl(String text) {
-    for (String textPart : text.split(" ")) {
-      if (urlPattern.matcher(textPart)
-          .matches()) {
-        return textPart;
+    if (text.contains(" ") || text.contains("\n")) {
+      for (String textPart : text.split("[ \n]")) {
+        if (urlPattern.matcher(textPart)
+            .matches()) {
+          return textPart;
+        }
       }
     }
     return "";

@@ -208,11 +208,11 @@ class PostPresenter implements Presenter {
             .distinctUntilChanged()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(__ -> view.clearRemoteRelated())
-            .switchMap(insertedText -> {
-              if (urlValidator.containsUrl(insertedText)) {
-                return loadRelatedApps(urlValidator.getUrl(insertedText));
+            .switchMap(url -> {
+              if (url.isEmpty()) {
+                return Observable.just("");
               }
-              return Observable.just("");
+              return loadRelatedApps(url);
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
