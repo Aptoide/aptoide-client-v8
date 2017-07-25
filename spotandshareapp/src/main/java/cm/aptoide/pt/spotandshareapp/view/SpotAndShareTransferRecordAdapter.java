@@ -103,7 +103,11 @@ public class SpotAndShareTransferRecordAdapter
             .getString(R.string.spotandshare_message_app_sender_info_sent, transferItem.getFriend()
                 .getUsername()));
         acceptButton.setVisibility(View.GONE);
-        installButton.setVisibility(View.VISIBLE);
+        if (!transferItem.isInstalled()) {
+          installButton.setVisibility(View.VISIBLE);
+        } else {
+          installButton.setVisibility(View.GONE);
+        }
         transferProgressBar.setVisibility(View.INVISIBLE);
       } else if (transferItem.getTransferState() == Transfer.State.SERVING) {
         acceptButton.setVisibility(View.GONE);
