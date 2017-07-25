@@ -132,6 +132,12 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
     notifyItemRangeRemoved(0, numberOfRemoves);
   }
 
+  public void clearAllRelated() {
+    int numberOfRemoves = relatedAppList.size();
+    relatedAppList.clear();
+    notifyItemRangeRemoved(0, numberOfRemoves);
+  }
+
   private static class RelatedAppViewHolder extends RecyclerView.ViewHolder {
     public static final int SELECTED_ELEVATION = 20;
     public static final int UNSELECTED_ELEVATION = 0;

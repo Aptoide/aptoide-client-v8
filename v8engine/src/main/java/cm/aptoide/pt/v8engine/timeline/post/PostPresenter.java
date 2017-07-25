@@ -12,13 +12,11 @@ import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -46,17 +44,18 @@ class PostPresenter implements Presenter {
   }
 
   @Override public void present() {
+    if (isExternalOpen()) {
+      showPreviewAppsOnStart();
+    } else {
+      showCardPreviewAfterTextChanges();
+      showRelatedAppsAfterTextChanges();
+    }
     showRelatedAppsOnStart();
-    showPreviewAppsOnStart();
     postOnTimelineOnButtonClick();
     handleCancelButtonClick();
     handleRelatedAppClick();
     onCreateLoginErrorHandle();
     onViewCreatedHandleAppNotFoundErrorAction();
-    if (!isExternalOpen()) {
-      showCardPreviewAfterTextChanges();
-      showRelatedAppsAfterTextChanges();
-    }
   }
 
   @Override public void saveState(Bundle state) {
@@ -105,10 +104,19 @@ class PostPresenter implements Presenter {
 
   private void showRelatedAppsOnStart() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .filter(event -> getRelatedAppsLifecycleFilter(event))
+        .doOnNext(lifecycleEvent -> view.clearAllRelated())
         .doOnNext(lifecycleEvent -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
-        .switchMap(lifecycleEvent -> getStartSuggestions().toObservable())
+        .switchMap(viewResumed -> {
+          if (isExternalOpen()) {
+            return postManager.getSuggestionAppsOnStart(postUrlProvider.getUrlToShare())
+                .toObservable();
+          } else {
+            return postManager.getSuggestionApps()
+                .toObservable();
+          }
+        })
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(relatedApps -> {
           view.addRelatedApps(relatedApps);
@@ -120,19 +128,9 @@ class PostPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private Single<List<PostRemoteAccessor.RelatedApp>> getStartSuggestions() {
-    if (isExternalOpen()) {
-      return Single.zip(postManager.getLocalAppSuggestions(),
-          postManager.getRemoteAppSuggestions(postUrlProvider.getUrlToShare())
-              .onErrorResumeNext(throwable -> Single.just(Collections.emptyList())),
-          (localApps, remoteApps) -> {
-            ArrayList<PostRemoteAccessor.RelatedApp> list = new ArrayList<>();
-            list.addAll(remoteApps);
-            list.addAll(localApps);
-            return list;
-          });
-    }
-    return postManager.getLocalAppSuggestions();
+  private boolean getRelatedAppsLifecycleFilter(View.LifecycleEvent event) {
+    return isExternalOpen() ? event.equals(View.LifecycleEvent.RESUME)
+        : event.equals(View.LifecycleEvent.CREATE);
   }
 
   private void handleRelatedAppClick() {
@@ -236,7 +234,7 @@ class PostPresenter implements Presenter {
   private Observable<List<PostRemoteAccessor.RelatedApp>> loadRelatedApps(String url) {
     return Completable.fromAction(() -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
-        .andThen(postManager.getRemoteAppSuggestions(url))
+        .andThen(postManager.getSuggestionApps(url))
         .observeOn(AndroidSchedulers.mainThread())
         .toObservable()
         .doOnNext(relatedApps -> view.addRelatedApps(relatedApps))

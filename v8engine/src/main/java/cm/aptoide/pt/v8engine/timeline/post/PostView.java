@@ -55,6 +55,8 @@ interface PostView extends View {
 
   Observable<Void> getAppNotFoundErrorAction();
 
+  void clearAllRelated();
+
   class PostPreview {
     private final String image;
     private final String title;

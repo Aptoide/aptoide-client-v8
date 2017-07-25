@@ -311,6 +311,10 @@ public class PostFragment extends FragmentView implements PostView {
     return openUploaderButton;
   }
 
+  @Override public void clearAllRelated() {
+    adapter.clearAllRelated();
+  }
+
   private void hidePreviewLayout() {
     if (previewImage.getVisibility() == View.GONE
         && previewLoading.getVisibility() == View.GONE

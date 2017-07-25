@@ -1,10 +1,13 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -69,12 +72,27 @@ public class PostManager {
     return Single.just(true);
   }
 
-  public Single<List<RelatedApp>> getLocalAppSuggestions() {
+  public Single<List<RelatedApp>> getSuggestionApps() {
     return postLocalRepository.getRelatedApps(null);
   }
 
-  public Single<List<RelatedApp>> getRemoteAppSuggestions(String url) {
+  public Single<List<RelatedApp>> getSuggestionApps(String url) {
     return postRemoteRepository.getRelatedApps(addProtocolIfNeeded(url));
+  }
+
+  public Single<List<RelatedApp>> getSuggestionAppsOnStart(@Nullable String url) {
+    if (url != null && !url.isEmpty()) {
+      return Single.zip(getSuggestionApps(),
+          postRemoteRepository.getRelatedApps(addProtocolIfNeeded(url))
+              .onErrorResumeNext(throwable -> Single.just(Collections.emptyList())),
+          (localApps, remoteApps) -> {
+            ArrayList<RelatedApp> list = new ArrayList<>();
+            list.addAll(remoteApps);
+            list.addAll(localApps);
+            return list;
+          });
+    }
+    return getSuggestionApps();
   }
 
   @CheckResult private String addProtocolIfNeeded(String url) {
