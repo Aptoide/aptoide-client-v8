@@ -318,7 +318,7 @@ public class TimelinePresenter implements Presenter {
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
             } else if (type.equals(CardType.SOCIAL_RECOMMENDATION) || type.equals(
-                CardType.SOCIAL_INSTALL)) {
+                CardType.SOCIAL_INSTALL) || type.equals(CardType.SOCIAL_POST_RECOMMENDATION)) {
               RatedRecommendation card = (RatedRecommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
