@@ -290,11 +290,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     };
   }
 
-  private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
-      String storeImagePath) {
+  private void editStore(long storeId, String storeThemeName, String storeDescription,
+      String storeName, String storeImagePath) {
     ManageStoreFragment.ViewModel viewModel =
-        new ManageStoreFragment.ViewModel(storeId, storeTheme, storeName, storeDescription,
-            storeImagePath);
+        new ManageStoreFragment.ViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
+            storeDescription, storeImagePath);
     getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
   }
 
