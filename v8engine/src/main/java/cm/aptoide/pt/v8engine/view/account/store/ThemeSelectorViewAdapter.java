@@ -17,7 +17,7 @@ public class ThemeSelectorViewAdapter
 
   private final PublishRelay<StoreTheme> storeThemePublishRelay;
   private final List<StoreTheme> themes;
-  private String selectedStoreThemeName;
+  private StoreTheme selectedStoreTheme;
 
   public ThemeSelectorViewAdapter(PublishRelay<StoreTheme> storeThemePublishRelay,
       List<StoreTheme> themes) {
@@ -32,24 +32,24 @@ public class ThemeSelectorViewAdapter
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    holder.update(themes.get(position), selectedStoreThemeName);
+    holder.update(themes.get(position), selectedStoreTheme);
   }
 
   @Override public int getItemCount() {
     return themes != null ? themes.size() : 0;
   }
 
-  public void selectTheme(String selectedStoreThemeName) {
-    this.selectedStoreThemeName = selectedStoreThemeName;
+  public void selectTheme(StoreTheme selectedStoreTheme) {
+    this.selectedStoreTheme = selectedStoreTheme;
     this.notifyDataSetChanged();
   }
 
-  public String getSelectedThemeName() {
-    return this.selectedStoreThemeName;
+  public StoreTheme getSelectedTheme() {
+    return this.selectedStoreTheme;
   }
 
   public Observable<StoreTheme> storeThemeSelection() {
-    return storeThemePublishRelay.doOnNext(storeTheme -> selectTheme(storeTheme.getThemeName()));
+    return storeThemePublishRelay.doOnNext(storeTheme -> selectTheme(storeTheme));
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {
@@ -74,10 +74,10 @@ public class ThemeSelectorViewAdapter
           .subscribe();
     }
 
-    public void update(StoreTheme storeTheme, String selectedStoreThemeName) {
+    public void update(StoreTheme storeTheme, StoreTheme selectedStoreTheme) {
       this.storeTheme = storeTheme;
       storeThemeImage.setBackgroundResource(storeTheme.getRoundDrawable());
-      if (storeTheme == StoreTheme.get(selectedStoreThemeName)) {
+      if (storeTheme == selectedStoreTheme) {
         storeThemeCheckMark.setVisibility(View.VISIBLE);
       } else {
         storeThemeCheckMark.setVisibility(View.GONE);
