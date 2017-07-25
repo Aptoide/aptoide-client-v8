@@ -2,14 +2,18 @@ package cm.aptoide.pt.spotandshareapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
+import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.InstallService;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import rx.Observable;
 
 /**
  * Created by filipe on 13-07-2017.
@@ -37,6 +41,17 @@ public class SpotAndShareInstallManager {
   private void install(String filePath) {
     String apkFilePath = filePath + "/" + APK_FILE_NAME;
     startInstallIntent(context, new File(apkFilePath));
+  }
+
+  public Observable<Void> listenToAppInstalation(String packageName) {
+    BroadcastRegisterOnSubscribe installBroadcast =
+        new BroadcastRegisterOnSubscribe(context, new IntentFilter(), null, null);
+    return Observable.create(installBroadcast)
+        .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(
+            intent.getAction()))
+        .first(intent -> packageName.equals(intent.getData()
+            .getEncodedSchemeSpecificPart()))
+        .map(intent -> null);
   }
 
   private void moveObbs(String filePath, String packageName) {
