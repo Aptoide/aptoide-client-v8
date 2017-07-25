@@ -97,7 +97,6 @@ public class SpotAndShareTransferRecordAdapter
         transferProgressBar.setVisibility(View.VISIBLE);
         transferProgressBar.setIndeterminate(true);
       } else if (transferItem.getTransferState() == Transfer.State.RECEIVED) {
-        //// TODO: 19-07-2017 filipe consultar installed apps to check if it is installed and remove the button
         senderName.setText(itemView.getContext()
             .getResources()
             .getString(R.string.spotandshare_message_app_sender_info_sent, transferItem.getFriend()
