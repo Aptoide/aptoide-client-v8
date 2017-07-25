@@ -20,5 +20,6 @@
   <string name="spotandshare_message_instruction_for_friend_to_receive">Your friend should go to Spot&amp;Share and press Receive</string>
   <string name="spotandshare_message_looking_for_a_friend_to_receive_app">Looking for a friend to receive app</string>
   <string name="spotandshare_mesage_sending_app">Sending</string>
-  <string name="spotandshare_message_app_sender_info">%1$s is sending</string>
+  <string name="spotandshare_message_app_sender_info_sending">%1$s is sending</string>
+  <string name="spotandshare_message_app_sender_info_sent">%1$s sent</string>
 </resources>
