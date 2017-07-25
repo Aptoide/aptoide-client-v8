@@ -10,6 +10,7 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
+import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 class PostPresenter implements Presenter {
+  public static final String UPLOADER_PACKAGENAME = "pt.caixamagica.aptoide.uploader";
   private static final String TAG = PostPresenter.class.getSimpleName();
   private final PostView view;
   private final CrashReport crashReport;
@@ -50,6 +52,7 @@ class PostPresenter implements Presenter {
     handleCancelButtonClick();
     handleRelatedAppClick();
     onCreateLoginErrorHandle();
+    onViewCreatedHandleAppNotFoundErrorAction();
     if (!isExternalOpen()) {
       showCardPreviewAfterTextChanges();
       showRelatedAppsAfterTextChanges();
@@ -62,6 +65,17 @@ class PostPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void onViewCreatedHandleAppNotFoundErrorAction() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(viewCreated -> view.getAppNotFoundErrorAction())
+        .doOnNext(click -> fragmentNavigator.navigateTo(
+            AppViewFragment.newInstance(UPLOADER_PACKAGENAME, AppViewFragment.OpenType.OPEN_ONLY)))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(aVoid -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void onCreateLoginErrorHandle() {
@@ -280,6 +294,9 @@ class PostPresenter implements Presenter {
           break;
         case NO_LOGIN:
           view.showNoLoginError();
+          break;
+        case NO_APP_FOUND:
+          view.showAppNotFoundError();
           break;
       }
     } else {

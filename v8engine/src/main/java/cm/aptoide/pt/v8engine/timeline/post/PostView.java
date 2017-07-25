@@ -51,6 +51,10 @@ interface PostView extends View {
 
   Observable<Void> getLoginClick();
 
+  void showAppNotFoundError();
+
+  Observable<Void> getAppNotFoundErrorAction();
+
   class PostPreview {
     private final String image;
     private final String title;

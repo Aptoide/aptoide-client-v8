@@ -60,6 +60,7 @@ public class PostFragment extends FragmentView implements PostView {
   private ScrollView scrollView;
   private View previewLayout;
   private PublishRelay<Void> loginAction;
+  private PublishRelay<Void> openUploaderButton;
   private PostPresenter presenter;
 
   public static PostFragment newInstance() {
@@ -72,6 +73,7 @@ public class PostFragment extends FragmentView implements PostView {
     cancelClick = PublishRelay.create();
     postClick = PublishRelay.create();
     loginAction = PublishRelay.create();
+    openUploaderButton = PublishRelay.create();
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -296,6 +298,17 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public Observable<Void> getLoginClick() {
     return loginAction;
+  }
+
+  @Override public void showAppNotFoundError() {
+    Snackbar.make(getView(), R.string.timeline_message_upload_app,
+        BaseTransientBottomBar.LENGTH_LONG)
+        .setAction(R.string.timeline_button_open_uploader, view -> openUploaderButton.call(null))
+        .show();
+  }
+
+  @Override public Observable<Void> getAppNotFoundErrorAction() {
+    return openUploaderButton;
   }
 
   private void hidePreviewLayout() {

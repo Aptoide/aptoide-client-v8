@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.support.annotation.CheckResult;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.v8engine.timeline.post.PostRemoteAccessor.RelatedApp;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
 import java.util.List;
@@ -10,6 +11,7 @@ import rx.Single;
 
 public class PostManager {
 
+  public static final String APP_NOT_FOUND_ERROR_CODE = "APP-1";
   private final PostAccessor postRemoteRepository;
   private final PostAccessor postLocalRepository;
   private AptoideAccountManager accountManager;
@@ -25,7 +27,20 @@ public class PostManager {
     return validateLogin().flatMap(userLogged -> validateInsertedText(content, packageName))
         .flatMapCompletable(
             validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
-                getContent(url, content), packageName));
+                getContent(url, content), packageName))
+        .onErrorResumeNext(throwable -> handleErrors(throwable));
+  }
+
+  private Completable handleErrors(Throwable throwable) {
+    if (throwable instanceof AptoideWsV7Exception) {
+      if (((AptoideWsV7Exception) throwable).getBaseResponse()
+          .getError()
+          .getCode()
+          .equals(APP_NOT_FOUND_ERROR_CODE)) {
+        return Completable.error(new PostException(PostException.ErrorCode.NO_APP_FOUND));
+      }
+    }
+    return Completable.error(throwable);
   }
 
   private String getContent(String url, String content) {
