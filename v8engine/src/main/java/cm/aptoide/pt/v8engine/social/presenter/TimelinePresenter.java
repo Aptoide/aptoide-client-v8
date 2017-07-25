@@ -3,7 +3,9 @@ package cm.aptoide.pt.v8engine.social.presenter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -28,6 +30,7 @@ import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
+import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
@@ -353,12 +356,21 @@ public class TimelinePresenter implements Presenter {
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.LIKE) && cardTouchEvent.getCard()
                 .getType()
-                .isSocial())
+                .isSocial() || cardTouchEvent.getCard()
+                .getType()
+                .equals(CardType.MINIMAL_CARD))
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
+                    if (showCreateStore(account)) {
+                      return Completable.fromAction(
+                          () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                    } else if (showSetUserOrStoreToPublic(account)) {
+                      return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
+                    }
+
                     final Post post = cardTouchEvent.getCard();
                     return timeline.like(post, post.getCardId())
                         .doOnCompleted(() -> view.updatePost(post,
@@ -371,10 +383,25 @@ public class TimelinePresenter implements Presenter {
             .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
+  private boolean showSetUserOrStoreToPublic(Account account) {
+    final Account.Access userAccess = account.getAccess();
+    final Store store = account.getStore();
+    return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (store
+        != null && !store.hasPublicAccess());
+  }
+
+  private boolean showCreateStore(Account account) {
+    Account.Access userAccess = account.getAccess();
+    return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (
+        account.getStore()
+            == null);
+  }
+
   private void handleLoginMessageClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.loginActionClick())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> timelineNavigation.navigateToLoginView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -392,6 +419,7 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
                     final Post post = cardTouchEvent.getCard();
@@ -422,6 +450,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 return Completable.fromAction(
@@ -447,6 +476,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 return Completable.fromAction(() -> view.showCommentDialog(cardTouchEvent.getCard()
@@ -469,6 +499,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 return Completable.fromAction(() -> timelineNavigation.navigateToComments(
@@ -494,6 +525,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 return Completable.fromAction(

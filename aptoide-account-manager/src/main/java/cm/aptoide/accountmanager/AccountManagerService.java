@@ -188,10 +188,12 @@ public class AccountManagerService {
     if (store == null) {
       return Store.emptyStore();
     }
+    final String publicAccessConstant =
+        cm.aptoide.pt.dataprovider.model.v7.store.Store.PUBLIC_ACCESS;
     return new Store(store.getStats() == null ? 0 : store.getStats()
         .getDownloads(), store.getAvatar(), store.getId(), store.getName(),
         store.getAppearance() == null ? "DEFAULT" : store.getAppearance()
-            .getTheme(), null, null);
+            .getTheme(), null, null, publicAccessConstant.equalsIgnoreCase(store.getAccess()));
   }
 
   public Single<Account> getAccount(String accessToken, String refreshToken,
