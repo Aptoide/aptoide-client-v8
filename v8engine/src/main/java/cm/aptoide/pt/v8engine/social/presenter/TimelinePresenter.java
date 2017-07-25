@@ -273,7 +273,7 @@ public class TimelinePresenter implements Presenter {
             Media card = (Media) post;
             card.getPublisherLink()
                 .launch();
-          } else if (CardType.isSocial(post)) {
+          } else if (postType.isSocial()) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
@@ -309,7 +309,7 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> {
           final Post post = cardTouchEvent.getCard();
           final CardType type = post.getType();
-          if (CardType.isMedia(post)) {
+          if (type.isMedia()) {
             Media card = (Media) post;
             card.getMediaLink()
                 .launch();
@@ -391,7 +391,9 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-                .equals(CardTouchEvent.Type.LIKE) && CardType.isSocial(cardTouchEvent.getCard()))
+                .equals(CardTouchEvent.Type.LIKE) && cardTouchEvent.getCard()
+                .getType()
+                .isSocial())
             .flatMapCompletable(cardTouchEvent -> timeline.like(cardTouchEvent.getCard(),
                 cardTouchEvent.getCard()
                     .getCardId())))
@@ -405,7 +407,9 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-                .equals(CardTouchEvent.Type.LIKE) && CardType.isNormal(cardTouchEvent.getCard()))
+                .equals(CardTouchEvent.Type.LIKE) && cardTouchEvent.getCard()
+                .getType()
+                .isNormal())
             .flatMapCompletable(cardTouchEvent -> timeline.sharePost(cardTouchEvent.getCard())
                 .flatMapCompletable(cardId -> timeline.like(cardTouchEvent.getCard(), cardId)))
             .retry())
@@ -419,8 +423,9 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-            .equals(CardTouchEvent.Type.COMMENT) && (CardType.isSocial(cardTouchEvent.getCard())
-            || cardTouchEvent.getCard()
+            .equals(CardTouchEvent.Type.COMMENT) && (cardTouchEvent.getCard()
+            .getType()
+            .isSocial() || cardTouchEvent.getCard()
             .getType()
             .equals(CardType.MINIMAL_CARD)))
         .doOnNext(cardTouchEvent -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
@@ -436,7 +441,9 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-            .equals(CardTouchEvent.Type.COMMENT) && (CardType.isNormal(cardTouchEvent.getCard())))
+            .equals(CardTouchEvent.Type.COMMENT) && cardTouchEvent.getCard()
+            .getType()
+            .isNormal())
         .doOnNext(cardTouchEvent -> view.showCommentDialog(cardTouchEvent.getCard()
             .getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
