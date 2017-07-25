@@ -16,7 +16,7 @@ public class TransferAppModel {
   private Drawable appIcon;
 
   private Transfer.State transferState;
-  private boolean finishedTransference;
+  private boolean installed;
   private Friend senderFriend;
   private int hashcode;
 
@@ -55,12 +55,18 @@ public class TransferAppModel {
     return senderFriend;
   }
 
-  public boolean isTransferenceFinished() {
-    return finishedTransference;
+  /**
+   * Returns true if the user installed this app, by pressing the install button on the transfer
+   * record view.
+   *
+   * @return boolean
+   */
+  public boolean isInstalled() {
+    return installed;
   }
 
-  public void setTransferenceFinished(boolean finishedTransference) {
-    this.finishedTransference = finishedTransference;
+  public void setInstalledApp(boolean installed) {
+    this.installed = installed;
   }
 
   public int getHashcode() {

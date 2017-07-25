@@ -173,6 +173,11 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     return installApp;
   }
 
+  @Override public void updateTransferInstallStatus(TransferAppModel transferAppModel) {
+    transferAppModel.setInstalledApp(true);
+    adapter.notifyDataSetChanged();
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == android.R.id.home) {
       backRelay.call(null);
