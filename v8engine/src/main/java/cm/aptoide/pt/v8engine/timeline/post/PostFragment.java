@@ -53,6 +53,7 @@ public class PostFragment extends FragmentView implements PostView {
   private AppCompatEditText userInput;
   private ImageView previewImage;
   private TextView previewTitle;
+  private TextView urlShower;
   private InstalledRepository installedRepository;
   private Toolbar toolbar;
   private PublishRelay<Void> cancelClick;
@@ -110,6 +111,8 @@ public class PostFragment extends FragmentView implements PostView {
     toolbar = null;
     scrollView = null;
     previewLayout = null;
+    inputSeparator = null;
+    urlShower = null;
     super.onDestroyView();
   }
 
@@ -135,6 +138,7 @@ public class PostFragment extends FragmentView implements PostView {
     scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
     previewLayout = view.findViewById(R.id.preview_layout);
     inputSeparator = view.findViewById(R.id.input_text_separator);
+    urlShower = (TextView) view.findViewById(R.id.url_shower);
   }
 
   private void destroyLoading(ProgressBar progressBar) {
@@ -225,7 +229,16 @@ public class PostFragment extends FragmentView implements PostView {
       ImageLoader.with(getContext())
           .loadWithRoundCorners(suggestion.getImage(), radius, margin, previewImage);
     }
-    previewTitle.setText(suggestion.getTitle());
+
+    if (suggestion.getTitle() == null || suggestion.getTitle()
+        .isEmpty()) {
+      previewTitle.setText(suggestion.getUrl());
+      urlShower.setVisibility(View.GONE);
+    } else {
+      urlShower.setText(suggestion.getUrl());
+      urlShower.setVisibility(View.VISIBLE);
+      previewTitle.setText(suggestion.getTitle());
+    }
     previewTitle.setVisibility(View.VISIBLE);
     handlePreviewLayout();
   }
@@ -251,7 +264,8 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void hideCardPreview() {
     previewImage.setVisibility(View.GONE);
-    previewTitle.setVisibility(View.INVISIBLE);
+    previewTitle.setVisibility(View.GONE);
+    urlShower.setVisibility(View.GONE);
     handlePreviewLayout();
   }
 
@@ -291,6 +305,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void hideCardPreviewTitle() {
     previewTitle.setVisibility(View.GONE);
+    urlShower.setVisibility(View.GONE);
     hideCardPreview();
   }
 
@@ -325,7 +340,8 @@ public class PostFragment extends FragmentView implements PostView {
 
   private void handlePreviewLayout() {
     if (previewImage.getVisibility() == View.GONE
-        && previewLoading.getVisibility() == View.GONE && previewTitle.getVisibility() == View.INVISIBLE) {
+        && previewLoading.getVisibility() == View.GONE
+        && previewTitle.getVisibility() == View.GONE) {
       previewLayout.setVisibility(View.GONE);
       inputSeparator.setVisibility(View.VISIBLE);
     } else {

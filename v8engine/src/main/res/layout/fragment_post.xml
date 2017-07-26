@@ -76,6 +76,7 @@
             android:layout_width="88dp"
             android:layout_height="88dp"
             android:visibility="gone"
+            tools:background="@color/orange"
             tools:src="@drawable/wizard_community"
             tools:visibility="visible"
             />
@@ -90,26 +91,42 @@
             android:visibility="gone"
             tools:visibility="visible"
             />
-        <TextView
-            android:id="@+id/preview_title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/label_padding"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="@dimen/label_padding"
             android:layout_toRightOf="@+id/preview_image"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/black_87_alpha"
-            android:visibility="invisible"
-            tools:text="Preview Title"
-            tools:visibility="visible"
-            style="@style/Aptoide.TextView.Medium.M"
-            />
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:padding="8dp"
+            >
+          <TextView
+              android:id="@+id/preview_title"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:ellipsize="end"
+              android:maxLines="2"
+              android:textColor="@color/black_87_alpha"
+              android:visibility="gone"
+              tools:text="Preview Title "
+              tools:visibility="visible"
+              style="@style/Aptoide.TextView.Medium.M"
+              />
+          <TextView
+              android:id="@+id/url_shower"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:ellipsize="end"
+              android:lines="1"
+              tools:text="url preview"
+              style="@style/Aptoide.TextView.Regular.XS"
+              />
+        </LinearLayout>
+
       </RelativeLayout>
       <TextView
           android:id="@+id/related_apps_header"

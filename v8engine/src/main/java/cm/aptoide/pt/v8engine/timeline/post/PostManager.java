@@ -104,7 +104,7 @@ public class PostManager {
 
   public Single<PostView.PostPreview> getPreview(String url) {
     return postRemoteRepository.getCardPreview(addProtocolIfNeeded(url))
-        .onErrorReturn(throwable -> new PostView.PostPreview(null, url));
+        .onErrorReturn(throwable -> new PostView.PostPreview(null, null, url));
   }
 
   enum Origin {

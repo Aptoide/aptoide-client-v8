@@ -222,6 +222,7 @@ class PostPresenter implements Presenter {
             .doOnNext(__ -> view.clearRemoteRelated())
             .switchMap(url -> {
               if (url.isEmpty()) {
+                view.hideRelatedAppsLoading();
                 return Observable.just("");
               }
               return loadRelatedApps(url);

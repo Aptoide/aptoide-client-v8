@@ -83,7 +83,7 @@ public class PostRemoteAccessor implements PostAccessor {
         tokenInvalidator)
         .observe()
         .toSingle()
-        .map(response -> convertToLocalCardPreview(response));
+        .map(response -> convertToLocalCardPreview(url, response));
   }
 
   private Observable<RelatedAppResponse> getRelatedAppsFromNetwork(String url) {
@@ -115,12 +115,12 @@ public class PostRemoteAccessor implements PostAccessor {
         PostManager.Origin.Remote, isSelected, remoteRelatedApp.getPackageName());
   }
 
-  private PostView.PostPreview convertToLocalCardPreview(CardPreviewResponse response) {
+  private PostView.PostPreview convertToLocalCardPreview(String url, CardPreviewResponse response) {
     return new PostView.PostPreview(response.getData()
         .getData()
         .getThumbnail(), response.getData()
         .getData()
-        .getTitle());
+        .getTitle(), url);
   }
 
   static class RelatedApp {
