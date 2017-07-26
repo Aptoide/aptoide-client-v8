@@ -26,7 +26,7 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
 
-  public DownloadInstallEventConverter(String appId, ConnectivityManager connectivityManager,
+  DownloadInstallEventConverter(String appId, ConnectivityManager connectivityManager,
       TelephonyManager telephonyManager) {
     this.appId = appId;
     this.connectivityManager = connectivityManager;

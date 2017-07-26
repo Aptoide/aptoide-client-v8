@@ -71,7 +71,7 @@ class DownloadTask {
       headers.put(Constants.FILE_TYPE, String.valueOf(fileToDownload.getFileType()));
 
       DownloadTaskWrapper downloader = new DownloadTaskWrapper(fileDownloader, fileToDownload.getLink(),
-          genericPath + fileToDownload.getFileName(), headers, RETRY_TIMES,
+          new File(genericPath, fileToDownload.getFileName()), headers, RETRY_TIMES,
           fileToDownload.getFileName());
       fileToDownload.setDownloadId(downloader.getId());
       fileToDownload.setPath(downloader.getPath());
@@ -103,7 +103,7 @@ class DownloadTask {
       subscriptions.add(downloader.getPause()
           .subscribe(downloadId -> {
             setDownloadStatus(Download.PAUSED, download, downloadId);
-            onDownloadTermitaed();
+            onDownloadTerminated();
             downloadManager.currentDownloadFinished();
           }));
 
@@ -173,7 +173,7 @@ class DownloadTask {
               download.setDownloadError(Download.GENERIC_ERROR);
             }
             setDownloadStatus(Download.ERROR, download, downloadProgress.getId());
-            onDownloadTermitaed();
+            onDownloadTerminated();
             downloadManager.currentDownloadFinished();
           }));
 
@@ -205,7 +205,7 @@ class DownloadTask {
     if (download.getOverallProgress() == progressMaxValue
         && download.getOverallDownloadStatus() != Download.COMPLETED) {
       setDownloadStatus(Download.COMPLETED, download);
-      onDownloadTermitaed();
+      onDownloadTerminated();
       downloadManager.currentDownloadFinished();
     }
 
@@ -330,7 +330,7 @@ class DownloadTask {
     return path;
   }
 
-  private void onDownloadTermitaed() {
+  private void onDownloadTerminated() {
     if (!subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();
     }
