@@ -27,7 +27,7 @@ public class PostManager {
   }
 
   public Completable post(String url, String content, String packageName) {
-    return validateLogin().flatMap(userLogged -> validateInsertedText(content, packageName))
+    return validateLogin().flatMap(userLogged -> validateInsertedText(content, packageName, url))
         .flatMapCompletable(
             validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
                 getContent(url, content), packageName))
@@ -63,8 +63,8 @@ public class PostManager {
         });
   }
 
-  private Single<Boolean> validateInsertedText(String textToShare, String packageName) {
-    if (textToShare == null || textToShare.isEmpty()) {
+  private Single<Boolean> validateInsertedText(String textToShare, String packageName, String url) {
+    if ((textToShare == null || textToShare.isEmpty()) && (url == null || url.isEmpty())) {
       return Single.error(new PostException(PostException.ErrorCode.INVALID_TEXT));
     } else if (packageName == null || packageName.isEmpty()) {
       return Single.error(new PostException(PostException.ErrorCode.INVALID_PACKAGE));

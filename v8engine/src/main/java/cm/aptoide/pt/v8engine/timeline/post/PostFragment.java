@@ -175,6 +175,10 @@ public class PostFragment extends FragmentView implements PostView {
     } else {
       urlProvider = () -> null;
     }
+    if (urlProvider.getUrlToShare() != null && !urlProvider.getUrlToShare()
+        .isEmpty()) {
+      userInput.setHint(R.string.timeline_message_share_on_timeline_external);
+    }
     presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
