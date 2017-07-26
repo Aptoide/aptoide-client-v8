@@ -15,14 +15,6 @@ public interface SpotAndShareAppSelectionView extends View {
 
   void setupRecyclerView(List<AppModel> installedApps);
 
-  Observable<Void> backButtonEvent();
-
-  void showExitWarning();
-
-  Observable<Void> exitEvent();
-
-  void navigateBack();
-
   void onLeaveGroupError();
 
   Observable<AppModel> appSelection();

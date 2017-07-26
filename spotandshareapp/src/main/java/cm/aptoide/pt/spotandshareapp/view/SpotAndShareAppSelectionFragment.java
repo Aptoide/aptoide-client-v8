@@ -23,8 +23,6 @@ import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
-import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -41,9 +39,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private RecyclerView recyclerView;
   private SpotAndShareAppSelectionAdapter adapter;
   private Toolbar toolbar;
-  private PublishRelay<Void> backRelay;
-  private ClickHandler clickHandler;
-  private RxAlertDialog backDialog;
   private PublishSubject<AppModel> appSubject;
   private View progressBarContainer;
 
@@ -62,7 +57,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     shouldCreateGroup = getArguments().getBoolean(CREATE_GROUP_KEY);
-    backRelay = PublishRelay.create();
     appSubject = PublishSubject.create();
   }
 
@@ -77,24 +71,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     recyclerView.setAdapter(adapter);
     setupLayoutManager();
     recyclerView.setHasFixedSize(true);
-  }
-
-  @Override public Observable<Void> backButtonEvent() {
-    return backRelay;
-  }
-
-  @Override public void showExitWarning() {
-    backDialog.show();
-  }
-
-  @Override public Observable<Void> exitEvent() {
-    return backDialog.positiveClicks()
-        .map(dialogInterface -> null);
-  }
-
-  @Override public void navigateBack() {
-    getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance());
   }
 
   @Override public void onLeaveGroupError() {
@@ -153,16 +129,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
     recyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
-    clickHandler = () -> {
-      backRelay.call(null);
-      return true;
-    };
-    registerClickHandler(clickHandler);
-    backDialog = new RxAlertDialog.Builder(getContext()).setMessage(
-        R.string.spotandshare_message_leave_group_warning)
-        .setPositiveButton(R.string.spotandshare_button_leave_group)
-        .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
-        .build();
     progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
 
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
@@ -183,9 +149,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
 
   @Override public void onDestroyView() {
     toolbar = null;
-    unregisterClickHandler(clickHandler);
-    clickHandler = null;
-    backDialog = null;
     adapter = null;
     recyclerView = null;
     progressBarContainer = null;
@@ -193,7 +156,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void onDestroy() {
-    backRelay = null;
     appSubject = null;
     super.onDestroy();
   }
@@ -206,9 +168,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      backRelay.call(null);
-    }
-    return false;
+    return true;
   }
 }

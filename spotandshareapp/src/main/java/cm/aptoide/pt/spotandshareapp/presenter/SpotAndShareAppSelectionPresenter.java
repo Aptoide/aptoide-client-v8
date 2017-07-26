@@ -57,23 +57,6 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.backButtonEvent())
-        .doOnNext(click -> view.showExitWarning())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.exitEvent())
-        .doOnNext(clicked -> leaveGroup())
-        .doOnNext(__ -> view.navigateBack())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appSelection())
         .doOnNext(appModel -> selectedApp(appModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
