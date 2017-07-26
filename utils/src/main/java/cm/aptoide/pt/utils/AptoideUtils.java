@@ -783,9 +783,7 @@ public class AptoideUtils {
     }
 
     public static String getCountryCode() {
-      return context.getResources().getConfiguration().locale.getLanguage()
-                + "_"
-                + context.getResources().getConfiguration().locale.getCountry();
+      return "fa_IR";
     }
 
     public static PackageInfo getPackageInfo(String packageName) {
