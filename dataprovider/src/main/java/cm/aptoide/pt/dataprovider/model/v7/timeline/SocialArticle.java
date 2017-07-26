@@ -21,6 +21,7 @@ import lombok.Getter;
   @Getter private final Store store;
   @Getter private final String cardId;
   @Getter private final String title;
+  @Getter private final String content;
   @Getter private final String thumbnailUrl;
   @Getter private final String url;
   @Getter private final Date date;
@@ -35,7 +36,7 @@ import lombok.Getter;
       @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store,
       @JsonProperty("my") My my, @JsonProperty("url") String url,
       @JsonProperty("likes") List<UserTimeline> likes,
-      @JsonProperty("comments") List<CardComment> comments,
+      @JsonProperty("comments") List<CardComment> comments, @JsonProperty("content") String content,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
     super(likes, comments, my);
@@ -45,6 +46,7 @@ import lombok.Getter;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
     this.url = url;
+    this.content = content;
     this.date = date;
     this.apps = apps;
     this.ab = ab;

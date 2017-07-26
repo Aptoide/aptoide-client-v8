@@ -363,7 +363,7 @@ public class ImageLoader {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager))
+          .load(url)
           .centerCrop()
           .into(imageView);
     } else {
