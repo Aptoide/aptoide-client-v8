@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -42,14 +43,14 @@ class DownloadTask {
   private final CompositeSubscription subscriptions;
   private int currentDownload;
   private List<DownloadStatus> downloaders;
-  private String apkPath;
-  private String obbPath;
-  private String genericPath;
+  private File apkPath;
+  private File obbPath;
+  private File genericPath;
   private FileDownloader fileDownloader;
 
   DownloadTask(int progressMaxValue, DownloadAccessor downloadAccessor, Download download,
       FileUtils fileUtils, Analytics analytics, AptoideDownloadManager downloadManager,
-      CrashReport crashReport, String apkPath, String obbPath, String genericPath,
+      CrashReport crashReport, File apkPath, File obbPath, File genericPath,
       FileDownloader fileDownloader) {
     this.progressMaxValue = progressMaxValue;
     this.download = download;
@@ -110,15 +111,15 @@ class DownloadTask {
           .subscribe(downloadId -> {
             Observable.from(download.getFilesToDownload())
                 .filter(file -> file.getDownloadId() == downloadId)
-                .flatMap(file -> {
+                .flatMapSingle(file -> {
                   file.setStatus(Download.COMPLETED);
                   for (final FileToDownload downloadingFile : download.getFilesToDownload()) {
                     if (downloadingFile.getStatus() != Download.COMPLETED) {
                       file.setProgress(this.progressMaxValue);
-                      return Observable.just(null);
+                      return Single.just(null);
                     }
                   }
-                  return checkMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
+                  return checkMd5AndMoveFileToRightPlace(download).doOnSuccess(fileMoved -> {
                     if (fileMoved) {
                       Logger.d(TAG, "Download md5 match");
                       file.setProgress(this.progressMaxValue);
@@ -291,33 +292,35 @@ class DownloadTask {
     return false;
   }
 
-  private Observable<Boolean> checkMd5AndMoveFileToRightPlace(Download download) {
-    return Observable.fromCallable(() -> {
+  private Single<Boolean> checkMd5AndMoveFileToRightPlace(Download download) {
+    return Single.fromCallable(() -> {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        fileToDownload.setFileName(fileToDownload.getFileName()
-            .replace(".temp", ""));
-        if (!TextUtils.isEmpty(fileToDownload.getMd5())) {
-          if (!TextUtils.equals(AptoideUtils.AlgorithmU.computeMd5(
-              new File(genericPath + fileToDownload.getFileName())), fileToDownload.getMd5())) {
+        final String fileName = fileToDownload.getFileName();
+        fileToDownload.setFileName(fileName.replace(".temp", ""));
+        final String downloadMd5 = fileToDownload.getMd5();
+        if (!TextUtils.isEmpty(downloadMd5)) {
+          final String computedMd5 =
+              AptoideUtils.AlgorithmU.computeMd5(new File(genericPath, fileName));
+          if (!TextUtils.equals(computedMd5, downloadMd5)) {
             return false;
           }
         }
-        String newFilePath = getFilePathFromFileType(fileToDownload);
-        fileUtils.copyFile(genericPath, newFilePath, fileToDownload.getFileName());
-        fileToDownload.setPath(newFilePath);
+        File newFilePath = getFilePathFromFileType(fileToDownload);
+        fileUtils.copyFile(genericPath, newFilePath, fileName);
+        fileToDownload.setPath(newFilePath.getAbsolutePath());
       }
       return true;
     });
   }
 
-  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
-    String path;
+  @NonNull private File getFilePathFromFileType(FileToDownload fileToDownload) {
+    File path;
     switch (fileToDownload.getFileType()) {
       case FileToDownload.APK:
         path = apkPath;
         break;
       case FileToDownload.OBB:
-        path = obbPath + fileToDownload.getPackageName() + "/";
+        path = new File(new File(obbPath, fileToDownload.getPackageName()), File.pathSeparator);
         break;
       case FileToDownload.GENERIC:
       default:

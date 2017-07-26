@@ -6,6 +6,8 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import java.util.Map;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by trinkes on 02/06/2017.
@@ -15,7 +17,7 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
   private final FileDownloader fileDownloader;
   private final BaseDownloadTask baseDownloadTask;
   private BehaviorRelay<Integer> pending;
-  private BehaviorRelay<DownloadProgress> progress;
+  private PublishSubject<DownloadProgress> progress;
   private BehaviorRelay<Integer> pause;
   private BehaviorRelay<Integer> complete;
   private BehaviorRelay<DownloadProgress> error;
@@ -29,7 +31,7 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
       Map<String, String> headers, int retryTimes, String fileName) {
     this.fileDownloader = fileDownloader;
     pending = BehaviorRelay.create();
-    progress = BehaviorRelay.create();
+    progress = PublishSubject.create();
     pause = BehaviorRelay.create();
     complete = BehaviorRelay.create();
     error = BehaviorRelay.create();
@@ -65,7 +67,7 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
     DownloadProgress downloadProgress =
         new DownloadProgress(task.getId(), task.getSpeed(), soFarBytes, totalBytes, task, null,
             task.getUrl());
-    progress.call(downloadProgress);
+    progress.onNext(downloadProgress);
   }
 
   @Override protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
@@ -87,27 +89,27 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
     warn.call(task.getId());
   }
 
-  public BehaviorRelay<Integer> getPending() {
+  public Observable<Integer> getPending() {
     return pending;
   }
 
-  public BehaviorRelay<DownloadProgress> getProgress() {
-    return progress;
+  public Observable<DownloadProgress> getProgress() {
+    return progress.onBackpressureDrop();
   }
 
-  public BehaviorRelay<Integer> getPause() {
+  public Observable<Integer> getPause() {
     return pause;
   }
 
-  public BehaviorRelay<Integer> getComplete() {
+  public Observable<Integer> getComplete() {
     return complete;
   }
 
-  public BehaviorRelay<DownloadProgress> getError() {
+  public Observable<DownloadProgress> getError() {
     return error;
   }
 
-  public BehaviorRelay<Integer> getWarn() {
+  public Observable<Integer> getWarn() {
     return warn;
   }
 

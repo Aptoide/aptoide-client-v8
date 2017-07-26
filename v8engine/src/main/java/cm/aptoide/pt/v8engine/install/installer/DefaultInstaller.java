@@ -210,10 +210,11 @@ public class DefaultInstaller implements Installer {
     for (int i = 0; i < files.size(); i++) {
       FileToDownload file = files.get(i);
       if (file != null && file.getFileType() == FileToDownload.OBB) {
-        String newPath = OBB_FOLDER + installation.getPackageName() + "/";
-        fileUtils.copyFile(file.getPath(), newPath, file.getFileName());
+        File newPath =
+            new File(new File(OBB_FOLDER, installation.getPackageName()), File.pathSeparator);
+        fileUtils.copyFile(new File(file.getPath()), newPath, file.getFileName());
         FileUtils.removeFile(file.getPath());
-        file.setPath(newPath);
+        file.setPath(newPath.getAbsolutePath());
       }
     }
     installation.saveFileChanges();

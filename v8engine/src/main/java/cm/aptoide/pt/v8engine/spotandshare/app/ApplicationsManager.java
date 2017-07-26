@@ -60,20 +60,17 @@ public class ApplicationsManager {
 
   public void moveObbs(String filePath, String packageName) {
 
-    FileUtils fileUtils = new FileUtils();
-    String obbsFilePath =
-        Environment.getExternalStoragePublicDirectory("/") + "/Android/Obb/" + packageName + "/";
-    String appFolderPath = getAppFolder(filePath);
-    File appFolder = new File(appFolderPath);
-    File[] filesList = appFolder.listFiles();
-
-    for (File file : filesList) {
+    final FileUtils fileUtils = new FileUtils();
+    File obbsFile = new File(
+        Environment.getExternalStoragePublicDirectory("/") + "/Android/Obb/" + packageName + "/");
+    File appFolder = new File(getAppFolder(filePath));
+    for (File file : appFolder.listFiles()) {
       String fileName = file.getName();
       if (fileName.endsWith("obb")) {
         String[] fileNameArray = fileName.split("\\.");
         String prefix = fileNameArray[0];
         if (prefix.equalsIgnoreCase("main") || prefix.equalsIgnoreCase("patch")) {
-          fileUtils.copyFile(appFolderPath, obbsFilePath, fileName);
+          fileUtils.copyFile(appFolder, obbsFile, fileName);
         }
       }
     }

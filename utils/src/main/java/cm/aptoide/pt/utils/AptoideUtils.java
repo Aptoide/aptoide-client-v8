@@ -402,7 +402,7 @@ public class AptoideUtils {
 
     public static File takeScreenshot(Activity a, String mPath, String fileName) {
       Bitmap bitmap;
-      FileUtils.createDir(mPath);
+      FileUtils.createDir(new File(mPath));
       View v1 = a.getWindow()
           .getDecorView()
           .getRootView();
@@ -777,7 +777,7 @@ public class AptoideUtils {
         return null;
       }
       FileOutputStream outputStream;
-      FileUtils.createDir(mPath);
+      FileUtils.createDir(new File(mPath));
       File logsFile = new File(mPath, fileName);
       StringBuilder log = new StringBuilder();
       log.append("Android Build Version: " + Build.VERSION.SDK_INT + "\n");

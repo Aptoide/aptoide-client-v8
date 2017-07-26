@@ -1,7 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.CheckResult;
-import com.jakewharton.rxrelay.BehaviorRelay;
+import rx.Observable;
 
 /**
  * Created by trinkes on 05/06/2017.
@@ -9,17 +9,17 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 
 public interface DownloadStatus {
 
-  BehaviorRelay<Integer> getPending();
+  Observable<Integer> getPending();
 
-  BehaviorRelay<DownloadProgress> getProgress();
+  Observable<DownloadProgress> getProgress();
 
-  BehaviorRelay<Integer> getPause();
+  Observable<Integer> getPause();
 
-  BehaviorRelay<Integer> getComplete();
+  Observable<Integer> getComplete();
 
-  BehaviorRelay<DownloadProgress> getError();
+  Observable<DownloadProgress> getError();
 
-  BehaviorRelay<Integer> getWarn();
+  Observable<Integer> getWarn();
 
   int getId();
 

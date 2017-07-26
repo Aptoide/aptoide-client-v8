@@ -81,6 +81,10 @@ public interface AptoidePreferencesConfiguration {
 
   String getVersionName();
 
+  String getDownloadsFolderName();
+  String getArchievedApksFolderName();
+  String getArchievedObbsFolderName();
+
   enum SocialLogin {
     FACEBOOK, GOOGLE
   }

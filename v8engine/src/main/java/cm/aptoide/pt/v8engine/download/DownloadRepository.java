@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.repository;
+package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -10,7 +10,7 @@ public class DownloadRepository {
 
   private final DownloadAccessor accessor;
 
-  DownloadRepository(DownloadAccessor downloadAccessor) {
+  public DownloadRepository(DownloadAccessor downloadAccessor) {
     this.accessor = downloadAccessor;
   }
 

@@ -10,6 +10,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.liulishuo.filedownloader.FileDownloader;
+import java.io.File;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -24,9 +25,9 @@ public class AptoideDownloadManager {
   static public final int PROGRESS_MAX_VALUE = 100;
   private static final String TAG = AptoideDownloadManager.class.getSimpleName();
 
-  private final String downloadsStoragePath;
-  private final String apkPath;
-  private final String obbPath;
+  private final File downloadsStoragePath;
+  private final File apkPath;
+  private final File obbPath;
   private boolean isDownloading = false;
   private boolean isPausing = false;
   private DownloadAccessor downloadAccessor;
@@ -37,7 +38,7 @@ public class AptoideDownloadManager {
 
   public AptoideDownloadManager(DownloadAccessor downloadAccessor, CacheManager cacheHelper,
       FileUtils fileUtils, Analytics analytics, FileDownloader fileDownloader,
-      String downloadsStoragePath, String apkPath, String obbPath) {
+      File downloadsStoragePath, File apkPath, File obbPath) {
     this.fileDownloader = fileDownloader;
     this.analytics = analytics;
     this.cacheHelper = cacheHelper;
@@ -134,7 +135,7 @@ public class AptoideDownloadManager {
       downloadStatus = Download.PROGRESS;
     } else {
       for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
-        if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
+        if (!new File(fileToDownload.getFilePath()).exists()) {
           downloadStatus = Download.FILE_MISSING;
           break;
         }
@@ -201,9 +202,11 @@ public class AptoideDownloadManager {
       getNextDownload().first()
           .subscribe(download -> {
             if (download != null) {
-              new DownloadTask(PROGRESS_MAX_VALUE, downloadAccessor, download, fileUtils, analytics,
-                  this, CrashReport.getInstance(), apkPath, obbPath, downloadsStoragePath,
-                  fileDownloader).startDownload();
+              DownloadTask downloadTask =
+                  new DownloadTask(PROGRESS_MAX_VALUE, downloadAccessor, download, fileUtils,
+                      analytics, this, CrashReport.getInstance(), apkPath, obbPath,
+                      downloadsStoragePath, fileDownloader);
+              downloadTask.startDownload();
               Logger.d(TAG, "Download with md5 " + download.getMd5() + " started");
             } else {
               isDownloading = false;

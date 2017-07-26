@@ -10,11 +10,15 @@ import android.os.Environment;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
+import java.io.File;
 
 /**
  * Created by neuro on 10-05-2016.
  */
 public class VanillaConfiguration implements AptoidePreferencesConfiguration {
+
+  private static final File SDCARD_PATH = Environment.getExternalStorageDirectory();
+  private static final File INTERNAL_APP_PATH = new File(SDCARD_PATH, ".aptoide");
 
   private static final String PATH_SDCARD = Environment.getExternalStorageDirectory()
       .getAbsolutePath();
@@ -39,6 +43,18 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public String getCachePath() {
     return PATH_CACHE;
+  }
+
+  @Override public String getDownloadsFolderName() {
+    return ".aptoide";
+  }
+
+  @Override public String getArchievedApksFolderName() {
+    return "apks";
+  }
+
+  @Override public String getArchievedObbsFolderName() {
+    return "obbs";
   }
 
   @Override public String getApkCachePath() {

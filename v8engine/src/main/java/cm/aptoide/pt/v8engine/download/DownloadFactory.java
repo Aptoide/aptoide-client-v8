@@ -84,7 +84,7 @@ public class DownloadFactory {
     }
   }
 
-  ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
+  private ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
     switch (downloadAction) {
       case Download.ACTION_INSTALL:
         path += INSTALL_ACTION;
@@ -339,11 +339,11 @@ public class DownloadFactory {
     return null;
   }
 
-  private class ApkPaths {
+  private static class ApkPaths {
     String path;
     String altPath;
 
-    public ApkPaths(String path, String altPath) {
+    ApkPaths(String path, String altPath) {
       this.path = path;
       this.altPath = altPath;
     }

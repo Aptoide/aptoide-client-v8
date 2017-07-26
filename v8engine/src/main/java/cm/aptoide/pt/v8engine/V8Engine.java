@@ -564,8 +564,9 @@ public abstract class V8Engine extends Application {
   public AptoideDownloadManager getDownloadManager() {
     if (downloadManager == null) {
 
-      final String apkPath = getConfiguration().getCachePath() + "apks/";
-      final String obbPath = getConfiguration().getCachePath() + "obb/";
+      final File downloadsPath = new File(this.getApplicationContext()
+          .getFilesDir(), getConfiguration().getDownloadsFolderName());
+
       final OkHttpClient.Builder httpClientBuilder =
           new OkHttpClient.Builder().addInterceptor(getUserAgentInterceptor())
               .addInterceptor(new PaidAppsDownloadInterceptor(getAccountManager()))
@@ -574,17 +575,20 @@ public abstract class V8Engine extends Application {
               .writeTimeout(20, TimeUnit.SECONDS)
               .readTimeout(20, TimeUnit.SECONDS);
 
+      final File apkPath = new File(downloadsPath, getConfiguration().getArchievedApksFolderName());
+      final File obbPath = new File(downloadsPath, getConfiguration().getArchievedObbsFolderName());
       FileUtils.createDir(apkPath);
       FileUtils.createDir(obbPath);
 
       FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
-      FileDownloadUtils.setDefaultSaveRootPath(getConfiguration().getCachePath());
+      FileDownloadUtils.setDefaultSaveRootPath(downloadsPath.getAbsolutePath());
+
       downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
           getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
-          getConfiguration().getCachePath(), apkPath, obbPath);
+          downloadsPath, apkPath, obbPath);
     }
     return downloadManager;
   }

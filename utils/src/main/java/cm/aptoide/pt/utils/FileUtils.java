@@ -22,9 +22,11 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 5/18/16.
  */
-public class FileUtils {
-  public static final String MOVE = "Move";
-  public static final String COPY = "Copy";
+//FIXME use a lib to do this.
+// Apache already solved most of this problems: https://github.com/apache/commons-io
+@Deprecated public class FileUtils {
+  private static final String MOVE = "Move";
+  private static final String COPY = "Copy";
   private static final String TAG = FileUtils.class.getSimpleName();
   private Action1<String> sendFileMoveEvent;
 
@@ -48,11 +50,8 @@ public class FileUtils {
     return toReturn;
   }
 
-  public static void createDir(String path) {
-    File dir = new File(path);
-    if (!dir.exists()) {
-      dir.mkdirs();
-    }
+  public static boolean createDir(File directory) {
+    return !directory.exists() && directory.mkdirs();
   }
 
   public static boolean saveBitmapToFile(File dir, String fileName, Bitmap bm,
@@ -81,10 +80,6 @@ public class FileUtils {
       }
     }
     return false;
-  }
-
-  public static boolean fileExists(String path) {
-    return !TextUtils.isEmpty(path) && new File(path).exists();
   }
 
   public long deleteDir(File dir) {
@@ -141,13 +136,14 @@ public class FileUtils {
    * @param outputPath Path to the directory where the file should be copied
    * @param fileName Name of the file to be copied
    */
-  public void copyFile(String inputPath, String outputPath, String fileName) {
-    if (!fileExists(inputPath + fileName)) {
+  public void copyFile(File inputPath, File outputPath, String fileName) {
+    final File origin = new File(inputPath, fileName);
+    final File destination = new File(outputPath, fileName);
+    if (!origin.exists()) {
       throw new RuntimeException("Input file(" + inputPath + fileName + ") doesn't exists");
     }
 
-    File file = new File(inputPath + fileName);
-    if (!file.renameTo(new File(outputPath + fileName))) {
+    if (!origin.renameTo(destination)) {
       cloneFile(inputPath, outputPath, fileName);
     } else if (sendFileMoveEvent != null) {
       sendFileMoveEvent.call(MOVE);
@@ -161,19 +157,24 @@ public class FileUtils {
    * @param outputPath Path to the directory where the file should be copied
    * @param fileName Name of the file to be copied
    */
-  public void cloneFile(String inputPath, String outputPath, String fileName) {
-    InputStream in = null;
-    OutputStream out = null;
+  private void cloneFile(File inputPath, File outputPath, String fileName) {
+    InputStream in;
+    OutputStream out;
+
+    File inputFile = new File(inputPath, fileName);
+    File outputFile = new File(outputPath, fileName);
+
     try {
 
       //create output directory if it doesn't exist
-      File dir = new File(outputPath);
-      if (!dir.exists()) {
-        dir.mkdirs();
+      if (!outputPath.exists()) {
+        if (!outputPath.mkdirs()) {
+          throw new IOException("Unable to create output directory");
+        }
       }
 
-      in = new FileInputStream(inputPath + "/" + fileName);
-      out = new FileOutputStream(outputPath + "/" + fileName);
+      in = new FileInputStream(inputFile);
+      out = new FileOutputStream(outputFile);
 
       byte[] buffer = new byte[1024];
       int read;
@@ -185,29 +186,24 @@ public class FileUtils {
       // write the output file (You have now copied the file)
       out.flush();
       out.close();
-      new File(inputPath + fileName).delete();
+      inputFile.delete();
       if (sendFileMoveEvent != null) {
         sendFileMoveEvent.call(COPY);
       }
     } catch (Exception e) {
-      File inputFile = new File(inputPath + "/" + fileName);
       if (inputFile.exists()) {
         inputFile.delete();
       }
-      File outputFile = new File(outputPath + "/" + fileName);
       if (outputFile.exists()) {
         outputFile.delete();
       }
+
       Logger.e(TAG, e.getMessage());
-      //				toReturn = false;
       throw new RuntimeException(e);
-    } finally {
-      in = null;
-      out = null;
     }
   }
 
-  public Observable<Long> deleteFolder(File... folders) {
+  private Observable<Long> deleteFolder(File... folders) {
     return Observable.from(folders)
         .observeOn(Schedulers.io())
         .flatMap(filePath -> Observable.fromCallable(() -> {

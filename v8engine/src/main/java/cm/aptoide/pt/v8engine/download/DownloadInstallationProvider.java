@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.installer.InstallationProvider;
@@ -62,8 +63,9 @@ public class DownloadInstallationProvider implements InstallationProvider {
                   storedMinimalAdAccessor.get(downloadInstallationAdapter.getPackageName())
                       .doOnNext(handleCpd())
                       .subscribeOn(Schedulers.io())
-                      .subscribe(storedMinimalAd -> {
-                      }, Throwable::printStackTrace);
+                      .subscribe(__ -> {
+                      }, err -> CrashReport.getInstance()
+                          .log(err));
                 });
           }
           return Observable.error(new InstallationException("Installation file not available."));
