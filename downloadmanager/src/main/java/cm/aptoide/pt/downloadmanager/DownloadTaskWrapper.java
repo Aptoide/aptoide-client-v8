@@ -11,7 +11,6 @@ import rx.subjects.PublishSubject;
 /**
  * Created by trinkes on 02/06/2017.
  */
-
 class DownloadTaskWrapper extends FileDownloadLargeFileListener implements DownloadStatus {
   private final FileDownloader fileDownloader;
   private final BaseDownloadTask baseDownloadTask;
