@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.util.Patterns;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +48,6 @@ import rx.Observable;
 public class PostFragment extends FragmentView implements PostView {
 
   private static final int MAX_CHARACTERS = 200;
-  private static final String DATA_TO_SHARE = "data_to_share";
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
   private AppCompatEditText userInput;
@@ -62,6 +63,7 @@ public class PostFragment extends FragmentView implements PostView {
   private PublishRelay<Void> loginAction;
   private PublishRelay<Void> openUploaderButton;
   private PostPresenter presenter;
+  private View inputSeparator;
 
   public static PostFragment newInstance() {
     return new PostFragment();
@@ -132,6 +134,7 @@ public class PostFragment extends FragmentView implements PostView {
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
     previewLayout = view.findViewById(R.id.preview_layout);
+    inputSeparator = view.findViewById(R.id.input_text_separator);
   }
 
   private void destroyLoading(ProgressBar progressBar) {
@@ -213,23 +216,28 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void showCardPreview(PostPreview suggestion) {
     if (suggestion.getImage() != null) {
+      Resources r = getResources();
+      int radius =
+          (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
+      int margin =
+          (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, r.getDisplayMetrics());
       previewImage.setVisibility(View.VISIBLE);
       ImageLoader.with(getContext())
-          .loadWithoutResizeCenterCrop(suggestion.getImage(), previewImage);
+          .loadWithRoundCorners(suggestion.getImage(), radius, margin, previewImage);
     }
     previewTitle.setText(suggestion.getTitle());
     previewTitle.setVisibility(View.VISIBLE);
-    previewLayout.setVisibility(View.VISIBLE);
+    handlePreviewLayout();
   }
 
   @Override public void showCardPreviewLoading() {
-    previewLayout.setVisibility(View.VISIBLE);
     previewLoading.setVisibility(View.VISIBLE);
+    handlePreviewLayout();
   }
 
   @Override public void hideCardPreviewLoading() {
     previewLoading.setVisibility(View.GONE);
-    hidePreviewLayout();
+    handlePreviewLayout();
   }
 
   @Override public void showRelatedAppsLoading() {
@@ -244,7 +252,7 @@ public class PostFragment extends FragmentView implements PostView {
   @Override public void hideCardPreview() {
     previewImage.setVisibility(View.GONE);
     previewTitle.setVisibility(View.INVISIBLE);
-    hidePreviewLayout();
+    handlePreviewLayout();
   }
 
   @Override public void showGenericError() {
@@ -315,11 +323,14 @@ public class PostFragment extends FragmentView implements PostView {
     adapter.clearAllRelated();
   }
 
-  private void hidePreviewLayout() {
+  private void handlePreviewLayout() {
     if (previewImage.getVisibility() == View.GONE
-        && previewLoading.getVisibility() == View.GONE
-        && previewTitle.getVisibility() == View.INVISIBLE) {
+        && previewLoading.getVisibility() == View.GONE && previewTitle.getVisibility() == View.INVISIBLE) {
       previewLayout.setVisibility(View.GONE);
+      inputSeparator.setVisibility(View.VISIBLE);
+    } else {
+      previewLayout.setVisibility(View.VISIBLE);
+      inputSeparator.setVisibility(View.GONE);
     }
   }
 

@@ -140,7 +140,7 @@ class RelatedAppsAdapter extends RecyclerView.Adapter {
 
   private static class RelatedAppViewHolder extends RecyclerView.ViewHolder {
     public static final int SELECTED_ELEVATION = 20;
-    public static final int UNSELECTED_ELEVATION = 0;
+    public static final int UNSELECTED_ELEVATION = 5;
     private final ImageView image;
     private final TextView name;
     private final ImageView checkIndicator;
