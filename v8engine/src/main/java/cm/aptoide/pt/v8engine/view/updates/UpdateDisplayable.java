@@ -112,11 +112,11 @@ public class UpdateDisplayable extends Displayable {
         update.getUpdateVersionCode(), installedRepository, permissionManager);
   }
 
-  public Completable downloadAndInstall(Context context, PermissionService permissionRequest,
+  Completable downloadAndInstall(Context context, PermissionService permissionRequest,
       Resources resources) {
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(sucess -> {
+        .flatMap(__ -> {
           if (installManager.showWarning()) {
             return GenericDialogs.createGenericYesNoCancelMessage(context, "",
                 AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, resources))
@@ -150,11 +150,11 @@ public class UpdateDisplayable extends Displayable {
     return R.layout.update_row;
   }
 
-  public int getUpdateVersionCode() {
+  private int getUpdateVersionCode() {
     return updateVersionCode;
   }
 
-  public Observable<Boolean> shouldShowProgress() {
+  Observable<Boolean> shouldShowProgress() {
     return installManager.getInstall(getMd5(), getPackageName(), getUpdateVersionCode())
         .map(installationProgress -> installationProgress.getState()
             == Install.InstallationStatus.INSTALLING || installationProgress.isIndeterminate());

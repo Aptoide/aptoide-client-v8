@@ -5,26 +5,19 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
-import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.view.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-@Ignore @Accessors(chain = true) public abstract class Displayable implements LifecycleSchim {
+public abstract class Displayable implements LifecycleSchim {
 
-  @Getter CompositeSubscription subscriptions;
-  @Getter private boolean fixedPerLineCount;
-  @Getter private int defaultPerLineCount;
-  @Setter @Getter private boolean isVisible = false;
+  private boolean fixedPerLineCount;
+  private int defaultPerLineCount;
+  private boolean isVisible = false;
 
   /**
    * Needed for reflective {@link Class#newInstance()}.
@@ -35,7 +28,21 @@ import rx.subscriptions.CompositeSubscription;
     defaultPerLineCount = config.getDefaultPerLineCount();
   }
 
-  //public abstract Type getType();
+  public boolean isFixedPerLineCount() {
+    return fixedPerLineCount;
+  }
+
+  public int getDefaultPerLineCount() {
+    return defaultPerLineCount;
+  }
+
+  public boolean isVisible() {
+    return isVisible;
+  }
+
+  public void setVisible(boolean visible) {
+    isVisible = visible;
+  }
 
   @Partners protected abstract Configs getConfig();
 
@@ -46,16 +53,6 @@ import rx.subscriptions.CompositeSubscription;
         resources);
   }
 
-  //
-  // LifecycleSchim interface
-  // optional methods
-
-  /**
-   * Same code as in {@link Type#getPerLineCount()} todo: terminar este doc
-   *
-   * @param windowManager
-   * @param resources
-   */
   public int getPerLineCount(WindowManager windowManager, Resources resources) {
 
     int tmp;
@@ -120,13 +117,21 @@ import rx.subscriptions.CompositeSubscription;
     return this;
   }
 
-  @Getter public class Configs {
+  public class Configs {
     private final int defaultPerLineCount;
     private final boolean fixedPerLineCount;
 
     public Configs(int defaultPerLineCount, boolean fixedPerLineCount) {
       this.defaultPerLineCount = defaultPerLineCount;
       this.fixedPerLineCount = fixedPerLineCount;
+    }
+
+    public int getDefaultPerLineCount() {
+      return this.defaultPerLineCount;
+    }
+
+    public boolean isFixedPerLineCount() {
+      return this.fixedPerLineCount;
     }
   }
 }
