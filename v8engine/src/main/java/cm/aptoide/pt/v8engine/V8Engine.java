@@ -698,9 +698,16 @@ public abstract class V8Engine extends Application {
       abTestManager = new ABTestManager(new SixpackBuilder(),
           new OkHttpClient.Builder().authenticator(
               new BasicAuthenticator(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD))
-              .build(), BuildConfig.SIXPACK_URL);
+              .build(), getAbHost(getDefaultSharedPreferences()));
     }
     return abTestManager;
+  }
+
+  private String getAbHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_SIXPACK_HOST;
   }
 
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
