@@ -13,6 +13,6 @@ import lombok.EqualsAndHashCode;
  * Created by neuro on 27-04-2016.
  */
 @Data @EqualsAndHashCode(callSuper = true) public class ListApps
-    extends BaseV7EndlessDatalistResponse<App> {
+    extends BaseV7EndlessDataListResponse<App> {
 
 }

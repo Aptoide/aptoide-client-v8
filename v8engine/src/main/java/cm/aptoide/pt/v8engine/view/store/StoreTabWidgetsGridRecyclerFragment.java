@@ -76,7 +76,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
       boolean refresh, String url) {
-    return Observable.from(getStoreWidgets.getDatalist()
+    return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .flatMap(wsWidget -> {
           return WSWidgetsUtils.loadWidgetNode(wsWidget,
@@ -93,7 +93,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               ((V8Engine) getContext().getApplicationContext()).getVersionCodeProvider());
         })
         .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist()
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())
         .concatMap(wsWidget -> {
           return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,

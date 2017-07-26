@@ -42,7 +42,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
 
   @NonNull private List<Displayable> createDisplayables(ListStores listStores) {
     List<Displayable> displayables = new ArrayList<>();
-    for (final Store store : listStores.getDatalist()
+    for (final Store store : listStores.getDataList()
         .getList()) {
       displayables.add(new GridStoreDisplayable(store));
     }

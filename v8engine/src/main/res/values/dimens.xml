@@ -87,6 +87,13 @@
   <dimen name="button_big_height">40dp</dimen>
   <dimen name="partial_view_store_theme_checked_size">22dp</dimen>
   <dimen name="partial_view_store_theme_sample_size">44dp</dimen>
-
+  <dimen name="padding_tiny">4dp</dimen>
+  <integer name="min_avatar_height">600</integer>
+  <integer name="max_avatar_height">10240</integer>
+  <integer name="min_avatar_width">600</integer>
+  <integer name="max_avatar_width">10240</integer>
+  <integer name="max_avatar_Size">5242880</integer>
+  <dimen name="timeline_post_hint_left_margin">17dp</dimen>
+  <dimen name="timeline_post_post_title_title">28sp</dimen>
 
 </resources>
