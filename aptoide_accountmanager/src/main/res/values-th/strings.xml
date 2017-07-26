@@ -10,16 +10,17 @@
   <string name="login">ลงชื่อเข้าใช้งาน</string>
   <string name="successful">สำเร็จ</string>
   <string name="login_successful">เข้าระบบได้สำเร็จ</string>
-  <string name="forgot_passwd"><u>ลืมรหัสผ่าน?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">โปรดตรวจสอบอีเมลและรหัสผ่านของคุณ</string>
   <string name="unknown_error">ความผิดพลาดที่ไม่ทราบ</string>
-  <string name="accept_terms">\"โดยการลงชื่อเข้าใช้ที่คุณยินยอมกับเงื่อนไขการให้บริการของ Aptoide
-และนโยบายของนักพัฒนาคอนเท้นต์
- \"</string>
-  <string name="no_email_and_pass_error_message">\"โปรดใส่อีเมมล์และรหัสผ่านเพื่อ
- \"</string>
-  <string name="no_pass_error_message">โปรดใส่รหัสผ่าน</string>
-  <string name="no_email_error_message">โปรดใส่อีเมลล์</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"รหัสผ่านต้องประกอบด้วยกันอย่างน้อย 8 ตัว และมี
  ตัวอักษรอย่างน้อยหนึ่งตัว และมีตัวเลขหรือสัญลักษณ์พิเศษอย่างน้อยหนึ่งตัว  (!@#$%*)
  \"</string>

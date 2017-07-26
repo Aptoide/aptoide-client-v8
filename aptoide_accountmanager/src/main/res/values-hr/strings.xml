@@ -10,17 +10,17 @@
   <string name="login">Prijava</string>
   <string name="successful">Uspješno</string>
   <string name="login_successful">Prijava uspješna</string>
-  <string name="forgot_passwd">Zaboravljena lozinka?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Molimo vas provjerite e-poštu i zaporku</string>
   <string name="unknown_error">Nepoznata greška</string>
-  <string name="accept_terms">\"Prijavom se slažete s Uvijetima pružanja usluge Aptoide i
- Pravilima o sadržaju za razvojne programere.
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Molimo unesite e-mail adresu i lozinku za
-registraciju.
- \"</string>
-  <string name="no_pass_error_message">Molimo unesite lozinku za registraciju.</string>
-  <string name="no_email_error_message">Molimo unesite e-mail adresu za registraciju.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Lozinka mora imati minimalno 8 znakova i mora sadržavati
 najmanje jedno slovo i jedan broj ili specijalni znak (!@#$%*)
  \"</string>

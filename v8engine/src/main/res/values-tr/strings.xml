@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Hesabım</string>
-  <string name="setting_schdwntitle">Programlanmış İndirmeler</string>
-  <string name="settings">Ayarlar</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Yedekleme Uygulamaları</string>
   <string name="dark">Karanlık</string>
   <string name="light">Işık</string>
   <string name="updates_filter_summary">Burayı işaretlerseniz, beta sürümlerinden haberdar olmazsınız.</string>
@@ -133,22 +126,28 @@ bir tehdit içermez!</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>ATLA</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Şimdi bir Zaman Çizelgesi ile birlikte!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Güvenli</b> ve <b>keyifli</b> bir yolculuğa başlayın.</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>Uygulama Zaman Tüneli</b></string>
-  <string name="wizard_sub_title_viewpager_two"><b>En son uygulamaları</b> alın, <b>tematik mağazaları</b> 
-bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Topluluğa katılın</b></string>
-  <string name="wizard_sub_title_viewpager_three">Uygulama ilgi alanlarınızı paylaşan <b>insanlar bulun</b>. \n<b>Oylayın ve paylaşın.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Bize katılın!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Oturum açmış olmanız gerekir</string>
   <string name="follow">Takip Et</string>
   <!--need translation-->
   <string name="followed">Takip Ediliyor</string>
   <string name="unfollow_yes_no">Takipten çıkarmak istediğinizden emin misiniz?</string>
   <string name="unfollow">Takipten Çıkar</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Takip Edilmiyor %s</string>
   <string name="store_followed">Mağaza %s takip edildi</string>
   <string name="subscribers">Aboneler</string>
@@ -176,7 +175,6 @@ bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
   <string name="social_timeline">Sosyal Zaman Çizelgesi</string>
   <string name="downloads">İndirilenler</string>
   <string name="apps_timeline"><b>Uygulama Zaman Tüneli</b></string>
-  <string name="timeline"><b>Zaman çizelgesi</b></string>
   <string name="latest_reviews">En Son İncelemeler</string>
   <string name="latest_comments">Son Yorumlar</string>
   <string name="action">Aksiyon</string>
@@ -249,8 +247,6 @@ bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
   <string name="essential_apps">Önemli Uygulamalar</string>
   <string name="summer_apps">Yaz Uygulamaları</string>
   <string name="play_it">Oyna bunu!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Öne Çıkan Mağazalar</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s ile ilgili</string>
   <string name="appstimeline_update_app">uygulama</string>
@@ -273,10 +269,9 @@ bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
   <string name="create_store_displayable_message">Mağazanızı şimdi oluşturun ve uygulamalarınızı paylaşmaya başlayın!</string>
   <string name="create_store_displayable_button">MAĞAZA OLUŞTURUN</string>
   <string name="my_store_created_displayable_message">Android Uygulama Mağazanız</string>
-  <string name="create_store_displayable_created_store_short_term_message">Mağazanızı az önce oluşturdunuz!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Tüm olasılıkları araştır ve gir</string>
   <string name="create_store_displayable_explore_button">Araştır</string>
-  <string name="follow_store">Mağaza Takip Et</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Mağaza uygulamalarınız henüz yok.</string>
   <string name="install_app_outter_pt2">ve uygulamaları dünya ile paylaşmak için yükle!</string>
@@ -289,8 +284,6 @@ bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
   <string name="word_this">bu</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Hangi takipçileri göreceksiniz:</string>
-  <string name="social_timeline_you_will_share_comment">Takipçileriniz yorumunuzu görebilecektir:</string>
-  <string name="social_timeline_you_will_share_like">Takipçileriniz Beğenilerinizi görebilecektir:</string>
   <string name="social_timeline_share_title">Kart önizlemesini paylaş</string>
   <string name="social_timeline_share_title_checkbox">Kullanıcı profilimi Uygulama Zaman Tünelinde özel hale getir. Sadece mağazamın bilgisini paylaş</string>
   <string name="social_timeline_share_title_checkbox_fb">Kullanıcı profilimin Uygulama Zaman Tünelinde herkese açık olmasına izin ver</string>
@@ -325,84 +318,16 @@ bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
   <string name="private_followers_message">%d takipçileri özeldir</string>
   <string name="private_following_message">%d özel kullanıcılar/mağazaları takip ediyorsunuz</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Yanıtlar</string>
   <string name="out_of_space_dialog_title">Yer Yok</string>
   <string name="out_of_space_dialog_message">Devam etmek için lütfen boş alan yaratın.</string>
-  <string name="setting_category_autoupdate">%s Güncelleştirmeler</string>
-  <string name="setting_category_autoupdate_title">%sGüncelleme bildirimleri al</string>
-  <string name="setting_category_autoupdate_message">%s yeni sürümleri için düzenli olarak kontrol et</string>
-  <string name="store_added_long_time_suggestion_message">uzun vadeli göster</string>
-  <string name="store_added_short_time_suggestion_message">yeni oluşturulanları göster</string>
-  <string name="create_store_displayable_created_store_long_term_message">uzun vadeli</string>
-  <string name="create_store_displayable_explore_long_term_button">Mağazayı Görüntüle</string>
-  <string name="create_store_displayable_empty_description_message">Mağazanız için bir açıklama ekleyin. İyi bir açıklama daha fazla takipçi ve etkileşim almanıza yardımcı olur.</string>
-  <string name="fragment_spot_share_preview_start_button">Başlat</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">%s katıl</string>
-  <string name="login">Giriş</string>
-  <string name="login_company">%s oturum aç</string>
-  <string name="connect_with_facebook">Facebook ile Bağlan</string>
-  <string name="connect_with_google">Google ile Bağlan</string>
-  <string name="accept_terms_signup">Aptoide katılarak Aptoide\'nın Geliştiriciler için Şart ve Koşullar ile İçerik politikasını kabul etmiş olursunuz</string>
-  <string name="recover_password">Şifrenizi kurtarın</string>
-  <string name="email">E-posta</string>
-  <string name="password">Parola</string>
-  <string name="create_password">Parola Oluştur</string>
-  <string name="store_suspended_message">Mağaza askıya alındı</string>
-  <string name="facebook_login_cancelled">Facebook girişi iptal edildi</string>
-  <string name="google_login_cancelled">Google oturum açma başarısız oldu</string>
-  <string name="login_separator_text">Veya e-posta kullanarak bağlan</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Farklı mağazalarda sadece sizin için özel olarak hazırlanmış içeriği bulabilirsiniz</string>
-  <string name="add_store_dialog_top_stores">EN İYİ MAĞAZALARI KEŞFET</string>
-  <string name="add_store_dialog_top_stores_small_text">ve özel içerik bulun!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Giriş</string>
-  <string name="activity_login_forgot_password_button">Parolanızı unuttunuz mu?</string>
-  <string name="activity_login_button">Giriş</string>
-  <string name="activity_login_sign_up_button">Hesap aç</string>
-  <string name="view_credentials_username_hint">E-posta</string>
-  <string name="view_credentials_password_hint">Parola</string>
-  <string name="permission_access_deny">harici depolamayı okumak ve açmak için erişim reddedildi</string>
-  <string name="permission_account_deny">hesap almak için erişim reddedildi</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Ağınız artırın.</string>
-  <string name="addressbook_connect_with_friends_message">Arkadaşlarınızla bağlantı kurun.</string>
-  <string name="addressbook_sync">Adres Defteri\'ni Eşitle</string>
-  <string name="not_now">Şimdi değil</string>
-  <string name="follow_friends">Arkadaşlarınızı Takip Edin</string>
-  <string name="addressbook_data_about"><b>%1$s verilerinizi nasıl kullanırsınız</b> 
-
-
-%1$s App Store kullanan arkadaşlarınız ve aile üyeleriniz için rehberinizde arama yapar. Bu bilgiyi sadece sizin içeriğiniz ile ilintili uygulamaları paylaşabilecek daha fazla insanla bağlantı kurmak üzere %1$s deneyiminizi geliştirmek kullanıyoruz.
-
-
-
-Gizliliğinizi korumak için tüm verileri %1$s sunucuları göndermeden önce kodlanacaktır.
- </string>
-  <string name="addressbook_success">Başarılı!</string>
-  <string name="addressbook_allow_friends_find">Arkadaşlarınızın sizi bulmasına izin verin</string>
-  <string name="google">Google</string>
-  <string name="done">Tamam</string>
-  <string name="addressbook_share_phone">Telefon numaranızı paylaşın, böylece arkadaşlarınız %s üzerinde kolayca bulabilirler</string>
-  <string name="addressbook_phone_number">Telefon numarası</string>
-  <string name="addressbook_insuccess_connection">Rehberiniz ile bağlantı kuramadık!</string>
-  <string name="addressbook_invite_friends">Size katılmaları için arkadaşlarınızı davet edin!</string>
-  <string name="addressbook_thanks_for_connecting">Bağlantı kurduğunuz için teşekkürler</string>
-  <string name="addressbook_success_connected_friends">Sizi başarıyla %2$s kullanan %1$s arkadaşınızla başarı ile bağlantı kurmanızı sağladık</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">%1$s kullanan herhangi bir kişi bulamadık</string>
-  <string name="addressbook_2nd_msg">%1$s App Store kullanan arkadaşlarınız ve aile üyeleriniz
-için rehberinize bir göz atacaktır. Gizliliğinizi korumak için %1$s
-sunucularına hiçbir özel veri gönderilmeyecektir</string>
-  <string name="addressbook_3rd_msg">DAHA FAZLA BİLGİ EDİNİN</string>
-  <string name="address_book_twitter_error">Twitter yetkilendirme hatası</string>
-  <string name="follow_my_store">Merhaba, %1$s Mağazamı burada takip edin</string>
-  <string name="store_meta_apps">Uygulamalar\n%s</string>
-  <string name="store_meta_following">Takiptesin\n%s</string>
-  <string name="store_meta_followers">Takipçiler\n%s</string>
-  <string name="addressbook_about">Adres Defteri Hakkında</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Sizi bağlamamız mümkün değildi</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Uygulamaları arkadaşlarınızla paylaşın</string>
-  <string name="spot_share_line_2">İnternet olmadan telefondan telefona</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

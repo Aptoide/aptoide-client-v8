@@ -10,16 +10,17 @@
   <string name="login">登入</string>
   <string name="successful">成功</string>
   <string name="login_successful">登录成功</string>
-  <string name="forgot_passwd"><u>忘记密码？</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">请检查您的电子邮件和密码。</string>
   <string name="unknown_error">未知错误</string>
-  <string name="accept_terms">\"注册则表示您同意Aptoide针对开发人员的服务条款
-及内容政策
- \"</string>
-  <string name="no_email_and_pass_error_message">\"请输入电子邮件和密码
- \"</string>
-  <string name="no_pass_error_message">请输入密码</string>
-  <string name="no_email_error_message">请输入电子邮件</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"密码必须至少包含8个字符，且至少包括一个字母和
 一个数字或特殊字符(!@#$%*)
  \"</string>

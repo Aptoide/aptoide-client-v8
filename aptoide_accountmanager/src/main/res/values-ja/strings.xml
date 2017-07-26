@@ -10,16 +10,14 @@
   <string name="login">ログイン</string>
   <string name="successful">成功しました</string>
   <string name="login_successful">ログインに成功しました</string>
-  <string name="forgot_passwd"><u>パスワードをお忘れですか?</u></string>
+  <string name="forgot_passwd">パスワードをお忘れですか？</string>
   <string name="fields_cannot_empty">Eメールとパスワードを確認してください。</string>
   <string name="unknown_error">不明なエラー</string>
-  <string name="accept_terms">\"サインアップすることにより、Aptoide サービス利用規約、
-開発者向けコンテンツポリシーに同意します。
- \"</string>
-  <string name="no_email_and_pass_error_message">\"メールアドレスとパスワードを入力してください
- \"</string>
-  <string name="no_pass_error_message">パスワードを入力してください</string>
-  <string name="no_email_error_message">メールアドレスを入力してください</string>
+  <string name="accept_terms">サインアップすることにより、Aptoide サービス利用規約、
+開発者向けコンテンツポリシーに同意します    </string>
+  <string name="no_email_and_pass_error_message">登録するメールアドレスとパスワードを入力してください。    </string>
+  <string name="no_pass_error_message">登録するパスワードを入力してください。</string>
+  <string name="no_email_error_message">登録するメールアドレスを入力してください。</string>
   <string name="password_validation_text">\"パスワードは 8 文字以上で、少なくとも 1 つの文字と 1 つの数字、
 または特殊文字 (!@#$%*) にする必要があります
  \"</string>

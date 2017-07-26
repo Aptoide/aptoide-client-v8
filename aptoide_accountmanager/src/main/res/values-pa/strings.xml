@@ -10,16 +10,17 @@
   <string name="login">ਲਾਗਇਨ</string>
   <string name="successful">ਸਫਲ</string>
   <string name="login_successful">ਲਾਗਇਨ ਸਫਲ</string>
-  <string name="forgot_passwd"><u> ਪਾਸਵਰਡ ਭੁੱਲ ਗਿਆ?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">ਆਪਣੇ ਈ-ਮੇਲ ਅਤੇ ਪਾਸਵਰਡ ਚੈੱਕ ਕਰੋ ਜੀ|</string>
   <string name="unknown_error">ਅਣਜਾਣ ਗਲਤੀ</string>
-  <string name="accept_terms">\"ਸਾਈਨ ਅੱਪ ਕਰਕੇ ਤੁਸੀ ਐਪਟੋਇਡ ਦੇ ਸੇਵਾ ਨਿਯਮਾਂ ਨੂੰ ਸਵੀਕਾਰ ਕਰਦੇ ਹੋ ਅਤੇ
-ਡਿਵੈਲਪਰਾਂ ਦੀਆਂ ਨੀਤੀਆਂ ਨੂੰ ਵੀ
- \"</string>
-  <string name="no_email_and_pass_error_message">\"ਇੱਕ ਈ-ਮੇਲ ਅਤੇ ਪਾਸਵਰਡ ਪਾਓ ਜੀ
- \"</string>
-  <string name="no_pass_error_message">ਇੱਕ ਪਾਸਵਰਡ ਪਾਓ ਜੀ</string>
-  <string name="no_email_error_message">ਇੱਕ ਈ-ਮੇਲ ਪਾਓ ਜੀ|</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"ਪਾਸਵਰਡ ਘੱਟੋਂ-ਘੱਟ 8 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਇਸ ਵਿਚ
 ਘੱਟੋਂ-ਘੱਟ ਇੱਕ ਅੰਗਰੇਜ਼ੀ ਅੱਖਰ ਅਤੇ ਇੱਕ ਨੰਬਰ ਜਾਂ ਖਾਸ ਅੱਖਰ (!@#$%*) ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ
  \"</string>

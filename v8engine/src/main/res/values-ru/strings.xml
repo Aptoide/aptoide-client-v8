@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Мой аккаунт</string>
-  <string name="setting_schdwntitle">Запланированные загрузки</string>
-  <string name="settings">Настройки</string>
-  <string name="facebook">Фейсбук</string>
-  <string name="twitter">Твиттер</string>
-  <string name="backup_apps">Резервные копии приложений</string>
   <string name="dark">Темная</string>
   <string name="light">Светлая</string>
   <string name="updates_filter_summary">Проверяем, вы не будете уведомляться о Бета-версиях.</string>
@@ -131,21 +124,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>Пропустить</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Теперь с лентой!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Лучшие видео и новости из мира приложений</b> в одном месте. \n Открывайте для себя приложения с вашими <b>друзьями.</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Заведите собственный магазин приложений</string>
-  <string name="wizard_sub_title_viewpager_two">Настройте свой магазин, <b>чтобы делиться приложениями \n с друзьями</b> и <b>сообществом Aptoide.</b></string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Будьте частью большего</string>
-  <string name="wizard_sub_title_viewpager_three"><b>Найдите людей</b> которые разделяют ваши интересы. \n <b>Оценивайте и делитесь приложениями.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Присоединяйтесь к нам!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Вам нужно залогиниться</string>
   <string name="follow">Подписаться</string>
   <!--need translation-->
   <string name="followed">Подписка</string>
   <string name="unfollow_yes_no">Вы уверены, что хотите отписаться?</string>
   <string name="unfollow">Отписаться</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Отписка от %s</string>
   <string name="store_followed">Вы подписались на магазин %s</string>
   <string name="subscribers">Подписчики</string>
@@ -174,7 +174,6 @@
   <string name="social_timeline">Социальная лента сообщений</string>
   <string name="downloads">Загрузки</string>
   <string name="apps_timeline"><b>Лента приложений</b></string>
-  <string name="timeline"><b>Лента</b></string>
   <string name="latest_reviews">Последние отзывы</string>
   <string name="latest_comments">Последние комментарии</string>
   <string name="action">Экшен-игры</string>
@@ -247,8 +246,6 @@
   <string name="essential_apps">Основные приложения</string>
   <string name="summer_apps">Летние приложения</string>
   <string name="play_it">Игры Play-It!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Рекомендуемые магазины</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Связанные с %1$s</string>
   <string name="appstimeline_update_app">приложение</string>
@@ -271,10 +268,9 @@
   <string name="create_store_displayable_message">Создайте свой магазин сейчас и начните делиться вашими приложениями!</string>
   <string name="create_store_displayable_button">СОЗДАТЬ МАГАЗИН</string>
   <string name="my_store_created_displayable_message">Ваш магазин приложений для Android</string>
-  <string name="create_store_displayable_created_store_short_term_message">Вы только что создали ваш магазин!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Войдите и изучите все возможности</string>
   <string name="create_store_displayable_explore_button">Изучить</string>
-  <string name="follow_store">Подписаться на магазин</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">В вашем магазине пока нет приложений.</string>
   <string name="install_app_outter_pt2">и загружайте приложения, чтобы поделиться ими с миром!</string>
@@ -287,8 +283,6 @@
   <string name="word_this">это</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Что будут видеть ваши подписчики:</string>
-  <string name="social_timeline_you_will_share_comment">Ваши подписчики увидят ваш комментарий:</string>
-  <string name="social_timeline_you_will_share_like">Ваши подписчики увидят вашу отметку \"Нравится\":</string>
   <string name="social_timeline_share_title">Предварительный просмотр публикации</string>
   <string name="social_timeline_share_title_checkbox">Сделать мой профиль пользователя скрытым на ленте приложений. Показывать/делиться только общей информацией о моем магазине.</string>
   <string name="social_timeline_share_title_checkbox_fb">Сделать профиль моего пользователя публичным в ленте приложений</string>
@@ -323,91 +317,16 @@
   <string name="private_followers_message">Подписчики %d являются закрытыми</string>
   <string name="private_following_message">Вы подписаны на %d частных пользователей/магазинов</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">Ответы %d</string>
   <string name="out_of_space_dialog_title">Нет места</string>
   <string name="out_of_space_dialog_message">Пожалуйста, освободите место, чтобы продолжить.</string>
-  <string name="setting_category_autoupdate">Обновления %s</string>
-  <string name="setting_category_autoupdate_title">Получать уведомления об обновлениях %s</string>
-  <string name="setting_category_autoupdate_message">Периодически проверять наличие новых версий %s</string>
-  <string name="store_added_long_time_suggestion_message">показать долгоживущие</string>
-  <string name="store_added_short_time_suggestion_message">показать недавно созданные</string>
-  <string name="create_store_displayable_created_store_long_term_message">долгоживущие</string>
-  <string name="create_store_displayable_explore_long_term_button">Посмотреть магазин</string>
-  <string name="create_store_displayable_empty_description_message">Добавьте описание для вашего магазина. Хорошее описание поможет вам получить больше подписчиков и взаимодействия.</string>
-  <string name="fragment_spot_share_preview_start_button">Начало</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Присоединиться к %s</string>
-  <string name="login">Вход</string>
-  <string name="login_company">Войти в %s</string>
-  <string name="connect_with_facebook">Подключиться через Facebook</string>
-  <string name="connect_with_google">Подключиться через Google</string>
-  <string name="accept_terms_signup">Присоединяясь к Aptoide вы соглашаетесь с условиями и положениями Aptoide, а также с политикой распространения контента для разработчиков.</string>
-  <string name="recover_password">Восстановить ваш пароль</string>
-  <string name="email">E-mail</string>
-  <string name="password">Пароль</string>
-  <string name="create_password">Создать пароль</string>
-  <string name="store_suspended_message">Работа магазина приостановлена</string>
-  <string name="facebook_login_cancelled">Вход через Facebook отменён</string>
-  <string name="google_login_cancelled">Ошибка входа через Google</string>
-  <string name="login_separator_text">Или подключитесь, используя ваш e-mail</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Вы можете найти эксклюзивный контент, разработанный специально для вас, в разных магазинах</string>
-  <string name="add_store_dialog_top_stores">ОТКРОЙТЕ ДЛЯ СЕБЯ ЛУЧШИЕ МАГАЗИНЫ</string>
-  <string name="add_store_dialog_top_stores_small_text">и найдите эксклюзивный контент!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Вход</string>
-  <string name="activity_login_forgot_password_button">Забыли пароль?</string>
-  <string name="activity_login_button">Вход</string>
-  <string name="activity_login_sign_up_button">Регистрация</string>
-  <string name="view_credentials_username_hint">E-mail</string>
-  <string name="view_credentials_password_hint">Пароль</string>
-  <string name="permission_access_deny">в доступе для чтения и записи на внешнее устройство отказано</string>
-  <string name="permission_account_deny">в доступе к получению учетной записи отказано</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Увеличьте вашу сеть.</string>
-  <string name="addressbook_connect_with_friends_message">Свяжитесь с друзьями.</string>
-  <string name="addressbook_sync">Синхронизировать адресную книгу</string>
-  <string name="not_now">Не сейчас</string>
-  <string name="follow_friends">Подпишитесь на друзей</string>
-  <string name="addressbook_data_about"><b>как %1$s использует ваши данные</b>
-
-
-%1$s будет искать в вашей адресной книге друзей и членов семьи, которые используют наш магазин приложений. Мы
- используем эту информацию только для того, чтобы улучшить ваш опыт работы с %1$s
-связав вас с большим количеством людей,
- которые могут поделиться контентом, связанным с приложениями.
-
-
-Чтобы защитить вашу конфиденциальность, данные в чистом виде
- не будут передаваться на сервера %1$s. Анонимный код (хэш) будет создан на основе ваших данных,
- и на основе этого кода невозможно будет восстановить исходную информацию.
- </string>
-  <string name="addressbook_success">Успешно!</string>
-  <string name="addressbook_allow_friends_find">Позвольте друзьям найти вас</string>
-  <string name="google">Google</string>
-  <string name="done">Готово</string>
-  <string name="addressbook_share_phone">Поделитесь своим номером телефона, чтобы ваши друзья могли легко найти вас на %s</string>
-  <string name="addressbook_phone_number">Номер телефона</string>
-  <string name="addressbook_insuccess_connection">Нам не удалось подключиться к вашей адресной книге!</string>
-  <string name="addressbook_invite_friends">Пригласите друзей присоединиться к вам!</string>
-  <string name="addressbook_thanks_for_connecting">Спасибо за подключение</string>
-  <string name="addressbook_success_connected_friends">Мы успешно связали вас с %1$s друзьями, которые используют %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Мы не нашли ни одного контакта, использующего %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s найдет в вашей адресной книге друзей и членов семьи,
- которые используют наш магазин приложений. Чтобы защитить вашу конфиденциальность, личные данные не будут отправлены на
- сервера %1$s</string>
-  <string name="addressbook_3rd_msg">УЗНАТЬ БОЛЬШЕ</string>
-  <string name="address_book_twitter_error">Ошибка авторизации Twitter</string>
-  <string name="follow_my_store">Здравствуйте, подпишитесь на мой магазин %1$s здесь</string>
-  <string name="store_meta_apps">Приложения
-%s</string>
-  <string name="store_meta_following">Подписан на
-%s</string>
-  <string name="store_meta_followers">Подписчики
-%s</string>
-  <string name="addressbook_about">Об адресной книге</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Мы не смогли соединить вас</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Поделиться приложениями с друзьями</string>
-  <string name="spot_share_line_2">С телефона на телефон, без Интернета</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

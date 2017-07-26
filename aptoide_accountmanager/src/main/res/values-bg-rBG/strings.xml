@@ -10,13 +10,17 @@
   <string name="login">Вход</string>
   <string name="successful">Успешно</string>
   <string name="login_successful">Успешно влизане</string>
-  <string name="forgot_passwd"><u>Забравена парола?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Проверете своя имейл адрес и парола.</string>
   <string name="unknown_error">Неизвестна грешка</string>
-  <string name="accept_terms">С регистрацията си, Вие приемате Общите условия и Правила за съдържанието на Aptoide за разработчици  </string>
-  <string name="no_email_and_pass_error_message">Моля, въведете имейл и парола  </string>
-  <string name="no_pass_error_message">Моля, въведете парола</string>
-  <string name="no_email_error_message">Моля, въведете е-мейл</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">Паролата трябва да бъде най-малко 8 знака и трябва да има поне една буква и едно число или специални знаци (! @# $% *)    </string>
   <string name="logged_as">Вие сте влезли като:</string>
   <string name="sign_out">Отпишете се</string>

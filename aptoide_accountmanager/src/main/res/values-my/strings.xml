@@ -10,15 +10,17 @@
   <string name="login">အကောင့်၀င်ပါ</string>
   <string name="successful">ေအာင္ျမင္ပါသည္</string>
   <string name="login_successful">အကောင့်၀င်ခြင်း အောင်မြင်ပါသည်</string>
-  <string name="forgot_passwd">စကားဝွက္ေမ့ေနပါသလား?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">သင်၏ အီးမေးလ်နှင့် လျှို့ဝှက်စကားလုံးကို ကျေးဇူးပြု၍ ပြန်စစ်ပါ.</string>
   <string name="unknown_error">အမည်မသိအမှား</string>
-  <string name="accept_terms">\"အေကာင့္ဖြင့္ျခင္းျဖင့္ သင္သည္ Aptoide ဝန္ေဆာင္မႈ အခ်က္အလက္မ်ားႏွင့္ ထုတ္လုပ္သူမ်ားအတြက္ ပါဝင္မႈ မူဝါဒကို သေဘာတူသည္
- \"</string>
-  <string name="no_email_and_pass_error_message">\"စာရင်းသွင်းရန်အတွက်ကျေးဇူးပြု၍ အီးမေးလ်နှင့် လျှို့ဝှက်စကားလုံးကို ထည့်သွင်းပါ.
- \"</string>
-  <string name="no_pass_error_message">စာရင္းသြင္းရန္ စကားဝွက္တစ္ခုထည့္ေပးပါ.</string>
-  <string name="no_email_error_message">စာရင္းသြင္းရန္ အီးေမးလ္တစ္ခုထည့္ေပးပါ.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"လွ်ို႕ဝွက္စကားလံုးသည္ အနည္းဆံုး စာလံုး ၈ လံုး ပါဝင္ရမည္ျဖစ္ၿပီး အနည္းဆံုး အကၡရာတစ္လံုးႏွင့္ နံပါတ္တစ္လံုး သို႕မဟုတ္ အထူးစာလံုး (!@#$%*) တစ္လံုး ပါဝင္သင့္ပါသည္
  \"</string>
   <string name="logged_as">သင်အကောင့်၀င်ထားသည့် အမည်မှာ:</string>

@@ -10,16 +10,17 @@
   <string name="login">Inloggen</string>
   <string name="successful">Geslaagd</string>
   <string name="login_successful">Het inloggen is geslaagd</string>
-  <string name="forgot_passwd"><u>Wachtwoord vergeten?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Controleer je email en wachtwoord.</string>
   <string name="unknown_error">Onbekende fout</string>
-  <string name="accept_terms">\"Door u te registreren gaat u akkoord met de gebruikersvoorwaarden en
- het inhoudsbeleid voor ontwikkelaars van Aptoide
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Voer een e-mailadres en wachtwoord in
- \"</string>
-  <string name="no_pass_error_message">Voer een wachtwoord in</string>
-  <string name="no_email_error_message">Voer een e-mailadres in</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Wachtwoord moet minimaal 8 tekens lang zijn en minstens
 één letter en één cijfer of speciale tekens (!@#$%^*) bevatten.
  \"</string>

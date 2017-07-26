@@ -10,16 +10,17 @@
   <string name="login">Prisijungti</string>
   <string name="successful">Successful</string>
   <string name="login_successful">Prisijungimas sėkmingas</string>
-  <string name="forgot_passwd">Pamiršote slaptažodį?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Patikrinkite savo el. pašto adresą ir slaptažodį.</string>
   <string name="unknown_error">Nežinoma klaida</string>
-  <string name="accept_terms">\"Užsiregistravę, jūs sutinkate su paslaugos teikimo sąlygos Aptoide ir turinio politikos kūrėjams
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Norėdami užsiregistruoti, įveskite el. pašto adresą ir 
- slaptažodį.
- \"</string>
-  <string name="no_pass_error_message">Norėdami užsiregistruoti, įveskite slaptažodį.</string>
-  <string name="no_email_error_message">Norėdami užsiregistruoti, įveskite el. pašto adresą.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Slaptažodį turi sudaryti bent 8 simboliai, tarp kurių turi būti 
 bent viena raidė ir bent vienas skaitmuo arba specialusis simbolis (!@#$%*)
  \"</string>

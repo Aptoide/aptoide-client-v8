@@ -10,16 +10,17 @@
   <string name="login">Σύνδεση</string>
   <string name="successful">Επιτυχές</string>
   <string name="login_successful">Επιτυχής σύνδεση</string>
-  <string name="forgot_passwd"><u>Ξεχάσατε τον κωδικό;</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Παρακαλώ ελέγξτε το ηλεκτρονικό ταχυδρομείο και τον κωδικό σας.</string>
   <string name="unknown_error">Άγνωστο Σφάλμα</string>
   <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-      Content Policy for Developers
-  </string>
-  <string name="no_email_and_pass_error_message">\"Παρακαλώ εισάγετε email και κωδικό
- \"</string>
-  <string name="no_pass_error_message">Παρακαλώ εισάγετε έναν κωδικό</string>
-  <string name="no_email_error_message">Παρακαλώ εισάγεται ένα email</string>
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Ο κωδικός πρέπει να έχει το λιγότερο 8 χαρακτήρες και πρέπει να έχει
  τουλάχιστον ένα χαρακτήρα και ένα αριθμό ή ειδικό χαρακτήρα (!@#$%*)
  \"</string>

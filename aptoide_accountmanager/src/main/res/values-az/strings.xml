@@ -10,18 +10,17 @@
   <string name="login">Daxil ol</string>
   <string name="successful">uğurlu</string>
   <string name="login_successful">Uğurlu daxilolma</string>
-  <string name="forgot_passwd"><u>Parolu unutdunuz?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Email və parolunuzu yoxlayın.</string>
   <string name="unknown_error">Naməlum Xəta</string>
-  <string name="accept_terms">\"Qeydiyyatdan keçərək Aptoide-in İstifadəçi Razılaşması
-və Mobil proqram tərtibatçıları üçün Kontent Siyasəti
-ilə razı olduğunu bildirirsiniz
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Qeydiyyatdan keçmək üçün email və
-parolunuzu daxil edin.
- \"</string>
-  <string name="no_pass_error_message">parolunuzu daxil edin</string>
-  <string name="no_email_error_message">emailinizi daxil edin</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Parol ən azı 8 simvoldan ibarət olmalıdır və ən azı bir hərf,
 bir rəqəm və ya xüsusi simvol (!@#$%*) daşımalıdır
  \"</string>

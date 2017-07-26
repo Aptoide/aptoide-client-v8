@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Mon compte</string>
-  <string name="setting_schdwntitle">Téléchargements planifiés</string>
-  <string name="settings">Paramètres</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Sauvegarder les Apps</string>
   <string name="dark">Sombre</string>
   <string name="light">Clair</string>
   <string name="updates_filter_summary">Si coché, vous ne serez pas notifié de l’existence de versions beta.</string>
@@ -132,24 +125,28 @@ et ne contient pas de menace !</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>IGNORER</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Désormais, profitez d\'un Flux !</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Les meilleures applications vidéos et d\'actualité</b> regroupées en un seul endroit.
-Découvrez des applications grâce à vos<b> amis.</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Créez une boutique personnelle</string>
-  <string name="wizard_sub_title_viewpager_two">Personnalisez votre boutique <b>pour partager des applications
-avec vos amis</b> et la <b>communauté Aptoide.</b></string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Rejoignez la communauté</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Rencontrez des personnes</b> ayant les mêmes centres d\'intérêts que vous.
-<b>Notez et partagez.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Rejoignez-nous !</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Vous devez être connecté</string>
   <string name="follow">Suivre</string>
   <!--need translation-->
   <string name="followed">Abonné</string>
   <string name="unfollow_yes_no">Voulez-vous vraiment vous désabonner ?</string>
   <string name="unfollow">Se désabonner</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Vous ne suivez plus %s</string>
   <string name="store_followed">Vous êtes abonnés à la boutique %s</string>
   <string name="subscribers">Abonnés</string>
@@ -165,7 +162,7 @@ avec vos amis</b> et la <b>communauté Aptoide.</b></string>
 Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</string>
   <string name="dialog_install_warning_trusted_version_button">Version approuvée</string>
   <string name="dialog_install_warning_get_trusted_version_button">Obtenir</string>
-  <string name="flag_results">Résultats marqués</string>
+  <string name="flag_results">Analyse des avis</string>
   <string name="helpful">Utile</string>
   <string name="not_helpful">Non Utile</string>
   <string name="description_not_available">Aucune description disponible pour cette application</string>
@@ -178,7 +175,6 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="social_timeline">Flux social</string>
   <string name="downloads">Téléchargements</string>
   <string name="apps_timeline"><b>Flux d\'Apps</b></string>
-  <string name="timeline"><b>Flux</b></string>
   <string name="latest_reviews">Dernières critiques</string>
   <string name="latest_comments">Derniers Commentaires</string>
   <string name="action">Action</string>
@@ -251,8 +247,6 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="essential_apps">Applications essentielles</string>
   <string name="summer_apps">Applications pour l’été</string>
   <string name="play_it">Jouez-y !</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Boutiques en vedette</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Associés à %1$s</string>
   <string name="appstimeline_update_app">app</string>
@@ -275,10 +269,9 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="create_store_displayable_message">Créez une boutique et partagez vos applications !</string>
   <string name="create_store_displayable_button">CRÉER UN MAGASIN</string>
   <string name="my_store_created_displayable_message">Votre boutique d\'applications Android</string>
-  <string name="create_store_displayable_created_store_short_term_message">Vous venez de créer votre boutique !</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Entrez et explorez toutes les possibilités...</string>
   <string name="create_store_displayable_explore_button">Explorer</string>
-  <string name="follow_store">S\'abonner à la boutique</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Votre boutique ne contient pas encore d\'application.</string>
   <string name="install_app_outter_pt2">et téléchargez des applications pour les partager !</string>
@@ -291,8 +284,6 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="word_this">ce</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Ce que verront vos %d suiveurs :</string>
-  <string name="social_timeline_you_will_share_comment">Vos suiveurs verront votre commentaire :</string>
-  <string name="social_timeline_you_will_share_like">Vos suiveurs verront votre \"j’aime\" :</string>
   <string name="social_timeline_share_title">Aperçu de carte partagée</string>
   <string name="social_timeline_share_title_checkbox">Rendre mon profil d’utilisateur privé dans le Flux d\'applications et ne partager que les infos de ma boutique.</string>
   <string name="social_timeline_share_title_checkbox_fb">Permettre à mon profil d\'être public dans le Flux des applications.</string>
@@ -327,89 +318,16 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="private_followers_message">%d suiveurs sont privés</string>
   <string name="private_following_message">vous suivez %d utilisateurs / boutiques privés</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d réponses</string>
   <string name="out_of_space_dialog_title">Espace insuffisant</string>
   <string name="out_of_space_dialog_message">Libérez de l\'espace avant de poursuivre.</string>
-  <string name="setting_category_autoupdate">%s mises à jour</string>
-  <string name="setting_category_autoupdate_title">Être notifié des mises à jour pour %s</string>
-  <string name="setting_category_autoupdate_message">Vérifier automatiquement les mises à jour pour %s</string>
-  <string name="store_added_long_time_suggestion_message">afficher sur le long terme</string>
-  <string name="store_added_short_time_suggestion_message">afficher créé récemment</string>
-  <string name="create_store_displayable_created_store_long_term_message">long terme</string>
-  <string name="create_store_displayable_explore_long_term_button">Visiter la boutique</string>
-  <string name="create_store_displayable_empty_description_message">Rédigez une description pour votre boutique. Une bonne description est la clef de votre succès.</string>
-  <string name="fragment_spot_share_preview_start_button">Démarrer</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">S\'inscrire à %s</string>
-  <string name="login">Ouverture de session</string>
-  <string name="login_company">Se connecter à %s</string>
-  <string name="connect_with_facebook">Se connecter avec Facebook</string>
-  <string name="connect_with_google">Se connecter avec Google</string>
-  <string name="accept_terms_signup">En vous inscrivant vous acceptez les Conditions d\'Utilisation d\'Aptoide et la Politique de Contenu pour développeurs.</string>
-  <string name="recover_password">Mot de passe oublié</string>
-  <string name="email">E-mail</string>
-  <string name="password">Mot de passe</string>
-  <string name="create_password">Générer un mot de passe</string>
-  <string name="store_suspended_message">Boutique suspendue</string>
-  <string name="facebook_login_cancelled">Connexion Facebook annulée</string>
-  <string name="google_login_cancelled">Connexion Google annulée</string>
-  <string name="login_separator_text">Ou connectez-vous avec votre adresse mail</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Vous pourrez trouver du contenu exclusif et sur-mesure dans les boutiques</string>
-  <string name="add_store_dialog_top_stores">DÉCOUVREZ LES MEILLEURES BOUTIQUES</string>
-  <string name="add_store_dialog_top_stores_small_text">et accédez à des contenus exclusifs !</string>
-  <!-- Login -->
-  <string name="activity_login_title">Ouverture de session</string>
-  <string name="activity_login_forgot_password_button">Mot de passe oublié ?</string>
-  <string name="activity_login_button">Ouverture de session</string>
-  <string name="activity_login_sign_up_button">Inscription</string>
-  <string name="view_credentials_username_hint">E-mail</string>
-  <string name="view_credentials_password_hint">Mot de passe</string>
-  <string name="permission_access_deny">les accès en lecture / écriture au stockage externe ont été refusés</string>
-  <string name="permission_account_deny">l\'accès aux comptes a été refusé</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Augmentez votre réseau.</string>
-  <string name="addressbook_connect_with_friends_message">Connectez-vous avec vos amis.</string>
-  <string name="addressbook_sync">Synchroniser votre carnet d\'adresses</string>
-  <string name="not_now">Pas maintenant</string>
-  <string name="follow_friends">Suivre vos amis</string>
-  <string name="addressbook_data_about"><b>Comment %1$s utilise vos données ?</b>
-
-
-%1$s va parcourir votre carnet d\'adresses à la recherche de contacts qui utilisent notre boutique d\'applications.
-Nous utiliserons ces informations pour améliorer votre expérience %1$s en vous connectant à plus de personnes
-qui peuvent partager des contenus liés aux applications avec vous.
-
-
-Afin de protéger votre vie privée, toutes les données seront chiffrées lors de l\'envoi sur les serveurs de %1$s.
-Une signature anonyme (hash) sera créee avec vos données et ce hash ne permet pas de retrouver les infos du contact.
- </string>
-  <string name="addressbook_success">Succès !</string>
-  <string name="addressbook_allow_friends_find">Permettre aux amis de vous trouver</string>
-  <string name="google">Google</string>
-  <string name="done">Terminé</string>
-  <string name="addressbook_share_phone">Partagez votre numéro de téléphone afin que vos amis puissent vous trouver facilement sur %s</string>
-  <string name="addressbook_phone_number">Numéro de téléphone</string>
-  <string name="addressbook_insuccess_connection">Impossible de se connecter à votre carnet d\'adresses !</string>
-  <string name="addressbook_invite_friends">Invitez vos amis à vous rejoindre !</string>
-  <string name="addressbook_thanks_for_connecting">Merci de vous être connecté</string>
-  <string name="addressbook_success_connected_friends">Vous êtes maintenant connectés avec %1$s amis qui utilisent %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Aucun contact utilisant %1$s n\'a été trouvé</string>
-  <string name="addressbook_2nd_msg">%1$s va rechercher dans votre carnet d\'adresses vos amis ou famille
-utilisant notre App Store. Pour protéger votre vie privée, aucune donnée ne sera envoyée sur
-les serveurs de %1$s</string>
-  <string name="addressbook_3rd_msg">EN SAVOIR PLUS</string>
-  <string name="address_book_twitter_error">Erreur d\'autorisation Twitter</string>
-  <string name="follow_my_store">Bonjour, abonnez-vous à ma boutique %1$s ici</string>
-  <string name="store_meta_apps">Apps
-%s</string>
-  <string name="store_meta_following">Vous suivez
-%s</string>
-  <string name="store_meta_followers">Vous êtes suivis par
-%s</string>
-  <string name="addressbook_about">A propos du Carnet d\'adresses</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Impossible de vous connecter</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Partager des apps avec vos amis</string>
-  <string name="spot_share_line_2">De téléphone à téléphone, sans connexion Internet</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

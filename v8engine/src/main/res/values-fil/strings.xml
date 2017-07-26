@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Aking account</string>
-  <string name="setting_schdwntitle">Mga Na-iskedyul na Download</string>
-  <string name="settings">Mga seting</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Mga Backup Apps</string>
   <string name="dark">Matingkad</string>
   <string name="light">Magaan</string>
   <string name="updates_filter_summary">Sa pagtsetsek nito, ikaw ay hindi aabisuhan ng mga beta na bersyon.</string>
@@ -131,24 +124,28 @@ Magpanatili ng isang log ng lahat ng iyong nainstalang app (sa pamamagitan ng %s
   <!-- WIZARD -->
   <string name="wizard_skip"><b>LAKTAWAN</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Ngayon ay may Timeline na!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Pinakamagandang mga app bidyo at balita</b> sa iisang lugar.
-Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Magkaroon ng iyong sariling Store</string>
-  <string name="wizard_sub_title_viewpager_two">Ipasadya ang iyong store <b>upang makapagbahagi ng app
- sa mga kaibigan</b> at sa <b>Komunidad ng Aptoide.</b></string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Maging bahagi<b>Sumali sa komunidad</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Mahanap ang mga tao</b> na mayroon din ng iyong mga kinawiwilihang app. 
-<b>Graduhan at ibahagi.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Samahan kami!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Kailangan na ikaw ay naka-log in</string>
   <string name="follow">Sundan</string>
   <!--need translation-->
   <string name="followed">Sinusundan</string>
   <string name="unfollow_yes_no">Sigurado kang gusto mong hindi na sumunod?</string>
   <string name="unfollow">Hindi na susunod</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Hindi na sumusunod %s</string>
   <string name="store_followed">Store %s sinundan</string>
   <string name="subscribers">Mga subskrayber</string>
@@ -177,7 +174,6 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="social_timeline">Ang Social Timeline</string>
   <string name="downloads">Mga Download</string>
   <string name="apps_timeline"><b>Mga App Timeline</b></string>
-  <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">Pinakabagong Mga Rebyu</string>
   <string name="latest_comments">Mga Pinakabagong Komento</string>
   <string name="action">Aksyon</string>
@@ -250,8 +246,6 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="essential_apps">Mga Kinakailangang App</string>
   <string name="summer_apps">Mga App ng Tag-init</string>
   <string name="play_it">Laruin-Siya!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Mga Tampok na Store</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Kaugnay sa %1$s</string>
   <string name="appstimeline_update_app">ang app</string>
@@ -274,10 +268,9 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="create_store_displayable_message">Lumikha ng iyong Store ngayon at simulan ang pamamahagi ng iyong apps!</string>
   <string name="create_store_displayable_button">LUMIKHA NG STORE</string>
   <string name="my_store_created_displayable_message">Iyong Android App store</string>
-  <string name="create_store_displayable_created_store_short_term_message">Kakalikha mo lamang ng iyong Store!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Pumasok at galugarin ang lahat ng mga posibilidad</string>
   <string name="create_store_displayable_explore_button">Galugarin</string>
-  <string name="follow_store">Sundan ang Store</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Ang iyong store ay wala pang mga aplikasyon.</string>
   <string name="install_app_outter_pt2">at mag-upload ng mga apps para maibahagi sila sa mundo!</string>
@@ -290,8 +283,6 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="word_this">ito</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Ang makikita ng iyong mga tagasunod:</string>
-  <string name="social_timeline_you_will_share_comment">Ang iyong mga tagasunod ay makikita ang iyong Komento:</string>
-  <string name="social_timeline_you_will_share_like">Ang iyong mga tagasunod ay makikita ang iyong Like:</string>
   <string name="social_timeline_share_title">Ibahagi ang prebyu ng kard</string>
   <string name="social_timeline_share_title_checkbox">Gawing pribado ang aking user profile sa Apps Timeline. Ipakita/ibahagi lamang ang impormasyon ng aking store.</string>
   <string name="social_timeline_share_title_checkbox_fb">Pahintulutan na maging publiko ang aking user profile sa Apps Timeline</string>
@@ -326,87 +317,16 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="private_followers_message">%d mga tagasunod ay pribado</string>
   <string name="private_following_message">Sinusundan mo ang %d pribadong mga user/store</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Mga Tugon</string>
   <string name="out_of_space_dialog_title">Naubusan ng espasyo</string>
   <string name="out_of_space_dialog_message">Pakiusap, magpalaya ng espasyo upang makapagpatuloy.</string>
-  <string name="setting_category_autoupdate">%s Mga Update</string>
-  <string name="setting_category_autoupdate_title">Kumuha ng %s Mga notipikasyon sa Update</string>
-  <string name="setting_category_autoupdate_message">Pana-panahong magtsek para sa %s mga bagong bersyon</string>
-  <string name="store_added_long_time_suggestion_message">ipakita ang pangmatagalang termino</string>
-  <string name="store_added_short_time_suggestion_message">ipakita ang kakalikha pa lamang</string>
-  <string name="create_store_displayable_created_store_long_term_message">pangmatagalang termino</string>
-  <string name="create_store_displayable_explore_long_term_button">Tingnan ang Store</string>
-  <string name="create_store_displayable_empty_description_message">Magdagdag ng isang deskripsyon para sa iyong Store. Ang isang magandang deskripsyon ay tinutulungan kang makakuha ng mas maraming mga tagasunod at interaksyon.</string>
-  <string name="fragment_spot_share_preview_start_button">Magsimula</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Sumama %s</string>
-  <string name="login">Mag-login</string>
-  <string name="login_company">Mag-login %s</string>
-  <string name="connect_with_facebook">Kumonekta sa Facebook</string>
-  <string name="connect_with_google">Kumonekta sa Google</string>
-  <string name="accept_terms_signup">Sa pagsali sa Aptoide ikaw ay sumasang-ayon sa Mga Termino at Kondisyon ng Aptoide at Polisiya ng Nilalaman para sa mga Developer.</string>
-  <string name="recover_password">Kuning muli ang iyong password</string>
-  <string name="email">Email</string>
-  <string name="password">Password</string>
-  <string name="create_password">Lumikha ng Password</string>
-  <string name="store_suspended_message">Store ay suspendido</string>
-  <string name="facebook_login_cancelled">Facebook login ay nakansela</string>
-  <string name="google_login_cancelled">Google login ay nabigo</string>
-  <string name="login_separator_text">O kumonekta gamit ang iyong email</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Maaari kang makahanap ng eksklusibong pinasadyang nilalaman na ginawa para lamang sa yo sa iba-ibang mga store</string>
-  <string name="add_store_dialog_top_stores">TUKLASIN ANG MGA NANGUNGUNANG STORE</string>
-  <string name="add_store_dialog_top_stores_small_text">at makahanap ng eksklusibong nilalaman!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Mag-login</string>
-  <string name="activity_login_forgot_password_button">Nakalimutan ang pasword?</string>
-  <string name="activity_login_button">Mag-login</string>
-  <string name="activity_login_sign_up_button">Mag-sign up</string>
-  <string name="view_credentials_username_hint">Email</string>
-  <string name="view_credentials_password_hint">Password</string>
-  <string name="permission_access_deny">akses sa pagbabasa at pagsusulat sa panlabas na imbakan (internal storage) ay hindi pinayagan</string>
-  <string name="permission_account_deny">akses upang makakuha ng mga account ay hindi pinayagan</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Dagdagan ang iyong network.</string>
-  <string name="addressbook_connect_with_friends_message">Kumonekta sa mga kaibigan.</string>
-  <string name="addressbook_sync">I-sync ang Libro ng Address</string>
-  <string name="not_now">Hindi ngayon</string>
-  <string name="follow_friends">Sundan Ang Mga Kaibigan</string>
-  <string name="addressbook_data_about"><b>Paano Ginagamit ng %1$s ang iyong Datos</b>
-
-
-Ang %1$s ay maghahanap sa iyong libro ng address para sa mga kaibigan at pamilya na gumagamit ng iyong App Store. Gagamitin lamang namin ang impormasyong ito upang pagbutihin ang iyong %1$s na karanasan sa pamamagitan ng pagkonekta sa yo sa mas maraming tao na maaaring magbahagi sa yo ng nilalaman na may kaugnayan sa apps.
-
-
-Para maprotektahan ang iyong privacy, walang malinaw na pribadong datos
-ang ipapadala sa mga %1$s server. Isang anonimong lagda (hash) ay malilikha sa pamamagitan ng iyong datos
-at ang hash na iyon ay hindi maaaring ibalik sa orihinal na impormasyon ng contact.
- </string>
-  <string name="addressbook_success">Tagumpay!</string>
-  <string name="addressbook_allow_friends_find">Pahintulutan ang mga kaibigan na hanapin ka</string>
-  <string name="google">Google</string>
-  <string name="done">Gawa na</string>
-  <string name="addressbook_share_phone">Ibahagi ang iyong numero ng telepono upang madali kang mahanap ng iyong mga kaibigan sa %s</string>
-  <string name="addressbook_phone_number">Numero ng telepono</string>
-  <string name="addressbook_insuccess_connection">Hindi namin nagawang makakonekta sa iyong libro ng address (address book)!</string>
-  <string name="addressbook_invite_friends">Imbitahin ang mga kaibigan na samahan ka!</string>
-  <string name="addressbook_thanks_for_connecting">Salamat sa pagkonekta</string>
-  <string name="addressbook_success_connected_friends">Matagumpay naming naikonekta ka sa %1$s mga kaibigan na gumagamit ng %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Wala kaming nahanap na sinumang mga contact na gumagamit ng %1$s</string>
-  <string name="addressbook_2nd_msg">Ang %1$s ay mag-babrowse sa iyong libro ng address para sa mga kaibigan at pamilya
- na gumagamit ng aming App Store. Para maprotektahan ang iyong privacy, walang pribadong datos ang ipadadala sa mga %1$s na server</string>
-  <string name="addressbook_3rd_msg">MATUTUNAN ANG HIGIT PA</string>
-  <string name="address_book_twitter_error">Twitter awtorisasyon ng pagkakamali</string>
-  <string name="follow_my_store">Hello, sundan ang aking %1$s Store dito</string>
-  <string name="store_meta_apps">Mga Apps
-%s</string>
-  <string name="store_meta_following">Sinusundan
-%s</string>
-  <string name="store_meta_followers">Mga Tagasunod
-%s</string>
-  <string name="addressbook_about">Tungkol sa Libro ng Address (Address Book)</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Hindi namin nagawang ikonekta ka</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Magbahagi ng apps sa iyong mga kaibigan</string>
-  <string name="spot_share_line_2">Telepono sa telepono, walang Internet</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

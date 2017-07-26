@@ -10,17 +10,17 @@
   <string name="login">התחבר</string>
   <string name="successful">Successful</string>
   <string name="login_successful">הכניסה הצליחה</string>
-  <string name="forgot_passwd">שכחת ססמה?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">אנא בדוק את הדוא\"ל והשם שלך</string>
   <string name="unknown_error">שגיאה בלתי ידועה</string>
-  <string name="accept_terms">\"הרשמתך מהווה הסכמה לתנאי השימוש והתוכן
-של אפטויד למפתחים
- \"</string>
-  <string name="no_email_and_pass_error_message">\"נא להזין כתובת דוא״ל וססמה
-כדי להירשם.
- \"</string>
-  <string name="no_pass_error_message">נא להזין ססמה כדי להירשם.</string>
-  <string name="no_email_error_message">נא להזין כתובת דוא״ל כדי להירשם.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"על הססמה להיות מורכבת מ־8 תווים לפחות
 בהם אות לטינית אחת לפחות וספרה או תו מיוחד (! @#$%*)
  \"</string>

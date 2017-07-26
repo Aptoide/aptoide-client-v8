@@ -10,17 +10,17 @@
   <string name="login">Zaloguj się</string>
   <string name="successful">Powodzenie</string>
   <string name="login_successful">Logowanie powiodło się</string>
-  <string name="forgot_passwd">Zapomniałeś hasła?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Prosimy sprawdzić e-mail i hasło.</string>
   <string name="unknown_error">Nieznany błąd</string>
-  <string name="accept_terms">\"Rejestrując się, wyrażasz zgodę na Warunki świadczenia usług Aptoide
- oraz Politykę zawartości dla Deweloperów
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Aby się zarejestrować, wprowadź 
- email i hasło.
- \"</string>
-  <string name="no_pass_error_message">Aby się zarejestrować, wprowadź hasło.</string>
-  <string name="no_email_error_message">Aby się zarejestrować, wprowadź email.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Hasło musi mieć przynajmniej 8 znaków i powinno składać się
  z przynajmniej jednej litery, jednej cyfry lub znaków specjalnych (!@#$%*)
  \"</string>

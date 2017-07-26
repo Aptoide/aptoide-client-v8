@@ -10,17 +10,17 @@
   <string name="login">Đăng nhập</string>
   <string name="successful">Thành công</string>
   <string name="login_successful">Đăng nhập thành công</string>
-  <string name="forgot_passwd">Quên mật khẩu?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Xin kiểm tra email và mật khẩu của bạn.</string>
   <string name="unknown_error">Lỗi không rõ</string>
-  <string name="accept_terms">\"Bằng việc đăng ký, bạn đồng ý với các Điều khoản dịch vụ của Aptoide và 
-Chính sách nội dung đối với Lập trình viên
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Vui lòng nhập địa chỉ email và mật mã để 
-đăng ký.
- \"</string>
-  <string name="no_pass_error_message">Nhập mật mã để đăng ký.</string>
-  <string name="no_email_error_message">Nhập địa chỉ mail để đăng ký.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Mật khẩu cần phải có ít nhất 8 kí tự và nên có 
 ít nhất 1 chữ cái và 1 chữ số hoặc những kí tự đặc biệt khác (!@#$%*)
  \"</string>

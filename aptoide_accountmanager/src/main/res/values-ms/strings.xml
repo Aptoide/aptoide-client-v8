@@ -10,16 +10,17 @@
   <string name="login">Log Masuk</string>
   <string name="successful">Berjaya</string>
   <string name="login_successful">Berjaya log masuk</string>
-  <string name="forgot_passwd"><u>Terlupa kata laluan?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Sila semak e-mel dan kata laluan anda.</string>
   <string name="unknown_error">Ralat tidak diketahui</string>
-  <string name="accept_terms">\"Dengan mendaftar, anda bersetuju dengan Syarat Perkhidmatan Aptoide dan
-  Dasar Kandungan untuk Pemaju
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Sila masukkan e-mel dan kata laluan.
- \"</string>
-  <string name="no_pass_error_message">Sila masukkan kata laluan</string>
-  <string name="no_email_error_message">Sila masukkan e-mel</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Kata laluan mestilah sekurang-kurangnya 8 aksara dan harus mempunyai sekurang-kurangnya satu huruf dan satu nombor atau aksara khas (!@#$%*)
  \"</string>
   <string name="logged_as">Anda log masuk sebagai:</string>

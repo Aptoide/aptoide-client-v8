@@ -10,16 +10,17 @@
   <string name="login">Вход</string>
   <string name="successful">Успешно</string>
   <string name="login_successful">Вход успешно выполнен</string>
-  <string name="forgot_passwd"><u>Забыли пароль?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Пожалуйста, проверьте свой email и пароль.</string>
   <string name="unknown_error">Неизвестная ошибка</string>
-  <string name="accept_terms">\"При регистрации вы соглашаетесь с условиями использования Aptoide и
- политикой контента для разработчиков
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Пожалуйста введите email и пароль
- \"</string>
-  <string name="no_pass_error_message">Пожалуйста, введите пароль</string>
-  <string name="no_email_error_message">Пожалуйста, введите e-mail</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Пароль должен быть не менее 8 символов и должен включать в себя
  как минимум одну букву, один номер или специальный символ (!@#$%*)
  \"</string>

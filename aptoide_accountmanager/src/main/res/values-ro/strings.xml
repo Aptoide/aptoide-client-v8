@@ -10,16 +10,17 @@
   <string name="login">Autentificare</string>
   <string name="successful">Cu succes</string>
   <string name="login_successful">Autentificare reușită</string>
-  <string name="forgot_passwd"><u>Ai uitat parola?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Vă rugăm verificați-vă adresa de e-mail și parola.</string>
   <string name="unknown_error">Eroare necunoscută</string>
-  <string name="accept_terms">\"Înregistrându-te declari că ești de acord cu Termenii Serviciului și
-Politica Conținutului pentru Dezvoltatori
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Te rugăm să introduci o adresă de e-mail și o parolă.
- \"</string>
-  <string name="no_pass_error_message">Introdu o parolă</string>
-  <string name="no_email_error_message">Introdu o adresă de e-mail</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Parola trebuie să aibă cel puțin 8 caractere și cel puțin o literă
 și un număr sau caractere speciale (!@#$%*)
  \"</string>

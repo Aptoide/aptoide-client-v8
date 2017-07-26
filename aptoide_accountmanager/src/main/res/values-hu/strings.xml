@@ -10,15 +10,17 @@
   <string name="login">Bejelentkezés</string>
   <string name="successful">Sikeres</string>
   <string name="login_successful">Sikeres bejelentkezés</string>
-  <string name="forgot_passwd">Elfelejtette a jelszavát?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Kérjük ellenőrizze az e-mail címét és a jelszavát</string>
   <string name="unknown_error">Ismeretlen hiba</string>
   <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-      Content Policy for Developers
-  </string>
-  <string name="no_email_and_pass_error_message">Kérjük, adjon meg egy e-mailt és jelszót a regisztrációhoz.</string>
-  <string name="no_pass_error_message">Kérjük, a regisztrációhoz adjon meg egy jelszót.</string>
-  <string name="no_email_error_message">Kérjük, a regisztrációhoz adjon meg egy e-mailt .</string>
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">A jelszónak legalább 8 karakterből kell állnia, és tartalmaznia kell legalább egy betűt és egy számot vagy speciális karaktert (!@#$%*) </string>
   <string name="logged_as">Bejelentkezett, mint:</string>
   <string name="sign_out">Kijelentkezés</string>

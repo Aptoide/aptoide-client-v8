@@ -10,16 +10,17 @@
   <string name="login">Ouverture de session</string>
   <string name="successful">Avec succès</string>
   <string name="login_successful">Connexion réussie</string>
-  <string name="forgot_passwd"><u>Mot de passe perdu ?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Veuillez vérifier votre e-mail et mot de passe.</string>
   <string name="unknown_error">Erreur inconnue</string>
-  <string name="accept_terms">\"En vous inscrivant vous acceptez les Conditions d\'Utilisation d\'Aptoide
-et la Politique de Contenu pour développeurs
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Merci de saisir une adresse courriel et un mot de passe
- \"</string>
-  <string name="no_pass_error_message">Merci de saisir un mot de passe</string>
-  <string name="no_email_error_message">Merci de saisir une adresse courriel</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Le mot de passe doit contenir au moins 8 caractères dont
 au moins une lettre et un chiffre ou un caractère spécial (!@#$%*)
  \"</string>

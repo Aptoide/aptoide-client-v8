@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">내 계정</string>
-  <string name="setting_schdwntitle">스케줄된 다운로드</string>
-  <string name="settings">설정</string>
-  <string name="facebook">페이스북</string>
-  <string name="twitter">트위터</string>
-  <string name="backup_apps">Backup Apps</string>
   <string name="dark">어두움</string>
   <string name="light">밝음</string>
   <string name="updates_filter_summary">체크하시면 베타 버전에 대한 알림을 받지 않습니다.</string>
@@ -130,22 +123,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>건너뛰기</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Now with a Timeline!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>안전</b> 하고 <b>즐거운</b> 여행을 시작 하세요.</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>Apps 타임라인</b></string>
-  <string name="wizard_sub_title_viewpager_two"><b>최신 앱들</b>을 받고 , <b>테마 스토어</b>를 찾고 
-<b>개인화된 컨텐츠를</b> 이용합니다</string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>커뮤니티 참여</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Find people</b> who share your app interests. \n<b>Rate and share.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Join us!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">로그인 하실 필요가 있습니다</string>
   <string name="follow">팔로우</string>
   <!--need translation-->
   <string name="followed">팔로잉</string>
   <string name="unfollow_yes_no">팔로우를 중지하시겠습니까?</string>
   <string name="unfollow">언팔로우</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">%s 언팔로잉</string>
   <string name="store_followed">%s 스토어 팔로우함</string>
   <string name="subscribers">구독자</string>
@@ -173,7 +172,6 @@
   <string name="social_timeline">소셜 타임라인</string>
   <string name="downloads">다운로드 목록</string>
   <string name="apps_timeline"><b>앱 타임라인</b></string>
-  <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">최근 리뷰</string>
   <string name="latest_comments">최근 댓글</string>
   <string name="action">액션</string>
@@ -246,8 +244,6 @@
   <string name="essential_apps">필수 앱</string>
   <string name="summer_apps">여름 앱</string>
   <string name="play_it">플레이 하기!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Featured Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s 에 관련</string>
   <string name="appstimeline_update_app">앱</string>
@@ -270,10 +266,9 @@
   <string name="create_store_displayable_message">Create your Store now and start sharing your apps!</string>
   <string name="create_store_displayable_button">스토어 생성</string>
   <string name="my_store_created_displayable_message">Your Android App store</string>
-  <string name="create_store_displayable_created_store_short_term_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
-  <string name="follow_store">Follow Store</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Your store doesn\'t have applications yet.</string>
   <string name="install_app_outter_pt2">and upload apps to share them with the world!</string>
@@ -286,8 +281,6 @@
   <string name="word_this">this</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">What your followers will see:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">Share card preview</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in Apps Timeline. Only show/share my store info.</string>
   <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
@@ -322,82 +315,16 @@
   <string name="private_followers_message">%d followers are private</string>
   <string name="private_following_message">you are following %d private users/stores</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
-  <string name="setting_category_autoupdate">%s Updates</string>
-  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
-  <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
-  <string name="store_added_long_time_suggestion_message">show long term</string>
-  <string name="store_added_short_time_suggestion_message">show just created</string>
-  <string name="create_store_displayable_created_store_long_term_message">long term</string>
-  <string name="create_store_displayable_explore_long_term_button">View Store</string>
-  <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
-  <string name="fragment_spot_share_preview_start_button">시작</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Join %s</string>
-  <string name="login">로그인</string>
-  <string name="login_company">Login %s</string>
-  <string name="connect_with_facebook">Connect with Facebook</string>
-  <string name="connect_with_google">Connect with Google</string>
-  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
-  <string name="recover_password">Recover your password</string>
-  <string name="email">이메일</string>
-  <string name="password">패스워드</string>
-  <string name="create_password">Create Password</string>
-  <string name="store_suspended_message">Store suspended</string>
-  <string name="facebook_login_cancelled">Facebook login canceled</string>
-  <string name="google_login_cancelled">Google login failed</string>
-  <string name="login_separator_text">Or connect using your email</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
-  <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
-  <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
-  <!-- Login -->
-  <string name="activity_login_title">로그인</string>
-  <string name="activity_login_forgot_password_button">비밀번호를 잊으셨나요?</string>
-  <string name="activity_login_button">로그인</string>
-  <string name="activity_login_sign_up_button">등록하기</string>
-  <string name="view_credentials_username_hint">이메일</string>
-  <string name="view_credentials_password_hint">패스워드</string>
-  <string name="permission_access_deny">access to read and write to external storage was denied</string>
-  <string name="permission_account_deny">access to get accounts was denied</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Increase your network.</string>
-  <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
-  <string name="addressbook_sync">Sync Address Book</string>
-  <string name="not_now">Not now</string>
-  <string name="follow_friends">Follow Friends</string>
-  <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
-    \n\n%1$s will search your address book for friends and family that are using our App Store. We\'ll
-    only use this information to improve your %1$s experience by connecting you to more people
-    that can share apps related content with you.\n\n\nTo protect your privacy, no clear private data
-    will be sent out to %1$s servers. An anonymous signature (hash) will be created with your data
-    and that hash cannot be reversed into the original contact info.
-  </string>
-  <string name="addressbook_success">성공!</string>
-  <string name="addressbook_allow_friends_find">Allow friends to find you</string>
-  <string name="google">Google</string>
-  <string name="done">완료</string>
-  <string name="addressbook_share_phone">Share your phone number so your friends can easily find you on %s</string>
-  <string name="addressbook_phone_number">전화번호</string>
-  <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
-  <string name="addressbook_invite_friends">Invite friends to join you!</string>
-  <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
-  <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s will browse your address book for friends and family
-    that are using our App Store. To protect your privacy, no private data will be sent out to %1$s
-    servers</string>
-  <string name="addressbook_3rd_msg">더 배우기</string>
-  <string name="address_book_twitter_error">Twitter authorization error</string>
-  <string name="follow_my_store">Hello, follow my %1$s Store here</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">About Address Book</string>
-  <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Share apps with your friends</string>
-  <string name="spot_share_line_2">Phone to phone, without Internet</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

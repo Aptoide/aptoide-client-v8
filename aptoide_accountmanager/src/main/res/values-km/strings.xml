@@ -10,16 +10,17 @@
   <string name="login">ការចុះឈ្មោះចូលប្រើ</string>
   <string name="successful">Successful</string>
   <string name="login_successful">Successful login</string>
-  <string name="forgot_passwd"><u>Forgot password?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">សូមពិនិត្យមើលអ៊ីម៉ែលនិងពាក្យសម្ងាត់របស់អ្នក.</string>
   <string name="unknown_error">Unknown Error</string>
   <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-      Content Policy for Developers
-  </string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password
-  </string>
-  <string name="no_pass_error_message">Please insert a password</string>
-  <string name="no_email_error_message">Please insert an email</string>
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">Password must be at least 8 characters and should have
         at least one letter and one number or special characters (!@#$%*)
     </string>

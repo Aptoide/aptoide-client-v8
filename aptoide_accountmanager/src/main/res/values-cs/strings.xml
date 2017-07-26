@@ -10,15 +10,17 @@
   <string name="login">Přihlášení</string>
   <string name="successful">Successful</string>
   <string name="login_successful">Successful login</string>
-  <string name="forgot_passwd">Zapomněli jste heslo?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Zkontrolujte prosím svůj e-mail a heslo.</string>
   <string name="unknown_error">Unknown Error</string>
   <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-      Content Policy for Developers
-  </string>
-  <string name="no_email_and_pass_error_message">Prosím vložte svůj email a heslo pro registraci.</string>
-  <string name="no_pass_error_message">Prosím vložte heslo pro registraci.</string>
-  <string name="no_email_error_message">Prosím vložte email pro registraci.</string>
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">Heslo musí být alespoň 8 znaků dlouhé a mělo by obsahovat alepoň jedno písmeno, číslici nebo zvláštní znak (!@#$%*) </string>
   <string name="logged_as">Jste přihlášeni jako:</string>
   <string name="sign_out">Odhlásit se</string>

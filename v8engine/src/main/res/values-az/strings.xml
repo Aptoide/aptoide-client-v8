@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Hesabım</string>
-  <string name="setting_schdwntitle">Planlı Yükləmələr</string>
-  <string name="settings">Ayarlar</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Backup Əlavələr</string>
   <string name="dark">Tünd</string>
   <string name="light">Açıq</string>
   <string name="updates_filter_summary">Bunu seçərək siz beta versiyalar haqda məlumat almayacaqsınız.</string>
@@ -131,24 +124,28 @@ bir müddət üzərinə basın.</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>keç</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">indi isə Tarixçə ilə!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Ən yaxşı əlavə videolar və xəbərlər</b> bir yerdə.
-<b>Dostlarınız sayəsində əlavələri kəşf edin.</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Öz mağazanı əldə et</string>
-  <string name="wizard_sub_title_viewpager_two"><b>Əlavələri dostlarınla</b> və <b>Azercellilərlə</b> paylaşmaq 
-üçün Mağazanı özünə görə yarat.</string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Hissəsi ol</string>
-  <string name="wizard_sub_title_viewpager_three">Maraqlarını paylaşan <b>digərləri tap.</b>
-<b>Dəyərləndir və paylaş.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Bizə qoşul!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Daxil olmalısınız</string>
   <string name="follow">İzlə</string>
   <!--need translation-->
   <string name="followed">İzlənilir</string>
   <string name="unfollow_yes_no">İzləmədən imtina etməyə əminsiniz?</string>
   <string name="unfollow">İzləməkdən imtina</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">%s izləməkdən imtina</string>
   <string name="store_followed">%s mağazalar izlənilir</string>
   <string name="subscribers">Abunəçilər</string>
@@ -176,7 +173,6 @@ bir müddət üzərinə basın.</string>
   <string name="social_timeline">Sosial Tarixçə</string>
   <string name="downloads">Yükləmələr</string>
   <string name="apps_timeline"><b>Əlavələr Tarixçəsi</b></string>
-  <string name="timeline"><b>Tarixçə</b></string>
   <string name="latest_reviews">Son rəylər</string>
   <string name="latest_comments">Son şərhlər</string>
   <string name="action">Savaş</string>
@@ -249,8 +245,6 @@ bir müddət üzərinə basın.</string>
   <string name="essential_apps">Əsas əlavələr</string>
   <string name="summer_apps">Yay əlavələri</string>
   <string name="play_it">Oyna!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Featured Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s əlaqəli</string>
   <string name="appstimeline_update_app">əlavə</string>
@@ -273,10 +267,9 @@ bir müddət üzərinə basın.</string>
   <string name="create_store_displayable_message">Mağazanı yarat və əlavələr paylaşmağa başla!</string>
   <string name="create_store_displayable_button">Mağazanı yarat</string>
   <string name="my_store_created_displayable_message">Android Əlavələr Mağazanız</string>
-  <string name="create_store_displayable_created_store_short_term_message">Mağazanızı yaratdınız!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Daxil ol və bütün imkanları kəşf et</string>
   <string name="create_store_displayable_explore_button">Kəşf et</string>
-  <string name="follow_store">Mağazanı izlə</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Mağazanızda əlavələr yoxdur.</string>
   <string name="install_app_outter_pt2">və dünya ilə əlavələrinizi paylaşmaq üçün yükləyin!</string>
@@ -289,8 +282,6 @@ bir müddət üzərinə basın.</string>
   <string name="word_this">bu</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">İzəyiciləriniz bunu görəcək:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">kartın öncəbaxışını paylaş</string>
   <string name="social_timeline_share_title_checkbox">Əlavələr tarixçəsində profilimi gizlət. Yalnız mağazamın məlumatını göstər.</string>
   <string name="social_timeline_share_title_checkbox_fb">Əlavələr Tarixçəsində profilimi açıq et</string>
@@ -325,86 +316,16 @@ bir müddət üzərinə basın.</string>
   <string name="private_followers_message">%d izləyicilər gizlidir</string>
   <string name="private_following_message">%d gizli istifadəçını/mağazanı izləyirsən</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d cavab</string>
   <string name="out_of_space_dialog_title">Yaddaş bitdi</string>
   <string name="out_of_space_dialog_message">Davam etmək üçün yaddaşda boş yer azad edin.</string>
-  <string name="setting_category_autoupdate">%s Yeniləmələr</string>
-  <string name="setting_category_autoupdate_title">%s Yeniləmə haqda bildiriş al</string>
-  <string name="setting_category_autoupdate_message">Vaxtaşırı %s yeni versiyaları yoxla</string>
-  <string name="store_added_long_time_suggestion_message">uzun müddətli göstər</string>
-  <string name="store_added_short_time_suggestion_message">yaradıldı</string>
-  <string name="create_store_displayable_created_store_long_term_message">uzun müddətli</string>
-  <string name="create_store_displayable_explore_long_term_button">Mağazanı göstər</string>
-  <string name="create_store_displayable_empty_description_message">Mağazaya təsvir əlavə et. Doğru təsvir daha çox izləyici yığmaq və qarşılıqlı əlaqələr qurmağa kömək edir.</string>
-  <string name="fragment_spot_share_preview_start_button">Başla</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">%s qoşul</string>
-  <string name="login">Daxil ol</string>
-  <string name="login_company">%s daxil ol</string>
-  <string name="connect_with_facebook">Facebook ilə bağlan</string>
-  <string name="connect_with_google">Google ilə bağlan</string>
-  <string name="accept_terms_signup">Aptoide-ə qoşularaq Aptoide-in proqram tərtibatçılar üçün Məzmun Siyasəti, Şərtlər və Qaydalar ilə razılığınızı bildirirsiniz.</string>
-  <string name="recover_password">Parolun bərpası</string>
-  <string name="email">Email</string>
-  <string name="password">Parol</string>
-  <string name="create_password">Parolu yarat</string>
-  <string name="store_suspended_message">Mağaza dayandırılıb</string>
-  <string name="facebook_login_cancelled">Facebook daxilolma ləğv olunub</string>
-  <string name="google_login_cancelled">Google daxilolma xətası</string>
-  <string name="login_separator_text">və ya emailiniz ilə qoşulun</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Müxtəlif mağazalarda məhz sizin üçün yaradılmış məzmunları tapa bilərsiniz</string>
-  <string name="add_store_dialog_top_stores">POPULYAR MAĞAZALARI KƏŞF EDİN</string>
-  <string name="add_store_dialog_top_stores_small_text">və xüsusi məzmun tapın!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Daxil ol</string>
-  <string name="activity_login_forgot_password_button">Parolu unutdun?</string>
-  <string name="activity_login_button">Daxil ol</string>
-  <string name="activity_login_sign_up_button">Qeydiyyat</string>
-  <string name="view_credentials_username_hint">Email</string>
-  <string name="view_credentials_password_hint">Parol</string>
-  <string name="permission_access_deny">Xarici yaddaşı oxumaq/yazmaq qadağandır</string>
-  <string name="permission_account_deny">Hesabları almaq qadağandir</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Şəbəkənizi genişləndirin.</string>
-  <string name="addressbook_connect_with_friends_message">Dostlarınızla bağlanın.</string>
-  <string name="addressbook_sync">Telefon kitabçanızı sinxronlaşdırın</string>
-  <string name="not_now">İndi yox</string>
-  <string name="follow_friends">Dostları izlə</string>
-  <string name="addressbook_data_about"><b>%1$s məlumatlarınızdan necə istifadə edir</b>
-
-
-%1$s telefon kitabçanızda Mağazadan istifadə edən dost və tanışlarınızı axtaracaq. 
-Biz bu məlumatı sadəcə sizin %1$s təcrübənizi təkmilləşdirmək məqsədilə əlavələr haqda 
-məlumat paylaşa biləcək adamlar ilə sizi əlaqələndirmək üçün istifadə edəcəyik.
-
-Məxfiliyinizi qorumaq üçün heç bir şəxsi məlumatınız %1$s serverlərimizə ötürülməyəcək.
- </string>
-  <string name="addressbook_success">Uğur!</string>
-  <string name="addressbook_allow_friends_find">Dostlarınıza sizi tapmağa icazə verin</string>
-  <string name="google">Google</string>
-  <string name="done">Hazır</string>
-  <string name="addressbook_share_phone">Dostlarınızın sizə rahatlıqla %s -da tapmaları üçün mobil nömrənizi qeyd edin</string>
-  <string name="addressbook_phone_number">Mobil nömrə</string>
-  <string name="addressbook_insuccess_connection">Telefon kitabçanıza qoşula bilmədik!</string>
-  <string name="addressbook_invite_friends">Dostları qoşulmağa dəvət et!</string>
-  <string name="addressbook_thanks_for_connecting">Qoşulduğunuz üçün təşəkkür</string>
-  <string name="addressbook_success_connected_friends">Sizi müvəffəqiyyətlə %2$s istifadə edən %1$s dostlarınıza qoşduq</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">%1$s istifadə edən kontakt tapmadıq</string>
-  <string name="addressbook_2nd_msg">%1$s Mağazamızdan istifadə edən dost və tanışlarınızı axtaracaq.
-Məxfilik üçün heş bir şəxsi məlumatınız bizim %1$s serverlərə ötürülməyəcək</string>
-  <string name="addressbook_3rd_msg">DAHA ÇOX ÖYRƏN</string>
-  <string name="address_book_twitter_error">Twitter avtorizasiya xətası</string>
-  <string name="follow_my_store">Salam, mənim %1$s mağazamı burada izlə</string>
-  <string name="store_meta_apps">Əlavələr
-%s</string>
-  <string name="store_meta_following">İzlənilir
-%s</string>
-  <string name="store_meta_followers">İzləyicilər
-%s</string>
-  <string name="addressbook_about">Telefon Kitabça haqqında</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Sizi qoşdura bilmədik</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Dostlarınızla əlavələri bölüşün</string>
-  <string name="spot_share_line_2">İnternetsiz telefonlar arası</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

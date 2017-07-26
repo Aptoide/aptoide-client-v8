@@ -10,17 +10,17 @@
   <string name="login">ເຂົ້າສູ່ລະບົບ</string>
   <string name="successful">ປະສົບຜົນສຳເລັດ</string>
   <string name="login_successful">ເຂົ້າສູ່ລະບົບສຳເລັດແລ້ວ</string>
-  <string name="forgot_passwd">ລືມລະຫັດຜ່ານຫຼືບໍ່?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">ກະລຸນາກວດເບິ່ງອີເມວ ແລະ ລະຫັດຜ່ານຂອງທ່ານ.</string>
   <string name="unknown_error">ຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ</string>
-  <string name="accept_terms">\"ໂດຍການລົງທະບຽນນີ້ແມ່ນທ່ານຍິນຍອມຕໍ່ເງື່ອນໄຂການໃຫ້ບໍລິການ Aptoide ແລະ
- ນະໂຍບາຍເນື້ອຫາສຳລັບຜູ້ພັດທະນາ
- \"</string>
-  <string name="no_email_and_pass_error_message">\"ກະລຸນາໃສ່ອີເມວ ແລະ ລະຫັດຜ່ານເພື່ອ
-ລົງທະບຽນ.
- \"</string>
-  <string name="no_pass_error_message">ກະລຸນາໃສ່ລະຫັດຜ່ານເພື່ອລົງທະບຽນ.</string>
-  <string name="no_email_error_message">ກະລຸນາໃສ່ອີເມວເພື່ອລົງທະບຽນ.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 8 ໂຕອັກສອນ ແລະ ຄວນມີ
 1 ໂຕໜັງສື ແລະ 1 ໂຕເລກ ຫຼື ສັນຍາລັກພິເສດ (!@#$%*)
  \"</string>

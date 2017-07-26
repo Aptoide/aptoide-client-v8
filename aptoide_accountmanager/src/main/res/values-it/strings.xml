@@ -10,16 +10,15 @@
   <string name="login">Login</string>
   <string name="successful">Effettuato con successo</string>
   <string name="login_successful">Login effettuato</string>
-  <string name="forgot_passwd"><u>Password dimenticata?</u></string>
+  <string name="forgot_passwd">Dimenticato la password?</string>
   <string name="fields_cannot_empty">Per favore controlla il tuo indirizzo e-mail e la password.</string>
   <string name="unknown_error">Errore sconosciuto</string>
-  <string name="accept_terms">\"Registrandoti accetti i Termini di Servizio e
-le Norme dei Contenuti per gli Sviluppatori di Aptoide
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Si prega di inserire indirizzo e-mail e password
- \"</string>
-  <string name="no_pass_error_message">Inserire una password</string>
-  <string name="no_email_error_message">Inserire una e-mail</string>
+  <string name="accept_terms">Registrandoti accetti i Termini di Servizio e
+  le Norme dei Contenuti per gli Sviluppatori di Aptoide
+    </string>
+  <string name="no_email_and_pass_error_message">Si prega di inserire un indirizzo e-mail e una password per registrarsi.    </string>
+  <string name="no_pass_error_message">Si prega di inserire una password per registrarsi.</string>
+  <string name="no_email_error_message">Si prega di inserire un indirizzo e-mail per registrarsi.</string>
   <string name="password_validation_text">\"La password deve essere lunga almeno 8 caratteri e dovrebbe
  contenere almeno una lettera e un numero o caratteri speciali (!@#$%*)
  \"</string>

@@ -11,16 +11,17 @@
 লগইন</string>
   <string name="successful">সফল</string>
   <string name="login_successful">সফল লগ ইন</string>
-  <string name="forgot_passwd"><u>পাসওয়ার্ড ভুলে গেছেন?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">অনুগ্রহপূর্বক আপনার ইমেইল ও ইউজারনাম পরীক্ষা করুন।</string>
   <string name="unknown_error">অজানা ত্রুটি</string>
-  <string name="accept_terms">\"সাইন আপ করার মাধ্যমে আপনি মেনে নিচ্ছেন অ্যাপটোইড এর সেবার শর্তাবলী এবং
-  ডেভেলপারদের বিষয়বস্তুর নীতি
- \"</string>
-  <string name="no_email_and_pass_error_message">\"অনুগ্রহপূর্বক একটি ইমেইল এবং পাসওয়ার্ড অনুপ্রবেশ করুন
- \"</string>
-  <string name="no_pass_error_message">অনুগ্রহপূর্বক পাসওয়ার্ড অনুপ্রবেশ করুন</string>
-  <string name="no_email_error_message">অনুগ্রহপূর্বক একটি ইমেইল অনুপ্রবেশ করুন</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"পাসওয়ার্ড অবশ্যই ৮ অক্ষর বিশিষ্ট হতে এবং তাতে থাকতে হবে
  অন্ততপক্ষে একটি বর্ণ এবং একটি সংখ্যা বা বিশেষ চিহ্নসমূহ (!@#$%*)
  \"</string>

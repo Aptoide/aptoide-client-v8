@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">บัญชีของฉัน</string>
-  <string name="setting_schdwntitle">ดาวน์โหลดตาราง</string>
-  <string name="settings">การตั้งค่า</string>
-  <string name="facebook">เฟสบุ๊ค</string>
-  <string name="twitter">ทวิตเตอร์</string>
-  <string name="backup_apps">สำรองแอป</string>
   <string name="dark">มืด</string>
   <string name="light">สว่าง</string>
   <string name="updates_filter_summary">การตรวจสอบสิ่งนี คุณไม่ต้องแจ้งเวอร์ชั่นเบต้า</string>
@@ -131,21 +124,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>ข้าม</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">ตอนนี้ที่ไทม์ไลน์!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>แอปวีดีโอและข่าวสารที่ดีที่สุด</b> ในที่ที่เดียว \n ค้นพบแอปผ่าน<b>เพื่อนของคุณ</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">มีร้านค้าของคุณ</string>
-  <string name="wizard_sub_title_viewpager_two">ตั้งค่าร้านของคุณ<b> แชร์แอป \n ให้กับเพื่อน</b> และ<b>คอมมิวนิตี้Aptoide</b></string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">เป็นส่วนหนึ่ง</string>
-  <string name="wizard_sub_title_viewpager_three"><b>ค้นหาคน</b> ผู้ที่แชร์แอปที่คุณสนใจ \n <b>ให้คะแนนและแชร์</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">เข้าร่วมกับเรา!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">คุณจำเป็นต้องเข้าสู่ระบบ</string>
   <string name="follow">ติดตาม</string>
   <!--need translation-->
   <string name="followed">ติดตาม</string>
   <string name="unfollow_yes_no">คุณต้องการไม่ติดตามใช่หรือไม่?</string>
   <string name="unfollow">ไม่ติดตาม</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">ไม่ติดตาม%s</string>
   <string name="store_followed">ร้าน%sติดตาม</string>
   <string name="subscribers">ผู้ตอบรับ</string>
@@ -174,7 +174,6 @@
   <string name="social_timeline">โซเชียลไทม์ไลน์</string>
   <string name="downloads">ดาวน์โหลด</string>
   <string name="apps_timeline"><b> ไทม์ไลน์แอป</b></string>
-  <string name="timeline"><b>ไทม์ไลน์</b></string>
   <string name="latest_reviews">การรีวิวล่าสุด</string>
   <string name="latest_comments">ความคิดเห็นล่าสุด</string>
   <string name="action">แอคชั่น</string>
@@ -247,8 +246,6 @@
   <string name="essential_apps">แอปจำเป็น</string>
   <string name="summer_apps">แอปซัมเมอร์</string>
   <string name="play_it">เล่นมัน!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">ฟีจเจอร์ร้านค้า</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">เกี่ยวข้องกับ %1$s</string>
   <string name="appstimeline_update_app">แอป</string>
@@ -271,10 +268,9 @@
   <string name="create_store_displayable_message">สร้างร้านค้าของคุณตอนนี้และเริ่มแชร์แอปของคุณ!</string>
   <string name="create_store_displayable_button">สร้างร้านค้า</string>
   <string name="my_store_created_displayable_message">ร้านค้าแอนดรอย์แอปของคุณ</string>
-  <string name="create_store_displayable_created_store_short_term_message">คุณเพิ่งสร้างร้านค้าของคุณ!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">ใส่และสำรวจความเป็นไปได้ทั้งหมด</string>
   <string name="create_store_displayable_explore_button">สำรวจ</string>
-  <string name="follow_store">ติดตามร้านค้า</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">ร้านค้าของคุณยังไม่มีแอปพลิเคชั่น</string>
   <string name="install_app_outter_pt2">และอัพโหลดแอปเพื่อแชร์ให้กับโลก!</string>
@@ -287,8 +283,6 @@
   <string name="word_this">นี่</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">สิ่งที่ผู้ติดตามของคุณจะเห็น:</string>
-  <string name="social_timeline_you_will_share_comment">ผู้ติดตามจะเห็นความคิดเห็นของคุณ:</string>
-  <string name="social_timeline_you_will_share_like">ผู้ติดตามของคุณจะเห็นสิ่งที่คุณชอบ:</string>
   <string name="social_timeline_share_title">แชร์การ์ดก่อน</string>
   <string name="social_timeline_share_title_checkbox">ทำโปรไฟล์ผู้ใช้ส่วนตัวในไทม์ไลน์แอป แสดง/แชร์เพียงข้อมูลร้านค้าของฉัน</string>
   <string name="social_timeline_share_title_checkbox_fb">ติดตามโปรไฟล์ผู้ใช้ของฉันสาธารณะบนไทม์ไลน์แอป</string>
@@ -323,90 +317,16 @@
   <string name="private_followers_message">%dผู้ติดตามส่วนตัว</string>
   <string name="private_following_message">คุณกำลังติดตามผู้ใช้งาน/ร้านค้าส่วนตัว %d</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%dตอบกลับ</string>
   <string name="out_of_space_dialog_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_dialog_message">โปรดเตรียมที่ว่างเพื่อดำเนินการ</string>
-  <string name="setting_category_autoupdate">%sอัพเดต</string>
-  <string name="setting_category_autoupdate_title">รับ%sการแจ้งเตือนอัพเดต</string>
-  <string name="setting_category_autoupdate_message">ช่วงระยะที่ตรวจสอบสำหรับ%sเวอร์ชั่นใหม่</string>
-  <string name="store_added_long_time_suggestion_message">แสดงระยะยาว</string>
-  <string name="store_added_short_time_suggestion_message">แสดงที่เพิ่งสร้าง</string>
-  <string name="create_store_displayable_created_store_long_term_message">ระยะยาว</string>
-  <string name="create_store_displayable_explore_long_term_button">ดูร้านค้า</string>
-  <string name="create_store_displayable_empty_description_message">เพิ่มคำบรรยายสำหรับร้านค้าของคุณ คำบรรยายที่ดีช่วยให้คุณได้ผู้ติดตามเพิ่มและมีกิจกรรม</string>
-  <string name="fragment_spot_share_preview_start_button">เริ่ม</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">เข้าร่วม %s</string>
-  <string name="login">ลงชื่อเข้าใช้งาน</string>
-  <string name="login_company">เข้าสู่ระบบ %s</string>
-  <string name="connect_with_facebook">เชื่อมต่อกับเฟสบุ๊ค</string>
-  <string name="connect_with_google">เชื่อต่อกับกูเกิ้ล</string>
-  <string name="accept_terms_signup">โดยการเข้าร่วมAptoide คุณยอมรับเงื่อนไขและข้อตกลงของทีม Aptoide และนโยบายเนื้อหาสำหรับนักพัฒนา</string>
-  <string name="recover_password">รื้อฟื้นรหัสผ่านของคุณ</string>
-  <string name="email">อีเมลล์</string>
-  <string name="password">รหัสผ่าน</string>
-  <string name="create_password">สร้างรหัสผ่าน</string>
-  <string name="store_suspended_message">ร้านค้าที่ระงับชั่วคราว</string>
-  <string name="facebook_login_cancelled">ยกเลิกการเข้าสู่ระบบเฟสบุ๊ค</string>
-  <string name="google_login_cancelled">การเข้าสู่ระบบกูเกิ้ลล้มเหลว</string>
-  <string name="login_separator_text">หรือเชื่อมต่อโดยการใช้อีเมลล์ของคุณ</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">คุณสามารถพบคอนเท็นต์ที่ปรับได้โดยเฉพาะเพื่อสร้างร้านค้าที่แตกต่าง</string>
-  <string name="add_store_dialog_top_stores">ค้นพบร้านค้ายอดนิยม</string>
-  <string name="add_store_dialog_top_stores_small_text">และเนื้อหาสุดพิเศษ!</string>
-  <!-- Login -->
-  <string name="activity_login_title">เข้าสู่ระบบ</string>
-  <string name="activity_login_forgot_password_button">ลืมรหัสผ่าน?</string>
-  <string name="activity_login_button">เข้าสู่ระบบ</string>
-  <string name="activity_login_sign_up_button">สมัคร</string>
-  <string name="view_credentials_username_hint">อีเมลล์</string>
-  <string name="view_credentials_password_hint">รหัสผ่าน</string>
-  <string name="permission_access_deny">เข้าสู่เพื่ออ่านและเขียนคลังภายนอกที่ถูกปฏิเสธ</string>
-  <string name="permission_account_deny">เข้าสู่บัญชีที่ถูกปฏิเสธ</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">เพิ่มเครือข่ายของคุณ</string>
-  <string name="addressbook_connect_with_friends_message">เชื่อมต่อกับเพื่อน</string>
-  <string name="addressbook_sync">ซิงค์สมุดที่อยู่</string>
-  <string name="not_now">ไม่ใช่ตอนนี้</string>
-  <string name="follow_friends">ติดตามเพื่อน</string>
-  <string name="addressbook_data_about"><b> %1$s ใช้ข้อมูลของคุณอย่างไรa</b>
-
-
-%1$s จะค้นหาสมุดที่อยู่สำหรับเพื่อและครอบครัวของคุณ ซึ่งถูกใช้บนร้านค้าแอปของเรา พวกเราจะ
-ส่งเพียงข้อมูลปรับปรุงประสบการณ์ %1$sของคุณโดยการเชื่อมต่อคุณกับคนเพิ่มเติม
-ซึ่งสามารถแชร์เนื้อหาแอปที่เกี่ยวข้องกับคุณ
-
-
-เพื่อป้องกันความเป็นส่วนตัวของคุณ ไม่มีข้อมูลส่วนที่ชัดเจน
-ที่ถูกส่งไปยังเซิฟเวอร์ %1$s ลายเซ็นต์ที่ไม่แสดงตัวตนจะถูกสร้างด้วยข้อมูลของคุณ
-และอันตรายนั้นไม่สามารถกลับไปสู่ข้อมูลการติดต่อเดิมได้
- </string>
-  <string name="addressbook_success">สำเร็จ!</string>
-  <string name="addressbook_allow_friends_find">อนุญาตให้เพื่อนค้นหาคุณ</string>
-  <string name="google">กูเกิ้ล</string>
-  <string name="done">สำเร็จ</string>
-  <string name="addressbook_share_phone">แชร์เบอร์โทรศัพท์ของคุณ เพื่อให้เพื่อนพบคุณได้ง่ายขึ้นบน %s</string>
-  <string name="addressbook_phone_number">เบอร์โทรศัพท์</string>
-  <string name="addressbook_insuccess_connection">คุณไม่สามารถเชื่อต่อสมุดที่อยู่ของคุณได้!</string>
-  <string name="addressbook_invite_friends">เชิญเพื่อนเพื่อเข้าร่วมกับคุณ!</string>
-  <string name="addressbook_thanks_for_connecting">ขอบคุณสำหรับการเชื่อมต่อ</string>
-  <string name="addressbook_success_connected_friends">พวกเราเชื่อมต่อกับคุณได้สำเร็จด้วยเพื่อน%1$s คน ซึ่งใช้%2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">พวกเราไม่พบผู้ติดต่อใๆที่กำลังใช้%1$s</string>
-  <string name="addressbook_2nd_msg">\"%1$s จะค้นหาสมุดที่อยู่สำหรับเพื่อนและครอบครัว
-ซึ่งใช้ร้านค้าแอปของพวกเรา เพื่อป้องกันความเป็นส่วนตัวของคุณ ไม่มีข้อมูลส่วนตัวที่ถูกส่งออกไปจาก  %1$s
- บริการ\"</string>
-  <string name="addressbook_3rd_msg">เรียนรู้เพิม่เติม</string>
-  <string name="address_book_twitter_error">ข้อผิดพลาดในการมีสิทธิ์ทวิตเตอร์</string>
-  <string name="follow_my_store">สวัสดีติดตามร้านค้าฉัน%1$s ได้ที่นี่</string>
-  <string name="store_meta_apps">แอป
-%s</string>
-  <string name="store_meta_following">ติดตาม
-%s</string>
-  <string name="store_meta_followers">ผู้ติดตาม
-%s</string>
-  <string name="addressbook_about">เกี่ยวกับสมุดที่อยู่</string>
-  <string name="addressbook_we_werent_able_to_connect_you">พวกเราไม่สามารถเชื่อมต่อคุณได้</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">แชร์แอปกับเพื่อนของคุณ</string>
-  <string name="spot_share_line_2">โทรศัพท์กับโทรศัพท์ โดยไม่ใช้อินเตอร์เน็ต</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

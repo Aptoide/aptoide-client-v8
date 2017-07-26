@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">မိမိ၏အေကာင့္</string>
-  <string name="setting_schdwntitle">အစီအစဥ္လုပ္ထားေသာ ေဒါင္းလုပ္မ်ား</string>
-  <string name="settings">ခ်ိန္ညႇိမႈမ်ား</string>
-  <string name="facebook">ေဖ့စ္ဘြတ္</string>
-  <string name="twitter">တြစ္တာ</string>
-  <string name="backup_apps">App မ်ားအား backup လုပ္ပါ</string>
   <string name="dark">ရင့်သော</string>
   <string name="light">ဖျော့သော</string>
   <string name="updates_filter_summary">အမွန္ျခစ္ျခစ္ထားပါ၊ စမ္းသပ္ဗား႐ွင္းတို႔ကို ျမင္ႏိုင္မည္မဟုတ္ပါ.</string>
@@ -129,21 +122,28 @@ http://aptoi.de/tv</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>ကျော်ပါ</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">အခု Timeline တစ္ခုႏွင့္အတူ</string>
-  <string name="wizard_sub_title_viewpager_one"><b>လုံခြုံမှုရှိ</b> ပြီး <b>ပျော်စရာကောင်းသော</b> ခရီးတစ်ခုအား စတင်လိုက်ပါ.</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">သင့္ကိုယ္ပိုင္စတိုးကို ရယူပါ</string>
-  <string name="wizard_sub_title_viewpager_two"><b>နောက်ဆုံး apps များအား</b>ရယူပါ, <b>ဆက်စပ်မှုရှိသော စတိုးများအား</b>ရှာဖွေပြီး <b>စိတ်ကြိုက်ပြုလုပ်ထားသော ပါ၀င်မှုအား</b>ရယူပါ</string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>လူမှုအဖွဲ့အစည်းတွင် ပါ၀င်ပါ</b></string>
-  <string name="wizard_sub_title_viewpager_three">သင္ စိတ္၀င္စားေသာ အပ္စ္ကို ေ၀မွ်သူမ်ား <b>ရွာေဖြပါ</b>။ \n<b> အဆင့္သတ္မွတ္ၿပီး ေ၀မွ်ပါ။</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">ကၽြႏု္ပ္တို႔နဲ႔ ခ်ိတ္ဆက္ပါ။</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">သင် အကောင့်၀င်ထားရန် လိုအပ်ပါသည်</string>
   <string name="follow">Follow လုပ္ပါ</string>
   <!--need translation-->
   <string name="followed">Follow လုပ်ထားသော</string>
   <string name="unfollow_yes_no">Follow မလုပ်လိုသည်မှာ သေချာပါသလား?</string>
   <string name="unfollow">Follow မလုပ်ပါ</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Follow မလုပ်ခြင်း %s</string>
   <string name="store_followed">Follow လုပ်ထားသော %s စတိုး</string>
   <string name="subscribers">ပံုမွန္မွာယူသူမ်ား</string>
@@ -171,7 +171,6 @@ http://aptoi.de/tv</string>
   <string name="social_timeline">လူမှုအသိုင်းအဝိုင်း အချိန်လိုင်း</string>
   <string name="downloads"> ေဒါင္းလုပ္မ်ား</string>
   <string name="apps_timeline"><b>Apps တိုင္းမ္လိုင္း</b></string>
-  <string name="timeline"><b>အခ်ိန္လိုင္း</b></string>
   <string name="latest_reviews">ေနာက္ဆံုးေသာ ျပန္လည္ဆန္းစစ္ခ်က္မ်ား</string>
   <string name="latest_comments">ေနာက္ဆံုးမွတ္ခ်က္မ်ား</string>
   <string name="action">အက်ရှင်</string>
@@ -244,8 +243,6 @@ http://aptoi.de/tv</string>
   <string name="essential_apps">မရွိမျဖစ္ Appsမ်ား</string>
   <string name="summer_apps">ေႏြရာသီ Apps</string>
   <string name="play_it">၄င္းကို ဖြင့္ပါ။</string>
-  <!--home Fragment-->
-  <string name="featured_stores">အသားေပးထားေသာ စတိုးမ်ား</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s ႏွင့္ သက္ဆိုင္ေသာ</string>
   <string name="appstimeline_update_app">အပ္စ္</string>
@@ -268,10 +265,9 @@ http://aptoi.de/tv</string>
   <string name="create_store_displayable_message">သင့္စတုိးအား ယခုပင္ ဖန္တီးၿပီး သင့္ Apps မ်ားအား စတင္မွ်ေဝပါ!</string>
   <string name="create_store_displayable_button">စတိုးပြုလုပ်ပါ</string>
   <string name="my_store_created_displayable_message">သင့္ Android App စတိုး</string>
-  <string name="create_store_displayable_created_store_short_term_message">သင့့္စတိုးအား ဖန္တီးလိုက္ၿပီ ျဖစ္ပါသည္!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">ျဖစ္ႏိုင္ေခ်မ်ားအားလံုး ထည့္သြင္း၍  ခ်ဲ႕ထြင္ပါ</string>
   <string name="create_store_displayable_explore_button">ခ်ဲ႕ထြင္ပါ</string>
-  <string name="follow_store">စတိုးအား follow လုပ္ပါ</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">သင့္စတုိးတြင္ applications မ်ား မရွိေသးပါ.</string>
   <string name="install_app_outter_pt2">ၿပီးေနာက္ Apps မ်ားတင္ၿပီး ယင္းတုိ႕အား တကမာၻလံုးႏွင့္ မွ်ေဝပါ!</string>
@@ -284,8 +280,6 @@ http://aptoi.de/tv</string>
   <string name="word_this">ယင္း</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">သင့္ followers မ်ား ျမင္ရမည္မွာ :</string>
-  <string name="social_timeline_you_will_share_comment">သင့္ကို ေစာင့္ၾကည့္ေနသူမ်ားသည္ သင္၏မွတ္ခ်က္ကို ျမင္ရလိမ့္မည္:</string>
-  <string name="social_timeline_you_will_share_like">သင့္ကို ေစာင့္ၾကည့္ေနသူမ်ားသည္ သင္ ႀကိဳက္ႏွစ္သက္ထားေသာအရာမ်ားကို ျမင္ရလိမ့္မည္:</string>
   <string name="social_timeline_share_title">ကတ္အႀကိဳျမင္ကြင္းအား မွ်ေဝပါ</string>
   <string name="social_timeline_share_title_checkbox">ကၽြႏ္ုပ္၏ အသံုးျပဳသူ ပ႐ိုဖိုင္အား Apps Timeline တြင္ သီးသန္႕ျဖစ္ေအာင္ ျပဳလုပ္ပါ. ကၽြႏ္ုပ္၏ စတုိးအေၾကာင္းကိုသာ ျပပါ/မွ်ေဝပါ.</string>
   <string name="social_timeline_share_title_checkbox_fb">ကၽြႏ္ုပ္၏ အသံုးျပဳသူ ပ႐ိုဖိုင္အား Apps Timeline တြင္ အမ်ားျမင္ႏိုင္ရန္ ခြင့္ျပဳပါ</string>
@@ -320,81 +314,16 @@ http://aptoi.de/tv</string>
   <string name="private_followers_message">%d followers မ်ားသည္ သီးသန္႕ ျဖစ္ပါသည္</string>
   <string name="private_following_message">%d သီးသန္႕ အသံုးျပဳသူမ်ား/စတိုးမ်ားအား သင္ follow လုပ္ထားပါသည္</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d တံု႕ျပန္မႈမ်ား</string>
   <string name="out_of_space_dialog_title">ေနရာမက်န္ေတာ့ပါ</string>
   <string name="out_of_space_dialog_message">ဆက္လက္လုပ္ေဆာင္ရန္ ေနရာရွင္းေပးပါ.</string>
-  <string name="setting_category_autoupdate">%s အပ္ဒိတ္မ်ား</string>
-  <string name="setting_category_autoupdate_title">%s အပ္ဒိတ္ အသိေပးခ်က္မ်ားကို ရယူပါ</string>
-  <string name="setting_category_autoupdate_message">%s ဗားရွင္းအသစ္မ်ားကို အခါအားေလ်ာ္စြာ စစ္ေဆးပါ</string>
-  <string name="store_added_long_time_suggestion_message">စာလံံုး အရွည္ကို ျပပါ</string>
-  <string name="store_added_short_time_suggestion_message">ျပပြဲအား ဖန္တီးလိုက္ပါသည္</string>
-  <string name="create_store_displayable_created_store_long_term_message">စာလံုး အရွည္</string>
-  <string name="create_store_displayable_explore_long_term_button">စတိုးအား ၾကည့္႐ႈပါ</string>
-  <string name="create_store_displayable_empty_description_message">သင့္စတိုးအတြက္ ေဖာ္ျပခ်က္တစ္ခုကို ထည့္သြင္းပါ. ေဖာ္ျပခ်က္ေကာင္းတစ္ခုသည္ follow လုပ္သူမ်ားႏွင့္ ျပန္လွန္တံု႕ျပန္မႈမ်ား ပို၍ရရန္ အကူအညီ ျဖစ္ေစပါသည္.</string>
-  <string name="fragment_spot_share_preview_start_button">စပါ</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">%s တြင္ ပါ၀င္ပါ</string>
-  <string name="login">အကောင့်၀င်ပါ</string>
-  <string name="login_company">%s တြင္ အေကာင့္၀င္ပါ</string>
-  <string name="connect_with_facebook">Facebook ျဖင့္ ဆက္သြယ္ပါ</string>
-  <string name="connect_with_google">Google ျဖင့္ ဆက္သြယ္ပါ</string>
-  <string name="accept_terms_signup">Aptoide ႏွင့္ ပူးေပါင္းျခင္းျဖင့္ Aptoide ၏ စည္းကမ္းခ်က္မ်ားႏွင့္ အေျခအေနမ်ား အပါအ၀င္ ထုတ္လုပ္သူမ်ားအတြက္ ပါ၀င္မႈ မူ၀ါဒကို သေဘာတူျခင္း ျဖစ္ပါသည္.</string>
-  <string name="recover_password">သင့္စကား၀ွက္အား ျပန္လည္ရယူပါ</string>
-  <string name="email">အီးေမးလ္</string>
-  <string name="password">လျှို့ဝှက်စကားလုံး</string>
-  <string name="create_password">စကား၀ွက္ ဖန္တီးပါ</string>
-  <string name="store_suspended_message">စတိုး ဆိုင္းငံံ့ထားေသာ</string>
-  <string name="facebook_login_cancelled">ေဖ့စ္ဘြတ္ျဖင့္ အေကာင့္၀င္ျခင္းကို ပယ္ဖ်က္သည္</string>
-  <string name="google_login_cancelled">ဂူးဂဲလ္ျဖင့္ အေကာင့္၀င္ျခင္း က်ရႈံးသည္</string>
-  <string name="login_separator_text">(သို႔) သင့္အီးေမးလ္ျဖင့္ ခ်ိတ္ဆက္ပါ</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">မတူညီေသာ စတိုးမ်ားတြင္ သင့္အတြက္ သင့္ေလ်ာ္သည့္ သီးသန္႕ ပါ၀င္မႈကို ေတြ႕ရွိႏိုင္ပါသည္</string>
-  <string name="add_store_dialog_top_stores">ထိပ္တန္း စတိုးမ်ားကို ရွာေဖြပါ</string>
-  <string name="add_store_dialog_top_stores_small_text">ႏွင့္ သီးသန္႕ ပါ၀င္မႈမ်ားကို ရွာေဖြပါ!</string>
-  <!-- Login -->
-  <string name="activity_login_title">အေကာင့္၀င္ပါ</string>
-  <string name="activity_login_forgot_password_button">လျှို့ဝှက်စကားလုံး မေ့နေပါသလား?</string>
-  <string name="activity_login_button">အေကာင့္၀င္ပါ</string>
-  <string name="activity_login_sign_up_button">အေကာင့္အသစ္ဖြင့္ပါ</string>
-  <string name="view_credentials_username_hint">အီးေမးလ္</string>
-  <string name="view_credentials_password_hint">စကား၀ွက္</string>
-  <string name="permission_access_deny">ျပင္ပသိုေလွာင္မႈအား ဖတ္ရန္ႏွင့္ ေရးရန္ ခြင့္ျပဳမႈကို ျငင္းဆိုထားပါသည္</string>
-  <string name="permission_account_deny">အေကာင့္မ်ားအား ရရွိရန္ ခြင့္ျပဳမႈကို ျငင္းဆိုထားပါသည္</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">သင့္ကြန္ရက္အား ျမႇင့္တင္ပါ.</string>
-  <string name="addressbook_connect_with_friends_message">သူငယ္ခ်င္းမ်ားႏွင့္ ဆက္သြယ္ပါ.</string>
-  <string name="addressbook_sync">လိပ္စာစာအုပ္ကို ခ်ိန္ကိုက္ပါ</string>
-  <string name="not_now">ယခု မလုပ္ေသးပါ</string>
-  <string name="follow_friends">သူငယ္ခ်င္းမ်ားကို follow လုပ္ပါ</string>
-  <string name="addressbook_data_about"><b>%1$s မွ သင့္အခ်က္အလက္အား အသံုးျပဳပံု</b>
- 
-
-%1$s သည္ ကၽြႏ္ုပ္တို႕၏ App စတိုးအား အသံုးျပဳေသာ သူငယ္ခ်င္းမ်ားႏွင့့္ မိသားစု၀င္မ်ားကို သင့္လိပ္စာစာအုပ္တြင္ ရွာေဖြပါမည္. သင္ႏွင့္ app မ်ားဆိုင္ရာ ပါ၀င္မႈမ်ားအား မွ်ေ၀ႏိုင္ေသာ လူမ်ားျဖင့္ ပို၍ဆက္သြယ္ေပးျခင္းျဖင့္ သင့္ %1$s အေတြ႕အႀကံဳကို ျမႇင့္တင္ရန္အတြက္သာ ယင္းအခ်က္အလက္ကို အသံုးျပဳမည္ ျဖစ္ပါသည္.
-
-
-သင့္ကိုယ္ေရးလံုၿခံဳမႈကို ကာကြယ္ရန္အတြက္ မည္သည့္ ထင္ရွားေသာ ကိုယ္ေရးအခ်က္အလက္ကိုမွ် %1$s ဆာဗာမ်ားထံ ေပးပို႕မည္ မဟုတ္ပါ. သင့္အခ်က္အလက္ျဖင့္ အမည္မသိႏိုင္ေသာ လက္မွတ္ (hash) တစ္ခုအား ဖန္တီးမည္ျဖစ္ၿပီး အဆိုပါ hash အား မူလအဆက္အသြယ္ အခ်က္အလက္အျဖစ္သို႕ ျပန္ေျပာင္းႏိုင္မည္ မဟုတ္ပါ.
- </string>
-  <string name="addressbook_success">အောင်မြင်ပါသည်!</string>
-  <string name="addressbook_allow_friends_find">သင့္အား ရွာေဖြရန္ သူငယ္ခ်င္းမ်ားကို ခြင့္ျပဳပါ</string>
-  <string name="google">ဂူးဂဲလ္</string>
-  <string name="done">ၿပီးပါၿပီ</string>
-  <string name="addressbook_share_phone">သင့္သူငယ္ခ်င္မ်ားမွ သင့္အား %s ေပၚတြင္ လြယ္ကူစြာ ရွာေဖြႏိုင္ရန္ သင့္ဖုန္းနံပါတ္အား မွ်ေ၀ပါ</string>
-  <string name="addressbook_phone_number">ဖုန်းနံပါတ်</string>
-  <string name="addressbook_insuccess_connection">သင့္လိပ္စာစာအုပ္ႏွင့္ ကၽြႏ္ုပ္တုိ႕ ဆက္သြယ္၍ မရပါ!</string>
-  <string name="addressbook_invite_friends">သင္ႏွင့္ ပူးေပါင္းရန္ သူငယ္ခ်င္းမ်ားအား ဖိတ္ေခၚပါ!</string>
-  <string name="addressbook_thanks_for_connecting">ဆက္သြယ္ျခင္းအတြက္ ေက်းဇူးတင္ပါသည္</string>
-  <string name="addressbook_success_connected_friends">%2$s အသံုးျပဳေသာ %1$s သူငယ္ခ်င္းမ်ားႏွင့္ သင့့္အား ေအာင္ျမင္စြာ ဆက္သြယ္ၿပီးပါၿပီ</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">%1$s အား အသံုးျပဳေနေသာ မည္သည့္ အဆက္အသြယ္ကိုမွ် ရွာမေတြ႕ပါ</string>
-  <string name="addressbook_2nd_msg">ကၽြႏ္ုပ္တုိ႕၏ App Store ကို အသံုးျပဳေသာ သူငယ္ခ်င္းမ်ားႏွင့္ မိသားစုအား ရွာရန္ %1$s သည္ သင့္လိပ္စာစာအုပ္ကို ေလ့လာမည္ ျဖစ္ပါသည္. သင့္ကိုယ္ေရး လံုၿခံုမႈကို ကာကြယ္ရန္အတြက္ မည္သည့္ ကိုယ္ေရး အခ်က္အလက္ကိုမွ် %1$s ဆာဗာမ်ားသို႕ ေပးပို႕မည္ မဟုတ္ပါ</string>
-  <string name="addressbook_3rd_msg">ပို၍ လေ့လာပါ</string>
-  <string name="address_book_twitter_error">Twitter ခြင့္ျပဳျခင္း အမွား</string>
-  <string name="follow_my_store">ဟယ္လို ဤေနရာတြင္ ကၽြႏ္ုပ္၏ %1$s စတိုးအား follow လုပ္ပါ</string>
-  <string name="store_meta_apps">အပ္စ္မ်ား\n%s</string>
-  <string name="store_meta_following">ေစာင့္ၾကည့္ေနသည္\n%s</string>
-  <string name="store_meta_followers">ေစာင့္ၾကည္သူမ်ား\n%s</string>
-  <string name="addressbook_about">လိပ္စာ စာအုပ္အေၾကာင္း</string>
-  <string name="addressbook_we_werent_able_to_connect_you">ကၽြႏ္ုပ္တုိ႕ သင့္အား ဆက္သြယ္၍ မရပါ</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">အပ္စ္မ်ားကို သင့္သူငယ္ခ်င္းမ်ားထံ ေ၀မွ်ပါ</string>
-  <string name="spot_share_line_2">ဖုန္းတစ္လံုးမွ အျခားဖုန္းတစ္လံုးသို႔ အင္တာနက္ မပါဘဲႏွင့္</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

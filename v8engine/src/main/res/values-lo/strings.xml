@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">ບັນຊີຂອງຂ້ອຍ</string>
-  <string name="setting_schdwntitle">Scheduled Downloads</string>
-  <string name="settings">ການຕັ້ງຄ່າ</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Backup Apps</string>
   <string name="dark">ມືດ</string>
   <string name="light">ແຈ້ງ</string>
   <string name="updates_filter_summary">ເລືອກບ່ອນນີ້, ທ່ານຈະບໍ່ໄດ້ຮັບການແຈ້ງເຕືອນສຳລັບເວີຊັນທົດສອບ.</string>
@@ -132,22 +125,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>ຂ້າມ</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Now with a Timeline!</string>
-  <string name="wizard_sub_title_viewpager_one">ເລີ່ມຕົ້ນການເດີນທາງທີ່ <b>ປອດໄພ</b> ແລະ <b>ມ່ວນຊື່ນ</b>.</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>ແອັບທາມລາຍ</b></string>
-  <string name="wizard_sub_title_viewpager_two">ດາວໂຫຼດ <b>ແອັບຫຼ້າສຸດ</b>, ຊອກຫາ <b>ຮ້ານຄ້າທີ່ກ່ຽວຂ້ອງ</b>
-ແລະເຂົ້າເຖິງ <b>ເນື້ອຫາສະເພາະບຸກຄົນ.</b></string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>ເຂົ້າຮ່ວມຊຸມຊົນ</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Find people</b> who share your app interests. \n<b>Rate and share.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Join us!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">ທ່ານຕ້ອງເຂົ້າສູ່ລະບົບ</string>
   <string name="follow">ຕິດຕາມ</string>
   <!--need translation-->
   <string name="followed">ຕິດຕາມຢູ່</string>
   <string name="unfollow_yes_no">ທ່ານແນ່ໃຈບໍ່ວ່າທ່ານຕ້ອງການເຊົາຕິດຕາມ?</string>
   <string name="unfollow">ເຊົາຕິດຕາມ</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">ກຳລັງເຊົາຕິດຕາມ %s</string>
   <string name="store_followed">ຕິດຕາມຮ້ານຄ້າ %s ແລ້ວ</string>
   <string name="subscribers">ຜູ້ຕິດຕາມ</string>
@@ -176,7 +175,6 @@
   <string name="social_timeline">ທາມລາຍສັງຄົມ</string>
   <string name="downloads">ດາວໂຫຼດ</string>
   <string name="apps_timeline"><b>ແອັບທາມລາຍ</b></string>
-  <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">ບົດວິຈານຫຼ້າສຸດ</string>
   <string name="latest_comments">ຄຳເຫັນຫຼ້າສຸດ</string>
   <string name="action">ແອັກຊັນ</string>
@@ -249,8 +247,6 @@
   <string name="essential_apps">ແອັບສຳຄັນ</string>
   <string name="summer_apps">ແອັບພັກຄາຍຮ້ອນ</string>
   <string name="play_it">ຫຼິ້ນມັນເລີຍ!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Featured Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">ກ່ຽວຂ້ອງກັບ %1$s</string>
   <string name="appstimeline_update_app">ແອັບ</string>
@@ -273,10 +269,9 @@
   <string name="create_store_displayable_message">Create your Store now and start sharing your apps!</string>
   <string name="create_store_displayable_button">ສ້າງຮ້ານຄ້າ</string>
   <string name="my_store_created_displayable_message">Your Android App store</string>
-  <string name="create_store_displayable_created_store_short_term_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
-  <string name="follow_store">Follow Store</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Your store doesn\'t have applications yet.</string>
   <string name="install_app_outter_pt2">and upload apps to share them with the world!</string>
@@ -289,8 +284,6 @@
   <string name="word_this">this</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">What your followers will see:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">Share card preview</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in Apps Timeline. Only show/share my store info.</string>
   <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
@@ -325,82 +318,16 @@
   <string name="private_followers_message">%d followers are private</string>
   <string name="private_following_message">you are following %d private users/stores</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
-  <string name="setting_category_autoupdate">%s Updates</string>
-  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
-  <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
-  <string name="store_added_long_time_suggestion_message">show long term</string>
-  <string name="store_added_short_time_suggestion_message">show just created</string>
-  <string name="create_store_displayable_created_store_long_term_message">long term</string>
-  <string name="create_store_displayable_explore_long_term_button">View Store</string>
-  <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
-  <string name="fragment_spot_share_preview_start_button">ເລີ່ມ</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Join %s</string>
-  <string name="login">ເຂົ້າສູ່ລະບົບ</string>
-  <string name="login_company">Login %s</string>
-  <string name="connect_with_facebook">Connect with Facebook</string>
-  <string name="connect_with_google">Connect with Google</string>
-  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
-  <string name="recover_password">Recover your password</string>
-  <string name="email">ອີເມວ</string>
-  <string name="password">ລະຫັດຜ່ານ</string>
-  <string name="create_password">Create Password</string>
-  <string name="store_suspended_message">Store suspended</string>
-  <string name="facebook_login_cancelled">Facebook login canceled</string>
-  <string name="google_login_cancelled">Google login failed</string>
-  <string name="login_separator_text">Or connect using your email</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
-  <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
-  <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
-  <!-- Login -->
-  <string name="activity_login_title">ເຂົ້າສູ່ລະບົບ</string>
-  <string name="activity_login_forgot_password_button">ລືມລະຫັດຜ່ານຫຼືບໍ່?</string>
-  <string name="activity_login_button">ເຂົ້າສູ່ລະບົບ</string>
-  <string name="activity_login_sign_up_button">ລົງທະບຽນ</string>
-  <string name="view_credentials_username_hint">ອີເມວ</string>
-  <string name="view_credentials_password_hint">ລະຫັດຜ່ານ</string>
-  <string name="permission_access_deny">access to read and write to external storage was denied</string>
-  <string name="permission_account_deny">access to get accounts was denied</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Increase your network.</string>
-  <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
-  <string name="addressbook_sync">Sync Address Book</string>
-  <string name="not_now">Not now</string>
-  <string name="follow_friends">Follow Friends</string>
-  <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
-    \n\n%1$s will search your address book for friends and family that are using our App Store. We\'ll
-    only use this information to improve your %1$s experience by connecting you to more people
-    that can share apps related content with you.\n\n\nTo protect your privacy, no clear private data
-    will be sent out to %1$s servers. An anonymous signature (hash) will be created with your data
-    and that hash cannot be reversed into the original contact info.
-  </string>
-  <string name="addressbook_success">ສຳເລັດ!</string>
-  <string name="addressbook_allow_friends_find">Allow friends to find you</string>
-  <string name="google">Google</string>
-  <string name="done">Done</string>
-  <string name="addressbook_share_phone">Share your phone number so your friends can easily find you on %s</string>
-  <string name="addressbook_phone_number">Phone number</string>
-  <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
-  <string name="addressbook_invite_friends">Invite friends to join you!</string>
-  <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
-  <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s will browse your address book for friends and family
-    that are using our App Store. To protect your privacy, no private data will be sent out to %1$s
-    servers</string>
-  <string name="addressbook_3rd_msg">ສຶກສາເພີ່ມເຕີມ</string>
-  <string name="address_book_twitter_error">Twitter authorization error</string>
-  <string name="follow_my_store">Hello, follow my %1$s Store here</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">About Address Book</string>
-  <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Share apps with your friends</string>
-  <string name="spot_share_line_2">Phone to phone, without Internet</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

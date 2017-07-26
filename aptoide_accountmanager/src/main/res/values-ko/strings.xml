@@ -10,16 +10,17 @@
   <string name="login">로그인</string>
   <string name="successful">Successful</string>
   <string name="login_successful">로그인 성공</string>
-  <string name="forgot_passwd">비밀번호를 분실했나요?</string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">이메일과 비밀번호를 확인해주세요.</string>
   <string name="unknown_error">알수없는 에러</string>
-  <string name="accept_terms">\"회원가입을 함으로서  Aptoide 서비스약관과 
-개발자의 컨텐츠 정책에 동의 하시는 것 입니다.
- \"</string>
-  <string name="no_email_and_pass_error_message">\"등록하려면 이메일과 비밀번호를 입력해 주세요.
- \"</string>
-  <string name="no_pass_error_message">등록하려면 비밀번호를 입력하세요.</string>
-  <string name="no_email_error_message">등록하려면 이메일을 입력하세요.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"비밀번호는 최소 8자 이상이어야하며 최소 한개의 글자와 하나의 숫자나 특수문자(!@#$%*)를 포함해야 합니다
  \"</string>
   <string name="logged_as">로그인한 사용자:</string>

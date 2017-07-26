@@ -10,16 +10,17 @@
   <string name="login">Mag-login</string>
   <string name="successful">Matagumpay</string>
   <string name="login_successful">Login ay matagumpay</string>
-  <string name="forgot_passwd"><u>Nakalimutan ang password?</u></string>
+  <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Paki-tsek ang iyong email at pasword.</string>
   <string name="unknown_error">Hindi alam na kamalian</string>
-  <string name="accept_terms">\"Sa pagsa-sign up ikaw ay sumasang-ayon sa Aptoide Tuntunin ng Serbisyo at
- Polisiya ng Nilalaman para sa mga Tagalikha (Developers)
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Paki-lagay ang email at password
- \"</string>
-  <string name="no_pass_error_message">Paki-lagay ang pasword</string>
-  <string name="no_email_error_message">Paki-lagay ang email</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"Ang password ay dapat na hindi bababa sa 8 karakter at dapat mayroong
  isang letra at isang numero man lamang o kaya ay mga espesyal na karakter (!@#$%*)
  \"</string>

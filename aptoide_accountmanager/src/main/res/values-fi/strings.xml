@@ -10,16 +10,17 @@
   <string name="login">Kirjaudu</string>
   <string name="successful">Onnistui</string>
   <string name="login_successful">Kirjautuminen onnistui</string>
-  <string name="forgot_passwd"><u>Unohditko salasanasi?</u></string>
+  <string name="forgot_passwd">Unohditko salasanasi?</string>
   <string name="fields_cannot_empty">Tarkista sähköpostiosoitteesi ja salasanasi.</string>
   <string name="unknown_error">Tuntematon virhe</string>
-  <string name="accept_terms">\"Rekisteröitymällä hyväksyt Aptoiden käyttöehdot
-sekä kehittäjien sisältökäytännön
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Syötä sähköposti ja salasana
- \"</string>
-  <string name="no_pass_error_message">Syötä salasana</string>
-  <string name="no_email_error_message">Syötä sähköposti</string>
+  <string name="accept_terms">Rekisteröitymällä hyväksyt Aptoiden käyttöehdot sekä
+     sekä kehittäjien sisältökäytännön
+    </string>
+  <string name="no_email_and_pass_error_message">Syötä sähköposti ja salasana
+     rekisteröityäksesi.
+    </string>
+  <string name="no_pass_error_message">Syötä salasana rekisteröityäksesi.</string>
+  <string name="no_email_error_message">Syötä sähköposti rekisteröityäksesi.</string>
   <string name="password_validation_text">\"Salasanan pitää olla ainakin 8 merkkiä pitkä ja siinä pitää
 olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)
  \"</string>

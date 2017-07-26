@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">আমার একাউন্ট</string>
-  <string name="setting_schdwntitle">রুটিনমাফিক ডাউনলোডসমূহ</string>
-  <string name="settings">সেটিংস</string>
-  <string name="facebook">ফেসবুক</string>
-  <string name="twitter">টুইটার</string>
-  <string name="backup_apps">ব্যাকআপ অ্যাপসমূহ</string>
   <string name="dark">অন্ধকার</string>
   <string name="light">আলো</string>
   <string name="updates_filter_summary">এটি দেখা হচ্ছে, আপনি বিটা ভার্সনে অবহিত হতে পারবেন না।</string>
@@ -134,15 +127,21 @@
   <!-- WIZARD -->
   <string name="wizard_skip">উইজার্ড<b>স্কিপ</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">এখন একটি টাইমলাইন সহ!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>শ্রেষ্ট ভিডিও ও খবরের অ্যাপ</b>একটি যায়গায় \n আবিষ্কার করুন অ্যাপসমূহ আপনার<b>বন্ধুদের মাধ্যমে।</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">আপনার নিজস্ব স্টোর নিন</string>
-  <string name="wizard_sub_title_viewpager_two">আপনার স্টোর সাজান<b>অ্যাপসমূহ শেয়ার করার জন্য \n আপনার বন্ধুদের সাথে</b>এবং<b>অ্যাপটোইড কমিউনিটির সাথে।</b></string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">অংশীদার হন</string>
-  <string name="wizard_sub_title_viewpager_three"><b>পরিচিতজন খুঁজুন</b>যিনি আপনার মতো অ্যাপ পছন্দ করে। \n <b>রেট ও শেয়ার করুন।</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">আমাদের সাথে যোগদিন!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">আপনাকে লগ ইন হতে হবে</string>
   <string name="follow">অনুসরণ</string>
   <!--need translation-->
@@ -150,6 +149,7 @@
 অনুসরণরত</string>
   <string name="unfollow_yes_no">আপনি কি নিশ্চিত আপনি অনুসরন করতে চান না?</string>
   <string name="unfollow">অনুসরণ বাতিল</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">অনুসরণ বাতিলরত %s</string>
   <string name="store_followed">স্টোর %s অনুসরণকৃত</string>
   <string name="subscribers">সাবস্ক্রিপশনকৃতরা</string>
@@ -179,7 +179,6 @@
   <string name="social_timeline">সামাজিক টাইমলাইন</string>
   <string name="downloads">ডাউনলোডসমূহ</string>
   <string name="apps_timeline"><b>অ্যাপস টাইমলাইন</b></string>
-  <string name="timeline"><b>সময়ক্রম</b></string>
   <string name="latest_reviews">সর্বশেষ রিভিউসমূহ</string>
   <string name="latest_comments">সর্বশেষ মন্তব্য সমূহ</string>
   <string name="action">কাজ</string>
@@ -252,8 +251,6 @@
   <string name="essential_apps">প্রয়োজনীয় অ্যাপসমূহ</string>
   <string name="summer_apps">গ্রীষ্মকালীণ অ্যাপসমূহ</string>
   <string name="play_it">প্লে-ইট!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">ফিচারড স্টোরসমূহ</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">রেটিং করা %1$s</string>
   <string name="appstimeline_update_app">অ্যাপ</string>
@@ -278,10 +275,9 @@
   <string name="create_store_displayable_message">এখন আপনার স্টোর তৈরী করুন ও আপনার অ্যাপ শেয়ার শুরু করুন!</string>
   <string name="create_store_displayable_button">স্টোর তৈরী করুন</string>
   <string name="my_store_created_displayable_message">আপনার অ্যান্ড্রয়েড অ্যাপ স্টোর</string>
-  <string name="create_store_displayable_created_store_short_term_message">আপনি এইমাত্র আপনার স্টোরটি সৃষ্টি করেছেন!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">ইন্টার দিন এবং সকল সুবিধায় বিচরণ করুন</string>
   <string name="create_store_displayable_explore_button">বিচরণ</string>
-  <string name="follow_store">স্টোর অনুসরণ করুন</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">স্টোর ট্যাব &gt; আমার অ্যাপবিহীন স্টোর
 আপনার স্টোর অদ্যবধি অ্যাপ্লিকেশন নেই।</string>
@@ -298,8 +294,6 @@
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">সামাজিক অ্যাপসমূহের টাইমলাইন
 যা আপনার অনুসরণকারীরা দেখবেন:</string>
-  <string name="social_timeline_you_will_share_comment">আপনার অনুসরীরা আপনার মন্তব্য দেখবেন:</string>
-  <string name="social_timeline_you_will_share_like">আপনার অনুসরণকারীরা আপনার লাইক দেখতে পারবেন:</string>
   <string name="social_timeline_share_title">কার্ড প্রিভিউ শেয়ার</string>
   <string name="social_timeline_share_title_checkbox">অ্যাপ টাইমলাইনে আমার ইউজার প্রোফাইল প্রাইভেট করুন এবং শুধুমাত্র নিজ স্টোরের তথ্য দেখান/শেয়ার করুন।</string>
   <string name="social_timeline_share_title_checkbox_fb">আমার ইউজার প্রোফাইল অ্যাপস টাইমলাইনে পাবলিক করার সুযোগ দিন</string>
@@ -335,96 +329,16 @@
   <string name="private_followers_message">%d জন ফলোওয়ার হচ্ছেন নিজস্ব</string>
   <string name="private_following_message">আপনি %d জন নিজস্ব ইউজার/স্টোরকে ফলোও করছেন</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d প্রতিউত্তর</string>
   <string name="out_of_space_dialog_title">যায়গা নেই</string>
   <string name="out_of_space_dialog_message">অনুগ্রহপূর্বক, সামনে এগোনোর জন্য যায়গা খালি করুন।</string>
-  <string name="setting_category_autoupdate">%s আপডেটসমূহ</string>
-  <string name="setting_category_autoupdate_title">%s আপডেটের নোটিফিকেশন নিন</string>
-  <string name="setting_category_autoupdate_message">সময় সময়ে %s নতুন সংস্করণ পরীক্ষা করুন</string>
-  <string name="store_added_long_time_suggestion_message">দীর্ঘ মেয়াদে দেখান</string>
-  <string name="store_added_short_time_suggestion_message">এইমাত্র প্রস্তুতকৃতদের দেখান</string>
-  <string name="create_store_displayable_created_store_long_term_message">দীর্ঘ মেয়াদী</string>
-  <string name="create_store_displayable_explore_long_term_button">স্টোর দেখুন</string>
-  <string name="create_store_displayable_empty_description_message">আপনার স্টোরের জন্য একটি বিবরণ সংযুক্ত করুন। একটি ভালো বিবরণ আপনাকে আরোও ফলোওয়ার পেতে ও আন্ত:সম্পর্ক গঠনে সহায়তা করবে।</string>
-  <string name="fragment_spot_share_preview_start_button">শুরু</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">%s যোগদান</string>
-  <string name="login">লগইন
-লগইন</string>
-  <string name="login_company">লগইন %s</string>
-  <string name="connect_with_facebook">ফেসবুকে সংযুক্তকরণ</string>
-  <string name="connect_with_google">গুগলে সংযুক্তকরণ</string>
-  <string name="accept_terms_signup">অ্যাপটোইডে যোগ দেবার মাধ্যমে আপনি একমত রয়েছেন অ্যাপটোইডের নিয়ম ও কানুন সমূহ এবং ডেভেলপারদের বিষয়বস্তুগত নীতিতে।
- অ্যাপটোইডে যোগ দেবার মাধ্যমে আপনি একমত রয়েছেন অ্যাপটোইডের নিয়ম ও কানুন সমূহ এবং ডেভেলপারদের বিষয়বস্তুগত নীতিতে।</string>
-  <string name="recover_password">আপনার পাসওয়ার্ড পুনরুদ্ধার করুন</string>
-  <string name="email">ইমেইল</string>
-  <string name="password">পাসওয়ার্ড</string>
-  <string name="create_password">পাসওয়ার্ড তৈরী করুন</string>
-  <string name="store_suspended_message">স্টোর বরখাস্তকৃত</string>
-  <string name="facebook_login_cancelled">ফেসবুক লগইন বাতিলকৃত</string>
-  <string name="google_login_cancelled">গুগল লগইন অকৃতকার্য</string>
-  <string name="login_separator_text">অথবা আপনার ইমেইল ব্যবহার করে সংযুক্ত হন</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">স্টোরের বাণী যুক্তকরা
-আপনি পরিচ্ছন্ন স্বতন্ত্য লেখা খুঁজে পাবেন বিভিন্ন স্টোরে যা শুধুমাত্র আপনার জন্য তৈরীকৃত</string>
-  <string name="add_store_dialog_top_stores">শীর্ষ খবরসমূহ উন্মোচন করুন</string>
-  <string name="add_store_dialog_top_stores_small_text">এবং স্বাতন্ত্য লেখা খুঁজুন!</string>
-  <!-- Login -->
-  <string name="activity_login_title">লগইন
-লগইন</string>
-  <string name="activity_login_forgot_password_button">পাসওয়ার্ড মনে নেই?</string>
-  <string name="activity_login_button">লগইন
-লগইন</string>
-  <string name="activity_login_sign_up_button">সাইন আপ</string>
-  <string name="view_credentials_username_hint">ইমেইল</string>
-  <string name="view_credentials_password_hint">পাসওয়ার্ড</string>
-  <string name="permission_access_deny">বাইরের স্টোরেজে পড়া ও লেখার অনুমতি পাওয়া যায়নি</string>
-  <string name="permission_account_deny">একাউন্টে অনুপ্রবেশ অনুমতি পাওয়া যায়নি</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">অ্যাড্রেস বুক
-আপনার নেটওয়ার্ক বৃদ্ধি করুন।</string>
-  <string name="addressbook_connect_with_friends_message">বন্ধুদের সাথে সংযুক্ত হন।</string>
-  <string name="addressbook_sync">অ্যাড্রেস বুক সিন্ক করুন</string>
-  <string name="not_now">এখন নয়</string>
-  <string name="follow_friends">বন্ধুদের ফলোও করুন</string>
-  <string name="addressbook_data_about"><b>কিভাবে %1$s আপনার তথ্য ব্যবহার করে</b>
-
-
-%1$s আপনার অ্যাড্রেস বুকে বন্ধু ও পরিবার সদস্যদের যারা আমাদের অ্যাপ স্টোর ব্যবহার করে তাদের খুঁজতে সার্চ করবে। আমরা
- শুধুমাত্র তথ্যগুলো এজন্য ব্যবহার করবো যেন তা আরও লোকজনের সাথে আপনাকে সংযুক্ত করে আপনার %1$s ব্যবহার অভিজ্ঞতাকে উন্নত করে
-
-
-আপনার গোপনীয়তা বজায় রাখতে, কোন সুস্পষ্ট ব্যাক্তিগত তথ্য
- %1$s সার্ভারে প্রেরণ করা হবে না। একটি নামবিহীন স্বাক্ষর (হ্যাস) আপনার তথ্য দিয়ে তৈরী করা হবে
- এবং সেই হ্যাসটি কোনভাবেই মুল পরিচয় বাহক তথ্যে পরিনত হবে না।
- </string>
-  <string name="addressbook_success">সাফল্য!</string>
-  <string name="addressbook_allow_friends_find">বন্ধুদের সুযোগ দিন আপনাকে খুঁজে পেতে</string>
-  <string name="google">গুগল</string>
-  <string name="done">সম্পন্ন</string>
-  <string name="addressbook_share_phone">আপনার ফোন নাম্বার শেয়ার করুন যাতে আপনার বন্ধুরা আপনাকে %s এ সহজে খুঁজে পায়</string>
-  <string name="addressbook_phone_number">ফোন নাম্বার</string>
-  <string name="addressbook_insuccess_connection">আমরা আপনার অ্যাড্রেস বই এর সাথে সংযুক্ত হতে ব্যার্থ হয়েছি!</string>
-  <string name="addressbook_invite_friends">আপনার সাথে যোগ দিতে বন্ধুদের আমন্ত্রন জানান!</string>
-  <string name="addressbook_thanks_for_connecting">সংযুক্ত হবার জন্য ধন্যবাদ</string>
-  <string name="addressbook_success_connected_friends">আমরা সফলভাবে সংযুক্ত হয়েছি আপনার %1$s বন্ধুদের সাথে যারা %2$s ব্যবহার করে</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">আমরা এমন কোন কন্ট্রাক্ট পাইনি যারা %1$s ব্যবহার করছে</string>
-  <string name="addressbook_2nd_msg">%1$s আপনার অ্যাড্রেস বুকে বিচরন করবে বন্ধু ও পরিবারের জন্য
- যারা আমাদের অ্যাপ স্টোর ব্যবহার করছেন। আপনার গোপনীয়তা সুরক্ষা দিতে কোন ব্যাক্তিগত তথ্য প্রেরণ করা হবেনা %1$s
- সার্ভারে</string>
-  <string name="addressbook_3rd_msg">আরও জানুন</string>
-  <string name="address_book_twitter_error">টুইটার যাচাইকরণ ত্রুটি</string>
-  <string name="follow_my_store">হ্যালো, আমার %1$s স্টোর এখানে অনুসরণ করুন</string>
-  <string name="store_meta_apps">অ্যাপস
-%s</string>
-  <string name="store_meta_following">অনুসরনরত
-%s</string>
-  <string name="store_meta_followers">ফলোয়ারগণ
-%s</string>
-  <string name="addressbook_about">অ্যাড্রেস বুক সম্পর্কে</string>
-  <string name="addressbook_we_werent_able_to_connect_you">আমরা আপনাকে সংযুক্ত করতে সক্ষম হইনি</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">স্পট ও শেয়ার
-আপনার বন্ধুদের সাথে অ্যাপসমূহ শেয়ার করুন</string>
-  <string name="spot_share_line_2">ফোন থেকে ফোনে, ইন্টারনেট বাদে</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>
