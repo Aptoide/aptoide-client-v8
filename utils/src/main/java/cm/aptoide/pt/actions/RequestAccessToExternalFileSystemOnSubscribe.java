@@ -25,8 +25,7 @@ public class RequestAccessToExternalFileSystemOnSubscribe implements Observable.
         subscriber.onNext(null);
         subscriber.onCompleted();
       }
-    }, () -> {
-      subscriber.onError(new SecurityException("Permission denied to access to external storage."));
-    });
+    }, () -> subscriber.onError(
+        new SecurityException("Permission denied to access to external storage.")));
   }
 }
