@@ -43,3 +43,6 @@ signing.properties
 google-services.json
 **/crashlytics-build.properties
 projectFilesBackup/.idea/
+
+.idea/instapk.xml
+instapk.log*
