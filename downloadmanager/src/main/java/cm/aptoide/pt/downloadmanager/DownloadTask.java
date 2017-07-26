@@ -70,7 +70,7 @@ class DownloadTask {
     for (FileToDownload fileToDownload : download.getFilesToDownload()) {
       headers.put(Constants.FILE_TYPE, String.valueOf(fileToDownload.getFileType()));
 
-      Downloader downloader = new Downloader(fileDownloader, fileToDownload.getLink(),
+      DownloadTaskWrapper downloader = new DownloadTaskWrapper(fileDownloader, fileToDownload.getLink(),
           genericPath + fileToDownload.getFileName(), headers, RETRY_TIMES,
           fileToDownload.getFileName());
       fileToDownload.setDownloadId(downloader.getId());
