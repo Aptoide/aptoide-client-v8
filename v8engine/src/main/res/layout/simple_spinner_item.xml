@@ -7,6 +7,9 @@
       android:layout_width="56dp"
       android:layout_height="56dp"
       android:layout_gravity="center_vertical"
-      android:layout_margin="23dp"
+      android:layout_marginEnd="23dp"
+      android:layout_marginLeft="23dp"
+      android:layout_marginRight="23dp"
+      android:layout_marginStart="23dp"
       />
 </FrameLayout>

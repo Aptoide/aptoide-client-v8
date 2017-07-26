@@ -18,6 +18,11 @@
     <item name="android:fontFamily">sans-serif-medium</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.M">
+    <item name="android:textSize">16dp</item>
+    <item name="android:lineSpacingExtra">4dp</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XXL">
     <item name="android:textSize">34sp</item>
     <item name="android:lineSpacingExtra">2dp</item>

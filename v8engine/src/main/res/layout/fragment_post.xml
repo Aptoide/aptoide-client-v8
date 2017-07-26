@@ -54,7 +54,7 @@
           android:id="@+id/input_text_separator"
           android:layout_width="match_parent"
           android:layout_height="1dp"
-          android:background="@color/grey_fog_dark"
+          android:background="@color/grey_fog_normal"
           />
 
       <RelativeLayout
@@ -108,7 +108,7 @@
             android:visibility="invisible"
             tools:text="Preview Title"
             tools:visibility="visible"
-            style="@style/Aptoide.TextView.Regular.L"
+            style="@style/Aptoide.TextView.Medium.M"
             />
       </RelativeLayout>
       <TextView
@@ -124,7 +124,7 @@
       <android.support.v7.widget.RecyclerView
           android:id="@+id/related_apps_list"
           android:layout_width="match_parent"
-          android:layout_height="200dp"
+          android:layout_height="160dp"
           android:layout_marginLeft="@dimen/label_padding"
           android:scrollbars="horizontal"
           />
