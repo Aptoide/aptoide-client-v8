@@ -12,11 +12,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -59,12 +59,12 @@ import rx.functions.Action1;
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
-              StoreThemeEnum.get(store)
-                  .getStoreHeaderInt());
+              StoreTheme.get(store)
+                  .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
     } else {
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar, StoreThemeEnum.get(store)
-              .getStoreHeaderInt());
+          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar, StoreTheme.get(store)
+              .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
     }
   }
 }

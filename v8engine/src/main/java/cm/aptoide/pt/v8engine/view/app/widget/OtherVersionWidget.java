@@ -6,14 +6,14 @@ import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Malware;
-import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.app.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -24,7 +24,6 @@ import java.util.Locale;
 
   private static final String TAG = OtherVersionWidget.class.getSimpleName();
   private static final Locale DEFAULT_LOCALE = Locale.getDefault();
-  private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 
   // left side
   //private ImageView versionBadge;
@@ -72,8 +71,9 @@ import java.util.Locale;
       version.setText(app.getFile()
           .getVername());
       setBadge(app);
-      date.setText(DATE_TIME_U.getTimeDiffString(getContext(), app.getModified()
-          .getTime()));
+      date.setText(AptoideUtils.DateTimeU.getInstance(getContext())
+          .getTimeDiffString(getContext(), app.getModified()
+              .getTime(), getContext().getResources()));
       downloads.setText(String.format(DEFAULT_LOCALE,
           getContext().getString(R.string.other_versions_downloads_count_text),
           AptoideUtils.StringU.withSuffix(app.getStats()

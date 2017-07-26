@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.Translator;
@@ -32,7 +32,7 @@ import rx.functions.Action1;
     final String buttonText = Translator.translate(displayable.getPojo()
         .getActions()
         .get(0)
-        .getLabel());
+        .getLabel(), getContext().getApplicationContext());
     button.setText(buttonText);
 
     final Action1<Void> handleButtonClick = __ -> {
@@ -42,7 +42,8 @@ import rx.functions.Action1;
           .getEvent();
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, Translator.translate(displayable.getPojo()
-              .getTitle()), null, displayable.getTag(), displayable.getStoreContext()));
+                  .getTitle(), getContext().getApplicationContext()), null, displayable.getTag(),
+              displayable.getStoreContext()));
     };
     compositeSubscription.add(RxView.clicks(button)
         .subscribe(handleButtonClick));

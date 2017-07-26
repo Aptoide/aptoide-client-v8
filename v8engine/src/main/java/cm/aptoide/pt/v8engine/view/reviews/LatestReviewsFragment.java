@@ -6,12 +6,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.FullReview;
+import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
-import cm.aptoide.pt.model.v7.FullReview;
-import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
@@ -90,7 +90,9 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
-              baseBodyInterceptor, httpClient, converterFactory);
+              baseBodyInterceptor, httpClient, converterFactory,
+              ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+              ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDatalist()
             .getList();

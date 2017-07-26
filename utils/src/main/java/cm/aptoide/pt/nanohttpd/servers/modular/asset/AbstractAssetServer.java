@@ -1,7 +1,7 @@
 package cm.aptoide.pt.nanohttpd.servers.modular.asset;
 
+import android.content.res.AssetManager;
 import cm.aptoide.pt.nanohttpd.servers.modular.AbstractServerModule;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,8 +11,11 @@ import java.io.InputStream;
 
 public abstract class AbstractAssetServer extends AbstractServerModule {
 
-  public AbstractAssetServer(String accepts) {
+  private final AssetManager assetManager;
+
+  public AbstractAssetServer(String accepts, AssetManager assetManager) {
     super(accepts);
+    this.assetManager = assetManager;
   }
 
   // TODO: 23-05-2017 neuro add cache to this
@@ -22,9 +25,7 @@ public abstract class AbstractAssetServer extends AbstractServerModule {
     String out;
 
     try {
-      inputStream = AptoideUtils.getContext()
-          .getAssets()
-          .open(assetPath);
+      inputStream = assetManager.open(assetPath);
 
       byte[] buffer;
       buffer = new byte[inputStream.available()];

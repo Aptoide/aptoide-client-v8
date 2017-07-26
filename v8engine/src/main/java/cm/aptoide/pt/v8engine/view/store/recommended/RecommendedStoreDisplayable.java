@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.view.store.recommended;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;

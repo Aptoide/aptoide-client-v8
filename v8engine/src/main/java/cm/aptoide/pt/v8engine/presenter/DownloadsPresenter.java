@@ -1,13 +1,10 @@
 package cm.aptoide.pt.v8engine.presenter;
 
-import android.content.Context;
 import android.os.Bundle;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.DownloadRepository;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -15,13 +12,10 @@ import rx.schedulers.Schedulers;
 public class DownloadsPresenter implements Presenter {
 
   private final DownloadsView view;
-  private final DownloadRepository downloadRepository;
   private final InstallManager installManager;
 
-  public DownloadsPresenter(DownloadsView downloadsView, DownloadRepository downloadRepository,
-      InstallManager installManager) {
+  public DownloadsPresenter(DownloadsView downloadsView, InstallManager installManager) {
     this.view = downloadsView;
-    this.downloadRepository = downloadRepository;
     this.installManager = installManager;
   }
 
@@ -31,16 +25,16 @@ public class DownloadsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
         .first()
         .observeOn(Schedulers.computation())
-        .flatMap(created -> downloadRepository.getAll()
-            .sample(100, TimeUnit.MILLISECONDS)
+        .flatMap(created -> installManager.getInstallations()
+            .distinctUntilChanged()
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap(downloads -> {
-              if (downloads == null || downloads.isEmpty()) {
+            .flatMap(installations -> {
+              if (installations == null || installations.isEmpty()) {
                 view.showEmptyDownloadList();
                 return Observable.empty();
               }
-              return Observable.merge(setActive(downloads), setStandBy(downloads),
-                  setCompleted(downloads));
+              return Observable.merge(setActive(installations), setStandBy(installations),
+                  setCompleted(installations));
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -58,16 +52,16 @@ public class DownloadsPresenter implements Presenter {
   @Override public void restoreState(Bundle state) {
   }
 
-  private Observable<Void> setActive(List<Download> downloads) {
+  private Observable<Void> setActive(List<Install> downloads) {
     return Observable.from(downloads)
-        .filter(d -> isDownloading(d))
+        .filter(d -> isInstalling(d))
         .toList()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(onGoingDownloads -> view.showActiveDownloads(onGoingDownloads))
         .map(__ -> null);
   }
 
-  private Observable<Void> setStandBy(List<Download> downloads) {
+  private Observable<Void> setStandBy(List<Install> downloads) {
     return Observable.from(downloads)
         .filter(d -> isStandingBy(d))
         .toList()
@@ -76,40 +70,26 @@ public class DownloadsPresenter implements Presenter {
         .map(__ -> null);
   }
 
-  private Observable<Void> setCompleted(List<Download> downloads) {
+  private Observable<Void> setCompleted(List<Install> downloads) {
     return Observable.from(downloads)
-        .filter(d -> !isDownloading(d) && !isStandingBy(d))
+        .filter(d -> !isInstalling(d) && !isStandingBy(d))
         .toList()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(onGoingDownloads -> view.showCompletedDownloads(onGoingDownloads))
         .map(__ -> null);
   }
 
-  private boolean isDownloading(Download progress) {
-    return progress.getOverallDownloadStatus() == Download.PROGRESS;
+  private boolean isInstalling(Install progress) {
+    return progress.getState() == Install.InstallationStatus.INSTALLING;
   }
 
-  private boolean isStandingBy(Download progress) {
-    return progress.getOverallDownloadStatus() == Download.ERROR
-        || progress.getOverallDownloadStatus() == Download.PENDING
-        || progress.getOverallDownloadStatus() == Download.PAUSED
-        || progress.getOverallDownloadStatus() == Download.IN_QUEUE;
+  private boolean isStandingBy(Install install) {
+    return install.isFailed()
+        || install.getState() == Install.InstallationStatus.PAUSED
+        || install.getState() == Install.InstallationStatus.IN_QUEUE;
   }
 
-  private DownloadsView.DownloadViewModel convertToViewModelDownload(Download download) {
-    DownloadsView.DownloadViewModel.Status status;
-    if (isDownloading(download)) {
-      status = DownloadsView.DownloadViewModel.Status.DOWNLOADING;
-    } else if (isStandingBy(download)) {
-      status = DownloadsView.DownloadViewModel.Status.STAND_BY;
-    } else {
-      status = DownloadsView.DownloadViewModel.Status.COMPLETED;
-    }
-    return new DownloadsView.DownloadViewModel(download.getOverallProgress(), download.getMd5(),
-        download.getAppName(), status, download.getIcon(), download.getDownloadSpeed());
-  }
-
-  public void pauseInstall(Context context, DownloadsView.DownloadViewModel download) {
-    installManager.stopInstallation(context, download.getAppMd5());
+  public void pauseInstall(DownloadsView.DownloadViewModel download) {
+    installManager.stopInstallation(download.getAppMd5());
   }
 }

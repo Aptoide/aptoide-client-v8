@@ -5,8 +5,8 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -16,7 +16,6 @@ import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.Observable;
-import rx.functions.Action0;
 
 /**
  * Created by trinkes on 7/15/16.
@@ -28,23 +27,20 @@ public class CompletedDownloadDisplayable extends Displayable {
   private final Analytics analytics;
   private final InstallEventConverter installConverter;
 
-  private final Download download;
-
-  private Action0 onPauseAction;
-  private Action0 onResumeAction;
+  private final Install installation;
 
   public CompletedDownloadDisplayable() {
     this.installManager = null;
     this.converter = null;
     this.analytics = null;
     this.installConverter = null;
-    this.download = null;
+    this.installation = null;
   }
 
-  public CompletedDownloadDisplayable(Download download, InstallManager installManager,
+  public CompletedDownloadDisplayable(Install installation, InstallManager installManager,
       DownloadEventConverter converter, Analytics analytics,
       InstallEventConverter installConverter) {
-    this.download = download;
+    this.installation = installation;
     this.installManager = installManager;
     this.converter = converter;
     this.analytics = analytics;
@@ -59,52 +55,41 @@ public class CompletedDownloadDisplayable extends Displayable {
     return R.layout.completed_donwload_row_layout;
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    if (onResumeAction != null) {
-      onResumeAction.call();
-    }
+  void removeDownload(Context context) {
+    installManager.removeInstallationFile(installation.getMd5(), context);
   }
 
-  @Override public void onPause() {
-    if (onPauseAction != null) {
-      onResumeAction.call();
-    }
-    super.onPause();
+  public Observable<Install> getInstall() {
+    return installManager.getInstall(installation.getMd5(), installation.getPackageName(),
+        installation.getVersionCode());
   }
 
-  public void removeDownload(Context context) {
-    installManager.removeInstallationFile(download.getMd5(), context);
-  }
-
-  public Observable<Integer> downloadStatus() {
-    return installManager.getInstallation(download.getMd5())
-        .map(installationProgress -> installationProgress.getRequest()
-            .getOverallDownloadStatus())
-        .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
-  }
-
-  public Observable<Progress<Download>> installOrOpenDownload(Context context,
-      PermissionService permissionRequest) {
-    return installManager.getInstallation(download.getMd5())
-        .flatMap(installed -> {
-          if (installed.getState() == Progress.DONE) {
-            AptoideUtils.SystemU.openApp(download.getFilesToDownload()
-                .get(0)
-                .getPackageName());
+  Observable<Install> installOrOpenDownload(Context context, PermissionService permissionRequest) {
+    return installManager.getInstall(installation.getMd5(), installation.getPackageName(),
+        installation.getVersionCode())
+        .first()
+        .flatMap(installationProgress -> {
+          if (installationProgress.getState() == Install.InstallationStatus.INSTALLED) {
+            AptoideUtils.SystemU.openApp(installation.getPackageName(), context.getPackageManager(),
+                context);
             return Observable.empty();
+          } else {
+            return resumeDownload(permissionRequest);
           }
-          return resumeDownload(context, permissionRequest);
         });
   }
 
-  public Observable<Progress<Download>> resumeDownload(Context context,
-      PermissionService permissionRequest) {
+  Observable<Install> resumeDownload(PermissionService permissionRequest) {
     PermissionManager permissionManager = new PermissionManager();
-    return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download)
-            .doOnSubscribe(() -> setupEvents(download)));
+    return installManager.getDownload(installation.getMd5())
+        .toObservable()
+        .flatMap(download -> permissionManager.requestExternalStoragePermission(permissionRequest)
+            .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+            .flatMap(success -> installManager.install(download)
+                .toObservable()
+                .flatMap(downloadProgress -> installManager.getInstall(installation.getMd5(),
+                    installation.getPackageName(), installation.getVersionCode()))
+                .doOnSubscribe(() -> setupEvents(download))));
   }
 
   private void setupEvents(Download download) {
@@ -118,15 +103,28 @@ public class CompletedDownloadDisplayable extends Displayable {
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
-  public Download getDownload() {
-    return download;
+  public Install getInstallation() {
+    return installation;
   }
 
-  public void setOnPauseAction(Action0 onPauseAction) {
-    this.onPauseAction = onPauseAction;
-  }
-
-  public void setOnResumeAction(Action0 onResumeAction) {
-    this.onResumeAction = onResumeAction;
+  String getStatusName(Context context) {
+    switch (installation.getState()) {
+      case INSTALLATION_TIMEOUT:
+      case INSTALLING:
+      case IN_QUEUE:
+        return context.getString(cm.aptoide.pt.database.R.string.download_progress);
+      case PAUSED:
+        return context.getString(cm.aptoide.pt.database.R.string.download_paused);
+      case INSTALLED:
+        return context.getString(cm.aptoide.pt.database.R.string.download_completed);
+      case UNINSTALLED:
+        return "";
+      case GENERIC_ERROR:
+        return context.getString(R.string.simple_error_occured);
+      case NOT_ENOUGH_SPACE_ERROR:
+        return context.getString(cm.aptoide.pt.database.R.string.out_of_space_error);
+      default:
+        throw new RuntimeException("Unknown status");
+    }
   }
 }

@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.download;
 
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import lombok.Setter;
@@ -19,9 +21,11 @@ public class InstallEvent extends DownloadInstallBaseEvent {
       String patchObbUrl, AppContext context, int versionCode,
       DownloadInstallEventConverter downloadInstallEventConverter,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     super(action, origin, packageName, url, obbUrl, patchObbUrl, context, versionCode,
-        downloadInstallEventConverter, EVENT_NAME, bodyInterceptor, httpClient, converterFactory);
+        downloadInstallEventConverter, EVENT_NAME, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   public boolean getAptoideSettings() {

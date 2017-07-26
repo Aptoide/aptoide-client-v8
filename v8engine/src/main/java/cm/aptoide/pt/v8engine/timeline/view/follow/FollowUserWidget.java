@@ -12,15 +12,15 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -99,7 +99,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final StoreUtilsProxy storeUtilsProxy =
           new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
               AccessorFactory.getAccessorFor(Store.class), httpClient,
-              WebService.getDefaultConverter());
+              WebService.getDefaultConverter(),
+              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+              ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
@@ -109,7 +111,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       Action1<Void> subscribeStore = __ -> {
         storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                  getContext().getResources(), storeName));
         }, err -> {
           CrashReport.getInstance()
               .log(err);
@@ -163,12 +166,13 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     }
 
     if (displayable.hasStore()) {
-      setupStoreNameTv(displayable.getStoreColor(), displayable.storeName());
+      setupStoreNameTv(displayable.getStoreColor(getContext().getApplicationContext()),
+          displayable.storeName());
     } else {
       storeNameTv.setVisibility(View.GONE);
     }
-    followedTv.setTextColor(displayable.getStoreColor());
-    followingTv.setTextColor(displayable.getStoreColor());
+    followedTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
+    followingTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(click -> displayable.viewClicked(getFragmentNavigator()), err -> {
@@ -179,11 +183,13 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
   private void setFollowColor(FollowUserDisplayable displayable) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      follow.setBackground(displayable.getButtonBackgroundStoreThemeColor());
+      follow.setBackground(
+          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
     } else {
-      follow.setBackgroundDrawable(displayable.getButtonBackgroundStoreThemeColor());
+      follow.setBackgroundDrawable(
+          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
     }
-    follow.setTextColor(displayable.getStoreColor());
+    follow.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
   }
 
   private void setupStoreNameTv(int storeColor, String storeName) {

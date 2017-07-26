@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/padding_medium_default"
+    android:paddingLeft="@dimen/padding_medium_default"
+    android:paddingRight="@dimen/padding_medium_default"
+    android:paddingStart="@dimen/padding_medium_default"
+    android:paddingTop="@dimen/padding_medium_default"
+    >
+
+  <TextView
+      android:id="@+id/button_camera"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:drawableLeft="@drawable/upload_camera"
+      android:drawablePadding="@dimen/padding_smaller"
+      android:drawableStart="@drawable/upload_camera"
+      android:gravity="center_vertical"
+      android:text="@string/upload_dialog_photo"
+      android:textColor="@color/create_store_title_color"
+      android:textSize="@dimen/text_size_medium_small"
+      style="@style/Aptoide.TextView.Regular.XS"
+      />
+
+  <TextView
+      android:id="@+id/button_gallery"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/padding_medium_small"
+      android:drawableLeft="@drawable/upload_dialog_gallery"
+      android:drawablePadding="@dimen/padding_smaller"
+      android:drawableStart="@drawable/upload_dialog_gallery"
+      android:gravity="center"
+      android:text="@string/upload_dialog_gallery"
+      android:textColor="@color/create_store_title_color"
+      android:textSize="@dimen/text_size_medium_small"
+      style="@style/Aptoide.TextView.Regular.XS"
+      />
+
+</LinearLayout>

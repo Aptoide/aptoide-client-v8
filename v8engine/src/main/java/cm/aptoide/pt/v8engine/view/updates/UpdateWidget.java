@@ -19,19 +19,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.updates.UpdatesAnalytics;
@@ -40,7 +35,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -81,7 +75,8 @@ import rx.android.schedulers.AndroidSchedulers;
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
     progressBar = (ProgressBar) itemView.findViewById(R.id.row_progress_bar);
 
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override public void unbindView() {
@@ -102,12 +97,14 @@ import rx.android.schedulers.AndroidSchedulers;
     final Observable<Void> handleUpdateButtonClick =
         handleUpdateButtonClick(updateDisplayable, context);
 
+    compositeSubscription.add(updateDisplayable.shouldShowProgress()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(shouldShow -> showProgress(shouldShow), throwable -> CrashReport.getInstance()
+            .log(throwable)));
+
     final Observable<Void> showInstalledVersionName =
         showInstalledVersionName(updateDisplayable.getPackageName(),
-            AccessorFactory.getAccessorFor(Installed.class));
-
-    final Observable<Void> showProgress =
-        showProgress(updateDisplayable.getInstallManager(), updateDisplayable.getMd5());
+            updateDisplayable.getInstalledRepository());
 
     final Observable<Void> handleLongClicks =
         handleLongClicks(updateDisplayable.getPackageName(), context);
@@ -115,8 +112,8 @@ import rx.android.schedulers.AndroidSchedulers;
     final Observable<Void> handleUpdateRowClick = handleUpdateRowClick(updateDisplayable);
 
     compositeSubscription.add(
-        Observable.merge(handleUpdateButtonClick, showInstalledVersionName, showProgress,
-            handleLongClicks, handleUpdateRowClick)
+        Observable.merge(handleUpdateButtonClick, showInstalledVersionName, handleLongClicks,
+            handleUpdateRowClick)
             .subscribe(__ -> {/* do nothing */}, err -> CrashReport.getInstance()
                 .log(err)));
   }
@@ -124,26 +121,20 @@ import rx.android.schedulers.AndroidSchedulers;
   private Observable<Void> handleUpdateButtonClick(UpdateDisplayable displayable, Context context) {
     return RxView.clicks(updateButtonLayout)
         .doOnNext(__ -> updatesAnalytics.updates("Update"))
-        .flatMap(click -> displayable.downloadAndInstall(context, (PermissionService) context))
+        .flatMapCompletable(
+            click -> displayable.downloadAndInstall(context, (PermissionService) context,
+                getContext().getResources()))
         .retry()
         .map(__ -> null);
   }
 
   private Observable<Void> showInstalledVersionName(String packageName,
-      InstalledAccessor accessor) {
-    return accessor.get(packageName)
+      InstalledRepository installedRepository) {
+    return installedRepository.getInstalled(packageName)
         .first()
         .filter(installed -> installed != null && !TextUtils.isEmpty(installed.getVersionName()))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(installed -> installedVersionName.setText(installed.getVersionName()))
-        .map(__ -> null);
-  }
-
-  @NonNull private Observable<Void> showProgress(InstallManager installManager, String md5) {
-    return getUpdateProgress(installManager, md5).map(
-        downloadProgress -> isDownloadingOrInstalling(downloadProgress))
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(shouldShow -> showProgress(shouldShow))
         .map(__ -> null);
   }
 
@@ -160,36 +151,6 @@ import rx.android.schedulers.AndroidSchedulers;
               .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
           getFragmentNavigator().navigateTo(fragment);
         });
-  }
-
-  /**
-   * *  <dt><b>Scheduler:</b></dt>
-   * <dd>{@code getUpdates} operates by default on the {@code io} {@link Scheduler}..</dd>
-   * </dl>
-   */
-  private Observable<Progress<Download>> getUpdateProgress(InstallManager installManager,
-      String md5) {
-    return installManager.getInstallationsAsList()
-        .filter(listProgress -> listProgress != null && !listProgress.isEmpty())
-        .flatMap(list -> {
-          for (Progress<Download> progress : list) {
-            if (progress.getRequest() != null && progress.getRequest()
-                .getMd5()
-                .equalsIgnoreCase(md5)) {
-              return Observable.just(progress);
-            }
-          }
-          return Observable.empty();
-        });
-  }
-
-  private boolean isDownloadingOrInstalling(Progress<Download> progress) {
-    return progress.getRequest()
-        .getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest()
-        .getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest()
-        .getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   @NonNull

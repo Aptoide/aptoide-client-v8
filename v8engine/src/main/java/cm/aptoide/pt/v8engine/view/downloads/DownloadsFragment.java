@@ -1,212 +1,132 @@
 package cm.aptoide.pt.v8engine.view.downloads;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
+import android.view.LayoutInflater;
 import android.view.View;
-import cm.aptoide.pt.database.realm.Download;
+import android.view.ViewGroup;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.repository.DownloadRepository;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadDisplayable;
-import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadsHeaderDisplayable;
-import cm.aptoide.pt.v8engine.view.downloads.completed.CompletedDownloadDisplayable;
-import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerFragmentWithDecorator;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.store.StoreGridHeaderDisplayable;
-import com.trello.rxlifecycle.android.FragmentEvent;
-import java.util.ArrayList;
+import cm.aptoide.pt.v8engine.presenter.DownloadsPresenter;
+import cm.aptoide.pt.v8engine.presenter.DownloadsView;
+import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Completable;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-/**
- * Created by trinkes on 7/15/16.
- */
-@Deprecated public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
+public class DownloadsFragment extends FragmentView implements DownloadsView {
 
-  private static final String TAG = DownloadsFragment.class.getName();
-
-  // list of apps in the same state
-  private List<Displayable> downloadingDisplayables;
-  private List<Displayable> standingByDisplayables;
-  private List<Displayable> completedDisplayables;
-
-  private InstallManager installManager;
-  private Analytics analytics;
+  private DownloadsAdapter adapter;
+  private View noDownloadsView;
   private InstallEventConverter installConverter;
   private DownloadEventConverter downloadConverter;
-  private View noDownloadsView;
+  private InstallManager installManager;
+  private Analytics analytics;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
   }
 
-  @Override public int getContentViewId() {
-    return R.layout.recycler_fragment_downloads;
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    final TokenInvalidator tokenInvalidator =
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    installConverter =
+        new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
+            tokenInvalidator, V8Engine.getConfiguration()
+            .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+    downloadConverter =
+        new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
+            tokenInvalidator, V8Engine.getConfiguration()
+            .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
+    analytics = Analytics.getInstance();
   }
 
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    View view = inflater.inflate(R.layout.recycler_fragment_downloads, container, false);
+
+    RecyclerView downloadsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+    downloadsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+    final int pixelDimen = AptoideUtils.ScreenU.getPixelsForDip(5, getContext().getResources());
+    final DividerItemDecoration decor =
+        new DividerItemDecoration(getContext(), pixelDimen, DividerItemDecoration.ALL);
+    downloadsRecyclerView.addItemDecoration(decor);
+
+    adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,
+        getContext().getResources());
+    downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
+
+    return view;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    // TODO: 1/2/2017 optimize this listener splitting it in 3 listeners: one for each download state
-
-    DownloadRepository downloadRepo = RepositoryFactory.getDownloadRepository();
-    downloadRepo.getAll()
-        .observeOn(Schedulers.computation())
-        .sample(100, TimeUnit.MILLISECONDS)
-        .doOnNext(__ -> {
-          downloadingDisplayables.clear();
-          standingByDisplayables.clear();
-          completedDisplayables.clear();
-        })
-        .flatMap(data -> Observable.from(data)
-            .flatMap(
-                downloadProgress -> createDisplayableForDownload(downloadProgress).toObservable())
-            .toList())
-        // wait for all displayables are created
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(__ -> addListHeaders().andThen(updateUi())
-            .doOnCompleted(() -> {
-              Logger.v(TAG, "updated list of download states");
-            })
-            .toObservable())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> {
-          // does nothing
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
+    attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
   }
 
-  @SuppressLint("MissingSuperCall") @Override
-  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    // not calling super on purpose to avoid cleaning displayables
+  @UiThread @Override public void showActiveDownloads(List<Install> downloads) {
+    setEmptyDownloadVisible(false);
+    adapter.setActiveDownloads(downloads);
   }
 
-  private Completable createDisplayableForDownload(Download download) {
-    return Completable.fromAction(() -> {
-      if (isDownloading(download)) {
-        downloadingDisplayables.add(new ActiveDownloadDisplayable(download, installManager));
-      } else if (isStandingBy(download)) {
-        standingByDisplayables.add(
-            new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
-                installConverter));
-      } else {
-        // then it is complete
-        completedDisplayables.add(
-            new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
-                installConverter));
-      }
-    });
+  @UiThread @Override public void showStandByDownloads(List<Install> downloads) {
+    setEmptyDownloadVisible(false);
+    adapter.setStandByDownloads(downloads);
   }
 
-  private Completable addListHeaders() {
-    return Completable.fromAction(() -> {
-
-      // add each list header displayable
-
-      if (!downloadingDisplayables.isEmpty()) {
-        downloadingDisplayables.add(0,
-            new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active),
-                installManager));
-      }
-
-      if (!standingByDisplayables.isEmpty()) {
-        standingByDisplayables.add(0, new StoreGridHeaderDisplayable(
-            new GetStoreWidgets.WSWidget().setTitle(
-                AptoideUtils.StringU.getResString(R.string.stand_by))));
-      }
-      if (!completedDisplayables.isEmpty()) {
-        completedDisplayables.add(0, new StoreGridHeaderDisplayable(
-            new GetStoreWidgets.WSWidget().setTitle(
-                AptoideUtils.StringU.getResString(R.string.completed))));
-      }
-    });
+  @UiThread @Override public void showCompletedDownloads(List<Install> downloads) {
+    setEmptyDownloadVisible(false);
+    adapter.setCompletedDownloads(downloads);
   }
 
-  private Completable updateUi() {
-    return Completable.fromAction(() -> {
-      if (emptyDownloadList()) {
-        clearDisplayables();
-        finishLoading();
-        noDownloadsView.setVisibility(View.VISIBLE);
-      } else {
-        noDownloadsView.setVisibility(View.GONE);
-
-        clearDisplayables().
-            addDisplayables(downloadingDisplayables, false)
-            .
-                addDisplayables(standingByDisplayables, false)
-            .
-                addDisplayables(completedDisplayables, true);
-      }
-    });
+  @UiThread @Override public void showEmptyDownloadList() {
+    setEmptyDownloadVisible(true);
+    adapter.clearAll();
   }
 
-  private boolean isDownloading(Download progress) {
-    return progress.getOverallDownloadStatus() == Download.PROGRESS;
-  }
+  @UiThread private void setEmptyDownloadVisible(boolean visible) {
+    if (noDownloadsView.getVisibility() == View.GONE && visible) {
+      noDownloadsView.setVisibility(View.VISIBLE);
+    }
 
-  private boolean isStandingBy(Download progress) {
-    return progress.getOverallDownloadStatus() == Download.ERROR
-        || progress.getOverallDownloadStatus() == Download.PENDING
-        || progress.getOverallDownloadStatus() == Download.PAUSED
-        || progress.getOverallDownloadStatus() == Download.IN_QUEUE;
-  }
-
-  private boolean emptyDownloadList() {
-    return downloadingDisplayables != null
-        && downloadingDisplayables.size() == 0
-        && standingByDisplayables != null
-        && standingByDisplayables.size() == 0
-        && completedDisplayables != null
-        && completedDisplayables.size() == 0;
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    // variables initialization
-
-    downloadingDisplayables = new ArrayList<>();
-    standingByDisplayables = new ArrayList<>();
-    completedDisplayables = new ArrayList<>();
-
-    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
-    analytics = Analytics.getInstance();
-    final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    installConverter =
-        new InstallEventConverter(baseBodyBodyInterceptor, httpClient, converterFactory);
-    downloadConverter =
-        new DownloadEventConverter(baseBodyBodyInterceptor, httpClient, converterFactory);
+    if (noDownloadsView.getVisibility() == View.VISIBLE && !visible) {
+      noDownloadsView.setVisibility(View.GONE);
+    }
   }
 }

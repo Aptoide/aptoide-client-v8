@@ -5,13 +5,15 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.database.accessors.TransactionAccessor;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -25,23 +27,28 @@ import rx.Observable;
  */
 public class InAppBillingRepository {
 
-  private final PaymentConfirmationAccessor confirmationAccessor;
+  private final TransactionAccessor confirmationAccessor;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
-  public InAppBillingRepository(PaymentConfirmationAccessor confirmationAccessor,
+  public InAppBillingRepository(TransactionAccessor confirmationAccessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.confirmationAccessor = confirmationAccessor;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
     return InAppBillingAvailableRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
-        httpClient, converterFactory)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -61,7 +68,7 @@ public class InAppBillingRepository {
 
   public Completable deleteInAppPurchase(int apiVersion, String packageName, String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3,
-        httpClient, converterFactory)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .first()
         .toSingle()

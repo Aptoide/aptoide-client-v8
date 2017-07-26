@@ -108,7 +108,7 @@ public class AptoideDownloadManager {
             storedDownload -> storedDownload.getOverallDownloadStatus() == Download.COMPLETED);
   }
 
-  public Observable<List<Download>> getAsListDownload(String md5) {
+  public Observable<Download> getAsListDownload(String md5) {
     return downloadAccessor.getAsList(md5)
         .map(downloads -> {
           for (int i = 0; i < downloads.size(); i++) {
@@ -119,7 +119,11 @@ public class AptoideDownloadManager {
               i--;
             }
           }
-          return downloads;
+          if (downloads.isEmpty()) {
+            return null;
+          } else {
+            return downloads.get(0);
+          }
         })
         .distinctUntilChanged();
   }
@@ -170,8 +174,7 @@ public class AptoideDownloadManager {
           downloadAccessor.save(downloads);
           Logger.d(TAG, "Downloads paused");
         }, err -> {
-          CrashReport.getInstance()
-              .log(err);
+          Logger.e(TAG, err);
         });
   }
 

@@ -6,15 +6,10 @@
 include 'vanilla',
     ':v8engine',
     ':dataprovider',
-    ':model',
-    ':networkclient',
     ':aptoidepreferences',
-    ':utilsdesign',
     ':crashreports',
     ':utils',
-    ':aptoide_accountmanager',
-    ':database',
-    ':imageloader',
+    ':aptoide-account-manager',
+    ':aptoide-database',
     ':downloadmanager',
-    ':spotandshare',
-    ':spotandshareandroid'
+    ':spotandshare'

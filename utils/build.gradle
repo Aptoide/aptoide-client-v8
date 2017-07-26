@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified on 08/07/2016.
  */
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
@@ -72,6 +72,7 @@ dependencies {
   testCompile "junit:junit:${JUNIT_VERSION}"
 
   //noinspection GradleDependency
+  compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"

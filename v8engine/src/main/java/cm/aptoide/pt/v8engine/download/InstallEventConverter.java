@@ -1,8 +1,13 @@
 package cm.aptoide.pt.v8engine.download;
 
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.telephony.TelephonyManager;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Data;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Root;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -16,18 +21,23 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
 
   public InstallEventConverter(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences, ConnectivityManager connectivityManager,
+      TelephonyManager telephonyManager) {
+    super(appId, connectivityManager, telephonyManager);
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
-  @Override
-  protected DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(InstallEvent report,
-      DownloadInstallAnalyticsBaseBody.Data data) {
-    DownloadInstallAnalyticsBaseBody.Root root = new DownloadInstallAnalyticsBaseBody.Root();
+  @Override protected Data convertSpecificFields(InstallEvent report, Data data) {
+    Root root = new Root();
     root.setAptoideSettings(report.getAptoideSettings());
     root.setPhone(report.getIsPhoneRooted());
     data.setRoot(root);
@@ -39,8 +49,9 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
       String patchObbUrl, DownloadInstallBaseEvent.AppContext context, int versionCode) {
     InstallEvent installEvent =
         new InstallEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
-            versionCode, this, bodyInterceptor, httpClient, converterFactory);
-    installEvent.setAptoideSettings(ManagerPreferences.allowRootInstallation());
+            versionCode, this, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences);
+    installEvent.setAptoideSettings(ManagerPreferences.allowRootInstallation(sharedPreferences));
     return installEvent;
   }
 }

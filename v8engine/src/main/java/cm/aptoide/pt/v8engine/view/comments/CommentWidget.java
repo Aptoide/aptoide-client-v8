@@ -7,13 +7,13 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.comments.ComplexComment;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -57,9 +57,9 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     userName.setText(comment.getUser()
         .getName());
 
-    String date = AptoideUtils.DateTimeU.getInstance()
+    String date = AptoideUtils.DateTimeU.getInstance(getContext())
         .getTimeDiffString(context, comment.getAdded()
-            .getTime());
+            .getTime(), getContext().getResources());
     datePos1.setText(date);
     datePos2.setText(date);
 
@@ -71,6 +71,12 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     } else {
       datePos1.setVisibility(View.VISIBLE);
     }
+
+    compositeSubscription.add(RxView.clicks(itemView)
+        .doOnNext(click -> displayable.itemClicked())
+        .subscribe(__ -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void bindComplexComment(ComplexComment comment) {
@@ -114,7 +120,8 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
   private void setLayoutLeftPadding(ComplexComment complexComment) {
     final int level = complexComment.getLevel();
-    int baseMargin = AptoideUtils.ScreenU.getPixelsForDip(MARGIN_IN_DIP);
+    int baseMargin =
+        AptoideUtils.ScreenU.getPixelsForDip(MARGIN_IN_DIP, getContext().getResources());
     @Dimension int leftMargin = level < 2 ? baseMargin : baseMargin * level;
     outerLayout.setPadding(leftMargin, outerLayout.getPaddingTop(), baseMargin,
         outerLayout.getPaddingBottom());

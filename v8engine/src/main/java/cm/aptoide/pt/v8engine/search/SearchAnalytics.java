@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.search;
 
+import android.os.Bundle;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by pedroribeiro on 04/05/17.
  */
 
-public class SearchAnalytics extends AptoideAnalytics {
+public class SearchAnalytics {
 
   private static final String QUERY = "search_term";
   private static final String SEARCH = "Search";
@@ -40,5 +40,19 @@ public class SearchAnalytics extends AptoideAnalytics {
     map.put(QUERY, query);
     map.put("package_name", packageName);
     analytics.sendEvent(new FacebookEvent(facebook, APP_CLICK, createComplexBundleData(map)));
+  }
+
+  private Bundle createBundleData(String key, String value) {
+    final Bundle data = new Bundle();
+    data.putString(key, value);
+    return data;
+  }
+
+  private Bundle createComplexBundleData(Map<String, Object> keyValuePair) {
+    Bundle bundle = new Bundle();
+    for (Map.Entry<String, Object> entry : keyValuePair.entrySet()) {
+      bundle.putString(entry.getKey(), (String) entry.getValue());
+    }
+    return bundle;
   }
 }

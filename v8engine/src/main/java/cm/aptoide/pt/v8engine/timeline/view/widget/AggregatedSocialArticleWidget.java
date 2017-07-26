@@ -6,28 +6,31 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.MinimalCard;
-import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
+import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -85,17 +88,27 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
   @Override public void bindView(AggregatedSocialArticleDisplayable displayable) {
     super.bindView(displayable);
-
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(0)
-            .getUser()
-            .getAvatar(), headerAvatar1);
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharers()
-            .get(1)
-            .getUser()
-            .getAvatar(), headerAvatar2);
+    if (displayable.getSharers()
+        .get(0)
+        .getUser() != null) {
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(displayable.getSharers()
+              .get(0)
+              .getUser()
+              .getAvatar(), headerAvatar1);
+    }
+    if (displayable.getSharers()
+        .size() > 1) {
+      if (displayable.getSharers()
+          .get(1)
+          .getUser() != null) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(displayable.getSharers()
+                .get(1)
+                .getUser()
+                .getAvatar(), headerAvatar2);
+      }
+    }
     headerNames.setText(displayable.getCardHeaderNames());
     headerTime.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
@@ -119,7 +132,9 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
     setCardViewMargin(displayable, cardView);
 
-    setAdditionalNumberOfSharersLabel(displayable);
+    setAdditionalNumberOfSharersLabel(additionalNumberOfSharesLabel,
+        additionalNumberOfSharesCircularMask, displayable.getSharers()
+            .size());
     showSeeMoreAction(displayable);
     showSubCards(displayable, 2);
   }
@@ -128,9 +143,8 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
     return AggregatedSocialArticleDisplayable.CARD_TYPE_NAME;
   }
 
-  private void setAdditionalNumberOfSharersLabel(AggregatedSocialArticleDisplayable displayable) {
-    int numberOfSharers = displayable.getSharers()
-        .size();
+  private void setAdditionalNumberOfSharersLabel(TextView additionalNumberOfSharesLabel,
+      ImageView additionalNumberOfSharesCircularMask, int numberOfSharers) {
 
     if (numberOfSharers <= 2) {
       additionalNumberOfSharesLabel.setVisibility(View.INVISIBLE);
@@ -157,18 +171,22 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
       }
       View subCardView =
           inflater.inflate(R.layout.timeline_sub_minimal_card, subCardsContainer, false);
-      ImageView minimalCardHeaderMainAvatar = (ImageView) subCardView.findViewById(R.id.card_image);
       TextView minimalCardHeaderMainName = (TextView) subCardView.findViewById(R.id.card_title);
-      ImageView minimalCardHeaderSecondaryAvatar =
-          (ImageView) subCardView.findViewById(R.id.card_user_avatar);
-      TextView minimalCardHeaderSecondaryName =
-          (TextView) subCardView.findViewById(R.id.card_subtitle);
+      ImageView minimalCardHeaderMainAvatar =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_1);
+      ImageView minimalCardHeaderMainAvatar2 =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_2);
       TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
       TextView comment = (TextView) subCardView.findViewById(R.id.social_comment);
       TextView shareSubCardButton = (TextView) subCardView.findViewById(R.id.social_share);
       LikeButtonView likeSubCardButton =
           (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
       LinearLayout likeLayout = (LinearLayout) subCardView.findViewById(R.id.social_like);
+      FrameLayout plusFrame = (FrameLayout) subCardView.findViewById(R.id.card_header_plus_frame);
+      TextView additionalNumberOfSharesLabel = (TextView) subCardView.findViewById(
+          R.id.timeline_header_aditional_number_of_shares_circular);
+      ImageView additionalNumberOfSharesCircularMask =
+          (ImageView) subCardView.findViewById(R.id.card_header_avatar_plus);
       LinearLayout socialInfoBar = (LinearLayout) subCardView.findViewById(R.id.social_info_bar);
       RelativeLayout likePreviewContainer = (RelativeLayout) subCardView.findViewById(
           R.id.displayable_social_timeline_likes_preview_container);
@@ -186,27 +204,33 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
       int marginOfTheNextLikePreview = 0;
 
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(minimalCard.getSharers()
-              .get(0)
-              .getUser()
-              .getAvatar(), minimalCardHeaderMainAvatar);
-
-      minimalCardHeaderMainName.setText(minimalCard.getSharers()
+      if (minimalCard.getSharers()
           .get(0)
-          .getUser()
-          .getName());
+          .getUser() != null) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(minimalCard.getSharers()
+                .get(0)
+                .getUser()
+                .getAvatar(), minimalCardHeaderMainAvatar);
+      }
 
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(minimalCard.getSharers()
-              .get(0)
-              .getStore()
-              .getAvatar(), minimalCardHeaderSecondaryAvatar);
+      if (displayable.getSharers()
+          .size() > 1) {
+        if (displayable.getSharers()
+            .get(1)
+            .getUser() != null) {
+          ImageLoader.with(getContext())
+              .loadWithShadowCircleTransform(displayable.getSharers()
+                  .get(1)
+                  .getUser()
+                  .getAvatar(), minimalCardHeaderMainAvatar2);
+        }
+      } else {
+        plusFrame.setVisibility(View.GONE);
+        minimalCardHeaderMainAvatar2.setVisibility(View.GONE);
+      }
 
-      minimalCardHeaderSecondaryName.setText(minimalCard.getSharers()
-          .get(0)
-          .getStore()
-          .getName());
+      minimalCardHeaderMainName.setText(getCardHeaderNames(minimalCard.getSharers()));
 
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
@@ -265,6 +289,10 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
         numberLikes.setVisibility(View.INVISIBLE);
         numberLikesOneLike.setVisibility(View.INVISIBLE);
       }
+
+      setAdditionalNumberOfSharersLabel(additionalNumberOfSharesLabel,
+          additionalNumberOfSharesCircularMask, minimalCard.getSharers()
+              .size());
 
       compositeSubscription.add(displayable.getRelatedToApplication()
           .observeOn(AndroidSchedulers.mainThread())
@@ -343,7 +371,8 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
                     .isLiked()) {
                   UserTimeline user = new UserTimeline();
                   Store store = new Store();
-                  store.setAvatar(account.getStoreAvatar());
+                  store.setAvatar(account.getStore()
+                      .getAvatar());
                   user.setAvatar(account.getAvatar());
                   user.setStore(store);
                   addUserToPreview(marginOfTheNextLikePreview, user, likePreviewContainer,
@@ -397,9 +426,8 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
                   .log(err)));
 
       compositeSubscription.add(RxView.clicks(likePreviewContainer)
-          .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator(),
-              minimalCard.getStats()
-                  .getLikes(), minimalCard.getCardId()), err -> CrashReport.getInstance()
+          .subscribe(click -> displayable.likesPreviewClick(minimalCard.getStats()
+              .getLikes(), minimalCard.getCardId()), err -> CrashReport.getInstance()
               .log(err)));
 
       subCardsContainer.addView(subCardView);
@@ -483,5 +511,23 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
         getContext().getString(R.string.likes)
             .toLowerCase()));
     numberLikesOneLike.setVisibility(View.INVISIBLE);
+  }
+
+  public String getCardHeaderNames(List<UserSharerTimeline> sharers) {
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    if (sharers.size() == 1) {
+      return headerNamesStringBuilder.append(sharers.get(0)
+          .getStore()
+          .getName())
+          .toString();
+    }
+    List<UserSharerTimeline> firstSharers = sharers.subList(0, 2);
+    for (UserSharerTimeline user : firstSharers) {
+      headerNamesStringBuilder.append(user.getStore()
+          .getName())
+          .append(", ");
+    }
+    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    return headerNamesStringBuilder.toString();
   }
 }

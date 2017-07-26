@@ -6,17 +6,16 @@ import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 
 public class PaymentRepositoryFactory {
 
-  private final InAppPaymentConfirmationRepository inAppPaymentConfirmationRepository;
-  private final PaidAppPaymentConfirmationRepository paidAppPaymentConfirmationRepository;
+  private final InAppTransactionRepository inAppPaymentConfirmationRepository;
+  private final PaidAppTransactionRepository paidAppPaymentConfirmationRepository;
 
-  public PaymentRepositoryFactory(
-      InAppPaymentConfirmationRepository inAppPaymentConfirmationRepository,
-      PaidAppPaymentConfirmationRepository paidAppPaymentConfirmationRepository) {
+  public PaymentRepositoryFactory(InAppTransactionRepository inAppPaymentConfirmationRepository,
+      PaidAppTransactionRepository paidAppPaymentConfirmationRepository) {
     this.inAppPaymentConfirmationRepository = inAppPaymentConfirmationRepository;
     this.paidAppPaymentConfirmationRepository = paidAppPaymentConfirmationRepository;
   }
 
-  public PaymentConfirmationRepository getPaymentConfirmationRepository(Product product) {
+  public TransactionRepository getPaymentConfirmationRepository(Product product) {
     if (product instanceof InAppProduct) {
       return inAppPaymentConfirmationRepository;
     } else if (product instanceof PaidAppProduct) {
@@ -26,11 +25,11 @@ public class PaymentRepositoryFactory {
     }
   }
 
-  public PaymentConfirmationRepository getPaidAppConfirmationRepository() {
+  public TransactionRepository getPaidAppConfirmationRepository() {
     return paidAppPaymentConfirmationRepository;
   }
 
-  public PaymentConfirmationRepository getInAppConfirmationRepository() {
+  public TransactionRepository getInAppConfirmationRepository() {
     return inAppPaymentConfirmationRepository;
   }
 }

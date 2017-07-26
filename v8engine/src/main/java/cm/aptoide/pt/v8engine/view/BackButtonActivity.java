@@ -9,7 +9,7 @@ import java.util.Set;
  * Created by marcelobenites on 11/04/17.
  */
 
-public class BackButtonActivity extends ActivityView implements BackButton {
+public abstract class BackButtonActivity extends ActivityView implements BackButton {
 
   private Set<BackButton.ClickHandler> clickHandlers;
 
@@ -18,15 +18,15 @@ public class BackButtonActivity extends ActivityView implements BackButton {
     clickHandlers = new HashSet<>();
   }
 
-  @Override public void registerBackClickHandler(ClickHandler clickHandler) {
+  @Override public void registerClickHandler(ClickHandler clickHandler) {
     clickHandlers.add(clickHandler);
   }
 
-  @Override public void unregisterBackClickHandler(ClickHandler clickHandler) {
+  @Override public void unregisterClickHandler(ClickHandler clickHandler) {
     clickHandlers.remove(clickHandler);
   }
 
-  @Override public void backClick() {
+  @Override public void onBackPressed() {
     boolean handled = false;
     for (ClickHandler clickHandler : clickHandlers) {
       if (clickHandler.handle()) {
@@ -37,9 +37,5 @@ public class BackButtonActivity extends ActivityView implements BackButton {
     if (!handled) {
       super.onBackPressed();
     }
-  }
-
-  @Override public void onBackPressed() {
-    backClick();
   }
 }

@@ -3,13 +3,13 @@ package cm.aptoide.pt.v8engine.timeline.view.follow;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.GetFollowers;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowUserDisplayable;
@@ -31,35 +31,34 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
 
-  public static TimeLineFollowFragment newInstanceUsingUser(Long id, long followNumber,
-      String storeTheme) {
-    Bundle args = getBundle(followNumber, storeTheme);
+  public static TimeLineFollowFragment newInstanceUsingUser(Long id, String storeTheme,
+      String title) {
+    Bundle args = getBundle(storeTheme, title);
     args.putLong(BundleKeys.USER_ID, id);
     TimeLineFollowersFragment fragment = new TimeLineFollowersFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
-  @NonNull private static Bundle getBundle(long followNumber, String storeTheme) {
+  @NonNull private static Bundle getBundle(String storeTheme, String title) {
     Bundle args = new Bundle();
-    args.putString(TITLE_KEY,
-        AptoideUtils.StringU.getFormattedString(R.string.social_timeline_followers_fragment_title,
-            followNumber));
+    args.putString(TITLE_KEY, title);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     return args;
   }
 
-  public static TimeLineFollowFragment newInstanceUsingUser(long followNumber, String storeTheme) {
-    Bundle args = getBundle(followNumber, storeTheme);
+  public static TimeLineFollowFragment newInstanceUsingUser(String storeTheme, String title) {
+    Bundle args = getBundle(storeTheme, title);
     TimeLineFollowersFragment fragment = new TimeLineFollowersFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
-  public static TimeLineFollowFragment newInstanceUsingStore(Long id, long followNumber,
-      String storeTheme) {
-    Bundle args = getBundle(followNumber, storeTheme);
+  public static TimeLineFollowFragment newInstanceUsingStore(Long id, String storeTheme,
+      String title) {
+    Bundle args = getBundle(storeTheme, title);
     args.putLong(BundleKeys.STORE_ID, id);
     TimeLineFollowersFragment fragment = new TimeLineFollowersFragment();
     fragment.setArguments(args);
@@ -72,6 +71,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -86,7 +86,8 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   @Override protected V7 buildRequest() {
     return GetFollowersRequest.of(baseBodyInterceptor, userId, storeId, httpClient,
-        converterFactory);
+        converterFactory, tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {

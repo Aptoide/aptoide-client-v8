@@ -17,11 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
@@ -121,7 +122,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     if (args.containsKey(BundleCons.STORE_CONTEXT)) {
       storeContext = ((StoreContext) args.getSerializable(BundleCons.STORE_CONTEXT));
     }
-    title = args.getString(Translator.translate(BundleCons.TITLE));
+    title = args.getString(
+        Translator.translate(BundleCons.TITLE, getContext().getApplicationContext()));
     action = args.getString(BundleCons.ACTION);
     storeTheme = args.getString(BundleCons.STORE_THEME);
   }
@@ -129,7 +131,9 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh || !hasDisplayables()) {
-      String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
+      String url = action != null ? action.replace(V7.getHost(
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), "")
+          : null;
 
       if (!StoreTabFragmentChooser.validateAcceptedName(name)) {
         throw new RuntimeException(
@@ -176,7 +180,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(Translator.translate(title));
+    toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext()));
     toolbar.setLogo(R.drawable.logo_toolbar);
   }
 

@@ -5,11 +5,11 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -31,20 +31,24 @@ import org.xml.sax.ext.DefaultHandler2;
 public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo> {
 
   private static final String TAG = AutoUpdate.class.getSimpleName();
-  private final String url = Application.getConfiguration()
-      .getAutoUpdateUrl();
-  private BaseActivity activity;
-  private DownloadFactory downloadFactory;
+  private final String url;
+  private final BaseActivity activity;
+  private final DownloadFactory downloadFactory;
+  private final PermissionManager permissionManager;
+  private final InstallManager installManager;
+  private final Resources resources;
+
   private ProgressDialog dialog;
-  private PermissionManager permissionManager;
-  private InstallManager installManager;
 
   public AutoUpdate(BaseActivity activity, DownloadFactory downloadFactory,
-      PermissionManager permissionManager, InstallManager installManager) {
+      PermissionManager permissionManager, InstallManager installManager, Resources resources,
+      String autoUpdateUrl) {
+    this.url = autoUpdateUrl;
     this.activity = activity;
     this.permissionManager = permissionManager;
     this.downloadFactory = downloadFactory;
     this.installManager = installManager;
+    this.resources = resources;
   }
 
   @Override protected AutoUpdateInfo doInBackground(Void... params) {
@@ -130,9 +134,10 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     updateSelfDialog.setTitle(activity.getText(R.string.update_self_title));
     updateSelfDialog.setIcon(Application.getConfiguration()
         .getIcon());
-    updateSelfDialog.setMessage(AptoideUtils.StringU.getFormattedString(R.string.update_self_msg,
-        Application.getConfiguration()
-            .getMarketName()));
+    updateSelfDialog.setMessage(
+        AptoideUtils.StringU.getFormattedString(R.string.update_self_msg, resources,
+            Application.getConfiguration()
+                .getMarketName()));
     updateSelfDialog.setCancelable(false);
     updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE,
         activity.getString(android.R.string.yes), (arg0, arg1) -> {
@@ -144,12 +149,17 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           permissionManager.requestDownloadAccess(activity)
               .flatMap(
                   permissionGranted -> permissionManager.requestExternalStoragePermission(activity))
-              .flatMap(success -> installManager.install(activity,
-                  downloadFactory.create(autoUpdateInfo)))
-              .filter(progress -> !isDownloading(progress))
+              .flatMap(success -> installManager.install(downloadFactory.create(autoUpdateInfo))
+                  .toObservable())
               .first()
-              .subscribe(progress -> {
-                if (progress.getState() == Progress.ERROR) {
+              .flatMap(downloadProgress -> installManager.getInstall(autoUpdateInfo.md5,
+                  autoUpdateInfo.packageName, autoUpdateInfo.vercode))
+              .skipWhile(installationProgress -> installationProgress.getState()
+                  != Install.InstallationStatus.INSTALLING)
+              .first(progress -> progress.getState() != Install.InstallationStatus.INSTALLING)
+              .subscribe(install -> {
+                // TODO: 12/07/2017 this code doesn't run
+                if (install.isFailed()) {
                   ShowMessage.asSnack(activity, R.string.error_SYS_1);
                 }
                 dismissDialog();
@@ -169,17 +179,6 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     if (activity.is_resumed()) {
       updateSelfDialog.show();
     }
-  }
-
-  private boolean isDownloading(Progress<Download> progress) {
-    return progress.getRequest()
-        .getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest()
-        .getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest()
-        .getOverallDownloadStatus() == Download.INVALID_STATUS
-        || progress.getRequest()
-        .getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   private void dismissDialog() {

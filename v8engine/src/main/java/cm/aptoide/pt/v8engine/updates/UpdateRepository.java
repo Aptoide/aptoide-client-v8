@@ -1,15 +1,19 @@
 package cm.aptoide.pt.v8engine.updates;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.Collections;
 import java.util.List;
@@ -35,11 +39,15 @@ public class UpdateRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final SharedPreferences sharedPreferences;
+  private final PackageManager packageManager;
 
   public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
       AptoideAccountManager accountManager, IdsRepository idsRepository,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, PackageManager packageManager) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
     this.accountManager = accountManager;
@@ -47,6 +55,9 @@ public class UpdateRepository {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
+    this.packageManager = packageManager;
   }
 
   public @NonNull Completable sync(boolean bypassCache) {
@@ -70,7 +81,7 @@ public class UpdateRepository {
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(), bodyInterceptor,
-        httpClient, converterFactory)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager)
         .observe(bypassCache)
         .map(result -> {
           if (result != null && result.isOk()) {
@@ -89,7 +100,7 @@ public class UpdateRepository {
 
   private Completable saveNewUpdates(List<App> updates) {
     return Completable.fromSingle(Observable.from(updates)
-        .map(app -> new Update(app))
+        .map(app -> mapAppUpdate(app))
         .toList()
         .toSingle()
         .flatMap(updateList -> {
@@ -97,6 +108,46 @@ public class UpdateRepository {
               updateList.size()));
           return saveNonExcludedUpdates(updateList);
         }));
+  }
+
+  private Update mapAppUpdate(App app) {
+
+    final Obb obb = app.getObb();
+
+    String mainObbFileName = null;
+    String mainObbPath = null;
+    String mainObbMd5 = null;
+    String patchObbFileName = null;
+    String patchObbPath = null;
+    String patchObbMd5 = null;
+
+    if (obb != null) {
+      final Obb.ObbItem mainObb = obb.getMain();
+      final Obb.ObbItem patchObb = obb.getPatch();
+      if (mainObb != null) {
+        mainObbFileName = mainObb.getFilename();
+        mainObbPath = mainObb.getPath();
+        mainObbMd5 = mainObb.getMd5sum();
+      }
+
+      if (patchObb != null) {
+        patchObbFileName = patchObb.getFilename();
+        patchObbPath = patchObb.getPath();
+        patchObbMd5 = patchObb.getMd5sum();
+      }
+    }
+
+    return new Update(app.getId(), app.getName(), app.getIcon(), app.getPackageName(), app.getFile()
+        .getMd5sum(), app.getFile()
+        .getPath(), app.getFile()
+        .getFilesize(), app.getFile()
+        .getVername(), app.getFile()
+        .getPathAlt(), app.getFile()
+        .getVercode(), app.getFile()
+        .getMalware()
+        .getRank()
+        .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
+        patchObbMd5);
   }
 
   public Completable removeAll(List<Update> updates) {
@@ -149,10 +200,7 @@ public class UpdateRepository {
   }
 
   public Completable remove(Update update) {
-    return Completable.fromCallable(() -> {
-      updateAccessor.remove(update.getPackageName());
-      return null;
-    });
+    return Completable.fromAction(() -> updateAccessor.remove(update.getPackageName()));
   }
 
   public void remove(String packageName) {

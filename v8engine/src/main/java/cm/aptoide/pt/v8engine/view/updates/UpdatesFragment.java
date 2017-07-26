@@ -1,16 +1,21 @@
 package cm.aptoide.pt.v8engine.view.updates;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
 import android.view.View;
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -21,8 +26,8 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
@@ -64,6 +69,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private Subscription updateReloadSubscription;
 
   private int oldUpdateListHash = 0;
+  private TokenInvalidator tokenInvalidator;
+  private OkHttpClient httpClient;
+  private BodyInterceptor<BaseBody> bodyInterceptorV7;
+  private Converter.Factory converterFactory;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -142,19 +151,31 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final BodyInterceptor<BaseBody> bodyInterceptor =
+    bodyInterceptorV7 =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
+    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
+        new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
+            tokenInvalidator, V8Engine.getConfiguration()
+            .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+    installConverter =
+        new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
+            V8Engine.getConfiguration()
+                .getAppId(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installedRepository = RepositoryFactory.getInstalledRepository();
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   private void setUpdates(List<Update> updateList) {
@@ -162,13 +183,14 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
     if (updateList.size() > 0) {
       updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
-          AptoideUtils.StringU.getResString(R.string.updates), analytics,
-          downloadInstallEventConverter, installConverter));
+          AptoideUtils.StringU.getResString(R.string.updates, getContext().getResources()),
+          analytics, downloadInstallEventConverter, installConverter));
 
       for (Update update : updateList) {
         updatesDisplayablesList.add(
             UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
-                downloadInstallEventConverter, installConverter));
+                downloadInstallEventConverter, installConverter, installedRepository,
+                new PermissionManager()));
       }
     }
     addDisplayables(updatesDisplayablesList, false);
@@ -201,7 +223,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    * @return {@link Observable} to a {@link List} of {@link Installed} apps
    */
   private Observable<List<Installed>> fetchInstalled() {
-    return installedRepository.getAllSorted()
+    return installedRepository.getAllInstalledSorted()
         .first()
         .flatMapIterable(list -> list)
         .filter(item -> !item.isSystemApp())
@@ -213,14 +235,17 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installedDisplayablesList.clear();
     installedDisplayablesList.add(new StoreGridHeaderDisplayable(
         new GetStoreWidgets.WSWidget().setTitle(
-            AptoideUtils.StringU.getResString(R.string.installed_tab))));
+            AptoideUtils.StringU.getResString(R.string.installed_tab,
+                getContext().getResources()))));
 
     for (Installed installedApp : installedApps) {
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,
           new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
-              ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-              ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-              WebService.getDefaultConverter()), installedRepository));
+              bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
+              V8Engine.getConfiguration()
+                  .getAppId(),
+              ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+          installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
     Logger.v(TAG, "listed installed apps");
@@ -233,7 +258,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    *
    * @return {@link Observable} to a {@link Installed} or empty.
    */
-  // TODO: 31/1/2017 sithengineer instead of Observable<Installed> use Single<Installed>
+  // TODO: 31/1/2017 instead of Observable<Installed> use Single<Installed>
   private Observable<Installed> filterUpdates(Installed item) {
     return updateRepository.contains(item.getPackageName(), false)
         .flatMap(isUpdate -> {

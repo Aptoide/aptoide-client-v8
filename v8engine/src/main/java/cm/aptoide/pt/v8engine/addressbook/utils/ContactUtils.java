@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.addressbook.utils;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
@@ -17,15 +16,16 @@ import java.util.Locale;
 
 public class ContactUtils {
 
-  private TelephonyManager telephonyManager;
+  private final TelephonyManager telephonyManager;
+  private final ContentResolver contentResolver;
 
-  public ContactUtils(TelephonyManager telephonyManager) {
+  public ContactUtils(TelephonyManager telephonyManager, ContentResolver contentResolver) {
     this.telephonyManager = telephonyManager;
+    this.contentResolver = contentResolver;
   }
 
-  public ContactsModel getContacts(Context context) {
+  public ContactsModel getContacts() {
     ContactsModel contacts = new ContactsModel();
-    ContentResolver contentResolver = context.getContentResolver();
     Cursor cursor =
         contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
     if (cursor != null && cursor.getCount() > 0) {

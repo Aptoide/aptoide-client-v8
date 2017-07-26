@@ -11,20 +11,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import lombok.Getter;
@@ -137,7 +137,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       GetAppRequest.of(appId, V8Engine.getConfiguration()
               .getPartnerId() == null ? null : storeName,
           StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-          baseBodyBodyInterceptor, httpClient, converterFactory)
+          baseBodyBodyInterceptor, httpClient, converterFactory,
+          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .execute(getApp -> {
             setupAppDescription(getApp);
             setupTitle(getApp);
@@ -198,10 +200,10 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
       bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
-          .getColor(StoreThemeEnum.get(storeTheme)
-              .getStoreHeader())));
+          .getColor(StoreTheme.get(storeTheme)
+              .getPrimaryColor())));
     }
   }
 

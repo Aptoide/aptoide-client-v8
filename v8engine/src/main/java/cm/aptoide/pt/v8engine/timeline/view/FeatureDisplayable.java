@@ -4,7 +4,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.text.Spannable;
-import cm.aptoide.pt.model.v7.timeline.Feature;
+import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Feature;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -73,7 +74,8 @@ public class FeatureDisplayable extends Displayable {
       return 0;
     }
 
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
+    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation,
+        (WindowManager) context.getSystemService(Context.WINDOW_SERVICE));
 
     if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
       return (int) (width * 0.2);

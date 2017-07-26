@@ -154,15 +154,19 @@ public class RemoteInstallDialog extends BaseDialog implements RemoteInstallatio
   }
 
   @Override public void onAppSendSuccess() {
-    Toast.makeText(getContext(), R.string.remote_install_success, Toast.LENGTH_LONG)
-        .show();
-    dismiss();
+    if (isAdded()) {
+      Toast.makeText(getContext(), R.string.remote_install_success, Toast.LENGTH_LONG)
+          .show();
+      dismiss();
+    }
   }
 
   @Override public void onAppSendUnsuccess() {
-    Toast.makeText(getContext(), R.string.remote_install_fail, Toast.LENGTH_LONG)
-        .show();
-    dismiss();
+    if (isAdded()) {
+      Toast.makeText(getContext(), R.string.remote_install_fail, Toast.LENGTH_LONG)
+          .show();
+      dismiss();
+    }
   }
 
   @Override public void onNoNetworkAccess() {

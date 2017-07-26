@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.account.user;
 
 import android.content.Context;
+import android.content.res.Resources;
 import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -17,10 +18,13 @@ public class CreateUserErrorMapper implements ThrowableToStringMapper {
 
   private final Context context;
   private final AccountErrorMapper accountErrorMapper;
+  private Resources resources;
 
-  public CreateUserErrorMapper(Context context, AccountErrorMapper accountErrorMapper) {
+  public CreateUserErrorMapper(Context context, AccountErrorMapper accountErrorMapper,
+      Resources resources) {
     this.context = context;
     this.accountErrorMapper = accountErrorMapper;
+    this.resources = resources;
   }
 
   @Override public String map(Throwable throwable) {
@@ -31,10 +35,10 @@ public class CreateUserErrorMapper implements ThrowableToStringMapper {
     } else if (throwable instanceof AccountValidationException) {
       switch (((AccountValidationException) throwable).getCode()) {
         case AccountValidationException.EMPTY_NAME:
-          message = AptoideUtils.StringU.getResString(R.string.no_username_inserted);
+          message = AptoideUtils.StringU.getResString(R.string.no_username_inserted, resources);
           break;
         case AccountValidationException.EMPTY_NAME_AND_AVATAR:
-          message = AptoideUtils.StringU.getResString(R.string.nothing_inserted_user);
+          message = AptoideUtils.StringU.getResString(R.string.nothing_inserted_user, resources);
           break;
       }
     }

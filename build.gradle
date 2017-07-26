@@ -4,7 +4,7 @@ buildscript {
     mavenLocal()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.2'
+    classpath 'com.android.tools.build:gradle:2.3.3'
     classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     classpath 'me.tatarka:gradle-retrolambda:3.3.0'
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
@@ -76,11 +76,9 @@ ext {
   MOCK_WEB_SERVER_VERSION = '3.4.1'
   JUNIT_VERSION = '4.12'
   MOCKITO_CORE_VERSION = '1.10.19'
-  ROBOELECTRIC_VERSION = '3.1.1'
   EXPRESSO_VERSION = '2.2.2'
   RUNNER_VERSION = '0.5'
   RULES_VERSION = '0.5'
-  POWER_MOCK_CORE_VERSION = '1.6.2'
 
   // Lombok plugin
   LOMBOK_VERSION = '1.16.8'

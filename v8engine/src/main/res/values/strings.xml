@@ -639,5 +639,13 @@
   <string name="edit_profile_save_button">Save</string>
   <string name="edit_profile_title">Edit Your Profile</string>
   <string name="user_edited">User Edited</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root install is not responding</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">%d apps failed to root install</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
+  <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
 
+  <!-- Appview Share"-->
+
+  <string name="appview_message_install_before_share_spotandshare">Install app first</string>
+  <string name="appview_button_install_before_share_spotandshare">install</string>
 </resources>

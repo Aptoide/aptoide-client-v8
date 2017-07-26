@@ -6,31 +6,33 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Pair;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.FullReview;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.Layout;
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
+import cm.aptoide.pt.dataprovider.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
+import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.FullReview;
-import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.Layout;
-import cm.aptoide.pt.model.v7.ListApps;
-import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
-import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.app.GridAppDisplayable;
@@ -61,7 +63,8 @@ public class DisplayablesFactory {
 
   public static Observable<Displayable> parse(GetStoreWidgets.WSWidget widget, String storeTheme,
       StoreRepository storeRepository, StoreContext storeContext, Context context,
-      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy) {
+      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
+      WindowManager windowManager, Resources resources, InstalledRepository installedRepository) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -70,21 +73,27 @@ public class DisplayablesFactory {
       switch (widget.getType()) {
 
         case APPS_GROUP:
-          return Observable.just(getApps(widget, storeTheme, storeContext));
+          return Observable.just(getApps(widget, storeTheme, storeContext,
+              context.getApplicationContext()
+                  .getResources(), windowManager));
 
         case MY_STORES_SUBSCRIBED:
-          return getMyStores(widget, storeRepository, storeTheme, storeContext);
+          return getMyStores(widget, storeRepository, storeTheme, storeContext, windowManager,
+              resources);
 
         case STORES_GROUP:
-          return Observable.just(getStores(widget, storeTheme, storeContext));
+          return Observable.just(
+              getStores(widget, storeTheme, storeContext, windowManager, resources));
 
         case DISPLAYS:
-          return Observable.just(getDisplays(widget, storeTheme, storeContext));
+          return Observable.just(
+              getDisplays(widget, storeTheme, storeContext, windowManager, resources,
+                  installedRepository));
 
         case ADS:
-          List<Displayable> adsList = getAds(widget);
+          List<Displayable> adsList = getAds(widget, new MinimalAdMapper());
           if (adsList.size() > 0) {
-            DisplayableGroup ads = new DisplayableGroup(adsList);
+            DisplayableGroup ads = new DisplayableGroup(adsList, windowManager, resources);
             // Header hammered
             LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
             actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(
@@ -104,7 +113,7 @@ public class DisplayablesFactory {
               new StoreCredentialsProviderImpl()));
 
         case REVIEWS_GROUP:
-          return Observable.from(createReviewsGroupDisplayables(widget));
+          return Observable.from(createReviewsGroupDisplayables(widget, windowManager, resources));
 
         case MY_STORE_META:
           return Observable.from(createMyStoreDisplayables(widget.getViewObject()));
@@ -112,7 +121,7 @@ public class DisplayablesFactory {
         case STORES_RECOMMENDED:
           return Observable.just(
               createRecommendedStores(widget, storeTheme, storeRepository, storeContext, context,
-                  accountManager, storeUtilsProxy));
+                  accountManager, storeUtilsProxy, windowManager, resources));
 
         case COMMENTS_GROUP:
           return Observable.from(createCommentsGroup(widget));
@@ -128,7 +137,7 @@ public class DisplayablesFactory {
   }
 
   private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      StoreContext storeContext) {
+      StoreContext storeContext, Resources resources, WindowManager windowManager) {
     ListApps listApps = (ListApps) wsWidget.getViewObject();
     if (listApps == null) {
       return new EmptyDisplayable();
@@ -147,13 +156,9 @@ public class DisplayablesFactory {
         .getLayout())) {
       if (apps.size() > 0) {
 
-        boolean useBigBrick = V8Engine.getContext()
-            .getResources()
-            .getBoolean(R.bool.use_big_app_brick);
+        boolean useBigBrick = resources.getBoolean(R.bool.use_big_app_brick);
 
-        int nrAppBricks = V8Engine.getContext()
-            .getResources()
-            .getInteger(R.integer.nr_small_app_bricks);
+        int nrAppBricks = resources.getInteger(R.integer.nr_small_app_bricks);
 
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
@@ -199,11 +204,12 @@ public class DisplayablesFactory {
         displayables.add(diplayable);
       }
     }
-    return new DisplayableGroup(displayables);
+    return new DisplayableGroup(displayables, windowManager, resources);
   }
 
   private static Observable<Displayable> getMyStores(GetStoreWidgets.WSWidget wsWidget,
-      StoreRepository storeRepository, String storeTheme, StoreContext storeContext) {
+      StoreRepository storeRepository, String storeTheme, StoreContext storeContext,
+      WindowManager windowManager, Resources resources) {
     return loadLocalSubscribedStores(storeRepository).map(stores -> {
       List<Displayable> tmp = new ArrayList<>(stores.size());
       int maxStoresToShow = stores.size();
@@ -234,12 +240,12 @@ public class DisplayablesFactory {
         }
         tmp.add(0, header);
       }
-      return new DisplayableGroup(tmp);
+      return new DisplayableGroup(tmp, windowManager, resources);
     });
   }
 
   private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      StoreContext storeContext) {
+      StoreContext storeContext, WindowManager windowManager, Resources resources) {
     Object viewObject = wsWidget.getViewObject();
     ListStores listStores = (ListStores) viewObject;
     if (listStores == null) {
@@ -254,11 +260,12 @@ public class DisplayablesFactory {
       GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
       tmp.add(diplayable);
     }
-    return new DisplayableGroup(tmp);
+    return new DisplayableGroup(tmp, windowManager, resources);
   }
 
   private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      StoreContext storeContext) {
+      StoreContext storeContext, WindowManager windowManager, Resources resources,
+      InstalledRepository installedRepository) {
     GetStoreDisplays getStoreDisplays = (GetStoreDisplays) wsWidget.getViewObject();
     if (getStoreDisplays == null) {
       return new EmptyDisplayable();
@@ -268,7 +275,8 @@ public class DisplayablesFactory {
 
     for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
       DisplayablePojo<GetStoreDisplays.EventImage> displayablePojo =
-          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag(), storeContext);
+          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag(), storeContext,
+              installedRepository);
 
       Event.Name name = displayablePojo.getPojo()
           .getEvent()
@@ -280,10 +288,11 @@ public class DisplayablesFactory {
       }
       tmp.add(displayablePojo);
     }
-    return new DisplayableGroup(tmp);
+    return new DisplayableGroup(tmp, windowManager, resources);
   }
 
-  private static @NonNull List<Displayable> getAds(GetStoreWidgets.WSWidget wsWidget) {
+  private static @NonNull List<Displayable> getAds(GetStoreWidgets.WSWidget wsWidget,
+      MinimalAdMapper adMapper) {
     GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
     if (getAdsResponse != null
         && getAdsResponse.getAds() != null
@@ -293,7 +302,7 @@ public class DisplayablesFactory {
       List<Displayable> tmp = new ArrayList<>(ads.size());
       for (GetAdsResponse.Ad ad : ads) {
 
-        GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
+        GridAdDisplayable diplayable = new GridAdDisplayable(adMapper.map(ad), wsWidget.getTag());
         tmp.add(diplayable);
       }
       return tmp;
@@ -302,8 +311,8 @@ public class DisplayablesFactory {
     return Collections.emptyList();
   }
 
-  private static List<Displayable> createReviewsGroupDisplayables(
-      GetStoreWidgets.WSWidget wsWidget) {
+  private static List<Displayable> createReviewsGroupDisplayables(GetStoreWidgets.WSWidget wsWidget,
+      WindowManager windowManager, Resources resources) {
     List<Displayable> displayables = new LinkedList<>();
 
     ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
@@ -313,7 +322,7 @@ public class DisplayablesFactory {
         .getList()
         .size() > 0) {
       displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-      displayables.add(createReviewsDisplayables(reviewsList));
+      displayables.add(createReviewsDisplayables(reviewsList, windowManager, resources));
     }
 
     return displayables;
@@ -331,7 +340,8 @@ public class DisplayablesFactory {
 
   private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
       String storeTheme, StoreRepository storeRepository, StoreContext storeContext,
-      Context context, AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy) {
+      Context context, AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
+      WindowManager windowManager, Resources resources) {
     ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
@@ -352,7 +362,7 @@ public class DisplayablesFactory {
       }
     }
 
-    return new DisplayableGroup(displayables);
+    return new DisplayableGroup(displayables, windowManager, resources);
   }
 
   private static List<Displayable> createCommentsGroup(GetStoreWidgets.WSWidget wsWidget) {
@@ -373,7 +383,7 @@ public class DisplayablesFactory {
                   .getList()));
     } else {
       displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-          StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
+          StoreTheme.DEFAULT));
     }
 
     return displayables;
@@ -395,7 +405,8 @@ public class DisplayablesFactory {
             .toList());
   }
 
-  private static Displayable createReviewsDisplayables(ListFullReviews listFullReviews) {
+  private static Displayable createReviewsDisplayables(ListFullReviews listFullReviews,
+      WindowManager windowManager, Resources resources) {
     List<FullReview> reviews = listFullReviews.getDatalist()
         .getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
@@ -403,6 +414,6 @@ public class DisplayablesFactory {
       displayables.add(new RowReviewDisplayable(reviews.get(i)));
     }
 
-    return new DisplayableGroup(displayables);
+    return new DisplayableGroup(displayables, windowManager, resources);
   }
 }

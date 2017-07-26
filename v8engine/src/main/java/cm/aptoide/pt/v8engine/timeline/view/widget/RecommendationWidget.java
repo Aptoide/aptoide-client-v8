@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.RecommendationDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -84,11 +84,12 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
           knockWithSixpackCredentials(displayable.getAbUrl());
 
           Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME,
-              displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
+              displayable.getTitle(getContext().getResources()),
               Analytics.AppsTimeline.OPEN_APP_VIEW);
           displayable.sendRecommendedOpenAppEvent();
           displayable.sendRecommendationCardClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
-              socialAction);
+              socialAction, getContext().getResources());
           getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
               .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
         }));
