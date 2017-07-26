@@ -53,7 +53,7 @@
   <string name="displayable_social_timeline_app_update">ማሻሻል</string>
   <string name="displayable_social_timeline_app_update_version">ስሪት %1$s</string>
   <string name="displayable_social_timeline_app_update_button">ማሻሻል %1$s</string>
-  <string name="appview_other_versions"><u>ሌላ ስሪት</u›</string>
+  <string name="appview_other_versions"><u>ሌላ ስሪት</u></string>
   <string name="appview_latest_version_text">የቅርብ ጊዜ ስሪት</string>
   <string name="appview_rate_this_app">የኤፒፒ ደረጃ</string>
   <string name="appview_read_all">read all <![CDATA[>]]></string>
