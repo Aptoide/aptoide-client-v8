@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
@@ -32,6 +33,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
   private ProductProvider productProvider;
   private BillingAnalytics billingAnalytics;
   private int paymentMethodId;
+  private AptoideAccountManager accountManager;
 
   public static Fragment create(Bundle bundle, int paymentMethodId) {
     final PayPalFragment fragment = new PayPalFragment();
@@ -46,6 +48,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
     productProvider = ProductProvider.fromBundle(billing, getArguments());
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     paymentMethodId = getArguments().getInt(EXTRA_PAYMENT_METHOD_ID);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Nullable @Override
@@ -69,8 +72,8 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
 
     attachPresenter(new PayPalPresenter(this, billing, productProvider, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator()), AndroidSchedulers.mainThread(),
-        paymentMethodId), savedInstanceState);
+            getActivityNavigator(), getFragmentNavigator(), accountManager),
+        AndroidSchedulers.mainThread(), paymentMethodId), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

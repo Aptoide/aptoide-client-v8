@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
@@ -25,6 +26,7 @@ public class BoaCompraFragment extends WebViewFragment implements WebView {
   private BillingSyncScheduler billingSyncScheduler;
   private ProductProvider productProvider;
   private int paymentMethodId;
+  private AptoideAccountManager accountManager;
 
   public static Fragment create(Bundle bundle, int paymentMethodId) {
     final BoaCompraFragment fragment = new BoaCompraFragment();
@@ -41,13 +43,15 @@ public class BoaCompraFragment extends WebViewFragment implements WebView {
     billingSyncScheduler =
         ((V8Engine) getContext().getApplicationContext()).getBillingSyncScheduler();
     productProvider = ProductProvider.fromBundle(billing, getArguments());
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     attachPresenter(new BoaCompraPresenter(this, billing, billingAnalytics, billingSyncScheduler,
-        productProvider,
-        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator()), paymentMethodId), savedInstanceState);
+            productProvider,
+            new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+                getActivityNavigator(), getFragmentNavigator(), accountManager), paymentMethodId),
+        savedInstanceState);
   }
 }

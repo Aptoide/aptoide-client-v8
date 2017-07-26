@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
@@ -24,6 +25,7 @@ public class MolFragment extends WebViewFragment {
   private BillingAnalytics billingAnalytics;
   private ProductProvider productProvider;
   private int paymentMethodId;
+  private AptoideAccountManager accountManager;
 
   public static Fragment create(Bundle bundle, int paymentMethodId) {
     final MolFragment fragment = new MolFragment();
@@ -38,6 +40,7 @@ public class MolFragment extends WebViewFragment {
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     productProvider = ProductProvider.fromBundle(billing, getArguments());
     paymentMethodId = getArguments().getInt(EXTRA_PAYMENT_METHOD_ID);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Nullable @Override
@@ -49,7 +52,8 @@ public class MolFragment extends WebViewFragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     attachPresenter(new MolPresenter(this, billing, billingAnalytics, productProvider,
-        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator()), paymentMethodId), savedInstanceState);
+            new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+                getActivityNavigator(), getFragmentNavigator(), accountManager), paymentMethodId),
+        savedInstanceState);
   }
 }

@@ -20,7 +20,6 @@ import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -57,7 +56,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private Billing billing;
   private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
-  private AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
 
   public static Fragment create(Bundle bundle) {
@@ -72,11 +70,9 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productProvider = ProductProvider.fromBundle(billing, getArguments());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     billingNavigator =
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator());
+            getActivityNavigator(), getFragmentNavigator(), accountManager);
   }
 
   @Nullable @Override
@@ -115,7 +111,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .build();
 
     attachPresenter(
-        new PaymentPresenter(this, billing, accountManager, accountNavigator, billingNavigator,
+        new PaymentPresenter(this, billing, billingNavigator,
             billingAnalytics, productProvider), savedInstanceState);
   }
 

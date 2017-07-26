@@ -171,7 +171,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyDecorator = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+        new AccountNavigator(getFragmentNavigator(), accountManager);
     return v;
   }
 

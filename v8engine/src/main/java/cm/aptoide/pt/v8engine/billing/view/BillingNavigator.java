@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentMethod;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.v8engine.billing.view.boacompra.BoaCompraFragment;
 import cm.aptoide.pt.v8engine.billing.view.braintree.BraintreeCreditCardFragment;
 import cm.aptoide.pt.v8engine.billing.view.mol.MolFragment;
 import cm.aptoide.pt.v8engine.billing.view.paypal.PayPalFragment;
+import cm.aptoide.pt.v8engine.view.account.LoginActivity;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -29,12 +31,26 @@ public class BillingNavigator {
   private final PurchaseBundleMapper bundleMapper;
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
+  private final AptoideAccountManager accountManager;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
+    this.accountManager = accountManager;
+  }
+
+  public void navigateToPayerAuthenticationForResult(int requestCode) {
+    activityNavigator.navigateForResult(LoginActivity.class, requestCode);
+  }
+
+  public Observable<Boolean> payerAuthenticationResults(int requestCode) {
+    return activityNavigator.results(requestCode)
+        .flatMapSingle(result -> accountManager.accountStatus()
+            .first()
+            .toSingle())
+        .map(account -> account.isLoggedIn());
   }
 
   public void navigateToTransactionAuthorizationView(PaymentMethod paymentMethod, Product product) {
@@ -91,15 +107,16 @@ public class BillingNavigator {
   }
 
   public void popPaymentViewWithResult(Purchase purchase) {
-    activityNavigator.finish(Activity.RESULT_OK, bundleMapper.map(purchase));
+    activityNavigator.navigateBackWithResult(Activity.RESULT_OK, bundleMapper.map(purchase));
   }
 
   public void popPaymentViewWithResult(Throwable throwable) {
-    activityNavigator.finish(Activity.RESULT_CANCELED, bundleMapper.map(throwable));
+    activityNavigator.navigateBackWithResult(Activity.RESULT_CANCELED, bundleMapper.map(throwable));
   }
 
   public void popPaymentViewWithResult() {
-    activityNavigator.finish(Activity.RESULT_CANCELED, bundleMapper.mapCancellation());
+    activityNavigator.navigateBackWithResult(Activity.RESULT_CANCELED,
+        bundleMapper.mapCancellation());
   }
 
   private Bundle getProductBundle(Product product) {

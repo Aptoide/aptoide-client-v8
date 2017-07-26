@@ -88,7 +88,7 @@ import rx.android.schedulers.AndroidSchedulers;
     baseBodyInterceptorV3 =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV3();
     accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+        new AccountNavigator(getFragmentNavigator(), accountManager);
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes()
         .getMeta()

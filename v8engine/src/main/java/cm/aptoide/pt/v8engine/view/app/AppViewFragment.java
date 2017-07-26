@@ -268,7 +268,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         ((V8Engine) getContext().getApplicationContext()).getPurchaseBundleMapper();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+        new AccountNavigator(getFragmentNavigator(), accountManager);
     permissionManager = new PermissionManager();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);

@@ -24,15 +24,21 @@ public class Billing {
   private final AuthorizationRepository authorizationRepository;
   private final PaymentMethodSelector paymentMethodSelector;
   private final TransactionPersistence transactionPersistence;
+  private final Payer payer;
 
   public Billing(TransactionRepository transactionRepository, BillingService billingService,
       AuthorizationRepository authorizationRepository, PaymentMethodSelector paymentMethodSelector,
-      TransactionPersistence transactionPersistence) {
+      TransactionPersistence transactionPersistence, Payer payer) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
     this.paymentMethodSelector = paymentMethodSelector;
     this.transactionPersistence = transactionPersistence;
+    this.payer = payer;
+  }
+
+  public Payer getPayer() {
+    return payer;
   }
 
   public Single<Boolean> isSupported(String packageName, int apiVersion, String type) {
