@@ -11,7 +11,6 @@ import java.util.Date;
 
 public class Media implements Post {
   private final String cardId;
-  private final String userContent;
   private final String mediaTitle;
   private final String mediaThumbnailUrl;
   private final Date date;
@@ -24,11 +23,10 @@ public class Media implements Post {
   private final boolean isLiked;
   private final CardType cardType;
 
-  public Media(String cardId, String userContent, String mediaTitle, String mediaThumbnailUrl,
-      Date date, App app, String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink,
-      boolean isLiked, CardType cardType) {
+  public Media(String cardId, String mediaTitle, String mediaThumbnailUrl, Date date, App app,
+      String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink, boolean isLiked,
+      CardType cardType) {
     this.cardId = cardId;
-    this.userContent = userContent;
     this.mediaTitle = mediaTitle;
     this.mediaThumbnailUrl = mediaThumbnailUrl;
     this.date = date;
@@ -53,10 +51,6 @@ public class Media implements Post {
 
   public String getAbUrl() {
     return abTestURL;
-  }
-
-  public String getUserContent() {
-    return userContent;
   }
 
   public String getMediaTitle() {

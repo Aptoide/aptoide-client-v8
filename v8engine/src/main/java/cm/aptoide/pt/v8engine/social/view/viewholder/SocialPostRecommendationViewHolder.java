@@ -1,52 +1,53 @@
 package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.SocialMedia;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 /**
- * Created by jdandrade on 27/06/2017.
+ * Created by jdandrade on 24/07/2017.
  */
 
-public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
+public class SocialPostRecommendationViewHolder extends PostViewHolder<RatedRecommendation> {
   private final DateCalculator dateCalculator;
-  private final SpannableFactory spannableFactory;
   private final ImageView headerPrimaryAvatar;
   private final ImageView headerSecondaryAvatar;
   private final TextView headerPrimaryName;
   private final TextView headerSecondaryName;
   private final TextView timestamp;
-  private final TextView mediaTitle;
-  private final ImageView mediaThumbnail;
-  private final TextView relatedTo;
-  private final ImageView playIcon;
+  private final ImageView appIcon;
+  private final TextView appName;
+  private final RatingBar appRating;
+  private final Button getAppButton;
+  private final SpannableFactory spannableFactory;
   private final RelativeLayout cardHeader;
   private final LinearLayout like;
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   private final LinearLayout socialInfoBar;
   private final TextView numberLikes;
@@ -58,13 +59,14 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
   private final TextView socialCommentUsername;
   private final TextView socialCommentBody;
   private final ImageView latestCommentMainAvatar;
+  /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
+  private final TextView postContent;
   private int marginOfTheNextLikePreview = 60;
 
-  /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-  public SocialMediaViewHolder(View view,
-      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory) {
+  public SocialPostRecommendationViewHolder(View view, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory,
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
     super(view);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -74,11 +76,13 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     this.headerPrimaryName = (TextView) view.findViewById(R.id.card_title);
     this.headerSecondaryName = (TextView) view.findViewById(R.id.card_subtitle);
     this.timestamp = (TextView) view.findViewById(R.id.card_date);
-    this.mediaTitle =
-        (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
-    this.mediaThumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
-    this.relatedTo = (TextView) itemView.findViewById(R.id.app_name);
-    this.playIcon = (ImageView) itemView.findViewById(R.id.play_button);
+    this.appIcon =
+        (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+    this.appName =
+        (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
+    this.appRating = (RatingBar) view.findViewById(R.id.rating_bar);
+    this.getAppButton =
+        (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
     this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
@@ -99,16 +103,10 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
         (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.inflater = LayoutInflater.from(itemView.getContext());
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
+    this.postContent = (TextView) itemView.findViewById(R.id.post_content);
   }
 
-  @Override public void setPost(SocialMedia card, int position) {
-    if (card.getType()
-        .equals(CardType.SOCIAL_ARTICLE)) {
-      this.playIcon.setVisibility(View.GONE);
-    } else if (card.getType()
-        .equals(CardType.SOCIAL_VIDEO)) {
-      this.playIcon.setVisibility(View.VISIBLE);
-    }
+  @Override public void setPost(RatedRecommendation card, int position) {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPoster()
             .getPrimaryAvatar(), headerPrimaryAvatar);
@@ -118,15 +116,17 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     this.headerPrimaryName.setText(getStyledTitle(itemView.getContext(), card.getPoster()
         .getPrimaryName()));
     showHeaderSecondaryName(card);
-    this.timestamp.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
-    this.mediaTitle.setText(card.getMediaTitle());
+    this.timestamp.setText(
+        dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
     ImageLoader.with(itemView.getContext())
-        .loadWithCenterCrop(card.getMediaThumbnailUrl(), mediaThumbnail);
-    this.relatedTo.setText(spannableFactory.createStyleSpan(itemView.getContext()
-        .getString(R.string.displayable_social_timeline_article_related_to, card.getRelatedApp()
-            .getName()), Typeface.BOLD, card.getRelatedApp()
-        .getName()));
-    this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        .load(card.getAppIcon(), appIcon);
+    this.appName.setText(card.getAppName());
+    this.appRating.setRating(card.getAppAverageRating());
+    this.postContent.setText(card.getContent());
+
+    this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new SocialHeaderCardTouchEvent(card, card.getPoster()
@@ -165,7 +165,7 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
-  private void showHeaderSecondaryName(SocialMedia card) {
+  private void showHeaderSecondaryName(RatedRecommendation card) {
     if (TextUtils.isEmpty(card.getPoster()
         .getSecondaryName())) {
       this.headerSecondaryName.setVisibility(View.GONE);
@@ -177,7 +177,7 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
   }
 
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-  private void showSocialInformationBar(SocialMedia card) {
+  private void showSocialInformationBar(RatedRecommendation card) {
     if (card.getLikesNumber() > 0 || card.getCommentsNumber() > 0) {
       socialInfoBar.setVisibility(View.VISIBLE);
     } else {
@@ -188,7 +188,7 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     handleCommentsInformation(card);
   }
 
-  private void showLikesPreview(SocialMedia post) {
+  private void showLikesPreview(RatedRecommendation post) {
     likePreviewContainer.removeAllViews();
     marginOfTheNextLikePreview = 60;
     for (int j = 0; j < post.getLikesNumber(); j++) {
@@ -206,7 +206,7 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     }
   }
 
-  private void handleLikesInformation(SocialMedia card) {
+  private void handleLikesInformation(RatedRecommendation card) {
     if (card.getLikesNumber() > 0) {
       if (card.getLikesNumber() > 1) {
         showNumberOfLikes(card.getLikesNumber());
@@ -248,7 +248,7 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     }
   }
 
-  private void handleCommentsInformation(SocialMedia post) {
+  private void handleCommentsInformation(RatedRecommendation post) {
     if (post.getCommentsNumber() > 0) {
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(itemView.getContext()
@@ -271,6 +271,7 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
       socialCommentBar.setVisibility(View.GONE);
     }
   }
+  /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
   private void addUserToPreview(int i, UserTimeline user) {
     View likeUserPreviewView;
@@ -298,7 +299,6 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
       marginOfTheNextLikePreview -= 20;
     }
   }
-  /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
   private void showNumberOfLikes(long likesNumber) {
     numberLikes.setVisibility(View.VISIBLE);

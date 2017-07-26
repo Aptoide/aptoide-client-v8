@@ -60,7 +60,6 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
   private final TextView socialCommentUsername;
   private final TextView socialCommentBody;
   private final ImageView latestCommentMainAvatar;
-  private final TextView userContent;
 
   private int marginOfTheNextLikePreview = 60;
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
@@ -106,8 +105,6 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
     this.inflater = LayoutInflater.from(itemView.getContext());
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
-    userContent =
-        (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title_user);
   }
 
   @Override public void setPost(RatedRecommendation card, int position) {
@@ -160,7 +157,6 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
         new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
-    this.userContent.setText(card.getUserContent());
   }
 
   public Spannable getStyledTitle(Context context, String title, int titleStringResourceId) {

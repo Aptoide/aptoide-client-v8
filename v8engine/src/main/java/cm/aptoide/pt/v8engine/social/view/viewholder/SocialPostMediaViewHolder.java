@@ -26,10 +26,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 /**
- * Created by jdandrade on 27/06/2017.
+ * Created by jdandrade on 24/07/2017.
  */
 
-public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
+public class SocialPostMediaViewHolder extends PostViewHolder<SocialMedia> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final ImageView headerPrimaryAvatar;
@@ -58,13 +58,16 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
   private final TextView socialCommentUsername;
   private final TextView socialCommentBody;
   private final ImageView latestCommentMainAvatar;
-
+  /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
+  private final TextView postContent;
+  private final TextView publisher;
+  private final RelativeLayout postBodyThumbnailLayout;
+  private final TextView postUrlWhenNoThumbnail;
   private int marginOfTheNextLikePreview = 60;
 
-  /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-  public SocialMediaViewHolder(View view,
-      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory) {
+  public SocialPostMediaViewHolder(View view, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory,
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
     super(view);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -99,14 +102,18 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
         (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.inflater = LayoutInflater.from(itemView.getContext());
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
+    this.postContent = (TextView) itemView.findViewById(R.id.post_content);
+    this.publisher = (TextView) itemView.findViewById(R.id.partial_social_timeline_publisher);
+    this.postBodyThumbnailLayout = (RelativeLayout) itemView.findViewById(R.id.post_thumbnail);
+    this.postUrlWhenNoThumbnail = (TextView) itemView.findViewById(R.id.post_url_when_no_thumbnail);
   }
 
   @Override public void setPost(SocialMedia card, int position) {
     if (card.getType()
-        .equals(CardType.SOCIAL_ARTICLE)) {
+        .equals(CardType.SOCIAL_POST_ARTICLE)) {
       this.playIcon.setVisibility(View.GONE);
     } else if (card.getType()
-        .equals(CardType.SOCIAL_VIDEO)) {
+        .equals(CardType.SOCIAL_POST_VIDEO)) {
       this.playIcon.setVisibility(View.VISIBLE);
     }
     ImageLoader.with(itemView.getContext())
@@ -120,12 +127,27 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     showHeaderSecondaryName(card);
     this.timestamp.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
     this.mediaTitle.setText(card.getMediaTitle());
-    ImageLoader.with(itemView.getContext())
-        .loadWithCenterCrop(card.getMediaThumbnailUrl(), mediaThumbnail);
     this.relatedTo.setText(spannableFactory.createStyleSpan(itemView.getContext()
         .getString(R.string.displayable_social_timeline_article_related_to, card.getRelatedApp()
             .getName()), Typeface.BOLD, card.getRelatedApp()
         .getName()));
+    this.postContent.setText(card.getContent());
+    this.publisher.setText(spannableFactory.createColorSpan(itemView.getContext()
+            .getString(R.string.timeline_title_card_title_post_past_singular, card.getPublisherName()),
+        ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
+        card.getPublisherName()));
+
+    if (!TextUtils.isEmpty(card.getMediaThumbnailUrl())) {
+      postBodyThumbnailLayout.setVisibility(View.VISIBLE);
+      postUrlWhenNoThumbnail.setVisibility(View.GONE);
+      ImageLoader.with(itemView.getContext())
+          .loadWithCenterCrop(card.getMediaThumbnailUrl(), mediaThumbnail);
+    } else {
+      postBodyThumbnailLayout.setVisibility(View.GONE);
+      postUrlWhenNoThumbnail.setVisibility(View.VISIBLE);
+      postUrlWhenNoThumbnail.setText(card.getMediaLink()
+          .getUrl());
+    }
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(

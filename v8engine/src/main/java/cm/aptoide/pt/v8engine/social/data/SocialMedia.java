@@ -20,19 +20,25 @@ public class SocialMedia extends Media {
   private final long likesNumber;
   private final List<UserTimeline> likes;
   private final List<SocialCard.CardComment> comments;
+  private final String content;
 
-  public SocialMedia(String cardId, String userContent, Poster poster, String mediaTitle,
-      String mediaThumbnailUrl, Date date, App app, String abTestURL, Publisher publisher,
-      Link publisherLink, Link mediaLink, boolean isLiked, long commentsNumber, long likesNumber,
-      List<UserTimeline> likes, List<SocialCard.CardComment> comments, CardType cardType) {
-    super(cardId, userContent, mediaTitle, mediaThumbnailUrl, date, app, abTestURL, publisher,
-        publisherLink, mediaLink, false, cardType);
+  public SocialMedia(String cardId, Poster poster, String mediaTitle, String mediaThumbnailUrl,
+      Date date, App app, String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink,
+      boolean isLiked, long commentsNumber, long likesNumber, List<UserTimeline> likes,
+      List<SocialCard.CardComment> comments, String content, CardType cardType) {
+    super(cardId, mediaTitle, mediaThumbnailUrl, date, app, abTestURL, publisher, publisherLink,
+        mediaLink, false, cardType);
     this.poster = poster;
     this.isLiked = isLiked;
     this.commentsNumber = commentsNumber;
     this.likesNumber = likesNumber;
     this.likes = likes;
     this.comments = comments;
+    this.content = content;
+  }
+
+  public String getContent() {
+    return content;
   }
 
   public long getCommentsNumber() {
