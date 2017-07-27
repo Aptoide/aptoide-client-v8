@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialVideoDisplayable;
@@ -284,7 +286,9 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
           }, err -> CrashReport.getInstance()
               .log(err)));
 
-      compositeSubscription.add(displayable.getRelatedToApplication()
+      compositeSubscription.add(displayable.getRelatedToApplication(AccessorFactory.getAccessorFor(
+          ((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Installed.class))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installeds -> {
             if (installeds != null && !installeds.isEmpty()) {

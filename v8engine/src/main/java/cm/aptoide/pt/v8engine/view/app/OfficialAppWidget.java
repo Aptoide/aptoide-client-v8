@@ -154,7 +154,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
   }
 
   private boolean isAppInstalled(String packageName) {
-    InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
+    InstalledRepository installedRepo =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     return installedRepo.isInstalled(packageName)
         .toBlocking()
         .first();

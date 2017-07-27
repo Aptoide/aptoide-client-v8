@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * Created by filipegoncalves on 18-07-2016.
  */
-public class RadarActivity extends ActivityView implements RadarView, PermissionManager {
+public class RadarActivity extends SpotAndShareActivityView implements RadarView, PermissionManager {
 
   public static final String HOTSPOT_NAME = "HOTSPOT_NAME";
   private static final int PERMISSION_REQUEST_CODE = 6531;

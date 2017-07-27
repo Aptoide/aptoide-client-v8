@@ -25,7 +25,6 @@ import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.InstallationState;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.repository.DownloadRepository;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -50,13 +49,14 @@ public class InstallManager {
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
-      SharedPreferences sharedPreferences, SharedPreferences securePreferences) {
+      SharedPreferences sharedPreferences, SharedPreferences securePreferences,
+      DownloadRepository downloadRepository, InstalledRepository installedRepository) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
     this.rootAvailabilityManager = rootAvailabilityManager;
-    this.downloadRepository = RepositoryFactory.getDownloadRepository();
-    this.installedRepository = RepositoryFactory.getInstalledRepository();
+    this.downloadRepository = downloadRepository;
+    this.installedRepository = installedRepository;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
   }

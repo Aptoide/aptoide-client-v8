@@ -7,22 +7,20 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.telephony.TelephonyManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.app.AppRepository;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
@@ -38,18 +36,25 @@ import okhttp3.OkHttpClient;
  */
 public final class RepositoryFactory {
 
-  public static ScheduledDownloadRepository getScheduledDownloadRepository() {
-    return new ScheduledDownloadRepository(AccessorFactory.getAccessorFor(Scheduled.class));
+  public static ScheduledDownloadRepository getScheduledDownloadRepository(Context context) {
+    return new ScheduledDownloadRepository(
+        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
+            Scheduled.class));
   }
 
-  public static RollbackRepository getRollbackRepository() {
-    return new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
+  public static RollbackRepository getRollbackRepository(Context context) {
+    return new RollbackRepository(
+        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
+            Rollback.class));
   }
 
   public static UpdateRepository getUpdateRepository(Context context,
       SharedPreferences sharedPreferences) {
-    return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
+    return new UpdateRepository(AccessorFactory.getAccessorFor(
+        ((V8Engine) context.getApplicationContext()
+            .getApplicationContext()).getDatabase(), Update.class), AccessorFactory.getAccessorFor(
+        ((V8Engine) context.getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class), getAccountManager(context),
         getIdsRepository(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
         WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
         context.getPackageManager());
@@ -67,30 +72,32 @@ public final class RepositoryFactory {
     return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 
-  public static InstalledRepository getInstalledRepository() {
-    return new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
+  public static InstalledRepository getInstalledRepository(Context context) {
+    return new InstalledRepository(
+        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
+            Installed.class));
   }
 
-  public static cm.aptoide.pt.v8engine.repository.StoreRepository getStoreRepository() {
+  public static cm.aptoide.pt.v8engine.repository.StoreRepository getStoreRepository(
+      Context context) {
     return new cm.aptoide.pt.v8engine.repository.StoreRepository(
-        AccessorFactory.getAccessorFor(Store.class));
+        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
+            Store.class));
   }
 
-  public static cm.aptoide.pt.v8engine.repository.DownloadRepository getDownloadRepository() {
+  public static cm.aptoide.pt.v8engine.repository.DownloadRepository getDownloadRepository(
+      Context context) {
     return new cm.aptoide.pt.v8engine.repository.DownloadRepository(
-        AccessorFactory.getAccessorFor(Download.class));
-  }
-
-  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
-    return new NetworkOperatorManager(
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
+            Download.class));
   }
 
   public static AppRepository getAppRepository(Context context,
       SharedPreferences sharedPreferences) {
-    return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
-        getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
-        new StoreCredentialsProviderImpl(), getHttpClient(context),
+    return new AppRepository(getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((V8Engine) context.getApplicationContext()
+                .getApplicationContext()).getDatabase(), Store.class)), getHttpClient(context),
         WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
         context.getResources());
   }

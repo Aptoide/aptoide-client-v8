@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers;
  */
 public class UpdateAccessor extends SimpleAccessor<Update> {
 
-  UpdateAccessor(Database db) {
+  public UpdateAccessor(Database db) {
     super(db, Update.class);
   }
 
