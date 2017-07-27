@@ -46,7 +46,9 @@ public interface TimelineView extends View {
 
   void showRootAccessDialog();
 
-  void updatePost(Post card, int cardPosition);
+  void updatePost(int cardPosition);
+
+  void swapPost(Post post, int postPosition);
 
   void showStoreSubscribedMessage(String storeName);
 

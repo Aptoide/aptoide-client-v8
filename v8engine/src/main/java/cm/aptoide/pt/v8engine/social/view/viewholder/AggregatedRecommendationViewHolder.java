@@ -89,7 +89,7 @@ public class AggregatedRecommendationViewHolder extends PostViewHolder<Aggregate
     minimalCardContainer.removeAllViews();
     minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalPosts(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
-        itemView.getContext()));
+        itemView.getContext(), position));
   }
 
   public String getCardHeaderNames(AggregatedRecommendation card) {

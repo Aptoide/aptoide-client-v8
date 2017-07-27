@@ -10,4 +10,10 @@ public interface Post {
   CardType getType();
 
   String getAbUrl();
+
+  boolean isLiked();
+
+  void setLiked(boolean liked);
+
+  boolean isLikeFromClick();
 }

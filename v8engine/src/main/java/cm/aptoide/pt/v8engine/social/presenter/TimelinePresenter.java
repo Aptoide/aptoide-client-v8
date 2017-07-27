@@ -23,7 +23,8 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
@@ -314,7 +315,7 @@ public class TimelinePresenter implements Presenter {
                     .doOnNext(install -> {
                       // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
                       ((AppUpdate) post).setInstallationStatus(install.getState());
-                      view.updatePost(post,
+                      view.swapPost(post,
                           ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
                     })
                     .subscribe(downloadProgress -> {
@@ -359,9 +360,20 @@ public class TimelinePresenter implements Presenter {
                 .isSocial() || cardTouchEvent.getCard()
                 .getType()
                 .equals(CardType.MINIMAL_CARD))
+            .filter(cardTouchEvent -> !cardTouchEvent.getCard()
+                .isLiked())
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
+                .doOnSuccess(account -> {
+                  if (!account.isLoggedIn()) {
+                    view.showLoginPromptWithAction();
+                  } else {
+                    cardTouchEvent.getCard()
+                        .setLiked(true);
+                    view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                  }
+                })
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
                     if (showCreateStore(account)) {
@@ -372,9 +384,7 @@ public class TimelinePresenter implements Presenter {
                     }
 
                     final Post post = cardTouchEvent.getCard();
-                    return timeline.like(post, post.getCardId())
-                        .doOnCompleted(() -> view.updatePost(post,
-                            ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition()));
+                    return timeline.like(post, post.getCardId());
                   }
                   return Completable.fromAction(() -> view.showLoginPromptWithAction());
                 })))
@@ -416,17 +426,26 @@ public class TimelinePresenter implements Presenter {
                 .equals(CardTouchEvent.Type.LIKE) && cardTouchEvent.getCard()
                 .getType()
                 .isNormal())
+            .filter(cardTouchEvent -> !cardTouchEvent.getCard()
+                .isLiked())
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(account -> {
+                  if (!account.isLoggedIn()) {
+                    view.showLoginPromptWithAction();
+                  } else {
+                    cardTouchEvent.getCard()
+                        .setLiked(true);
+                    view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                  }
+                })
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
                     final Post post = cardTouchEvent.getCard();
                     return timeline.sharePost(post)
-                        .flatMapCompletable(cardId -> timeline.like(post, cardId))
-                        .doOnCompleted(() -> view.updatePost(post,
-                            ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition()));
+                        .flatMapCompletable(cardId -> timeline.like(post, cardId));
                   } else {
                     return Completable.fromAction(() -> view.showLoginPromptWithAction());
                   }
@@ -434,7 +453,7 @@ public class TimelinePresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
-            .getAbUrl()), throwable -> crashReport.log(throwable));
+            .getAbUrl()), throwable -> throwable.printStackTrace());
   }
 
   private void clickOnCommentSocialPost() {
@@ -637,7 +656,7 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.LIKES_PREVIEW))
         .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(cardTouchEvent.getCard()
-            .getCardId(), ((LikesCardTouchEvent) cardTouchEvent).getLikesNumber()))
+            .getCardId(), ((LikesPreviewCardTouchEvent) cardTouchEvent).getLikesNumber()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {

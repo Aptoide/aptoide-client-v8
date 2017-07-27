@@ -16,7 +16,7 @@ public class AggregatedRecommendation extends AppPost {
       String appIcon, String appName, long appId, float appAverageRating, Long storeId,
       String packageName, Date timestamp, String abUrl, CardType cardType) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType,
-        appAverageRating, storeId);
+        appAverageRating, storeId, false);
     this.posters = posters;
     this.minimalPosts = minimalPosts;
   }

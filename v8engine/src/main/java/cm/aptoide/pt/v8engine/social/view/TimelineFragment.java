@@ -350,8 +350,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         });
   }
 
-  @Override public void updatePost(Post post, int cardPosition) {
-    adapter.updatePost(post, cardPosition);
+  @Override public void updatePost(int cardPosition) {
+    adapter.updatePost(cardPosition);
+  }
+
+  @Override public void swapPost(Post post, int postPosition) {
+    adapter.swapPost(post, postPosition);
   }
 
   @Override public void showStoreSubscribedMessage(String storeName) {
