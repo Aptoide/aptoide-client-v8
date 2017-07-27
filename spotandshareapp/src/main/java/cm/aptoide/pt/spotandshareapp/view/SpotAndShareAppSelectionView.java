@@ -13,11 +13,11 @@ public interface SpotAndShareAppSelectionView extends View {
 
   void finish();
 
-  void setupRecyclerView(List<AppModel> installedApps);
+  void setupRecyclerInstalledAppsView(List<AppModel> installedApps);
 
   void onLeaveGroupError();
 
-  Observable<AppModel> appSelection();
+  Observable<AppModel> selectedApp();
 
   void openTransferRecord();
 

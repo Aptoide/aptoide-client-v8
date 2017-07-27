@@ -64,7 +64,7 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
     getActivity().finish();
   }
 
-  @Override public void setupRecyclerView(List<AppModel> installedApps) {
+  @Override public void setupRecyclerInstalledAppsView(List<AppModel> installedApps) {
     adapter = new SpotAndShareAppSelectionAdapter(appSubject,
         new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
         installedApps);
@@ -79,7 +79,7 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
         .show();
   }
 
-  @Override public Observable<AppModel> appSelection() {
+  @Override public Observable<AppModel> selectedApp() {
     return appSubject;
   }
 
