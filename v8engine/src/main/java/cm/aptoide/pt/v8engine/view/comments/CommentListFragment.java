@@ -277,11 +277,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
-          && listComments.getDatalist() != null
-          && listComments.getDatalist()
+          && listComments.getDataList() != null
+          && listComments.getDataList()
           .getList() != null) {
         comments = commentOperations.flattenByDepth(commentOperations.transform(
-            listComments.getDatalist()
+            listComments.getDataList()
                 .getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
@@ -330,11 +330,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
-          && listComments.getDatalist() != null
-          && listComments.getDatalist()
+          && listComments.getDataList() != null
+          && listComments.getDataList()
           .getList() != null) {
         comments = commentOperations.flattenByDepth(commentOperations.transform(
-            listComments.getDatalist()
+            listComments.getDataList()
                 .getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());

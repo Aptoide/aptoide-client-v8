@@ -38,10 +38,10 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
   @Override protected Action1<ListFullReviews> buildAction() {
     return listFullReviews -> {
       if (listFullReviews != null
-          && listFullReviews.getDatalist() != null
-          && listFullReviews.getDatalist()
+          && listFullReviews.getDataList() != null
+          && listFullReviews.getDataList()
           .getList() != null) {
-        List<FullReview> reviews = listFullReviews.getDatalist()
+        List<FullReview> reviews = listFullReviews.getDataList()
             .getList();
         ArrayList<Displayable> displayables = new ArrayList<>(reviews.size());
         for (int i = 0; i < reviews.size(); i++) {

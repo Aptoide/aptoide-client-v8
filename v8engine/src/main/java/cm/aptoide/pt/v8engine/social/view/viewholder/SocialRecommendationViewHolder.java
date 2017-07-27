@@ -104,6 +104,7 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
         (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.inflater = LayoutInflater.from(itemView.getContext());
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
+
   }
 
   @Override public void setPost(RatedRecommendation card, int position) {
@@ -251,7 +252,8 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(itemView.getContext()
           .getResources()
-          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber()));
+          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber(),
+              (int) post.getCommentsNumber()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(itemView.getContext())
           .loadWithShadowCircleTransform(post.getComments()

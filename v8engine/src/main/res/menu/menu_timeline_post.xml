@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+  <item
+      android:id="@+id/post_button"
+      android:title="@string/timeline_button_post"
+      app:showAsAction="always"/>
+</menu>

@@ -78,7 +78,7 @@ android:fitsSystemWindows="true"
           android:id="@+id/join_us"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:text="@string/wizard_sub_sub_title_viewpager_three"
+          android:text="@string/wizard_sub_title_viewpager_three"
           style="@style/OnBoarding.SubTitle.TextView"
           />
 

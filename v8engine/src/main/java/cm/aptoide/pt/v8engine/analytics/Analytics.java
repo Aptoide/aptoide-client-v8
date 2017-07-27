@@ -562,7 +562,7 @@ public class Analytics {
           "Like Card"), COMMENT_LIST("Comment List"), RATE_DIALOG("Reviews FAB"), REPLY_REVIEW(
           "Reply Review"), REVIEW_FEEDBACK("Review Feedback"), SOCIAL_LIKE(
           "Like Social Card"), STORE_COMMENT("Store Comment"), LATEST_COMMENTS_STORE(
-          "Comment on Latest Store Comments");
+          "Comment on Latest Store Comments"), POST_ON_TIMELINE("Post on Timeline"),;
 
       private final String origin;
 

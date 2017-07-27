@@ -94,7 +94,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
               ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
               ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
-        List<FullReview> reviews = listTopFullReviews.getDatalist()
+        List<FullReview> reviews = listTopFullReviews.getDataList()
             .getList();
         displayables = new LinkedList<>();
         for (final FullReview review : reviews) {

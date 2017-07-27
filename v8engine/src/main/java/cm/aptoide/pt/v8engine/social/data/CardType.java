@@ -5,28 +5,41 @@ package cm.aptoide.pt.v8engine.social.data;
  */
 
 public enum CardType {
-  ARTICLE, VIDEO, RECOMMENDATION, STORE, UPDATE, POPULAR_APP, SOCIAL_RECOMMENDATION, SOCIAL_INSTALL, SOCIAL_ARTICLE, SOCIAL_VIDEO, SOCIAL_STORE, AGGREGATED_SOCIAL_ARTICLE, AGGREGATED_SOCIAL_VIDEO, AGGREGATED_SOCIAL_INSTALL, AGGREGATED_SOCIAL_STORE, MINIMAL_CARD, TIMELINE_STATS, LOGIN, SIMILAR, PROGRESS;
+  ARTICLE, VIDEO, RECOMMENDATION, STORE, UPDATE, POPULAR_APP, SOCIAL_RECOMMENDATION, SOCIAL_INSTALL, SOCIAL_ARTICLE, SOCIAL_VIDEO, SOCIAL_STORE, AGGREGATED_SOCIAL_ARTICLE, AGGREGATED_SOCIAL_VIDEO, AGGREGATED_SOCIAL_INSTALL, AGGREGATED_SOCIAL_STORE, MINIMAL_CARD, TIMELINE_STATS, LOGIN, SIMILAR, PROGRESS, SOCIAL_POST_ARTICLE, SOCIAL_POST_VIDEO, SOCIAL_POST_RECOMMENDATION;
 
-  public static boolean isNormal(CardType cardType) {
-    return cardType.equals(CardType.RECOMMENDATION)
-        || cardType.equals(CardType.ARTICLE)
-        || cardType.equals(CardType.VIDEO)
-        || cardType.equals(CardType.POPULAR_APP)
-        || cardType.equals(CardType.STORE)
-        || cardType.equals(CardType.UPDATE);
+  public boolean isNormal() {
+    return equals(RECOMMENDATION)
+        || equals(ARTICLE)
+        || equals(VIDEO)
+        || equals(POPULAR_APP)
+        || equals(STORE)
+        || equals(UPDATE);
   }
 
-  public static boolean isSocial(CardType cardType) {
-    return cardType.equals(CardType.SOCIAL_ARTICLE)
-        || cardType.equals(CardType.SOCIAL_VIDEO)
-        || cardType.equals(CardType.SOCIAL_STORE)
-        || cardType.equals(CardType.SOCIAL_RECOMMENDATION)
-        || cardType.equals(CardType.SOCIAL_INSTALL);
+  public boolean isSocial() {
+    return equals(SOCIAL_ARTICLE) || equals(SOCIAL_VIDEO) || equals(SOCIAL_STORE) || equals(
+        SOCIAL_RECOMMENDATION) || equals(SOCIAL_INSTALL) || equals(SOCIAL_POST_ARTICLE) || equals(
+        SOCIAL_POST_VIDEO) || equals(SOCIAL_POST_RECOMMENDATION);
   }
 
-  public static boolean isMedia(CardType cardType) {
-    return cardType.equals(CardType.VIDEO) || cardType.equals(CardType.ARTICLE) || cardType.equals(
-        CardType.SOCIAL_ARTICLE) || cardType.equals(CardType.SOCIAL_VIDEO) || cardType.equals(
-        CardType.AGGREGATED_SOCIAL_ARTICLE) || cardType.equals(CardType.AGGREGATED_SOCIAL_VIDEO);
+  public boolean isMedia() {
+    return equals(VIDEO)
+        || equals(ARTICLE)
+        || equals(SOCIAL_ARTICLE)
+        || equals(SOCIAL_VIDEO)
+        || equals(AGGREGATED_SOCIAL_ARTICLE)
+        || equals(AGGREGATED_SOCIAL_VIDEO)
+        || equals(SOCIAL_POST_VIDEO)
+        || equals(SOCIAL_POST_ARTICLE);
+  }
+
+  public boolean isVideo() {
+    return equals(VIDEO) || equals(SOCIAL_VIDEO) || equals(AGGREGATED_SOCIAL_VIDEO) || equals(
+        SOCIAL_POST_VIDEO);
+  }
+
+  public boolean isArticle() {
+    return equals(ARTICLE) || equals(SOCIAL_ARTICLE) || equals(AGGREGATED_SOCIAL_ARTICLE) || equals(
+        SOCIAL_POST_ARTICLE);
   }
 }

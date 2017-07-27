@@ -114,7 +114,7 @@
     <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
     <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
     <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
-    <item name="icAppviewsPencil">@drawable/ic_pencil</item>
+    <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
     <item name="alertDialogTheme">@style/AlertDialogAptoide</item>
   </style>
 
@@ -240,7 +240,7 @@
     <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
     <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
     <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
-    <item name="icAppviewsPencil">@drawable/ic_pencil</item>
+    <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
 
 
   </style>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -14,16 +16,37 @@
 
   <include layout="@layout/partial_view_error"/>
 
-  <android.support.v4.widget.SwipeRefreshLayout
-      android:id="@+id/refresh_layout"
+  <android.support.design.widget.CoordinatorLayout
+      android:id="@+id/coordinator_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_cards_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        >
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/fragment_cards_list"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="90dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/rounded_corners_primary"
+        android:src="@drawable/ic_edit_black_24dp"
+        android:tint="@color/white"
+        android:visibility="visible"
+        tools:visibility="visible"
         />
-  </android.support.v4.widget.SwipeRefreshLayout>
+
+  </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>

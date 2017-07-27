@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.timeline;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.Datalist;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
@@ -49,7 +49,7 @@ public class TimelineRepository {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
+  public Observable<DataList<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh, String cardId) {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames, bodyInterceptor,
         httpClient, converterFactory, cardId, tokenInvalidator, sharedPreferences)
@@ -62,7 +62,7 @@ public class TimelineRepository {
               new RepositoryItemNotFoundException("Could not retrieve timeline."));
         })
         .doOnNext(item -> filter.clear())
-        .map(getUserTimeline -> getUserTimeline.getDatalist())
+        .map(getUserTimeline -> getUserTimeline.getDataList())
         .flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
             .concatMap(item -> filter.filter(item))
             .toList()
@@ -70,7 +70,7 @@ public class TimelineRepository {
   }
 
   private List<TimelineItem<TimelineCard>> getTimelineList(
-      Datalist<TimelineItem<TimelineCard>> datalist) {
+      DataList<TimelineItem<TimelineCard>> datalist) {
     List<TimelineItem<TimelineCard>> items;
     if (datalist == null) {
       items = new ArrayList<>();
@@ -80,9 +80,9 @@ public class TimelineRepository {
     return items;
   }
 
-  @NonNull private Datalist<TimelineCard> getTimelineCardDatalist(
-      Datalist<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
-    Datalist<TimelineCard> cardDataList = new Datalist<>();
+  @NonNull private DataList<TimelineCard> getTimelineCardDatalist(
+      DataList<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
+    DataList<TimelineCard> cardDataList = new DataList<>();
     cardDataList.setCount(itemDataList.getCount());
     cardDataList.setOffset(itemDataList.getOffset());
     cardDataList.setTotal(itemDataList.getTotal());

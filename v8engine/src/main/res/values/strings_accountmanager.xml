@@ -6,7 +6,7 @@
   <string name="title_successful">Successful</string>
   <string name="login_successful">Successful login</string>
   <string name="forgot_passwd"><u>Forgot password?</u></string>
-  <string name="fields_cannot_empty">Please check your email and password.</string>
+  <string name="fields_cant_empty">Please check your email and password.</string>
   <string name="unknown_error">Unknown Error</string>
   <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and Content Policy for Developers</string>
   <string name="no_email_and_pass_error_message">Please insert an email and password</string>
@@ -21,97 +21,96 @@
   <string name="facebook_email_permission_regected_message">We need your email to create an account</string>
   <string name="user_cancelled">Cancelled by user</string>
 
-  <string name="user_upload_photo_failed">At the moment it was not possible to create a profile.</string>
-  <string name="store_upload_photo_failed">At the moment it was not possible to upload the photo, but your store was created.</string>
-  <string name="user_created">User Created</string>
+  <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
+  <string name="store_upload_photo_failed">It wasn\'t possible to upload the photo, but your store was created.</string>
+  <string name="user_created">User created</string>
 
   <!-- WIZARD -->
-  <string name="please_wait_upload">Please wait, if you are uploading, it may take a while…</string>
+  <string name="please_wait_upload">If you\'re uploading, it may take a while…</string>
   <string name="wizard_title_01">Welcome to Aptoide</string>
 
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Now with a Timeline!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Best app videos and news</b> in one place. \nDiscover apps via your <b>friends.</b></string>
+  <string name="wizard_title_viewpager_one">Meet your new social app store!</string>
+  <string name="wizard_sub_title_viewpager_one">Explore the best app videos and news <b>in your timeline.</b></string>
 
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Have your own Store</string>
-  <string name="wizard_sub_title_viewpager_two">Customize your store <b>to share apps \n with friends</b> and the <b>Aptoide Community.</b></string>
+  <string name="wizard_title_viewpager_two">Create a Personal Store</string>
+  <string name="wizard_sub_title_viewpager_two"><b>Share</b> your favourite apps /n with the <b>Aptoide Community</b>.</string>
 
   <!-- WIZARD PAGE 3 -->
-  <string name="login_sign_up_title">Be a part</string>
-  <string name="wizard_sub_title_viewpager_three"><b>Find people</b> who share your app interests. \n<b>Rate and share.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Join us!</string>
+  <string name="login_sign_up_title">Join Our Community</string>
+  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends.</string>
 
   <string name="you_need_to_be_logged_in">You need to be logged in</string>
   <string name="follow">Follow</string>
 
   <!--Create user fragment-->
-  <string name="create_user_title">Create a User Profile</string>
-  <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
-  <string name="edit_profile_header_message">Edit your profile with a beautiful image</string>
+  <string name="create_user_title">Create a user profile</string>
+  <string name="create_user_header"><b>Create your user profile</b> to rate, comment and share apps with your friends</string>
+  <string name="edit_profile_header_message">Add a nice image to your profile</string>
   <string name="create_user_take_picture">Take a picture for your profile</string>
   <string name="create_user_random_photo">Or use random photo</string>
   <string name="create_user_choose_username">Choose your username</string>
-  <string name="create_user_username">User name</string>
+  <string name="create_user_username">Username</string>
   <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
-  <string name="create_user_create_button">Create Profile</string>
-  <string name="create_user_dialog_camera">Take Photo</string>
-  <string name="create_user_dialog_gallery">Choose From Gallery</string>
+  <string name="create_user_create_button">Create profile</string>
+  <string name="create_user_dialog_camera">Take photo</string>
+  <string name="create_user_dialog_gallery">Choose from gallery</string>
   <string name="create_user_dialog_cancel">Cancel</string>
-  <string name="nothing_inserted_store">Please insert a store\'s name to create your store</string>
-  <string name="nothing_inserted_user">Please insert a username and a photo (optional) to create your profile</string>
-  <string name="create_user_bad_photo">Please choose a image with at least 300x300 resolution</string>
-  <string name="no_username_inserted">Please insert a username to create your profile</string>
-  <string name="no_photo_inserted">Please choose a photo to create your profile</string>
+  <string name="nothing_inserted_store">Insert a store\'s name to create your store</string>
+  <string name="nothing_inserted_user">Insert a username and a photo (optional) to create your profile</string>
+  <string name="create_user_bad_photo">Use an image with a resolution of at least 300x300</string>
+  <string name="no_username_inserted">Add a username to create your profile</string>
+  <string name="no_photo_inserted">Choose a photo to create your profile</string>
 
   <!--User interests fragment -->
   <string name="user_interests_header"><b>Show us your interests</b> and help us to find the best apps for you</string>
   <string name="next">Next</string>
 
   <!--Create Store fragment-->
-  <string name="create_store_title">Create Your Store</string>
+  <string name="create_store_title">Create your store</string>
   <string name="create_store_header"><b>Create your store</b> and share your apps selection with %s community. <b>Give it a try</b></string>
-  <string name="edit_store_header">Edit your store with a beautiful image and a lovely description</string>
-  <string name="create_store_name">Choose a name for your %s Store</string>
-  <string name="create_store_name_inserted">Your Store\'s name</string>
-  <string name="create_store_theme">Store Theme</string>
-  <string name="create_store_create">Create Store</string>
+  <string name="edit_store_header">Edit your store with a nice image and a cool description</string>
+  <string name="create_store_name">Choose a name for your %s store</string>
+  <string name="create_store_name_inserted">Your store\'s name</string>
+  <string name="create_store_theme">Store theme</string>
+  <string name="create_store_create">Create store</string>
   <string name="create_store_choose_image">Choose an image for your store</string>
-  <string name="create_store_description_title">Your Store\'s description</string>
+  <string name="create_store_description_title">Your store\'s description</string>
   <string name="create_store_description_hint">Your store description</string>
-  <string name="edit_store_title">Edit Your Store</string>
+  <string name="edit_store_title">Edit your store</string>
   <string name="save_edit_store">Save</string>
 
 
-  <string name="upload_dialog_title">Upload Photo</string>
-  <string name="upload_dialog_photo">Take new Photo</string>
+  <string name="upload_dialog_title">Upload photo</string>
+  <string name="upload_dialog_photo">Take new photo</string>
   <string name="upload_dialog_gallery">Select from gallery</string>
   <string name="create_store_store_created">Store created</string>
 
   <!--Public/Private-->
   <string name="create_profile_pub_pri_suc_login">You\'re successfully logged in</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow you and see your shares on Apps Timeline!</string>
-  <string name="create_profile_pub_pri">Aptoide\'s Apps Timeline</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow you and see your shares on the timeline!</string>
+  <string name="create_profile_pub_pri">Aptoide\'s Timeline</string>
   <string name="create_profile_pub_pri_sub_text_1">Allows you to follow your friends and family</string>
-  <string name="create_profile_pub_pri_sub_text_2">With Apps Timeline you can share app recommendations and articles with your followers, seeing what you share.</string>
+  <string name="create_profile_pub_pri_sub_text_2">Share app recommendations and articles with your followers on the timeline.</string>
   <string name="create_profile_pub_pri_sub_text_3">You can choose to make your profile private, losing sharing features.</string>
   <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
   <string name="create_profile_logged_in_activity_title">Logged in</string>
   <string name="image_requirements_popup_message">The image has the following problems:\n</string>
   <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
-  <string name="image_requirements_error_max_height">- Maximum height is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_height">- Maximum height is higher than 1024px\n</string>
   <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
-  <string name="image_requirements_error_max_width">- Maximum width is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_width">- Maximum width is higher than 1024px\n</string>
   <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
   <string name="image_requirements_error_open_image">- Error opening the image\n</string>
   <string name="image_requirements_error_popup_title">Image</string>
 
 
   <!-- My account -->
-  <string name="myaccount_my_profile_title">My Profile</string>
-  <string name="myaccount_user_store_title">My Store</string>
+  <string name="myaccount_my_profile_title">My profile</string>
+  <string name="myaccount_user_store_title">My store</string>
   <string name="myaccount_edit_store_button">Edit</string>
-  <string name="myaccount_log_out_button">Log Out</string>
+  <string name="myaccount_log_out_button">Log out</string>
   <string name="myaccount_header_title">Notifications</string>
 
 </resources>

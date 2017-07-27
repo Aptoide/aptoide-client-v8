@@ -5,6 +5,7 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -42,6 +43,14 @@ public interface TimelineView extends View {
   void hideLoadMoreProgressIndicator();
 
   boolean isNewRefresh();
+
+  Observable<Void> floatingActionButtonClicked();
+
+  Completable showFloatingActionButton();
+
+  Completable hideFloatingActionButton();
+
+  Observable<Direction> scrolled();
 
   void showRootAccessDialog();
 
