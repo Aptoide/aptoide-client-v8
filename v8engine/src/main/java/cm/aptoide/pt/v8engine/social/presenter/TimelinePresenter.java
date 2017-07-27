@@ -213,21 +213,26 @@ public class TimelinePresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.retry()
             .doOnNext(__2 -> view.showProgressIndicator())
+            .flatMapSingle(__3 -> accountManager.accountStatus()
+                .first()
+                .toSingle())
             .observeOn(Schedulers.io())
-            .flatMap(__2 -> timeline.getCards()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(cards -> {
-                  if (cards != null && cards.size() > 0) {
-                    showCardsAndHideProgress(cards);
-                  } else {
-                    view.showGenericViewError();
-                  }
-                })
-                .doOnError(err -> {
-                  crashReport.log(err);
-                  view.showGenericViewError();
-                })
-                .toObservable())
+            .flatMapSingle(account -> Single.zip(
+                account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+                    : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(posts -> {
+              if (posts != null && posts.size() > 0) {
+                showCardsAndHideProgress(posts);
+              } else {
+                view.showGenericViewError();
+              }
+            })
+            .doOnError(err -> {
+              crashReport.log(err);
+              view.showGenericViewError();
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
