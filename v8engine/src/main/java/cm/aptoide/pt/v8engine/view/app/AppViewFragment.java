@@ -469,7 +469,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, this);
+    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 

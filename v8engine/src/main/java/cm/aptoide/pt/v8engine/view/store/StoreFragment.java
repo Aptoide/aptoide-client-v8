@@ -290,7 +290,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
+    SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName);
   }
 
   /**
