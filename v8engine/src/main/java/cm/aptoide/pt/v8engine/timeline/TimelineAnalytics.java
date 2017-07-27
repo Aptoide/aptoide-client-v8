@@ -462,8 +462,8 @@ public class TimelineAnalytics {
     final Post post = cardTouchEvent.getCard();
     final CardType cardType = post.getType();
 
-    if (postType.isMedia()) {
-      if (postType.isArticle()) {
+    if (cardType.isMedia()) {
+      if (cardType.isArticle()) {
         Media media = (Media) post;
         Analytics.AppsTimeline.clickOnCard(media.getType()
                 .name(), Analytics.AppsTimeline.BLANK, media.getMediaTitle(), media.getPublisherName(),
@@ -475,7 +475,7 @@ public class TimelineAnalytics {
         sendMediaCardClickEvent(media.getType()
                 .name(), media.getMediaTitle(), media.getPublisherName(),
             Analytics.AppsTimeline.OPEN_ARTICLE, "(blank)");
-      } else if (postType.isVideo()) {
+      } else if (cardType.isVideo()) {
         Media media = (Media) post;
         Analytics.AppsTimeline.clickOnCard(media.getType()
                 .name(), Analytics.AppsTimeline.BLANK, media.getMediaTitle(), media.getPublisherName(),

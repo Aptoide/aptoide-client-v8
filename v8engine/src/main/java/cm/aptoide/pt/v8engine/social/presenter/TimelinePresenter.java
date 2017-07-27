@@ -44,8 +44,8 @@ import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Completable;
 import java.util.concurrent.TimeUnit;
+import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -223,22 +223,24 @@ public class TimelinePresenter implements Presenter {
   private void onPullToRefreshRefreshPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.refreshes())
-        .flatMapSingle(__ -> accountManager.accountStatus()
-            .first()
-            .toSingle())
-        .observeOn(Schedulers.io())
-        .flatMapSingle(account -> Single.zip(
-            account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                : timeline.getTimelineStatisticsPost(), timeline.getCards(),
-            (post, posts) -> mergeStatsPostWithPosts(post, posts)))
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showCardsAndHideRefresh(cards))
+        .flatMap(created -> view.refreshes()
+            .flatMapSingle(__ -> accountManager.accountStatus()
+                .first()
+                .toSingle())
+            .observeOn(Schedulers.io())
+            .flatMapSingle(account -> Single.zip(
+                account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+                    : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                (post, posts) -> mergeStatsPostWithPosts(post, posts)))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cards -> showCardsAndHideRefresh(cards))
+            .doOnError(throwable -> {
+              crashReport.log(throwable);
+              view.showGenericViewError();
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
-        }, throwable -> {
-          crashReport.log(throwable);
-          view.showGenericViewError();
         });
   }
 
@@ -306,7 +308,7 @@ public class TimelinePresenter implements Presenter {
             Media card = (Media) post;
             card.getPublisherLink()
                 .launch();
-          } else if (postType.isSocial()) {
+          } else if (cardType.isSocial()) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
@@ -347,15 +349,15 @@ public class TimelinePresenter implements Presenter {
             card.getMediaLink()
                 .launch();
           } else {
-            if (cardType.equals(CardType.RECOMMENDATION)) {
+            if (type.equals(CardType.RECOMMENDATION)) {
               Recommendation card = (Recommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (cardType.equals(CardType.STORE)) {
+            } else if (type.equals(CardType.STORE)) {
               StoreAppCardTouchEvent storeAppCardTouchEvent =
                   (StoreAppCardTouchEvent) cardTouchEvent;
               navigateToAppView(storeAppCardTouchEvent);
-            } else if (cardType.equals(CardType.SOCIAL_STORE) || cardType.equals(
+            } else if (type.equals(CardType.SOCIAL_STORE) || type.equals(
                 CardType.AGGREGATED_SOCIAL_STORE)) {
               if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
                 navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
@@ -369,7 +371,7 @@ public class TimelinePresenter implements Presenter {
                 timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
                     storeCardTouchEvent.getStoreTheme());
               }
-            } else if (cardType.equals(CardType.UPDATE)) {
+            } else if (type.equals(CardType.UPDATE)) {
               AppUpdate card = (AppUpdate) post;
               if (cardTouchEvent instanceof AppUpdateCardTouchEvent) {
                 permissionManager.requestExternalStoragePermission(permissionRequest)
@@ -395,7 +397,7 @@ public class TimelinePresenter implements Presenter {
                 timelineNavigation.navigateToAppView(card.getAppUpdateId(), card.getPackageName(),
                     AppViewFragment.OpenType.OPEN_ONLY);
               }
-            } else if (cardType.equals(CardType.POPULAR_APP)) {
+            } else if (type.equals(CardType.POPULAR_APP)) {
               PopularApp card = (PopularApp) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
@@ -404,7 +406,7 @@ public class TimelinePresenter implements Presenter {
               RatedRecommendation card = (RatedRecommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (cardType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+            } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
               AggregatedRecommendation card = (AggregatedRecommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
@@ -425,7 +427,8 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.LIKE) && cardTouchEvent.getCard()
-                .getType().isSocial())
+                .getType()
+                .isSocial())
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
@@ -459,7 +462,8 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.LIKE) && cardTouchEvent.getCard()
-                .getType().isNormal())
+                .getType()
+                .isNormal())
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
@@ -513,7 +517,8 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.COMMENT) && cardTouchEvent.getCard()
-            .getType().isNormal())
+            .getType()
+            .isNormal())
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
