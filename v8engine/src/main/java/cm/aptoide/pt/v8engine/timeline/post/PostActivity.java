@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.ActivityView;
 
@@ -13,7 +14,7 @@ public class PostActivity extends ActivityView implements PostFragment.PostUrlPr
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
     if (savedInstanceState == null) {
-      final PostFragment fragment = PostFragment.newInstance();
+      final Fragment fragment = PostFragment.newInstanceFromExternalSource();
       getFragmentNavigator().navigateToWithoutBackSave(fragment);
     }
   }

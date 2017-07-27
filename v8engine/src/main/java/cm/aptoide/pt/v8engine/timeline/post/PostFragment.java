@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
@@ -32,6 +34,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
@@ -39,6 +42,7 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
@@ -46,7 +50,7 @@ import rx.Completable;
 import rx.Observable;
 
 public class PostFragment extends FragmentView implements PostView {
-
+  public static final String OPEN_SOURCE = "open_source";
   private static final int MAX_CHARACTERS = 200;
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
@@ -65,9 +69,22 @@ public class PostFragment extends FragmentView implements PostView {
   private PublishRelay<Void> openUploaderButton;
   private PostPresenter presenter;
   private View inputSeparator;
+  private PostAnalytics analytics;
 
-  public static PostFragment newInstance() {
-    return new PostFragment();
+  public static Fragment newInstanceFromExternalSource() {
+    return newInstance(PostAnalytics.OpenSource.EXTERNAL);
+  }
+
+  @NonNull private static Fragment newInstance(PostAnalytics.OpenSource openSource) {
+    PostFragment postFragment = new PostFragment();
+    Bundle args = new Bundle();
+    args.putSerializable(OPEN_SOURCE, openSource);
+    postFragment.setArguments(args);
+    return postFragment;
+  }
+
+  public static Fragment newInstanceFromTimeline() {
+    return newInstance(PostAnalytics.OpenSource.APP_TIMELINE);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +94,9 @@ public class PostFragment extends FragmentView implements PostView {
     postClick = PublishRelay.create();
     loginAction = PublishRelay.create();
     openUploaderButton = PublishRelay.create();
+    analytics = new PostAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    handleAnalytics();
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -93,6 +113,10 @@ public class PostFragment extends FragmentView implements PostView {
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  private void handleAnalytics() {
+    analytics.sendOpenEvent((PostAnalytics.OpenSource) getArguments().getSerializable(OPEN_SOURCE));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
