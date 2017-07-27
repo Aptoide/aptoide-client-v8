@@ -72,7 +72,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   }
 
   @Override protected Action1<ListStores> buildAction() {
-    return listStores -> addDisplayables(getStoresDisplayable(listStores.getDatalist()
+    return listStores -> addDisplayables(getStoresDisplayable(listStores.getDataList()
         .getList()));
   }
 

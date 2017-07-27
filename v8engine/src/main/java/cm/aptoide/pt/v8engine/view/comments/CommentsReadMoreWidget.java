@@ -51,7 +51,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
     compositeSubscription.add(RxView.clicks(readMoreButton)
         .flatMap(__ -> listCommentsObservable)
         .subscribe(listComments -> displayable.getCommentAdder()
-            .addComment(listComments.getDatalist()
+            .addComment(listComments.getDataList()
                 .getList())));
   }
 }

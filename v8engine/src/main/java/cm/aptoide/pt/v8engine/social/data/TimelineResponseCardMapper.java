@@ -57,7 +57,7 @@ public class TimelineResponseCardMapper {
   public List<Post> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
     final List<Post> cards = new ArrayList();
 
-    for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist()
+    for (TimelineItem<TimelineCard> item : timelineResponse.getDataList()
         .getList()) {
       try {
         addMappedCardFromItem(linksFactory, cards, item);

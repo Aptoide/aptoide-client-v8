@@ -11,7 +11,7 @@ import lombok.Data;
 /**
  * Created by neuro on 27-04-2016.
  */
-@Data public class Datalist<T> {
+@Data public class DataList<T> {
 
   private int total;
   private int count;

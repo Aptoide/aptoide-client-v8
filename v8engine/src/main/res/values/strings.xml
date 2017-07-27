@@ -643,4 +643,5 @@
 
   <string name="appview_message_install_before_share_spotandshare">Install app first</string>
   <string name="appview_button_install_before_share_spotandshare">install</string>
+  <string name="timeline_message_share_on_timeline_external">Write something (optional)</string>
 </resources>

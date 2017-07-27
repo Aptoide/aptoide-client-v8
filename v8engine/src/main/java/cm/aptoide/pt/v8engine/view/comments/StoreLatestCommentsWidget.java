@@ -100,7 +100,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(listComments -> {
-              setAdapter(listComments.getDatalist()
+              setAdapter(listComments.getDataList()
                   .getList());
             }, err -> {
               CrashReport.getInstance()
