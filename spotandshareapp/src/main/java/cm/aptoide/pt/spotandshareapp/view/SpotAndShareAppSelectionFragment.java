@@ -22,7 +22,7 @@ import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
-import cm.aptoide.pt.v8engine.view.BackButtonFragment;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -31,7 +31,7 @@ import rx.subjects.PublishSubject;
  * Created by filipe on 12-06-2017.
  */
 
-public class SpotAndShareAppSelectionFragment extends BackButtonFragment
+public class SpotAndShareAppSelectionFragment extends FragmentView
     implements SpotAndShareAppSelectionView {
 
   private boolean shouldCreateGroup;
