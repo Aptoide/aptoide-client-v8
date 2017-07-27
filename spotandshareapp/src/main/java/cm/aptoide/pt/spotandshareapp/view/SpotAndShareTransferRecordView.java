@@ -26,8 +26,6 @@ public interface SpotAndShareTransferRecordView extends View {
 
   void updateReceivedAppsList(List<TransferAppModel> transferAppModelList);
 
-  Observable<Void> shareApp();
-
   void openAppSelectionFragment(boolean shouldCreateGroup);
 
   Observable<TransferAppModel> installApp();

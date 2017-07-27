@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
@@ -22,7 +21,6 @@ import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
-import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
@@ -35,6 +33,7 @@ import rx.subjects.PublishSubject;
 public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     implements SpotAndShareTransferRecordView {
 
+  private final String TAG = getClass().getSimpleName();
   private Toolbar toolbar;
   private PublishRelay<Void> backRelay;
   private RxAlertDialog backDialog;
@@ -43,7 +42,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private SpotAndShareTransferRecordAdapter adapter;
   private PublishSubject<TransferAppModel> acceptApp;
   private PublishSubject<TransferAppModel> installApp;
-  private Button shareAppButton;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -71,6 +69,14 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     transferRecordRecyclerView =
         (RecyclerView) view.findViewById(R.id.transfer_record_recycler_view);
     setupRecyclerView();
+    setupBackClick();
+    attachPresenter(new SpotAndShareTransferRecordPresenter(this,
+        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        new SpotAndShareTransferRecordManager(getContext()),
+        new SpotAndShareInstallManager(getActivity().getApplicationContext())), savedInstanceState);
+  }
+
+  private void setupBackClick() {
     clickHandler = () -> {
       backRelay.call(null);
       return true;
@@ -81,12 +87,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         .setPositiveButton(R.string.spotandshare_button_leave_group)
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
-    shareAppButton = (Button) view.findViewById(R.id.transfer_record_share_an_app_button);
-
-    attachPresenter(new SpotAndShareTransferRecordPresenter(this,
-        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-        new SpotAndShareTransferRecordManager(getContext()),
-        new SpotAndShareInstallManager(getActivity().getApplicationContext())), savedInstanceState);
   }
 
   private void setupRecyclerView() {
@@ -112,7 +112,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     adapter.onDestroy();
     adapter = null;
     transferRecordRecyclerView = null;
-    shareAppButton = null;
     super.onDestroyView();
   }
 
@@ -157,10 +156,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void updateReceivedAppsList(List<TransferAppModel> transferAppModelList) {
     adapter.updateTransferList(transferAppModelList);
-  }
-
-  @Override public Observable<Void> shareApp() {
-    return RxView.clicks(shareAppButton);
   }
 
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {

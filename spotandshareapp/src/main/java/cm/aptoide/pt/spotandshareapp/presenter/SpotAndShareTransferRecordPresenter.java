@@ -65,14 +65,6 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.shareApp())
-        .doOnNext(__ -> view.openAppSelectionFragment(false))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.backButtonEvent())
         .doOnNext(click -> view.showExitWarning())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
