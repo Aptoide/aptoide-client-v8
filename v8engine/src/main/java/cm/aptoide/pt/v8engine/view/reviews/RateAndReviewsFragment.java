@@ -271,7 +271,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
       Review review) {
     return new CommentsReadMoreDisplayable(review.getId(), true, review.getCommentList()
-        .getDatalist()
+        .getDataList()
         .getNext(), new SimpleReviewCommentAdder(itemPosition, this));
   }
 

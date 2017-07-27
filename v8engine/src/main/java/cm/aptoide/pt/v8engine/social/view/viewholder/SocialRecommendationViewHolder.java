@@ -105,6 +105,7 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
         (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.inflater = LayoutInflater.from(itemView.getContext());
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
+
   }
 
   @Override public void setPost(RatedRecommendation card, int position) {

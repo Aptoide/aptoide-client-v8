@@ -22,6 +22,7 @@ import lombok.Getter;
   @Getter private final String title;
   @Getter private final String thumbnailUrl;
   @Getter private final String url;
+  @Getter private final String content;
   @Getter private final Comment.User user;
   @Getter private final Comment.User userSharer;
   @Getter private final Store store;
@@ -33,15 +34,17 @@ import lombok.Getter;
   @JsonCreator
   public SocialVideo(@JsonProperty("uid") String cardId, @JsonProperty("title") String title,
       @JsonProperty("thumbnail") String thumbnailUrl,
-      @JsonProperty("publisher") Publisher publisher, @JsonProperty("user") Comment.User user,
-      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("my") My my,
-      @JsonProperty("stats") SocialCardStats stats, @JsonProperty("url") String url,
-      @JsonProperty("store") Store store, @JsonProperty("likes") List<UserTimeline> likes,
+      @JsonProperty("publisher") Publisher publisher, @JsonProperty("content") String content,
+      @JsonProperty("user") Comment.User user, @JsonProperty("user_sharer") Comment.User userSharer,
+      @JsonProperty("my") My my, @JsonProperty("stats") SocialCardStats stats,
+      @JsonProperty("url") String url, @JsonProperty("store") Store store,
+      @JsonProperty("likes") List<UserTimeline> likes,
       @JsonProperty("comments") List<CardComment> comments,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
     super(likes, comments, my);
     this.publisher = publisher;
+    this.content = content;
     this.store = store;
     this.user = user;
     this.stats = stats;

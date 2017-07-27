@@ -226,7 +226,7 @@ import rx.Observable;
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .execute(listComments -> {
           if (listComments.isOk()) {
-            List<Comment> comments = listComments.getDatalist()
+            List<Comment> comments = listComments.getDataList()
                 .getList();
             commentAdder.addComment(comments);
           } else {

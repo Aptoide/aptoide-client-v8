@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -69,6 +70,7 @@ import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -97,12 +99,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
+  private View coordinatorLayout;
   private RecyclerViewPositionHelper helper;
   private View genericError;
   private View retryButton;
   private TokenInvalidator tokenInvalidator;
   private LinksHandlerFactory linksHandlerFactory;
   private SharedPreferences sharedPreferences;
+  private FloatingActionButton floatingActionButton;
   private InstallManager installManager;
   private boolean newRefresh;
   private Long userId;
@@ -197,6 +201,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+    coordinatorLayout = view.findViewById(R.id.coordinator_layout);
+    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
+
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
@@ -236,7 +243,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             new PermissionManager(), (PermissionService) getContext(), installManager,
             RepositoryFactory.getStoreRepository(), storeUtilsProxy,
             new StoreCredentialsProviderImpl(), accountManager, timelineAnalytics, userId, storeId,
-            storeContext, getContext().getResources()), savedInstanceState);
+            storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -260,6 +267,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void hideProgressIndicator() {
     list.setVisibility(View.VISIBLE);
     swipeRefreshLayout.setVisibility(View.VISIBLE);
+    coordinatorLayout.setVisibility(View.VISIBLE);
     progressBar.setVisibility(View.GONE);
   }
 
@@ -276,6 +284,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     this.list.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
     this.swipeRefreshLayout.setVisibility(View.GONE);
+    this.coordinatorLayout.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
     }
@@ -332,6 +341,31 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     boolean b = newRefresh;
     newRefresh = false;
     return b;
+  }
+
+  @Override public Observable<Void> floatingActionButtonClicked() {
+    return RxView.clicks(floatingActionButton);
+  }
+
+  @Override public Completable showFloatingActionButton() {
+    return Completable.fromAction(() -> {
+      // todo up transition
+      //floatingActionButton.animate().yBy(-100f);
+      floatingActionButton.setVisibility(View.VISIBLE);
+    });
+  }
+
+  @Override public Completable hideFloatingActionButton() {
+    return Completable.fromAction(() -> {
+      // todo down transition
+      //floatingActionButton.animate().yBy(100f);
+      floatingActionButton.setVisibility(View.GONE);
+    });
+  }
+
+  @Override public Observable<Direction> scrolled() {
+    return RxRecyclerView.scrollEvents(list)
+        .map(event -> new Direction(event.dx(), event.dy()));
   }
 
   @Override public void showRootAccessDialog() {

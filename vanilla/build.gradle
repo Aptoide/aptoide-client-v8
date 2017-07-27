@@ -68,7 +68,7 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
-      versionName "8.3.0." + getDate()
+      versionName "8.4.0." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
       resValue "string", "authenticator_account_type", APPLICATION_ID + ".internal"
@@ -87,7 +87,7 @@ android {
       applicationIdSuffix ".dev"
 
 
-      versionName "8.3.0." + getDate()
+      versionName "8.4.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
 
       resValue "string", "authenticator_account_type", APPLICATION_ID + ".dev"

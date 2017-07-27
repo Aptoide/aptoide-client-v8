@@ -20,6 +20,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.NotificationTarget;
@@ -347,6 +348,18 @@ public class ImageLoader {
     return null;
   }
 
+  public Target<GlideDrawable> loadWithoutResizing(String url, ImageView imageView) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::load() Context is null");
+    }
+    return null;
+  }
+
   public Target<GlideDrawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
@@ -360,10 +373,15 @@ public class ImageLoader {
   }
 
   public Target<GlideDrawable> loadWithCenterCrop(String url, ImageView imageView) {
+    return loadWithoutResizeCenterCrop(
+        AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager), imageView);
+  }
+
+  public Target<GlideDrawable> loadWithoutResizeCenterCrop(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager))
+          .load(url)
           .centerCrop()
           .into(imageView);
     } else {
@@ -471,5 +489,18 @@ public class ImageLoader {
       Log.e(TAG, "::loadUsingCircleTransformAndPlaceholder() Context is null");
     }
     return null;
+  }
+
+  public void loadWithRoundCorners(String image, int radius, int margin, ImageView previewImage) {
+    Context context = weakContext.get();
+    if (context != null) {
+      Glide.with(context)
+          .load(image)
+          .centerCrop()
+          .bitmapTransform(new CenterCrop(context),
+              new RoundedCornersTransform(context, radius, margin,
+                  RoundedCornersTransform.CornerType.LEFT))
+          .into(previewImage);
+    }
   }
 }
