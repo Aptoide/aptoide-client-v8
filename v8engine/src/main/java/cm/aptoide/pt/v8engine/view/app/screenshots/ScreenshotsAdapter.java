@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.app.screenshots;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +11,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.app.AppViewNavigator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +28,10 @@ public class ScreenshotsAdapter
   private final List<GetAppMeta.Media.Video> videos;
   private final List<GetAppMeta.Media.Screenshot> screenshots;
   private final ArrayList<String> imageUris;
-  private final FragmentNavigator navigator;
+  private final AppViewNavigator navigator;
   private final AppViewAnalytics appViewAnalytics;
 
-  public ScreenshotsAdapter(GetAppMeta.Media media, FragmentNavigator navigator,
+  public ScreenshotsAdapter(GetAppMeta.Media media, AppViewNavigator navigator,
       AppViewAnalytics appViewAnalytics) {
     this.videos = media.getVideos();
     this.screenshots = media.getScreenshots();
@@ -54,7 +52,6 @@ public class ScreenshotsAdapter
   }
 
   @Override public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
-
     if (videos != null && videos.size() > position) {
       // its a video. asSnack placeholder for video
       GetAppMeta.Media.Video item = videos.get(position);
@@ -63,9 +60,7 @@ public class ScreenshotsAdapter
       // its a screenshot. asSnack placeholder for screenshot
       GetAppMeta.Media.Screenshot item = screenshots.get(position);
       int videosOffset = videos != null ? videos.size() : 0;
-      holder.bindViews(item, position - videosOffset, imageUris
-
-      );
+      holder.bindViews(item, position - videosOffset, imageUris);
     }
   }
 
@@ -79,13 +74,15 @@ public class ScreenshotsAdapter
 
   static class ScreenshotsViewHolder extends RecyclerView.ViewHolder {
 
-    private final FragmentNavigator navigator;
+    private static final String PORTRAIT = "PORTRAIT";
+
+    private final AppViewNavigator navigator;
     private final AppViewAnalytics appViewAnalytics;
     private ImageView screenshot;
     private ImageView play_button;
     private FrameLayout media_layout;
 
-    ScreenshotsViewHolder(View itemView, FragmentNavigator navigator,
+    ScreenshotsViewHolder(View itemView, AppViewNavigator navigator,
         AppViewAnalytics appViewAnalytics) {
       super(itemView);
       assignViews(itemView);
@@ -101,7 +98,10 @@ public class ScreenshotsAdapter
 
     public void bindViews(GetAppMeta.Media.Video item) {
 
-      final Context context = itemView.getContext();
+      final Context context = screenshot.getContext();
+      if (context == null) {
+        return;
+      }
 
       ImageLoader.with(context)
           .load(item.getThumbnail(), R.drawable.placeholder_square, screenshot);
@@ -118,16 +118,17 @@ public class ScreenshotsAdapter
 
       itemView.setOnClickListener(v -> {
         appViewAnalytics.sendOpenVideoEvent();
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getUrl()));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        navigator.navigateToUri(Uri.parse(item.getUrl()));
       });
     }
 
     public void bindViews(GetAppMeta.Media.Screenshot item, final int position,
         final ArrayList<String> imagesUris) {
 
-      final Context context = itemView.getContext();
+      final Context context = screenshot.getContext();
+      if (context == null) {
+        return;
+      }
 
       media_layout.setForeground(null);
       play_button.setVisibility(View.GONE);
@@ -138,20 +139,15 @@ public class ScreenshotsAdapter
 
       itemView.setOnClickListener(v -> {
         appViewAnalytics.sendOpenScreenshotEvent();
-        // TODO improve this call
-        navigator.navigateTo(V8Engine.getFragmentProvider()
-            .newScreenshotsViewerFragment(imagesUris, position));
+        navigator.navigateToScreenshots(imagesUris, position);
       });
     }
 
     private int getPlaceholder(String orient) {
-      int id;
-      if (orient != null && orient.equals("portrait")) {
-        id = R.drawable.placeholder_9_16;
-      } else {
-        id = R.drawable.placeholder_16_9;
+      if (orient != null && orient.equals(PORTRAIT)) {
+        return R.drawable.placeholder_9_16;
       }
-      return id;
+      return R.drawable.placeholder_16_9;
     }
   }
 }
