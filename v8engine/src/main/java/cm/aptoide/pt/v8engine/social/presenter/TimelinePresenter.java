@@ -39,9 +39,12 @@ import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.post.PostFragment;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -67,6 +70,7 @@ public class TimelinePresenter implements Presenter {
   private final Long storeId;
   private final StoreContext storeContext;
   private final Resources resources;
+  private final FragmentNavigator fragmentNavigator;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
@@ -74,7 +78,8 @@ public class TimelinePresenter implements Presenter {
       InstallManager installManager, StoreRepository storeRepository,
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
-      Long storeId, StoreContext storeContext, Resources resources) {
+      Long storeId, StoreContext storeContext, Resources resources,
+      FragmentNavigator fragmentNavigator) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -91,6 +96,7 @@ public class TimelinePresenter implements Presenter {
     this.storeId = storeId;
     this.storeContext = storeContext;
     this.resources = resources;
+    this.fragmentNavigator = fragmentNavigator;
   }
 
   @Override public void present() {
@@ -127,14 +133,57 @@ public class TimelinePresenter implements Presenter {
     clickOnLikesPreview();
 
     clickOnLogin();
+
+    listenToScrollUp();
+
+    listenToScrollDown();
+
+    handleFabClick();
   }
 
   @Override public void saveState(Bundle state) {
-
   }
 
   @Override public void restoreState(Bundle state) {
+  }
 
+  private void listenToScrollUp() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.scrolled()
+            .throttleLast(1, TimeUnit.SECONDS)
+            .filter(direction -> direction.top())
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap(__2 -> view.showFloatingActionButton()
+                .toObservable()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cards -> {
+        }, throwable -> view.showGenericError());
+  }
+
+  private void listenToScrollDown() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.scrolled()
+            .throttleLast(1, TimeUnit.SECONDS)
+            .filter(direction -> direction.bottom())
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap(__2 -> view.hideFloatingActionButton()
+                .toObservable()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cards -> {
+        }, throwable -> view.showGenericError());
+  }
+
+  private void handleFabClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(__ -> view.floatingActionButtonClicked()
+            .doOnNext(__2 -> fragmentNavigator.navigateTo(new PostFragment())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cards -> {
+        }, throwable -> view.showGenericError());
   }
 
   private void onCreateShowPosts() {
@@ -318,7 +367,7 @@ public class TimelinePresenter implements Presenter {
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
             } else if (type.equals(CardType.SOCIAL_RECOMMENDATION) || type.equals(
-                CardType.SOCIAL_INSTALL)) {
+                CardType.SOCIAL_INSTALL) || type.equals(CardType.SOCIAL_POST_RECOMMENDATION)) {
               RatedRecommendation card = (RatedRecommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);

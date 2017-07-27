@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,7 +27,7 @@ public abstract class BaseTable {
   private static final String DROP_TABLE_SQL = "DROP TABLE IF EXISTS ";
 
   public void migrate(SQLiteDatabase db, Accessor<RealmObject> accessor,
-      PackageManager packageManager) {
+      PackageManager packageManager, Context context) {
     Cursor cursor = null;
     try {
 
@@ -46,7 +47,7 @@ public abstract class BaseTable {
       ArrayList<RealmObject> objs = new ArrayList<>();
       RealmObject converted;
       for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-        converted = convert(cursor, packageManager);
+        converted = convert(cursor, packageManager, context);
         if (converted != null) objs.add(converted);
       }
       if (objs.size() > 0 && accessor != null) {
@@ -80,5 +81,6 @@ public abstract class BaseTable {
     return null;
   }
 
-  public abstract RealmObject convert(Cursor cursor, PackageManager packageManager);
+  public abstract RealmObject convert(Cursor cursor, PackageManager packageManager,
+      Context context);
 }

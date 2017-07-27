@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.store;
 
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -15,8 +14,8 @@ public class StoreCredentialsProviderImpl implements StoreCredentialsProvider {
 
   private final StoreAccessor storeAccessor;
 
-  public StoreCredentialsProviderImpl() {
-    storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+  public StoreCredentialsProviderImpl(StoreAccessor storeAccessor) {
+    this.storeAccessor = storeAccessor;
   }
 
   @Override public BaseRequestWithStore.StoreCredentials get(long storeId) {

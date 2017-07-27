@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -50,7 +51,8 @@ public final class Installed extends BaseTable {
     return updatesTable.getTableName();
   }
 
-  @Override public RealmObject convert(Cursor cursor, PackageManager packageManager) {
+  @Override
+  public RealmObject convert(Cursor cursor, PackageManager packageManager, Context context) {
 
     String path = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_URL));
     String packageName = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_PACKAGE));

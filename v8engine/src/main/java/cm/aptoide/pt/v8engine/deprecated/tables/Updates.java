@@ -5,14 +5,16 @@
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import io.realm.RealmObject;
 
 /**
@@ -51,11 +53,14 @@ public class Updates extends BaseTable {
     return NAME;
   }
 
-  @Override public RealmObject convert(Cursor cursor, PackageManager packageManager) {
+  @Override
+  public RealmObject convert(Cursor cursor, PackageManager packageManager, Context context) {
 
     String path = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_URL));
     String packageName = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_PACKAGE));
-    if (!TextUtils.isEmpty(path) && !isExcluded(packageName)) {
+    if (!TextUtils.isEmpty(path) && !isExcluded(packageName,
+        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
+            Update.class))) {
       try {
         PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
         cm.aptoide.pt.database.realm.Update realmObject = new cm.aptoide.pt.database.realm.Update();
@@ -95,14 +100,13 @@ public class Updates extends BaseTable {
     return null;
   }
 
-  private boolean isExcluded(String packageName) {
+  private boolean isExcluded(String packageName, UpdateAccessor updateAccessor) {
     //return DeprecatedDatabase.get()
     //    .where(Update.class)
     //    .equalTo(Update.PACKAGE_NAME, packageName)
     //    .equalTo(Update.EXCLUDED, true)
     //    .findFirst() != null;
 
-    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
     return updateAccessor.get(packageName, true)
         .toBlocking()
         .firstOrDefault(null) != null;

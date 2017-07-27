@@ -761,7 +761,7 @@
   </style>
 
   <style name="TextAppearance.Aptoide.Title" parent="@style/TextAppearance.AppCompat.Title">
-    <item name="android:textColor">@color/activity_payment_dark_gray</item>
+    <item name="android:textColor">@color/fragment_payment_dark_gray</item>
     <item name="android:typeface">normal</item>
   </style>
 
@@ -770,12 +770,12 @@
   </style>
 
   <style name="TextAppearance.Aptoide.Subhead" parent="@style/TextAppearance.AppCompat.Subhead">
-    <item name="android:textColor">@color/activity_payment_dark_gray</item>
+    <item name="android:textColor">@color/fragment_payment_dark_gray</item>
     <item name="android:typeface">normal</item>
   </style>
 
   <style name="TextAppearance.Aptoide.Caption" parent="@style/TextAppearance.AppCompat.Caption">
-    <item name="android:textColor">@color/activity_payment_dark_gray</item>
+    <item name="android:textColor">@color/fragment_payment_dark_gray</item>
     <item name="android:typeface">normal</item>
   </style>
 
@@ -784,11 +784,11 @@
   </style>
 
   <style name="Widget.Aptoide.Button.Borderless.Colored" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
-    <item name="android:textColor">@color/activity_payment_dark_gray</item>
+    <item name="android:textColor">@color/fragment_payment_dark_gray</item>
   </style>
 
   <style name="Widget.Aptoide.Button.Borderless" parent="@style/Widget.AppCompat.Button.Borderless">
-    <item name="android:textColor">@color/activity_payment_light_gray</item>
+    <item name="android:textColor">@color/fragment_payment_light_gray</item>
   </style>
 
   <style name="Widget.Aptoide.Button.Colored" parent="@style/Widget.AppCompat.Button.Colored">

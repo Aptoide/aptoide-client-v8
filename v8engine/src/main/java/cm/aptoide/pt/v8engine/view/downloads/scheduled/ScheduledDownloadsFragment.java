@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
@@ -119,7 +121,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
-    scheduledDownloadRepository = RepositoryFactory.getScheduledDownloadRepository();
+    scheduledDownloadRepository =
+        RepositoryFactory.getScheduledDownloadRepository(getContext().getApplicationContext());
     //		compositeSubscription = new CompositeSubscription();
     setHasOptionsMenu(true);
   }
@@ -295,7 +298,9 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         ScheduledDownloadDisplayable displayable =
             (ScheduledDownloadDisplayable) adapter.getDisplayable(i);
         if (displayable.isSelected()) {
-          displayable.removeFromDatabase();
+          displayable.removeFromDatabase(((ScheduledAccessor) AccessorFactory.getAccessorFor(
+              ((V8Engine) getContext().getApplicationContext()
+                  .getApplicationContext()).getDatabase(), Scheduled.class)));
         }
       }
       return true;

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
  * Created by trinkes on 16/12/2016.
  */
 @EqualsAndHashCode(callSuper = false) @Data public class GetFollowers
-    extends BaseV7EndlessDatalistResponse<GetFollowers.TimelineUser> {
+    extends BaseV7EndlessDataListResponse<GetFollowers.TimelineUser> {
 
   @Data public static class TimelineUser {
     long id;

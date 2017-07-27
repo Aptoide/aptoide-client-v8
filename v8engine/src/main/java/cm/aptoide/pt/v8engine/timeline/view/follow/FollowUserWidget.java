@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -20,6 +19,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
@@ -96,12 +96,15 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final String storeTheme = V8Engine.getConfiguration()
           .getDefaultTheme();
 
-      final StoreUtilsProxy storeUtilsProxy =
-          new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
-              AccessorFactory.getAccessorFor(Store.class), httpClient,
-              WebService.getDefaultConverter(),
-              ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-              ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
+          new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+              ((V8Engine) getContext().getApplicationContext()
+                  .getApplicationContext()).getDatabase(), Store.class)),
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class), httpClient,
+          WebService.getDefaultConverter(),
+          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
@@ -119,7 +122,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
         }, accountManager);
       };
 
-      StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
+      StoreRepository storeRepository =
+          RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
       compositeSubscription.add(storeRepository.isSubscribed(displayable.getStoreName())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(isSubscribed -> {

@@ -9,15 +9,12 @@ import android.preference.PreferenceManager;
 import cm.aptoide.pt.preferences.secure.DevSecureKeys;
 import cm.aptoide.pt.utils.AptoideUtils;
 
-/**
- * Created by neuro on 10-05-2016.
- */
 public class Vanilla extends AptoideBase {
 
   @Override public void onCreate() {
     clearAppDataOnNewBuild();
+    activateLogger(BuildConfig.DEBUG);
     super.onCreate();
-    activateLogger();
     // FIXME: comment the next line to avoid a sensible app when debugging
     // TODO: move the decision of using this to a gradle flag
     //setupStrictMode();

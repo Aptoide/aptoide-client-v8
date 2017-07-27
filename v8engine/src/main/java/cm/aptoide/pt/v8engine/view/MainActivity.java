@@ -14,7 +14,6 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.preferences.Application;
@@ -26,6 +25,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallCompletedNotifier;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -78,19 +78,25 @@ public class MainActivity extends TabNavigatorActivity
     final SharedPreferences securePreferences =
         SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
 
-    final StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
+    final StoreRepository storeRepository =
+        RepositoryFactory.getStoreRepository(getApplicationContext());
 
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
 
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
-        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
-        converterFactory, ((V8Engine) getApplicationContext()).getTokenInvalidator(),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class)), AccessorFactory.getAccessorFor(
+        ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(), Store.class),
+        httpClient, converterFactory, ((V8Engine) getApplicationContext()).getTokenInvalidator(),
         sharedPreferences);
 
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
-            sharedPreferences);
+            sharedPreferences, AccessorFactory.getAccessorFor(
+            ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class));
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 

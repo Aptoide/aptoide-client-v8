@@ -10,14 +10,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.install.InstallFabricEvents;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -72,7 +73,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       return true;
     } else if (itemId == R.id.menu_clear) {
       //DeprecatedDatabase.RollbackQ.deleteAll(realm);
-      AccessorFactory.getAccessorFor(Rollback.class)
+      AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+          .getApplicationContext()).getDatabase(), Rollback.class)
           .removeAll();
       clearDisplayables();
       finishLoading();
@@ -107,7 +109,9 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @UiThread private void fetchRollbacks() {
-    RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Rollback.class);
     rollbackAccessor.getConfirmedRollbacks()
         .observeOn(Schedulers.computation())
         .map(rollbacks -> createDisplayables(rollbacks))

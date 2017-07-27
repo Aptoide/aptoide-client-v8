@@ -16,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -27,6 +26,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.InstallFabricEvents;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
@@ -89,7 +89,7 @@ public class InstallService extends Service {
     setupNotification();
     installerTypeMap = new HashMap();
     analytics = Analytics.getInstance();
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -217,7 +217,9 @@ public class InstallService extends Service {
   }
 
   private void removeFromScheduled(String md5) {
-    ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+    ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+        Scheduled.class);
     scheduledAccessor.delete(md5);
     Logger.d(TAG, "Removing schedulled download with appId " + md5);
   }

@@ -17,7 +17,7 @@ import rx.Observable;
  */
 public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
 
-  protected ScheduledAccessor(Database db) {
+  public ScheduledAccessor(Database db) {
     super(db, Scheduled.class);
   }
 

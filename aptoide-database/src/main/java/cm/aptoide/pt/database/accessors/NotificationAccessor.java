@@ -14,7 +14,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class NotificationAccessor extends SimpleAccessor<Notification> {
-  NotificationAccessor(Database db) {
+  public NotificationAccessor(Database db) {
     super(db, Notification.class);
   }
 

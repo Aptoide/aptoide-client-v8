@@ -101,7 +101,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    storeRepository = RepositoryFactory.getStoreRepository();
+    storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);
   }

@@ -37,7 +37,7 @@ public class ScheduleDownloadsNetworkReceiver extends BroadcastReceiver {
     }
 
     // start scheduled downloads (if there are any)
-    if (RepositoryFactory.getScheduledDownloadRepository()
+    if (RepositoryFactory.getScheduledDownloadRepository(context.getApplicationContext())
         .hasScheduleDownloads()) {
       Intent i = new Intent(Intent.ACTION_VIEW,
           Uri.parse(ScheduledDownloadsFragment.OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI));

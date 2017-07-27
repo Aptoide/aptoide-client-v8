@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.WindowManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -107,9 +106,8 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
         windowManager);
   }
 
-  public Observable<List<Installed>> getRelatedToApplication() {
+  public Observable<List<Installed>> getRelatedToApplication(InstalledAccessor installedAccessor) {
     if (relatedToApps != null && relatedToApps.size() > 0) {
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       List<String> packageNamesList = new ArrayList<>();
 
       for (int i = 0; i < relatedToApps.size(); i++) {

@@ -16,7 +16,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
-import cm.aptoide.pt.v8engine.view.BaseActivity;
+import cm.aptoide.pt.v8engine.view.ActivityView;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -30,9 +30,8 @@ import org.xml.sax.ext.DefaultHandler2;
 
 public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo> {
 
-  private static final String TAG = AutoUpdate.class.getSimpleName();
   private final String url;
-  private final BaseActivity activity;
+  private final ActivityView activity;
   private final DownloadFactory downloadFactory;
   private final PermissionManager permissionManager;
   private final InstallManager installManager;
@@ -40,7 +39,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
 
   private ProgressDialog dialog;
 
-  public AutoUpdate(BaseActivity activity, DownloadFactory downloadFactory,
+  public AutoUpdate(ActivityView activity, DownloadFactory downloadFactory,
       PermissionManager permissionManager, InstallManager installManager, Resources resources,
       String autoUpdateUrl) {
     this.url = autoUpdateUrl;
