@@ -7,7 +7,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -26,6 +25,7 @@ import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -72,7 +72,7 @@ public class InstalledIntentService extends IntentService {
     final SharedPreferences sharedPreferences =
         ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
     adsRepository = ((V8Engine) getApplicationContext()).getAdsRepository();
-    repository = RepositoryFactory.getRollbackRepository();
+    repository = RepositoryFactory.getRollbackRepository(getApplicationContext());
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
 
     subscriptions = new CompositeSubscription();
@@ -169,8 +169,9 @@ public class InstalledIntentService extends IntentService {
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
-    StoredMinimalAdAccessor storedMinimalAdAccessor =
-        AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+        StoredMinimalAd.class);
     Subscription unManagedSubscription = storedMinimalAdAccessor.get(packageName)
         .flatMapCompletable(storeMinimalAd -> {
           if (storeMinimalAd != null) {

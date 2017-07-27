@@ -7,13 +7,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -52,7 +53,9 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   private void fetchExcludedUpdates() {
-    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Update.class);
     updateAccessor.getAll(true)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -127,7 +130,9 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
       //realm.copyToRealmOrUpdate(excludedUpdatesToRestore);
       //realm.commitTransaction();
 
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
+          ((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Update.class);
       Observable.from(excludedUpdatesToRestore)
           .doOnNext(update -> update.setExcluded(false))
           .toList()

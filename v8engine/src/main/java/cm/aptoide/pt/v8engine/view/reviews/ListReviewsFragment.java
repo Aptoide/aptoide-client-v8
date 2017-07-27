@@ -4,10 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.FullReview;
 import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -27,7 +30,9 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
   }
 
   @Override

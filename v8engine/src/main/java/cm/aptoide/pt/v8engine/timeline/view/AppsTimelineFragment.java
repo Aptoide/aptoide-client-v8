@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
@@ -37,6 +38,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
@@ -259,13 +261,16 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     packageRepository = ((V8Engine) getContext().getApplicationContext()).getPackageRepository();
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
-    InstalledRepository installedRepository = RepositoryFactory.getInstalledRepository();
+    InstalledRepository installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
 
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, sharedPreferences);
-    final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl(
+        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
     final InstallManager installManager =
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(
             InstallerFactory.ROLLBACK);

@@ -17,7 +17,7 @@ import rx.schedulers.Schedulers;
  */
 public class RollbackAccessor extends SimpleAccessor<Rollback> {
 
-  protected RollbackAccessor(Database db) {
+  public RollbackAccessor(Database db) {
     super(db, Rollback.class);
   }
 

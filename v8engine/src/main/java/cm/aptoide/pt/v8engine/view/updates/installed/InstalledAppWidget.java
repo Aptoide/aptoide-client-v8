@@ -82,7 +82,7 @@ import retrofit2.Converter;
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
-    shareAppHelper = new ShareAppHelper(RepositoryFactory.getInstalledRepository(), accountManager,
+    shareAppHelper = new ShareAppHelper(RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()), accountManager,
         accountNavigator, getContext(), new SpotAndShareAnalytics(Analytics.getInstance()),
         displayable.getTimelineAnalytics(), PublishRelay.create(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());

@@ -39,7 +39,7 @@
 
   <uses-sdk
       android:minSdkVersion="15"
-      tools:overrideLibrary="com.paypal.android.sdk.payments"
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.braintreepayments.api.core, com.braintreepayments.api, com.braintreepayments.cardform"
       />
 
   <application
@@ -76,13 +76,8 @@
 
     <activity
         android:name=".billing.view.PaymentActivity"
-        android:theme="@style/AppBaseTheme.NoTitle.Transparent.WhiteGreen"/>
+        android:theme="@style/AppBaseTheme.NoTitle.Transparent"/>
 
-    <activity
-        android:name=".billing.view.PayPalActivity"
-        android:theme="@style/AppBaseTheme.NoTitle"/>
-
-    <activity android:name=".billing.view.BoaCompraActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.view.SpotSharePreviewActivity"/>
 
@@ -220,7 +215,7 @@
     </receiver>
 
     <service android:name=".notification.PullingContentService"/>
-    <service android:name=".notification.NotificationSyncService"/>
+    <service android:name=".sync.alarm.NotificationSyncService"/>
 
     <receiver android:name=".notification.NotificationReceiver">
       <intent-filter>

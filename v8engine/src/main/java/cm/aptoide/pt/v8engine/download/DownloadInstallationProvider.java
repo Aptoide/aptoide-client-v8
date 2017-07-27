@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.download;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -37,11 +36,11 @@ public class DownloadInstallationProvider implements InstallationProvider {
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
       DownloadAccessor downloadAccessor, InstalledRepository installedRepository,
-      MinimalAdMapper adMapper) {
+      MinimalAdMapper adMapper, StoredMinimalAdAccessor storeMinimalAdAccessor) {
     this.downloadManager = downloadManager;
     this.downloadAccessor = downloadAccessor;
     this.adMapper = adMapper;
-    this.storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    this.storedMinimalAdAccessor = storeMinimalAdAccessor;
     this.installedRepository = installedRepository;
   }
 

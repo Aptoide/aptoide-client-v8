@@ -5,6 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
@@ -53,14 +54,16 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     storeUtilsProxy.subscribeStore(getPojo().getName());
   }
 
-  void unsubscribeStore() {
+  void unsubscribeStore(Context context) {
     if (accountManager.isLoggedIn()) {
       accountManager.unsubscribeStore(getPojo().getName(),
           storeCredentialsProvider.get(getPojo().getName())
               .getName(), storeCredentialsProvider.get(getPojo().getName())
               .getPasswordSha1());
     }
-    StoreUtils.unSubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider);
+    StoreUtils.unSubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider,
+        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
+            cm.aptoide.pt.database.realm.Store.class));
   }
 
   void openStoreFragment(FragmentNavigator navigator) {

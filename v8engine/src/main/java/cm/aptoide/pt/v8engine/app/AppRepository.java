@@ -7,8 +7,6 @@ package cm.aptoide.pt.v8engine.app;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -25,13 +23,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 7/27/16.
- */
 public class AppRepository {
 
-  private final NetworkOperatorManager operatorManager;
-  private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private final StoreCredentialsProvider storeCredentialsProvider;
@@ -41,14 +34,11 @@ public class AppRepository {
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
 
-  public AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV7,
+  public AppRepository(BodyInterceptor<BaseBody> bodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       StoreCredentialsProviderImpl storeCredentialsProvider, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources) {
-    this.operatorManager = operatorManager;
-    this.accountManager = accountManager;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.storeCredentialsProvider = storeCredentialsProvider;
@@ -123,8 +113,8 @@ public class AppRepository {
 
   private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
-    return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
+    return GetApkInfoRequest.of(appId, sponsored, storeName, bodyInterceptorV3, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences, resources)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {

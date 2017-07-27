@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Marcelo Benites on 19/08/2016.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <FrameLayout
+      android:id="@+id/fragment_payment_overlay"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/overlay_black"
+      android:clickable="true"
+      android:orientation="horizontal"
+      />
+
+  <ScrollView
+      android:id="@+id/fragment_payment_card"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:layout_margin="16dp"
+      android:background="@drawable/dialog_bg"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:minHeight="200dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        >
+
+      <include layout="@layout/include_payment_product"/>
+
+
+      <RadioGroup
+          android:id="@+id/fragment_payment_list"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          />
+
+      <TextView
+          android:id="@+id/fragment_payment_no_payments_text"
+          android:layout_width="match_parent"
+          android:layout_height="100dp"
+          android:layout_marginBottom="16dp"
+          android:layout_marginTop="16dp"
+          android:gravity="center"
+          android:text="@string/no_payments_available"
+          android:visibility="gone"
+          tools:visibility="visible"
+          />
+
+      <include layout="@layout/include_payment_buttons"/>
+    </LinearLayout>
+  </ScrollView>
+
+  <LinearLayout
+      android:id="@+id/fragment_payment_global_progress_bar"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_alignBottom="@id/fragment_payment_card"
+      android:layout_alignEnd="@id/fragment_payment_card"
+      android:layout_alignLeft="@id/fragment_payment_card"
+      android:layout_alignRight="@id/fragment_payment_card"
+      android:layout_alignStart="@id/fragment_payment_card"
+      android:layout_alignTop="@id/fragment_payment_card"
+      android:background="@drawable/dialog_bg"
+      android:clickable="true"
+      android:gravity="center"
+      android:orientation="vertical"
+      android:visibility="gone"
+      >
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/AptoideThemeDefault"
+        />
+  </LinearLayout>
+
+</RelativeLayout>
+

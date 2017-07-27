@@ -10,7 +10,7 @@ import cm.aptoide.pt.v8engine.billing.Product;
 
 public abstract class AbstractProduct implements Product {
 
-  protected final int packageVersionCode;
+  private final int packageVersionCode;
   private final int id;
   private final String icon;
   private final String title;

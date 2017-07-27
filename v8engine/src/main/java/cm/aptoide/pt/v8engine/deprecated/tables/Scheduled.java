@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -33,7 +34,8 @@ public class Scheduled extends BaseTable {
     return NAME;
   }
 
-  @Override public RealmObject convert(Cursor cursor, PackageManager packageManager) {
+  @Override
+  public RealmObject convert(Cursor cursor, PackageManager packageManager, Context context) {
     cm.aptoide.pt.database.realm.Scheduled realmObject =
         new cm.aptoide.pt.database.realm.Scheduled();
     realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));

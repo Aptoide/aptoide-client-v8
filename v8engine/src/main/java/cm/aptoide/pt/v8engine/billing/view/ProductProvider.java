@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.Product;
@@ -48,15 +47,15 @@ public class ProductProvider {
     this.developerPayload = developerPayload;
   }
 
-  public static ProductProvider fromIntent(Billing billing, Intent intent) {
-    return new ProductProvider(billing, intent.getLongExtra(EXTRA_APP_ID, -1),
-        intent.getStringExtra(EXTRA_STORE_NAME), intent.getBooleanExtra(EXTRA_SPONSORED, false),
-        intent.getIntExtra(EXTRA_API_VERSION, -1), intent.getStringExtra(EXTRA_TYPE),
-        intent.getStringExtra(EXTRA_SKU), intent.getStringExtra(EXTRA_PACKAGE_NAME),
-        intent.getStringExtra(EXTRA_DEVELOPER_PAYLOAD));
+  public static ProductProvider fromBundle(Billing billing, Bundle bundle) {
+    return new ProductProvider(billing, bundle.getLong(EXTRA_APP_ID, -1),
+        bundle.getString(EXTRA_STORE_NAME), bundle.getBoolean(EXTRA_SPONSORED, false),
+        bundle.getInt(EXTRA_API_VERSION, -1), bundle.getString(EXTRA_TYPE),
+        bundle.getString(EXTRA_SKU), bundle.getString(EXTRA_PACKAGE_NAME),
+        bundle.getString(EXTRA_DEVELOPER_PAYLOAD));
   }
 
-  public static Bundle createIntentBundle(long appId, String storeName, boolean sponsored) {
+  public static Bundle createBundle(long appId, String storeName, boolean sponsored) {
     final Bundle bundle = new Bundle();
     bundle.putLong(ProductProvider.EXTRA_APP_ID, appId);
     bundle.putString(ProductProvider.EXTRA_STORE_NAME, storeName);
@@ -64,8 +63,8 @@ public class ProductProvider {
     return bundle;
   }
 
-  public static Bundle createIntentBundle(int apiVersion, String packageName, String type,
-      String sku, String developerPayload) {
+  public static Bundle createBundle(int apiVersion, String packageName, String type, String sku,
+      String developerPayload) {
     final Bundle bundle = new Bundle();
     bundle.putInt(ProductProvider.EXTRA_API_VERSION, apiVersion);
     bundle.putString(ProductProvider.EXTRA_PACKAGE_NAME, packageName);
@@ -78,13 +77,13 @@ public class ProductProvider {
   public Single<Product> getProduct() {
 
     if (storeName != null) {
-      return billing.getPaidAppProduct(appId, storeName, sponsored);
+      return billing.getProduct(appId, storeName, sponsored);
     }
 
     if (sku != null) {
-      return billing.getInAppProduct(apiVersion, packageName, sku, type, developerPayload);
+      return billing.getProduct(packageName, apiVersion, type, sku, developerPayload);
     }
 
-    return Single.error(new IllegalStateException("No product information provided to presenter."));
+    return Single.error(new IllegalArgumentException("Invalid product information."));
   }
 }
