@@ -2,6 +2,7 @@ package cm.aptoide.pt.database.accessors;
 
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import rx.Observable;
+import rx.Scheduler;
 
 /**
  * Created on 11/10/2016.
@@ -9,8 +10,8 @@ import rx.Observable;
 
 public class StoredMinimalAdAccessor extends SimpleAccessor<StoredMinimalAd> {
 
-  StoredMinimalAdAccessor(Database db) {
-    super(db, StoredMinimalAd.class);
+  StoredMinimalAdAccessor(Database db, Scheduler observingScheduler) {
+    super(db, observingScheduler, StoredMinimalAd.class);
   }
 
   public Observable<StoredMinimalAd> get(String packageName) {

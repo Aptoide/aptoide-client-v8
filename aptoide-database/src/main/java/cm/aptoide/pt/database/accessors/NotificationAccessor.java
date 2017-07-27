@@ -6,6 +6,7 @@ import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
@@ -14,8 +15,8 @@ import rx.schedulers.Schedulers;
  */
 
 public class NotificationAccessor extends SimpleAccessor<Notification> {
-  NotificationAccessor(Database db) {
-    super(db, Notification.class);
+  NotificationAccessor(Database db, Scheduler observingScheduler) {
+    super(db, observingScheduler, Notification.class);
   }
 
   public Observable<List<Notification>> getDismissed(Integer[] notificationType, long startingTime,

@@ -181,6 +181,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
@@ -192,6 +193,7 @@ import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -576,13 +578,16 @@ public abstract class V8Engine extends Application {
       FileUtils.createDir(apkPath);
       FileUtils.createDir(obbPath);
 
+      int nrIoCores = Runtime.getRuntime().availableProcessors() * 5;
+      Scheduler scheduler = Schedulers.from(Executors.newFixedThreadPool(nrIoCores));
+
       FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
       downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
           getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
-          getConfiguration().getCachePath(), apkPath, obbPath);
+          getConfiguration().getCachePath(), apkPath, obbPath, scheduler);
     }
     return downloadManager;
   }
