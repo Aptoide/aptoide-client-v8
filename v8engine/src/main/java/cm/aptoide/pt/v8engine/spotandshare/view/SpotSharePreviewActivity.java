@@ -4,13 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.BaseActivity;
+import cm.aptoide.pt.v8engine.view.ActivityView;
 
-/**
- * Created by neuro on 10-04-2017.
- */
-
-public class SpotSharePreviewActivity extends BaseActivity {
+public class SpotSharePreviewActivity extends ActivityView {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

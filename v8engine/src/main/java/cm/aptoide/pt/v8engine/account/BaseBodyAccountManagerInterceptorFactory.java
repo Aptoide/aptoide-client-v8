@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import cm.aptoide.accountmanager.AccountManagerInterceptorFactory;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -32,12 +33,13 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   private final String packageName;
   private final int androidVersion;
   private final PackageRepository packageRepository;
+  private final NetworkOperatorManager operatorManager;
 
   public BaseBodyAccountManagerInterceptorFactory(IdsRepository idsRepository,
       Preferences preferences, SecurePreferences securePreferences, String aptoideMd5sum,
       String aptoidePackage, QManager qManager, SharedPreferences sharedPreferences,
       Resources resources, String packageName, int androidVersion,
-      PackageRepository packageRepository) {
+      PackageRepository packageRepository, NetworkOperatorManager operatorManager) {
     this.idsRepository = idsRepository;
     this.preferences = preferences;
     this.securePreferences = securePreferences;
@@ -49,6 +51,7 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
     this.packageName = packageName;
     this.androidVersion = androidVersion;
     this.packageRepository = packageRepository;
+    this.operatorManager = operatorManager;
   }
 
   @Override public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager) {
@@ -77,7 +80,8 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(
       AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, accountManager,
-        qManager, sharedPreferences, BaseBodyInterceptorV3.RESPONSE_MODE_JSON, androidVersion);
+        qManager, sharedPreferences, BaseBodyInterceptorV3.RESPONSE_MODE_JSON, androidVersion,
+        operatorManager);
   }
 
   @Override

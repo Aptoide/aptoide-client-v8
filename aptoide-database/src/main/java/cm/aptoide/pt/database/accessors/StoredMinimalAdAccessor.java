@@ -9,7 +9,7 @@ import rx.Observable;
 
 public class StoredMinimalAdAccessor extends SimpleAccessor<StoredMinimalAd> {
 
-  StoredMinimalAdAccessor(Database db) {
+  public StoredMinimalAdAccessor(Database db) {
     super(db, StoredMinimalAd.class);
   }
 

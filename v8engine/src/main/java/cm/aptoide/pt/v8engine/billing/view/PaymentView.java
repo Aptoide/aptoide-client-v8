@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
 import rx.Observable;
@@ -23,27 +22,27 @@ public interface PaymentView extends View {
 
   void selectPayment(PaymentMethodViewModel payment);
 
-  void showLoading();
+  void showPaymentLoading();
+
+  void showTransactionLoading();
+
+  void showBuyLoading();
 
   void showPayments(List<PaymentMethodViewModel> paymentList);
 
   void showProduct(Product product);
 
-  void hideLoading();
+  void hidePaymentLoading();
 
-  void dismiss(Purchase purchase);
+  void hideTransactionLoading();
 
-  void dismiss(Throwable throwable);
-
-  void dismiss();
+  void hideBuyLoading();
 
   void showPaymentsNotFoundMessage();
 
   void showNetworkError();
 
   void showUnknownError();
-
-  void hideAllErrors();
 
   class PaymentMethodViewModel {
 

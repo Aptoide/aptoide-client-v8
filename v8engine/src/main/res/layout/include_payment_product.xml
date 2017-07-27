@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+  <RelativeLayout
+      android:id="@+id/fragment_payment_header"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      tools:visibility="visible"
+      >
+
+    <ImageView
+        android:id="@+id/include_payment_product_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        tools:ignore="contentDescription"
+        tools:src="@drawable/icon_user"
+        />
+
+    <TextView
+        android:id="@+id/include_payment_product_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="8dp"
+        tools:text="Cut the Rope"
+        style="@style/TextAppearance.Aptoide.Subhead"
+        />
+
+
+    <TextView
+        android:id="@+id/include_payment_product_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/include_payment_product_name"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginStart="96dp"
+        android:ellipsize="end"
+        android:lines="2"
+        tools:text="Golden coins for you to conquer the world with Cut the Rope the best mobile application you'e ever seen"
+        style="@style/TextAppearance.Aptoide.Caption.Inverse"
+        />
+
+  </RelativeLayout>
+  <LinearLayout
+      android:id="@+id/fragment_payment_body"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:animateLayoutChanges="true"
+      android:orientation="vertical"
+      tools:visibility="visible"
+      >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        >
+
+      <ImageView
+          android:id="@+id/activity_selected_payment_checked_image"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="16dp"
+          android:layout_marginRight="16dp"
+          android:scaleType="centerInside"
+          android:src="@drawable/selected_payment_icon"
+          tools:ignore="contentDescription"
+          />
+
+      <TextView
+          android:id="@+id/include_payment_product_price"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_toLeftOf="@id/activity_selected_payment_checked_image"
+          android:layout_toStartOf="@id/activity_selected_payment_checked_image"
+          android:gravity="end"
+          android:lines="1"
+          tools:text="6,50 R$"
+          style="@style/TextAppearance.Aptoide.Title"
+          />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/fragment_payment_selected_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/fragment_payment_dark_gray"
+        />
+  </LinearLayout>
+</LinearLayout>

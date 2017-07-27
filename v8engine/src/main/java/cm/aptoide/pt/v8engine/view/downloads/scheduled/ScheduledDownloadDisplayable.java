@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.downloads.scheduled;
 
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.v8engine.Install;
@@ -39,9 +38,8 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
     return R.layout.displayable_scheduled_download_row;
   }
 
-  public void removeFromDatabase() {
-    ((ScheduledAccessor) AccessorFactory.getAccessorFor(Scheduled.class)).delete(
-        getPojo().getMd5());
+  public void removeFromDatabase(ScheduledAccessor accessor) {
+    accessor.delete(getPojo().getMd5());
   }
 
   public Observable<Boolean> isDownloading() {
