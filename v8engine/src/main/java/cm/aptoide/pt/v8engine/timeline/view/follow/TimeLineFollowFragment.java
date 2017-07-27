@@ -62,9 +62,9 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
 
       final int[] hidden = { 0 };
       Action1<GetFollowers> action = (followersList) -> {
-        hidden[0] += followersList.getDatalist()
+        hidden[0] += followersList.getDataList()
             .getHidden();
-        for (GetFollowers.TimelineUser user : followersList.getDatalist()
+        for (GetFollowers.TimelineUser user : followersList.getDataList()
             .getList()) {
           dispList.add(createUserDisplayable(user));
         }

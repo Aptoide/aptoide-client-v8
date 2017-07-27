@@ -46,6 +46,16 @@
       android:allowBackup="true"
       >
 
+    <activity
+        android:name=".timeline.post.PostActivity"
+        android:launchMode="singleInstance">
+      <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="text/plain"/>
+      </intent-filter>
+    </activity>
+
     <activity android:name=".view.search.SearchActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEARCH"/>

@@ -176,7 +176,7 @@ public class AccountManagerService {
     return new GetMySubscribedStoresRequest(accessToken,
         interceptorFactory.createV7(accountManager), httpClient, converterFactory,
         tokenInvalidatorFactory.getTokenInvalidator(accountManager), sharedPreferences).observe()
-        .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist()
+        .map(getUserRepoSubscription -> getUserRepoSubscription.getDataList()
             .getList())
         .flatMapIterable(list -> list)
         .map(store -> mapToStore(store))

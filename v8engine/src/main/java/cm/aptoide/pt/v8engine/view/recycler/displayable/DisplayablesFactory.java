@@ -143,7 +143,7 @@ public class DisplayablesFactory {
       return new EmptyDisplayable();
     }
 
-    List<App> apps = listApps.getDatalist()
+    List<App> apps = listApps.getDataList()
         .getList();
     List<Displayable> displayables = new ArrayList<>(apps.size());
 
@@ -215,10 +215,10 @@ public class DisplayablesFactory {
       int maxStoresToShow = stores.size();
       if (wsWidget.getViewObject() instanceof ListStores) {
         ListStores listStores = (ListStores) wsWidget.getViewObject();
-        stores.addAll(listStores.getDatalist()
+        stores.addAll(listStores.getDataList()
             .getList());
-        maxStoresToShow = listStores.getDatalist()
-            .getLimit() > stores.size() ? stores.size() : listStores.getDatalist()
+        maxStoresToShow = listStores.getDataList()
+            .getLimit() > stores.size() ? stores.size() : listStores.getDataList()
             .getLimit();
       }
       Collections.sort(stores, (store, t1) -> store.getName()
@@ -251,7 +251,7 @@ public class DisplayablesFactory {
     if (listStores == null) {
       return new EmptyDisplayable();
     }
-    List<Store> stores = listStores.getDatalist()
+    List<Store> stores = listStores.getDataList()
         .getList();
     List<Displayable> tmp = new ArrayList<>(stores.size());
     tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext));
@@ -317,8 +317,8 @@ public class DisplayablesFactory {
 
     ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
     if (reviewsList != null
-        && reviewsList.getDatalist() != null
-        && reviewsList.getDatalist()
+        && reviewsList.getDataList() != null
+        && reviewsList.getDataList()
         .getList()
         .size() > 0) {
       displayables.add(new StoreGridHeaderDisplayable(wsWidget));
@@ -346,7 +346,7 @@ public class DisplayablesFactory {
     if (listStores == null) {
       return new EmptyDisplayable();
     }
-    List<Store> stores = listStores.getDatalist()
+    List<Store> stores = listStores.getDataList()
         .getList();
     List<Displayable> displayables = new LinkedList<>();
     displayables.add(
@@ -373,13 +373,13 @@ public class DisplayablesFactory {
     ListComments comments = data.first;
     displayables.add(new StoreGridHeaderDisplayable(wsWidget));
     if (comments != null
-        && comments.getDatalist() != null
-        && comments.getDatalist()
+        && comments.getDataList() != null
+        && comments.getDataList()
         .getList()
         .size() > 0) {
       displayables.add(
           new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
-              comments.getDatalist()
+              comments.getDataList()
                   .getList()));
     } else {
       displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
@@ -407,7 +407,7 @@ public class DisplayablesFactory {
 
   private static Displayable createReviewsDisplayables(ListFullReviews listFullReviews,
       WindowManager windowManager, Resources resources) {
-    List<FullReview> reviews = listFullReviews.getDatalist()
+    List<FullReview> reviews = listFullReviews.getDataList()
         .getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
     for (int i = 0; i < reviews.size(); i++) {

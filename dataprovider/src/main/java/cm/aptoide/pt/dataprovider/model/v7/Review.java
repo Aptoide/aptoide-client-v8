@@ -26,10 +26,10 @@ import lombok.Data;
 
   public boolean hasComments() {
     return commentList != null
-        && commentList.getDatalist() != null
-        && commentList.getDatalist()
+        && commentList.getDataList() != null
+        && commentList.getDataList()
         .getList() != null
-        && !commentList.getDatalist()
+        && !commentList.getDataList()
         .getList()
         .isEmpty();
   }

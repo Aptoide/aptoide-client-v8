@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.Datalist;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -268,7 +268,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
               bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
       of.execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
             .getList();
 
         if (list != null && hasMoreResults(listSearchApps)) {
@@ -283,7 +283,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
           bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
                 .getList();
 
             if (list != null && hasMoreResults(listSearchApps)) {
@@ -299,7 +299,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
           bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
                 .getList();
 
             if (list != null && hasMoreResults(listSearchApps)) {
@@ -314,7 +314,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   private boolean hasMoreResults(ListSearchApps listSearchApps) {
-    Datalist<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDatalist();
+    DataList<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDataList();
 
     return datalist.getList()
         .size() > 0 || listSearchApps.getTotal() > listSearchApps.getNextSize();
