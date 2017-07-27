@@ -292,7 +292,7 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       oldVersion++;
     }
 
-    if (oldVersion == 8086) {
+    if (oldVersion == 8085) {
       realm.delete(PaymentConfirmation.class.getSimpleName());
       schema.get("PaymentConfirmation")
           .addField("clientToken", String.class);
