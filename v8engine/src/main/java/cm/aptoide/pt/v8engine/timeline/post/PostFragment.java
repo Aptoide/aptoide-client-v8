@@ -39,6 +39,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
@@ -67,6 +68,7 @@ public class PostFragment extends FragmentView implements PostView {
   private View previewLayout;
   private PublishRelay<Void> loginAction;
   private PublishRelay<Void> openUploaderButton;
+  private PublishRelay<Void> backButton;
   private PostPresenter presenter;
   private View inputSeparator;
   private PostAnalytics analytics;
@@ -94,6 +96,7 @@ public class PostFragment extends FragmentView implements PostView {
     postClick = PublishRelay.create();
     loginAction = PublishRelay.create();
     openUploaderButton = PublishRelay.create();
+    backButton = PublishRelay.create();
     analytics = new PostAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     handleAnalytics();
@@ -137,6 +140,7 @@ public class PostFragment extends FragmentView implements PostView {
     previewLayout = null;
     inputSeparator = null;
     urlShower = null;
+    ((BackButtonActivity) getActivity()).unregisterClickHandler(presenter);
     super.onDestroyView();
   }
 
@@ -207,7 +211,8 @@ public class PostFragment extends FragmentView implements PostView {
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        urlProvider);
+        urlProvider, analytics);
+    ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
     attachPresenter(presenter, null);
   }
 

@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
+import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
@@ -20,7 +21,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-class PostPresenter implements Presenter {
+class PostPresenter implements Presenter, BackButton.ClickHandler {
   public static final String UPLOADER_PACKAGENAME = "pt.caixamagica.aptoide.uploader";
   private static final String TAG = PostPresenter.class.getSimpleName();
   private final PostView view;
@@ -28,12 +29,14 @@ class PostPresenter implements Presenter {
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
   private final PostFragment.PostUrlProvider postUrlProvider;
+  private PostAnalytics analytics;
   private UrlValidator urlValidator;
   private AccountNavigator accountNavigator;
 
   public PostPresenter(PostFragment view, CrashReport crashReport, PostManager postManager,
       FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
-      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider) {
+      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider,
+      PostAnalytics analytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
@@ -41,6 +44,7 @@ class PostPresenter implements Presenter {
     this.urlValidator = urlValidator;
     this.accountNavigator = accountNavigator;
     this.postUrlProvider = postUrlProvider;
+    this.analytics = analytics;
   }
 
   @Override public void present() {
@@ -147,6 +151,7 @@ class PostPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonPressed()
+            .doOnNext(click -> analytics.sendClosePostEvent(PostAnalytics.CloseType.X))
             .doOnNext(__2 -> goBack()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -301,5 +306,11 @@ class PostPresenter implements Presenter {
     } else {
       view.showGenericError();
     }
+  }
+
+  @Override public boolean handle() {
+    analytics.sendClosePostEvent(PostAnalytics.CloseType.BACK);
+    goBack();
+    return true;
   }
 }
