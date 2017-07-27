@@ -77,14 +77,22 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
   }
 
   @Override public void setPost(AggregatedStore card, int position) {
-    ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPosters()
-            .get(0)
-            .getPrimaryAvatar(), this.headerAvatar1);
-    ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPosters()
-            .get(1)
-            .getPrimaryAvatar(), this.headerAvatar2);
+    if (card.getPosters() != null) {
+      if (card.getPosters()
+          .size() > 0) {
+        ImageLoader.with(itemView.getContext())
+            .loadWithShadowCircleTransform(card.getPosters()
+                .get(0)
+                .getPrimaryAvatar(), this.headerAvatar1);
+      }
+      if (card.getPosters()
+          .size() > 1) {
+        ImageLoader.with(itemView.getContext())
+            .loadWithShadowCircleTransform(card.getPosters()
+                .get(1)
+                .getPrimaryAvatar(), this.headerAvatar2);
+      }
+    }
     this.headerNames.setText(getCardHeaderNames(card));
     this.headerTimestamp.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getLatestUpdate()));
@@ -111,13 +119,16 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
 
   public String getCardHeaderNames(AggregatedStore card) {
     StringBuilder headerNamesStringBuilder = new StringBuilder();
-    List<Poster> posters = card.getPosters()
-        .subList(0, 2);
-    for (Poster poster : posters) {
-      headerNamesStringBuilder.append(poster.getPrimaryName())
-          .append(", ");
+    if (card.getPosters()
+        .size() >= 2) {
+      List<Poster> posters = card.getPosters()
+          .subList(0, 2);
+      for (Poster poster : posters) {
+        headerNamesStringBuilder.append(poster.getPrimaryName())
+            .append(", ");
+      }
+      headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
     }
-    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
     return headerNamesStringBuilder.toString();
   }
 
