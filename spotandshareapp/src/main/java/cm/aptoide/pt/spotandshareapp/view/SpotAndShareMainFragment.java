@@ -83,7 +83,8 @@ public class SpotAndShareMainFragment extends FragmentView
   }
 
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
-    getFragmentNavigator().navigateTo(SpotAndSharePickAppsFragment.newInstance(shouldCreateGroup));
+    getFragmentNavigator().navigateTo(
+        SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
   }
 
   @Override

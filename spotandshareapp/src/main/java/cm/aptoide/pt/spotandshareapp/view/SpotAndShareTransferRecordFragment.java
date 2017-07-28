@@ -226,7 +226,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(SpotAndSharePickAppsFragment.newInstance(shouldCreateGroup));
+    getFragmentNavigator().navigateTo(
+        SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
   }
 
   @Override public Observable<TransferAppModel> installApp() {
