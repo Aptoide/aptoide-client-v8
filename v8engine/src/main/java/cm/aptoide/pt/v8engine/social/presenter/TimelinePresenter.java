@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.social.presenter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Store;
@@ -455,8 +456,9 @@ public class TimelinePresenter implements Presenter {
   private boolean showCreateStore(Account account) {
     Account.Access userAccess = account.getAccess();
     return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (
-        account.getStore()
-            == null);
+        account.getStore() == null
+            || TextUtils.isEmpty(account.getStore()
+            .getName()));
   }
 
   private void handleLoginMessageClick() {
