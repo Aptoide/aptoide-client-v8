@@ -37,11 +37,11 @@ public class SpotAndSharePickAppsAdapter extends RecyclerView.Adapter<ViewHolder
 
     if (viewType == TYPE_HEADER) {
       View view = LayoutInflater.from(parent.getContext())
-          .inflate(R.layout.fragment_spotandshare_app_selection_header, parent, false);
+          .inflate(R.layout.fragment_spotandshare_pick_apps_header, parent, false);
       return new ViewHolderHeader(view);
     } else {
       View view = LayoutInflater.from(parent.getContext())
-          .inflate(R.layout.fragment_spotandshare_app_selection_item, parent, false);
+          .inflate(R.layout.fragment_spotandshare_pick_apps_item, parent, false);
       return new ViewHolderItem(view);
     }
   }
