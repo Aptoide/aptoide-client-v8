@@ -13,15 +13,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import cm.aptoide.pt.spotandshareapp.AppModel;
+import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
+import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
+import cm.aptoide.pt.spotandshareapp.Header;
+import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
+import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
+import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
+import cm.aptoide.pt.v8engine.presenter.CompositePresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -42,6 +51,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private SpotAndShareTransferRecordAdapter adapter;
   private PublishSubject<TransferAppModel> acceptApp;
   private PublishSubject<TransferAppModel> installApp;
+  private SpotAndShareBottomSheetPickAppDialog bottomSheetPickAppDialog;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -70,10 +80,35 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         (RecyclerView) view.findViewById(R.id.transfer_record_recycler_view);
     setupRecyclerView();
     setupBackClick();
-    attachPresenter(new SpotAndShareTransferRecordPresenter(this,
-        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-        new SpotAndShareTransferRecordManager(getContext()),
-        new SpotAndShareInstallManager(getActivity().getApplicationContext())), savedInstanceState);
+
+    PublishSubject<AppModel> appSubject = PublishSubject.create();
+    SpotAndShareAppSelectionAdapter adapter = new SpotAndShareAppSelectionAdapter(appSubject,
+        new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)));
+    bottomSheetPickAppDialog = new SpotAndShareBottomSheetPickAppDialog(getContext(), adapter);
+    bottomSheetPickAppDialog.show();
+    showLoading();
+    attachPresenters();
+  }
+
+  private void attachPresenters() {
+
+    SpotAndShareTransferRecordPresenter transferRecordPresenter =
+        new SpotAndShareTransferRecordPresenter(this,
+            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            new SpotAndShareTransferRecordManager(getContext()),
+            new SpotAndShareInstallManager(getActivity().getApplicationContext()));
+
+    SpotAndShareAppSelectionPresenter appSelectionPresenter =
+        new SpotAndShareAppSelectionPresenter(this, false,
+            new InstalledRepositoryDummy(getActivity().getApplicationContext(),
+                getContext().getPackageManager()),
+            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            new DrawableBitmapMapper(getActivity().getApplicationContext()),
+            new AppModelToAndroidAppInfoMapper(new ObbsProvider()));
+
+    attachPresenter(
+        new CompositePresenter(Arrays.asList(transferRecordPresenter, appSelectionPresenter)),
+        null);
   }
 
   private void setupBackClick() {
@@ -112,6 +147,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     adapter.onDestroy();
     adapter = null;
     transferRecordRecyclerView = null;
+    bottomSheetPickAppDialog = null;
     super.onDestroyView();
   }
 
@@ -124,6 +160,12 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void finish() {
     getActivity().finish();
+  }
+
+  @Override public void buildInstalledAppsList(List<AppModel> installedApps) {
+
+    bottomSheetPickAppDialog.setInstalledAppsList(installedApps);
+    hideLoading();
   }
 
   @Override public Observable<TransferAppModel> acceptApp() {
@@ -152,6 +194,30 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     Toast.makeText(getContext(), "There was an error while trying to leave the group",
         Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<AppModel> selectedApp() {
+    return bottomSheetPickAppDialog.onSelectedApp();
+  }
+
+  @Override public void openTransferRecord() {
+
+  }
+
+  @Override public void openWaitingToSendScreen(AppModel selectedApp) {
+
+  }
+
+  @Override public void onCreateGroupError(Throwable throwable) {
+
+  }
+
+  @Override public void hideLoading() {
+    bottomSheetPickAppDialog.hideLoading();
+  }
+
+  @Override public void showLoading() {
+    bottomSheetPickAppDialog.showLoading();
   }
 
   @Override public void updateReceivedAppsList(List<TransferAppModel> transferAppModelList) {
