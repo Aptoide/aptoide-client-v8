@@ -474,10 +474,13 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.SHARE))
-        .doOnNext(cardTouchEvent -> view.showSharePreview(cardTouchEvent.getCard()))
+        .doOnNext(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
+            .getAbUrl()))
+        .flatMap(cardTouchEvent -> accountManager.accountStatus()
+            .doOnNext(account -> view.showSharePreview(cardTouchEvent.getCard(), account)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
-            .getAbUrl()), throwable -> {
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
         });

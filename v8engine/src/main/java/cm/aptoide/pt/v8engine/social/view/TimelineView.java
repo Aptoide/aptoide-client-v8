@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.social.view;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
@@ -60,7 +61,7 @@ public interface TimelineView extends View {
 
   void showStoreUnsubscribedMessage(String storeName);
 
-  void showSharePreview(Post post);
+  void showSharePreview(Post post, Account account);
 
   void showShareSuccessMessage();
 

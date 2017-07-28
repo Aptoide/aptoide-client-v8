@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -44,10 +45,10 @@ import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
-import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
+import cm.aptoide.pt.v8engine.social.data.share.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -160,7 +161,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    sharePreviewFactory = new SharePreviewFactory(accountManager);
+    sharePreviewFactory = new SharePreviewFactory();
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
@@ -401,11 +402,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             getContext().getResources(), storeName));
   }
 
-  @Override public void showSharePreview(Post post) {
+  @Override public void showSharePreview(Post post, Account account) {
     shareDialog =
         new AlertDialog.Builder(getContext()).setTitle(R.string.timeline_title_shared_card_preview)
             .setMessage(R.string.social_timeline_you_will_share)
-            .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
+            .setView(sharePreviewFactory.getSharePreviewView(post, getContext(), account))
             .setPositiveButton(R.string.share,
                 (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
             .setNegativeButton(android.R.string.cancel,

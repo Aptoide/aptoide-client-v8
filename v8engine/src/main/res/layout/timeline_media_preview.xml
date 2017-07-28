@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2016.
-  ~ Modified on 01/08/2016.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
@@ -12,38 +7,7 @@
     android:orientation="vertical"
     android:padding="20dp"
     >
-
   <include layout="@layout/displayable_social_timeline_social_article"/>
-
-  <LinearLayout
-      android:id="@+id/social_privacy_terms"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:paddingTop="10dp"
-      android:visibility="gone"
-      tools:visibility="visible"
-      >
-
-    <CheckBox
-        android:id="@+id/social_preview_checkbox"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        style="?android:attr/textAppearanceMedium"
-        />
-
-    <TextView
-        android:id="@+id/social_text_privacy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="fill"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:clickable="true"
-        android:text="@string/social_timeline_share_title_checkbox"
-        android:textColor="@color/almost_black"
-        />
-  </LinearLayout>
+  <include layout="@layout/partial_timeline_dialog_post_privacy_checkbox"/>
 </LinearLayout>
 
