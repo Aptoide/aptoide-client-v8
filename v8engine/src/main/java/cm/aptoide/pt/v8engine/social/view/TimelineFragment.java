@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -463,16 +463,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showSetUserOrStorePublicMessage() {
-    Snackbar.make(getView(), R.string.timeline_error_you_need_to_set_store_or_user_to_public,
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
         Snackbar.LENGTH_LONG)
         .show();
   }
 
   @Override public void showCreateStoreMessage(SocialAction socialAction) {
-    Snackbar.make(getView(), String.format(
-        getString(R.string.timeline_error_you_need_to_create_store_with_social_action),
-        socialAction.name()
-            .toLowerCase()), Snackbar.LENGTH_LONG)
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_create_store_with_social_action,
+        Snackbar.LENGTH_LONG)
         .show();
   }
 

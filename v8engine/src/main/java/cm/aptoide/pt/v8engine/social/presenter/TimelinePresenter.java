@@ -419,9 +419,7 @@ public class TimelinePresenter implements Presenter {
                   if (!account.isLoggedIn()) {
                     view.showLoginPromptWithAction();
                   } else {
-                    if (showSetUserOrStoreToPublic(account)) {
-                      view.showSetUserOrStorePublicMessage();
-                    } else if (showCreateStore(account)) {
+                    if (showCreateStore(account)) {
                       view.showCreateStoreMessage(SocialAction.LIKE);
                     } else {
                       cardTouchEvent.getCard()
@@ -432,7 +430,7 @@ public class TimelinePresenter implements Presenter {
                 })
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
-                    if (showCreateStore(account) || showSetUserOrStoreToPublic(account)) {
+                    if (showCreateStore(account)) {
                       return Completable.complete();
                     }
 
@@ -490,9 +488,7 @@ public class TimelinePresenter implements Presenter {
                   if (!account.isLoggedIn()) {
                     view.showLoginPromptWithAction();
                   } else {
-                    if (showSetUserOrStoreToPublic(account)) {
-                      view.showSetUserOrStorePublicMessage();
-                    } else if (showCreateStore(account)) {
+                    if (showCreateStore(account)) {
                       view.showCreateStoreMessage(SocialAction.LIKE);
                     } else {
                       cardTouchEvent.getCard()
@@ -503,7 +499,7 @@ public class TimelinePresenter implements Presenter {
                 })
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
-                    if (showCreateStore(account) || showSetUserOrStoreToPublic(account)) {
+                    if (showCreateStore(account)) {
                       return Completable.complete();
                     }
                     final Post post = cardTouchEvent.getCard();
@@ -538,8 +534,6 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE));
-                } else if (showSetUserOrStoreToPublic(account)) {
-                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
                 }
                 return Completable.fromAction(
                     () -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
@@ -570,8 +564,6 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE));
-                } else if (showSetUserOrStoreToPublic(account)) {
-                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
                 }
                 return Completable.fromAction(() -> view.showCommentDialog(cardTouchEvent.getCard()
                     .getCardId()));
@@ -625,8 +617,6 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE));
-                } else if (showSetUserOrStoreToPublic(account)) {
-                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
                 }
                 return Completable.fromAction(
                     () -> view.showSharePreview(cardTouchEvent.getCard()));
