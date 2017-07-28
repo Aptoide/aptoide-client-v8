@@ -10,9 +10,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.view.braintree.BraintreeActivity;
+import cm.aptoide.pt.v8engine.sync.SyncScheduler;
 
 public class PaymentActivity extends BraintreeActivity {
+
+  private SyncScheduler syncScheduler;
 
   public static Intent getIntent(Context context, long appId, String storeName, boolean sponsored) {
     final Intent intent = new Intent(context, PaymentActivity.class);
@@ -36,5 +40,12 @@ public class PaymentActivity extends BraintreeActivity {
       getFragmentNavigator().navigateToWithoutBackSave(
           PaymentFragment.create(getIntent().getExtras()));
     }
+
+    syncScheduler = ((V8Engine) getApplication()).getSyncScheduler();
+  }
+
+  @Override protected void onDestroy() {
+    syncScheduler.cancelAll();
+    super.onDestroy();
   }
 }

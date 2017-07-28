@@ -3,9 +3,8 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.sync.adapter;
+package cm.aptoide.pt.v8engine.sync.billing;
 
-import android.content.SyncResult;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
@@ -13,14 +12,12 @@ import cm.aptoide.pt.v8engine.billing.transaction.LocalTransaction;
 import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionService;
-import java.net.HttpRetryException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import org.apache.http.conn.ConnectTimeoutException;
+import cm.aptoide.pt.v8engine.sync.Sync;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class TransactionSync extends ScheduledSync {
+public class TransactionSync extends Sync {
 
   private final Product product;
   private final TransactionPersistence transactionPersistence;
@@ -29,7 +26,9 @@ public class TransactionSync extends ScheduledSync {
   private final TransactionService transactionService;
 
   public TransactionSync(Product product, TransactionPersistence transactionPersistence,
-      Payer payer, BillingAnalytics analytics, TransactionService transactionService) {
+      Payer payer, BillingAnalytics analytics, TransactionService transactionService,
+      boolean periodic, boolean exact, long interval) {
+    super(String.valueOf(product.getId()), periodic, exact, interval);
     this.product = product;
     this.transactionPersistence = transactionPersistence;
     this.payer = payer;
@@ -37,27 +36,16 @@ public class TransactionSync extends ScheduledSync {
     this.transactionService = transactionService;
   }
 
-  @Override public void sync(SyncResult syncResult) {
-    try {
-      payer.getId()
-          .flatMapObservable(payerId -> syncLocalTransaction(payerId).switchIfEmpty(
-              syncTransaction(payerId).toObservable())
-              .doOnNext(transaction -> {
-                analytics.sendPurchaseStatusEvent(transaction, product);
-                reschedulePendingTransaction(transaction, syncResult);
-              })
-              .doOnError(throwable -> {
-                rescheduleOnNetworkError(syncResult, throwable);
-              }))
-          .toCompletable()
-          .onErrorComplete()
-          .await();
-    } catch (RuntimeException e) {
-      rescheduleSync(syncResult);
-    }
+  @Override public Completable execute() {
+    return payer.getId()
+        .flatMapObservable(payerId -> syncLocalTransaction(payerId).switchIfEmpty(
+            syncTransaction(payerId).toObservable())
+            .doOnNext(transaction -> analytics.sendPurchaseStatusEvent(transaction, product))
+            .doOnError(throwable -> analytics.sendPurchaseErrorEvent(product, throwable)))
+        .toCompletable();
   }
 
-  public Observable<Transaction> syncLocalTransaction(String payerId) {
+  private Observable<Transaction> syncLocalTransaction(String payerId) {
     return transactionPersistence.getTransaction(product.getId(), payerId)
         .first()
         .filter(transaction -> transaction.isPending())
@@ -70,25 +58,9 @@ public class TransactionSync extends ScheduledSync {
                 .andThen(Single.just(transaction))));
   }
 
-  public Single<Transaction> syncTransaction(String payerId) {
+  private Single<Transaction> syncTransaction(String payerId) {
     return transactionService.getTransaction(product, payerId)
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
-  }
-
-  private void reschedulePendingTransaction(Transaction transaction, SyncResult syncResult) {
-    if (transaction.isPending()) {
-      rescheduleSync(syncResult);
-    }
-  }
-
-  private void rescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
-    if (throwable instanceof UnknownHostException
-        || throwable instanceof ConnectTimeoutException
-        || throwable instanceof SocketTimeoutException
-        || throwable instanceof HttpRetryException) {
-      analytics.sendPurchaseNetworkRetryEvent(product);
-      rescheduleSync(syncResult);
-    }
   }
 }

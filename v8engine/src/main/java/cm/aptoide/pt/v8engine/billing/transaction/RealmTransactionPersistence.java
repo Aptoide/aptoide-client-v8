@@ -41,7 +41,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
         .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
             .map(paymentConfirmation -> transactionMapper.map(paymentConfirmation))
             .defaultIfEmpty(
-                transactionFactory.create(productId, payerId, Transaction.Status.NEW, -1, null,
+                transactionFactory.create(productId, payerId, Transaction.Status.UNKNOWN, -1, null,
                     null, null, null)));
   }
 

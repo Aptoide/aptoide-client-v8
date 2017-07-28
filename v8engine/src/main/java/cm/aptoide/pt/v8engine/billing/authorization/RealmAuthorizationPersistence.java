@@ -28,7 +28,10 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
             .equalTo(PaymentAuthorization.PAYMENT_ID, paymentId))
         .flatMap(query -> realm.findAsList(query))
         .flatMap(authorizations -> Observable.from(authorizations)
-            .map(paymentAuthorization -> authorizationFactory.map(paymentAuthorization)));
+            .map(paymentAuthorization -> authorizationFactory.map(paymentAuthorization))
+            .defaultIfEmpty(
+                authorizationFactory.create(paymentId, Authorization.Status.UNKNOWN, payerId, null,
+                    null)));
   }
 
   @Override public Completable saveAuthorizations(List<Authorization> authorizations) {

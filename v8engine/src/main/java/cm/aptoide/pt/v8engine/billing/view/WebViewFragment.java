@@ -16,7 +16,7 @@ import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public class WebViewFragment extends PermissionServiceFragment
+public abstract class WebViewFragment extends PermissionServiceFragment
     implements cm.aptoide.pt.v8engine.billing.view.WebView {
 
   private WebView webView;
@@ -93,7 +93,9 @@ public class WebViewFragment extends PermissionServiceFragment
 
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        mainUrlSubject.call(null);
+        if (mainUrl.equals(url)) {
+          mainUrlSubject.call(null);
+        }
       }
     });
     webView.loadUrl(mainUrl);

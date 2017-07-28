@@ -127,7 +127,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(product -> billing.getTransaction(product)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(transaction -> {
-              if (transaction.isPending() || transaction.isCompleted()) {
+              if (transaction.isPending() || transaction.isCompleted() || transaction.isUnknown()) {
                 view.showTransactionLoading();
               } else {
                 view.hideTransactionLoading();

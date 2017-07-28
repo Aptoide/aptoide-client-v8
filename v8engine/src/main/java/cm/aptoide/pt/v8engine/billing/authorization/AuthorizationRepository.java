@@ -35,7 +35,8 @@ public class AuthorizationRepository {
 
   public Observable<Authorization> getAuthorization(int paymentId) {
     return payer.getId()
-        .flatMapObservable(payerId -> syncScheduler.scheduleAuthorizationSync(paymentId)
-            .andThen(authorizationPersistence.getAuthorization(paymentId, payerId)));
+        .doOnSuccess(__ -> syncScheduler.syncAuthorization(paymentId))
+        .flatMapObservable(
+            payerId -> authorizationPersistence.getAuthorization(paymentId, payerId));
   }
 }

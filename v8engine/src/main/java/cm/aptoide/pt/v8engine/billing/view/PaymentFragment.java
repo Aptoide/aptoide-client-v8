@@ -111,8 +111,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .build();
 
     attachPresenter(
-        new PaymentPresenter(this, billing, billingNavigator,
-            billingAnalytics, productProvider), savedInstanceState);
+        new PaymentPresenter(this, billing, billingNavigator, billingAnalytics, productProvider),
+        savedInstanceState);
   }
 
   @Override public void onDestroyView() {

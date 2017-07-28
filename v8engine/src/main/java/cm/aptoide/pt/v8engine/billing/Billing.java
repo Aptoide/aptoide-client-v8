@@ -104,8 +104,7 @@ public class Billing {
   }
 
   public Observable<Transaction> getTransaction(Product product) {
-    return transactionRepository.getTransaction(product)
-        .distinctUntilChanged(transaction -> transaction.getStatus());
+    return transactionRepository.getTransaction(product);
   }
 
   public Single<Purchase> getPurchase(Product product) {

@@ -22,7 +22,6 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
@@ -91,7 +90,6 @@ import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.BillingService;
-import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodSelector;
@@ -155,10 +153,13 @@ import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.sync.adapter.BillingSyncAdapterScheduler;
-import cm.aptoide.pt.v8engine.sync.adapter.ProductBundleMapper;
-import cm.aptoide.pt.v8engine.sync.alarm.NotificationAlarmManagerScheduler;
-import cm.aptoide.pt.v8engine.sync.alarm.NotificationSyncService;
+import cm.aptoide.pt.v8engine.sync.SyncScheduler;
+import cm.aptoide.pt.v8engine.sync.SyncService;
+import cm.aptoide.pt.v8engine.sync.SyncStorage;
+import cm.aptoide.pt.v8engine.sync.billing.BillingSyncFactory;
+import cm.aptoide.pt.v8engine.sync.billing.BillingSyncManager;
+import cm.aptoide.pt.v8engine.sync.notification.NotificationSyncFactory;
+import cm.aptoide.pt.v8engine.sync.notification.NotificationSyncManager;
 import cm.aptoide.pt.v8engine.view.account.store.StoreManager;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
@@ -182,8 +183,8 @@ import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -236,7 +237,6 @@ public abstract class V8Engine extends Application {
   private BillingAnalytics billingAnalytics;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
-  private BillingSyncScheduler billingSyncScheduler;
   private Payer accountPayer;
   private ExternalBillingSerializer inAppBillingSerialzer;
   private AuthorizationFactory authorizationFactory;
@@ -266,6 +266,9 @@ public abstract class V8Engine extends Application {
   private TransactionMapper transactionMapper;
   private AuthorizationService v3AuthorizationService;
   private AuthorizationPersistence realmAuthorizationPersistence;
+  private NotificationProvider notificationProvider;
+  private SyncStorage syncStorage;
+  private SyncScheduler syncScheduler;
 
   /**
    * call after this instance onCreate()
@@ -439,8 +442,7 @@ public abstract class V8Engine extends Application {
           AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
               Notification.class);
 
-      final NotificationProvider notificationProvider =
-          new NotificationProvider(notificationAccessor, Schedulers.io());
+      final NotificationProvider notificationProvider = getNotificationProvider();
 
       notificationCenter = new NotificationCenter(getNotificationHandler(), notificationProvider,
           getNotificationSyncScheduler(), systemNotificationShower, CrashReport.getInstance(),
@@ -448,6 +450,15 @@ public abstract class V8Engine extends Application {
           new NotificationsCleaner(notificationAccessor), getAccountManager());
     }
     return notificationCenter;
+  }
+
+  public NotificationProvider getNotificationProvider() {
+    if (notificationProvider == null) {
+      notificationProvider = new NotificationProvider(
+          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
+              Notification.class), Schedulers.io());
+    }
+    return notificationProvider;
   }
 
   public StoreManager getStoreManager() {
@@ -461,27 +472,22 @@ public abstract class V8Engine extends Application {
     return storeManager;
   }
 
-  @NonNull public NotificationSyncScheduler getNotificationSyncScheduler() {
+  public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
-
-      long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
-      if (ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences()) > 0) {
-        pushNotificationSocialPeriodicity =
-            ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences());
-      }
-
-      final List<NotificationAlarmManagerScheduler.Schedule> scheduleList = Arrays.asList(
-          new NotificationAlarmManagerScheduler.Schedule(
-              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY),
-          new NotificationAlarmManagerScheduler.Schedule(
-              NotificationSyncService.NOTIFICATIONS_SOCIAL_ACTION,
-              pushNotificationSocialPeriodicity));
-
-      notificationSyncScheduler = new NotificationAlarmManagerScheduler(this,
-          (AlarmManager) getSystemService(ALARM_SERVICE), NotificationSyncService.class,
-          scheduleList, true);
+      notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
+          new NotificationSyncFactory(getDefaultSharedPreferences(),
+              getNotificationNetworkService(), getNotificationProvider()));
     }
     return notificationSyncScheduler;
+  }
+
+  public SyncScheduler getSyncScheduler() {
+    if (syncScheduler == null) {
+      syncScheduler =
+          new SyncScheduler(this, SyncService.class, (AlarmManager) getSystemService(ALARM_SERVICE),
+              getSyncStorage());
+    }
+    return syncScheduler;
   }
 
   public SharedPreferences getDefaultSharedPreferences() {
@@ -751,25 +757,22 @@ public abstract class V8Engine extends Application {
     return billingAnalytics;
   }
 
-  public BillingSyncScheduler getBillingSyncScheduler() {
-    if (billingSyncScheduler == null) {
-      billingSyncScheduler =
-          new BillingSyncAdapterScheduler(new ProductBundleMapper(), getAndroidAccountProvider(),
-              getConfiguration().getContentAuthority());
-    }
-    return billingSyncScheduler;
-  }
-
   public Billing getBilling() {
 
     if (billing == null) {
 
+      final BillingSyncManager billingSyncManager = new BillingSyncManager(
+          new BillingSyncFactory(getAccountPayer(), getBillingAnalytics(),
+              getV3TransactionService(), getV3AuthorizationService(),
+              getRealmTransactionPersistence(), getRealmAuthorizationPersistence()),
+          getSyncScheduler());
+
       final TransactionRepository transactionRepository =
-          new TransactionRepository(getRealmTransactionPersistence(), getBillingSyncScheduler(),
+          new TransactionRepository(getRealmTransactionPersistence(), billingSyncManager,
               getAccountPayer(), getV3TransactionService());
 
       final AuthorizationRepository authorizationRepository =
-          new AuthorizationRepository(getBillingSyncScheduler(), getAccountPayer(),
+          new AuthorizationRepository(billingSyncManager, getAccountPayer(),
               getV3AuthorizationService(), getRealmAuthorizationPersistence());
 
       final BillingService billingService =
@@ -1248,5 +1251,12 @@ public abstract class V8Engine extends Application {
               .getPartnerId(), new MinimalAdMapper());
     }
     return adsRepository;
+  }
+
+  public SyncStorage getSyncStorage() {
+    if (syncStorage == null) {
+      syncStorage = new SyncStorage(new HashMap());
+    }
+    return syncStorage;
   }
 }

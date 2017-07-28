@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.billing.view.boacompra;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
-import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.authorization.boacompra.BoaCompraAuthorization;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
 import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
@@ -22,18 +21,15 @@ public class BoaCompraPresenter implements Presenter {
   private final WebView view;
   private final Billing billing;
   private final BillingAnalytics analytics;
-  private final BillingSyncScheduler syncScheduler;
   private final ProductProvider productProvider;
   private final BillingNavigator navigator;
   private final int paymentMethodId;
 
   public BoaCompraPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      BillingSyncScheduler syncScheduler, ProductProvider productProvider,
-      BillingNavigator navigator, int paymentMethodId) {
+      ProductProvider productProvider, BillingNavigator navigator, int paymentMethodId) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
-    this.syncScheduler = syncScheduler;
     this.productProvider = productProvider;
     this.navigator = navigator;
     this.paymentMethodId = paymentMethodId;
@@ -134,10 +130,6 @@ public class BoaCompraPresenter implements Presenter {
             .doOnNext(backToStorePressed -> view.showLoading())
             .flatMapSingle(loading -> productProvider.getProduct())
             .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product)))
-        // Optimization to accelerate authorization sync once user interacts with the UI, should
-        // be removed once we have a better sync implementation
-        .flatMapCompletable(
-            analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentMethodId))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
