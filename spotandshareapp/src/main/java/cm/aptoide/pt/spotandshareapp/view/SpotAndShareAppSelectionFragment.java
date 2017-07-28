@@ -138,10 +138,15 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     unregisterClickHandler(clickHandler);
     clickHandler = null;
     backDialog = null;
+
+    pickAppsAdapter = null;
+    pickAppsRecyclerView = null;
+    progressBarContainer = null;
     super.onDestroyView();
   }
 
   @Override public void onDestroy() {
+    pickAppSubject = null;
     super.onDestroy();
   }
 
