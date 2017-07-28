@@ -52,7 +52,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     Observable.zip(getInstaledAppsObservable(), getCreateGroupObservable(),
         (appModels, s) -> appModels)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(installedApps -> view.setupRecyclerInstalledAppsView(installedApps))
+        .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
         .subscribe(o -> view.hideLoading(), throwable -> throwable.printStackTrace());
 
     view.getLifecycle()

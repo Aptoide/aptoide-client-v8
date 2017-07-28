@@ -64,13 +64,9 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
     getActivity().finish();
   }
 
-  @Override public void setupRecyclerInstalledAppsView(List<AppModel> installedApps) {
-    adapter = new SpotAndShareAppSelectionAdapter(appSubject,
-        new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
-        installedApps);
-    recyclerView.setAdapter(adapter);
-    setupLayoutManager();
-    recyclerView.setHasFixedSize(true);
+  @Override public void buildInstalledAppsList(List<AppModel> installedApps) {
+    adapter.setInstalledAppsList(installedApps);
+    hideLoading();
   }
 
   @Override public void onLeaveGroupError() {
@@ -130,6 +126,12 @@ public class SpotAndShareAppSelectionFragment extends FragmentView
     setupToolbar();
     recyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
     progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
+
+    adapter = new SpotAndShareAppSelectionAdapter(appSubject,
+        new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)));
+    recyclerView.setAdapter(adapter);
+    setupLayoutManager();
+    recyclerView.setHasFixedSize(true);
 
     attachPresenter(new SpotAndShareAppSelectionPresenter(this, shouldCreateGroup,
         new InstalledRepositoryDummy(getActivity().getApplicationContext(),

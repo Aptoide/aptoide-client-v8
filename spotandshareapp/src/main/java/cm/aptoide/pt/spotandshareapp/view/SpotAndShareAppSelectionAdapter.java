@@ -12,6 +12,7 @@ import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.R;
 import java.util.List;
+import rx.Observable;
 import rx.subjects.PublishSubject;
 
 /**
@@ -27,11 +28,9 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
   private List<AppModel> installedApps;
   private PublishSubject<AppModel> appSubject;
 
-  public SpotAndShareAppSelectionAdapter(PublishSubject<AppModel> appSubject, Header header,
-      List<AppModel> installedApps) {
+  public SpotAndShareAppSelectionAdapter(PublishSubject<AppModel> appSubject, Header header) {
     this.appSubject = appSubject;
     this.header = header;
-    this.installedApps = installedApps;
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -66,11 +65,22 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
   }
 
   @Override public int getItemCount() {
-    return installedApps.size() + 1;
+    if (installedApps != null) {
+      return installedApps.size() + 1;
+    }
+    return 0;
+  }
+
+  public void setInstalledAppsList(List<AppModel> installedApps) {
+    this.installedApps = installedApps;
   }
 
   public boolean isPositionHeader(int position) {
     return position == 0;
+  }
+
+  public Observable<AppModel> onSelectedApp() {
+    return appSubject;
   }
 
   class ViewHolderHeader extends ViewHolder {

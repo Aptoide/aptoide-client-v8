@@ -13,7 +13,7 @@ public interface SpotAndShareAppSelectionView extends View {
 
   void finish();
 
-  void setupRecyclerInstalledAppsView(List<AppModel> installedApps);
+  void buildInstalledAppsList(List<AppModel> installedApps);
 
   void onLeaveGroupError();
 
