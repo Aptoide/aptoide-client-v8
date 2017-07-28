@@ -48,8 +48,8 @@ import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Completable;
 import java.util.concurrent.TimeUnit;
+import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -414,39 +414,44 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(account -> {
                   if (!account.isLoggedIn()) {
                     view.showLoginPromptWithAction();
                   } else {
-                    cardTouchEvent.getCard()
-                        .setLiked(true);
-                    view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                    if (showSetUserOrStoreToPublic(account)) {
+                      view.showSetUserOrStorePublicMessage();
+                    } else if (showCreateStore(account)) {
+                      view.showCreateStoreMessage(SocialAction.LIKE);
+                    } else {
+                      cardTouchEvent.getCard()
+                          .setLiked(true);
+                      view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                    }
                   }
                 })
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
-                    if (showCreateStore(account)) {
-                      return Completable.fromAction(
-                          () -> view.showCreateStoreMessage(SocialAction.LIKE));
-                    } else if (showSetUserOrStoreToPublic(account)) {
-                      return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
+                    if (showCreateStore(account) || showSetUserOrStoreToPublic(account)) {
+                      return Completable.complete();
                     }
 
                     final Post post = cardTouchEvent.getCard();
                     return timeline.like(post, post.getCardId());
                   }
-                  return Completable.fromAction(() -> view.showLoginPromptWithAction());
+                  return Completable.complete();
                 })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
+  //todo missing  && !store.hasPublicAccess()
   private boolean showSetUserOrStoreToPublic(Account account) {
     final Account.Access userAccess = account.getAccess();
     final Store store = account.getStore();
     return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (store
-        != null && !store.hasPublicAccess());
+        != null);
   }
 
   private boolean showCreateStore(Account account) {
@@ -485,18 +490,27 @@ public class TimelinePresenter implements Presenter {
                   if (!account.isLoggedIn()) {
                     view.showLoginPromptWithAction();
                   } else {
-                    cardTouchEvent.getCard()
-                        .setLiked(true);
-                    view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                    if (showSetUserOrStoreToPublic(account)) {
+                      view.showSetUserOrStorePublicMessage();
+                    } else if (showCreateStore(account)) {
+                      view.showCreateStoreMessage(SocialAction.LIKE);
+                    } else {
+                      cardTouchEvent.getCard()
+                          .setLiked(true);
+                      view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                    }
                   }
                 })
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
+                    if (showCreateStore(account) || showSetUserOrStoreToPublic(account)) {
+                      return Completable.complete();
+                    }
                     final Post post = cardTouchEvent.getCard();
                     return timeline.sharePost(post)
                         .flatMapCompletable(cardId -> timeline.like(post, cardId));
                   } else {
-                    return Completable.fromAction(() -> view.showLoginPromptWithAction());
+                    return Completable.complete();
                   }
                 }))
             .retry())
@@ -521,6 +535,12 @@ public class TimelinePresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
+                if (showCreateStore(account)) {
+                  return Completable.fromAction(
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                } else if (showSetUserOrStoreToPublic(account)) {
+                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
+                }
                 return Completable.fromAction(
                     () -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
                         cardTouchEvent.getCard()
@@ -547,6 +567,12 @@ public class TimelinePresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
+                if (showCreateStore(account)) {
+                  return Completable.fromAction(
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                } else if (showSetUserOrStoreToPublic(account)) {
+                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
+                }
                 return Completable.fromAction(() -> view.showCommentDialog(cardTouchEvent.getCard()
                     .getCardId()));
               }
@@ -596,6 +622,12 @@ public class TimelinePresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
+                if (showCreateStore(account)) {
+                  return Completable.fromAction(
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                } else if (showSetUserOrStoreToPublic(account)) {
+                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
+                }
                 return Completable.fromAction(
                     () -> view.showSharePreview(cardTouchEvent.getCard()));
               }
