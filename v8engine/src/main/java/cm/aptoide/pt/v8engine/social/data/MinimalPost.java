@@ -19,7 +19,8 @@ public class MinimalPost implements Post {
   private final List<UserTimeline> likes;
   private final List<SocialCard.CardComment> comments;
   private final CardType cardType;
-  private final boolean liked;
+  private boolean liked;
+  private boolean likedFromClick;
 
   public MinimalPost(String cardId, List<Poster> minimalPostPosters, Date date, boolean liked,
       long commentsNumber, long likesNumber, List<UserTimeline> likes,
@@ -59,10 +60,6 @@ public class MinimalPost implements Post {
     return minimalPostPosters;
   }
 
-  public boolean isLiked() {
-    return liked;
-  }
-
   @Override public String getCardId() {
     return cardId;
   }
@@ -74,5 +71,22 @@ public class MinimalPost implements Post {
   @Override public String getAbUrl() {
     //supposed to return null
     return null;
+  }
+
+  public boolean isLiked() {
+    return liked;
+  }
+
+  @Override public void setLiked(boolean liked) {
+    this.liked = liked;
+    this.likedFromClick = true;
+  }
+
+  @Override public boolean isLikeFromClick() {
+    return likedFromClick;
+  }
+
+  public void setLikedFromClick(boolean likedFromClick) {
+    this.likedFromClick = likedFromClick;
   }
 }

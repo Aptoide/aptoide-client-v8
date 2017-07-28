@@ -15,7 +15,6 @@ import java.util.List;
 
 public class SocialMedia extends Media {
   private final Poster poster;
-  private final boolean isLiked;
   private final long commentsNumber;
   private final long likesNumber;
   private final List<UserTimeline> likes;
@@ -27,9 +26,8 @@ public class SocialMedia extends Media {
       boolean isLiked, long commentsNumber, long likesNumber, List<UserTimeline> likes,
       List<SocialCard.CardComment> comments, String content, CardType cardType) {
     super(cardId, mediaTitle, mediaThumbnailUrl, date, app, abTestURL, publisher, publisherLink,
-        mediaLink, false, cardType);
+        mediaLink, isLiked, cardType);
     this.poster = poster;
-    this.isLiked = isLiked;
     this.commentsNumber = commentsNumber;
     this.likesNumber = likesNumber;
     this.likes = likes;
@@ -59,9 +57,5 @@ public class SocialMedia extends Media {
 
   public Poster getPoster() {
     return poster;
-  }
-
-  @Override public boolean isLiked() {
-    return isLiked;
   }
 }

@@ -153,6 +153,6 @@ public class AndroidAccountManagerDataPersist implements AccountDataPersist {
         androidAccountManager.getUserData(account, ACCOUNT_STORE_NAME),
         androidAccountManager.getUserData(account, ACCOUNT_STORE_THEME),
         androidAccountManager.getUserData(account, ACCOUNT_STORE_USERNAME),
-        androidAccountManager.getUserData(account, ACCOUNT_STORE_PASSWORD));
+        androidAccountManager.getUserData(account, ACCOUNT_STORE_PASSWORD), true);
   }
 }

@@ -107,7 +107,7 @@ public class AggregatedMediaViewHolder extends PostViewHolder<AggregatedMedia> {
     minimalCardContainer.removeAllViews();
     minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalCards(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
-        itemView.getContext()));
+        itemView.getContext(), position));
   }
 
   public String getCardHeaderNames(AggregatedMedia card) {

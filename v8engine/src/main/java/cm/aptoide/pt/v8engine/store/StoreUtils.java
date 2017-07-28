@@ -26,10 +26,9 @@ import rx.Observable;
  */
 
 public class StoreUtils {
-  public static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
-
-  public static final String PRIVATE_STORE_ERROR_CODE = "STORE-3";
-  public static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
+  private static final String PRIVATE_STORE_ERROR_CODE = "STORE-3";
+  private static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
+  private static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
 
   @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(long storeId,
       StoreCredentialsProvider storeCredentialsProvider) {
@@ -51,23 +50,49 @@ public class StoreUtils {
       String storeUserName, String storePassword, StoreAccessor storeAccessor) {
 
     return getStoreMetaRequest.observe()
-        .flatMap(getStoreMeta -> {
-          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo()
-              .getStatus())) {
-            // TODO: 18-05-2016 neuro private ainda na ta
-            if (accountManager.isLoggedIn()) {
-              return accountManager.subscribeStore(getStoreMeta.getData()
-                  .getName(), storeUserName, storePassword)
-                  .andThen(Observable.just(getStoreMeta));
-            } else {
-              return Observable.just(getStoreMeta);
-            }
-          } else {
-            return Observable.error(new Exception("Something went wrong while getting store meta"));
-          }
-        })
+        .flatMap(getStoreMeta -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .flatMapObservable(account -> {
+              if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo()
+                  .getStatus())) {
+                // TODO: 18-05-2016 neuro private ainda na ta
+                if (account.isLoggedIn()) {
+                  return accountManager.subscribeStore(getStoreMeta.getData()
+                      .getName(), storeUserName, storePassword)
+                      .andThen(Observable.just(getStoreMeta));
+                } else {
+                  return Observable.just(getStoreMeta);
+                }
+              } else {
+                return Observable.error(
+                    new Exception("Something went wrong while getting store meta"));
+              }
+            }))
         .doOnNext(
             getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor));
+  }
+
+  private static void saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
+      GetStoreMetaRequest getStoreMetaRequest, StoreAccessor storeAccessor) {
+    Store store = new Store();
+
+    store.setStoreId(storeData.getId());
+    store.setStoreName(storeData.getName());
+    store.setDownloads(storeData.getStats()
+        .getDownloads());
+
+    store.setIconPath(storeData.getAvatar());
+    store.setTheme(storeData.getAppearance()
+        .getTheme());
+
+    if (isPrivateCredentialsSet(getStoreMetaRequest)) {
+      store.setUsername(getStoreMetaRequest.getBody()
+          .getStoreUser());
+      store.setPasswordSha1(getStoreMetaRequest.getBody()
+          .getStorePassSha1());
+    }
+    storeAccessor.save(store);
   }
 
   /**
@@ -99,28 +124,6 @@ public class StoreUtils {
   @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(
       String storeName, StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.get(storeName);
-  }
-
-  private static void saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
-      GetStoreMetaRequest getStoreMetaRequest, StoreAccessor storeAccessor) {
-    Store store = new Store();
-
-    store.setStoreId(storeData.getId());
-    store.setStoreName(storeData.getName());
-    store.setDownloads(storeData.getStats()
-        .getDownloads());
-
-    store.setIconPath(storeData.getAvatar());
-    store.setTheme(storeData.getAppearance()
-        .getTheme());
-
-    if (isPrivateCredentialsSet(getStoreMetaRequest)) {
-      store.setUsername(getStoreMetaRequest.getBody()
-          .getStoreUser());
-      store.setPasswordSha1(getStoreMetaRequest.getBody()
-          .getStorePassSha1());
-    }
-    storeAccessor.save(store);
   }
 
   private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {

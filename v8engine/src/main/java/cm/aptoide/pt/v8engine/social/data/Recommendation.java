@@ -9,7 +9,6 @@ import java.util.Date;
 
 public class Recommendation extends AppPost {
   private final String relatedToAppName;
-  private final boolean isLiked;
   private final String relatedToPackageName;
   private final String publisherName;
   private final int publisherDrawableId;
@@ -19,13 +18,12 @@ public class Recommendation extends AppPost {
       String relatedToPackageName, Publisher publisher, Date timestamp, String abUrl,
       boolean isLiked, CardType cardType) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType,
-        appAverageRating, storeId);
+        appAverageRating, storeId, isLiked);
     this.relatedToPackageName = relatedToPackageName;
     this.publisherName = publisher.getPublisherName();
     this.publisherDrawableId = publisher.getPublisherAvatar()
         .getDrawableId();
     this.relatedToAppName = relatedToAppName;
-    this.isLiked = isLiked;
   }
 
   public String getRelatedToPackageName() {
@@ -42,9 +40,5 @@ public class Recommendation extends AppPost {
 
   public int getPublisherDrawableId() {
     return publisherDrawableId;
-  }
-
-  public boolean isLiked() {
-    return isLiked;
   }
 }

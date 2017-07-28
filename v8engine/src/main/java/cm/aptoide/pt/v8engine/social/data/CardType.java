@@ -10,6 +10,7 @@ public enum CardType {
   public boolean isNormal() {
     return equals(RECOMMENDATION)
         || equals(ARTICLE)
+        || equals(SIMILAR)
         || equals(VIDEO)
         || equals(POPULAR_APP)
         || equals(STORE)

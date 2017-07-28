@@ -407,7 +407,9 @@ public class DisplayablesFactory {
               nwStore.setName(store.getStoreName());
               nwStore.setId(store.getStoreId());
               nwStore.setAvatar(store.getIconPath());
-              nwStore.setAppearance(new Store.Appearance().setTheme(store.getTheme()));
+              Store.Appearance appearance = new Store.Appearance();
+              appearance.setTheme(store.getTheme());
+              nwStore.setAppearance(appearance);
               return nwStore;
             })
             .toList());
