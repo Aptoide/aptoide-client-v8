@@ -59,7 +59,9 @@ public class PostRemoteAccessor implements PostAccessor {
    * the request.
    */
   @Override public Single<List<RelatedApp>> getRelatedApps(String url) {
-    return getRelatedAppsFromNetwork(url).map(response -> {
+    return handleProcessing(
+        RelatedAppRequest.of(url, preferences, client, converter, bodyInterceptor, tokenInvalidator)
+            .observe()).map(response -> {
       if (response.getDataList()
           .getCount() <= 0) {
         return Collections.<RelatedApp>emptyList();
@@ -79,27 +81,24 @@ public class PostRemoteAccessor implements PostAccessor {
   }
 
   @Override public Single<PostView.PostPreview> getCardPreview(String url) {
-    return CardPreviewRequest.of(url, preferences, client, converter, bodyInterceptor,
-        tokenInvalidator)
-        .observe()
-        .toSingle()
+    return handleProcessing(
+        CardPreviewRequest.of(url, preferences, client, converter, bodyInterceptor,
+            tokenInvalidator)
+            .observe()).toSingle()
         .map(response -> convertToLocalCardPreview(url, response));
   }
 
-  private Observable<RelatedAppResponse> getRelatedAppsFromNetwork(String url) {
-
-    return RelatedAppRequest.of(url, preferences, client, converter, bodyInterceptor,
-        tokenInvalidator)
-        .observe()
-        .flatMap(relatedAppResponse -> {
-          if (relatedAppResponse.getInfo()
-              .getStatus()
-              .equals(BaseV7Response.Info.Status.Processing)) {
-            return Observable.error(new ProcessingException());
-          } else {
-            return Observable.just(relatedAppResponse);
-          }
-        })
+  private <T extends BaseV7Response> Observable<T> handleProcessing(
+      Observable<T> requestObservable) {
+    return requestObservable.flatMap(relatedAppResponse -> {
+      if (relatedAppResponse.getInfo()
+          .getStatus()
+          .equals(BaseV7Response.Info.Status.Processing)) {
+        return Observable.error(new ProcessingException());
+      } else {
+        return Observable.just(relatedAppResponse);
+      }
+    })
         .retryWhen(observable -> observable.flatMap(throwable -> {
           if (throwable instanceof ProcessingException) {
             return Observable.timer(1, TimeUnit.SECONDS);
