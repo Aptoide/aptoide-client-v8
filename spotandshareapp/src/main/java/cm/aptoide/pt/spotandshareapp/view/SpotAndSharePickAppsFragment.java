@@ -3,11 +3,8 @@ package cm.aptoide.pt.spotandshareapp.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +34,6 @@ public class SpotAndSharePickAppsFragment extends FragmentView implements SpotAn
   private static String CREATE_GROUP_KEY = "CREATE_GROUP_KEY";
   private RecyclerView recyclerView;
   private SpotAndSharePickAppsAdapter adapter;
-  private Toolbar toolbar;
   private PublishSubject<AppModel> appSubject;
   private View progressBarContainer;
 
@@ -121,8 +117,6 @@ public class SpotAndSharePickAppsFragment extends FragmentView implements SpotAn
 
   @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
-    setupToolbar();
     recyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
     progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
 
@@ -140,16 +134,7 @@ public class SpotAndSharePickAppsFragment extends FragmentView implements SpotAn
         new AppModelToAndroidAppInfoMapper(new ObbsProvider())), savedInstanceState);
   }
 
-  private void setupToolbar() {
-    setHasOptionsMenu(true);
-    toolbar.setTitle(R.string.spotandshare_title_toolbar);
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
-  }
-
   @Override public void onDestroyView() {
-    toolbar = null;
     adapter = null;
     recyclerView = null;
     progressBarContainer = null;
