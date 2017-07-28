@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.social.view;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,6 +48,7 @@ import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
+import cm.aptoide.pt.v8engine.social.data.share.SharePostPreviewDialog;
 import cm.aptoide.pt.v8engine.social.data.share.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
@@ -112,7 +113,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private Long storeId;
   private StoreContext storeContext;
   private AptoideAccountManager accountManager;
-  private AlertDialog shareDialog;
+  private DialogInterface shareDialog;
   private SharePreviewFactory sharePreviewFactory;
   private SpannableFactory spannableFactory;
   private TabNavigator tabNavigator;
@@ -403,17 +404,27 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showSharePreview(Post post, Account account) {
-    shareDialog =
-        new AlertDialog.Builder(getContext()).setTitle(R.string.timeline_title_shared_card_preview)
-            .setMessage(R.string.social_timeline_you_will_share)
-            .setView(sharePreviewFactory.getSharePreviewView(post, getContext(), account))
-            .setPositiveButton(R.string.share,
-                (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
-            .setNegativeButton(android.R.string.cancel,
-                (dialogInterface, i) -> timelineAnalytics.sendSocialCardPreviewActionEvent(
-                    TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL))
-            .create();
-    shareDialog.show();
+      /*
+      shareDialog =
+          new AlertDialog.Builder(getContext()).setTitle(R.string.timeline_title_shared_card_preview)
+              .setMessage(R.string.social_timeline_you_will_share)
+              .setView(sharePreviewFactory.getSharePreviewView(post, getContext(), account))
+              .setPositiveButton(R.string.share,
+                  (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
+              .setNegativeButton(android.R.string.cancel,
+                  (dialogInterface, i) -> timelineAnalytics.sendSocialCardPreviewActionEvent(
+                      TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL))
+              .create();
+      shareDialog.show();
+      */
+
+    View view = sharePreviewFactory.getSharePreviewView(post, getContext(), account);
+    shareDialog = new SharePostPreviewDialog.Builder(getContext()).setView(view)
+        .setTitle(R.string.timeline_title_shared_card_preview)
+        .setMessage(R.string.social_timeline_you_will_share)
+        .setPositiveButton(R.string.share)
+        .setNegativeButton(android.R.string.cancel)
+        .build();
   }
 
   @Override public void showShareSuccessMessage() {
