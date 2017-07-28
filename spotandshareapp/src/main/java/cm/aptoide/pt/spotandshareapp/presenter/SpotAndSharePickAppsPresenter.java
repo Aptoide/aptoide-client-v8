@@ -8,7 +8,7 @@ import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
-import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
+import cm.aptoide.pt.spotandshareapp.view.SpotAndSharePickAppsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -24,8 +24,8 @@ import rx.schedulers.Schedulers;
  * Created by filipe on 12-06-2017.
  */
 
-public class SpotAndShareAppSelectionPresenter implements Presenter {
-  private final SpotAndShareAppSelectionView view;
+public class SpotAndSharePickAppsPresenter implements Presenter {
+  private final SpotAndSharePickAppsView view;
   private final SpotAndShare spotAndShare;
   private boolean shouldCreateGroup;
   private InstalledRepositoryDummy installedRepositoryDummy;
@@ -34,7 +34,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
   private ObbsProvider obbsProvider;
 
-  public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
+  public SpotAndSharePickAppsPresenter(SpotAndSharePickAppsView view,
       boolean shouldCreateGroup, InstalledRepositoryDummy installedRepositoryDummy,
       SpotAndShare spotAndShare, DrawableBitmapMapper drawableBitmapMapper,
       AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper) {

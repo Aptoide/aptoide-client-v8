@@ -24,7 +24,7 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
-import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
+import cm.aptoide.pt.spotandshareapp.presenter.SpotAndSharePickAppsPresenter;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
 import cm.aptoide.pt.v8engine.presenter.CompositePresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
@@ -82,7 +82,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     setupBackClick();
 
     PublishSubject<AppModel> appSubject = PublishSubject.create();
-    SpotAndShareAppSelectionAdapter adapter = new SpotAndShareAppSelectionAdapter(appSubject,
+    SpotAndSharePickAppsAdapter adapter = new SpotAndSharePickAppsAdapter(appSubject,
         new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)));
     bottomSheetPickAppDialog = new SpotAndShareBottomSheetPickAppDialog(getContext(), adapter);
     bottomSheetPickAppDialog.show();
@@ -98,8 +98,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
             new SpotAndShareTransferRecordManager(getContext()),
             new SpotAndShareInstallManager(getActivity().getApplicationContext()));
 
-    SpotAndShareAppSelectionPresenter appSelectionPresenter =
-        new SpotAndShareAppSelectionPresenter(this, false,
+    SpotAndSharePickAppsPresenter appSelectionPresenter =
+        new SpotAndSharePickAppsPresenter(this, false,
             new InstalledRepositoryDummy(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
             ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
@@ -226,8 +226,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(
-        SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
+    getFragmentNavigator().navigateTo(SpotAndSharePickAppsFragment.newInstance(shouldCreateGroup));
   }
 
   @Override public Observable<TransferAppModel> installApp() {

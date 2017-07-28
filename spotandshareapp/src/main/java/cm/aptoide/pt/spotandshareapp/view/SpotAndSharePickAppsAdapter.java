@@ -19,7 +19,7 @@ import rx.subjects.PublishSubject;
  * Created by filipe on 19-06-2017.
  */
 
-public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class SpotAndSharePickAppsAdapter extends RecyclerView.Adapter<ViewHolder> {
 
   private static final int TYPE_HEADER = 0;
   private static final int TYPE_ITEM = 1;
@@ -28,7 +28,7 @@ public class SpotAndShareAppSelectionAdapter extends RecyclerView.Adapter<ViewHo
   private List<AppModel> installedApps;
   private PublishSubject<AppModel> appSubject;
 
-  public SpotAndShareAppSelectionAdapter(PublishSubject<AppModel> appSubject, Header header) {
+  public SpotAndSharePickAppsAdapter(PublishSubject<AppModel> appSubject, Header header) {
     this.appSubject = appSubject;
     this.header = header;
   }

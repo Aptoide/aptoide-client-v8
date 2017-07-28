@@ -8,7 +8,7 @@ import rx.Observable;
  * Created by filipe on 12-06-2017.
  */
 
-public interface SpotAndShareTransferRecordView extends SpotAndShareAppSelectionView {
+public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView {
 
   void finish();
 

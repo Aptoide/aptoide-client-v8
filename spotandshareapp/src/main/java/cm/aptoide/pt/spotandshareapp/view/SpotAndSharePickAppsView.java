@@ -9,7 +9,7 @@ import rx.Observable;
  * Created by filipe on 12-06-2017.
  */
 
-public interface SpotAndShareAppSelectionView extends View {
+public interface SpotAndSharePickAppsView extends View {
 
   void finish();
 

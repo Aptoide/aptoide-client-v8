@@ -21,12 +21,12 @@ import rx.Observable;
 
 public class SpotAndShareBottomSheetPickAppDialog extends BottomSheetDialog {
 
-  private final SpotAndShareAppSelectionAdapter adapter;
+  private final SpotAndSharePickAppsAdapter adapter;
   private RecyclerView installedAppsRecyclerView;
   private View progressBarContainer;
 
   public SpotAndShareBottomSheetPickAppDialog(@NonNull Context context,
-      SpotAndShareAppSelectionAdapter adapter) {
+      SpotAndSharePickAppsAdapter adapter) {
     super(context);
     this.adapter = adapter;
     supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
