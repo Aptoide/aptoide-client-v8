@@ -36,8 +36,7 @@ public class SpotAndShareBottomSheetPickAppDialog extends BottomSheetDialog {
     super.onCreate(savedInstanceState);
     setCancelable(false);
 
-    View contentView =
-        View.inflate(getContext(), R.layout.fragment_spotandshare_app_selection, null);
+    View contentView = View.inflate(getContext(), R.layout.fragment_spotandshare_pick_apps, null);
 
     setContentView(contentView);
     configureBottomSheet(contentView);

@@ -165,7 +165,7 @@ public class SpotAndSharePickAppsFragment extends FragmentView implements SpotAn
   public android.view.View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_spotandshare_app_selection, container, false);
+    return inflater.inflate(R.layout.fragment_spotandshare_pick_apps, container, false);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
