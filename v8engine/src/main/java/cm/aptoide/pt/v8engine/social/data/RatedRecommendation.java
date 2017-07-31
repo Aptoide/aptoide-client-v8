@@ -14,7 +14,6 @@ import java.util.List;
 
 public class RatedRecommendation extends AppPost {
   private final Poster poster;
-  private final boolean isLiked;
   private final long commentsNumber;
   private final long likesNumber;
   private final List<UserTimeline> likes;
@@ -27,9 +26,8 @@ public class RatedRecommendation extends AppPost {
       List<UserTimeline> likes, List<SocialCard.CardComment> comments, String content,
       CardType cardType) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage,
-        storeId);
+        storeId, isLiked);
     this.poster = poster;
-    this.isLiked = isLiked;
     this.commentsNumber = commentsNumber;
     this.likesNumber = likesNumber;
     this.likes = likes;
@@ -51,10 +49,6 @@ public class RatedRecommendation extends AppPost {
 
   public Poster getPoster() {
     return poster;
-  }
-
-  public boolean isLiked() {
-    return isLiked;
   }
 
   public List<UserTimeline> getLikes() {

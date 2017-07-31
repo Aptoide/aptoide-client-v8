@@ -5,6 +5,7 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
+import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -55,7 +56,9 @@ public interface TimelineView extends View {
 
   void showRootAccessDialog();
 
-  void updateInstallProgress(Post card, int cardPosition);
+  void updatePost(int cardPosition);
+
+  void swapPost(Post post, int postPosition);
 
   void showStoreSubscribedMessage(String storeName);
 
@@ -70,4 +73,12 @@ public interface TimelineView extends View {
   void showCommentSuccess();
 
   void showGenericError();
+
+  void showLoginPromptWithAction();
+
+  Observable<Void> loginActionClick();
+
+  void showSetUserOrStorePublicMessage();
+
+  void showCreateStoreMessage(SocialAction socialAction);
 }

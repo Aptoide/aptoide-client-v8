@@ -23,11 +23,12 @@ public class AppUpdate implements Post {
   private final float appUpdateAverageRating;
   private final Date updateAddedDate;
   private final String abUrl;
-  private final boolean isLiked;
   private final CardType cardType;
   private final File file;
   private final Obb obb;
+  private boolean isLiked;
   private Install.InstallationStatus installationStatus;
+  private boolean likedFromClick;
 
   public AppUpdate(String cardId, String storeName, String storeAvatar, String storeTheme,
       Long storeId, String appUpdateIcon, String appUpdateName, long appUpdateId,
@@ -121,7 +122,20 @@ public class AppUpdate implements Post {
     return isLiked;
   }
 
+  @Override public void setLiked(boolean liked) {
+    isLiked = liked;
+    likedFromClick = true;
+  }
+
+  @Override public boolean isLikeFromClick() {
+    return likedFromClick;
+  }
+
   public float getAppUpdateAverageRating() {
     return appUpdateAverageRating;
+  }
+
+  public void setLikedFromClick(boolean likedFromClick) {
+    this.likedFromClick = likedFromClick;
   }
 }

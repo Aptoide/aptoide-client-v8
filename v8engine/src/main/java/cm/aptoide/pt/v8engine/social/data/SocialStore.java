@@ -13,7 +13,6 @@ import java.util.List;
 
 public class SocialStore extends StoreLatestApps {
   private final Poster poster;
-  private final boolean isLiked;
   private final long commentsNumber;
   private final long likesNumber;
   private final List<UserTimeline> likes;
@@ -24,9 +23,8 @@ public class SocialStore extends StoreLatestApps {
       List<App> apps, String abUrl, boolean isLiked, long commentsNumber, long likesNumber,
       List<UserTimeline> likes, List<SocialCard.CardComment> comments, CardType cardType) {
     super(cardId, storeId, storeName, storeAvatar, socialStore, subscribers, appsNumber,
-        latestUpdate, apps, abUrl, false, cardType);
+        latestUpdate, apps, abUrl, isLiked, cardType);
     this.poster = poster;
-    this.isLiked = isLiked;
     this.commentsNumber = commentsNumber;
     this.likesNumber = likesNumber;
     this.likes = likes;
@@ -51,9 +49,5 @@ public class SocialStore extends StoreLatestApps {
 
   public Poster getPoster() {
     return poster;
-  }
-
-  public boolean isLiked() {
-    return isLiked;
   }
 }
