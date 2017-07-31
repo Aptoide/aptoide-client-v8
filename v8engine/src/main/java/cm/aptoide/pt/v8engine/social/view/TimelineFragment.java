@@ -48,8 +48,8 @@ import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
-import cm.aptoide.pt.v8engine.social.data.share.SharePostPreviewDialog;
-import cm.aptoide.pt.v8engine.social.data.share.SharePreviewFactory;
+import cm.aptoide.pt.v8engine.social.data.share.ShareDialogFactory;
+import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -114,11 +114,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private StoreContext storeContext;
   private AptoideAccountManager accountManager;
   private DialogInterface shareDialog;
-  private SharePreviewFactory sharePreviewFactory;
   private SpannableFactory spannableFactory;
   private TabNavigator tabNavigator;
   private String postIdForTimelineRequest;
   private TimelineAnalytics timelineAnalytics;
+  private ShareDialogFactory shareDialogFactory;
+  private PublishSubject<ShareEvent> sharePostPublishSubject;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -162,16 +163,17 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    sharePreviewFactory = new SharePreviewFactory();
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
     sharePreviewPublishSubject = PublishSubject.create();
+    sharePostPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
     spannableFactory = new SpannableFactory();
+    shareDialogFactory = new ShareDialogFactory(sharePostPublishSubject);
     adapter = new PostAdapter(Collections.emptyList(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
@@ -417,14 +419,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
               .create();
       shareDialog.show();
       */
+      shareDialog = shareDialogFactory.createDialogFor(post);
 
-    View view = sharePreviewFactory.getSharePreviewView(post, getContext(), account);
-    shareDialog = new SharePostPreviewDialog.Builder(getContext()).setView(view)
-        .setTitle(R.string.timeline_title_shared_card_preview)
-        .setMessage(R.string.social_timeline_you_will_share)
-        .setPositiveButton(R.string.share)
-        .setNegativeButton(android.R.string.cancel)
-        .build();
   }
 
   @Override public void showShareSuccessMessage() {

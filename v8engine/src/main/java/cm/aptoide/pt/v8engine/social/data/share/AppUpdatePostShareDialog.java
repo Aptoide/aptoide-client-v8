@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data.share;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,40 +14,44 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
-import rx.Observable;
 
-class AppUpdatePostShareDialog implements DialogInterface {
+class AppUpdatePostShareDialog extends BaseShareDialog<AppUpdate> {
 
-  private RxAlertDialog dialog;
+  @LayoutRes static final int LAYOUT_ID = R.layout.timeline_recommendation_preview;
 
-  public AppUpdatePostShareDialog(RxAlertDialog dialog) {
-    this.dialog = dialog;
+  AppUpdatePostShareDialog(RxAlertDialog dialog) {
+    super(dialog);
   }
 
-  @Override public void cancel() {
-    dialog.cancel();
-  }
+  void setupView(View view, AppUpdate post) {
+    final Context context = view.getContext();
+    ImageView appIcon =
+        (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+    TextView appName =
+        (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
+    TextView getApp = (TextView) view.findViewById(
+        R.id.displayable_social_timeline_recommendation_get_app_button);
+    RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
-  @Override public void dismiss() {
-    dialog.dismiss();
-  }
+    ImageLoader.with(context)
+        .load(post.getAppUpdateIcon(), appIcon);
+    appName.setText(post.getAppUpdateName());
+    ratingBar.setRating(post.getAppUpdateAverageRating());
 
-  public void show() {
-    dialog.show();
-  }
+    SpannableFactory spannableFactory = new SpannableFactory();
 
-  public Observable<DialogInterface> cancelsSelected() {
-    return dialog.cancels();
+    getApp.setText(spannableFactory.createColorSpan(
+        context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
+        ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
   }
 
   public static class Builder {
 
     private final RxAlertDialog.Builder builder;
-    private final LayoutInflater layoutInflater;
     private final Context context;
     private final SharePostViewSetup sharePostViewSetup;
     private final Account account;
-    private AppUpdate post;
+    private final LayoutInflater layoutInflater;
 
     public Builder(Context context, SharePostViewSetup sharePostViewSetup, Account account) {
       this.builder = new RxAlertDialog.Builder(context);
@@ -55,11 +59,6 @@ class AppUpdatePostShareDialog implements DialogInterface {
       this.context = context;
       this.sharePostViewSetup = sharePostViewSetup;
       this.account = account;
-    }
-
-    public AppUpdatePostShareDialog.Builder setPost(AppUpdate post) {
-      this.post = post;
-      return this;
     }
 
     public AppUpdatePostShareDialog build() {
@@ -71,26 +70,7 @@ class AppUpdatePostShareDialog implements DialogInterface {
     }
 
     private View getView() {
-      View view = layoutInflater.inflate(R.layout.timeline_recommendation_preview, null);
-      ImageView appIcon =
-          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView getApp = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_get_app_button);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-
-      ImageLoader.with(context)
-          .load(post.getAppUpdateIcon(), appIcon);
-      appName.setText(post.getAppUpdateName());
-      ratingBar.setRating(post.getAppUpdateAverageRating());
-
-      SpannableFactory spannableFactory = new SpannableFactory();
-
-      getApp.setText(spannableFactory.createColorSpan(
-          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-      return view;
+      return layoutInflater.inflate(LAYOUT_ID, null);
     }
   }
 }

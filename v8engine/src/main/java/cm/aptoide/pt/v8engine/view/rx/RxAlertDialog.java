@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.rx;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -27,6 +28,10 @@ public class RxAlertDialog implements DialogInterface {
     this.negativeClick = negativeClick;
     this.cancelEvent = cancelEvent;
     this.dismissEvent = dismissEvent;
+  }
+
+  public View getView(@IdRes int viewId){
+    return dialog.findViewById(viewId);
   }
 
   public void show() {

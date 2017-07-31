@@ -13,7 +13,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 
-class SharePostViewSetup {
+public class SharePostViewSetup {
   private void setupBody(View view) {
     CardView cardView = (CardView) view.findViewById(R.id.card);
     LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);

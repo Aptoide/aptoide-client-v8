@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data.share;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,30 +14,45 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
-import rx.Observable;
 
-class StoreLatestAppsPostShareDialog implements DialogInterface {
+class StoreLatestAppsPostShareDialog extends BaseShareDialog<StoreLatestApps> {
 
-  private RxAlertDialog dialog;
+  @LayoutRes static final int LAYOUT_ID = R.layout.timeline_store_preview;
 
-  public StoreLatestAppsPostShareDialog(RxAlertDialog dialog) {
-    this.dialog = dialog;
+  StoreLatestAppsPostShareDialog(RxAlertDialog dialog) {
+    super(dialog);
   }
 
-  @Override public void cancel() {
-    dialog.cancel();
-  }
+  @Override void setupView(View view, StoreLatestApps post) {
+    final Context context = view.getContext();
+    final LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-  @Override public void dismiss() {
-    dialog.dismiss();
-  }
+    TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
+    TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
+    ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
+    LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
+        R.id.displayable_social_timeline_store_latest_apps_container);
+    RelativeLayout followStoreBar = (RelativeLayout) view.findViewById(R.id.follow_store_bar);
 
-  public void show() {
-    dialog.show();
-  }
-
-  public Observable<DialogInterface> cancelsSelected() {
-    return dialog.cancels();
+    followStoreBar.setVisibility(View.GONE);
+    sharedStoreTitleName.setText((post).getStoreName());
+    sharedStoreName.setText((post).getStoreName());
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform((post).getStoreAvatar(), sharedStoreAvatar);
+    View latestAppView;
+    ImageView latestAppIcon;
+    TextView latestAppName;
+    for (App latestApp : (post).getApps()) {
+      latestAppView =
+          layoutInflater.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
+      latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
+      latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
+      ImageLoader.with(context)
+          .load(latestApp.getIcon(), latestAppIcon);
+      latestAppName.setMaxLines(1);
+      latestAppName.setText(latestApp.getName());
+      latestAppsContainer.addView(latestAppView);
+    }
   }
 
   public static class Builder {
@@ -47,7 +62,6 @@ class StoreLatestAppsPostShareDialog implements DialogInterface {
     private final Context context;
     private final SharePostViewSetup sharePostViewSetup;
     private final Account account;
-    private StoreLatestApps post;
 
     public Builder(Context context, SharePostViewSetup sharePostViewSetup, Account account) {
       this.builder = new RxAlertDialog.Builder(context);
@@ -55,11 +69,6 @@ class StoreLatestAppsPostShareDialog implements DialogInterface {
       this.context = context;
       this.sharePostViewSetup = sharePostViewSetup;
       this.account = account;
-    }
-
-    public StoreLatestAppsPostShareDialog.Builder setPost(StoreLatestApps post) {
-      this.post = post;
-      return this;
     }
 
     public StoreLatestAppsPostShareDialog build() {
@@ -71,36 +80,7 @@ class StoreLatestAppsPostShareDialog implements DialogInterface {
     }
 
     private View getView() {
-      View view = layoutInflater.inflate(R.layout.timeline_store_preview, null);
-
-      TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
-      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
-      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
-      LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_container);
-      RelativeLayout followStoreBar = (RelativeLayout) view.findViewById(R.id.follow_store_bar);
-
-      followStoreBar.setVisibility(View.GONE);
-      sharedStoreTitleName.setText((post).getStoreName());
-      sharedStoreName.setText((post).getStoreName());
-      ImageLoader.with(context)
-          .loadWithShadowCircleTransform((post).getStoreAvatar(), sharedStoreAvatar);
-      View latestAppView;
-      ImageView latestAppIcon;
-      TextView latestAppName;
-      for (App latestApp : (post).getApps()) {
-        latestAppView =
-            layoutInflater.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
-        latestAppIcon =
-            (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
-        latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
-        ImageLoader.with(context)
-            .load(latestApp.getIcon(), latestAppIcon);
-        latestAppName.setMaxLines(1);
-        latestAppName.setText(latestApp.getName());
-        latestAppsContainer.addView(latestAppView);
-      }
-      return view;
+      return layoutInflater.inflate(LAYOUT_ID, null);
     }
   }
 }

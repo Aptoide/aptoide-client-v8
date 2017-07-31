@@ -6,6 +6,7 @@
     android:clipToPadding="false"
     android:orientation="vertical"
     android:padding="20dp"
+    android:id="@+id/dialog_root"
     >
   <include layout="@layout/displayable_social_timeline_social_store_latest_apps"/>
   <include layout="@layout/partial_timeline_dialog_post_privacy_checkbox"/>
