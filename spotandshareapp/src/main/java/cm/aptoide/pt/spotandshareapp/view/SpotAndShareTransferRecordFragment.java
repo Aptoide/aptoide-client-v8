@@ -1,10 +1,13 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
@@ -26,6 +30,7 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndSharePickAppsPresenter;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.presenter.CompositePresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -48,10 +53,16 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private RxAlertDialog backDialog;
   private ClickHandler clickHandler;
   private RecyclerView transferRecordRecyclerView;
-  private SpotAndShareTransferRecordAdapter adapter;
+  private SpotAndShareTransferRecordAdapter transferRecordAdapter;
   private PublishSubject<TransferAppModel> acceptApp;
   private PublishSubject<TransferAppModel> installApp;
-  private SpotAndShareBottomSheetPickAppDialog bottomSheetPickAppDialog;
+
+  private LinearLayout bottomSheet;
+  private BottomSheetBehavior bottomSheetBehavior;
+  private PublishSubject<AppModel> pickAppSubject;
+  private SpotAndSharePickAppsAdapter pickAppsAdapter;
+  private RecyclerView installedAppsRecyclerView;
+  private View pickAppsProgressBarContainer;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -63,6 +74,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     backRelay = PublishRelay.create();
     acceptApp = PublishSubject.create();
     installApp = PublishSubject.create();
+
+    pickAppSubject = PublishSubject.create();
   }
 
   @Nullable @Override
@@ -78,16 +91,73 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     setupToolbar();
     transferRecordRecyclerView =
         (RecyclerView) view.findViewById(R.id.transfer_record_recycler_view);
-    setupRecyclerView();
+    setupTransferRecordRecyclerView();
     setupBackClick();
 
-    PublishSubject<AppModel> appSubject = PublishSubject.create();
-    SpotAndSharePickAppsAdapter adapter = new SpotAndSharePickAppsAdapter(appSubject,
+    bottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
+    configureBottomSheet();
+    pickAppsProgressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
+    installedAppsRecyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
+    pickAppsAdapter = new SpotAndSharePickAppsAdapter(pickAppSubject,
         new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)));
-    bottomSheetPickAppDialog = new SpotAndShareBottomSheetPickAppDialog(getContext(), adapter);
-    bottomSheetPickAppDialog.show();
-    showLoading();
+    setupPickAppsRecyclerView();
+
     attachPresenters();
+  }
+
+  private void configureBottomSheet() {
+    bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    bottomSheetBehavior.setPeekHeight(
+        AptoideUtils.ScreenU.getPixelsForDip(75, getContext().getResources()));
+    bottomSheetBehavior.setHideable(true);
+    bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+
+      @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
+        switch (newState) {
+          case BottomSheetBehavior.STATE_HIDDEN:
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            break;
+          case BottomSheetBehavior.STATE_EXPANDED:
+            break;
+          case BottomSheetBehavior.STATE_COLLAPSED:
+            break;
+          case BottomSheetBehavior.STATE_DRAGGING:
+            break;
+          case BottomSheetBehavior.STATE_SETTLING:
+            break;
+        }
+      }
+
+      @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+      }
+    });
+  }
+
+  private void setupPickAppsRecyclerView() {
+    installedAppsRecyclerView.setAdapter(pickAppsAdapter);
+    setupPickAppsRecyclerViewLayoutManager();
+    installedAppsRecyclerView.setHasFixedSize(true);
+  }
+
+  private void setupPickAppsRecyclerViewLayoutManager() {
+    GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
+    gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+      @Override public int getSpanSize(int position) {
+        if (pickAppsAdapter.isPositionHeader(position)) {
+          return gridLayoutManager.getSpanCount();
+        }
+        return 1;
+      }
+    });
+    installedAppsRecyclerView.setLayoutManager(gridLayoutManager);
+  }
+
+  private void setupTransferRecordRecyclerView() {
+    transferRecordRecyclerView.setLayoutManager(
+        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    transferRecordAdapter = new SpotAndShareTransferRecordAdapter(acceptApp, installApp);
+    transferRecordRecyclerView.setAdapter(transferRecordAdapter);
   }
 
   private void attachPresenters() {
@@ -124,13 +194,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         .build();
   }
 
-  private void setupRecyclerView() {
-    transferRecordRecyclerView.setLayoutManager(
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-    adapter = new SpotAndShareTransferRecordAdapter(acceptApp, installApp);
-    transferRecordRecyclerView.setAdapter(adapter);
-  }
-
   private void setupToolbar() {
     setHasOptionsMenu(true);
     toolbar.setTitle(R.string.spotandshare_title_toolbar);
@@ -144,10 +207,11 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     unregisterClickHandler(clickHandler);
     clickHandler = null;
     backDialog = null;
-    adapter.onDestroy();
-    adapter = null;
+    transferRecordAdapter.onDestroy();
+    transferRecordAdapter = null;
     transferRecordRecyclerView = null;
-    bottomSheetPickAppDialog = null;
+
+    pickAppsAdapter = null;
     super.onDestroyView();
   }
 
@@ -155,6 +219,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     backRelay = null;
     acceptApp = null;
     installApp = null;
+
+    pickAppSubject = null;
     super.onDestroy();
   }
 
@@ -163,8 +229,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public void buildInstalledAppsList(List<AppModel> installedApps) {
-
-    bottomSheetPickAppDialog.setInstalledAppsList(installedApps);
+    pickAppsAdapter.setInstalledAppsList(installedApps);
     hideLoading();
   }
 
@@ -197,15 +262,16 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public Observable<AppModel> selectedApp() {
-    return bottomSheetPickAppDialog.onSelectedApp();
+    return pickAppsAdapter.onSelectedApp();
   }
 
   @Override public void openTransferRecord() {
-
+    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
   }
 
   @Override public void openWaitingToSendScreen(AppModel selectedApp) {
-
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(SpotAndShareWaitingToSendFragment.newInstance(selectedApp));
   }
 
   @Override public void onCreateGroupError(Throwable throwable) {
@@ -213,15 +279,15 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public void hideLoading() {
-    bottomSheetPickAppDialog.hideLoading();
+    pickAppsProgressBarContainer.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
-    bottomSheetPickAppDialog.showLoading();
+    pickAppsProgressBarContainer.setVisibility(View.VISIBLE);
   }
 
   @Override public void updateReceivedAppsList(List<TransferAppModel> transferAppModelList) {
-    adapter.updateTransferList(transferAppModelList);
+    transferRecordAdapter.updateTransferList(transferAppModelList);
   }
 
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
@@ -236,7 +302,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void updateTransferInstallStatus(TransferAppModel transferAppModel) {
     transferAppModel.setInstalledApp(true);
-    adapter.notifyDataSetChanged();
+    transferRecordAdapter.notifyDataSetChanged();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
