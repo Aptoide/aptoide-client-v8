@@ -43,6 +43,10 @@ public class Timeline {
     return service.getCards();
   }
 
+  public Single<List<Post>> getCards(String cardId) {
+    return service.getCards(cardId);
+  }
+
   public Single<List<Post>> getNextCards() {
     return service.getNextCards();
   }

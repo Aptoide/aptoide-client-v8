@@ -97,6 +97,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private PublishSubject<CardTouchEvent> postTouchEventPublishSubject;
   private PublishSubject<Post> sharePreviewPublishSubject;
   private PublishSubject<PostComment> commentPostResponseSubject;
+  private PublishSubject<String> openWithCardId;
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -151,12 +152,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tabNavigator.navigation()
-        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(tabNavigation -> postIdForTimelineRequest = tabNavigation.getBundle()
-            .getString(AppsTimelineTabNavigation.CARD_ID_KEY), err -> CrashReport.getInstance()
-            .log(err));
     newRefresh = true;
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
@@ -168,6 +163,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
+    openWithCardId = PublishSubject.create();
     sharePreviewPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
@@ -251,6 +247,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
             storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
+
+    tabNavigator.navigation()
+        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(tabNavigation -> {
+          postIdForTimelineRequest = tabNavigation.getBundle()
+              .getString(AppsTimelineTabNavigation.CARD_ID_KEY);
+          openWithCardId.onNext(postIdForTimelineRequest);
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public void onDestroyView() {
@@ -259,6 +265,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showCards(List<Post> cards) {
+    postIdForTimelineRequest = null;
     adapter.updatePosts(cards);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
@@ -329,6 +336,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> retry() {
     return RxView.clicks(retryButton);
+  }
+
+  @Override public Observable<String> openWithPostId() {
+    return openWithCardId;
   }
 
   @Override public void showLoadMoreProgressIndicator() {

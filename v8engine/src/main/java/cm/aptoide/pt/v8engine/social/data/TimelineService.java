@@ -95,7 +95,10 @@ public class TimelineService {
         })
         .toSingle())
         .doOnError(__ -> loading = false)
-        .doOnSuccess(__ -> loading = false)
+        .doOnSuccess(__ -> {
+          loading = false;
+          cardIdPriority = null;
+        })
         .map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
   }
 
@@ -180,5 +183,11 @@ public class TimelineService {
           }
         })
         .toCompletable();
+  }
+
+  public Single<List<Post>> getCards(String cardId) {
+    mapper.clearCachedPostsIds();
+    cardIdPriority = cardId;
+    return getCards(limit, initialOffset);
   }
 }
