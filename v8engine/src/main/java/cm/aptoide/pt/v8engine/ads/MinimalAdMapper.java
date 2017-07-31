@@ -26,7 +26,9 @@ public class MinimalAdMapper {
         .getCpiUrl(), ad.getData()
         .getName(), ad.getData()
         .getIcon(), ad.getData()
-        .getDescription());
+        .getDescription(), ad.getData()
+        .getDownloads(), ad.getData()
+        .getStars());
   }
 
   public StoredMinimalAd map(MinimalAd minimalAd, String referrer) {

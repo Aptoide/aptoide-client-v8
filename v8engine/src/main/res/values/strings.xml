@@ -539,7 +539,7 @@
   <string name="facebook_friends_list_using_timeline_empty">Social Timeline allows you to share your applications with your Facebook friends. Do you want to join the network?</string>
   <string name="X_download_number">%s down.</string>
   <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
-  <string name="sponsored">Sponsored</string>
+  <string name="sponsored">Suggested</string>
   <string name="friends_installs">Your friends installs</string>
   <string name="recommended_for_you">Recommended for you</string>
   <string name="highlighted_apps">Highlighted</string>
