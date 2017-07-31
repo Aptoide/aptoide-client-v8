@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareapp;
 
 import android.content.Context;
+import android.support.multidex.MultiDex;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -14,7 +15,13 @@ public class SpotAndShareApplication extends V8Engine {
   private cm.aptoide.pt.spotandshareandroid.SpotAndShare spotAndShare;
   public SpotAndShareUserManager spotAndShareUserManager;
 
+  @Override protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MultiDex.install(base);
+  }
+
   @Override public void onCreate() {
+    MultiDex.install(this);
     setupCrashReports(BuildConfig.CRASH_REPORTS_DISABLED);
     super.onCreate();
   }
