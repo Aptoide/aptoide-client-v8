@@ -18,28 +18,36 @@
         android:background="?attr/colorPrimary"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/transfer_record_recycler_view"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/bottom_sheet_coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:scrollbars="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="match_parent"
         >
-    </android.support.v7.widget.RecyclerView>
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/transfer_record_recycler_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginBottom="80dp"
+          android:layout_marginLeft="20dp"
+          android:layout_marginRight="20dp"
+          android:scrollbars="vertical"
+          >
+      </android.support.v7.widget.RecyclerView>
+
+
+      <LinearLayout
+          android:id="@+id/bottom_sheet"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+          >
+
+        <include layout="@layout/fragment_spotandshare_pick_apps"/>
+
+      </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
   </LinearLayout>
 
-  <LinearLayout
-      android:id="@+id/bottom_sheet"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-      >
-
-    <include layout="@layout/fragment_spotandshare_pick_apps"/>
-
-  </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
