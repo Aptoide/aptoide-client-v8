@@ -53,7 +53,9 @@ public class SpotAndShareTransferRecordAdapter
     notifyDataSetChanged();
   }
 
-  public void onDestroy() {
+  public void removeAll() {
+    appsTransfered.clear();
+    notifyDataSetChanged();
     acceptSubject = null;
     installSubject = null;
     appsTransfered = null;

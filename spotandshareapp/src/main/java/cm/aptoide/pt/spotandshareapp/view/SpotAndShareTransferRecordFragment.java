@@ -61,7 +61,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private BottomSheetBehavior bottomSheetBehavior;
   private PublishSubject<AppModel> pickAppSubject;
   private SpotAndSharePickAppsAdapter pickAppsAdapter;
-  private RecyclerView installedAppsRecyclerView;
+  private RecyclerView pickAppsRecyclerView;
   private View pickAppsProgressBarContainer;
 
   public static Fragment newInstance() {
@@ -97,7 +97,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     bottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
     configureBottomSheet();
     pickAppsProgressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
-    installedAppsRecyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
+    pickAppsRecyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
     pickAppsAdapter = new SpotAndSharePickAppsAdapter(pickAppSubject,
         new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)));
     setupPickAppsRecyclerView();
@@ -135,9 +135,9 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   private void setupPickAppsRecyclerView() {
-    installedAppsRecyclerView.setAdapter(pickAppsAdapter);
+    pickAppsRecyclerView.setAdapter(pickAppsAdapter);
     setupPickAppsRecyclerViewLayoutManager();
-    installedAppsRecyclerView.setHasFixedSize(true);
+    pickAppsRecyclerView.setHasFixedSize(true);
   }
 
   private void setupPickAppsRecyclerViewLayoutManager() {
@@ -150,7 +150,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         return 1;
       }
     });
-    installedAppsRecyclerView.setLayoutManager(gridLayoutManager);
+    pickAppsRecyclerView.setLayoutManager(gridLayoutManager);
   }
 
   private void setupTransferRecordRecyclerView() {
@@ -207,11 +207,15 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     unregisterClickHandler(clickHandler);
     clickHandler = null;
     backDialog = null;
-    transferRecordAdapter.onDestroy();
+    transferRecordAdapter.removeAll();
     transferRecordAdapter = null;
     transferRecordRecyclerView = null;
 
+    pickAppsAdapter.removeAll();
     pickAppsAdapter = null;
+    pickAppsRecyclerView = null;
+    bottomSheetBehavior = null;
+    bottomSheet = null;
     super.onDestroyView();
   }
 

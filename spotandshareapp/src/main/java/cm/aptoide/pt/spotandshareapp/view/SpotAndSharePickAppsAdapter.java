@@ -83,6 +83,13 @@ public class SpotAndSharePickAppsAdapter extends RecyclerView.Adapter<ViewHolder
     return appSubject;
   }
 
+  public void removeAll() {
+    installedApps.clear();
+    notifyDataSetChanged();
+    appSubject = null;
+    installedApps = null;
+  }
+
   class ViewHolderHeader extends ViewHolder {
 
     private TextView headerTextView;
