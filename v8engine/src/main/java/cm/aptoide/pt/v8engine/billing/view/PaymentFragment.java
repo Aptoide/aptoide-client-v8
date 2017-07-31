@@ -32,7 +32,6 @@ import rx.android.schedulers.AndroidSchedulers;
 public class PaymentFragment extends PermissionServiceFragment implements PaymentView {
 
   private View overlay;
-  private View body;
   private View progressView;
   private RadioGroup paymentRadioGroup;
   private ImageView productIcon;
@@ -92,7 +91,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productName = (TextView) view.findViewById(R.id.include_payment_product_name);
     productDescription = (TextView) view.findViewById(R.id.include_payment_product_description);
 
-    body = view.findViewById(R.id.fragment_payment_body);
     productPrice = (TextView) view.findViewById(R.id.include_payment_product_price);
     paymentRadioGroup = (RadioGroup) view.findViewById(R.id.fragment_payment_list);
 
@@ -123,7 +121,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productIcon = null;
     productName = null;
     productDescription = null;
-    body = null;
     productPrice = null;
     paymentRadioGroup = null;
     cancelButton = null;
@@ -185,7 +182,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void showPayments(List<PaymentMethodViewModel> payments) {
     paymentRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
-    body.setVisibility(View.VISIBLE);
     buyButton.setVisibility(View.VISIBLE);
     paymentMap.clear();
 
@@ -241,7 +237,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   }
 
   @Override public void showPaymentsNotFoundMessage() {
-    body.setVisibility(View.GONE);
     noPaymentsText.setVisibility(View.VISIBLE);
     buyButton.setVisibility(View.GONE);
   }
