@@ -72,9 +72,12 @@ class AppUpdatePostShareDialog implements DialogInterface {
 
     private View getView() {
       View view = layoutInflater.inflate(R.layout.timeline_recommendation_preview, null);
-      ImageView appIcon = (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView getApp = (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
+      ImageView appIcon =
+          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+      TextView appName = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_similar_apps);
+      TextView getApp = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_get_app_button);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
       ImageLoader.with(context)

@@ -71,10 +71,13 @@ class RatedRecommendationPostShareDialog implements DialogInterface {
 
     private View getView() {
       View view = layoutInflater.inflate(R.layout.timeline_recommendation_preview, null);
-      ImageView appIcon = (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
+      ImageView appIcon =
+          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+      TextView appName = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_similar_apps);
 
-      TextView getApp = (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
+      TextView getApp = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_get_app_button);
       ImageLoader.with(context)
           .load(post.getAppIcon(), appIcon);
       appName.setText(post.getAppName());

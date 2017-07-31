@@ -81,8 +81,7 @@ class AggregatedRecommendationPostShareDialog implements DialogInterface {
           R.id.displayable_social_timeline_recommendation_get_app_button);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
       ImageLoader.with(context)
-          .load((post)
-          .getAppIcon(), appIcon);
+          .load((post).getAppIcon(), appIcon);
       appName.setText(post.getAppName());
       ratingBar.setRating(post.getAppAverageRating());
       SpannableFactory spannableFactory = new SpannableFactory();

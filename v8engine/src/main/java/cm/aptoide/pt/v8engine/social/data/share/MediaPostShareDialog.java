@@ -70,7 +70,8 @@ class MediaPostShareDialog implements DialogInterface {
 
     private View getView() {
       View view = layoutInflater.inflate(R.layout.timeline_media_preview, null);
-      TextView mediaTitle = (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
+      TextView mediaTitle =
+          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
       ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
       TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
       ImageView playIcon = (ImageView) view.findViewById(R.id.play_button);
