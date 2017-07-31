@@ -7,12 +7,7 @@ import rx.Single;
 
 public interface ExternalBillingService {
 
-
   Single<List<Purchase>> getInAppPurchases(int apiVersion, String packageName, String type);
 
   Completable consumeInAppPurchase(int apiVersion, String packageName, String purchaseToken);
-
-
-
-
 }

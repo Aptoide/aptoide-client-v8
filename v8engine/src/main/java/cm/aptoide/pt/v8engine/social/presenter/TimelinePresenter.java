@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by jdandrade on 31/05/2017.
@@ -153,6 +154,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   @Override public void restoreState(Bundle state) {
+
   }
 
   private void listenToScrollUp() {
@@ -202,12 +204,19 @@ public class TimelinePresenter implements Presenter {
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
             .toSingle())
+        .observeOn(Schedulers.io())
         .flatMapSingle(account -> Single.zip(
             account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                 : timeline.getTimelineStatisticsPost(), timeline.getCards(),
             (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showCardsAndHideProgress(cards))
+        .doOnNext(cards -> {
+          if (cards != null && cards.size() > 0) {
+            showCardsAndHideProgress(cards);
+          } else {
+            view.showGenericViewError();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
@@ -219,21 +228,24 @@ public class TimelinePresenter implements Presenter {
   private void onPullToRefreshRefreshPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.refreshes())
-        .flatMapSingle(__ -> accountManager.accountStatus()
-            .first()
-            .toSingle())
-        .flatMapSingle(account -> Single.zip(
-            account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                : timeline.getTimelineStatisticsPost(), timeline.getCards(),
-            (post, posts) -> mergeStatsPostWithPosts(post, posts)))
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showCardsAndHideRefresh(cards))
+        .flatMap(created -> view.refreshes()
+            .flatMapSingle(__ -> accountManager.accountStatus()
+                .first()
+                .toSingle())
+            .observeOn(Schedulers.io())
+            .flatMapSingle(account -> Single.zip(
+                account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+                    : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                (post, posts) -> mergeStatsPostWithPosts(post, posts)))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cards -> showCardsAndHideRefresh(cards))
+            .doOnError(throwable -> {
+              crashReport.log(throwable);
+              view.showGenericViewError();
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
-        }, throwable -> {
-          crashReport.log(throwable);
-          view.showGenericViewError();
         });
   }
 
@@ -257,18 +269,32 @@ public class TimelinePresenter implements Presenter {
   private void onRetryShowPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.retry())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(created -> view.showProgressIndicator())
-        .flatMapSingle(retryClicked -> timeline.getCards())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showCardsAndHideProgress(cards))
+        .flatMap(__ -> view.retry()
+            .doOnNext(__2 -> view.showProgressIndicator())
+            .flatMapSingle(__3 -> accountManager.accountStatus()
+                .first()
+                .toSingle())
+            .observeOn(Schedulers.io())
+            .flatMapSingle(account -> Single.zip(
+                account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+                    : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(posts -> {
+              if (posts != null && posts.size() > 0) {
+                showCardsAndHideProgress(posts);
+              } else {
+                view.showGenericViewError();
+              }
+            })
+            .doOnError(err -> {
+              crashReport.log(err);
+              view.showGenericViewError();
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(cards -> {
-        }, throwable -> {
-          crashReport.log(throwable);
-          view.showGenericViewError();
-        });
+        .subscribe();
   }
 
   private void clickOnPostHeader() {
