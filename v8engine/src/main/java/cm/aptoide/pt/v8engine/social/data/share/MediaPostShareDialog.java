@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.social.data.share;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,32 +45,14 @@ class MediaPostShareDialog extends BaseShareDialog<Media> {
         .load(post.getMediaThumbnailUrl(), thumbnail);
   }
 
-  public static class Builder {
-
-    private final RxAlertDialog.Builder builder;
-    private final LayoutInflater layoutInflater;
-    private final Context context;
-    private final SharePostViewSetup sharePostViewSetup;
-    private final Account account;
+  public static class Builder extends BaseShareDialog.Builder {
 
     public Builder(Context context, SharePostViewSetup sharePostViewSetup, Account account) {
-      this.builder = new RxAlertDialog.Builder(context);
-      layoutInflater = LayoutInflater.from(context);
-      this.context = context;
-      this.sharePostViewSetup = sharePostViewSetup;
-      this.account = account;
+      super(context, sharePostViewSetup, account, LAYOUT_ID);
     }
 
     public MediaPostShareDialog build() {
-      View view = getView();
-      sharePostViewSetup.setup(view, context, account);
-      builder.setView(view);
-      final RxAlertDialog dialog = builder.build();
-      return new MediaPostShareDialog(dialog);
-    }
-
-    private View getView() {
-      return layoutInflater.inflate(LAYOUT_ID, null);
+      return new MediaPostShareDialog(buildRxAlertDialog());
     }
   }
 }

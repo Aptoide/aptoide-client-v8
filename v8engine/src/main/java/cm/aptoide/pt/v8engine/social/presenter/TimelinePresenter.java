@@ -477,6 +477,7 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()))
         .flatMap(cardTouchEvent -> accountManager.accountStatus()
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(account -> view.showSharePreview(cardTouchEvent.getCard(), account)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {

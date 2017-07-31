@@ -22,6 +22,7 @@ public class ShareDialogFactory {
   }
 
   public ShareDialogInterface createDialogFor(Post post, Account account) {
+    // TODO use card type, instead of class instance to filter between share dialogs
     if (post instanceof AggregatedRecommendation) {
       return new AggregatedRecommendationPostShareDialog.Builder(context, sharePostViewSetup,
           account).build();
