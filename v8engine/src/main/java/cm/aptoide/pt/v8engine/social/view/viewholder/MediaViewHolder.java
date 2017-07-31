@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
@@ -97,24 +97,19 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(media, CardTouchEvent.Type.SHARE)));
 
-    if (media.isLiked() && !likeButton.isIconEnabled()) {
-      likeButton.setHeartState(true);
+    if (media.isLiked()) {
+      if (media.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        media.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
       likeButton.setHeartState(false);
     }
 
-    this.likeView.setOnClickListener(click -> {
-      this.cardTouchEventPublishSubject.onNext(new CardTouchEvent(media, CardTouchEvent.Type.LIKE));
-
-      //FIXME hack moved from LikeButtonView to here
-      // if the Post card state is saved offline, invalidation of the
-      // card is already done so this code can be deleted
-      boolean isLoggedIn = ((V8Engine) articleHeader.getContext()
-          .getApplicationContext()).getAccountManager().isLoggedIn();
-      if (isLoggedIn && !likeButton.isIconEnabled()) {
-        likeButton.setHeartState(true);
-      }
-    });
+    this.likeView.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(media, CardTouchEvent.Type.LIKE, position)));
   }
 
   private void setIcon(int drawableId) {

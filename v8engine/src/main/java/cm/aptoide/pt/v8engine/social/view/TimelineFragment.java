@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -46,6 +46,7 @@ import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
+import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
@@ -390,19 +391,26 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         });
   }
 
-  @Override public void updatePost(Post post, int cardPosition) {
-    adapter.updatePost(post, cardPosition);
+  @Override public void updatePost(int cardPosition) {
+    adapter.updatePost(cardPosition);
+  }
+
+  @Override public void swapPost(Post post, int postPosition) {
+    adapter.swapPost(post, postPosition);
   }
 
   @Override public void showStoreSubscribedMessage(String storeName) {
-    ShowMessage.asSnack(getView(), AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-        getContext().getResources(), storeName));
+    final String msg = AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+        getContext().getResources(), storeName);
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void showStoreUnsubscribedMessage(String storeName) {
-    ShowMessage.asSnack(getView(),
-        AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-            getContext().getResources(), storeName));
+    final String msg = AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+        getContext().getResources(), storeName);
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void showSharePreview(Post post) {
@@ -452,6 +460,20 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> loginActionClick() {
     return loginPrompt.map(__ -> null);
+  }
+
+  @Override public void showSetUserOrStorePublicMessage() {
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
+        Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showCreateStoreMessage(SocialAction socialAction) {
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_create_store_with_social_action,
+        Snackbar.LENGTH_LONG)
+        .show();
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp

@@ -18,9 +18,10 @@ public class StoreLatestApps implements Post {
   private final Date latestUpdate;
   private final List<App> apps;
   private final String abUrl;
-  private final boolean isLiked;
   private final CardType cardType;
   private final Long storeId;
+  private boolean isLiked;
+  private boolean likedFromClick;
 
   public StoreLatestApps(String cardId, Long storeId, String storeName, String storeAvatar,
       String storeTheme, int subscribers, int appsNumber, Date latestUpdate, List<App> apps,
@@ -37,10 +38,6 @@ public class StoreLatestApps implements Post {
     this.abUrl = abUrl;
     this.isLiked = isLiked;
     this.cardType = cardType;
-  }
-
-  public boolean isLiked() {
-    return isLiked;
   }
 
   public String getStoreTheme() {
@@ -83,7 +80,24 @@ public class StoreLatestApps implements Post {
     return abUrl;
   }
 
+  public boolean isLiked() {
+    return isLiked;
+  }
+
+  @Override public void setLiked(boolean liked) {
+    this.isLiked = liked;
+    likedFromClick = true;
+  }
+
+  @Override public boolean isLikeFromClick() {
+    return likedFromClick;
+  }
+
   public Long getStoreId() {
     return storeId;
+  }
+
+  public void setLikedFromClick(boolean likedFromClick) {
+    this.likedFromClick = likedFromClick;
   }
 }

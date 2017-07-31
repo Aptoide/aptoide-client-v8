@@ -75,12 +75,30 @@ public class LikeButtonView extends FrameLayout {
     this.iconEnabled = iconEnabled;
   }
 
+  public void setHeartStateWithoutAnimation(boolean iconEnabled) {
+    if (animatorSet != null && animatorSet.isRunning()) {
+      animatorSet.cancel();
+    }
+
+    if (iconEnabled) {
+      setHeartIconOnWithoutAnimation();
+    } else {
+      setHeartOffWithoutAnimation();
+    }
+    this.iconEnabled = iconEnabled;
+  }
+
   public boolean isIconEnabled() {
     return iconEnabled;
   }
 
   private void setHeartOffWithoutAnimation() {
     vHeart.setImageResource(R.drawable.heart_off);
+    vHeart.invalidate();
+  }
+
+  private void setHeartIconOnWithoutAnimation() {
+    vHeart.setImageResource(R.drawable.heart_on);
     vHeart.invalidate();
   }
 

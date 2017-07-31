@@ -2,7 +2,7 @@
   <item android:color="@color/white" android:state_pressed="true">
     <shape>
       <solid
-          android:color="@color/grey_fog_normal"/>
+          android:color="@color/timeline_separator"/>
       <stroke
           android:color="@color/white"
           android:width="1dp"/>
@@ -19,8 +19,8 @@
     <shape>
       <solid android:color="@color/white"/>
       <stroke
-          android:color="@color/grey_fog_normal"
-          android:width="1dp"/>
+          android:color="@color/timeline_separator"
+          android:width="0.7dp"/>
       <corners
           android:radius="2dp"/>
       <padding

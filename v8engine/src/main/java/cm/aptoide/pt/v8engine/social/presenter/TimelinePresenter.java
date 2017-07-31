@@ -3,7 +3,10 @@ package cm.aptoide.pt.v8engine.social.presenter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -21,13 +24,15 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
+import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
@@ -303,22 +308,22 @@ public class TimelinePresenter implements Presenter {
             .getAbUrl()))
         .doOnNext(cardTouchEvent -> {
           final Post post = cardTouchEvent.getCard();
-          final CardType cardType = post.getType();
-          if (cardType.equals(CardType.VIDEO) || cardType.equals(CardType.ARTICLE)) {
+          final CardType postType = post.getType();
+          if (postType.equals(CardType.VIDEO) || postType.equals(CardType.ARTICLE)) {
             Media card = (Media) post;
             card.getPublisherLink()
                 .launch();
-          } else if (cardType.isSocial()) {
+          } else if (postType.isSocial()) {
             SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
                 ((SocialHeaderCardTouchEvent) cardTouchEvent);
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
-          } else if (cardType.equals(CardType.STORE)) {
+          } else if (postType.equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) post);
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-          } else if (cardType.equals(CardType.UPDATE)) {
+          } else if (postType.equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) post);
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
-          } else if (cardType.equals(CardType.POPULAR_APP)) {
+          } else if (postType.equals(CardType.POPULAR_APP)) {
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
                 popularAppTouchEvent.getStoreTheme());
@@ -386,7 +391,7 @@ public class TimelinePresenter implements Presenter {
                     .doOnNext(install -> {
                       // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
                       ((AppUpdate) post).setInstallationStatus(install.getState());
-                      view.updatePost(post,
+                      view.swapPost(post,
                           ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
                     })
                     .subscribe(downloadProgress -> {
@@ -428,28 +433,65 @@ public class TimelinePresenter implements Presenter {
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.LIKE) && cardTouchEvent.getCard()
                 .getType()
-                .isSocial())
+                .isSocial() || cardTouchEvent.getCard()
+                .getType()
+                .equals(CardType.MINIMAL_CARD))
+            .filter(cardTouchEvent -> !cardTouchEvent.getCard()
+                .isLiked())
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(account -> {
+                  if (!account.isLoggedIn()) {
+                    view.showLoginPromptWithAction();
+                  } else {
+                    if (showCreateStore(account)) {
+                      view.showCreateStoreMessage(SocialAction.LIKE);
+                    } else {
+                      cardTouchEvent.getCard()
+                          .setLiked(true);
+                      view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                    }
+                  }
+                })
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
+                    if (showCreateStore(account)) {
+                      return Completable.complete();
+                    }
+
                     final Post post = cardTouchEvent.getCard();
-                    return timeline.like(post, post.getCardId())
-                        .doOnCompleted(() -> view.updatePost(post,
-                            ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition()));
+                    return timeline.like(post, post.getCardId());
                   }
-                  return Completable.fromAction(() -> view.showLoginPromptWithAction());
+                  return Completable.complete();
                 })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
+  //todo missing  && !store.hasPublicAccess()
+  private boolean showSetUserOrStoreToPublic(Account account) {
+    final Account.Access userAccess = account.getAccess();
+    final Store store = account.getStore();
+    return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (store
+        != null);
+  }
+
+  private boolean showCreateStore(Account account) {
+    Account.Access userAccess = account.getAccess();
+    return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (
+        account.getStore() == null
+            || TextUtils.isEmpty(account.getStore()
+            .getName()));
+  }
+
   private void handleLoginMessageClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.loginActionClick())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> timelineNavigation.navigateToLoginView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -464,24 +506,41 @@ public class TimelinePresenter implements Presenter {
                 .equals(CardTouchEvent.Type.LIKE) && cardTouchEvent.getCard()
                 .getType()
                 .isNormal())
+            .filter(cardTouchEvent -> !cardTouchEvent.getCard()
+                .isLiked())
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(account -> {
+                  if (!account.isLoggedIn()) {
+                    view.showLoginPromptWithAction();
+                  } else {
+                    if (showCreateStore(account)) {
+                      view.showCreateStoreMessage(SocialAction.LIKE);
+                    } else {
+                      cardTouchEvent.getCard()
+                          .setLiked(true);
+                      view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                    }
+                  }
+                })
                 .flatMapCompletable(account -> {
                   if (account.isLoggedIn()) {
+                    if (showCreateStore(account)) {
+                      return Completable.complete();
+                    }
                     final Post post = cardTouchEvent.getCard();
                     return timeline.sharePost(post)
-                        .flatMapCompletable(cardId -> timeline.like(post, cardId))
-                        .doOnCompleted(() -> view.updatePost(post,
-                            ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition()));
+                        .flatMapCompletable(cardId -> timeline.like(post, cardId));
                   } else {
-                    return Completable.fromAction(() -> view.showLoginPromptWithAction());
+                    return Completable.complete();
                   }
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
-            .getAbUrl()), throwable -> crashReport.log(throwable));
+            .getAbUrl()), throwable -> throwable.printStackTrace());
   }
 
   private void clickOnCommentSocialPost() {
@@ -497,8 +556,13 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
+                if (showCreateStore(account)) {
+                  return Completable.fromAction(
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                }
                 return Completable.fromAction(
                     () -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
                         cardTouchEvent.getCard()
@@ -522,8 +586,13 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
+                if (showCreateStore(account)) {
+                  return Completable.fromAction(
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                }
                 return Completable.fromAction(() -> view.showCommentDialog(cardTouchEvent.getCard()
                     .getCardId()));
               }
@@ -544,6 +613,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 return Completable.fromAction(() -> timelineNavigation.navigateToComments(
@@ -569,8 +639,13 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
+                if (showCreateStore(account)) {
+                  return Completable.fromAction(
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                }
                 return Completable.fromAction(
                     () -> view.showSharePreview(cardTouchEvent.getCard()));
               }
@@ -680,7 +755,7 @@ public class TimelinePresenter implements Presenter {
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.LIKES_PREVIEW))
         .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(cardTouchEvent.getCard()
-            .getCardId(), ((LikesCardTouchEvent) cardTouchEvent).getLikesNumber()))
+            .getCardId(), ((LikesPreviewCardTouchEvent) cardTouchEvent).getLikesNumber()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {

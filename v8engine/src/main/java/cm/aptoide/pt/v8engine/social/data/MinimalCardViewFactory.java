@@ -50,19 +50,20 @@ public class MinimalCardViewFactory {
   }
 
   public View getView(Post originalPost, List<MinimalPost> minimalPosts, LayoutInflater inflater,
-      Context context) {
+      Context context, int position) {
     LinearLayout minimalCardContainer = new LinearLayout(context);
     minimalCardContainer.setOrientation(LinearLayout.VERTICAL);
 
     for (MinimalPost post : minimalPosts) {
       minimalCardContainer.addView(
-          getMinimalCardView(originalPost, post, inflater, context, minimalCardContainer));
+          getMinimalCardView(originalPost, post, inflater, context, minimalCardContainer,
+              position));
     }
     return minimalCardContainer;
   }
 
   private View getMinimalCardView(Post originalPost, MinimalPost post, LayoutInflater inflater,
-      Context context, ViewGroup minimalCardContainer) {
+      Context context, ViewGroup minimalCardContainer, int position) {
     this.inflater = inflater;
     View subCardView =
         inflater.inflate(R.layout.timeline_sub_minimal_card, minimalCardContainer, false);
@@ -117,7 +118,12 @@ public class MinimalCardViewFactory {
     cardHeaderTimestamp.setText(dateCalculator.getTimeSinceDate(context, post.getDate()));
 
     if (post.isLiked()) {
-      likeButton.setHeartState(true);
+      if (post.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        post.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
       likeButton.setHeartState(false);
     }
@@ -127,16 +133,15 @@ public class MinimalCardViewFactory {
     showLikesPreview(post, context);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
-    like.setOnClickListener(click -> likeButton.performClick());
-
-    likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(post, CardTouchEvent.Type.LIKE)));
+    like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
     commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, CardTouchEvent.Type.COMMENT)));
     shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(originalPost, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesCardTouchEvent(post, post.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
+        new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, CardTouchEvent.Type.COMMENT_NUMBER)));
     return subCardView;
@@ -156,8 +161,7 @@ public class MinimalCardViewFactory {
     StringBuilder headerNamesStringBuilder = new StringBuilder();
     if (sharers.size() == 1) {
       return headerNamesStringBuilder.append(sharers.get(0)
-          .getStore()
-          .getName())
+          .getPrimaryName())
           .toString();
     }
     List<Poster> firstSharers = sharers.subList(0, 2);
@@ -298,14 +302,14 @@ public class MinimalCardViewFactory {
   }
 
   public View getView(Post originalPost, List<Post> minimalCards, int numberOfCardsToShow,
-      LayoutInflater inflater, Context context) {
+      LayoutInflater inflater, Context context, int position) {
     LinearLayout minimalCardContainer = new LinearLayout(context);
     minimalCardContainer.setOrientation(LinearLayout.VERTICAL);
 
     for (int i = 0; i < numberOfCardsToShow && i < minimalCards.size(); i++) {
       minimalCardContainer.addView(
           getMinimalCardView(originalPost, (MinimalPost) minimalCards.get(i), inflater, context,
-              minimalCardContainer));
+              minimalCardContainer, position));
     }
 
     return minimalCardContainer;

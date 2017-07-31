@@ -17,9 +17,12 @@ abstract class AppPost implements Post {
   protected final long appId;
   protected final float appAverageRating;
   private final Long storeId;
+  private boolean isLiked;
+  private boolean likedFromClick;
 
   AppPost(String cardId, String appIcon, String appName, long appId, String packageName,
-      Date timestamp, String abUrl, CardType cardType, float appAverageRating, Long storeId) {
+      Date timestamp, String abUrl, CardType cardType, float appAverageRating, Long storeId,
+      boolean isLiked) {
     this.abUrl = abUrl;
     this.cardId = cardId;
     this.timestamp = timestamp;
@@ -30,6 +33,7 @@ abstract class AppPost implements Post {
     this.appIcon = appIcon;
     this.appAverageRating = appAverageRating;
     this.storeId = storeId;
+    this.isLiked = isLiked;
   }
 
   public Long getStoreId() {
@@ -60,6 +64,10 @@ abstract class AppPost implements Post {
     return packageName;
   }
 
+  public void setLikedFromClick(boolean likedFromClick) {
+    this.likedFromClick = likedFromClick;
+  }
+
   @Override public String getCardId() {
     return this.cardId;
   }
@@ -70,5 +78,18 @@ abstract class AppPost implements Post {
 
   @Override public String getAbUrl() {
     return abUrl;
+  }
+
+  @Override public boolean isLiked() {
+    return isLiked;
+  }
+
+  @Override public void setLiked(boolean liked) {
+    this.isLiked = liked;
+    this.likedFromClick = true;
+  }
+
+  @Override public boolean isLikeFromClick() {
+    return likedFromClick;
   }
 }
