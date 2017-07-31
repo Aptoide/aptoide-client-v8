@@ -176,13 +176,13 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showBuyLoading() {
-    buyLoading = true;
+  @Override public void showTransactionLoading() {
+    transactionLoading = true;
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showTransactionLoading() {
-    transactionLoading = true;
+  @Override public void showBuyLoading() {
+    buyLoading = true;
     progressView.setVisibility(View.VISIBLE);
   }
 

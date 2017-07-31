@@ -8,13 +8,8 @@ public enum CardType {
   ARTICLE, VIDEO, RECOMMENDATION, STORE, UPDATE, POPULAR_APP, SOCIAL_RECOMMENDATION, SOCIAL_INSTALL, SOCIAL_ARTICLE, SOCIAL_VIDEO, SOCIAL_STORE, AGGREGATED_SOCIAL_ARTICLE, AGGREGATED_SOCIAL_VIDEO, AGGREGATED_SOCIAL_INSTALL, AGGREGATED_SOCIAL_STORE, MINIMAL_CARD, TIMELINE_STATS, LOGIN, SIMILAR, PROGRESS, SOCIAL_POST_ARTICLE, SOCIAL_POST_VIDEO, SOCIAL_POST_RECOMMENDATION;
 
   public boolean isNormal() {
-    return equals(RECOMMENDATION)
-        || equals(ARTICLE)
-        || equals(SIMILAR)
-        || equals(VIDEO)
-        || equals(POPULAR_APP)
-        || equals(STORE)
-        || equals(UPDATE);
+    return equals(RECOMMENDATION) || equals(ARTICLE) || equals(SIMILAR) || equals(VIDEO) || equals(
+        POPULAR_APP) || equals(STORE) || equals(UPDATE);
   }
 
   public boolean isSocial() {

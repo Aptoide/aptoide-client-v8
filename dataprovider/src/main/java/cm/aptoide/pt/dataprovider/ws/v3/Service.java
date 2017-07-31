@@ -58,8 +58,8 @@ public interface Service {
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("createPurchaseAuthorization") @FormUrlEncoded
-  Observable<PaymentAuthorizationResponse> createPaymentAuthorization(
-      @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+  Observable<PaymentAuthorizationResponse> createPaymentAuthorization(@FieldMap BaseBody args,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

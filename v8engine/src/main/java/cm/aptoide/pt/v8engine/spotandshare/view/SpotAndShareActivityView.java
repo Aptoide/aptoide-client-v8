@@ -11,9 +11,9 @@ public abstract class SpotAndShareActivityView extends AnalyticsActivity {
     presenter.onCreate();
   }
 
-  @Override protected void onPause() {
-    super.onPause();
-    presenter.onPause();
+  @Override protected void onStart() {
+    super.onStart();
+    presenter.onStart();
   }
 
   @Override protected void onResume() {
@@ -21,9 +21,9 @@ public abstract class SpotAndShareActivityView extends AnalyticsActivity {
     presenter.onResume();
   }
 
-  @Override protected void onStart() {
-    super.onStart();
-    presenter.onStart();
+  @Override protected void onPause() {
+    super.onPause();
+    presenter.onPause();
   }
 
   @Override protected void onStop() {

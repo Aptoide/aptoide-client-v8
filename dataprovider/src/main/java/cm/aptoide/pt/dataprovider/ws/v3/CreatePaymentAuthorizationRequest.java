@@ -36,8 +36,8 @@ public class CreatePaymentAuthorizationRequest extends V3<PaymentAuthorizationRe
         converterFactory, false, tokenInvalidator, sharedPreferences);
   }
 
-  @Override
-  protected Observable<PaymentAuthorizationResponse> loadDataFromNetwork(Service service, boolean bypassCache) {
+  @Override protected Observable<PaymentAuthorizationResponse> loadDataFromNetwork(Service service,
+      boolean bypassCache) {
     if (hasAuthorizationCode) {
       return service.createPaymentAuthorizationWithCode(map, bypassCache);
     }

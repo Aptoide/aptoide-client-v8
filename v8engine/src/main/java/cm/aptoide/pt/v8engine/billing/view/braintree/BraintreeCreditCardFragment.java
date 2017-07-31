@@ -153,11 +153,6 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
         .setup(getActivity());
   }
 
-  @Override public Observable<CardBuilder> creditCardEvent() {
-    return Observable.merge(cardBuilderRelay, RxView.clicks(buyButton)
-        .map(__ -> createCard()));
-  }
-
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
   }
@@ -170,11 +165,6 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     unknownErrorDialog.show();
   }
 
-  @Override public Observable<Void> errorDismissedEvent() {
-    return unknownErrorDialog.dismisses()
-        .map(dialogInterface -> null);
-  }
-
   @Override public void showProduct(Product product) {
     ImageLoader.with(getContext())
         .load(product.getIcon(), productIcon);
@@ -183,6 +173,16 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     productPrice.setText(product.getPrice()
         .getCurrencySymbol() + " " + product.getPrice()
         .getAmount());
+  }
+
+  @Override public Observable<CardBuilder> creditCardEvent() {
+    return Observable.merge(cardBuilderRelay, RxView.clicks(buyButton)
+        .map(__ -> createCard()));
+  }
+
+  @Override public Observable<Void> errorDismissedEvent() {
+    return unknownErrorDialog.dismisses()
+        .map(dialogInterface -> null);
   }
 
   @Override public Observable<Void> cancellationEvent() {
