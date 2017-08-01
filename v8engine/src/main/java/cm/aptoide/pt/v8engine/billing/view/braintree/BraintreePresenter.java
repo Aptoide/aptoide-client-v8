@@ -48,6 +48,14 @@ public class BraintreePresenter implements Presenter {
     handleCancellationEvent();
   }
 
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
+  }
+
   private void handleCancellationEvent() {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
@@ -154,13 +162,5 @@ public class BraintreePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> view.showError());
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

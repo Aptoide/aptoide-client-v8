@@ -74,8 +74,8 @@ public class CreateTransactionRequest extends V3<TransactionResponse> {
     return body;
   }
 
-  @Override
-  protected Observable<TransactionResponse> loadDataFromNetwork(Service service, boolean bypassCache) {
+  @Override protected Observable<TransactionResponse> loadDataFromNetwork(Service service,
+      boolean bypassCache) {
     return service.createTransaction(map, bypassCache);
   }
 }

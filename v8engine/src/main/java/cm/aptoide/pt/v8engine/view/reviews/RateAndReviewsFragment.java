@@ -231,8 +231,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(
                 AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
-                    .getApplicationContext()).getDatabase(), Store.class)),
-                baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+                    .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
+                httpClient, converterFactory, tokenInvalidator,
                 ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
                 getFragmentNavigator(),
                 ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()),

@@ -12,5 +12,4 @@ public class RepositoryIllegalArgumentException extends BaseException {
   public RepositoryIllegalArgumentException(String detailMessage) {
     super(detailMessage);
   }
-
 }

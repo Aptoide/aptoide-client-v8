@@ -151,10 +151,9 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     showSocialInformationBar(card);
     showLikesPreview(card);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
-
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+    this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(

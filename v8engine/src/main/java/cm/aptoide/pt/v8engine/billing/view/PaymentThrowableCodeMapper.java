@@ -56,7 +56,6 @@ public class PaymentThrowableCodeMapper {
       throwable = new PurchaseNotFoundException();
     }
 
-
     return throwable;
   }
 }

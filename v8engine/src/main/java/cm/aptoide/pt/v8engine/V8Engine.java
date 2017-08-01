@@ -324,8 +324,6 @@ public abstract class V8Engine extends Application {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
-
-
     //
     // async app initialization
     // beware! this code could be executed at the same time the first activity is
