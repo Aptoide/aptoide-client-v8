@@ -3,8 +3,8 @@ package cm.aptoide.pt.v8engine.social.data.share;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,9 +27,9 @@ public class SharePostViewSetup {
     cardView.setCardElevation(10);
     like.setOnClickListener(null);
     like.setOnTouchListener(null);
-    like.setVisibility(View.VISIBLE);
     likeButtonView.setOnClickListener(null);
     likeButtonView.setOnTouchListener(null);
+    like.setVisibility(View.VISIBLE);
     likeButtonView.setVisibility(View.VISIBLE);
 
     comments.setVisibility(View.VISIBLE);
@@ -43,44 +43,70 @@ public class SharePostViewSetup {
   }
 
   private void setupBottom(View view, Account account) {
-    CheckBox checkBox = (CheckBox) view.findViewById(R.id.social_preview_checkbox);
-    checkBox.setVisibility(account.isAccessConfirmed() ? View.GONE : View.VISIBLE);
+    View socialPrivacyTerms = view.findViewById(R.id.social_privacy_terms);
+    final boolean accessConfirmed = account.isAccessConfirmed();
+    socialPrivacyTerms.setVisibility(accessConfirmed ? View.GONE : View.VISIBLE);
   }
 
   private void setupHeader(View view, Context context, Account account) {
+    if (TextUtils.isEmpty(account.getStore()
+        .getName())) {
+      setupHeaderWithoutStoreName(view, context, account);
+    } else {
+      setupHeaderWithStoreName(view, context, account);
+    }
+  }
+
+  private void setupHeaderWithStoreName(View view, Context context, Account account) {
     TextView storeName = (TextView) view.findViewById(R.id.card_title);
     TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
     ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
     ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
 
-    if (account.getStore()
-        .getName() != null) {
-      storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
-      if (Account.Access.PUBLIC.equals(account.getAccess())) {
-        storeAvatar.setVisibility(View.VISIBLE);
-        userAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.with(context)
-            .loadWithShadowCircleTransform(account.getStore()
-                .getAvatar(), storeAvatar);
-        ImageLoader.with(context)
-            .loadWithShadowCircleTransform(account.getAvatar(), userAvatar);
-        storeName.setText(account.getStore()
-            .getName());
-        userName.setText(account.getNickname());
-      } else {
-        storeAvatar.setVisibility(View.VISIBLE);
-        userAvatar.setVisibility(View.INVISIBLE);
-        ImageLoader.with(context)
-            .loadWithShadowCircleTransform(account.getStore()
-                .getAvatar(), storeAvatar);
-        ImageLoader.with(context)
-            .loadWithShadowCircleTransform(account.getAvatar(), userAvatar);
-        storeName.setText(account.getStore()
-            .getName());
-        userName.setText(account.getNickname());
-        userName.setVisibility(View.GONE);
-      }
+    final String accountStoreName = account.getStore()
+        .getName();
+    final String accountUserNickname = account.getNickname();
+    final String accountUserAvatar = account.getAvatar();
+    final String accountStoreAvatar = account.getStore()
+        .getAvatar();
+    final Account.Access accountUserAccess = account.getAccess();
+
+    storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
+    if (Account.Access.PUBLIC.equals(accountUserAccess)) {
+      storeName.setText(accountStoreName);
+      storeAvatar.setVisibility(View.VISIBLE);
+      userAvatar.setVisibility(View.VISIBLE);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(accountStoreAvatar, storeAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(accountUserAvatar, userAvatar);
+      userName.setText(accountUserNickname);
     }
+  }
+
+  private void setupHeaderWithoutStoreName(View view, Context context, Account account) {
+    TextView storeName = (TextView) view.findViewById(R.id.card_title);
+    TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
+    ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
+    ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
+
+    final String accountStoreName = account.getStore()
+        .getName();
+    final String accountStoreAvatar = account.getStore()
+        .getAvatar();
+    // final String accountUserAvatar = account.getAvatar();
+
+    storeName.setText(accountStoreName);
+
+    storeAvatar.setVisibility(View.VISIBLE);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(accountStoreAvatar, storeAvatar);
+
+    userAvatar.setVisibility(View.INVISIBLE);
+    // ImageLoader.with(context).loadWithShadowCircleTransform(accountUserAvatar, userAvatar);
+
+    userName.setText(account.getNickname());
+    userName.setVisibility(View.GONE);
   }
 
   public void setup(View view, Context context, Account account) {

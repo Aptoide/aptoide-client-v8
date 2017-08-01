@@ -324,8 +324,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return postTouchEventPublishSubject;
   }
 
-  @Override public Observable<Post> shareConfirmation() {
-    return sharePostPublishSubject.map(event -> event.getPost());
+  @Override public Observable<ShareEvent> shareConfirmation() {
+    return sharePostPublishSubject;
   }
 
   @Override public Observable<PostComment> commentPosted() {

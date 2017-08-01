@@ -6,6 +6,7 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
+import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -34,7 +35,7 @@ public interface TimelineView extends View {
 
   Observable<CardTouchEvent> postClicked();
 
-  Observable<Post> shareConfirmation();
+  Observable<ShareEvent> shareConfirmation();
 
   Observable<PostComment> commentPosted();
 

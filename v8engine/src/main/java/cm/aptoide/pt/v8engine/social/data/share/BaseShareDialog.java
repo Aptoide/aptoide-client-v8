@@ -5,6 +5,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.social.data.Post;
@@ -30,12 +31,12 @@ abstract class BaseShareDialog<T extends Post> implements ShareDialogInterface<T
 
   @Override public Observable<ShareEvent> shares() {
     return dialog.positiveClicks()
-        .map(__ -> shareEvent);
+        .map(__ -> updateEventWithPrivacyCheckbox(shareEvent));
   }
 
   @Override public Observable<ShareEvent> cancels() {
     return dialog.cancels()
-        .map(__ -> cancelEvent);
+        .map(__ -> updateEventWithPrivacyCheckbox(cancelEvent));
   }
 
   public void show() {
@@ -45,6 +46,15 @@ abstract class BaseShareDialog<T extends Post> implements ShareDialogInterface<T
   @Override @CallSuper public void setup(T post) {
     setupView(dialog.getDialogView(), post);
     setupEvents(post);
+  }
+
+  private ShareEvent updateEventWithPrivacyCheckbox(ShareEvent shareEvent) {
+    CheckBox makeMyProfilePrivate = (CheckBox) dialog.getDialogView()
+        .findViewById(R.id.social_preview_checkbox);
+    Account.Access access =
+        makeMyProfilePrivate.isChecked() ? Account.Access.PRIVATE : Account.Access.PUBLIC;
+    shareEvent.setAccess(access);
+    return shareEvent;
   }
 
   private void setupEvents(T post) {

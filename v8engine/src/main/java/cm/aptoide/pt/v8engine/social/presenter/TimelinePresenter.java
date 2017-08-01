@@ -40,6 +40,7 @@ import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineStatsPost;
 import cm.aptoide.pt.v8engine.social.data.TimelineStatsTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -649,11 +650,26 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
+  private Completable syncAccount(Account account, ShareEvent shareEvent) {
+    return Single.fromCallable(() -> account.getAccess() != shareEvent.getAccess())
+        .flatMapCompletable(shouldUpdateAccount -> {
+          if (shouldUpdateAccount) {
+            return accountManager.syncCurrentAccount(shareEvent.getAccess());
+          }
+          return Completable.complete();
+        });
+  }
+
   private void sharePostConfirmation() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
-            .flatMapSingle(post -> timeline.sharePost(post)
+            .flatMap(shareEvent -> accountManager.accountStatus()
+                .first()
+                .toSingle()
+                .flatMapObservable(account -> syncAccount(account, shareEvent).toObservable())
+                .map(__ -> shareEvent))
+            .flatMapSingle(shareEvent -> timeline.sharePost(shareEvent.getPost())
                 .doOnSuccess(cardId -> view.showShareSuccessMessage())))
         .doOnNext(cardid -> timelineAnalytics.sendSocialCardPreviewActionEvent(
             TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE))
