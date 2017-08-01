@@ -5,14 +5,14 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShareSender;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareMainFragment;
-import cm.aptoide.pt.v8engine.view.BaseActivity;
+import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import rx.functions.Action1;
 
 /**
  * Created by neuro on 27-06-2017.
  */
 
-public class MainActivity extends BaseActivity implements JoinGroupView {
+public class MainActivity extends BackButtonActivity implements JoinGroupView {
 
   private cm.aptoide.pt.spotandshareandroid.SpotAndShare spotAndShare;
   private Action1<SpotAndShareSender> onSuccess;
