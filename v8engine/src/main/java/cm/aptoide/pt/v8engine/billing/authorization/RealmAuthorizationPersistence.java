@@ -2,9 +2,6 @@ package cm.aptoide.pt.v8engine.billing.authorization;
 
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
-import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
-import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationFactory;
-import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;

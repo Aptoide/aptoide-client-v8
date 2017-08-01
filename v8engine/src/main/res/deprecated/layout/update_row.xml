@@ -166,7 +166,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="3"
-            android:text="@string/update"
+            android:text="@string/updatetab_button_update"
             android:textSize="@dimen/text_size_small"
             />
 

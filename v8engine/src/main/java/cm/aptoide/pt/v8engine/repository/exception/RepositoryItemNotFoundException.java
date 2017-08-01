@@ -12,5 +12,4 @@ public class RepositoryItemNotFoundException extends BaseException {
   public RepositoryItemNotFoundException(String detailMessage) {
     super(detailMessage);
   }
-
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -45,6 +46,7 @@ import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
+import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
@@ -65,6 +67,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
 import java.util.List;
@@ -117,6 +120,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TabNavigator tabNavigator;
   private String postIdForTimelineRequest;
   private TimelineAnalytics timelineAnalytics;
+  private PublishRelay<View> loginPrompt;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -192,6 +196,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
+    loginPrompt = PublishRelay.create();
     helper = RecyclerViewPositionHelper.createHelper(list);
     // Pull-to-refresh
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
@@ -386,19 +391,26 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         });
   }
 
-  @Override public void updateInstallProgress(Post card, int cardPosition) {
-    adapter.updatePost(card, cardPosition);
+  @Override public void updatePost(int cardPosition) {
+    adapter.updatePost(cardPosition);
+  }
+
+  @Override public void swapPost(Post post, int postPosition) {
+    adapter.swapPost(post, postPosition);
   }
 
   @Override public void showStoreSubscribedMessage(String storeName) {
-    ShowMessage.asSnack(getView(), AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-        getContext().getResources(), storeName));
+    final String msg = AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+        getContext().getResources(), storeName);
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void showStoreUnsubscribedMessage(String storeName) {
-    ShowMessage.asSnack(getView(),
-        AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-            getContext().getResources(), storeName));
+    final String msg = AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+        getContext().getResources(), storeName);
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void showSharePreview(Post post) {
@@ -431,11 +443,37 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showCommentSuccess() {
-    ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showGenericError() {
-    ShowMessage.asSnack(getView(), getContext().getString(R.string.all_message_general_error));
+    Snackbar.make(getView(), R.string.all_message_general_error, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showLoginPromptWithAction() {
+    Snackbar.make(getView(), R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
+        .setAction(R.string.login, view -> loginPrompt.call(view))
+        .show();
+  }
+
+  @Override public Observable<Void> loginActionClick() {
+    return loginPrompt.map(__ -> null);
+  }
+
+  @Override public void showSetUserOrStorePublicMessage() {
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
+        Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showCreateStoreMessage(SocialAction socialAction) {
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_create_store_with_social_action,
+        Snackbar.LENGTH_LONG)
+        .show();
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp
