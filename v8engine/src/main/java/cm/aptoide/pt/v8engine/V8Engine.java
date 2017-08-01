@@ -36,6 +36,7 @@ import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -181,6 +182,8 @@ import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -845,8 +848,13 @@ public abstract class V8Engine extends Application {
 
   public Database getDatabase() {
     if (database == null) {
+      final RealmConfiguration realmConfiguration =
+          new RealmConfiguration.Builder(this).name("aptoide.realm.db")
+              .schemaVersion(8086)
+              .migration(new RealmToRealmDatabaseMigration())
+              .build();
+      Realm.setDefaultConfiguration(realmConfiguration);
       database = new Database();
-      database.initialize(this);
     }
     return database;
   }

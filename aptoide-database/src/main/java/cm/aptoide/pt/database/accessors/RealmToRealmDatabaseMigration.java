@@ -28,7 +28,7 @@ import io.realm.RealmSchema;
  * For clarification see a migration example.
  * </a>
  */
-class RealmToRealmDatabaseMigration implements RealmMigration {
+public class RealmToRealmDatabaseMigration implements RealmMigration {
 
   private static final String TAG = RealmToRealmDatabaseMigration.class.getName();
 
