@@ -32,7 +32,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.database.AppAction;
+import cm.aptoide.pt.v8engine.install.AppAction;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
