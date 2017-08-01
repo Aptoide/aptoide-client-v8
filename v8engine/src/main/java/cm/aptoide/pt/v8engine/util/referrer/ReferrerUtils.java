@@ -184,7 +184,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
                 minimalAd.getClickUrl(), success, httpClient, converterFactory,
-                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)))
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+                sharedPreferences)
                 .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
