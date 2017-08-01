@@ -25,8 +25,8 @@ public class CreateTransactionRequest extends V3<TransactionResponse> {
   public static CreateTransactionRequest ofInApp(int productId, int paymentId,
       String developerPayload, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, int versionCode) {
-    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
+      SharedPreferences sharedPreferences, int versionCode, String productTitle) {
+    final BaseBody args = getBaseBody(productId, paymentId, versionCode, productTitle);
     args.put("developerPayload", developerPayload);
     return new CreateTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
@@ -35,8 +35,9 @@ public class CreateTransactionRequest extends V3<TransactionResponse> {
   public static CreateTransactionRequest ofInApp(int productId, int paymentId,
       String developerPayload, String metadata, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, int versionCode) {
-    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, int versionCode,
+      String productTitle) {
+    final BaseBody args = getBaseBody(productId, paymentId, versionCode, productTitle);
     args.put("paykey", metadata);
     args.put("developerPayload", developerPayload);
     return new CreateTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
@@ -46,8 +47,8 @@ public class CreateTransactionRequest extends V3<TransactionResponse> {
   public static CreateTransactionRequest ofPaidApp(int productId, int paymentId, String store,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, int versionCode) {
-    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
+      SharedPreferences sharedPreferences, int versionCode, String productTitle) {
+    final BaseBody args = getBaseBody(productId, paymentId, versionCode, productTitle);
     args.put("repo", store);
     return new CreateTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
@@ -56,19 +57,21 @@ public class CreateTransactionRequest extends V3<TransactionResponse> {
   public static CreateTransactionRequest ofPaidApp(int productId, int paymentId, String store,
       String metadata, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, int versionCode) {
-    final BaseBody args = getBaseBody(productId, paymentId, versionCode);
+      SharedPreferences sharedPreferences, int versionCode, String productTitle) {
+    final BaseBody args = getBaseBody(productId, paymentId, versionCode, productTitle);
     args.put("paykey", metadata);
     args.put("repo", store);
     return new CreateTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
-  private static BaseBody getBaseBody(int productId, int paymentId, int versionCode) {
+  private static BaseBody getBaseBody(int productId, int paymentId, int versionCode,
+      String productTitle) {
     final BaseBody body = new BaseBody();
     body.put("productid", String.valueOf(productId));
     body.put("payType", String.valueOf(paymentId));
     body.put("reqType", "rest");
+    body.put("product_name", productTitle);
     body.put("app_vercode", versionCode);
     return body;
   }
