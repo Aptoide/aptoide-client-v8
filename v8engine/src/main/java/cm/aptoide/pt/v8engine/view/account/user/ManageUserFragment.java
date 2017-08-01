@@ -286,7 +286,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   @Parcel protected static class ViewModel {
     String name;
     String pictureUri;
-    private boolean hasNewPicture;
+    boolean hasNewPicture;
 
     public ViewModel() {
       name = "";

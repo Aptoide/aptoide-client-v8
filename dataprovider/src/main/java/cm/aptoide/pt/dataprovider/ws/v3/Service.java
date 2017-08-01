@@ -8,8 +8,9 @@ import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationResponse;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import okhttp3.MultipartBody;
@@ -43,20 +44,22 @@ public interface Service {
   @POST("processInAppBilling") @FormUrlEncoded
   Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
 
-  @POST("checkProductPayment") @FormUrlEncoded
-  Observable<PaymentConfirmationResponse> getPaymentConfirmation(@FieldMap BaseBody args);
+  @POST("checkProductPayment") @FormUrlEncoded Observable<TransactionResponse> getTransaction(
+      @FieldMap BaseBody args);
 
   @POST("productPurchaseAuthorization") @FormUrlEncoded
   Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
 
   @POST("productPurchaseAuthorization") @FormUrlEncoded
-  Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args);
+  Observable<PaymentAuthorizationResponse> createPaymentAuthorizationWithCode(
+      @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-  @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createPaymentConfirmation(
-      @FieldMap BaseBody args);
+  @POST("payProduct") @FormUrlEncoded Observable<TransactionResponse> createTransaction(
+      @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("createPurchaseAuthorization") @FormUrlEncoded
-  Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args);
+  Observable<PaymentAuthorizationResponse> createPaymentAuthorization(@FieldMap BaseBody args,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

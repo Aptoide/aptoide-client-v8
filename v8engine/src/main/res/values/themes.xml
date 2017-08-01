@@ -133,8 +133,7 @@
     <item name="android:backgroundDimEnabled">false</item>
   </style>
 
-  <style name="AppBaseTheme.NoTitle.Transparent.WhiteGreen">
-    <item name="colorButtonNormal">@color/white</item>
+  <style name="AppBaseTheme.NoTitle.Transparent.Green">
     <item name="colorAccent">@color/activity_payment_green</item>
   </style>
 

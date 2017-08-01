@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -21,6 +20,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -53,7 +53,9 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -107,8 +109,11 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
           storesDisplayables.add(
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
                   new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-                      AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class),
-                      httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+                      AccessorFactory.getAccessorFor(
+                          ((V8Engine) getContext().getApplicationContext()
+                              .getApplicationContext()).getDatabase(),
+                          cm.aptoide.pt.database.realm.Store.class), httpClient,
+                      WebService.getDefaultConverter(), tokenInvalidator,
                       ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
                   storeCredentialsProvider));
         } else {

@@ -28,7 +28,9 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -110,7 +112,10 @@ public class DisplayablesFactory {
 
         case HOME_META:
           return Observable.just(new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject(),
-              new StoreCredentialsProviderImpl()));
+              new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+                  ((V8Engine) context.getApplicationContext()
+                      .getApplicationContext()).getDatabase(),
+                  cm.aptoide.pt.database.realm.Store.class))));
 
         case REVIEWS_GROUP:
           return Observable.from(createReviewsGroupDisplayables(widget, windowManager, resources));
@@ -356,7 +361,10 @@ public class DisplayablesFactory {
           .getLayout() == Layout.LIST) {
         displayables.add(
             new RecommendedStoreDisplayable(store, storeRepository, accountManager, storeUtilsProxy,
-                new StoreCredentialsProviderImpl()));
+                new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+                    ((V8Engine) context.getApplicationContext()
+                        .getApplicationContext()).getDatabase(),
+                    cm.aptoide.pt.database.realm.Store.class))));
       } else {
         displayables.add(new GridStoreDisplayable(store));
       }
@@ -399,7 +407,9 @@ public class DisplayablesFactory {
               nwStore.setName(store.getStoreName());
               nwStore.setId(store.getStoreId());
               nwStore.setAvatar(store.getIconPath());
-              nwStore.setAppearance(new Store.Appearance().setTheme(store.getTheme()));
+              Store.Appearance appearance = new Store.Appearance();
+              appearance.setTheme(store.getTheme());
+              nwStore.setAppearance(appearance);
               return nwStore;
             })
             .toList());

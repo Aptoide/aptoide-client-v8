@@ -5,14 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.exception;
 
-/**
- * Created by marcelobenites on 8/10/16.
- */
-public class PaymentFailureException extends PaymentException {
-
-  public PaymentFailureException(Throwable throwable) {
-    super(throwable);
-  }
+public class PaymentFailureException extends BillingException {
 
   public PaymentFailureException(String message) {
     super(message);

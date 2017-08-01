@@ -33,7 +33,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.AppAction;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -69,12 +68,13 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
-import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.exception.BillingException;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
-import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
+import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -179,9 +179,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
-  private PaymentAnalytics paymentAnalytics;
+  private BillingAnalytics billingAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-  private PurchaseIntentMapper purchaseIntentMapper;
+  private PurchaseBundleMapper purchaseBundleMapper;
   private ShareAppHelper shareAppHelper;
   private QManager qManager;
   private DownloadFactory downloadFactory;
@@ -264,8 +264,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreate(savedInstanceState);
     adMapper = new MinimalAdMapper();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
-    purchaseIntentMapper =
-        ((V8Engine) getContext().getApplicationContext()).getPurchaseIntentMapper();
+    purchaseBundleMapper =
+        ((V8Engine) getContext().getApplicationContext()).getPurchaseBundleMapper();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
@@ -273,7 +273,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     final TokenInvalidator tokenInvalidator =
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
@@ -290,11 +290,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
-    installedRepository = RepositoryFactory.getInstalledRepository();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
+    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
@@ -432,7 +436,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
+    billingAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
         .getPrice(), app.getPay()
         .getCurrency());
     startActivityForResult(PaymentActivity.getIntent(getActivity(), app.getId(), app.getStore()
@@ -443,7 +447,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (requestCode == PAY_APP_REQUEST_CODE) {
       try {
         final PaidAppPurchase purchase =
-            (PaidAppPurchase) purchaseIntentMapper.map(data, resultCode);
+            (PaidAppPurchase) purchaseBundleMapper.map(data.getExtras(), resultCode);
 
         FragmentActivity fragmentActivity = getActivity();
         Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
@@ -451,12 +455,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
         fragmentActivity.sendBroadcast(installApp);
       } catch (Throwable throwable) {
-        if (throwable instanceof PaymentCancellationException) {
-          Logger.i(TAG, "The user canceled.");
+        if (throwable instanceof BillingException) {
           ShowMessage.asSnack(header.badge, R.string.user_cancelled);
         } else {
-          Logger.i(TAG,
-              "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
           ShowMessage.asSnack(header.badge, R.string.unknown_error);
         }
       }
@@ -469,7 +470,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, this);
+    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
@@ -500,7 +501,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       appViewAnalytics.sendScheduleDownloadEvent();
       scheduled = createScheduled(app, appAction);
 
-      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
+          ((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Scheduled.class);
       scheduledAccessor.insert(scheduled);
 
       String str = this.getString(R.string.added_to_scheduled);
@@ -797,7 +800,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     //      }
     //    });
 
-    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class);
     storeAccessor.getAll()
         .flatMapIterable(list -> list)
         .filter(store -> store != null && store.getStoreId() == storeId)
@@ -817,7 +822,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     //      adapter.notifyDataSetChanged();
     //    });
 
-    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Rollback.class);
     rollbackAccessor.getAll()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

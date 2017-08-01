@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -20,6 +19,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
@@ -48,7 +48,7 @@ import rx.functions.Action1;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
-    storeRepository = RepositoryFactory.getStoreRepository();
+    storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -104,12 +104,15 @@ import rx.functions.Action1;
     final String storeTheme = store.getAppearance()
         .getTheme();
 
-    final StoreUtilsProxy storeUtilsProxy =
-        new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
-            AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class), httpClient,
-            WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, baseBodyInterceptor,
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((V8Engine) getContext().getApplicationContext()
+                .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class)),
+        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class),
+        httpClient, WebService.getDefaultConverter(),
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<Void> openStore = __ -> {
       displayable.getAppViewAnalytics()

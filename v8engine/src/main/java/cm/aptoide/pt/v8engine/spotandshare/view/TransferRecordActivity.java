@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransferRecordActivity extends ActivityView implements TransferRecordView {
+public class TransferRecordActivity extends SpotAndShareActivityView implements TransferRecordView {
 
   public static final String TAG = TransferRecordActivity.class.getSimpleName();
   private static final int SELECT_APPS_REQUEST_CODE = 53110;

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,7 +20,7 @@ import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -34,6 +35,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
@@ -44,6 +46,7 @@ import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
+import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
@@ -64,6 +67,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
 import java.util.List;
@@ -116,6 +120,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TabNavigator tabNavigator;
   private String postIdForTimelineRequest;
   private TimelineAnalytics timelineAnalytics;
+  private PublishRelay<View> loginPrompt;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -191,6 +196,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
+    loginPrompt = PublishRelay.create();
     helper = RecyclerViewPositionHelper.createHelper(list);
     // Pull-to-refresh
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
@@ -205,6 +211,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
         .getAppId(), sharedPreferences);
+
+    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class);
+    StoreCredentialsProviderImpl storeCredentialsProvider =
+        new StoreCredentialsProviderImpl(storeAccessor);
 
     int limit = 20;
     int initialOffset = 0;
@@ -227,7 +239,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class),
+            storeCredentialsProvider, storeAccessor,
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
@@ -236,8 +248,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
             new PermissionManager(), (PermissionService) getContext(), installManager,
-            RepositoryFactory.getStoreRepository(), storeUtilsProxy,
-            new StoreCredentialsProviderImpl(), accountManager, timelineAnalytics, userId, storeId,
+            RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
+            storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
             storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
   }
 
@@ -379,19 +391,26 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         });
   }
 
-  @Override public void updateInstallProgress(Post card, int cardPosition) {
-    adapter.updatePost(card, cardPosition);
+  @Override public void updatePost(int cardPosition) {
+    adapter.updatePost(cardPosition);
+  }
+
+  @Override public void swapPost(Post post, int postPosition) {
+    adapter.swapPost(post, postPosition);
   }
 
   @Override public void showStoreSubscribedMessage(String storeName) {
-    ShowMessage.asSnack(getView(), AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-        getContext().getResources(), storeName));
+    final String msg = AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+        getContext().getResources(), storeName);
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void showStoreUnsubscribedMessage(String storeName) {
-    ShowMessage.asSnack(getView(),
-        AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-            getContext().getResources(), storeName));
+    final String msg = AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+        getContext().getResources(), storeName);
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void showSharePreview(Post post) {
@@ -424,11 +443,37 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showCommentSuccess() {
-    ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
+    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showGenericError() {
-    ShowMessage.asSnack(getView(), getContext().getString(R.string.all_message_general_error));
+    Snackbar.make(getView(), R.string.all_message_general_error, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showLoginPromptWithAction() {
+    Snackbar.make(getView(), R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
+        .setAction(R.string.login, view -> loginPrompt.call(view))
+        .show();
+  }
+
+  @Override public Observable<Void> loginActionClick() {
+    return loginPrompt.map(__ -> null);
+  }
+
+  @Override public void showSetUserOrStorePublicMessage() {
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
+        Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showCreateStoreMessage(SocialAction socialAction) {
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_create_store_with_social_action,
+        Snackbar.LENGTH_LONG)
+        .show();
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp

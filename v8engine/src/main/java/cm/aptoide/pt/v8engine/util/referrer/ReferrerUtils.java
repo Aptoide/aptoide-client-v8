@@ -19,7 +19,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
@@ -34,6 +33,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -130,8 +130,9 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                 //    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
                 //        minimalAd.getAdId()), realm);
 
-                StoredMinimalAdAccessor storedMinimalAdAccessor =
-                    AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+                StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
+                    ((V8Engine) context.getApplicationContext()
+                        .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
                 storedMinimalAdAccessor.insert(adMapper.map(minimalAd, referrer));
               }
 

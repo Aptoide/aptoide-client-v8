@@ -26,17 +26,14 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
+import cm.aptoide.pt.v8engine.view.navigator.ActivityResultNavigator;
 import com.facebook.FacebookSdk;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import rx.functions.Action0;
 
-/**
- * Created by marcelobenites on 18/01/17.
- */
-@Deprecated public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
+@Deprecated public abstract class PermissionServiceActivity extends ActivityResultNavigator
     implements PermissionService {
 
   private static final String TAG = PermissionServiceActivity.class.getName();

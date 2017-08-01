@@ -20,4 +20,16 @@ public class ProgressCard implements Post {
     //supposed to be null
     return null;
   }
+
+  @Override public boolean isLiked() {
+    return false;
+  }
+
+  @Override public void setLiked(boolean liked) {
+    //do nothing
+  }
+
+  @Override public boolean isLikeFromClick() {
+    return false;
+  }
 }

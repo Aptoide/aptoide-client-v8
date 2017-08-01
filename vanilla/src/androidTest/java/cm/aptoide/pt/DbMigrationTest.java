@@ -14,7 +14,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Pair;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
@@ -26,6 +25,7 @@ import cm.aptoide.pt.table.ScheduledTable;
 import cm.aptoide.pt.table.Table;
 import cm.aptoide.pt.table.TableBag;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import java.util.List;
 import java.util.Set;
@@ -112,7 +112,9 @@ import static org.junit.Assert.fail;
     final int nr_values = 5;
     final ContentValues[] insertedValues = new ContentValues[nr_values];
     final String[] md5s = new String[nr_values];
-    final ScheduledAccessor accessor = AccessorFactory.getAccessorFor(Scheduled.class);
+    final ScheduledAccessor accessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) InstrumentationRegistry.getTargetContext()
+            .getApplicationContext()).getDatabase(), Scheduled.class);
 
     db.beginTransaction();
     try {
@@ -204,7 +206,9 @@ import static org.junit.Assert.fail;
     final int nr_values = 2;
     final ContentValues[] insertedValues = new ContentValues[nr_values];
     final String[] packageNames = new String[nr_values];
-    final UpdateAccessor accessor = AccessorFactory.getAccessorFor(Update.class);
+    final UpdateAccessor accessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) InstrumentationRegistry.getTargetContext()
+            .getApplicationContext()).getDatabase(), Update.class);
 
     PackageManager pm = InstrumentationRegistry.getTargetContext()
         .getPackageManager();
