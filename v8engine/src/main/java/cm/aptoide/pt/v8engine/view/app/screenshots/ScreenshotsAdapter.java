@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.app.screenshots;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,10 +48,9 @@ public class ScreenshotsAdapter
   }
 
   @Override public ScreenshotsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View inflate = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.row_item_screenshots_gallery, parent, false);
-
-    return new ScreenshotsViewHolder(inflate, screenShotClick);
+    View view = LayoutInflater.from(parent.getContext())
+        .inflate(ScreenshotsViewHolder.LAYOUT_ID, parent, false);
+    return new ScreenshotsViewHolder(view, screenShotClick);
   }
 
   @Override public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
@@ -59,9 +59,9 @@ public class ScreenshotsAdapter
       return;
     }
 
+    position -= (videos != null) ? videos.size() : 0;
     if (isScreenShot(position)) {
-      int videoListOffset = videos != null ? videos.size() : 0;
-      holder.bindView(screenshots.get(position), position - videoListOffset, imageUris);
+      holder.bindView(screenshots.get(position), position, imageUris);
     }
   }
 
@@ -83,8 +83,8 @@ public class ScreenshotsAdapter
 
   static class ScreenshotsViewHolder extends RecyclerView.ViewHolder {
 
+    @LayoutRes static final int LAYOUT_ID = R.layout.row_item_screenshots_gallery;
     private static final String PORTRAIT = "PORTRAIT";
-
     private final PublishSubject<ScreenShotClickEvent> screenShotClick;
     private ImageView screenshot;
     private ImageView play_button;
@@ -112,7 +112,7 @@ public class ScreenshotsAdapter
       ImageLoader.with(context)
           .load(item.getThumbnail(), R.drawable.placeholder_square, screenshot);
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      if (isLollipopOrHigher()) {
         media_layout.setForeground(context.getResources()
             .getDrawable(R.color.overlay_black, context.getTheme()));
       } else {
@@ -122,9 +122,12 @@ public class ScreenshotsAdapter
 
       play_button.setVisibility(View.VISIBLE);
 
-      itemView.setOnClickListener(v -> {
-        screenShotClick.onNext(new ScreenShotClickEvent(Uri.parse(item.getUrl())));
-      });
+      itemView.setOnClickListener(
+          __ -> screenShotClick.onNext(new ScreenShotClickEvent(Uri.parse(item.getUrl()))));
+    }
+
+    private boolean isLollipopOrHigher() {
+      return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     public void bindView(GetAppMeta.Media.Screenshot item, final int position,
@@ -142,16 +145,19 @@ public class ScreenshotsAdapter
           .loadScreenshotToThumb(item.getUrl(), item.getOrientation(),
               getPlaceholder(item.getOrientation()), screenshot);
 
-      itemView.setOnClickListener(v -> {
-        screenShotClick.onNext(new ScreenShotClickEvent(imagesUris, position));
-      });
+      itemView.setOnClickListener(
+          __ -> screenShotClick.onNext(new ScreenShotClickEvent(imagesUris, position)));
     }
 
     private int getPlaceholder(String orient) {
-      if (orient != null && orient.equals(PORTRAIT)) {
+      if (viewIsInPortrait(orient)) {
         return R.drawable.placeholder_9_16;
       }
       return R.drawable.placeholder_16_9;
+    }
+
+    private boolean viewIsInPortrait(String orient) {
+      return orient != null && orient.equals(PORTRAIT);
     }
   }
 }
