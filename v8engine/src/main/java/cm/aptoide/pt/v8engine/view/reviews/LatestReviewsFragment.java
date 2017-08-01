@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.FullReview;
 import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
@@ -49,7 +51,9 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -94,7 +98,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
               ((cm.aptoide.pt.v8engine.V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
               ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
-        List<FullReview> reviews = listTopFullReviews.getDatalist()
+        List<FullReview> reviews = listTopFullReviews.getDataList()
             .getList();
         displayables = new LinkedList<>();
         for (final FullReview review : reviews) {

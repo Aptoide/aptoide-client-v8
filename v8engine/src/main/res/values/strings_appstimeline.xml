@@ -33,6 +33,7 @@
   <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
   <string name="social_timeline_following_fragment_title">Following %d person(s)</string>
   <string name="social_timeline_share_soon">The share will be published soon</string>
+
   <string name="social_timeline_recommends">Recommends</string>
   <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
   <string name="social_timeline_shared_by">shared by %1$s</string>
@@ -128,6 +129,8 @@
   <string name="timeline_title_related_app">Related app</string>
   <string name="timeline_message_write_something">Write something</string>
   <string name="timeline_message_pick_an_app">Pick an app related to your post</string>
+  <string name="timeline_button_open_uploader">Open</string>
+  <string name="timeline_message_upload_app">Upload this app to Aptoide</string>
 
 
 </resources>

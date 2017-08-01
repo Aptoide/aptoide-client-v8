@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
@@ -16,6 +15,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.deprecated.tables.Downloads;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
@@ -92,13 +92,19 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     Logger.w(TAG, "Migrating database started....");
 
     try {
-      new Repo().migrate(db, AccessorFactory.getAccessorFor(Store.class), packageManager);
+      new Repo().migrate(db, AccessorFactory.getAccessorFor(
+          ((V8Engine) context.getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class), packageManager,
+          context.getApplicationContext());
     } catch (Exception ex) {
       logException(ex);
     }
 
     try {
-      new Excluded().migrate(db, AccessorFactory.getAccessorFor(Update.class), packageManager);
+      new Excluded().migrate(db, AccessorFactory.getAccessorFor(
+          ((V8Engine) context.getApplicationContext()
+              .getApplicationContext()).getDatabase(), Update.class), packageManager,
+          context.getApplicationContext());
     } catch (Exception ex) {
       logException(ex);
     }
@@ -112,17 +118,20 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     //}
 
     try {
-      new Rollback().migrate(db,
-          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Rollback.class),
-          packageManager);
+      new Rollback().migrate(db, AccessorFactory.getAccessorFor(
+          ((V8Engine) context.getApplicationContext()
+              .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Rollback.class),
+          packageManager, context.getApplicationContext());
     } catch (Exception ex) {
       logException(ex);
     }
 
     try {
-      new Scheduled().migrate(db,
-          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Scheduled.class),
-          packageManager); // X
+      new Scheduled().migrate(db, AccessorFactory.getAccessorFor(
+          ((V8Engine) context.getApplicationContext()
+              .getApplicationContext()).getDatabase(),
+          cm.aptoide.pt.database.realm.Scheduled.class), packageManager,
+          context.getApplicationContext()); // X
     } catch (Exception ex) {
       logException(ex);
     }
@@ -137,7 +146,9 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     //}
 
     try {
-      new Downloads().migrate(AccessorFactory.getAccessorFor(Download.class));
+      new Downloads().migrate(AccessorFactory.getAccessorFor(
+          ((V8Engine) context.getApplicationContext()
+              .getApplicationContext()).getDatabase(), Download.class));
     } catch (Exception ex) {
       logException(ex);
     }

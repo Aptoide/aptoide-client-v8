@@ -212,7 +212,7 @@ import rx.functions.Action1;
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {
-              List<Review> reviews = listReviews.getDatalist()
+              List<Review> reviews = listReviews.getDataList()
                   .getList();
               if (reviews == null || reviews.isEmpty()) {
                 loadedData(false);
@@ -220,7 +220,7 @@ import rx.functions.Action1;
               }
 
               loadedData(true);
-              final List<Review> list = listReviews.getDatalist()
+              final List<Review> list = listReviews.getDataList()
                   .getList();
               return new TopReviewsAdapter(list.toArray(new Review[list.size()]));
             })

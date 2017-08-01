@@ -58,6 +58,11 @@
     <item name="android:lineSpacingExtra">4dp</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.M">
+    <item name="android:textSize">16sp</item>
+    <item name="android:lineSpacingExtra">4dp</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.S">
     <item name="android:textSize">14sp</item>
     <item name="android:lineSpacingExtra">5dp</item>

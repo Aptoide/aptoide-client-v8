@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="0.5dp"
+      android:background="@color/fragment_payment_dark_gray"
+      />
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:padding="8dp"
+      >
+
+    <Button
+        android:id="@+id/include_payment_buttons_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/cancel"
+        style="@style/Widget.Aptoide.Button.Borderless"
+        />
+
+    <Button
+        android:id="@+id/include_payment_buttons_buy_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/buy"
+        style="@style/Widget.Aptoide.Button.Borderless.Colored"
+        />
+  </RelativeLayout>
+
+</LinearLayout>

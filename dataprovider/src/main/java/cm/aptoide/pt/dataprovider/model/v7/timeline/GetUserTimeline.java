@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDatalistResponse;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true) public class GetUserTimeline
-    extends BaseV7EndlessDatalistResponse<TimelineItem<TimelineCard>> {
+    extends BaseV7EndlessDataListResponse<TimelineItem<TimelineCard>> {
 
 }

@@ -155,7 +155,8 @@ public class HomeFragment extends StoreFragment {
     super.onCreate(savedInstanceState);
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
   }
 
   @Nullable @Override
@@ -217,7 +218,7 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, this);
+    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
   }
 
   @Override public void setupViews() {

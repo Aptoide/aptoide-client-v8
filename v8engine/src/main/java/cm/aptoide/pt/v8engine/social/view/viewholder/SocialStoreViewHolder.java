@@ -18,7 +18,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialStore;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
@@ -146,24 +147,34 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
         new StoreCardTouchEvent(card, card.getStoreName(), card.getStoreTheme(),
             CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {
-      likeButton.setHeartState(true);
+      if (card.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        card.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
-      likeButton.setHeartState(false);
+      if (card.isLikeFromClick()) {
+        likeButton.setHeartState(false);
+        card.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     }
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     showSocialInformationBar(card);
     showLikesPreview(card);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
+    this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
 
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
   }

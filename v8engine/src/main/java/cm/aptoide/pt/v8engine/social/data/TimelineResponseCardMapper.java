@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
@@ -56,7 +57,7 @@ public class TimelineResponseCardMapper {
   public List<Post> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
     final List<Post> cards = new ArrayList();
 
-    for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist()
+    for (TimelineItem<TimelineCard> item : timelineResponse.getDataList()
         .getList()) {
       try {
         addMappedCardFromItem(linksFactory, cards, item);
@@ -193,22 +194,39 @@ public class TimelineResponseCardMapper {
           ((SocialRecommendationTimelineItem) item).getData();
       UserSharerTimeline user =
           new UserSharerTimeline(socialRecommendation.getUser(), socialRecommendation.getStore());
-
-      cards.add(new RatedRecommendation(socialRecommendation.getCardId(),
-          new Poster(user.getUser(), user.getStore()), socialRecommendation.getApp()
-          .getId(), socialRecommendation.getApp()
-          .getPackageName(), socialRecommendation.getApp()
-          .getName(), socialRecommendation.getApp()
-          .getIcon(), socialRecommendation.getApp()
-          .getStore()
-          .getId(), socialRecommendation.getApp()
-          .getStats()
-          .getRating()
-          .getAvg(), socialRecommendation.getDate(), abUrl, socialRecommendation.getMy()
-          .isLiked(), socialRecommendation.getStats()
-          .getComments(), socialRecommendation.getStats()
-          .getLikes(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
-          CardType.SOCIAL_RECOMMENDATION));
+      if (!TextUtils.isEmpty(socialRecommendation.getContent())) {
+        cards.add(new RatedRecommendation(socialRecommendation.getCardId(),
+            new Poster(user.getUser(), user.getStore()), socialRecommendation.getApp()
+            .getId(), socialRecommendation.getApp()
+            .getPackageName(), socialRecommendation.getApp()
+            .getName(), socialRecommendation.getApp()
+            .getIcon(), socialRecommendation.getApp()
+            .getStore()
+            .getId(), socialRecommendation.getApp()
+            .getStats()
+            .getRating()
+            .getAvg(), socialRecommendation.getDate(), abUrl, socialRecommendation.getMy()
+            .isLiked(), socialRecommendation.getStats()
+            .getComments(), socialRecommendation.getStats()
+            .getLikes(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
+            socialRecommendation.getContent(), CardType.SOCIAL_POST_RECOMMENDATION));
+      } else {
+        cards.add(new RatedRecommendation(socialRecommendation.getCardId(),
+            new Poster(user.getUser(), user.getStore()), socialRecommendation.getApp()
+            .getId(), socialRecommendation.getApp()
+            .getPackageName(), socialRecommendation.getApp()
+            .getName(), socialRecommendation.getApp()
+            .getIcon(), socialRecommendation.getApp()
+            .getStore()
+            .getId(), socialRecommendation.getApp()
+            .getStats()
+            .getRating()
+            .getAvg(), socialRecommendation.getDate(), abUrl, socialRecommendation.getMy()
+            .isLiked(), socialRecommendation.getStats()
+            .getComments(), socialRecommendation.getStats()
+            .getLikes(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
+            socialRecommendation.getContent(), CardType.SOCIAL_RECOMMENDATION));
+      }
     } else if (item instanceof SocialInstallTimelineItem) {
       final SocialInstall socialInstall = ((SocialInstallTimelineItem) item).getData();
       UserSharerTimeline user =
@@ -226,46 +244,83 @@ public class TimelineResponseCardMapper {
           .getAvg(), socialInstall.getDate(), abUrl, socialInstall.getMy()
           .isLiked(), socialInstall.getStats()
           .getComments(), socialInstall.getStats()
-          .getLikes(), socialInstall.getLikes(), socialInstall.getComments(),
+          .getLikes(), socialInstall.getLikes(), socialInstall.getComments(), "",
           CardType.SOCIAL_INSTALL));
     } else if (item instanceof SocialArticleTimelineItem) {
       final SocialArticle socialArticle = ((SocialArticleTimelineItem) item).getData();
       UserSharerTimeline user =
           new UserSharerTimeline(socialArticle.getUser(), socialArticle.getStore());
-      cards.add(
-          new SocialMedia(socialArticle.getCardId(), new Poster(user.getUser(), user.getStore()),
-              socialArticle.getTitle(), socialArticle.getThumbnailUrl(), socialArticle.getDate(),
-              socialArticle.getApps()
-                  .get(0), abUrl, new MediaPublisher(socialArticle.getPublisher()
-              .getName(), new PublisherAvatar(socialArticle.getPublisher()
-              .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-              socialArticle.getPublisher()
-                  .getBaseUrl()),
-              linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
-              socialArticle.getMy()
-                  .isLiked(), socialArticle.getStats()
-              .getComments(), socialArticle.getStats()
-              .getLikes(), socialArticle.getLikes(), socialArticle.getComments(),
-              CardType.SOCIAL_ARTICLE));
+      if (!TextUtils.isEmpty(socialArticle.getContent())) {
+        cards.add(
+            new SocialMedia(socialArticle.getCardId(), new Poster(user.getUser(), user.getStore()),
+                socialArticle.getTitle(), socialArticle.getThumbnailUrl(), socialArticle.getDate(),
+                socialArticle.getApps()
+                    .get(0), abUrl, new MediaPublisher(socialArticle.getPublisher()
+                .getName(), new PublisherAvatar(socialArticle.getPublisher()
+                .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                socialArticle.getPublisher()
+                    .getBaseUrl()),
+                linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
+                socialArticle.getMy()
+                    .isLiked(), socialArticle.getStats()
+                .getComments(), socialArticle.getStats()
+                .getLikes(), socialArticle.getLikes(), socialArticle.getComments(),
+                socialArticle.getContent(), CardType.SOCIAL_POST_ARTICLE));
+      } else {
+        cards.add(
+            new SocialMedia(socialArticle.getCardId(), new Poster(user.getUser(), user.getStore()),
+                socialArticle.getTitle(), socialArticle.getThumbnailUrl(), socialArticle.getDate(),
+                socialArticle.getApps()
+                    .get(0), abUrl, new MediaPublisher(socialArticle.getPublisher()
+                .getName(), new PublisherAvatar(socialArticle.getPublisher()
+                .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                socialArticle.getPublisher()
+                    .getBaseUrl()),
+                linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
+                socialArticle.getMy()
+                    .isLiked(), socialArticle.getStats()
+                .getComments(), socialArticle.getStats()
+                .getLikes(), socialArticle.getLikes(), socialArticle.getComments(),
+                socialArticle.getContent(), CardType.SOCIAL_ARTICLE));
+      }
     } else if (item instanceof SocialVideoTimelineItem) {
       final SocialVideo socialVideo = ((SocialVideoTimelineItem) item).getData();
       UserSharerTimeline user =
           new UserSharerTimeline(socialVideo.getUser(), socialVideo.getStore());
-      cards.add(
-          new SocialMedia(socialVideo.getCardId(), new Poster(user.getUser(), user.getStore()),
-              socialVideo.getTitle(), socialVideo.getThumbnailUrl(), socialVideo.getDate(),
-              socialVideo.getApps()
-                  .get(0), abUrl, new MediaPublisher(socialVideo.getPublisher()
-              .getName(), new PublisherAvatar(socialVideo.getPublisher()
-              .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-              socialVideo.getPublisher()
-                  .getBaseUrl()),
-              linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialVideo.getUrl()),
-              socialVideo.getMy()
-                  .isLiked(), socialVideo.getStats()
-              .getComments(), socialVideo.getStats()
-              .getLikes(), socialVideo.getLikes(), socialVideo.getComments(),
-              CardType.SOCIAL_VIDEO));
+
+      if (!TextUtils.isEmpty(socialVideo.getContent())) {
+        cards.add(
+            new SocialMedia(socialVideo.getCardId(), new Poster(user.getUser(), user.getStore()),
+                socialVideo.getTitle(), socialVideo.getThumbnailUrl(), socialVideo.getDate(),
+                socialVideo.getApps()
+                    .get(0), abUrl, new MediaPublisher(socialVideo.getPublisher()
+                .getName(), new PublisherAvatar(socialVideo.getPublisher()
+                .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                socialVideo.getPublisher()
+                    .getBaseUrl()),
+                linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialVideo.getUrl()),
+                socialVideo.getMy()
+                    .isLiked(), socialVideo.getStats()
+                .getComments(), socialVideo.getStats()
+                .getLikes(), socialVideo.getLikes(), socialVideo.getComments(),
+                socialVideo.getContent(), CardType.SOCIAL_POST_VIDEO));
+      } else {
+        cards.add(
+            new SocialMedia(socialVideo.getCardId(), new Poster(user.getUser(), user.getStore()),
+                socialVideo.getTitle(), socialVideo.getThumbnailUrl(), socialVideo.getDate(),
+                socialVideo.getApps()
+                    .get(0), abUrl, new MediaPublisher(socialVideo.getPublisher()
+                .getName(), new PublisherAvatar(socialVideo.getPublisher()
+                .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                socialVideo.getPublisher()
+                    .getBaseUrl()),
+                linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialVideo.getUrl()),
+                socialVideo.getMy()
+                    .isLiked(), socialVideo.getStats()
+                .getComments(), socialVideo.getStats()
+                .getLikes(), socialVideo.getLikes(), socialVideo.getComments(),
+                socialVideo.getContent(), CardType.SOCIAL_VIDEO));
+      }
     } else if (item instanceof SocialStoreLatestAppsTimelineItem) {
       final SocialStoreLatestApps socialStoreLatestApps =
           ((SocialStoreLatestAppsTimelineItem) item).getData();

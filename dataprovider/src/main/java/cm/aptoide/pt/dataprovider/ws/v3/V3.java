@@ -7,9 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -72,20 +70,6 @@ public abstract class V3<U> extends WebService<Service, U> {
       builder.append("Server returned null response.");
     }
     return builder.toString();
-  }
-
-  protected static void addNetworkInformation(NetworkOperatorManager operatorManager, BaseBody args,
-      SharedPreferences sharedPreferences) {
-    String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
-    if (!TextUtils.isEmpty(forceCountry)) {
-      args.put("simcc", forceCountry);
-    } else {
-      if (operatorManager.isSimStateReady()) {
-        args.put("mcc", operatorManager.getMobileCountryCode());
-        args.put("mnc", operatorManager.getMobileNetworkCode());
-        args.put("simcc", operatorManager.getSimCountryISO());
-      }
-    }
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {

@@ -11,9 +11,6 @@ import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 09/02/17.
- */
 public class AccountNavigator {
 
   private final FragmentNavigator fragmentNavigator;
