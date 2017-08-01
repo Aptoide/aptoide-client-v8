@@ -122,6 +122,10 @@
 
   <string name="timeline_title_card_title_has_new_apps_present_singular">%s store has new apps</string>
 
+  <!--Error Messages regarding access level of the users/stores-->
+  <string name="timeline_message_error_you_need_to_create_store_with_social_action">You need to create a store to like, comment or share</string>
+  <string name="timeline_message_error_you_need_to_set_store_or_user_to_public">You need to set your store or user to public. Go to https://www.aptoide.com</string>
+
   <!--post-->
   <string name="timeline_title_new_post">New Post</string>
   <string name="timeline_button_post">Post</string>
@@ -132,8 +136,6 @@
   <string name="timeline_button_open_uploader">Open</string>
   <string name="timeline_message_upload_app">Upload this app to Aptoide</string>
   <string name="timeline_message_share_on_timeline_external">Write something (optional)</string>
-  <string name="timeline_message_error_you_need_to_create_store_with_social_action">You need to create a store to like, comment or share</string>
-  <string name="timeline_message_error_you_need_to_set_store_or_user_to_public">You need to set your store or user to public. To change these settings, go to https://www.aptoide.com</string>
 
 
 </resources>
