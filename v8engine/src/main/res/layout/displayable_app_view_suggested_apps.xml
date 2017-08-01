@@ -9,6 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="6dp"
+    android:clipToPadding="false"
     android:background="@color/grey_fog_light"
     >
   <LinearLayout
@@ -16,7 +17,8 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
-      android:background="@color/white"
+      android:elevation="2dp"
+      android:background="@drawable/rounded_corners_white"
       >
 
     <TextView
