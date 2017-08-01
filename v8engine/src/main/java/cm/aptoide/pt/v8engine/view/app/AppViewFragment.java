@@ -158,7 +158,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private Subscription subscription;
   private AdsRepository adsRepository;
   private boolean sponsored;
-  private List<MinimalAd> suggestedAds;
   // buy app vars
   private String storeName;
   private AppViewInstallDisplayable installDisplayable;
@@ -189,6 +188,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AppViewAnalytics appViewAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
+  @Getter private boolean suggestedShowing;
+  private List<String> keywords;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -362,7 +363,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -372,7 +373,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -384,7 +385,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -597,22 +598,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
   }
 
-  @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
-    List<String> keywords = getApp1.getNodes()
+  @NonNull private Observable<GetApp> setKeywords(GetApp getApp) {
+    keywords = getApp.getNodes()
         .getMeta()
         .getData()
         .getMedia()
         .getKeywords();
-    String packageName = getApp1.getNodes()
-        .getMeta()
-        .getData()
-        .getPackageName();
 
-    return adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
-        .map(minimalAds -> {
-          suggestedAds = minimalAds;
-          return getApp1;
-        });
+    return Observable.just(getApp);
   }
 
   private void setupAppView(GetApp getApp) {
@@ -755,7 +748,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
-            installAppRelay);
+            installAppRelay, this);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
@@ -769,9 +762,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     displayables.add(new AppViewDescriptionDisplayable(getApp, appViewAnalytics));
 
     displayables.add(new AppViewFlagThisDisplayable(getApp, appViewAnalytics));
-    if (suggestedAds != null) {
-      displayables.add(new AppViewSuggestedAppsDisplayable(suggestedAds, appViewAnalytics));
-    }
     displayables.add(new AppViewDeveloperDisplayable(getApp));
 
     return displayables;
@@ -894,6 +884,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void itemChanged(int pos) {
     getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
+  }
+
+  public void showSuggestedApps() {
+    adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(minimalAds -> {
+          addDisplayableWithAnimation(1,
+              new AppViewSuggestedAppsDisplayable(minimalAds, appViewAnalytics));
+          suggestedShowing = true;
+        }, Throwable::printStackTrace);
   }
 
   @Partners protected enum BundleKeys {
