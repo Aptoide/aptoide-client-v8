@@ -220,9 +220,11 @@ public class SearchFragment extends BasePagerToolbarFragment {
       setupButtonVisibility();
       setupButtonsListeners();
       setupViewPager();
-      // AB testing was removed from here: AN-1836: Search: remove ab testing
-      // This sets the All stores tab as the selected tab of the search
-      everywhereButtonListener(false);
+      if (create) {
+        // AB testing was removed from here: AN-1836: Search: remove ab testing
+        // This sets the All stores tab as the selected tab of the search
+        everywhereButtonListener(false);
+      }
       finishLoading();
     }
   }
