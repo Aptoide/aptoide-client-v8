@@ -108,6 +108,7 @@ import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
@@ -888,11 +889,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   public void showSuggestedApps() {
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
+        .onErrorReturn(throwable -> Collections.emptyList())
+        .zipWith(requestFactory.newListAppsRequest("")
+            .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
+            listApps.getDataList()
+                .getList(), appName))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(minimalAds -> {
-          addDisplayableWithAnimation(1,
-              new AppViewSuggestedAppsDisplayable(minimalAds, appViewAnalytics));
+        .subscribe(appViewSuggestedAppsDisplayable -> {
+          addDisplayableWithAnimation(1, appViewSuggestedAppsDisplayable);
           suggestedShowing = true;
         }, Throwable::printStackTrace);
   }
