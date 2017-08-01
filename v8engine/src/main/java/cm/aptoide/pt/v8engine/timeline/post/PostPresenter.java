@@ -263,8 +263,11 @@ class PostPresenter implements Presenter {
                   : view.getCurrentSelected()
                       .getPackageName())
                   .observeOn(AndroidSchedulers.mainThread())
-                  .doOnCompleted(() -> view.showSuccessMessage())
-                  .doOnCompleted(() -> goBack());
+                  .doOnSuccess(postId -> view.showSuccessMessage())
+                  .doOnSuccess(
+                      postId -> tabNavigator.navigate(new AppsTimelineTabNavigation(postId)))
+                  .doOnSuccess(postId -> goBack())
+                  .toCompletable();
             })
             .doOnError(throwable -> handleError(throwable))
             .retry())

@@ -39,6 +39,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
@@ -407,7 +408,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
         @Body SetUserSettings.Body body);
 
-    @POST("user/timeline/card/set") Observable<BaseV7Response> postInTimeline(
+    @POST("user/timeline/card/set") Observable<PostInTimelineResponse> postInTimeline(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body PostRequest.PostRequestBody body);
 

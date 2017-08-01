@@ -55,11 +55,9 @@ import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
-import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -68,7 +66,6 @@ import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -97,7 +94,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private PublishSubject<CardTouchEvent> postTouchEventPublishSubject;
   private PublishSubject<Post> sharePreviewPublishSubject;
   private PublishSubject<PostComment> commentPostResponseSubject;
-  private PublishSubject<String> openWithCardId;
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -119,9 +115,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private SharePreviewFactory sharePreviewFactory;
   private SpannableFactory spannableFactory;
   private TabNavigator tabNavigator;
-  private String postIdForTimelineRequest;
   private TimelineAnalytics timelineAnalytics;
   private PublishRelay<View> loginPrompt;
+  private TimelineService timelineService;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -163,7 +159,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
-    openWithCardId = PublishSubject.create();
     sharePreviewPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
@@ -176,6 +171,17 @@ public class TimelineFragment extends FragmentView implements TimelineView {
                 postTouchEventPublishSubject)), new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
+
+    int limit = 20;
+    int initialOffset = 0;
+
+    timelineService = new TimelineService(getArguments().getString(ACTION_KEY), userId,
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+        WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
+        LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(),
+        linksHandlerFactory, limit, initialOffset, Integer.MAX_VALUE, tokenInvalidator,
+        sharedPreferences);
   }
 
   @Nullable @Override
@@ -214,23 +220,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     StoreCredentialsProviderImpl storeCredentialsProvider =
         new StoreCredentialsProviderImpl(storeAccessor);
 
-    int limit = 20;
-    int initialOffset = 0;
-
-    TimelineService timelineService =
-        new TimelineService(getArguments().getString(ACTION_KEY), postIdForTimelineRequest, userId,
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, limit,
-            initialOffset, Integer.MAX_VALUE, tokenInvalidator, sharedPreferences);
-
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
-        getContext().getString(R.string.timeline_title_likes));
+        getContext().getString(R.string.timeline_title_likes), tabNavigator);
 
     StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
@@ -247,16 +241,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
             storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
-
-    tabNavigator.navigation()
-        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(tabNavigation -> {
-          postIdForTimelineRequest = tabNavigation.getBundle()
-              .getString(AppsTimelineTabNavigation.CARD_ID_KEY);
-          openWithCardId.onNext(postIdForTimelineRequest);
-        }, err -> CrashReport.getInstance()
-            .log(err));
   }
 
   @Override public void onDestroyView() {
@@ -265,7 +249,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showCards(List<Post> cards) {
-    postIdForTimelineRequest = null;
     adapter.updatePosts(cards);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
@@ -336,10 +319,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> retry() {
     return RxView.clicks(retryButton);
-  }
-
-  @Override public Observable<String> openWithPostId() {
-    return openWithCardId;
   }
 
   @Override public void showLoadMoreProgressIndicator() {
@@ -471,13 +450,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> loginActionClick() {
     return loginPrompt.map(__ -> null);
-  }
-
-  @Override public void showSetUserOrStorePublicMessage() {
-    Snackbar.make(getView(),
-        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
-        Snackbar.LENGTH_LONG)
-        .show();
   }
 
   @Override public void showCreateStoreMessage(SocialAction socialAction) {

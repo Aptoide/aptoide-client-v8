@@ -39,8 +39,6 @@ public interface TimelineView extends View {
 
   Observable<Void> retry();
 
-  Observable<String> openWithPostId();
-
   void showLoadMoreProgressIndicator();
 
   void hideLoadMoreProgressIndicator();
@@ -78,8 +76,6 @@ public interface TimelineView extends View {
   void showLoginPromptWithAction();
 
   Observable<Void> loginActionClick();
-
-  void showSetUserOrStorePublicMessage();
 
   void showCreateStoreMessage(SocialAction socialAction);
 }

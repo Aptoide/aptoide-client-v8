@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -43,11 +42,20 @@ public class PostRemoteAccessor implements PostAccessor {
    * @return Card inserted in the timeline. Possible types of cards: SOCIAL_APP, SOCIAL_ARTICLE,
    * SOCIAL_VIDEO
    */
-  @Override public Completable postOnTimeline(String url, String content, String packageName) {
+  @Override public Single<String> postOnTimeline(String url, String content, String packageName) {
     return PostRequest.of(url, content, packageName, preferences, bodyInterceptor, client,
         converter, tokenInvalidator)
         .observe()
-        .toCompletable();
+        .flatMapSingle(postResponse -> {
+          if (postResponse.isOk()) {
+            return Single.just(postResponse.getData()
+                .getData()
+                .getUid());
+          } else {
+            return Single.just("");
+          }
+        })
+        .toSingle();
   }
 
   /**
