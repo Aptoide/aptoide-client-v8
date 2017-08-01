@@ -67,6 +67,18 @@
           android:textSize="12sp"
           />
 
+      <RatingBar
+          android:id="@+id/ratingbar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="5dp"
+          android:layout_marginStart="5dp"
+          android:layout_marginTop="5dp"
+          android:clickable="false"
+          android:isIndicator="true"
+          android:numStars="5"
+          style="?attr/gridItemRatingBar"
+          />
 
     </LinearLayout>
 
