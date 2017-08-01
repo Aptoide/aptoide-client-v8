@@ -25,12 +25,19 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
   private static final int LINES_PER_REQUEST = 6;
   private String url;
 
-  private ListAppsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+  public ListAppsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.url = url;
+  }
+
+  public ListAppsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static ListAppsRequest ofAction(String url,
@@ -62,7 +69,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
     private Integer limit;
     private String notApkTags;
     private int offset;
-    private Integer groupId;
+    private Long groupId;
 
     public Body(BaseRequestWithStore.StoreCredentials storeCredentials,
         SharedPreferences sharedPreferences) {
@@ -78,6 +85,16 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
       super();
       this.storeUser = storeCredentials.getUsername();
       this.storePassSha1 = storeCredentials.getPasswordSha1();
+      this.limit = limit;
+      setNotApkTags(sharedPreferences);
+    }
+
+    public Body(BaseRequestWithStore.StoreCredentials storeCredentials, long groupId, int limit,
+        SharedPreferences sharedPreferences) {
+      super();
+      this.storeUser = storeCredentials.getUsername();
+      this.storePassSha1 = storeCredentials.getPasswordSha1();
+      this.groupId = groupId;
       this.limit = limit;
       setNotApkTags(sharedPreferences);
     }
@@ -115,11 +132,11 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
       return limit;
     }
 
-    public Integer getGroupId() {
+    public Long getGroupId() {
       return groupId;
     }
 
-    public void setGroupId(Integer groupId) {
+    public void setGroupId(Long groupId) {
       this.groupId = groupId;
     }
   }

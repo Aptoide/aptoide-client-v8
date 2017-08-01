@@ -48,6 +48,7 @@ import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.Group;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -87,6 +88,7 @@ import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreEnum;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -169,6 +171,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Partners @Getter private String appName;
   @Partners @Getter private String wUrl;
   private GetAppMeta.App app;
+  private Group group;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
   private AptoideAccountManager accountManager;
@@ -613,6 +616,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     app = getApp.getNodes()
         .getMeta()
         .getData();
+    group = getApp.getNodes()
+        .getGroups()
+        .getDataList()
+        .getList()
+        .get(0);
     updateLocalVars(app);
     if (storeTheme == null) {
       storeTheme = getApp.getNodes()
@@ -890,7 +898,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void showSuggestedApps() {
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
-        .zipWith(requestFactory.newListAppsRequest("")
+        .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(), group.getId(), 5)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             listApps.getDataList()
                 .getList(), appName))
