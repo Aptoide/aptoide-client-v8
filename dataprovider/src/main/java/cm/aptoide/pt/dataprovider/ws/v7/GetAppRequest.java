@@ -177,12 +177,14 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
       private Meta meta;
       private Versions versions;
+      private Groups groups;
 
       public Node(long appId, String packageName) {
         this.meta = new Meta();
         this.meta.setAppId(appId);
         this.versions = new Versions();
         this.versions.setPackageName(packageName);
+        this.groups = new Groups();
       }
 
       public Meta getMeta() {
@@ -199,6 +201,14 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
       public void setVersions(Versions versions) {
         this.versions = versions;
+      }
+
+      public Groups getGroups() {
+        return groups;
+      }
+
+      public void setGroups(Groups groups) {
+        this.groups = groups;
       }
 
       private static class Meta {
@@ -223,6 +233,9 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
         public void setPackageName(String packageName) {
           this.packageName = packageName;
         }
+      }
+
+      private static class Groups {
       }
     }
   }
