@@ -10,8 +10,6 @@ import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Price;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
-import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import java.util.ArrayList;
 import java.util.List;
 

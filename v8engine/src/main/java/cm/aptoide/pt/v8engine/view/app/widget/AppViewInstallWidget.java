@@ -299,8 +299,9 @@ import rx.android.schedulers.AndroidSchedulers;
       case UPDATE:
         //update
         isUpdate = true;
-        setupActionButton(R.string.appview_button_update, installOrUpgradeListener(app, getApp.getNodes()
-            .getVersions(), displayable));
+        setupActionButton(R.string.appview_button_update, installOrUpgradeListener(app,
+            getApp.getNodes()
+                .getVersions(), displayable));
         break;
       case DOWNGRADE:
         //downgrade
@@ -312,8 +313,9 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void updateInstalledUi(Install install) {
     setDownloadBarInvisible();
-    setupActionButton(R.string.appview_button_open, v -> AptoideUtils.SystemU.openApp(install.getPackageName(),
-        getContext().getPackageManager(), getContext()));
+    setupActionButton(R.string.appview_button_open,
+        v -> AptoideUtils.SystemU.openApp(install.getPackageName(),
+            getContext().getPackageManager(), getContext()));
   }
 
   private void updatePausedUi(Install install, GetApp app, boolean isSetup) {
@@ -376,8 +378,9 @@ import rx.android.schedulers.AndroidSchedulers;
                 .setPath(path);
             app.getPay()
                 .setPaid();
-            setupActionButton(R.string.appview_button_install, installOrUpgradeListener(app, getApp.getNodes()
-                .getVersions(), displayable));
+            setupActionButton(R.string.appview_button_install, installOrUpgradeListener(app,
+                getApp.getNodes()
+                    .getVersions(), displayable));
             actionButton.performClick();
           }
         }
@@ -385,8 +388,9 @@ import rx.android.schedulers.AndroidSchedulers;
       getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
     } else {
       isUpdate = false;
-      setupActionButton(R.string.appview_button_install, installOrUpgradeListener(app, getApp.getNodes()
-          .getVersions(), displayable));
+      setupActionButton(R.string.appview_button_install, installOrUpgradeListener(app,
+          getApp.getNodes()
+              .getVersions(), displayable));
       if (displayable.isShouldInstall()) {
         actionButton.postDelayed(() -> {
           if (displayable.isVisible() && displayable.isShouldInstall()) {
