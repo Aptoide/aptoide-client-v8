@@ -44,14 +44,6 @@ android {
     versionName "8.4.0.0"
     resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
     buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
-    // test default configs
-    testProguardFile 'proguard-rules-test.pro'
-    //testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
-    //testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-    consumerProguardFiles "proguard-rules-consumer.pro"
-
     buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
     buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
     buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
@@ -70,8 +62,10 @@ android {
         "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
     buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
-
-    multiDexEnabled true
+    // test default configs
+    testProguardFile 'proguard-rules-test.pro'
+    //testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
+    //testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
@@ -149,7 +143,7 @@ android {
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true
-      proguardFiles getDefaultProguardFile('proguard-android.txt')
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-consumer.pro'
       signingConfig signingConfigs.release
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
     }
@@ -278,18 +272,6 @@ dependencies {
 
   // Testing-only dependencies
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestCompile "junit:junit:${JUNIT_VERSION}"
-  androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-  androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-  androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-
-  compile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
