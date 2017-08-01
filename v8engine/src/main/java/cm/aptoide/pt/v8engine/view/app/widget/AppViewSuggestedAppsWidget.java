@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewAdDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewSuggestedAppDisplayable;
@@ -45,6 +46,8 @@ public class AppViewSuggestedAppsWidget
 
     for (App app : appsList) {
       // TODO: 01-08-2017 neuro fill app tag
+      app.getStore()
+          .setAppearance(new Store.Appearance());
       displayables.add(new AppViewSuggestedAppDisplayable(app));
     }
 
