@@ -61,7 +61,6 @@ import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.install.InstallWarningDialog;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
@@ -71,8 +70,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created on 06/05/16.
  */
-@Displayables({ AppViewInstallDisplayable.class }) public class AppViewInstallWidget
-    extends Widget<AppViewInstallDisplayable> {
+public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
   private static final String TAG = AppViewInstallWidget.class.getSimpleName();
 

@@ -18,11 +18,10 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
-@Displayables({ GridAppDisplayable.class }) public class GridAppWidget
+public class GridAppWidget
     extends Widget<GridAppDisplayable> {
 
   private TextView name;

@@ -13,13 +13,12 @@ import cm.aptoide.pt.v8engine.view.app.displayable.AppViewSuggestedAppDisplayabl
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-@Displayables({ AppViewSuggestedAppsDisplayable.class }) public class AppViewSuggestedAppsWidget
+public class AppViewSuggestedAppsWidget
     extends Widget<AppViewSuggestedAppsDisplayable> {
 
   private RecyclerView recyclerView;

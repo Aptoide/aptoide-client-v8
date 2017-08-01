@@ -19,7 +19,6 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.DialogUtils;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.share.ShareAppHelper;
 import com.jakewharton.rxbinding.view.RxView;
@@ -31,7 +30,7 @@ import retrofit2.Converter;
 /**
  * Created by neuro on 17-05-2016.
  */
-@Displayables({ InstalledAppDisplayable.class }) public class InstalledAppWidget
+public class InstalledAppWidget
     extends Widget<InstalledAppDisplayable> {
 
   private static final Locale LOCALE = Locale.getDefault();
