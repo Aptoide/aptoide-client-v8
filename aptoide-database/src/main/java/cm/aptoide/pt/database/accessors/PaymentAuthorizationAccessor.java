@@ -8,11 +8,12 @@ package cm.aptoide.pt.database.accessors;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import java.util.List;
 import rx.Observable;
+import rx.Scheduler;
 
 public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthorization> {
 
-  public PaymentAuthorizationAccessor(Database db) {
-    super(db, PaymentAuthorization.class);
+  public PaymentAuthorizationAccessor(Database db, Scheduler observingScheduler) {
+    super(db, observingScheduler, PaymentAuthorization.class);
   }
 
   public Observable<List<PaymentAuthorization>> getPaymentAuthorization(String payerId,

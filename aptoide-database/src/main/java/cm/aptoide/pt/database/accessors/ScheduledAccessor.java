@@ -11,14 +11,15 @@ import io.realm.RealmResults;
 import java.util.List;
 import lombok.Cleanup;
 import rx.Observable;
+import rx.Scheduler;
 
 /**
  * Created on 01/09/16.
  */
 public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
 
-  protected ScheduledAccessor(Database db) {
-    super(db, Scheduled.class);
+  protected ScheduledAccessor(Database db, Scheduler observingScheduler) {
+    super(db, observingScheduler, Scheduled.class);
   }
 
   public Observable<List<Scheduled>> getAll() {

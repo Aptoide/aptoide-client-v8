@@ -8,14 +8,15 @@ package cm.aptoide.pt.database.accessors;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import java.util.List;
 import rx.Observable;
+import rx.Scheduler;
 
 /**
  * Created by marcelobenites on 9/1/16.
  */
 public class TransactionAccessor extends SimpleAccessor<PaymentConfirmation> {
 
-  protected TransactionAccessor(Database database) {
-    super(database, PaymentConfirmation.class);
+  protected TransactionAccessor(Database database, Scheduler observingScheduler) {
+    super(database, observingScheduler, PaymentConfirmation.class);
   }
 
   public Observable<List<PaymentConfirmation>> getPersistedTransactions(int productId,

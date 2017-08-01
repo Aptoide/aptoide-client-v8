@@ -129,7 +129,6 @@ import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
-import cm.aptoide.pt.v8engine.networking.BasicAuthenticator;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
@@ -174,13 +173,13 @@ import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
-import com.seatgeek.sixpack.SixpackBuilder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
@@ -192,6 +191,7 @@ import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -325,9 +325,13 @@ public abstract class V8Engine extends Application {
     // beware! this code could be executed at the same time the first activity is
     // visible
     //
+    /**
+     * There's not test at the moment
+     * TODO change this class in order to accept that there's no test
+     * AN-1838
+     */
     checkAppSecurity().andThen(generateAptoideUuid())
         .observeOn(Schedulers.computation())
-        .andThen(initAbTestManager())
         .andThen(prepareApp(V8Engine.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
           CrashReport.getInstance()
@@ -576,13 +580,17 @@ public abstract class V8Engine extends Application {
       FileUtils.createDir(apkPath);
       FileUtils.createDir(obbPath);
 
+      int nrIoCores = Runtime.getRuntime()
+          .availableProcessors() * 5;
+      Scheduler scheduler = Schedulers.from(Executors.newFixedThreadPool(nrIoCores));
+
       FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
       downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
           getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
-          getConfiguration().getCachePath(), apkPath, obbPath);
+          getConfiguration().getCachePath(), apkPath, obbPath, scheduler);
     }
     return downloadManager;
   }
@@ -691,16 +699,6 @@ public abstract class V8Engine extends Application {
       preferences = new Preferences(getDefaultSharedPreferences());
     }
     return preferences;
-  }
-
-  public ABTestManager getABTestManager() {
-    if (abTestManager == null) {
-      abTestManager = new ABTestManager(new SixpackBuilder(),
-          new OkHttpClient.Builder().authenticator(
-              new BasicAuthenticator(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD))
-              .build(), BuildConfig.SIXPACK_URL);
-    }
-    return abTestManager;
   }
 
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
@@ -934,12 +932,6 @@ public abstract class V8Engine extends Application {
   private Completable generateAptoideUuid() {
     return Completable.fromAction(() -> getIdsRepository().getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
-  }
-
-  private Completable initAbTestManager() {
-    return Completable.defer(
-        () -> getABTestManager().initialize(getIdsRepository().getUniqueIdentifier())
-            .toCompletable());
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {

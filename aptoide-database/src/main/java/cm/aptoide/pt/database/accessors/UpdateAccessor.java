@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
 import rx.Observable;
+import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
 /**
@@ -11,8 +12,8 @@ import rx.schedulers.Schedulers;
  */
 public class UpdateAccessor extends SimpleAccessor<Update> {
 
-  UpdateAccessor(Database db) {
-    super(db, Update.class);
+  UpdateAccessor(Database db, Scheduler observingScheduler) {
+    super(db, observingScheduler, Update.class);
   }
 
   public Observable<Update> get(String packageName) {

@@ -10,6 +10,7 @@ import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Sort;
 import java.util.List;
 import rx.Observable;
+import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
 /**
@@ -17,8 +18,8 @@ import rx.schedulers.Schedulers;
  */
 public class RollbackAccessor extends SimpleAccessor<Rollback> {
 
-  protected RollbackAccessor(Database db) {
-    super(db, Rollback.class);
+  protected RollbackAccessor(Database db, Scheduler observingScheduler) {
+    super(db, observingScheduler, Rollback.class);
   }
 
   public Observable<List<Rollback>> getAll() {
