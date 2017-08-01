@@ -58,7 +58,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 
   @Override public void bindView(UpdatesHeaderDisplayable displayable) {
     title.setText(displayable.getLabel());
-    more.setText(R.string.update_all);
+    more.setText(R.string.updatetab_button_update_all);
     more.setVisibility(View.VISIBLE);
 
     more.setOnClickListener((view) -> {

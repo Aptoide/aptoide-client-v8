@@ -299,12 +299,12 @@ import rx.android.schedulers.AndroidSchedulers;
       case UPDATE:
         //update
         isUpdate = true;
-        setupActionButton(R.string.update, installOrUpgradeListener(app, getApp.getNodes()
+        setupActionButton(R.string.appview_button_update, installOrUpgradeListener(app, getApp.getNodes()
             .getVersions(), displayable));
         break;
       case DOWNGRADE:
         //downgrade
-        setupActionButton(R.string.downgrade, downgradeListener(app));
+        setupActionButton(R.string.appview_button_downgrade, downgradeListener(app));
         break;
     }
     setupDownloadControls(app, isSetup, installationType);
@@ -312,7 +312,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void updateInstalledUi(Install install) {
     setDownloadBarInvisible();
-    setupActionButton(R.string.open, v -> AptoideUtils.SystemU.openApp(install.getPackageName(),
+    setupActionButton(R.string.appview_button_open, v -> AptoideUtils.SystemU.openApp(install.getPackageName(),
         getContext().getPackageManager(), getContext()));
   }
 
@@ -364,7 +364,7 @@ import rx.android.schedulers.AndroidSchedulers;
     //check if the app is paid
     if (app.isPaid() && !app.getPay()
         .isPaid()) {
-      actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay()
+      actionButton.setText(getContext().getString(R.string.appview_button_buy) + " (" + app.getPay()
           .getSymbol() + " " + app.getPay()
           .getPrice() + ")");
       actionButton.setOnClickListener(v -> buyApp(app));
@@ -376,7 +376,7 @@ import rx.android.schedulers.AndroidSchedulers;
                 .setPath(path);
             app.getPay()
                 .setPaid();
-            setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes()
+            setupActionButton(R.string.appview_button_install, installOrUpgradeListener(app, getApp.getNodes()
                 .getVersions(), displayable));
             actionButton.performClick();
           }
@@ -385,7 +385,7 @@ import rx.android.schedulers.AndroidSchedulers;
       getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
     } else {
       isUpdate = false;
-      setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes()
+      setupActionButton(R.string.appview_button_install, installOrUpgradeListener(app, getApp.getNodes()
           .getVersions(), displayable));
       if (displayable.isShouldInstall()) {
         actionButton.postDelayed(() -> {
