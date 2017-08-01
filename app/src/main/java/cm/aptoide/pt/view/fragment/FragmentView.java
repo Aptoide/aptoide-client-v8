@@ -14,8 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.NavigationProvider;
 import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.NavigationProvider;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ScreenTrackingUtils;

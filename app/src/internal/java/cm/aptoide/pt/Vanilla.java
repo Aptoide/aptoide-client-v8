@@ -18,6 +18,9 @@ public class Vanilla extends AptoideBase {
     clearAppDataOnNewBuild();
     super.onCreate();
     activateLogger(true);
+    // FIXME: comment the next line to avoid a sensible app when debugging
+    // TODO: move the decision of using this to a gradle flag
+    //setupStrictMode();
   }
 
   private void clearAppDataOnNewBuild() {

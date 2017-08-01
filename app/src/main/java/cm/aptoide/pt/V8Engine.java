@@ -130,7 +130,7 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
-import cm.aptoide.pt.view.leak.LeakTool;
+import cm.aptoide.pt.leak.LeakTool;
 import cm.aptoide.pt.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.networking.BasicAuthenticator;

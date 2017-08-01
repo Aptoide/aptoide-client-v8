@@ -10,12 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.NavigationProvider;
 import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.NavigationProvider;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.view.leak.LeakActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public abstract class ActivityResultNavigator extends LeakActivity
     implements ActivityNavigator, NavigationProvider {
