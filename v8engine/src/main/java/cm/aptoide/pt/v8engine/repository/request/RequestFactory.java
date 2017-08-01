@@ -73,7 +73,7 @@ public class RequestFactory {
     return this.listAppsRequestFactory.newListAppsRequest(url);
   }
 
-  public ListAppsRequest newListAppsRequest(int storeId, long groupId, int limit) {
+  public ListAppsRequest newListAppsRequest(int storeId, Long groupId, int limit) {
     return this.listAppsRequestFactory.newListAppsRequest(storeId, groupId, limit);
   }
 

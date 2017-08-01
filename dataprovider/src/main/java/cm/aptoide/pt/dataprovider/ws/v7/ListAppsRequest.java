@@ -89,7 +89,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
       setNotApkTags(sharedPreferences);
     }
 
-    public Body(BaseRequestWithStore.StoreCredentials storeCredentials, long groupId, int limit,
+    public Body(BaseRequestWithStore.StoreCredentials storeCredentials, Long groupId, int limit,
         SharedPreferences sharedPreferences) {
       super();
       this.storeUser = storeCredentials.getUsername();

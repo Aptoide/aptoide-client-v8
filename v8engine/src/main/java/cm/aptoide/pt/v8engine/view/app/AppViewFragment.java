@@ -616,11 +616,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     app = getApp.getNodes()
         .getMeta()
         .getData();
-    group = getApp.getNodes()
+
+    List<Group> groupsList = getApp.getNodes()
         .getGroups()
         .getDataList()
-        .getList()
-        .get(0);
+        .getList();
+
+    if (groupsList.size() > 0) {
+      group = groupsList.get(0);
+    }
+
     updateLocalVars(app);
     if (storeTheme == null) {
       storeTheme = getApp.getNodes()
@@ -898,7 +903,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void showSuggestedApps() {
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
-        .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(), group.getId(), 5)
+        .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
+            group != null ? group.getId() : null, 5)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             listApps.getDataList()
                 .getList(), appName))
