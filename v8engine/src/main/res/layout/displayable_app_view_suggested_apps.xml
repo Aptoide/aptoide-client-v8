@@ -29,6 +29,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
         android:maxLines="1"
+        android:ellipsize="end"
         android:text="@string/similar_apps_to"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/aptoide_orange"
