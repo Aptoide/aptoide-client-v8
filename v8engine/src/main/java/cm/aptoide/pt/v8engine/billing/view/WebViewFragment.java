@@ -93,9 +93,7 @@ public abstract class WebViewFragment extends PermissionServiceFragment
 
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        if (mainUrl.equals(url)) {
-          mainUrlSubject.call(null);
-        }
+        mainUrlSubject.call(null);
       }
     });
     webView.loadUrl(mainUrl);

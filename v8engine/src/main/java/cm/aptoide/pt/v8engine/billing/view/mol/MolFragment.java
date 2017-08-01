@@ -53,7 +53,7 @@ public class MolFragment extends WebViewFragment {
     super.onViewCreated(view, savedInstanceState);
     attachPresenter(new MolPresenter(this, billing, billingAnalytics, productProvider,
             new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-                getActivityNavigator(), getFragmentNavigator(), accountManager), paymentMethodId),
+                getActivityNavigator(), getFragmentNavigator(), accountManager)),
         savedInstanceState);
   }
 }

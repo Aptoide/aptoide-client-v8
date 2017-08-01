@@ -11,7 +11,7 @@ public interface TransactionPersistence {
 
   Observable<Transaction> getTransaction(int productId, String payerId);
 
-  Completable removeTransaction(int productId);
+  Completable removeTransaction(String payerId, int productId);
 
   Completable removeAllTransactions();
 

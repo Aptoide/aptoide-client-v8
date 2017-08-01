@@ -13,6 +13,8 @@ import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionService;
 import cm.aptoide.pt.v8engine.sync.Sync;
+import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -38,24 +40,30 @@ public class TransactionSync extends Sync {
 
   @Override public Completable execute() {
     return payer.getId()
-        .flatMapObservable(payerId -> syncLocalTransaction(payerId).switchIfEmpty(
-            syncTransaction(payerId).toObservable())
-            .doOnNext(transaction -> analytics.sendPurchaseStatusEvent(transaction, product))
-            .doOnError(throwable -> analytics.sendPurchaseErrorEvent(product, throwable)))
+        .flatMap(payerId -> syncLocalTransaction(payerId).onErrorResumeNext(throwable -> {
+          if (throwable instanceof NoSuchElementException) {
+            return syncTransaction(payerId);
+          }
+          return Single.error(throwable);
+        }))
+        .doOnSuccess(transaction -> analytics.sendPurchaseStatusEvent(transaction, product))
+        .doOnError(throwable -> analytics.sendPurchaseErrorEvent(product, throwable))
         .toCompletable();
   }
 
-  private Observable<Transaction> syncLocalTransaction(String payerId) {
+  private Single<Transaction> syncLocalTransaction(String payerId) {
     return transactionPersistence.getTransaction(product.getId(), payerId)
+        .timeout(1, TimeUnit.SECONDS, Observable.empty())
         .first()
-        .filter(transaction -> transaction.isPending())
         .filter(transaction -> transaction instanceof LocalTransaction)
+        .filter(transaction -> transaction.isPending())
         .cast(LocalTransaction.class)
-        .flatMapSingle(localTransaction -> transactionService.createTransaction(product,
+        .toSingle()
+        .flatMap(localTransaction -> transactionService.createTransaction(product,
             localTransaction.getPaymentMethodId(), localTransaction.getPayerId(),
-            localTransaction.getLocalMetadata())
-            .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
-                .andThen(Single.just(transaction))));
+            localTransaction.getLocalMetadata()))
+        .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
+            .andThen(Single.just(transaction)));
   }
 
   private Single<Transaction> syncTransaction(String payerId) {

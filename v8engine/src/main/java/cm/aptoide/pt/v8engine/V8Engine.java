@@ -101,14 +101,13 @@ import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
-import cm.aptoide.pt.v8engine.billing.authorization.RealmAuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.authorization.InMemoryAuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.V3AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.product.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.transaction.RealmTransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionMapper;
-import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionService;
 import cm.aptoide.pt.v8engine.billing.transaction.V3TransactionService;
@@ -240,9 +239,7 @@ public abstract class V8Engine extends Application {
   private BillingAnalytics billingAnalytics;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
-  private Payer accountPayer;
   private ExternalBillingSerializer inAppBillingSerialzer;
-  private AuthorizationFactory authorizationFactory;
   private Billing billing;
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
@@ -262,13 +259,7 @@ public abstract class V8Engine extends Application {
   private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   private AdsRepository adsRepository;
   private ABTestManager abTestManager;
-  private TransactionPersistence realmTransactionPersistence;
   private Database database;
-  private TransactionFactory transactionFactory;
-  private TransactionService v3TransactionService;
-  private TransactionMapper transactionMapper;
-  private AuthorizationService v3AuthorizationService;
-  private AuthorizationPersistence realmAuthorizationPersistence;
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
   private SyncScheduler syncScheduler;
@@ -764,19 +755,41 @@ public abstract class V8Engine extends Application {
 
     if (billing == null) {
 
+      final Payer payer = new AccountPayer(getAccountManager());
+      final AuthorizationFactory authorizationFactory = new AuthorizationFactory();
+      final TransactionFactory transactionFactory = new TransactionFactory();
+      final TransactionMapper transactionMapper = new TransactionMapper(transactionFactory);
+
+      final TransactionService transactionService =
+          new V3TransactionService(transactionMapper, getBaseBodyInterceptorV3(),
+              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
+              getDefaultSharedPreferences(), transactionFactory);
+
+      final AuthorizationService authorizationService =
+          new V3AuthorizationService(authorizationFactory, getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences());
+
+      final AuthorizationPersistence authorizationPersistence =
+          new InMemoryAuthorizationPersistence(new HashMap<>(), PublishRelay.create(),
+              authorizationFactory);
+
+      final RealmTransactionPersistence transactionPersistence =
+          new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
+              transactionMapper, transactionFactory);
+
       final BillingSyncManager billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(getAccountPayer(), getBillingAnalytics(),
-              getV3TransactionService(), getV3AuthorizationService(),
-              getRealmTransactionPersistence(), getRealmAuthorizationPersistence()),
+          new BillingSyncFactory(payer, getBillingAnalytics(), transactionService,
+              authorizationService, transactionPersistence, authorizationPersistence),
           getSyncScheduler());
 
       final TransactionRepository transactionRepository =
-          new TransactionRepository(getRealmTransactionPersistence(), billingSyncManager,
-              getAccountPayer(), getV3TransactionService());
+          new TransactionRepository(transactionPersistence, billingSyncManager, payer,
+              transactionService);
 
       final AuthorizationRepository authorizationRepository =
-          new AuthorizationRepository(billingSyncManager, getAccountPayer(),
-              getV3AuthorizationService(), getRealmAuthorizationPersistence());
+          new AuthorizationRepository(billingSyncManager, payer, authorizationService,
+              authorizationPersistence);
 
       final BillingService billingService =
           new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
@@ -790,60 +803,9 @@ public abstract class V8Engine extends Application {
               getDefaultSharedPreferences());
 
       billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentMethodSelector, getRealmTransactionPersistence(), getAccountPayer());
+          paymentMethodSelector, transactionPersistence, payer);
     }
     return billing;
-  }
-
-  public AuthorizationPersistence getRealmAuthorizationPersistence() {
-    if (realmAuthorizationPersistence == null) {
-      realmAuthorizationPersistence =
-          new RealmAuthorizationPersistence(getDatabase(), getAuthorizationFactory());
-    }
-    return realmAuthorizationPersistence;
-  }
-
-  public TransactionService getV3TransactionService() {
-    if (v3TransactionService == null) {
-      v3TransactionService =
-          new V3TransactionService(getTransactionMapper(), getBaseBodyInterceptorV3(),
-              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), getTransactionFactory());
-    }
-    return v3TransactionService;
-  }
-
-  public AuthorizationService getV3AuthorizationService() {
-    if (v3AuthorizationService == null) {
-      v3AuthorizationService =
-          new V3AuthorizationService(getAuthorizationFactory(), getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences());
-    }
-    return v3AuthorizationService;
-  }
-
-  public TransactionMapper getTransactionMapper() {
-    if (transactionMapper == null) {
-      transactionMapper = new TransactionMapper(getTransactionFactory());
-    }
-    return transactionMapper;
-  }
-
-  public TransactionFactory getTransactionFactory() {
-    if (transactionFactory == null) {
-      transactionFactory = new TransactionFactory();
-    }
-    return transactionFactory;
-  }
-
-  public TransactionPersistence getRealmTransactionPersistence() {
-    if (realmTransactionPersistence == null) {
-      realmTransactionPersistence =
-          new RealmTransactionPersistence(getDatabase(), getTransactionMapper(),
-              getTransactionFactory());
-    }
-    return realmTransactionPersistence;
   }
 
   public Database getDatabase() {
@@ -885,20 +847,6 @@ public abstract class V8Engine extends Application {
       inAppBillingSerialzer = new ExternalBillingSerializer();
     }
     return inAppBillingSerialzer;
-  }
-
-  public AuthorizationFactory getAuthorizationFactory() {
-    if (authorizationFactory == null) {
-      authorizationFactory = new AuthorizationFactory();
-    }
-    return authorizationFactory;
-  }
-
-  public Payer getAccountPayer() {
-    if (accountPayer == null) {
-      accountPayer = new AccountPayer(getAccountManager());
-    }
-    return accountPayer;
   }
 
   public NetworkOperatorManager getNetworkOperatorManager() {

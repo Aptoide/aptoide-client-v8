@@ -18,23 +18,23 @@ public class MolPresenter implements Presenter {
   private final BillingAnalytics analytics;
   private final ProductProvider productProvider;
   private final BillingNavigator navigator;
-  private final int paymentMethodId;
 
   public MolPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      ProductProvider productProvider, BillingNavigator navigator, int paymentMethodId) {
+      ProductProvider productProvider, BillingNavigator navigator) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
     this.productProvider = productProvider;
     this.navigator = navigator;
-    this.paymentMethodId = paymentMethodId;
   }
 
   @Override public void present() {
 
     onViewCreatedAuthorizeMolPayment();
 
-    onViewCreatedShowMolPaymentError();
+    onViewCreatedCheckTransactionError();
+
+    onViewCreatedCheckTransactionCompleted();
 
     handleWebsiteLoadedEvent();
 
@@ -74,18 +74,40 @@ public class MolPresenter implements Presenter {
         });
   }
 
-  private void onViewCreatedShowMolPaymentError() {
+  private void onViewCreatedCheckTransactionError() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(product -> view.showLoading())
         .flatMap(product -> billing.getTransaction(product)
-            .first(transaction -> !transaction.isPendingAuthorization())
+            .first(transaction -> transaction.isFailed())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(transaction -> {
               view.showError();
               view.hideLoading();
+            }))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.showError();
+          view.hideLoading();
+        });
+  }
+
+  private void onViewCreatedCheckTransactionCompleted() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(__ -> productProvider.getProduct())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(product -> view.showLoading())
+        .flatMap(product -> billing.getTransaction(product)
+            .first(transaction -> transaction.isCompleted())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(transaction -> {
+              view.hideLoading();
+              navigator.popTransactionAuthorizationView();
             }))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -104,7 +126,7 @@ public class MolPresenter implements Presenter {
             .flatMapSingle(loading -> productProvider.getProduct())
             .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product))
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(sent -> navigator.popTransactionAuthorizationView()))
+            .doOnNext(sent -> view.showLoading()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -118,6 +140,7 @@ public class MolPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.urlLoadedEvent())
+        .first()
         .doOnNext(loaded -> view.hideLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

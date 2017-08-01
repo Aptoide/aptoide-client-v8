@@ -48,6 +48,8 @@ public class TransactionRepository {
   }
 
   public Completable remove(int productId) {
-    return transactionPersistence.removeTransaction(productId);
+    return payer.getId()
+        .flatMapCompletable(
+            payerId -> transactionPersistence.removeTransaction(payerId, productId));
   }
 }
