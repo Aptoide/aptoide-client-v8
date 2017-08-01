@@ -4,7 +4,6 @@
  */
 
 include 'vanilla',
-    ':v8engine',
     ':dataprovider',
     ':aptoidepreferences',
     ':crashreports',

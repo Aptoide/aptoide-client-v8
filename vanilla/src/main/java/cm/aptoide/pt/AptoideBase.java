@@ -8,7 +8,6 @@ package cm.aptoide.pt;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
-import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
  * Created by neuro on 10-05-2016.

@@ -5,7 +5,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="cm.aptoide.pt.v8engine">
+    package="cm.aptoide.pt">
 
   <uses-feature
       android:name="android.hardware.camera"
@@ -47,7 +47,7 @@
       >
 
     <activity
-        android:name=".timeline.post.PostActivity"
+        android:name="cm.aptoide.pt.timeline.post.PostActivity"
         android:launchMode="singleInstance">
       <intent-filter>
         <action android:name="android.intent.action.SEND"/>
@@ -56,7 +56,7 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".view.search.SearchActivity">
+    <activity android:name="cm.aptoide.pt.view.search.SearchActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEARCH"/>
       </intent-filter>
@@ -65,7 +65,7 @@
           android:resource="@xml/searchable"/>
     </activity>
 
-    <activity android:name=".view.search.StoreSearchActivity">
+    <activity android:name="cm.aptoide.pt.view.search.StoreSearchActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEARCH"/>
       </intent-filter>
@@ -75,11 +75,11 @@
     </activity>
 
     <activity
-        android:name=".billing.view.PaymentActivity"
+        android:name="cm.aptoide.pt.billing.view.PaymentActivity"
         android:theme="@style/AppBaseTheme.NoTitle.Transparent"/>
 
-    <activity android:name=".view.account.LoginActivity"/>
-    <activity android:name=".spotandshare.view.SpotSharePreviewActivity"/>
+    <activity android:name="cm.aptoide.pt.view.account.LoginActivity"/>
+    <activity android:name="cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity"/>
 
     <activity
         android:name="com.facebook.FacebookActivity"
@@ -87,7 +87,7 @@
         />
 
     <activity
-        android:name=".DeepLinkIntentReceiver"
+        android:name="cm.aptoide.pt.DeepLinkIntentReceiver"
         android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
@@ -204,7 +204,7 @@
 
     </activity>
 
-    <receiver android:name=".install.InstalledBroadcastReceiver">
+    <receiver android:name="cm.aptoide.pt.install.InstalledBroadcastReceiver">
       <intent-filter android:priority="999">
         <action android:name="android.intent.action.PACKAGE_ADDED"/>
         <action android:name="android.intent.action.PACKAGE_REMOVED"/>
@@ -214,10 +214,10 @@
       </intent-filter>
     </receiver>
 
-    <service android:name=".notification.PullingContentService"/>
-    <service android:name=".sync.alarm.NotificationSyncService"/>
+    <service android:name="cm.aptoide.pt.notification.PullingContentService"/>
+    <service android:name="cm.aptoide.pt.sync.sync.alarm.NotificationSyncService"/>
 
-    <receiver android:name=".notification.NotificationReceiver">
+    <receiver android:name="cm.aptoide.pt.notification.NotificationReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
@@ -225,10 +225,10 @@
     </receiver>
 
 
-    <receiver android:name=".link.CustomTabNativeReceiver"/>
+    <receiver android:name="cm.aptoide.pt.link.CustomTabNativeReceiver"/>
 
     <receiver
-        android:name=".download.ScheduleDownloadsNetworkReceiver"
+        android:name="cm.aptoide.pt.download.ScheduleDownloadsNetworkReceiver"
         android:enabled="true"
         android:exported="false">
       <intent-filter>
@@ -236,22 +236,22 @@
         <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
       </intent-filter>
     </receiver>
-    <receiver android:name=".install.CheckRootOnBoot">
+    <receiver android:name="cm.aptoide.pt.install.CheckRootOnBoot">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.REBOOT"/>
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
       </intent-filter>
     </receiver>
-    <receiver android:name=".install.RootInstallNotificationEventReceiver"/>
+    <receiver android:name="cm.aptoide.pt.install.RootInstallNotificationEventReceiver"/>
 
-    <service android:name=".InstallService"/>
+    <service android:name="cm.aptoide.pt.InstallService"/>
 
-    <service android:name=".install.InstalledIntentService"/>
+    <service android:name="cm.aptoide.pt.install.InstalledIntentService"/>
 
     <!-- spotandshare -->
     <activity
-        android:name=".spotandshare.view.RadarActivity"
+        android:name="cm.aptoide.pt.spotandshare.view.RadarActivity"
         android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
@@ -273,22 +273,22 @@
         <data android:mimeType="application/vnd.android.package-archive"/>
       </intent-filter>
     </activity>
-    <activity android:name=".spotandshare.view.AppSelectionActivity"/>
+    <activity android:name="cm.aptoide.pt.spotandshare.view.AppSelectionActivity"/>
 
     <service
-        android:name=".spotandshare.transference.ClientService"
+        android:name="cm.aptoide.pt.spotandshare.transference.ClientService"
         android:enabled="true"
         android:exported="true"/>
     <service
-        android:name=".spotandshare.transference.ServerService"
+        android:name="cm.aptoide.pt.spotandshare.transference.ServerService"
         android:enabled="true"
         android:exported="true"/>
 
     <activity
-        android:name=".spotandshare.view.TransferRecordActivity"
+        android:name="cm.aptoide.pt.spotandshare.view.TransferRecordActivity"
         android:configChanges="orientation|keyboardHidden|screenSize">
     </activity>
-    <activity android:name=".spotandshare.view.ShareAptoideActivity">
+    <activity android:name="cm.aptoide.pt.spotandshare.view.ShareAptoideActivity">
     </activity>
 
   </application>
