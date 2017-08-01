@@ -5,9 +5,6 @@
 
 package cm.aptoide.pt.v8engine.billing.authorization;
 
-import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
-import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
-import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import rx.Observable;

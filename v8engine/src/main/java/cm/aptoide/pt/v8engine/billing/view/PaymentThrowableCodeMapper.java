@@ -9,7 +9,6 @@ import cm.aptoide.pt.v8engine.billing.exception.BillingException;
 import cm.aptoide.pt.v8engine.billing.exception.ProductNotFoundException;
 import cm.aptoide.pt.v8engine.billing.exception.PurchaseNotFoundException;
 import cm.aptoide.pt.v8engine.billing.external.ExternalBillingBinder;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
 
 public class PaymentThrowableCodeMapper {

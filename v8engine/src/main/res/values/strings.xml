@@ -1,12 +1,22 @@
 <resources>
 
+
+  <string name="app_name">Aptoide</string>
+
   <!-- NavDrawer List items -->
-  <string name="my_account">My Account</string>
-  <string name="schdwntitle">Scheduled Downloads</string>
-  <string name="settings">Settings</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Backup Apps</string>
+  <string name="drawer_title_my_account">My Account</string>
+  <string name="drawer_title_spot_share">Spot&amp;Share</string>
+  <string name="drawer_title_rollback">Rollback</string>
+  <string name="drawer_title_schedule_download">Scheduled Downloads</string>
+  <string name="drawer_title_excluded_updates">Excluded updates</string>
+  <string name="drawer_title_settings">Settings</string>
+  <string name="drawer_title_backup_apps">Backup Apps</string>
+
+  <string name="drawer_social_media_title">Let\'s stay connected</string>
+  <string name="drawer_title_facebook">Facebook</string>
+  <string name="drawer_title_twitter">Twitter</string>
+  <string name="drawer_title_feedback_send_button">Send feedback</string>
+
   <string name="feedback_subject">Subject</string>
   <string name="feedback_to_write2">Write here to send us your feedback…\n\n
         Please give us all the details you can:
@@ -14,11 +24,19 @@
         \n\• Errors you are seeing</string>
   <string name="feedback_include_logs">Include screenshot and logs</string>
   <string name="feedback_no_email">No email client installed!</string>
-  <string name="feedback_send_button">Send feedback</string>
-  <string name="drawer_social_media_title">Let\'s stay connected</string>
 
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
+
+  <!--Social Media-->
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="all_button_feedback_send">Send feedback</string>
+
+  <!--General-->
+  <string name="install">Install</string>
+  <string name="open">Open</string>
+
 
   <!-- Permission pop-ups messages -->
   <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
@@ -29,21 +47,57 @@
   <string name="developer_privacy_policy">Privacy Policy: %s</string>
 
 
-  <string name="open">Open</string>
   <string name="button_header_more">more</string>
   <string name="search">Search</string>
 
-
-  <string name="update">Update</string>
-  <string name="uninstall">Uninstall</string>
-  <string name="downgrade">Downgrade</string>
+  <!-- AppView -->
+  <string name="appview_button_install">Install</string>
+  <string name="appview_button_downgrade">Downgrade</string>
+  <string name="appview_button_open">Open</string>
+  <string name="appview_button_update">Update</string>
+  <string name="appview_button_buy">Buy</string>
   <string name="appview_followers_count_text">%1$s   followers</string>
+  <string name="appview_other_versions"><u>Other versions</u></string>
+  <string name="appview_latest_version_text">Latest version</string>
+  <string name="appview_rate_this_app">rate this app</string>
+  <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
+  <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t contain any threats!</string>
+  <string name="appview_rating_card_text">Rating</string>
+  <string name="appview_button_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_recommended_for_you_title">Recommended for you</string>
+  <string name="appview_additional_information_title">Additional information</string>
+  <string name="appview_comment_reply_button_text">Reply</string>
+  <string name="appview_header_trusted_text">Trusted</string>
+  <string name="appview_subscribe_store_button_text">Follow?</string>
+  <string name="appview_subscribed_store_button_text">Followed</string>
+  <string name="appview_rate_this_app_text">Rate this app</string>
+  <string name="appview_other_versions_in_others_stores">Other versions in other stores</string>
+  <string name="appview_rate_Success">App rated</string>
+  <string name="rollback_empty">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed apps (via Aptoide) including version and install date.</string>
+  <string name="see_more">See more</string>
+  <string name="see_less">See less</string>
+  <string name="get_latest">Get latest version</string>
+
+
+  <!-- AppView developer area-->
+  <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
+
+  <!-- Appview Share"-->
+  <string name="appview_message_install_before_share_spotandshare">Install app first</string>
+  <string name="appview_button_install_before_share_spotandshare">install</string>
+
+
+  <string name="uninstall">Uninstall</string>
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>
 
   <!-- Common (menu) -->
+  <string name="menu_install">Install</string>
   <string name="menu_select_all">Select All</string>
   <string name="menu_select_none">Select None</string>
   <string name="clear">Clear</string>
+
+  <!--Scheduled Downloads-->
+  <string name="all_title_schedule_download">Scheduled Downloads</string>
 
   <!-- Excluded Updates Fragment -->
   <string name="excluded_updates">Excluded updates</string>
@@ -58,21 +112,12 @@
   <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
         apps (via %s) including version and install date.</string>
 
-  <string name="appview_other_versions"><u>Other versions</u></string>
-  <string name="appview_latest_version_text">Latest version</string>
-  <string name="appview_rate_this_app">rate this app</string>
   <string name="zero">0</string>
   <string name="working_well">Works well</string>
   <string name="needs_license">Needs licensee</string>
   <string name="fake_app">Fake app</string>
   <string name="virus">Virus</string>
   <string name="additional_information">Additional information</string>
-
-  <!-- need translation -->
-  <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
-  <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t
-        contain any threats!</string>
-  <!-- -->
 
   <!-- Preferences -->
 
@@ -135,6 +180,7 @@
   <!--Rate-->
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
   <string name="rate_this_app">Rate this app</string>
+  <string name="reviewappview_button_open">Open</string>
 
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
@@ -316,26 +362,14 @@
   <string name="permission_account_deny">access to get accounts was denied</string>
 
   <!--??-->
-  <string name="update_all">Update all</string>
   <string name="read_more">See more</string>
   <string name="read_less">See less</string>
   <string name="flag_this_app_good">Good</string>
   <string name="flag_this_app_button_text">Flag this app</string>
-  <string name="appview_rating_card_text">Rating</string>
   <string name="flag_this_app_need_licence">Needs license</string>
   <string name="flag_this_app_fake">Fake</string>
   <string name="flag_this_app_freeze">Freeze</string>
   <string name="flag_this_app_virus">Virus</string>
-  <string name="button_appview_read_all">read all <![CDATA[>]]></string>
-  <string name="appview_recommended_for_you_title">Recommended for you</string>
-  <string name="appview_additional_information_title">Additional information</string>
-  <string name="appview_comment_reply_button_text">Reply</string>
-  <string name="appview_header_trusted_text">Trusted</string>
-  <string name="appview_subscribe_store_button_text">Follow?</string>
-  <string name="appview_subscribed_store_button_text">Followed</string>
-  <string name="appview_rate_this_app_text">Rate this app</string>
-  <string name="appview_other_versions_in_others_stores">Other versions in other stores</string>
-  <string name="appview_rate_Success">App rated</string>
   <string name="ignoreUpdateText">Ignore update</string>
   <string name="ignored">Ignored</string>
   <string name="noIgnoreUpdateText">Is the latest version not working? To prevent an app from updating, go to the Updates tab and long press it.</string>
@@ -469,18 +503,21 @@
   <string name="hidden_adult">Some apps are hidden because the adult content filter is on. Do you want to list these apps?</string>
   <string name="dont_show_again">Don\'t show this dialog again</string>
 
-  <!-- App View -->
-
-  <string name="rollback_empty">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed apps (via Aptoide) including version and install date.</string>
-
-  <string name="see_more">See more</string>
-  <string name="see_less">See less</string>
-  <string name="get_latest">Get latest version</string>
 
   <!-- Tab names -->
-  <string name="installed_tab">Installed</string>
   <string name="updates_tab">Updates</string>
 
+  <!--Update Tab-->
+  <string name="updatetab_title_installed">Installed</string>
+  <string name="updatetab_button_update_all">Update all</string>
+  <string name="updatetab_button_update">Update</string>
+  <string name="no_updates_available_retoric">Everything is up to date!</string>
+  <string name="no_new_updates_available">No new updates available</string>
+  <string name="has_updates">%s has new updates available</string>
+  <string name="new_updates">There are %s new updates available</string>
+  <string name="one_new_update">There is %s new update available</string>
+  <string name="updates_tab_adapter_uninstalled">Uninstalled</string>
+  <string name="skip">Skip</string>
 
   <string name="menu_context_reparse">Reload</string>
   <string name="menu_context_remove">Remove</string>
@@ -500,6 +537,7 @@
   <string name="install_update">Install update</string>
 
   <!-- Payments -->
+  <string name="buy">buy</string>
   <string name="cancel">Cancel</string>
   <string name="no_payments_available">No payments available.</string>
   <string name="failed_auth_code">Failed to authorize account. Please try again.</string>
@@ -509,7 +547,6 @@
   <string name="confirm_carrier_payment">Do you want to purchase \'{title}\' for {value}? You will be charged from
         your carrier.
     </string>
-  <string name="buy">Buy</string>
   <string name="billing_result">Transaction result is: </string>
 
   <string name="change_payment">Back</string>
@@ -518,7 +555,6 @@
   <string name="rollback_updated">Updated</string>
   <string name="rollback_updated_at">Updated at %1$s</string>
   <string name="rollback_downgraded">Downgraded</string>
-  <string name="install">Install</string>
   <string name="cannot_uninstall_self">can\'t uninstall installer.</string>
   <string name="at_time">at %s</string>
   <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
@@ -598,14 +634,6 @@
   <string name="notification_social_timeline">Aptoide timeline. Check it now!</string>
   <string name="notification_timeline_posts">Your friends installed new apps!</string>
 
-  <!-- Updates -->
-  <string name="no_updates_available_retoric">Everything is up to date!</string>
-  <string name="no_new_updates_available">No new updates available</string>
-  <string name="has_updates">%s has new updates available</string>
-  <string name="new_updates">There are %s new updates available</string>
-  <string name="one_new_update">There is %s new update available</string>
-  <string name="updates_tab_adapter_uninstalled">Uninstalled</string>
-  <string name="skip">Skip</string>
 
   <string name="share">Share</string>
   <string name="share_on_timeline">Share on timeline</string>
@@ -614,18 +642,15 @@
   <string name="manually_reviewed">Good app guaranteed: this application passed the security tests for virus, malware and other malicious attacks and doesn\'t contain any threats</string>
   <string name="no_search_results_message">There are no results for your search. \nTry using other words.</string>
 
-  <!-- AppView developer area-->
-  <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
-
   <!-- Search Fragment -->
   <string name="all_stores">All stores</string>
   <string name="followed_stores">Followed stores</string>
   <string name="search_minimum_chars">Write at least 2 chars. to search for something</string>
 
-  <string name="app_name">Aptoide</string>
   <string name="access_to_open_gallery_rationale">You need to allow access to the gallery</string>
 
   <!-- My account -->
+  <string name="my_account_title_my_account">My Account</string>
   <string name="my_account_my_profile">My profile</string>
   <string name="my_account_user_store">My store</string>
   <string name="my_account_edit_store">Edit</string>
@@ -639,11 +664,5 @@
   <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
 
-  <!-- Appview Share"-->
 
-  <string name="appview_message_install_before_share_spotandshare">Install app first</string>
-  <string name="appview_button_install_before_share_spotandshare">install</string>
-  <string name="timeline_message_share_on_timeline_external">Write something (optional)</string>
-  <string name="timeline_message_error_you_need_to_create_store_with_social_action">You need to create a store to like, comment or share</string>
-  <string name="timeline_message_error_you_need_to_set_store_or_user_to_public">You need to set your store or user to public. To change these settings, go to https://www.aptoide.com</string>
 </resources>

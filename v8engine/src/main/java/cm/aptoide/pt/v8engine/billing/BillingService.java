@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.billing;
 
 import java.util.List;
 import rx.Completable;
-import rx.Observable;
 import rx.Single;
 
 public interface BillingService {

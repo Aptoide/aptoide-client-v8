@@ -162,7 +162,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (toolbar != null) {
       parentActivity.setSupportActionBar(toolbar);
 
-      toolbar.setTitle(R.string.settings);
+      toolbar.setTitle(R.string.settings_title_settings);
       toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
       ActionBar supportActionBar = parentActivity.getSupportActionBar();

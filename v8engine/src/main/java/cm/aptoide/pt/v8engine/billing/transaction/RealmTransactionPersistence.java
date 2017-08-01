@@ -7,10 +7,6 @@ package cm.aptoide.pt.v8engine.billing.transaction;
 
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
-import cm.aptoide.pt.v8engine.billing.transaction.TransactionFactory;
-import cm.aptoide.pt.v8engine.billing.transaction.TransactionMapper;
-import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
