@@ -371,6 +371,10 @@ public class PostFragment extends FragmentView implements PostView {
     adapter.clearAllRelated();
   }
 
+  @Override public int getPreviewVisibility() {
+    return previewImage.getVisibility();
+  }
+
   private void handlePreviewLayout() {
     if (previewImage.getVisibility() == View.GONE
         && previewLoading.getVisibility() == View.GONE

@@ -32,6 +32,9 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   private PostAnalytics analytics;
   private UrlValidator urlValidator;
   private AccountNavigator accountNavigator;
+  private boolean hasComment;
+  private boolean hasUrl;
+  private String url;
 
   public PostPresenter(PostFragment view, CrashReport crashReport, PostManager postManager,
       FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
@@ -243,7 +246,10 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
         .andThen(postManager.getSuggestionApps(url))
         .observeOn(AndroidSchedulers.mainThread())
         .toObservable()
-        .doOnNext(relatedApps -> view.addRelatedApps(relatedApps))
+        .doOnNext(relatedApps -> {
+          view.addRelatedApps(relatedApps);
+          postManager.setRemoteRelatedAppsAvailable(relatedApps.size() > 0);
+        })
         .doOnCompleted(() -> view.hideRelatedAppsLoading())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.hideRelatedAppsLoading())
@@ -257,13 +263,20 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
             .flatMapCompletable(textToShare -> {
-              String url;
               url = getUrl(textToShare);
+              hasComment = !textToShare.isEmpty();
+              hasUrl = url != null;
               return postManager.post(url, textToShare, view.getCurrentSelected() == null ? null
                   : view.getCurrentSelected()
                       .getPackageName())
                   .observeOn(AndroidSchedulers.mainThread())
-                  .doOnCompleted(() -> view.showSuccessMessage())
+                  .doOnCompleted(() -> {
+                    view.showSuccessMessage();
+                    analytics.sendPostCompleteEvent(postManager.remoteRelatedAppsAvailable(),
+                        view.getCurrentSelected()
+                            .getPackageName(), hasComment, hasUrl, url,
+                        android.view.View.VISIBLE == view.getPreviewVisibility());
+                  })
                   .doOnCompleted(() -> goBack());
             })
             .doOnError(throwable -> handleError(throwable))
@@ -288,23 +301,40 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
 
   private void handleError(Throwable throwable) {
     Logger.e(TAG, throwable);
+    boolean isSelected = view.getCurrentSelected() != null;
+    String packageName = view.getCurrentSelected() == null ? "" : view.getCurrentSelected()
+        .getPackageName();
     if (throwable instanceof PostException) {
       switch (((PostException) throwable).getErrorCode()) {
         case INVALID_TEXT:
           view.showInvalidTextError();
+          analytics.sendPostCompleteNoTextEvent(postManager.remoteRelatedAppsAvailable(),
+              isSelected, packageName, hasComment, hasUrl, url,
+              android.view.View.VISIBLE == view.getPreviewVisibility());
           break;
         case INVALID_PACKAGE:
           view.showInvalidPackageError();
+          analytics.sendPostCompleteNoSelectedAppEvent(postManager.remoteRelatedAppsAvailable(),
+              hasComment, hasUrl, url, android.view.View.VISIBLE == view.getPreviewVisibility());
           break;
         case NO_LOGIN:
           view.showNoLoginError();
+          analytics.sendPostCompleteNoLoginEvent(postManager.remoteRelatedAppsAvailable(),
+              isSelected, packageName, hasComment, hasUrl, url,
+              android.view.View.VISIBLE == view.getPreviewVisibility());
           break;
         case NO_APP_FOUND:
           view.showAppNotFoundError();
+          analytics.sendPostCompleteNoAppFoundEvent(postManager.remoteRelatedAppsAvailable(),
+              isSelected, packageName, hasComment, hasUrl, url,
+              android.view.View.VISIBLE == view.getPreviewVisibility());
           break;
       }
     } else {
       view.showGenericError();
+      analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),
+          isSelected, packageName, hasComment, hasUrl, url,
+          android.view.View.VISIBLE == view.getPreviewVisibility());
     }
   }
 
