@@ -17,9 +17,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.abtesting.ABTest;
-import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
-import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
@@ -48,7 +45,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   private boolean hasMultipleFragments;
   private boolean refreshed = false;
 
-  private ABTest<SearchTabOptions> searchAbTest;
   private Map<String, Void> mapPackages = new HashMap<>();
   private transient EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private transient ListSearchAppsRequest listSearchAppsRequest;
@@ -68,8 +64,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         from.forEach(searchAppsApp -> {
           mapPackages.put(searchAppsApp.getPackageName(), null);
-          displayables.add(new SearchDisplayable(searchAppsApp, searchAbTest, addSubscribedStores,
-              hasMultipleFragments, query));
+          displayables.add(new SearchDisplayable(searchAppsApp));
         });
 
         addDisplayables(displayables);
@@ -104,8 +99,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    searchAbTest = ((V8Engine) getContext().getApplicationContext()).getABTestManager()
-        .get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -174,11 +167,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     outState.putString(BundleCons.QUERY, query);
     outState.putString(BundleCons.STORE_NAME, storeName);
     outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
-  }
-
-  private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores) {
-    return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
-        == SearchTabOptions.FOLLOWED_STORES));
   }
 
   protected static class BundleCons {

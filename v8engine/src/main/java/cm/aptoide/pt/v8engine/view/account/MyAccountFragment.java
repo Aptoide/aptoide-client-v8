@@ -272,6 +272,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
-    toolbar.setTitle(getString(R.string.my_account));
+    toolbar.setTitle(getString(R.string.my_account_title_my_account));
   }
 }

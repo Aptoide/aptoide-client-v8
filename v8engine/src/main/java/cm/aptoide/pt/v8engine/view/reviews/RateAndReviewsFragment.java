@@ -120,7 +120,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         .subscribe(installed -> {
           if (installed != null) {
             // app installed... update text
-            installMenuItem.setTitle(R.string.open);
+            installMenuItem.setTitle(R.string.reviewappview_button_open);
           }
         }, err -> {
           CrashReport.getInstance()

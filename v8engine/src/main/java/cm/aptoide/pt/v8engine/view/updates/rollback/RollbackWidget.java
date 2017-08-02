@@ -52,15 +52,15 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
     switch (Rollback.Action.valueOf(pojo.getAction())) {
       case UPDATE:
         builder.append(context.getString(R.string.rollback_updated));
-        rollbackAction.setText(R.string.downgrade);
+        rollbackAction.setText(R.string.appview_button_downgrade);
         break;
       case DOWNGRADE:
         builder.append(context.getString(R.string.rollback_downgraded));
-        rollbackAction.setText(R.string.update);
+        rollbackAction.setText(R.string.appview_button_update);
         break;
       case UNINSTALL:
         builder.append(context.getString(R.string.rollback_uninstalled));
-        rollbackAction.setText(R.string.install);
+        rollbackAction.setText(R.string.appview_button_install);
         break;
       case INSTALL:
         builder.append(context.getString(R.string.rollback_installed));
