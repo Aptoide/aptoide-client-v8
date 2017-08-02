@@ -61,18 +61,18 @@ public class PostFilter {
 
   public static class PostDuplicateFilter implements Func1<Post, Boolean> {
 
-    private final Set<String> cardIds;
+    private final Set<String> postIds;
 
-    public PostDuplicateFilter(Set<String> cardIds) {
-      this.cardIds = cardIds;
+    public PostDuplicateFilter(Set<String> postIds) {
+      this.postIds = postIds;
     }
 
     public void clear() {
-      cardIds.clear();
+      postIds.clear();
     }
 
     @Override public Boolean call(Post post) {
-      return cardIds.add(post.getCardId());
+      return postIds.add(post.getCardId());
     }
   }
 }
