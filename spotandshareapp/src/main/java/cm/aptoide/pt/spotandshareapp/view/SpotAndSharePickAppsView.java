@@ -28,4 +28,6 @@ public interface SpotAndSharePickAppsView extends View {
   void hideLoading();
 
   void showLoading();
+
+  void navigateBack();
 }

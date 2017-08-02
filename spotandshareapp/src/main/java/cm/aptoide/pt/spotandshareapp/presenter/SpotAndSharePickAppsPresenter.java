@@ -15,6 +15,8 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,9 +36,9 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
   private ObbsProvider obbsProvider;
 
-  public SpotAndSharePickAppsPresenter(SpotAndSharePickAppsView view,
-      boolean shouldCreateGroup, InstalledRepositoryDummy installedRepositoryDummy,
-      SpotAndShare spotAndShare, DrawableBitmapMapper drawableBitmapMapper,
+  public SpotAndSharePickAppsPresenter(SpotAndSharePickAppsView view, boolean shouldCreateGroup,
+      InstalledRepositoryDummy installedRepositoryDummy, SpotAndShare spotAndShare,
+      DrawableBitmapMapper drawableBitmapMapper,
       AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper) {
     this.view = view;
     this.shouldCreateGroup = shouldCreateGroup;
@@ -70,13 +72,23 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
         .flatMapSingle(lifecycleEvent -> {
           if (shouldCreateGroup) {
             view.showLoading();
-            return createGroup().toSingleDefault(2);
+            return createGroup().timeout(10, TimeUnit.SECONDS)
+                .toSingleDefault(2);
             //// FIXME: 12-07-2017 should not pass this integer
           }
           return Completable.complete()
               .toSingleDefault(2);
         })
+        .doOnError(throwable -> handleCreateGroupError(throwable))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
+  }
+
+  private void handleCreateGroupError(Throwable throwable) {
+    if (throwable instanceof TimeoutException) {
+      spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
+      view.onCreateGroupError(throwable);
+      view.navigateBack();
+    }
   }
 
   private Observable<List<AppModel>> getInstaledAppsObservable() {
