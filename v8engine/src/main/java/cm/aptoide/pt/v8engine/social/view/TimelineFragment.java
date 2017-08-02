@@ -46,10 +46,10 @@ import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
-import cm.aptoide.pt.v8engine.social.data.PostFilter;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
+import cm.aptoide.pt.v8engine.social.data.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
@@ -225,11 +225,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     int initialOffset = 0;
 
     final HashSet<String> postIds = new HashSet<>();
-    final PostFilter.PostDuplicateFilter postDuplicateFilter =
-        new PostFilter.PostDuplicateFilter(postIds);
     final InstalledRepository installedRepository =
         RepositoryFactory.getInstalledRepository(getContext());
-    final PostFilter postFilter = new PostFilter(postDuplicateFilter, installedRepository);
+    //final PostFilter.PostDuplicateFilter postDuplicateFilter =
+    //    new PostFilter.PostDuplicateFilter(postIds);
+    //final PostFilter postFilter = new PostFilter(postDuplicateFilter, installedRepository);
+    final TimelineCardFilter.TimelineCardDuplicateFilter duplicateFilter = new TimelineCardFilter.TimelineCardDuplicateFilter(postIds);
+    final TimelineCardFilter postFilter = new TimelineCardFilter(duplicateFilter, installedRepository);
 
     final TimelineService timelineService =
         new TimelineService(getArguments().getString(ACTION_KEY), postIdForTimelineRequest, userId,

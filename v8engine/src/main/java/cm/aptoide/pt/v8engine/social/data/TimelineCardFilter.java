@@ -1,5 +1,6 @@
-package cm.aptoide.pt.v8engine.timeline;
+package cm.aptoide.pt.v8engine.social.data;
 
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
@@ -23,20 +24,19 @@ public class TimelineCardFilter {
     this.duplicateFilter.clear();
   }
 
-  public Observable<TimelineCard> filter(TimelineItem<TimelineCard> item) {
+  public Observable<TimelineItem<TimelineCard>> filter(TimelineItem<TimelineCard> item) {
     return Observable.just(item)
         .filter(timelineItem -> timelineItem != null)
-        .map(timelineItem -> timelineItem.getData())
         .filter(duplicateFilter)
         .flatMap(timelineCard -> filterInstalledRecommendation(timelineCard))
         .flatMap(timelineCard -> filterAlreadyDoneUpdates(timelineCard));
   }
 
-  private Observable<? extends TimelineCard> filterInstalledRecommendation(
-      TimelineCard timelineItem) {
-    if (timelineItem instanceof Recommendation) {
-      return installedRepository.isInstalled(((Recommendation) timelineItem).getRecommendedApp()
-          .getPackageName())
+  private Observable<TimelineItem<TimelineCard>> filterInstalledRecommendation(
+      TimelineItem<TimelineCard> timelineItem) {
+    String packageName = getPackageNameFrom(timelineItem);
+    if (!TextUtils.isEmpty(packageName)) {
+      return installedRepository.isInstalled(packageName)
           .firstOrDefault(false)
           .flatMap(installed -> {
             if (!installed) {
@@ -48,23 +48,38 @@ public class TimelineCardFilter {
     return Observable.just(timelineItem);
   }
 
-  private Observable<? extends TimelineCard> filterAlreadyDoneUpdates(TimelineCard timelineCard) {
-    if (timelineCard instanceof AppUpdate) {
-      return installedRepository.getInstalled(((AppUpdate) timelineCard).getPackageName())
+  private String getPackageNameFrom(TimelineItem<TimelineCard> timelineItem) {
+    final TimelineCard card = timelineItem.getData();
+    if (card instanceof Recommendation) {
+      return ((Recommendation) card).getRecommendedApp()
+          .getPackageName();
+    }
+    if (card instanceof AppUpdate) {
+      return ((AppUpdate) card).getPackageName();
+    }
+    return null;
+  }
+
+  private Observable<TimelineItem<TimelineCard>> filterAlreadyDoneUpdates(
+      TimelineItem<TimelineCard> timelineItem) {
+    String packageName = getPackageNameFrom(timelineItem);
+    if (!TextUtils.isEmpty(packageName)) {
+      return installedRepository.getInstalled(packageName)
           .firstOrDefault(null)
           .flatMap(installed -> {
             if (installed != null
-                && installed.getVersionCode() == ((AppUpdate) timelineCard).getFile()
+                && installed.getVersionCode() == ((AppUpdate) timelineItem).getFile()
                 .getVercode()) {
               return Observable.empty();
             }
-            return Observable.just(timelineCard);
+            return Observable.just(timelineItem);
           });
     }
-    return Observable.just(timelineCard);
+    return Observable.just(timelineItem);
   }
 
-  public static class TimelineCardDuplicateFilter implements Func1<TimelineCard, Boolean> {
+  public static class TimelineCardDuplicateFilter
+      implements Func1<TimelineItem<TimelineCard>, Boolean> {
 
     private final Set<String> cardIds;
 
@@ -76,8 +91,9 @@ public class TimelineCardFilter {
       cardIds.clear();
     }
 
-    @Override public Boolean call(TimelineCard card) {
-      return cardIds.add(card.getCardId());
+    @Override public Boolean call(TimelineItem<TimelineCard> card) {
+      return cardIds.add(card.getData()
+          .getCardId());
     }
   }
 }

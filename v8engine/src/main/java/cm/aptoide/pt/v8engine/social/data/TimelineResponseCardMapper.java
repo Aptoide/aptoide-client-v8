@@ -14,7 +14,6 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideoTimelin
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Article;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.ArticleTimelineItem;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.PopularAppTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.RecommendationTimelineItem;
@@ -54,11 +53,10 @@ import java.util.Set;
 public class TimelineResponseCardMapper {
   private final Set<String> postIds = new HashSet<>();
 
-  public List<Post> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
+  public List<Post> map(List<TimelineItem<TimelineCard>> cardList, LinksHandlerFactory linksFactory) {
     final List<Post> cards = new ArrayList();
 
-    for (TimelineItem<TimelineCard> item : timelineResponse.getDataList()
-        .getList()) {
+    for (TimelineItem<TimelineCard> item : cardList) {
       try {
         addMappedCardFromItem(linksFactory, cards, item);
       } catch (Exception e) {

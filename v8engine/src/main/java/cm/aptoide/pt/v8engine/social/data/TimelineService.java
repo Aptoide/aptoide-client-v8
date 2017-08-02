@@ -45,7 +45,7 @@ public class TimelineService {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private String cardIdPriority;
-  private PostFilter postFilter;
+  private TimelineCardFilter postFilter;
 
   public TimelineService(String url, String cardIdPriority, Long userId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
@@ -53,7 +53,7 @@ public class TimelineService {
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      PostFilter postFilter) {
+      TimelineCardFilter postFilter) {
     this.url = url;
     this.cardIdPriority = cardIdPriority;
     this.userId = userId;
@@ -99,12 +99,13 @@ public class TimelineService {
         .toSingle())
         .doOnError(__ -> loading = false)
         .doOnSuccess(__ -> loading = false)
-        .map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory))
         .toObservable()
-        .flatMapIterable(list -> list)
-        .flatMap(post -> postFilter.filter(post))
+        .flatMapIterable(list -> list.getDataList()
+            .getList())
+        .flatMap(data -> postFilter.filter(data))
         .toList()
-        .toSingle();
+        .toSingle()
+        .map(timelineItems -> mapper.map(timelineItems, linksHandlerFactory));
   }
 
   private Single<List<String>> getPackages() {

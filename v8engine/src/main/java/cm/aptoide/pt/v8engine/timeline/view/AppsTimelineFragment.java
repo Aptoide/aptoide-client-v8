@@ -50,7 +50,7 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.TimelineCardFilter;
+import cm.aptoide.pt.v8engine.social.data.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.timeline.TimelineRepository;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginDisplayable;
