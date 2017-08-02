@@ -1,9 +1,7 @@
-package cm.aptoide.pt.v8engine.filemanager;
+package cm.aptoide.pt.filemanager;
 
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.filemanager.CacheHelper;
-import cm.aptoide.pt.filemanager.FileManager;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.IOException;
 import org.junit.Before;

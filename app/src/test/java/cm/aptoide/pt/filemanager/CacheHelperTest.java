@@ -1,6 +1,5 @@
-package cm.aptoide.pt.v8engine.filemanager;
+package cm.aptoide.pt.filemanager;
 
-import cm.aptoide.pt.filemanager.CacheHelper;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.LinkedList;
