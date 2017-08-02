@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.billing.transaction;
 
-import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
-
 public class LocalTransaction extends Transaction {
 
   private final String localMetadata;

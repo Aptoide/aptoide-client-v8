@@ -5,10 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.ws.notifications;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -18,12 +21,17 @@ import rx.Observable;
  */
 public abstract class Notifications<U> extends WebService<Service, U> {
 
-  protected Notifications(OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(Service.class, httpClient, converterFactory, getHost());
+  protected Notifications(OkHttpClient httpClient, Converter.Factory converterFactory,
+      SharedPreferences sharedPreferences) {
+    super(Service.class, httpClient, converterFactory, getHost(sharedPreferences));
   }
 
-  public static String getHost() {
-    return "http://pnp.aptoide.com/pnp/v1/notifications/";
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST
+        + "/pnp/v1/notifications/";
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {

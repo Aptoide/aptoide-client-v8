@@ -236,7 +236,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installedDisplayablesList.clear();
     installedDisplayablesList.add(new StoreGridHeaderDisplayable(
         new GetStoreWidgets.WSWidget().setTitle(
-            AptoideUtils.StringU.getResString(R.string.installed_tab,
+            AptoideUtils.StringU.getResString(R.string.updatetab_title_installed,
                 getContext().getResources()))));
 
     for (Installed installedApp : installedApps) {

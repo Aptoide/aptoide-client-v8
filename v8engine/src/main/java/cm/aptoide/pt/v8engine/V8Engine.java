@@ -133,7 +133,6 @@ import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
-import cm.aptoide.pt.v8engine.networking.BasicAuthenticator;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
@@ -181,7 +180,6 @@ import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
-import com.seatgeek.sixpack.SixpackBuilder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -329,9 +327,13 @@ public abstract class V8Engine extends Application {
     // beware! this code could be executed at the same time the first activity is
     // visible
     //
+    /**
+     * There's not test at the moment
+     * TODO change this class in order to accept that there's no test
+     * AN-1838
+     */
     checkAppSecurity().andThen(generateAptoideUuid())
         .observeOn(Schedulers.computation())
-        .andThen(initAbTestManager())
         .andThen(prepareApp(V8Engine.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
           CrashReport.getInstance()
@@ -580,7 +582,6 @@ public abstract class V8Engine extends Application {
 
       FileUtils.createDir(apkPath);
       FileUtils.createDir(obbPath);
-
       FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
@@ -704,14 +705,11 @@ public abstract class V8Engine extends Application {
     return preferences;
   }
 
-  public ABTestManager getABTestManager() {
-    if (abTestManager == null) {
-      abTestManager = new ABTestManager(new SixpackBuilder(),
-          new OkHttpClient.Builder().authenticator(
-              new BasicAuthenticator(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD))
-              .build(), BuildConfig.SIXPACK_URL);
-    }
-    return abTestManager;
+  private String getAbHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_SIXPACK_HOST;
   }
 
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
@@ -977,12 +975,6 @@ public abstract class V8Engine extends Application {
   private Completable generateAptoideUuid() {
     return Completable.fromAction(() -> getIdsRepository().getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
-  }
-
-  private Completable initAbTestManager() {
-    return Completable.defer(
-        () -> getABTestManager().initialize(getIdsRepository().getUniqueIdentifier())
-            .toCompletable());
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {

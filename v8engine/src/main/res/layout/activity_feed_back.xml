@@ -64,7 +64,7 @@
         android:id="@+id/FeedBackSendButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/feedback_send_button"
+        android:text="@string/all_button_feedback_send"
         style="?attr/customButton"
         />
 
