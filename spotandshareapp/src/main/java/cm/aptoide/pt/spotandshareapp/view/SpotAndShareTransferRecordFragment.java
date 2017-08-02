@@ -65,6 +65,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private SpotAndSharePickAppsAdapter pickAppsAdapter;
   private RecyclerView pickAppsRecyclerView;
   private View pickAppsProgressBarContainer;
+  private PublishSubject connectedFriends;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -78,6 +79,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     installApp = PublishSubject.create();
 
     pickAppSubject = PublishSubject.create();
+    connectedFriends = PublishSubject.create();
   }
 
   @Nullable @Override
@@ -230,8 +232,10 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     backRelay = null;
     acceptApp = null;
     installApp = null;
+    connectedFriends = null;
 
     pickAppSubject = null;
+
     super.onDestroy();
   }
 
@@ -316,9 +320,20 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     transferRecordAdapter.notifyDataSetChanged();
   }
 
+  @Override public Observable<Void> clickedConnectedFriends() {
+    return connectedFriends;
+  }
+
+  @Override public void openConnectedFriendsFragment() {
+    getFragmentNavigator().navigateTo(SpotAndShareConnectedFriendsFragment.newInstance());
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
+    int id = item.getItemId();
+    if (id == android.R.id.home) {
       backRelay.call(null);
+    } else if (id == R.id.spotandshare_connected_friends) {
+      connectedFriends.onNext(null);
     }
     return false;
   }

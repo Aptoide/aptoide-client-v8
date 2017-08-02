@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item
-      android:id="@+id/connected_clients"
+      android:id="@+id/spotandshare_connected_friends"
       android:icon="@drawable/beta_icon"
       android:orderInCategory="1"
       android:title="@string/spotandshare_short_connected_friends"
