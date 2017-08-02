@@ -106,6 +106,12 @@ public interface Account {
    */
   Account.Type getType();
 
+  /**
+   * Returns the Store of the user.
+   * Attention: If the user does not have a store, store is not null.
+   *
+   * @return Store of the user.
+   */
   Store getStore();
 
   /**

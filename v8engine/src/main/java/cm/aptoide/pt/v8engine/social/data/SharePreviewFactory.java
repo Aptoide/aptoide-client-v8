@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
@@ -234,10 +233,10 @@ public class SharePreviewFactory {
   private void setPreviewHeader(TextView storeName, ImageView storeAvatar, ImageView userAvatar,
       TextView userName, Context context) {
     if (accountManager.getAccount()
-        .getStore()
-        .getName() != null) {
+        .hasStore()) {
       storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
-      if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
+      if (accountManager.getAccount()
+          .isPublicUser()) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
