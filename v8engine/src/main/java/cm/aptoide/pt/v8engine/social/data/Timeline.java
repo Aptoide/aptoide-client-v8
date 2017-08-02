@@ -50,6 +50,10 @@ public class Timeline {
     return timelinePostsRepository.getCards(cardId);
   }
 
+  public Single<List<Post>> getFreshCards() {
+    return timelinePostsRepository.getFreshCards();
+  }
+
   public Single<List<Post>> getNextCards() {
     return timelinePostsRepository.getNextCards();
   }
@@ -103,7 +107,7 @@ public class Timeline {
     return service.getTimelineStats();
   }
 
-  public Single<Post> getTimelineStatisticsPost() {
+  public Single<Post> getTimelineLoginPost() {
     return Single.just(new TimelineLoginPost());
   }
 

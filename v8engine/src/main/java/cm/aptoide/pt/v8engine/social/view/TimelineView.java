@@ -43,8 +43,6 @@ public interface TimelineView extends View {
 
   void hideLoadMoreProgressIndicator();
 
-  boolean isNewRefresh();
-
   Observable<Void> floatingActionButtonClicked();
 
   Completable showFloatingActionButton();

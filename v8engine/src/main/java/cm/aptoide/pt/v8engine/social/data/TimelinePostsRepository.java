@@ -25,6 +25,11 @@ public class TimelinePostsRepository {
         .doOnSuccess(posts -> cachedPosts = posts);
   }
 
+  public Single<List<Post>> getFreshCards() {
+    return postsRemoteDataSource.getCards()
+        .doOnSuccess(posts -> cachedPosts = posts);
+  }
+
   public Single<List<Post>> getCards(String cardId) {
     if (cachedPosts != null) {
       return Single.just(cachedPosts);

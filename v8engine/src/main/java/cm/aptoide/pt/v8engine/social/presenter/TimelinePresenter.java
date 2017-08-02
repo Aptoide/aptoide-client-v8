@@ -165,7 +165,7 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(__ -> view.showProgressIndicator())
             .flatMapSingle(cardId -> Single.zip(
                 accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineStatisticsPost(), timeline.getCards(cardId),
+                    : timeline.getTimelineLoginPost(), timeline.getCards(cardId),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cards -> showCardsAndHideProgress(cards))
@@ -217,7 +217,6 @@ public class TimelinePresenter implements Presenter {
   private void onCreateShowPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .filter(__ -> view.isNewRefresh())
         .doOnNext(__ -> view.showProgressIndicator())
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
@@ -225,7 +224,7 @@ public class TimelinePresenter implements Presenter {
         .observeOn(Schedulers.io())
         .flatMapSingle(account -> Single.zip(
             account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                : timeline.getTimelineLoginPost(), timeline.getCards(),
             (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> {
@@ -253,7 +252,7 @@ public class TimelinePresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> Single.zip(
                 account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                    : timeline.getTimelineLoginPost(), timeline.getFreshCards(),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cards -> showCardsAndHideRefresh(cards))
@@ -296,7 +295,7 @@ public class TimelinePresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> Single.zip(
                 account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                    : timeline.getTimelineLoginPost(), timeline.getCards(),
                 (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(posts -> {

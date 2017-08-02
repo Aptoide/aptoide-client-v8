@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.social.view;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
@@ -30,7 +31,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -38,14 +38,12 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
-import cm.aptoide.pt.v8engine.social.data.PostsRemoteDataSource;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
@@ -80,12 +78,11 @@ import rx.subjects.PublishSubject;
 
 public class TimelineFragment extends FragmentView implements TimelineView {
 
-  public static final int LATEST_PACKAGES_COUNT = 20;
-  public static final int RANDOM_PACKAGES_COUNT = 10;
   private static final String ACTION_KEY = "action";
   private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String STORE_ID = "STORE_ID";
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
+  private static final String LIST_STATE_KEY = "LIST_STATE";
 
   /**
    * The minimum number of items to have below your current scroll position before loading more.
@@ -97,6 +94,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private PublishSubject<Post> sharePreviewPublishSubject;
   private PublishSubject<PostComment> commentPostResponseSubject;
   private RecyclerView list;
+  private Parcelable listState;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
   private View coordinatorLayout;
@@ -104,11 +102,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private View genericError;
   private View retryButton;
   private TokenInvalidator tokenInvalidator;
-  private LinksHandlerFactory linksHandlerFactory;
   private SharedPreferences sharedPreferences;
   private FloatingActionButton floatingActionButton;
   private InstallManager installManager;
-  private boolean newRefresh;
   private Long userId;
   private Long storeId;
   private StoreContext storeContext;
@@ -121,6 +117,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private PublishRelay<View> loginPrompt;
   private TimelineService timelineService;
   private TimelinePostsRepository timelinePostsRepository;
+  private DateCalculator dateCalculator;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -151,12 +148,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    newRefresh = true;
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
-    linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     sharePreviewFactory = new SharePreviewFactory(accountManager);
     sharedPreferences =
@@ -164,34 +159,30 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     postTouchEventPublishSubject = PublishSubject.create();
     sharePreviewPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
-    final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
+    dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
-    spannableFactory = new SpannableFactory();
-    adapter = new PostAdapter(Collections.emptyList(),
-        new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
-            new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject)), new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
 
-    int limit = 20;
-    int initialOffset = 0;
-
-    timelinePostsRepository = new TimelinePostsRepository(
-        new PostsRemoteDataSource(getArguments().getString(ACTION_KEY),
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, limit,
-            initialOffset, Integer.MAX_VALUE, tokenInvalidator, sharedPreferences));
+    timelinePostsRepository =
+        ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
+            getArguments().getString(ACTION_KEY));
 
     timelineService = new TimelineService(userId,
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), new TimelineResponseCardMapper(), tokenInvalidator,
         sharedPreferences);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    if (list != null) {
+      outState.putParcelable(LIST_STATE_KEY, list.getLayoutManager()
+          .onSaveInstanceState());
+    }
   }
 
   @Nullable @Override
@@ -202,11 +193,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
+        listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+        savedInstanceState.putParcelable(LIST_STATE_KEY, null);
+      }
+    }
     genericError = view.findViewById(R.id.generic_error);
     retryButton = genericError.findViewById(R.id.retry);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
-    list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     loginPrompt = PublishRelay.create();
     helper = RecyclerViewPositionHelper.createHelper(list);
@@ -216,6 +212,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     coordinatorLayout = view.findViewById(R.id.coordinator_layout);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
+
+    spannableFactory = new SpannableFactory();
+    adapter = new PostAdapter(Collections.emptyList(),
+        new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
+            new MinimalCardViewFactory(dateCalculator, spannableFactory,
+                postTouchEventPublishSubject)), new ProgressCard());
+    list.setAdapter(adapter);
 
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
@@ -256,11 +259,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    listState = list.getLayoutManager()
+        .onSaveInstanceState();
+    adapter.clearPosts();
     hideLoadMoreProgressIndicator();
   }
 
   @Override public void showCards(List<Post> cards) {
     adapter.updatePosts(cards);
+    if (listState != null) {
+      list.getLayoutManager()
+          .onRestoreInstanceState(listState);
+      listState = null;
+    }
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     list.setVisibility(View.VISIBLE);
@@ -344,12 +355,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .getName(), "hide indicator called");
     bottomAlreadyReached = false;
     adapter.removeLoadMoreProgress();
-  }
-
-  @Override public boolean isNewRefresh() {
-    boolean b = newRefresh;
-    newRefresh = false;
-    return b;
   }
 
   @Override public Observable<Void> floatingActionButtonClicked() {
