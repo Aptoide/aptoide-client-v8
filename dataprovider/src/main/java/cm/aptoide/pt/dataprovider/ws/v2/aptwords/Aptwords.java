@@ -5,10 +5,12 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.http.FieldMap;
@@ -22,13 +24,17 @@ import rx.Observable;
  */
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
-  private static final String BASE_URL = BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_SCHEME
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_HOST
-      + "/api/2/";
+  Aptwords(OkHttpClient httpClient, Converter.Factory converterFactory,
+      SharedPreferences sharedPreferences) {
+    super(Interfaces.class, httpClient, converterFactory, getHost(sharedPreferences));
+  }
 
-  Aptwords(OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(Interfaces.class, httpClient, converterFactory, BASE_URL);
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_HOST
+        + "/api/2/";
   }
 
   interface Interfaces {
