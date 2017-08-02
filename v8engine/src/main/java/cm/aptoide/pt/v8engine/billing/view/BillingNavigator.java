@@ -60,8 +60,7 @@ public class BillingNavigator {
             PayPalFragment.create(getProductBundle(product), paymentMethod.getId()));
         break;
       case PaymentMethodMapper.MOL_POINTS:
-        fragmentNavigator.navigateTo(
-            MolFragment.create(getProductBundle(product), paymentMethod.getId()));
+        fragmentNavigator.navigateTo(MolFragment.create(getProductBundle(product)));
         break;
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:

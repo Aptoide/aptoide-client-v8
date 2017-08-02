@@ -36,7 +36,7 @@ public class MolPresenter implements Presenter {
 
     onViewCreatedCheckTransactionCompleted();
 
-    handleWebsiteLoadedEvent();
+    handleUrlLoadErrorEvent();
 
     handleBackButtonEvent();
 
@@ -63,15 +63,14 @@ public class MolPresenter implements Presenter {
             .first(transaction -> transaction.isPendingAuthorization())
             .cast(MolTransaction.class)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(transaction -> view.loadWebsite(transaction.getConfirmationUrl(),
-                transaction.getSuccessUrl())))
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+            .doOnNext(transaction -> {
+              view.hideLoading();
+              view.loadWebsite(transaction.getConfirmationUrl(), transaction.getSuccessUrl());
+            }))
+        .observeOn(AndroidSchedulers.mainThread()).compose(
+        view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.showError();
-          view.hideLoading();
-        });
+        }, throwable -> showError());
   }
 
   private void onViewCreatedCheckTransactionError() {
@@ -83,17 +82,11 @@ public class MolPresenter implements Presenter {
         .flatMap(product -> billing.getTransaction(product)
             .first(transaction -> transaction.isFailed())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(transaction -> {
-              view.showError();
-              view.hideLoading();
-            }))
+            .doOnNext(transaction -> showError()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.showError();
-          view.hideLoading();
-        });
+        }, throwable -> showError());
   }
 
   private void onViewCreatedCheckTransactionCompleted() {
@@ -112,10 +105,7 @@ public class MolPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.showError();
-          view.hideLoading();
-        });
+        }, throwable -> showError());
   }
 
   private void handleRedirectUrlEvent() {
@@ -130,24 +120,18 @@ public class MolPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
-  private void handleWebsiteLoadedEvent() {
+  private void handleUrlLoadErrorEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.urlLoadedEvent())
+        .flatMap(created -> view.loadUrlErrorEvent())
         .first()
-        .doOnNext(loaded -> view.hideLoading())
+        .doOnNext(loaded -> showError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void handleBackButtonEvent() {
@@ -159,10 +143,7 @@ public class MolPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void handleDismissEvent() {
@@ -172,5 +153,10 @@ public class MolPresenter implements Presenter {
         .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+  }
+
+  private void showError() {
+    view.hideLoading();
+    view.showError();
   }
 }

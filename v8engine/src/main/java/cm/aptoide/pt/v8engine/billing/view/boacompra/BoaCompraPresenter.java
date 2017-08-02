@@ -47,7 +47,7 @@ public class BoaCompraPresenter implements Presenter {
 
     onViewCreatedShowBoaCompraPendingLoading();
 
-    handleWebsiteLoadedEvent();
+    handleUrlLoadErrorEvent();
 
     handleBackButtonEvent();
 
@@ -73,15 +73,14 @@ public class BoaCompraPresenter implements Presenter {
         .first(authorization -> authorization.isInitialized())
         .cast(BoaCompraAuthorization.class)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(authorization -> view.loadWebsite(authorization.getUrl(),
-            authorization.getRedirectUrl()))
+        .doOnNext(authorization -> {
+          view.hideLoading();
+          view.loadWebsite(authorization.getUrl(), authorization.getRedirectUrl());
+        })
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void onViewCreatedProcessAuthorizedBoaCompra() {
@@ -94,17 +93,16 @@ public class BoaCompraPresenter implements Presenter {
         .flatMapCompletable(authorization -> productProvider.getProduct()
             .flatMapCompletable(product -> billing.processPayment(paymentMethodId, product)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  view.hideLoading();
-                  navigator.popTransactionAuthorizationView();
-                })))
+                .doOnCompleted(() -> popAuthorizationView())))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
+  }
+
+  private void popAuthorizationView() {
+    view.hideLoading();
+    navigator.popTransactionAuthorizationView();
   }
 
   private void onViewCreatedAuthorizeBoaCompra() {
@@ -117,10 +115,7 @@ public class BoaCompraPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void handleRedirectUrlEvent() {
@@ -133,10 +128,7 @@ public class BoaCompraPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void onViewCreatedShowBoaCompraError() {
@@ -145,16 +137,10 @@ public class BoaCompraPresenter implements Presenter {
         .flatMap(product -> billing.getAuthorization(paymentMethodId))
         .first(authorization -> authorization.isFailed())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> {
-          view.hideLoading();
-          view.showError();
-        })
+        .doOnNext(__ -> showError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void onViewCreatedShowBoaCompraPendingLoading() {
@@ -166,23 +152,18 @@ public class BoaCompraPresenter implements Presenter {
         .doOnNext(loaded -> view.showLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
-  private void handleWebsiteLoadedEvent() {
+  private void handleUrlLoadErrorEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.urlLoadedEvent())
-        .doOnNext(loaded -> view.hideLoading())
+        .flatMap(created -> view.loadUrlErrorEvent())
+        .first()
+        .doOnNext(loaded -> showError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void handleBackButtonEvent() {
@@ -194,10 +175,7 @@ public class BoaCompraPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          navigator.popTransactionAuthorizationView();
-        });
+        }, throwable -> popAuthorizationView());
   }
 
   private void handleDismissEvent() {
@@ -207,9 +185,11 @@ public class BoaCompraPresenter implements Presenter {
         .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          navigator.popTransactionAuthorizationView();
-        });
+        }, throwable -> popAuthorizationView());
+  }
+
+  private void showError() {
+    view.hideLoading();
+    view.showError();
   }
 }

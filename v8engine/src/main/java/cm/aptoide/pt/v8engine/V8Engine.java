@@ -101,13 +101,14 @@ import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
-import cm.aptoide.pt.v8engine.billing.authorization.InMemoryAuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.authorization.RealmAuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.V3AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.product.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.transaction.RealmTransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionMapper;
+import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionService;
 import cm.aptoide.pt.v8engine.billing.transaction.V3TransactionService;
@@ -771,10 +772,9 @@ public abstract class V8Engine extends Application {
               getDefaultSharedPreferences());
 
       final AuthorizationPersistence authorizationPersistence =
-          new InMemoryAuthorizationPersistence(new HashMap<>(), PublishRelay.create(),
-              authorizationFactory);
+          new RealmAuthorizationPersistence(getDatabase(), authorizationFactory);
 
-      final RealmTransactionPersistence transactionPersistence =
+      final TransactionPersistence transactionPersistence =
           new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
               transactionMapper, transactionFactory);
 
