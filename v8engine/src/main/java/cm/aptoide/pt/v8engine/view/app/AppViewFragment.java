@@ -907,7 +907,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             group != null ? group.getId() : null, 5)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             listApps.getDataList()
-                .getList(), appName))
+                .getList()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {

@@ -21,16 +21,13 @@ import lombok.EqualsAndHashCode;
 
   private List<MinimalAd> minimalAds;
   private List<App> appsList;
-  private String appName;
 
   public AppViewSuggestedAppsDisplayable() {
   }
 
-  public AppViewSuggestedAppsDisplayable(List<MinimalAd> minimalAds, List<App> appsList,
-      String appName) {
+  public AppViewSuggestedAppsDisplayable(List<MinimalAd> minimalAds, List<App> appsList) {
     this.minimalAds = minimalAds;
     this.appsList = appsList;
-    this.appName = appName;
   }
 
   @Override protected Displayable.Configs getConfig() {
@@ -39,9 +36,5 @@ import lombok.EqualsAndHashCode;
 
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_suggested_apps;
-  }
-
-  public String getAppName() {
-    return appName;
   }
 }

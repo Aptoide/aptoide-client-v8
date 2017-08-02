@@ -541,7 +541,7 @@
   <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
   <string name="sponsored">Sponsored</string>
   <string name="friends_installs">Your friends installs</string>
-  <string name="similar_apps_to">Similar apps to %s</string>
+  <string name="you_might_also_like">You might also like</string>
   <string name="highlighted_apps">Highlighted</string>
   <string name="button_more">More</string>
   <string name="unhide_post">UNHIDE</string>
