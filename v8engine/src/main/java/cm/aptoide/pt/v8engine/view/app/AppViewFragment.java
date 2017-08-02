@@ -619,7 +619,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     List<Group> groupsList = getApp.getNodes()
         .getGroups()
-        .getDataList()
+        .getDatalist()
         .getList();
 
     if (groupsList.size() > 0) {
@@ -906,7 +906,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
             group != null ? group.getId() : null, 5)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
-            listApps.getDataList()
+            listApps.getDatalist()
                 .getList()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

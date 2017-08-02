@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.search;
 
-import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +16,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import java.util.Date;
 
 /**
  * Created by neuro on 05-11-2015.
@@ -28,6 +28,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
   private TextView sponsored;
   private TextView downloadsTextView;
   private RatingBar ratingBar;
+  private TextView timeTextView;
 
   public SearchAdWidget(View itemView) {
     super(itemView);
@@ -39,16 +40,16 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
     sponsored = (TextView) itemView.findViewById(R.id.sponsored_label);
     downloadsTextView = (TextView) itemView.findViewById(R.id.downloads);
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
+    timeTextView = (TextView) itemView.findViewById(R.id.search_time);
   }
 
   @Override public void bindView(SearchAdDisplayable displayable) {
     MinimalAd minimalAd = displayable.getPojo();
 
     name.setText(minimalAd.getName());
-    sponsored.setTypeface(null, Typeface.BOLD);
     final FragmentActivity context = getContext();
     sponsored.setText((context.getResources()
-        .getText(R.string.sponsored) + "").toUpperCase());
+        .getText(R.string.ad) + ""));
     ImageLoader.with(context)
         .load(minimalAd.getIconPath(), icon);
 
@@ -64,5 +65,14 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
     downloadsTextView.setText(downloadNumber);
 
     ratingBar.setRating(minimalAd.getStars());
+
+    if (minimalAd.getModified() != null) {
+      Date modified = new Date(minimalAd.getModified());
+      String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
+          .getTimeDiffAll(itemView.getContext(), modified.getTime(), getContext().getResources());
+      if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
+        timeTextView.setText(timeSinceUpdate);
+      }
+    }
   }
 }

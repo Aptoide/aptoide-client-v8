@@ -539,7 +539,7 @@
   <string name="facebook_friends_list_using_timeline_empty">Social Timeline allows you to share your applications with your Facebook friends. Do you want to join the network?</string>
   <string name="X_download_number">%s down.</string>
   <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
-  <string name="sponsored">Sponsored</string>
+  <string name="ad">Ad</string>
   <string name="friends_installs">Your friends installs</string>
   <string name="you_might_also_like">You might also like</string>
   <string name="highlighted_apps">Highlighted</string>
@@ -651,5 +651,4 @@
   <string name="timeline_message_share_on_timeline_external">Write something (optional)</string>
   <string name="timeline_message_error_you_need_to_create_store_with_social_action">You need to create a store to like, comment or share</string>
   <string name="timeline_message_error_you_need_to_set_store_or_user_to_public">You need to set your store or user to public. To change these settings, go to https://www.aptoide.com</string>
-  <string name="ad" translatable="false">Ad</string>
 </resources>

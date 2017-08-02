@@ -28,7 +28,9 @@ public class MinimalAdMapper {
         .getIcon(), ad.getData()
         .getDescription(), ad.getData()
         .getDownloads(), ad.getData()
-        .getStars());
+        .getStars(), ad.getData()
+        .getModified()
+        .getTime());
   }
 
   public StoredMinimalAd map(MinimalAd minimalAd, String referrer) {
