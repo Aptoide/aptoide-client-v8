@@ -35,6 +35,7 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabconsume");
     args.put("purchasetoken", purchaseToken);
+    args.put("purchasetype", "inapp");
     return new InAppBillingConsumeRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }

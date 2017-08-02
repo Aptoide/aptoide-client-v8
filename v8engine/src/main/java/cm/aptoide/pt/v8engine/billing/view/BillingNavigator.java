@@ -121,8 +121,8 @@ public class BillingNavigator {
   private Bundle getProductBundle(Product product) {
     if (product instanceof InAppProduct) {
       return ProductProvider.createBundle(((InAppProduct) product).getApiVersion(),
-          ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(),
-          ((InAppProduct) product).getSku(), ((InAppProduct) product).getSku());
+          ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getSku(),
+          ((InAppProduct) product).getSku());
     } else if (product instanceof PaidAppProduct) {
       return ProductProvider.createBundle(((PaidAppProduct) product).getAppId(),
           ((PaidAppProduct) product).getStoreName(), ((PaidAppProduct) product).isSponsored());

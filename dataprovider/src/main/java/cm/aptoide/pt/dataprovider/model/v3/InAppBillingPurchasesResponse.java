@@ -12,9 +12,6 @@ import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * Created by marcelobenites on 8/12/16.
- */
 @Data @EqualsAndHashCode(callSuper = true) public class InAppBillingPurchasesResponse
     extends BaseV3Response {
 
@@ -29,8 +26,8 @@ import lombok.EqualsAndHashCode;
     @JsonProperty("INAAP_DATA_SIGNATURE_LIST") private List<String> signatureList;
   }
 
-  // Order must be kept here because the resulting JSON String is going to be encrypted using a
-  // public key and the resulting signature must match a signature generated on server side.
+  // Order must be kept here because the resulting JSON String must be validated against a digital
+  // signature generated and the developer public key.
   @JsonPropertyOrder({
       "orderId", "packageName", "productId", "purchaseTime", "purchaseToken", "purchaseState",
       "developerPayload"

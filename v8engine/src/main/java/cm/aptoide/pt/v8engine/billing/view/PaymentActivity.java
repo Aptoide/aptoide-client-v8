@@ -25,10 +25,9 @@ public class PaymentActivity extends BraintreeActivity {
   }
 
   public static Intent getIntent(Context context, int apiVersion, String packageName, String sku,
-      String type, String developerPayload) {
+      String developerPayload) {
     final Intent intent = new Intent(context, PaymentActivity.class);
-    intent.putExtras(
-        ProductProvider.createBundle(apiVersion, packageName, type, sku, developerPayload));
+    intent.putExtras(ProductProvider.createBundle(apiVersion, packageName, sku, developerPayload));
     return intent;
   }
 

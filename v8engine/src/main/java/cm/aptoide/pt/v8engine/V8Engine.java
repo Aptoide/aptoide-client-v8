@@ -804,7 +804,7 @@ public abstract class V8Engine extends Application {
               getDefaultSharedPreferences());
 
       billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentMethodSelector, transactionPersistence, payer);
+          paymentMethodSelector, payer);
     }
     return billing;
   }
