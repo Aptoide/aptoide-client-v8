@@ -5,7 +5,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -167,8 +166,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    if (TextUtils.isEmpty(account.getStore()
-        .getName()) && !Account.Access.PUBLIC.equals(account.getAccess())) {
+    if (account != null && !account.hasStore() && !account.isPublicUser()) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
@@ -233,8 +231,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return false;
     }
 
-    if (TextUtils.isEmpty(account.getStore()
-        .getName()) && !Account.Access.PUBLIC.equals(account.getAccess())) {
+    if (account != null && !account.hasStore() && !account.isPublicUser()) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
