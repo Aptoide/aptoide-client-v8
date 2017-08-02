@@ -59,6 +59,7 @@ public class AppViewSuggestedAppsWidget
 
     recyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), GridLayoutManager.HORIZONTAL, false));
+    recyclerView.setNestedScrollingEnabled(false);
     recyclerView.setAdapter(adapter);
 
     similarAppsToTextView.setText(String.format(Locale.getDefault(), getContext().getResources()
