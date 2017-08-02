@@ -8,9 +8,6 @@ package cm.aptoide.pt.database.accessors;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
-import cm.aptoide.pt.database.realm.PaymentAuthorization;
-import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -99,7 +96,7 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
       scheduledSchema.removeField("md5");
       scheduledSchema.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
 
-      realm.where(Update.class.getSimpleName())
+      realm.where("Update")
           //.equalTo(Update.LABEL, "").or()
           //.isNull(Update.LABEL)
           .findAll()
@@ -217,8 +214,8 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
       schema.get("Download")
           .addField("downloadError", int.class);
 
-      realm.delete(PaymentConfirmation.class.getSimpleName());
-      realm.delete(PaymentAuthorization.class.getSimpleName());
+      realm.delete("PaymentConfirmation");
+      realm.delete("PaymentAuthorization");
 
       schema.get("PaymentConfirmation")
           .addField("payerId", String.class, FieldAttribute.REQUIRED);
@@ -248,7 +245,7 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     if (oldVersion == 8082) {
-      schema.create(Notification.class.getSimpleName())
+      schema.create("Notification")
           .addField("key", String.class, FieldAttribute.PRIMARY_KEY)
           .addField("abTestingGroup", String.class)
           .addField("body", String.class)
@@ -268,7 +265,7 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     if (oldVersion == 8083) {
-      schema.get(Notification.class.getSimpleName())
+      schema.get("Notification")
           .addField(Notification.OWNER_ID_KEY, String.class)
           .transform(notification -> notification.set(Notification.OWNER_ID_KEY, ""));
 
@@ -276,7 +273,7 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     if (oldVersion == 8084) {
-      realm.delete(PaymentConfirmation.class.getSimpleName());
+      realm.delete("PaymentConfirmation");
       schema.get("PaymentConfirmation")
           .addField("paymentMethodId", int.class);
 
@@ -295,9 +292,15 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     if (oldVersion == 8085) {
-      realm.delete(PaymentConfirmation.class.getSimpleName());
+      realm.delete("PaymentConfirmation");
       schema.get("PaymentConfirmation")
           .addField("clientToken", String.class);
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 8086) {
+      realm.delete("PaymentAuthorization");
 
       oldVersion++;
     }

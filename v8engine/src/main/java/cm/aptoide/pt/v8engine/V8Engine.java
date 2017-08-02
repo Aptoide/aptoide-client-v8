@@ -36,9 +36,9 @@ import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
+import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
@@ -101,7 +101,7 @@ import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
-import cm.aptoide.pt.v8engine.billing.authorization.RealmAuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.authorization.InMemoryAuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.V3AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.product.ProductFactory;
@@ -772,7 +772,8 @@ public abstract class V8Engine extends Application {
               getDefaultSharedPreferences());
 
       final AuthorizationPersistence authorizationPersistence =
-          new RealmAuthorizationPersistence(getDatabase(), authorizationFactory);
+          new InMemoryAuthorizationPersistence(new HashMap<>(), PublishRelay.create(),
+              authorizationFactory);
 
       final TransactionPersistence transactionPersistence =
           new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
@@ -812,7 +813,7 @@ public abstract class V8Engine extends Application {
     if (database == null) {
       final RealmConfiguration realmConfiguration =
           new RealmConfiguration.Builder(this).name("aptoide.realm.db")
-              .schemaVersion(8086)
+              .schemaVersion(8087)
               .migration(new RealmToRealmDatabaseMigration())
               .build();
       Realm.setDefaultConfiguration(realmConfiguration);

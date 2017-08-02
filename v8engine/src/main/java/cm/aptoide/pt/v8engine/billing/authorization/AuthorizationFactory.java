@@ -29,20 +29,6 @@ public class AuthorizationFactory {
     }
   }
 
-  public cm.aptoide.pt.database.realm.PaymentAuthorization map(Authorization authorization) {
-    return new cm.aptoide.pt.database.realm.PaymentAuthorization(authorization.getPaymentId(),
-        ((BoaCompraAuthorization) authorization).getUrl(),
-        ((BoaCompraAuthorization) authorization).getRedirectUrl(), authorization.getStatus()
-        .name(), authorization.getPayerId());
-  }
-
-  public Authorization map(cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return create(paymentAuthorization.getPaymentId(),
-        Authorization.Status.valueOf(paymentAuthorization.getStatus()),
-        paymentAuthorization.getPayerId(), paymentAuthorization.getUrl(),
-        paymentAuthorization.getRedirectUrl());
-  }
-
   public List<Authorization> map(PaymentAuthorizationsResponse response, String payerId,
       int paymentId) {
 
