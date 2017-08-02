@@ -30,25 +30,28 @@ public class Timeline {
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
   private final TimelineAnalytics timelineAnalytics;
+  private final TimelinePostsRepository timelinePostsRepository;
 
   public Timeline(TimelineService service, InstallManager installManager,
-      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics) {
+      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
+      TimelinePostsRepository timelinePostsRepository) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.timelineAnalytics = timelineAnalytics;
+    this.timelinePostsRepository = timelinePostsRepository;
   }
 
   public Single<List<Post>> getCards() {
-    return service.getCards();
+    return timelinePostsRepository.getCards();
   }
 
   public Single<List<Post>> getCards(String cardId) {
-    return service.getCards(cardId);
+    return timelinePostsRepository.getCards(cardId);
   }
 
   public Single<List<Post>> getNextCards() {
-    return service.getNextCards();
+    return timelinePostsRepository.getNextCards();
   }
 
   public Observable<Install> updateApp(CardTouchEvent cardTouchEvent) {

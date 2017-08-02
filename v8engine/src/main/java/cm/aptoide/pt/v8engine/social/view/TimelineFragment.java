@@ -45,9 +45,11 @@ import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
+import cm.aptoide.pt.v8engine.social.data.PostsRemoteDataSource;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
+import cm.aptoide.pt.v8engine.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
@@ -118,6 +120,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TimelineAnalytics timelineAnalytics;
   private PublishRelay<View> loginPrompt;
   private TimelineService timelineService;
+  private TimelinePostsRepository timelinePostsRepository;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -175,12 +178,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     int limit = 20;
     int initialOffset = 0;
 
-    timelineService = new TimelineService(getArguments().getString(ACTION_KEY), userId,
+    timelinePostsRepository = new TimelinePostsRepository(
+        new PostsRemoteDataSource(getArguments().getString(ACTION_KEY),
+            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(),
+            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
+            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, limit,
+            initialOffset, Integer.MAX_VALUE, tokenInvalidator, sharedPreferences));
+
+    timelineService = new TimelineService(userId,
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
-        LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(),
-        linksHandlerFactory, limit, initialOffset, Integer.MAX_VALUE, tokenInvalidator,
+        WebService.getDefaultConverter(), new TimelineResponseCardMapper(), tokenInvalidator,
         sharedPreferences);
   }
 
@@ -221,7 +231,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new StoreCredentialsProviderImpl(storeAccessor);
 
     Timeline timeline =
-        new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics);
+        new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics,
+            timelinePostsRepository);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
@@ -294,6 +305,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public Observable<Void> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
         .filter(event -> !bottomAlreadyReached
+            && helper.getItemCount() > visibleThreshold
             && helper != null
             && event.view()
             .isAttachedToWindow()
