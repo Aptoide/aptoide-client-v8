@@ -470,7 +470,7 @@
   <string name="dont_show_again">Don\'t show this dialog again</string>
 
   <!-- App View -->
-
+  <string name="appview_title_you_might_also_like">You might also like</string>
   <string name="rollback_empty">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed apps (via Aptoide) including version and install date.</string>
 
   <string name="see_more">See More</string>
