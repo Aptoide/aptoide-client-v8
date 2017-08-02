@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,8 +30,6 @@ import rx.schedulers.Schedulers;
  * Created by neuro on 22-04-2016.
  */
 public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesRequest.Body> {
-
-  private static final String TAG = ListAppsUpdatesRequest.class.getName();
 
   private static final int SPLIT_SIZE = 100;
   private final SharedPreferences sharedPreferences;
@@ -53,14 +52,27 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
+  private static List<PackageInfo> getAllInstalledApps(PackageManager packageManager) {
+    return packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
+  }
+
   private static List<ApksData> getInstalledApks(PackageManager packageManager) {
     // TODO: 01-08-2016 neuro benchmark this, looks heavy
-    List<PackageInfo> allInstalledApps = AptoideUtils.SystemU.getAllInstalledApps(packageManager);
+    List<PackageInfo> allInstalledApps = getAllInstalledApps(packageManager);
     LinkedList<ApksData> apksDatas = new LinkedList<>();
 
     for (PackageInfo packageInfo : allInstalledApps) {
+      boolean isEnabled = true;
+      try {
+        isEnabled = packageManager.getApplicationInfo(packageInfo.packageName, 0).enabled;
+      } catch (PackageManager.NameNotFoundException ex) {
+        CrashReport.getInstance()
+            .log(ex);
+      }
+
       apksDatas.add(new ApksData(packageInfo.packageName, packageInfo.versionCode,
-          AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray())));
+          AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()),
+          isEnabled));
     }
 
     return apksDatas;
@@ -196,21 +208,27 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
   public static class ApksData {
 
     @JsonProperty("package") private String packageName;
-    private int vercode;
+    @JsonProperty("vercode") private int versionCode;
     private String signature;
+    private boolean isEnabled;
 
-    public ApksData(String packageName, int vercode, String signature) {
+    public ApksData(String packageName, int versionCode, String signature, boolean isEnabled) {
       this.packageName = packageName;
-      this.vercode = vercode;
+      this.versionCode = versionCode;
       this.signature = signature;
+      this.isEnabled = isEnabled;
+    }
+
+    public boolean isEnabled() {
+      return isEnabled;
     }
 
     public String getPackageName() {
       return packageName;
     }
 
-    public int getVercode() {
-      return vercode;
+    public int getVersionCode() {
+      return versionCode;
     }
 
     public String getSignature() {

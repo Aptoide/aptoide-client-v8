@@ -87,4 +87,12 @@ public class GoogleAccount implements Account {
   @Override public Store getStore() {
     return account.getStore();
   }
+
+  @Override public boolean hasStore() {
+    return account != null && account.hasStore();
+  }
+
+  @Override public boolean isPublicUser() {
+    return account != null && account.getAccess() == Access.PUBLIC;
+  }
 }

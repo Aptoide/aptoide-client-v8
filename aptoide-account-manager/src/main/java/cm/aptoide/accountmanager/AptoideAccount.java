@@ -5,6 +5,7 @@
 
 package cm.aptoide.accountmanager;
 
+import android.text.TextUtils;
 import java.util.List;
 import rx.Completable;
 
@@ -113,6 +114,14 @@ public final class AptoideAccount implements Account {
 
   @Override public Store getStore() {
     return store;
+  }
+
+  @Override public boolean hasStore() {
+    return store != null && !TextUtils.isEmpty(store.getName());
+  }
+
+  @Override public boolean isPublicUser() {
+    return access == Access.PUBLIC;
   }
 
   private void refreshToken(String accessToken) {
