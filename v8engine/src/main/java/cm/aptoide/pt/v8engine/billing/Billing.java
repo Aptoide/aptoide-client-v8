@@ -12,7 +12,6 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedExcept
 import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
-import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;

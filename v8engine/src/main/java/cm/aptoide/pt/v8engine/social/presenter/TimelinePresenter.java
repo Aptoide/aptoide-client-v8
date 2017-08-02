@@ -3,10 +3,8 @@ package cm.aptoide.pt.v8engine.social.presenter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -491,20 +489,16 @@ public class TimelinePresenter implements Presenter {
             .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
-  //todo missing  && !store.hasPublicAccess()
   private boolean showSetUserOrStoreToPublic(Account account) {
-    final Account.Access userAccess = account.getAccess();
-    final Store store = account.getStore();
-    return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (store
-        != null);
+    //TODO missing this part... at the moment we don't know if the store is public or private, after login
+    //return account != null && !account.isPublicUser() && account.hasStore() && !account.isPublicStore();
+    // user is private and has a private store
+    return account != null && !account.isPublicUser() && account.hasStore();
   }
 
   private boolean showCreateStore(Account account) {
-    Account.Access userAccess = account.getAccess();
-    return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (
-        account.getStore() == null
-            || TextUtils.isEmpty(account.getStore()
-            .getName()));
+    // user is private and does not have a store
+    return account != null && !account.isPublicUser() && !account.hasStore();
   }
 
   private void handleLoginMessageClick() {

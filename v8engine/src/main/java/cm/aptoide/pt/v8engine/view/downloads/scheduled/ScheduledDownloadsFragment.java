@@ -135,7 +135,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
           break;
         case AskInstallAll:
           GenericDialogs.createGenericYesNoCancelMessage(getContext(),
-              getString(R.string.schdwntitle), getString(R.string.schDown_install))
+              getString(R.string.all_title_schedule_download), getString(R.string.schDown_install))
               .subscribe(userResponse -> {
                 switch (userResponse) {
                   case YES:
@@ -256,7 +256,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(R.string.schdwntitle);
+    toolbar.setTitle(R.string.all_title_schedule_download);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {

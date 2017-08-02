@@ -106,7 +106,30 @@ public interface Account {
    */
   Account.Type getType();
 
+  /**
+   * Returns the Store of the user.
+   * Attention: If the user does not have a store, store is not null.
+   *
+   * @return Store of the user.
+   */
   Store getStore();
+
+  /**
+   * Returns true if the user has a store
+   *
+   * @return True, if the user has a store
+   */
+  boolean hasStore();
+
+  /**
+   * True if the user is public.
+   *
+   * On the android team: public means access = public
+   * On the android team: private means access = private or unlisted
+   *
+   * @return True if the user is public. False if user is private.
+   */
+  boolean isPublicUser();
 
   /**
    * Account information access level.
