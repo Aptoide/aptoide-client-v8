@@ -37,6 +37,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -45,6 +46,7 @@ import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
+import cm.aptoide.pt.v8engine.social.data.PostFilter;
 import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
@@ -70,6 +72,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -221,14 +224,21 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     int limit = 20;
     int initialOffset = 0;
 
-    TimelineService timelineService =
+    final HashSet<String> postIds = new HashSet<>();
+    final PostFilter.PostDuplicateFilter postDuplicateFilter =
+        new PostFilter.PostDuplicateFilter(postIds);
+    final InstalledRepository installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext());
+    final PostFilter postFilter = new PostFilter(postDuplicateFilter, installedRepository);
+
+    final TimelineService timelineService =
         new TimelineService(getArguments().getString(ACTION_KEY), postIdForTimelineRequest, userId,
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
             RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, limit,
-            initialOffset, Integer.MAX_VALUE, tokenInvalidator, sharedPreferences);
+            initialOffset, Integer.MAX_VALUE, tokenInvalidator, sharedPreferences, postFilter);
 
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics);
