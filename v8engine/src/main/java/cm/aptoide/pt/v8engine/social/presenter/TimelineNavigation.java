@@ -39,4 +39,6 @@ public interface TimelineNavigation {
   void navigateToLikesView(String cardId, long numberOfLikes);
 
   void navigateToComments(String cardId);
+
+  rx.Observable<String> postNavigation();
 }

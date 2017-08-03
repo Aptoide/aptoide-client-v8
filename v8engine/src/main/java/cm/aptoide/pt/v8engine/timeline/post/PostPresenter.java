@@ -9,9 +9,11 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -28,12 +30,14 @@ class PostPresenter implements Presenter {
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
   private final PostFragment.PostUrlProvider postUrlProvider;
+  private final TabNavigator tabNavigator;
   private UrlValidator urlValidator;
   private AccountNavigator accountNavigator;
 
   public PostPresenter(PostFragment view, CrashReport crashReport, PostManager postManager,
       FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
-      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider) {
+      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider,
+      TabNavigator tabNavigator) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
@@ -41,6 +45,7 @@ class PostPresenter implements Presenter {
     this.urlValidator = urlValidator;
     this.accountNavigator = accountNavigator;
     this.postUrlProvider = postUrlProvider;
+    this.tabNavigator = tabNavigator;
   }
 
   @Override public void present() {
@@ -258,8 +263,11 @@ class PostPresenter implements Presenter {
                   : view.getCurrentSelected()
                       .getPackageName())
                   .observeOn(AndroidSchedulers.mainThread())
-                  .doOnCompleted(() -> view.showSuccessMessage())
-                  .doOnCompleted(() -> goBack());
+                  .doOnSuccess(postId -> view.showSuccessMessage())
+                  .doOnSuccess(
+                      postId -> tabNavigator.navigate(new AppsTimelineTabNavigation(postId)))
+                  .doOnSuccess(postId -> goBack())
+                  .toCompletable();
             })
             .doOnError(throwable -> handleError(throwable))
             .retry())
