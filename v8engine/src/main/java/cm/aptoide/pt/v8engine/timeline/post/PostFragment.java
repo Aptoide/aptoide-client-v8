@@ -343,7 +343,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public void exit() {
-    getActivity().onBackPressed();
+    getActivity().finish();
   }
 
   @Override public void showNoLoginError() {

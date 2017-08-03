@@ -6,9 +6,9 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.ActivityView;
+import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 
-public class PostActivity extends ActivityView implements PostFragment.PostUrlProvider {
+public class PostActivity extends BackButtonActivity implements PostFragment.PostUrlProvider {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -17,6 +17,10 @@ public class PostActivity extends ActivityView implements PostFragment.PostUrlPr
       final Fragment fragment = PostFragment.newInstanceFromExternalSource();
       getFragmentNavigator().navigateToWithoutBackSave(fragment);
     }
+  }
+
+  @Override public void onBackPressed() {
+    super.onBackPressed();
   }
 
   @LayoutRes private int getLayoutId() {
