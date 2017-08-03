@@ -70,6 +70,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
+import cm.aptoide.pt.v8engine.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
@@ -190,6 +191,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
   @Getter private boolean suggestedShowing;
@@ -301,6 +303,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
@@ -901,13 +905,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void showSuggestedApps() {
+    appViewSimilarAppAnalytics.similarAppsIsShown();
+
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
         .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
             group != null ? group.getId() : null, 5)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             listApps.getDatalist()
-                .getList()))
+                .getList(), appViewSimilarAppAnalytics))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {
