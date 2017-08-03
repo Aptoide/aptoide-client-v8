@@ -54,7 +54,7 @@ public class AuthorizationSync extends Sync {
   private Completable createLocalAuthorization(String payerId, List<Authorization> authorizations) {
     return Observable.from(authorizations)
         .filter(authorization -> authorization.getPaymentId() == paymentId)
-        .switchIfEmpty(authorizationPersistence.createAuthorization(paymentId, payerId,
+        .switchIfEmpty(authorizationPersistence.createAuthorization(payerId, paymentId,
             Authorization.Status.INACTIVE)
             .toObservable())
         .toCompletable();

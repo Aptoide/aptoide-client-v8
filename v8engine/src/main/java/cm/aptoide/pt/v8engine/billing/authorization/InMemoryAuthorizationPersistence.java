@@ -29,13 +29,14 @@ public class InMemoryAuthorizationPersistence implements AuthorizationPersistenc
     });
   }
 
-  @Override public Observable<Authorization> getAuthorization(int paymentId, String payerId) {
+  @Override public Observable<Authorization> getAuthorization(String payerId, int paymentMethodId) {
     return authorizationRelay.startWith(Observable.defer(() -> {
-      if (authorizations.containsKey(getAuthorizationKey(payerId, paymentId))) {
-        return Observable.just(authorizations.get(getAuthorizationKey(payerId, paymentId)));
+      if (authorizations.containsKey(getAuthorizationKey(payerId, paymentMethodId))) {
+        return Observable.just(authorizations.get(getAuthorizationKey(payerId, paymentMethodId)));
       }
       return Observable.empty();
-    }));
+    }))
+        .filter(authorization -> authorization.getPaymentId() == paymentMethodId);
   }
 
   @Override public Completable saveAuthorizations(List<Authorization> authorizations) {
@@ -44,10 +45,10 @@ public class InMemoryAuthorizationPersistence implements AuthorizationPersistenc
         .toCompletable();
   }
 
-  @Override public Single<Authorization> createAuthorization(int paymentId, String payerId,
+  @Override public Single<Authorization> createAuthorization(String payerId, int paymentMethodId,
       Authorization.Status status) {
     final Authorization authorization =
-        authorizationFactory.create(paymentId, status, payerId, "", "");
+        authorizationFactory.create(paymentMethodId, status, payerId, "", "");
     return saveAuthorization(authorization).andThen(Single.just(authorization));
   }
 

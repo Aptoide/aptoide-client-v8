@@ -14,21 +14,22 @@ import lombok.Cleanup;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 public class RealmTransactionPersistence implements TransactionPersistence {
 
-  private final Map<String, Transaction> transactions;
+  private final Map<String, Transaction> nonLocalTransactions;
   private final PublishRelay<Transaction> transactionRelay;
-  private final Database database;
+  private final Database localTransactions;
   private final TransactionMapper transactionMapper;
   private final TransactionFactory transactionFactory;
 
-  public RealmTransactionPersistence(Map<String, Transaction> transactions,
+  public RealmTransactionPersistence(Map<String, Transaction> nonLocalTransactions,
       PublishRelay<Transaction> transactionRelay, Database database,
       TransactionMapper transactionMapper, TransactionFactory transactionFactory) {
-    this.transactions = transactions;
+    this.nonLocalTransactions = nonLocalTransactions;
     this.transactionRelay = transactionRelay;
-    this.database = database;
+    this.localTransactions = database;
     this.transactionMapper = transactionMapper;
     this.transactionFactory = transactionFactory;
   }
@@ -42,62 +43,87 @@ public class RealmTransactionPersistence implements TransactionPersistence {
   }
 
   @Override public Observable<Transaction> getTransaction(int productId, String payerId) {
-    return restoreLocalTransaction(productId, payerId).andThen(
-        transactionRelay.startWith(Observable.defer(() -> {
-          if (transactions.containsKey(getTransactionsKey(payerId, productId))) {
-            return Observable.just(transactions.get(getTransactionsKey(payerId, productId)));
-          }
-          return Observable.empty();
-        })));
+    return transactionRelay.flatMap(
+        transaction -> resolveTransaction(payerId, productId, transaction))
+        .startWith(resolveTransaction(payerId, productId,
+            nonLocalTransactions.get(getServerTransactionsKey(payerId, productId))))
+        .subscribeOn(Schedulers.io());
   }
 
   @Override public Completable removeTransaction(String payerId, int productId) {
     return Completable.fromAction(() -> {
-      removeRealmTransaction(payerId, productId);
-      transactions.remove(getTransactionsKey(payerId, productId));
-    });
-  }
-
-  @Override public Completable removeAllTransactions() {
-    return Completable.fromAction(() -> {
-      database.deleteAll(PaymentConfirmation.class);
-      transactions.clear();
+      removeLocalTransaction(payerId, productId);
+      nonLocalTransactions.remove(getServerTransactionsKey(payerId, productId));
     });
   }
 
   @Override public Completable saveTransaction(Transaction transaction) {
     return Completable.fromAction(() -> {
 
-      saveTransactionInMemory(transaction);
-
       if (transaction instanceof LocalTransaction) {
-        database.insert(transactionMapper.map(transaction));
+        localTransactions.insert(transactionMapper.map(transaction));
+        nonLocalTransactions.remove(
+            getServerTransactionsKey(transaction.getPayerId(), transaction.getProductId()));
       } else {
-        removeRealmTransaction(transaction.getPayerId(), transaction.getProductId());
+        nonLocalTransactions.put(
+            getServerTransactionsKey(transaction.getPayerId(), transaction.getProductId()),
+            transaction);
       }
+
+      transactionRelay.call(transaction);
     });
   }
 
-  private void removeRealmTransaction(String payerId, int productId) {
-    @Cleanup final Realm realm = database.get();
+  private Observable<Transaction> resolveTransaction(String payerId, int productId,
+      Transaction nonLocalTransaction) {
 
-    final PaymentConfirmation localTransaction = getRealmTransaction(payerId, productId, realm);
+    final Transaction localTransaction = getLocalTransaction(payerId, productId);
 
-    if (localTransaction != null) {
-      localTransaction.deleteFromRealm();
+    if (localTransaction == null && nonLocalTransaction == null) {
+      return Observable.empty();
     }
+
+    if (nonLocalTransaction == null) {
+      return Observable.just(localTransaction);
+    }
+
+    if (localTransaction == null) {
+      return Observable.just(nonLocalTransaction);
+    }
+
+    if (nonLocalTransaction.getPaymentMethodId() == -1) {
+      return Observable.just(localTransaction);
+    }
+
+    if (localTransaction.isPending()) {
+      return Observable.just(localTransaction);
+    }
+
+    return Observable.just(nonLocalTransaction);
   }
 
-  private Completable restoreLocalTransaction(int productId, String payerId) {
-    return Completable.fromAction(() -> {
-      @Cleanup Realm realm = database.get();
+  private Transaction getLocalTransaction(String payerId, int productId) {
+    @Cleanup Realm realm = localTransactions.get();
 
-      final PaymentConfirmation realmTransaction = getRealmTransaction(payerId, productId, realm);
+    final PaymentConfirmation realmTransaction = getRealmTransaction(payerId, productId, realm);
 
-      if (realmTransaction != null) {
-        saveTransactionInMemory(transactionMapper.map(realmTransaction));
-      }
-    });
+    Transaction localTransaction = null;
+    if (realmTransaction != null) {
+      localTransaction = transactionMapper.map(realmTransaction);
+    }
+    return localTransaction;
+  }
+
+  private void removeLocalTransaction(String payerId, int productId) {
+    @Cleanup final Realm realm = localTransactions.get();
+
+    final PaymentConfirmation realmTransaction = getRealmTransaction(payerId, productId, realm);
+
+    if (realmTransaction != null) {
+      realm.beginTransaction();
+      realmTransaction.deleteFromRealm();
+      realm.commitTransaction();
+    }
   }
 
   private PaymentConfirmation getRealmTransaction(String payerId, int productId, Realm realm) {
@@ -107,13 +133,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
         .findFirst();
   }
 
-  private String getTransactionsKey(String payerId, int productId) {
+  private String getServerTransactionsKey(String payerId, int productId) {
     return payerId + productId;
-  }
-
-  private void saveTransactionInMemory(Transaction transaction) {
-    transactions.put(getTransactionsKey(transaction.getPayerId(), transaction.getProductId()),
-        transaction);
-    transactionRelay.call(transaction);
   }
 }

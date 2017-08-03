@@ -114,7 +114,6 @@ public class MolPresenter implements Presenter {
         .flatMap(created -> view.redirectUrlEvent()
             .doOnNext(backToStorePressed -> view.showLoading())
             .flatMapSingle(loading -> productProvider.getProduct())
-            .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(sent -> view.showLoading()))
         .observeOn(AndroidSchedulers.mainThread())

@@ -30,8 +30,8 @@ public class BillingSyncFactory {
     this.authorizationPersistence = authorizationPersistence;
   }
 
-  public Sync createAuthorizationSync(int paymentId) {
-    return new AuthorizationSync(paymentId, payer, analytics, authorizationService,
+  public Sync createAuthorizationSync(int paymentMethodId) {
+    return new AuthorizationSync(paymentMethodId, payer, analytics, authorizationService,
         authorizationPersistence, true, true, 10000);
   }
 
