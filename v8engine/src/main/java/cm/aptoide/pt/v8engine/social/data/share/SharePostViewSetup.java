@@ -72,12 +72,14 @@ public class SharePostViewSetup {
     final Account.Access accountUserAccess = account.getAccess();
 
     storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
+
+    storeName.setText(accountStoreName);
+    storeAvatar.setVisibility(View.VISIBLE);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(accountStoreAvatar, storeAvatar);
+
     if (Account.Access.PUBLIC.equals(accountUserAccess)) {
-      storeName.setText(accountStoreName);
-      storeAvatar.setVisibility(View.VISIBLE);
       userAvatar.setVisibility(View.VISIBLE);
-      ImageLoader.with(context)
-          .loadWithShadowCircleTransform(accountStoreAvatar, storeAvatar);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(accountUserAvatar, userAvatar);
       userName.setText(accountUserNickname);
@@ -94,7 +96,6 @@ public class SharePostViewSetup {
         .getName();
     final String accountStoreAvatar = account.getStore()
         .getAvatar();
-    // final String accountUserAvatar = account.getAvatar();
 
     storeName.setText(accountStoreName);
 
@@ -103,7 +104,6 @@ public class SharePostViewSetup {
         .loadWithShadowCircleTransform(accountStoreAvatar, storeAvatar);
 
     userAvatar.setVisibility(View.INVISIBLE);
-    // ImageLoader.with(context).loadWithShadowCircleTransform(accountUserAvatar, userAvatar);
 
     userName.setText(account.getNickname());
     userName.setVisibility(View.GONE);
