@@ -21,8 +21,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
@@ -51,6 +51,7 @@
           android:paddingRight="3dp"
           android:paddingStart="3dp"
           android:textColor="?android:attr/textColorSecondary"
+          android:textAlignment="center"
           android:textSize="14sp"
           />
 
@@ -65,6 +66,7 @@
           android:paddingStart="3dp"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="12sp"
+          android:visibility="gone"
           />
 
       <!--style="?android:attr/ratingBarStyleIndicator"-->
@@ -72,13 +74,12 @@
           android:id="@+id/ratingbar"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="5dp"
-          android:layout_marginStart="5dp"
-          android:layout_marginTop="5dp"
+          android:layout_marginTop="10dp"
           android:clickable="false"
           android:isIndicator="true"
           android:numStars="5"
           style="?attr/gridItemRatingBar"
+          android:layout_gravity="center"
           />
 
       <TextView
