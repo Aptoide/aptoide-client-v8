@@ -45,10 +45,12 @@ class ListAppsRequestFactory {
         windowManager);
   }
 
-  public ListAppsRequest newListAppsRequest(int storeId, Long groupId, int limit) {
+  public ListAppsRequest newListAppsRequest(int storeId, Long groupId, int limit,
+      ListAppsRequest.Sort sort) {
     return new ListAppsRequest(
         new ListAppsRequest.Body(storeCredentialsProvider.get(storeId), groupId, limit,
-            sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences, sort), bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator,
         sharedPreferences);
   }
 }

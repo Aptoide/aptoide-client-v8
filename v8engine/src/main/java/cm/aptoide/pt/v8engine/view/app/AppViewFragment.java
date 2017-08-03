@@ -53,6 +53,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -910,7 +911,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
         .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
-            group != null ? group.getId() : null, 5)
+            group != null ? group.getId() : null, 5, ListAppsRequest.Sort.trending30d)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             listApps.getDatalist()
                 .getList(), appViewSimilarAppAnalytics))

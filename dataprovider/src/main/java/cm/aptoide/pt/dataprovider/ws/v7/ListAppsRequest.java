@@ -62,6 +62,10 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
     return interfaces.listApps(url != null ? url : "", body, bypassCache);
   }
 
+  public enum Sort {
+    trending30d,
+  }
+
   public static class Body extends BaseBody implements Endless {
 
     private String storeUser;
@@ -70,6 +74,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
     private String notApkTags;
     private int offset;
     private Long groupId;
+    private Sort sort;
 
     public Body(BaseRequestWithStore.StoreCredentials storeCredentials,
         SharedPreferences sharedPreferences) {
@@ -90,12 +95,13 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
     }
 
     public Body(BaseRequestWithStore.StoreCredentials storeCredentials, Long groupId, int limit,
-        SharedPreferences sharedPreferences) {
+        SharedPreferences sharedPreferences, Sort sort) {
       super();
       this.storeUser = storeCredentials.getUsername();
       this.storePassSha1 = storeCredentials.getPasswordSha1();
       this.groupId = groupId;
       this.limit = limit;
+      this.sort = sort;
       setNotApkTags(sharedPreferences);
     }
 
@@ -138,6 +144,14 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 
     public void setGroupId(Long groupId) {
       this.groupId = groupId;
+    }
+
+    public Sort getSort() {
+      return sort;
+    }
+
+    public void setSort(Sort sort) {
+      this.sort = sort;
     }
   }
 }
