@@ -30,16 +30,17 @@ public class TimelinePostsRepository {
         .doOnSuccess(posts -> cachedPosts = posts);
   }
 
-  public Single<List<Post>> getCards(String cardId) {
-    if (cachedPosts != null) {
-      return Single.just(cachedPosts);
-    }
-    return postsRemoteDataSource.getCards(cardId)
+  public Single<List<Post>> getFreshCards(String postId) {
+    return postsRemoteDataSource.getCards(postId)
         .doOnSuccess(posts -> cachedPosts = posts);
   }
 
   public Single<List<Post>> getNextCards() {
     return postsRemoteDataSource.getNextCards()
         .doOnSuccess(posts -> cachedPosts.addAll(posts));
+  }
+
+  public void clearLoading() {
+    postsRemoteDataSource.clearLoading();
   }
 }

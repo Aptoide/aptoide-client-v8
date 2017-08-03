@@ -63,13 +63,13 @@ public class PostsRemoteDataSource {
     return getCards(limit, currentOffset);
   }
 
-  @NonNull private Single<List<Post>> getCards(int limit, int initialOffset) {
-    if (loading || (currentOffset >= total)) {
+  @NonNull private Single<List<Post>> getCards(int limit, int offset) {
+    if (loading || (offset >= total)) {
       return Single.just(Collections.emptyList());
     }
     return getPackages().flatMap(packages -> Observable.fromCallable(() -> loading = true)
         .flatMapSingle(
-            __ -> GetUserTimelineRequest.of(url, limit, initialOffset, packages, bodyInterceptor,
+            __ -> GetUserTimelineRequest.of(url, limit, offset, packages, bodyInterceptor,
                 okhttp, converterFactory, cardIdPriority, tokenInvalidator, sharedPreferences)
                 .observe(true)
                 .toSingle())
@@ -106,5 +106,9 @@ public class PostsRemoteDataSource {
     mapper.clearCachedPostsIds();
     cardIdPriority = cardId;
     return getCards(limit, initialOffset);
+  }
+
+  public void clearLoading() {
+    loading = false;
   }
 }

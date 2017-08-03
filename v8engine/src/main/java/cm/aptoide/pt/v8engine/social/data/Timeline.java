@@ -46,12 +46,12 @@ public class Timeline {
     return timelinePostsRepository.getCards();
   }
 
-  public Single<List<Post>> getCards(String cardId) {
-    return timelinePostsRepository.getCards(cardId);
-  }
-
   public Single<List<Post>> getFreshCards() {
     return timelinePostsRepository.getFreshCards();
+  }
+
+  public Single<List<Post>> getFreshCards(String postId) {
+    return timelinePostsRepository.getFreshCards(postId);
   }
 
   public Single<List<Post>> getNextCards() {
@@ -154,6 +154,10 @@ public class Timeline {
                 .close();
           }
         });
+  }
+
+  public void clearLoading() {
+    timelinePostsRepository.clearLoading();
   }
 }
 

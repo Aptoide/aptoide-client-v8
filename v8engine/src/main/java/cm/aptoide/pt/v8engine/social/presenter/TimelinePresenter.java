@@ -166,7 +166,7 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(__ -> view.showProgressIndicator())
             .flatMapSingle(cardId -> Single.zip(
                 accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineLoginPost(), timeline.getCards(cardId),
+                    : timeline.getTimelineLoginPost(), timeline.getFreshCards(cardId),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cards -> showCardsAndHideProgress(cards))
@@ -372,7 +372,7 @@ public class TimelinePresenter implements Presenter {
             card.getMediaLink()
                 .launch();
           } else {
-            if (type.equals(CardType.RECOMMENDATION)) {
+            if (type.equals(CardType.RECOMMENDATION) || type.equals(CardType.SIMILAR)) {
               Recommendation card = (Recommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);

@@ -167,10 +167,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     spannableFactory = new SpannableFactory();
     shareDialogFactory =
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
-    adapter = new PostAdapter(Collections.emptyList(),
-        new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
-            new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject)), new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
 
@@ -271,6 +267,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     listState = list.getLayoutManager()
         .onSaveInstanceState();
     adapter.clearPosts();
+    timelinePostsRepository.clearLoading();
     hideLoadMoreProgressIndicator();
   }
 
