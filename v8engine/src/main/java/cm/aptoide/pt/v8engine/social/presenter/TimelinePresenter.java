@@ -279,6 +279,7 @@ public class TimelinePresenter implements Presenter {
             .doOnError(throwable -> {
               crashReport.log(throwable);
               view.showGenericError();
+              view.hideLoadMoreProgressIndicator();
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
