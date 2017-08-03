@@ -349,6 +349,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onDestroyView() {
     super.onDestroyView();
     header = null;
+    suggestedShowing = false;
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
           .getDefaultTheme()));
