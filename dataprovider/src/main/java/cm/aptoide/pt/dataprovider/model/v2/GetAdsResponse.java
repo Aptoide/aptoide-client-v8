@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.model.v2;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +32,9 @@ import java.util.List;
     private int downloads;
     private int stars;
     private String description;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date added;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date modified;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date updated;
   }
 
   @lombok.Data public static class Ad {

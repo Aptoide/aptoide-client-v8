@@ -36,7 +36,6 @@ import cm.aptoide.pt.v8engine.comments.CommentAdder;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -46,7 +45,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-@Displayables({ RateAndReviewCommentDisplayable.class }) public class RateAndReviewCommentWidget
+public class RateAndReviewCommentWidget
     extends Widget<RateAndReviewCommentDisplayable> {
 
   public static final int FULL_COMMENTS_LIMIT = 3;

@@ -9,13 +9,12 @@ import android.view.View;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewCommentsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created on 04/05/16.
  */
-@Deprecated @Displayables({ AppViewCommentsDisplayable.class }) public class AppViewCommentsWidget
+public class AppViewCommentsWidget
     extends Widget<AppViewCommentsDisplayable> {
 
   private View writeCommentView;

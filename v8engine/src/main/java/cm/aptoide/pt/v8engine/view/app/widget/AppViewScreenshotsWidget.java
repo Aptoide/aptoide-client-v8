@@ -15,13 +15,12 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.app.AppViewNavigator;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.app.screenshots.ScreenshotsAdapter;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created on 11/05/16.
  */
-@Displayables({ AppViewScreenshotsDisplayable.class }) public class AppViewScreenshotsWidget
+public class AppViewScreenshotsWidget
     extends Widget<AppViewScreenshotsDisplayable> {
 
   private RecyclerView mediaList;

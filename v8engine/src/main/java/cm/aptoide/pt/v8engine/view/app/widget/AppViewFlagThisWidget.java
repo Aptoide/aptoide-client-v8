@@ -23,7 +23,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewFlagThisDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -34,7 +33,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created on 30/06/16.
  */
-@Displayables({ AppViewFlagThisDisplayable.class }) public class AppViewFlagThisWidget
+public class AppViewFlagThisWidget
     extends Widget<AppViewFlagThisDisplayable> {
 
   private static final String TAG = AppViewFlagThisWidget.class.getSimpleName();
