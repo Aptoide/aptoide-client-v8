@@ -42,7 +42,7 @@ public class SyncService extends Service {
       }
     }
 
-    return Service.START_NOT_STICKY;
+    return Service.START_REDELIVER_INTENT;
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {

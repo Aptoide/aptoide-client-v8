@@ -23,4 +23,8 @@ public class SyncStorage {
   public List<Sync> getAll() {
     return new ArrayList<>(syncs.values());
   }
+
+  public void remove(String syncId) {
+    syncs.remove(syncId);
+  }
 }

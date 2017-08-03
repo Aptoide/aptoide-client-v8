@@ -105,6 +105,8 @@ import cm.aptoide.pt.v8engine.billing.authorization.InMemoryAuthorizationPersist
 import cm.aptoide.pt.v8engine.billing.authorization.V3AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.product.ProductFactory;
+import cm.aptoide.pt.v8engine.billing.sync.BillingSyncFactory;
+import cm.aptoide.pt.v8engine.billing.sync.BillingSyncManager;
 import cm.aptoide.pt.v8engine.billing.transaction.RealmTransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionMapper;
@@ -145,6 +147,8 @@ import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.notification.NotificationsCleaner;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
+import cm.aptoide.pt.v8engine.notification.sync.NotificationSyncFactory;
+import cm.aptoide.pt.v8engine.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -157,10 +161,6 @@ import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.sync.SyncScheduler;
 import cm.aptoide.pt.v8engine.sync.SyncService;
 import cm.aptoide.pt.v8engine.sync.SyncStorage;
-import cm.aptoide.pt.v8engine.sync.billing.BillingSyncFactory;
-import cm.aptoide.pt.v8engine.sync.billing.BillingSyncManager;
-import cm.aptoide.pt.v8engine.sync.notification.NotificationSyncFactory;
-import cm.aptoide.pt.v8engine.sync.notification.NotificationSyncManager;
 import cm.aptoide.pt.v8engine.view.account.store.StoreManager;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
@@ -188,6 +188,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -264,6 +265,15 @@ public abstract class V8Engine extends Application {
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
   private SyncScheduler syncScheduler;
+  private TransactionFactory transactionFactory;
+  private TransactionMapper transactionMapper;
+  private TransactionService transactionService;
+  private Payer payer;
+  private AuthorizationFactory authorizationFactory;
+  private AuthorizationService authorizationService;
+  private TransactionPersistence transactionPersistence;
+  private AuthorizationPersistence authorizationPersistence;
+  private BillingSyncManager billingSyncManager;
 
   /**
    * call after this instance onCreate()
@@ -756,41 +766,13 @@ public abstract class V8Engine extends Application {
 
     if (billing == null) {
 
-      final Payer payer = new AccountPayer(getAccountManager());
-      final AuthorizationFactory authorizationFactory = new AuthorizationFactory();
-      final TransactionFactory transactionFactory = new TransactionFactory();
-      final TransactionMapper transactionMapper = new TransactionMapper(transactionFactory);
-
-      final TransactionService transactionService =
-          new V3TransactionService(transactionMapper, getBaseBodyInterceptorV3(),
-              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), transactionFactory);
-
-      final AuthorizationService authorizationService =
-          new V3AuthorizationService(authorizationFactory, getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences());
-
-      final AuthorizationPersistence authorizationPersistence =
-          new InMemoryAuthorizationPersistence(new HashMap<>(), PublishRelay.create(),
-              authorizationFactory);
-
-      final TransactionPersistence transactionPersistence =
-          new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
-              transactionMapper, transactionFactory);
-
-      final BillingSyncManager billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(payer, getBillingAnalytics(), transactionService,
-              authorizationService, transactionPersistence, authorizationPersistence),
-          getSyncScheduler());
-
       final TransactionRepository transactionRepository =
-          new TransactionRepository(transactionPersistence, billingSyncManager, payer,
-              transactionService);
+          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(), getPayer(),
+              getTransactionService());
 
       final AuthorizationRepository authorizationRepository =
-          new AuthorizationRepository(billingSyncManager, payer, authorizationService,
-              authorizationPersistence);
+          new AuthorizationRepository(getBillingSyncManager(), getPayer(),
+              getAuthorizationService(), getAuthorizationPersistence());
 
       final BillingService billingService =
           new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
@@ -804,9 +786,85 @@ public abstract class V8Engine extends Application {
               getDefaultSharedPreferences());
 
       billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentMethodSelector, payer);
+          paymentMethodSelector, getPayer());
     }
     return billing;
+  }
+
+  public BillingSyncManager getBillingSyncManager() {
+    if (billingSyncManager == null) {
+      billingSyncManager = new BillingSyncManager(
+          new BillingSyncFactory(getPayer(), getBillingAnalytics(), getTransactionService(),
+              getAuthorizationService(), geTransactionPersistence(), getAuthorizationPersistence()),
+          getSyncScheduler(), new HashSet<>());
+    }
+    return billingSyncManager;
+  }
+
+  public AuthorizationPersistence getAuthorizationPersistence() {
+    if (authorizationPersistence == null) {
+      authorizationPersistence =
+          new InMemoryAuthorizationPersistence(new HashMap<>(), PublishRelay.create(),
+              getAuthorizationFactory());
+    }
+    return authorizationPersistence;
+  }
+
+  public TransactionPersistence geTransactionPersistence() {
+    if (transactionPersistence == null) {
+      transactionPersistence =
+          new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
+              getTransactionMapper(), getTransactionFactory());
+    }
+    return transactionPersistence;
+  }
+
+  public AuthorizationService getAuthorizationService() {
+    if (authorizationService == null) {
+      authorizationService =
+          new V3AuthorizationService(getAuthorizationFactory(), getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences());
+    }
+    return authorizationService;
+  }
+
+  public AuthorizationFactory getAuthorizationFactory() {
+    if (authorizationFactory == null) {
+      authorizationFactory = new AuthorizationFactory();
+    }
+    return authorizationFactory;
+  }
+
+  public Payer getPayer() {
+    if (payer == null) {
+      payer = new AccountPayer(getAccountManager());
+    }
+    return payer;
+  }
+
+  public TransactionService getTransactionService() {
+    if (transactionService == null) {
+      transactionService =
+          new V3TransactionService(getTransactionMapper(), getBaseBodyInterceptorV3(),
+              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
+              getDefaultSharedPreferences(), getTransactionFactory());
+    }
+    return transactionService;
+  }
+
+  public TransactionMapper getTransactionMapper() {
+    if (transactionMapper == null) {
+      transactionMapper = new TransactionMapper(getTransactionFactory());
+    }
+    return transactionMapper;
+  }
+
+  public TransactionFactory getTransactionFactory() {
+    if (transactionFactory == null) {
+      transactionFactory = new TransactionFactory();
+    }
+    return transactionFactory;
   }
 
   public Database getDatabase() {

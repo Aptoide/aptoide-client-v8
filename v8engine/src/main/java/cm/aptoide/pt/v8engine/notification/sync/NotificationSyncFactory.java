@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.sync.notification;
+package cm.aptoide.pt.v8engine.notification.sync;
 
 import android.app.AlarmManager;
 import android.content.SharedPreferences;
@@ -32,16 +32,16 @@ public class NotificationSyncFactory {
     switch (type) {
       case SOCIAL_NOTIFICATION_SYNC_PERIODIC:
         return new SocialNotificationSync(type, notificationService, notificationPersistence, true,
-            false, getSocialNotificationInterval());
+            false, getSocialNotificationInterval(), 0);
       case CAMPAIGN_NOTIFICATION_SYNC_PERIODIC:
         return new CampaignNotificationSync(type, notificationService, notificationPersistence,
-            true, false, AlarmManager.INTERVAL_HALF_DAY);
+            true, false, AlarmManager.INTERVAL_HALF_DAY, 0);
       case CAMPAIGN_NOTIFICATION_SYNC_IMMEDIATE:
         return new SocialNotificationSync(type, notificationService, notificationPersistence, false,
-            false, 0);
+            false, 0, 0);
       case SOCIAL_NOTIFICATION_SYNC_IMMEDIATE:
         return new CampaignNotificationSync(type, notificationService, notificationPersistence,
-            false, false, 0);
+            false, false, 0, 0);
       default:
         throw new IllegalArgumentException("Invalid sync " + type);
     }

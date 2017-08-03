@@ -11,12 +11,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.billing.sync.BillingSyncManager;
 import cm.aptoide.pt.v8engine.billing.view.braintree.BraintreeActivity;
-import cm.aptoide.pt.v8engine.sync.SyncScheduler;
 
 public class PaymentActivity extends BraintreeActivity {
 
-  private SyncScheduler syncScheduler;
+  private BillingSyncManager syncManager;
 
   public static Intent getIntent(Context context, long appId, String storeName, boolean sponsored) {
     final Intent intent = new Intent(context, PaymentActivity.class);
@@ -40,11 +40,11 @@ public class PaymentActivity extends BraintreeActivity {
           PaymentFragment.create(getIntent().getExtras()));
     }
 
-    syncScheduler = ((V8Engine) getApplication()).getSyncScheduler();
+    syncManager = ((V8Engine) getApplication()).getBillingSyncManager();
   }
 
   @Override protected void onDestroy() {
-    syncScheduler.cancelAll();
+    syncManager.cancelAll();
     super.onDestroy();
   }
 }

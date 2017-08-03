@@ -7,12 +7,14 @@ public abstract class Sync {
   private final String id;
   private final boolean periodic;
   private final boolean exact;
+  private final long trigger;
   private final long interval;
 
-  public Sync(String id, boolean periodic, boolean exact, long interval) {
+  public Sync(String id, boolean periodic, boolean exact, long trigger, long interval) {
     this.id = id;
     this.periodic = periodic;
     this.exact = exact;
+    this.trigger = trigger;
     this.interval = interval;
   }
 
@@ -26,6 +28,10 @@ public abstract class Sync {
 
   public boolean isExact() {
     return exact;
+  }
+
+  public long getTrigger() {
+    return trigger;
   }
 
   public long getInterval() {

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.sync.notification;
+package cm.aptoide.pt.v8engine.notification.sync;
 
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.sync.SyncScheduler;

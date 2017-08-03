@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.sync.billing;
+package cm.aptoide.pt.v8engine.billing.sync;
 
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
@@ -26,8 +26,8 @@ public class AuthorizationSync extends Sync {
 
   public AuthorizationSync(int paymentId, Payer payer, BillingAnalytics billingAnalytics,
       AuthorizationService authorizationService, AuthorizationPersistence authorizationPersistence,
-      boolean periodic, boolean exact, long interval) {
-    super(String.valueOf(paymentId), periodic, exact, interval);
+      boolean periodic, boolean exact, long interval, long trigger) {
+    super(String.valueOf(paymentId), periodic, exact, trigger, interval);
     this.paymentId = paymentId;
     this.payer = payer;
     this.billingAnalytics = billingAnalytics;
