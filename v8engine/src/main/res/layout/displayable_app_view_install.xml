@@ -139,7 +139,7 @@
         android:layout_gravity="center_vertical"
         android:background="@drawable/rounded_corners_primary2"
         android:fontFamily="@string/font_family_medium"
-        android:text="@string/install"
+        android:text="@string/appview_button_install"
         android:textAllCaps="true"
         android:textSize="14.7sp"
         style="?attr/customButton"

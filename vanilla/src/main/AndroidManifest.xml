@@ -98,7 +98,7 @@
     </service>
 
     <service
-        android:name=".v8engine.sync.AptoideSyncService"
+        android:name="cm.aptoide.pt.v8engine.sync.adapter.AptoideSyncService"
         android:exported="true">
       <intent-filter>
         <action android:name="android.content.SyncAdapter"/>
@@ -107,10 +107,11 @@
       <meta-data
           android:name="android.content.SyncAdapter"
           android:resource="@xml/sync"/>
-      <meta-data
-          android:name="cm.aptoide.pt.v8engine.networking.image.GlideModifications"
-          android:value="GlideModule"/>
     </service>
+
+    <meta-data
+        android:name="cm.aptoide.pt.v8engine.networking.image.GlideModifications"
+        android:value="GlideModule"/>
   </application>
 
 </manifest>

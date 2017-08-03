@@ -62,7 +62,7 @@ public class ContactsRepository {
               .observe()
               .subscribe(getFollowers -> {
                 List<Contact> contactList = new ArrayList<>();
-                for (GetFollowers.TimelineUser user : getFollowers.getDatalist()
+                for (GetFollowers.TimelineUser user : getFollowers.getDataList()
                     .getList()) {
                   Contact contact = new Contact();
                   contact.setStore(user.getStore());
@@ -88,7 +88,7 @@ public class ContactsRepository {
         .observe()
         .subscribe(getFollowers -> {
           List<Contact> contactList = new ArrayList<>();
-          for (GetFollowers.TimelineUser user : getFollowers.getDatalist()
+          for (GetFollowers.TimelineUser user : getFollowers.getDataList()
               .getList()) {
             Contact contact = new Contact();
             contact.setStore(user.getStore());
@@ -112,7 +112,7 @@ public class ContactsRepository {
         .observe()
         .subscribe(getFriends -> {
           List<Contact> contactList = new ArrayList<>();
-          for (GetFollowers.TimelineUser user : getFriends.getDatalist()
+          for (GetFollowers.TimelineUser user : getFriends.getDataList()
               .getList()) {
             Contact contact = new Contact();
             contact.setStore(user.getStore());

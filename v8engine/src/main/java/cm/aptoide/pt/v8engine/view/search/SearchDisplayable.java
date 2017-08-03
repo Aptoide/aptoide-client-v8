@@ -25,21 +25,27 @@ public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchApps
   public SearchDisplayable() {
   }
 
+  public SearchDisplayable(ListSearchApps.SearchAppsApp searchAppsApp) {
+    super(searchAppsApp);
+  }
+
   public SearchDisplayable(ListSearchApps.SearchAppsApp searchAppsApp,
       ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores,
       boolean hasMultipleFragments, String query) {
     super(searchAppsApp);
     this.query = query;
-    clickCallback = () -> {
-      if (isConvert(searchAbTest, addSubscribedStores, hasMultipleFragments)) {
-        searchAbTest.convert()
-            .subscribe(success -> {
-            }, throwable -> {
-              CrashReport.getInstance()
-                  .log(throwable);
-            });
-      }
-    };
+    if (searchAbTest != null) {
+      clickCallback = () -> {
+        if (isConvert(searchAbTest, addSubscribedStores, hasMultipleFragments)) {
+          searchAbTest.convert()
+              .subscribe(success -> {
+              }, throwable -> {
+                CrashReport.getInstance()
+                    .log(throwable);
+              });
+        }
+      };
+    }
   }
 
   @Override protected Configs getConfig() {

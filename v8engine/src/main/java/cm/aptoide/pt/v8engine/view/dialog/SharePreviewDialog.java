@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -523,10 +522,10 @@ public class SharePreviewDialog {
   private void setCardHeader(Context context, TextView storeName, TextView userName,
       ImageView storeAvatar, ImageView userAvatar) {
     if (accountManager.getAccount()
-        .getStore()
-        .getName() != null) {
+        .hasStore()) {
       storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
-      if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
+      if (accountManager.getAccount()
+          .isPublicUser()) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
@@ -559,7 +558,8 @@ public class SharePreviewDialog {
         userName.setVisibility(View.GONE);
       }
     } else {
-      if ((Account.Access.PUBLIC).equals(accountManager.getAccountAccess())) {
+      if (accountManager.getAccount()
+          .isPublicUser()) {
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(accountManager.getAccount()
@@ -575,7 +575,8 @@ public class SharePreviewDialog {
   private void setSharedByText(Context context, TextView sharedBy) {
     sharedBy.setVisibility(View.VISIBLE);
 
-    if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
+    if (accountManager.getAccount()
+        .isPublicUser()) {
       sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
           accountManager.getAccount()
               .getNickname()));

@@ -96,12 +96,15 @@ public class Timeline {
     return service.getTimelineStats();
   }
 
-  public Single<Post> getTimelineLoginPost() {
+  public Single<Post> getTimelineStatisticsPost() {
     return Single.just(new TimelineLoginPost());
   }
 
   public Single<String> sharePost(Post post) {
     sendSocialAnalyticsEvent(post, "Share");
+    if (post instanceof AppPost) {
+      return service.shareApp(post.getCardId(), ((AppPost) post).getStoreId());
+    }
     return service.share(post.getCardId());
   }
 

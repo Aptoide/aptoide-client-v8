@@ -19,20 +19,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.Datalist;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.abtesting.ABTest;
-import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
-import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.search.SearchAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -41,8 +39,6 @@ import com.facebook.appevents.AppEventsLogger;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -71,7 +67,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private Converter.Factory converterFactory;
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
-  private ABTestManager abTestManager;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -101,7 +96,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    abTestManager = ((V8Engine) getContext().getApplicationContext()).getABTestManager();
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
@@ -227,36 +221,12 @@ public class SearchFragment extends BasePagerToolbarFragment {
       setupButtonsListeners();
       setupViewPager();
       if (create) {
-        //only show the search results after choosing the tab to show
-        setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY))
-            .subscribe(setup -> finishLoading(), throwable -> {
-              CrashReport.getInstance()
-                  .log(throwable);
-              finishLoading();
-            });
-      } else {
-        finishLoading();
+        // AB testing was removed from here: AN-1836: Search: remove ab testing
+        // This sets the All stores tab as the selected tab of the search
+        everywhereButtonListener(false);
       }
+      finishLoading();
     }
-  }
-
-  private Observable<Void> setupAbTest() {
-    if (hasSubscribedResults && hasEverywhereResults) {
-      ABTest<SearchTabOptions> searchAbTest = abTestManager.get(ABTestManager.SEARCH_TAB_TEST);
-      return searchAbTest.participate()
-          .observeOn(AndroidSchedulers.mainThread())
-          .map(experiment -> setTabAccordingAbTest(searchAbTest));
-    } else {
-      return Observable.just(null);
-    }
-  }
-
-  private Void setTabAccordingAbTest(ABTest<SearchTabOptions> searchAbTest) {
-    if (searchAbTest.alternative()
-        .chooseTab() == 1) {
-      everywhereButtonListener(false);
-    }
-    return null;
   }
 
   @Partners protected void executeSearchRequests(String storeName, boolean create) {
@@ -264,11 +234,13 @@ public class SearchFragment extends BasePagerToolbarFragment {
     searchAnalytics.search(query);
     if (storeName != null) {
       shouldFinishLoading = true;
-      ListSearchAppsRequest of =
-          ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+      ListSearchAppsRequest of = ListSearchAppsRequest.of(query, storeName,
+          StoreUtils.getSubscribedStoresAuthMap(AccessorFactory.getAccessorFor(
+              ((V8Engine) getContext().getApplicationContext()
+                  .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor,
+          httpClient, converterFactory, tokenInvalidator, sharedPreferences);
       of.execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
             .getList();
 
         if (list != null && hasMoreResults(listSearchApps)) {
@@ -280,10 +252,12 @@ public class SearchFragment extends BasePagerToolbarFragment {
         }
       }, e -> finishLoading());
     } else {
-      ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+      ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
+          converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
                 .getList();
 
             if (list != null && hasMoreResults(listSearchApps)) {
@@ -296,10 +270,12 @@ public class SearchFragment extends BasePagerToolbarFragment {
           }, e -> finishLoading());
 
       // Other stores
-      ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+      ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
+          converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
                 .getList();
 
             if (list != null && hasMoreResults(listSearchApps)) {
@@ -314,7 +290,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   private boolean hasMoreResults(ListSearchApps listSearchApps) {
-    Datalist<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDatalist();
+    DataList<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDataList();
 
     return datalist.getList()
         .size() > 0 || listSearchApps.getTotal() > listSearchApps.getNextSize();
@@ -355,9 +331,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search, menu);
 
     if (storeName != null) {
-      SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
+      SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(),
+          storeName);
     } else {
-      SearchUtils.setupGlobalSearchView(menu, this);
+      SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
     }
   }
 

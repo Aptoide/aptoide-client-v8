@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.WindowManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -102,9 +101,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
         windowManager);
   }
 
-  public Observable<List<Installed>> getRelatedToApplication() {
+  public Observable<List<Installed>> getRelatedToApplication(InstalledAccessor installedAccessor) {
     if (relatedToAppsList != null && relatedToAppsList.size() > 0) {
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       List<String> packageNamesList = new ArrayList<>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
@@ -135,7 +133,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_shared, title),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_title_card_title_share_past_plural, title),
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 

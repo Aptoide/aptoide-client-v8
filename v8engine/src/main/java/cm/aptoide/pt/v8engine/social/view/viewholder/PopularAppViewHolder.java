@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -71,14 +72,18 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {
-      likeButton.setHeartState(true);
+      if (card.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        card.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
+    this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
 
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(

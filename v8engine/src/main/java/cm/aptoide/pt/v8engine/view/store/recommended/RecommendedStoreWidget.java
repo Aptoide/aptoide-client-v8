@@ -90,7 +90,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
               .observeOn(Schedulers.computation())
               .map(isSubscribed -> {
                 if (isSubscribed) {
-                  displayable.unsubscribeStore();
+                  displayable.unsubscribeStore(getContext().getApplicationContext());
                 } else {
                   displayable.subscribeStore(getContext());
                 }

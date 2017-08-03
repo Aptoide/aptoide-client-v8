@@ -8,14 +8,9 @@ package cm.aptoide.pt.dataprovider.model.v3;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-/**
- * Created by rmateus on 21-05-2014.
- */
 @Data public class PaymentServiceResponse {
 
   @JsonProperty("id") private int id;
-
-  @JsonProperty("short_name") private String shortName;
 
   @JsonProperty("name") private String name;
 

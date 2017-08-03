@@ -14,6 +14,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
@@ -81,7 +82,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
         .load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
     this.relatedToText.setText(itemView.getContext()
-        .getString(R.string.related_to)
+        .getString(R.string.timeline_short_related_to)
         .toLowerCase());
     this.relatedToApp.setText(card.getRelatedToAppName());
 
@@ -90,14 +91,18 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {
-      likeButton.setHeartState(true);
+      if (card.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        card.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
+    this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
 
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(

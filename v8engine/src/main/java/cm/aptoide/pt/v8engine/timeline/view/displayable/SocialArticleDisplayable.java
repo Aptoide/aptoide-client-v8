@@ -61,8 +61,8 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
 
   public SocialArticleDisplayable(SocialArticle socialArticle, String articleTitle, Link link,
       Link developerLink, String title, String thumbnailUrl, String avatarUrl, long appId,
-      String abUrl, Store store, Comment.User user, long numberOfLikes, long numberOfComments,
-      List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
+      String abUrl, String content, Store store, Comment.User user, long numberOfLikes,
+      long numberOfComments, List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, InstalledRepository installedRepository,
       AppsTimelineNavigator timelineNavigator, WindowManager windowManager) {
@@ -115,9 +115,9 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
             socialArticle.getPublisher()
                 .getBaseUrl()), socialArticle.getPublisher()
         .getName(), socialArticle.getThumbnailUrl(), socialArticle.getPublisher()
-        .getLogoUrl(), appId, abTestingURL, socialArticle.getStore(), socialArticle.getUser(),
-        socialArticle.getStats()
-            .getLikes(), socialArticle.getStats()
+        .getLogoUrl(), appId, abTestingURL, socialArticle.getContent(), socialArticle.getStore(),
+        socialArticle.getUser(), socialArticle.getStats()
+        .getLikes(), socialArticle.getStats()
         .getComments(), socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
         spannableFactory, timelineAnalytics, socialRepository, installedRepository,
         timelineNavigator, windowManager);
@@ -162,7 +162,8 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_shared, title),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_title_card_title_share_past_singular, title),
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 

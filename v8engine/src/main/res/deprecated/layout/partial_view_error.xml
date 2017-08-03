@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:text="@string/having_some_trouble"
+        android:text="@string/all_message_general_error"
         style="?android:textAppearanceMedium"
         />
 

@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -26,6 +25,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
@@ -89,12 +89,15 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     final OkHttpClient httpClient =
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    storeUtilsProxy =
-        new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
-            AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((V8Engine) getContext().getApplicationContext()
+                .getApplicationContext()).getDatabase(), Store.class)),
+        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class), httpClient,
+        WebService.getDefaultConverter(),
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final GetHomeMeta getHomeMeta = displayable.getPojo();
     final cm.aptoide.pt.dataprovider.model.v7.store.Store store = getHomeMeta.getData()
         .getStore();
@@ -106,7 +109,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           : store.getAppearance()
               .getTheme());
       final Context context = itemView.getContext();
-      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
+          ((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class);
       boolean isStoreSubscribed = storeAccessor.get(store.getId())
           .toBlocking()
           .firstOrDefault(null) != null;
@@ -266,7 +271,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           accountManager.unsubscribeStore(displayable.getStoreName(),
               displayable.getStoreUserName(), displayable.getStorePassword());
         }
-        StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+        StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
+            ((V8Engine) getContext().getApplicationContext()
+                .getApplicationContext()).getDatabase(), Store.class);
         storeAccessor.remove(storeWrapper.getStore()
             .getId());
         ShowMessage.asSnack(itemView,
@@ -290,11 +297,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     };
   }
 
-  private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
-      String storeImagePath) {
+  private void editStore(long storeId, String storeThemeName, String storeDescription,
+      String storeName, String storeImagePath) {
     ManageStoreFragment.ViewModel viewModel =
-        new ManageStoreFragment.ViewModel(storeId, storeTheme, storeName, storeDescription,
-            storeImagePath);
+        new ManageStoreFragment.ViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
+            storeDescription, storeImagePath);
     getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
   }
 

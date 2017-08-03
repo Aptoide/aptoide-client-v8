@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -71,14 +72,17 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
     headerSubtitle.setText(getTimeSinceLastUpdate(itemView.getContext(), card.getLatestUpdate()));
     showStoreLatestApps(card);
     if (card.isLiked()) {
-      likeButton.setHeartState(true);
+      if (card.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        card.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
-
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
+    this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
@@ -87,8 +91,8 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
 
   public Spannable getStyledTitle(Context context, String storeName) {
     return spannableFactory.createColorSpan(
-        context.getString(R.string.store_has_new_apps, storeName),
-        ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
+        context.getString(R.string.timeline_title_card_title_has_new_apps_present_singular,
+            storeName), ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
   }
 
   public String getTimeSinceLastUpdate(Context context, Date latestUpdate) {

@@ -13,6 +13,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import java.util.LinkedList;
@@ -195,6 +196,17 @@ public enum StoreTheme {
     }
 
     return theme;
+  }
+
+  public static StoreTheme fromName(String themeName) {
+    String storeThemeName = themeName.toLowerCase();
+    for (StoreTheme theme : StoreTheme.values()) {
+      if (TextUtils.equals(theme.getThemeName(), storeThemeName)) {
+        return theme;
+      }
+    }
+    // default case
+    return StoreTheme.DEFAULT;
   }
 
   public int getVersion() {

@@ -119,7 +119,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
       } else {
         view.findViewById(R.id.appbar)
             .setVisibility(View.VISIBLE);
-        toolbarTitle = getString(R.string.my_account);
+        toolbarTitle = getString(R.string.my_account_title_my_account);
       }
       mainContent.setPadding(0, 0, 0, originalBottomPadding);
       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);

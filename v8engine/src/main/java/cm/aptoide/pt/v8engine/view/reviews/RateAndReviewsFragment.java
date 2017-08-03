@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -118,7 +120,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         .subscribe(installed -> {
           if (installed != null) {
             // app installed... update text
-            installMenuItem.setTitle(R.string.open);
+            installMenuItem.setTitle(R.string.reviewappview_button_open);
           }
         }, err -> {
           CrashReport.getInstance()
@@ -227,8 +229,10 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(),
-                baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(
+                AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+                    .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
+                httpClient, converterFactory, tokenInvalidator,
                 ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
                 getFragmentNavigator(),
                 ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()),
@@ -258,11 +262,15 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
   }
@@ -271,7 +279,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
       Review review) {
     return new CommentsReadMoreDisplayable(review.getId(), true, review.getCommentList()
-        .getDatalist()
+        .getDataList()
         .getNext(), new SimpleReviewCommentAdder(itemPosition, this));
   }
 

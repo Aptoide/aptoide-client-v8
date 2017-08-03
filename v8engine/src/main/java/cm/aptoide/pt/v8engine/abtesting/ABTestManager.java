@@ -21,6 +21,12 @@ import rx.schedulers.Schedulers;
 public class ABTestManager {
 
   public static final String SEARCH_TAB_TEST = "search-result";
+  /**
+   * There's not test at the moment
+   * TODO change this class in order to accept that there's no test
+   * AN-1838
+   */
+
   private static final String TAG = ABTestManager.class.getSimpleName();
   private final OkHttpClient httpClient;
   private final String sixpackUrl;

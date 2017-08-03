@@ -13,6 +13,8 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.PostViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.ProgressViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.RecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialMediaViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.SocialPostMediaViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.SocialPostRecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialRecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.SocialStoreViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.StoreLatestAppsViewHolder;
@@ -53,6 +55,7 @@ public class CardViewHolderFactory {
         return new MediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_media_item, parent, false), cardTouchEventPublishSubject,
             dateCalculator, spannableFactory);
+      case SIMILAR:
       case RECOMMENDATION:
         return new RecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_recommendation_item, parent, false),
@@ -75,8 +78,8 @@ public class CardViewHolderFactory {
             .inflate(R.layout.timeline_social_recommendation_item, parent, false),
             cardType.equals(CardType.SOCIAL_RECOMMENDATION)
                 ? R.string.timeline_title_card_title_recommend_present_singular
-                : R.string.x_installed_and_recommended, cardTouchEventPublishSubject,
-            dateCalculator, spannableFactory);
+                : R.string.timeline_title_card_title_install_past_singular,
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case SOCIAL_ARTICLE:
       case SOCIAL_VIDEO:
         return new SocialMediaViewHolder(LayoutInflater.from(parent.getContext())
@@ -99,6 +102,15 @@ public class CardViewHolderFactory {
         return new AggregatedStoreViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_store_item, parent, false),
             cardTouchEventPublishSubject, dateCalculator, spannableFactory, minimalCardViewFactory);
+      case SOCIAL_POST_ARTICLE:
+      case SOCIAL_POST_VIDEO:
+        return new SocialPostMediaViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_social_post_media_item, parent, false), dateCalculator,
+            spannableFactory, cardTouchEventPublishSubject);
+      case SOCIAL_POST_RECOMMENDATION:
+        return new SocialPostRecommendationViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_social_post_recommendation_item, parent, false),
+            dateCalculator, spannableFactory, cardTouchEventPublishSubject);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));

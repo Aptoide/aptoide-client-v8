@@ -17,7 +17,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
-import cm.aptoide.pt.v8engine.social.data.LikesCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialMedia;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -137,7 +138,12 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
             .getUser()
             .getId(), CardTouchEvent.Type.HEADER)));
     if (card.isLiked()) {
-      likeButton.setHeartState(true);
+      if (card.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        card.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
       likeButton.setHeartState(false);
     }
@@ -145,22 +151,23 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     showSocialInformationBar(card);
     showLikesPreview(card);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
+    this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
 
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
   public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createColorSpan(context.getString(R.string.x_shared, title),
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_title_card_title_share_past_singular, title),
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
@@ -252,7 +259,8 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(itemView.getContext()
           .getResources()
-          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber()));
+          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber(),
+              (int) post.getCommentsNumber()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(itemView.getContext())
           .loadWithShadowCircleTransform(post.getComments()

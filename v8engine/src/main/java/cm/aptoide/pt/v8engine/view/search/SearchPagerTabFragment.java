@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.search;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -16,10 +17,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.abtesting.ABTest;
-import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
-import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
@@ -46,7 +45,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   private boolean hasMultipleFragments;
   private boolean refreshed = false;
 
-  private ABTest<SearchTabOptions> searchAbTest;
   private Map<String, Void> mapPackages = new HashMap<>();
   private transient EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private transient ListSearchAppsRequest listSearchAppsRequest;
@@ -55,7 +53,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         LinkedList<Displayable> displayables = new LinkedList<>();
 
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
             .getList();
         Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
 
@@ -66,8 +64,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         from.forEach(searchAppsApp -> {
           mapPackages.put(searchAppsApp.getPackageName(), null);
-          displayables.add(new SearchDisplayable(searchAppsApp, searchAbTest, addSubscribedStores,
-              hasMultipleFragments, query));
+          displayables.add(new SearchDisplayable(searchAppsApp));
         });
 
         addDisplayables(displayables);
@@ -102,8 +99,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    searchAbTest = ((V8Engine) getContext().getApplicationContext()).getABTestManager()
-        .get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -144,13 +139,19 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     getRecyclerView().clearOnScrollListeners();
     ListSearchAppsRequest of;
     if (storeName != null) {
-      of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+      of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
+          converterFactory, tokenInvalidator,
           ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     } else {
-      of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(),
-          StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator,
+      of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class)),
+          StoreUtils.getSubscribedStoresAuthMap(AccessorFactory.getAccessorFor(
+              ((V8Engine) getContext().getApplicationContext()
+                  .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor,
+          httpClient, converterFactory, tokenInvalidator,
           ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     }
     endlessRecyclerOnScrollListener =
@@ -166,11 +167,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     outState.putString(BundleCons.QUERY, query);
     outState.putString(BundleCons.STORE_NAME, storeName);
     outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
-  }
-
-  private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores) {
-    return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
-        == SearchTabOptions.FOLLOWED_STORES));
   }
 
   protected static class BundleCons {

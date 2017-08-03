@@ -62,42 +62,42 @@
   <string name="error_AUTH_2">Invalid credentials!</string>
   <string name="error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support team.</string>
   <string name="error_AUTH_4">HMAC Authentication failure</string>
-  <string name="error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address).</string>
-  <string name="error_AUTH_101">Could not login with Google. Please try again.</string>
-  <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address).</string>
-  <string name="error_AUTH_103">Could not login with Facebook. Please try again.</string>
+  <string name="error_AUTH_100">Couldn\'t login with Google. Check your Google account (you may need to validate your email address).</string>
+  <string name="error_AUTH_101">Couldn\'t login with Google. Please try again.</string>
+  <string name="error_AUTH_102">Couldn\'t login with Facebook. Check your Facebook account (you may need to validate your email address).</string>
+  <string name="error_AUTH_103">Couldn\'t login with Facebook. Please try again.</string>
 
-  <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)</string>
+  <string name="error_WOP_6">To add a comment, you need to insert a name (it will be visible)</string>
   <string name="error_WOP_7">Comment error</string>
   <string name="error_WOP_8">Comment vote error</string>
   <string name="error_WOP_9">The email provided already exists in the system</string>
-  <string name="error_WOP_10">The email provided does not exist in the system yet</string>
-  <string name="error_WOP_11">The store could not be created. Please try again.</string>
+  <string name="error_WOP_10">The email provided doesn\'t exist in the system yet</string>
+  <string name="error_WOP_11">The store couldn\'t be created. Please try again.</string>
 
-  <string name="error_REPO_1">The store does not exist.</string>
+  <string name="error_REPO_1">The store doesn\'t exist.</string>
   <string name="error_REPO_2">The store was cancelled.</string>
-  <string name="error_REPO_3">The store does not belong to this user.</string>
-  <string name="error_REPO_4_no_store">Your account has no store created. You need to create one to make a review.</string>
+  <string name="error_REPO_3">The store doesn\'t belong to this user.</string>
+  <string name="error_REPO_4_no_store">You need to create a store to make a review.</string>
   <string name="error_REPO_7">This user already has a valid store.</string>
 
   <string name="error_APK_1">Can\'t open this app with the given info and version</string>
   <string name="error_APK_4">Can\'t open this app</string>
   <string name="error_APK_Description">Description not available</string>
 
-  <string name="error_SYS_1">An unknown error occurred, please try again</string>
-  <string name="error_SYS_2">No data found, please try again later</string>
-  <string name="error_SYS_3">System is now in maintenance, please try again later</string>
+  <string name="error_SYS_1">An unknown error occurred. Try again later</string>
+  <string name="error_SYS_2">No data found. Try again later</string>
+  <string name="error_SYS_3">System is now under maintenance. Try again later</string>
   <string name="error_SYS_4">This call is not supported by the current API version</string>
   <string name="error_SYS_Billing">In-App Billing not supported in this device.</string>
 
-  <string name="error_410">Sorry, the requested App was not found on this server.</string>
+  <string name="error_410">Sorry, we couldn\'t find the app you\'re looking for.</string>
 
   <string name="simple_error_occured">An error occurred. </string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
 
   <string name="store_already_added">Store already added!</string>
-  <string name="subscribe_store">Subscribe Store</string>
+  <string name="subscribe_store">Follow store</string>
 
 
 </resources>

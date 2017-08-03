@@ -79,22 +79,23 @@ public class TimelineService {
     if (loading || (currentOffset >= total)) {
       return Single.just(Collections.emptyList());
     }
-    return getPackages().doOnSuccess(packages -> loading = true)
-        .flatMap(packages -> GetUserTimelineRequest.of(url, limit, initialOffset, packages,
-            bodyInterceptor, okhttp, converterFactory, cardIdPriority, tokenInvalidator,
-            sharedPreferences)
-            .observe()
-            .toSingle()
-            .flatMap(timelineResponse -> {
-              if (timelineResponse.isOk()) {
-                this.currentOffset = timelineResponse.getNextSize();
-                this.total = timelineResponse.getTotal();
-                loading = false;
-                return Single.just(timelineResponse);
-              }
-              return Single.error(
-                  new IllegalStateException("Could not obtain timeline from server."));
-            }))
+    return getPackages().flatMap(packages -> Observable.fromCallable(() -> loading = true)
+        .flatMapSingle(
+            __ -> GetUserTimelineRequest.of(url, limit, initialOffset, packages, bodyInterceptor,
+                okhttp, converterFactory, cardIdPriority, tokenInvalidator, sharedPreferences)
+                .observe(true)
+                .toSingle())
+        .flatMapSingle(timelineResponse -> {
+          if (timelineResponse.isOk()) {
+            this.currentOffset = timelineResponse.getNextSize();
+            this.total = timelineResponse.getTotal();
+            return Single.just(timelineResponse);
+          }
+          return Single.error(new IllegalStateException("Could not obtain timeline from server."));
+        })
+        .toSingle())
+        .doOnError(__ -> loading = false)
+        .doOnSuccess(__ -> loading = false)
         .map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
   }
 
@@ -142,6 +143,20 @@ public class TimelineService {
   public Single<String> share(String cardId) {
     return ShareCardRequest.of(cardId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
         sharedPreferences)
+        .observe()
+        .toSingle()
+        .flatMap(response -> {
+          if (response.isOk()) {
+            return Single.just(response.getData()
+                .getCardUid());
+          }
+          return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        });
+  }
+
+  public Single<String> shareApp(String cardId, Long storeId) {
+    return ShareCardRequest.of(cardId, storeId, okhttp, converterFactory, bodyInterceptor,
+        tokenInvalidator, sharedPreferences)
         .observe()
         .toSingle()
         .flatMap(response -> {

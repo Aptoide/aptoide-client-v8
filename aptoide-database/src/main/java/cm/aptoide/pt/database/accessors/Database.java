@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
  */
 public final class Database {
 
-  private static final int SCHEMA_VERSION = 8085; // if you bump this value, also add changes to the
+  private static final int SCHEMA_VERSION = 8086; // if you bump this value, also add changes to the
   private static final String DB_NAME = "aptoide.realm.db";
 
   private static boolean isInitialized = false;
@@ -32,7 +32,36 @@ public final class Database {
   //
   private static Realm INSTANCE;
 
-  protected Database() {
+  public Database() {
+  }
+
+  /**
+   * this code is expected to run on only a single thread, so no synchronizing primitives were used
+   *
+   * @return singleton Realm instance
+   */
+  protected static Realm getInternal() {
+    if (!isInitialized) {
+      throw new IllegalStateException("You need to call Database.initialize(Context) first");
+    }
+
+    if (INSTANCE == null) {
+      INSTANCE = Realm.getDefaultInstance();
+    }
+
+    return INSTANCE;
+  }
+
+  /**
+   * Returns realm database default instance. Do not use this method it is deprecated and will be
+   * made private in future releases,
+   * use {@link #getRealm()} instead.
+   */
+  @Deprecated protected static Realm get() {
+    if (!isInitialized) {
+      throw new IllegalStateException("You need to call Database.initialize(Context) first");
+    }
+    return Realm.getDefaultInstance();
   }
 
   /**
@@ -46,7 +75,7 @@ public final class Database {
    *
    * @param context Application context
    */
-  public static void initialize(Context context) {
+  public void initialize(Context context) {
     if (isInitialized) return;
 
     //StringBuilder strBuilder = new StringBuilder(KEY);
@@ -99,35 +128,6 @@ public final class Database {
     //}
     Realm.setDefaultConfiguration(realmConfig);
     isInitialized = true;
-  }
-
-  /**
-   * this code is expected to run on only a single thread, so no synchronizing primitives were used
-   *
-   * @return singleton Realm instance
-   */
-  protected static Realm getInternal() {
-    if (!isInitialized) {
-      throw new IllegalStateException("You need to call Database.initialize(Context) first");
-    }
-
-    if (INSTANCE == null) {
-      INSTANCE = Realm.getDefaultInstance();
-    }
-
-    return INSTANCE;
-  }
-
-  /**
-   * Returns realm database default instance. Do not use this method it is deprecated and will be
-   * made private in future releases,
-   * use {@link #getRealm()} instead.
-   */
-  @Deprecated protected static Realm get() {
-    if (!isInitialized) {
-      throw new IllegalStateException("You need to call Database.initialize(Context) first");
-    }
-    return Realm.getDefaultInstance();
   }
 
   //
@@ -227,7 +227,7 @@ public final class Database {
         .flatMap(query -> findAsList(query));
   }
 
-  <E extends RealmObject> Observable<List<E>> findAsList(RealmQuery<E> query) {
+  public <E extends RealmObject> Observable<List<E>> findAsList(RealmQuery<E> query) {
     return Observable.just(query.findAll())
         .filter(realmObject -> realmObject != null)
         .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(

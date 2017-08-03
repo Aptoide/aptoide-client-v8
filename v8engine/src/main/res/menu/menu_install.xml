@@ -10,7 +10,7 @@
 
   <item
       android:id="@+id/menu_install"
-      android:title="@string/install"
+      android:title="@string/menu_install"
       app:showAsAction="ifRoom"
       tools:visible="true"
       />

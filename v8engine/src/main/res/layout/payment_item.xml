@@ -6,6 +6,7 @@
     android:layout_height="56dp"
     android:paddingLeft="8dp"
     android:paddingStart="8dp"
+    android:theme="@style/AppBaseTheme.NoTitle.Transparent.Green"
     tools:checked="true"
     tools:text="Boa Compra"
     style="@style/TextAppearance.Aptoide.Title.Inverse"

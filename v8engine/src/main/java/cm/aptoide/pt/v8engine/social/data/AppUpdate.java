@@ -15,6 +15,7 @@ public class AppUpdate implements Post {
   private final String storeName;
   private final String storeAvatar;
   private final String storeTheme;
+  private final Long storeId;
   private final String appUpdateIcon;
   private final String appUpdateName;
   private final long appUpdateId;
@@ -22,20 +23,23 @@ public class AppUpdate implements Post {
   private final float appUpdateAverageRating;
   private final Date updateAddedDate;
   private final String abUrl;
-  private final boolean isLiked;
   private final CardType cardType;
   private final File file;
   private final Obb obb;
+  private boolean isLiked;
   private Install.InstallationStatus installationStatus;
+  private boolean likedFromClick;
 
   public AppUpdate(String cardId, String storeName, String storeAvatar, String storeTheme,
-      String appUpdateIcon, String appUpdateName, long appUpdateId, String packageName,
-      float appUpdateAverageRating, Date updateAddedDate, String abUrl, boolean isLiked,
-      CardType cardType, File file, Obb obb, Install.InstallationStatus installationStatus) {
+      Long storeId, String appUpdateIcon, String appUpdateName, long appUpdateId,
+      String packageName, float appUpdateAverageRating, Date updateAddedDate, String abUrl,
+      boolean isLiked, CardType cardType, File file, Obb obb,
+      Install.InstallationStatus installationStatus) {
     this.cardId = cardId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;
     this.storeTheme = storeTheme;
+    this.storeId = storeId;
     this.appUpdateIcon = appUpdateIcon;
     this.appUpdateName = appUpdateName;
     this.appUpdateId = appUpdateId;
@@ -48,6 +52,10 @@ public class AppUpdate implements Post {
     this.file = file;
     this.obb = obb;
     this.installationStatus = installationStatus;
+  }
+
+  public Long getStoreId() {
+    return storeId;
   }
 
   public String getStoreTheme() {
@@ -114,7 +122,20 @@ public class AppUpdate implements Post {
     return isLiked;
   }
 
+  @Override public void setLiked(boolean liked) {
+    isLiked = liked;
+    likedFromClick = true;
+  }
+
+  @Override public boolean isLikeFromClick() {
+    return likedFromClick;
+  }
+
   public float getAppUpdateAverageRating() {
     return appUpdateAverageRating;
+  }
+
+  public void setLikedFromClick(boolean likedFromClick) {
+    this.likedFromClick = likedFromClick;
   }
 }

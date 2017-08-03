@@ -57,7 +57,7 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
 
   @Override public void call(ListReviews listFullReviews) {
 
-    List<Review> reviews = listFullReviews.getDatalist()
+    List<Review> reviews = listFullReviews.getDataList()
         .getList();
     List<Displayable> displayables = new LinkedList<>();
 
@@ -101,15 +101,15 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
       }
       if (review.getCommentList() != null
           && review.getCommentList()
-          .getDatalist() != null
+          .getDataList() != null
           && review.getCommentList()
-          .getDatalist()
+          .getDataList()
           .getLimit() != null) {
         fragment.createDisplayableComments(review.getCommentList()
-            .getDatalist()
+            .getDataList()
             .getList(), displayables);
         if (review.getCommentList()
-            .getDatalist()
+            .getDataList()
             .getList()
             .size() > 2) {
           displayables.add(fragment.createReadMoreDisplayable(count, review));

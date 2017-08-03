@@ -10,8 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import cm.aptoide.pt.v8engine.NavigationProvider;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.ActivityView;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -28,8 +28,8 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 
   public Widget(@NonNull View itemView) {
     super(itemView);
-    fragmentNavigator = ((ActivityView) getContext()).getFragmentNavigator();
-    activityNavigator = ((ActivityView) getContext()).getActivityNavigator();
+    fragmentNavigator = ((NavigationProvider) getContext()).getFragmentNavigator();
+    activityNavigator = ((NavigationProvider) getContext()).getActivityNavigator();
 
     try {
       assignViews(itemView);

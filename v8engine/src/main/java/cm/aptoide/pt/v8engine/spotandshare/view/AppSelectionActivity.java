@@ -18,7 +18,7 @@ import cm.aptoide.pt.v8engine.spotandshare.presenter.AppSelectionView;
 import cm.aptoide.pt.v8engine.spotandshare.transference.ApplicationSender;
 import java.util.List;
 
-public class AppSelectionActivity extends ActivityView implements AppSelectionView {
+public class AppSelectionActivity extends SpotAndShareActivityView implements AppSelectionView {
 
   private boolean isHotspot;
   private AppSelectionCustomAdapter adapter;
@@ -73,12 +73,12 @@ public class AppSelectionActivity extends ActivityView implements AppSelectionVi
     super.onBackPressed();
   }
 
-  @Override protected void onPause() {
-    super.onPause();
-  }
-
   @Override protected void onResume() {
     super.onResume();
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
   }
 
   @Override protected void onDestroy() {

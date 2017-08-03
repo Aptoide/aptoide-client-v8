@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -31,6 +30,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
@@ -87,16 +87,19 @@ public class AggregatedSocialStoreLatestAppsWidget
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     apps = new HashMap<>();
     appsPackages = new HashMap<>();
-    storeRepository = RepositoryFactory.getStoreRepository();
+    storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    storeUtilsProxy =
-        new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
-            AccessorFactory.getAccessorFor(Store.class), httpClient,
-            WebService.getDefaultConverter(), tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    storeUtilsProxy = new StoreUtilsProxy(accountManager, baseBodyInterceptor,
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((V8Engine) getContext().getApplicationContext()
+                .getApplicationContext()).getDatabase(), Store.class)),
+        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class), httpClient,
+        WebService.getDefaultConverter(), tokenInvalidator,
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -345,7 +348,7 @@ public class AggregatedSocialStoreLatestAppsWidget
             .get(1)
             .getUser() != null) {
           ImageLoader.with(getContext())
-              .loadWithShadowCircleTransform(minimalCard.getSharers()
+              .loadWithShadowCircleTransform(displayable.getSharers()
                   .get(1)
                   .getUser()
                   .getAvatar(), minimalCardHeaderMainAvatar2);
@@ -433,6 +436,7 @@ public class AggregatedSocialStoreLatestAppsWidget
         numberComments.setVisibility(View.VISIBLE);
         numberComments.setText(getContext().getResources()
             .getQuantityString(R.plurals.timeline_short_comment, (int) minimalCard.getStats()
+                .getComments(), (int) minimalCard.getStats()
                 .getComments()));
         socialCommentBar.setVisibility(View.VISIBLE);
         ImageLoader.with(getContext())

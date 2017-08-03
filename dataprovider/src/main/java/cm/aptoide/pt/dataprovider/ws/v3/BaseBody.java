@@ -41,4 +41,16 @@ public class BaseBody extends HashMapNotNull<String, Object> {
   public void setQ(String q) {
     put("q", q);
   }
+
+  public void setSimCountryISOCode(String countryCode) {
+    put("simcc", countryCode);
+  }
+
+  public void setMobileNetworkCode(String mobileNetworkCode) {
+    put("mnc", mobileNetworkCode);
+  }
+
+  public void setMobileCountryCode(String mobileCountryCode) {
+    put("mcc", mobileCountryCode);
+  }
 }

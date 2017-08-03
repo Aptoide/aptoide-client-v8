@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardUseCompatPadding="true"
+    style="@style/Widget.Aptoide.Card"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <include layout="@layout/apps_timeline_card_header"/>
+
+    <TextView
+        android:id="@+id/social_shared_by"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="72dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="7dp"
+        android:text="@string/social_timeline_shared_by"
+        android:textStyle="italic"
+        android:visibility="gone"
+        tools:text="shared by Jonenz"
+        tools:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/post_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        tools:text="Lesboa menina e moss, lesboa!"
+        style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+        />
+
+    <RelativeLayout
+        android:id="@+id/partial_social_timeline_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/timeline_post_border_grey"
+        android:clickable="true"
+        android:padding="8dp"
+        tools:showIn="@layout/displayable_social_timeline_social_video"
+        >
+
+      <FrameLayout
+          android:id="@+id/partial_social_timeline_thumbnail_image"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/partial_social_timeline_thumbnail_title"
+          android:layout_centerVertical="true"
+          >
+
+        <TextView
+            android:id="@+id/post_url_when_no_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:text="teste"
+            />
+
+        <RelativeLayout
+            android:id="@+id/post_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="152dp"
+            >
+
+          <ImageView
+              android:id="@+id/featured_graphic"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:contentDescription="@null"
+              />
+
+          <RelativeLayout
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:layout_alignParentBottom="true"
+              android:background="@drawable/gradient_black"
+              android:gravity="bottom"
+              android:orientation="horizontal"
+              android:padding="4dp"
+              >
+
+            <TextView
+                android:id="@+id/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:paddingEnd="1.5dp"
+                android:paddingRight="1.5dp"
+                android:textColor="?attr/inverseTextColor"
+                tools:text="Little Commander worl world II"
+                />
+          </RelativeLayout>
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_movie_play_normal"
+            android:visibility="visible"
+            />
+
+      </FrameLayout>
+
+      <TextView
+          android:id="@+id/partial_social_timeline_publisher"
+          android:layout_width="match_parent"
+          android:layout_marginBottom="2dp"
+          android:maxLines="1"
+          android:typeface="serif"
+          tools:text="Ana's Blog"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
+          />
+
+      <TextView
+          android:id="@+id/partial_social_timeline_thumbnail_title"
+          android:layout_width="match_parent"
+          android:layout_below="@id/partial_social_timeline_publisher"
+          android:layout_marginBottom="8dp"
+          android:maxLines="3"
+          android:typeface="serif"
+          tools:text="Fábio Costa, não te esquecas do APK para a reunião."
+          style="@style/Aptoide.TextView.Regular.S.Grey"
+          />
+    </RelativeLayout>
+
+    <include layout="@layout/social_info_bar_timeline"/>
+
+    <include layout="@layout/social_last_comment_bar"/>
+
+    <include layout="@layout/social_bar_timeline"/>
+
+  </LinearLayout>
+</android.support.v7.widget.CardView>
+

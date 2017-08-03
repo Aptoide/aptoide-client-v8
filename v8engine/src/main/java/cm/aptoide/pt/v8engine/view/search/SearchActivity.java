@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view.search;
 
-import cm.aptoide.pt.v8engine.view.BaseActivity;
+import cm.aptoide.pt.v8engine.view.ActivityView;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends ActivityView {
 
 }

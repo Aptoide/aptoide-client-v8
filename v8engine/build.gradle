@@ -21,7 +21,8 @@ android {
     buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
     buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
     buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
-    buildConfigField "String", "SIXPACK_URL", "\"" + project.SIXPACK_URL + "\""
+    buildConfigField "String", "APTOIDE_WEB_SERVICES_SIXPACK_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_SIXPACK_HOST + "\""
     buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
 
     buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
@@ -232,5 +233,7 @@ dependencies {
 
 
   compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
-  //annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
+
+  compile "com.braintreepayments.api:braintree:${BRAINTREE_VERSION}"
+  compile "com.braintreepayments:card-form:${BRAINTREE_CARD_FORM_VERSION}"
 }

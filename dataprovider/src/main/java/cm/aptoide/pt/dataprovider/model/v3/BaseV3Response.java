@@ -8,9 +8,6 @@ package cm.aptoide.pt.dataprovider.model.v3;
 import java.util.List;
 import lombok.Data;
 
-/**
- * Created by marcelobenites on 8/11/16.
- */
 @Data public class BaseV3Response {
 
   private String status;
