@@ -12,8 +12,17 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
+import cm.aptoide.pt.v8engine.util.DateCalculator;
+import java.util.Date;
 
 public class SharePostViewSetup {
+
+  private DateCalculator dateCalculator;
+
+  public SharePostViewSetup(DateCalculator dateCalculator) {
+    this.dateCalculator = dateCalculator;
+  }
+
   private void setupBody(View view) {
     CardView cardView = (CardView) view.findViewById(R.id.card);
     LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);
@@ -35,11 +44,6 @@ public class SharePostViewSetup {
     comments.setVisibility(View.VISIBLE);
     socialInfoBar.setVisibility(View.GONE);
     socialCommentBar.setVisibility(View.GONE);
-
-    // yet to be used...
-    // LinearLayout socialTerms = (LinearLayout) view.findViewById(R.id.social_privacy_terms);
-    // TextView privacyText = (TextView) view.findViewById(R.id.social_text_privacy);
-    // TextView numberOfComments = (TextView) view.findViewById(R.id.social_number_of_comments);
   }
 
   private void setupBottom(View view, Account account) {
@@ -60,6 +64,7 @@ public class SharePostViewSetup {
   private void setupHeaderWithStoreName(View view, Context context, Account account) {
     TextView storeName = (TextView) view.findViewById(R.id.card_title);
     TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
+    TextView date = (TextView) view.findViewById(R.id.card_date);
     ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
     ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
 
@@ -71,13 +76,13 @@ public class SharePostViewSetup {
         .getAvatar();
     final Account.Access accountUserAccess = account.getAccess();
 
+    storeName.setText(accountStoreName);
     storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
 
-    storeName.setText(accountStoreName);
     storeAvatar.setVisibility(View.VISIBLE);
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(accountStoreAvatar, storeAvatar);
-
+    date.setText(dateCalculator.getTimeSinceDate(context, new Date()));
     if (Account.Access.PUBLIC.equals(accountUserAccess)) {
       userAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)

@@ -178,7 +178,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         getContext().getApplicationContext()
             .getResources());
     spannableFactory = new SpannableFactory();
-    shareDialogFactory = new ShareDialogFactory(getContext(), new SharePostViewSetup());
+    shareDialogFactory = new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
     adapter = new PostAdapter(Collections.emptyList(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
