@@ -54,10 +54,9 @@ public final class RepositoryFactory {
         ((V8Engine) context.getApplicationContext()
             .getApplicationContext()).getDatabase(), Update.class), AccessorFactory.getAccessorFor(
         ((V8Engine) context.getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class), getAccountManager(context),
-        getIdsRepository(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
-        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
-        context.getPackageManager());
+            .getApplicationContext()).getDatabase(), Store.class), getIdsRepository(context),
+        getBaseBodyInterceptorV7(context), getHttpClient(context), WebService.getDefaultConverter(),
+        getTokenInvalidator(context), sharedPreferences, context.getPackageManager());
   }
 
   private static IdsRepository getIdsRepository(Context context) {

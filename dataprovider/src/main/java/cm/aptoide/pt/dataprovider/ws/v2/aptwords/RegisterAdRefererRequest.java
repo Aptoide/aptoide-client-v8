@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import okhttp3.OkHttpClient;
@@ -23,8 +24,9 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
   private String success;
 
   private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
-    super(httpClient, converterFactory);
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
+    super(httpClient, converterFactory, sharedPreferences);
     this.q = q;
     this.adId = adId;
     this.appId = appId;
@@ -34,9 +36,10 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
   }
 
   public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
     return new RegisterAdRefererRequest(adId, appId, clickUrl, success, httpClient,
-        converterFactory, q);
+        converterFactory, q, sharedPreferences);
   }
 
   private void extractAndSetTracker(String clickUrl) {
