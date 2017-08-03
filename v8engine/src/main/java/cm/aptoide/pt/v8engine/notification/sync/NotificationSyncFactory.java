@@ -1,9 +1,8 @@
 package cm.aptoide.pt.v8engine.notification.sync;
 
-import android.app.AlarmManager;
 import android.content.SharedPreferences;
-import android.text.format.DateUtils;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.notification.NotificationNetworkService;
 import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import cm.aptoide.pt.v8engine.sync.Sync;
@@ -35,7 +34,7 @@ public class NotificationSyncFactory {
             false, getSocialNotificationInterval(), 0);
       case CAMPAIGN_NOTIFICATION_SYNC_PERIODIC:
         return new CampaignNotificationSync(type, notificationService, notificationPersistence,
-            true, false, AlarmManager.INTERVAL_HALF_DAY, 0);
+            true, false, BuildConfig.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS, 0);
       case CAMPAIGN_NOTIFICATION_SYNC_IMMEDIATE:
         return new SocialNotificationSync(type, notificationService, notificationPersistence, false,
             false, 0, 0);
@@ -48,7 +47,7 @@ public class NotificationSyncFactory {
   }
 
   private long getSocialNotificationInterval() {
-    long socialNotificationInterval = DateUtils.MINUTE_IN_MILLIS * 10;
+    long socialNotificationInterval = BuildConfig.DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS;
     if (ToolboxManager.getPushNotificationPullingInterval(sharedPreferences) > 0) {
       socialNotificationInterval =
           ToolboxManager.getPushNotificationPullingInterval(sharedPreferences);

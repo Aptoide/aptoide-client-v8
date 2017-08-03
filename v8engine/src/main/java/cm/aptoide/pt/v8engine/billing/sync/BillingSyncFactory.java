@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.billing.sync;
 
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
@@ -32,11 +33,12 @@ public class BillingSyncFactory {
 
   public Sync createAuthorizationSync(int paymentMethodId) {
     return new AuthorizationSync(paymentMethodId, payer, analytics, authorizationService,
-        authorizationPersistence, true, true, 10000, 0);
+        authorizationPersistence, true, true,
+        BuildConfig.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS, 0);
   }
 
   public Sync createTransactionSync(Product product) {
     return new TransactionSync(product, transactionPersistence, payer, analytics,
-        transactionService, true, true, 10000, 0);
+        transactionService, true, true, BuildConfig.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS, 0);
   }
 }

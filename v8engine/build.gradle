@@ -36,6 +36,15 @@ android {
         "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
     buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
+    buildConfigField "int", "DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS",
+        project.DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS
+    buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
+        project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
+    buildConfigField "int", "PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS",
+        project.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS
+    buildConfigField "int", "PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS",
+        project.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS
+
 
     multiDexEnabled true
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
