@@ -42,6 +42,8 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     // Access the Realm schema in order to create, modify or delete classes and their fields.
 
     // DynamicRealm exposes an editable schema
+    Logger.w(TAG, "migrate(): from: " + oldVersion + " to: " + newVersion);
+
     RealmSchema schema = realm.getSchema();
 
     //  Migrate from version 0 (<=8075) to version 1 (8076)
