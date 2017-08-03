@@ -684,11 +684,6 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
-            .flatMap(shareEvent -> accountManager.accountStatus()
-                .first()
-                .toSingle()
-                .flatMapObservable(account -> syncAccount(account, shareEvent).toObservable())
-                .map(__ -> shareEvent))
             .flatMapSingle(shareEvent -> timeline.sharePost(shareEvent.getPost())
                 .doOnSuccess(cardId -> view.showShareSuccessMessage())))
         .doOnNext(cardid -> timelineAnalytics.sendSocialCardPreviewActionEvent(
