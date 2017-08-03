@@ -63,6 +63,6 @@ public class AppViewSuggestedAppsWidget
     recyclerView.setAdapter(adapter);
 
     similarAppsToTextView.setText(String.format(Locale.getDefault(), getContext().getResources()
-        .getString(R.string.you_might_also_like)));
+        .getString(R.string.appview_title_you_might_also_like)));
   }
 }

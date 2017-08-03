@@ -30,7 +30,7 @@
         android:layout_marginTop="16dp"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="@string/you_might_also_like"
+        android:text="@string/appview_title_you_might_also_like"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/aptoide_orange"
         android:textSize="18sp"
