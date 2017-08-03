@@ -69,8 +69,8 @@ public class PostsRemoteDataSource {
     }
     return getPackages().flatMap(packages -> Observable.fromCallable(() -> loading = true)
         .flatMapSingle(
-            __ -> GetUserTimelineRequest.of(url, limit, offset, packages, bodyInterceptor,
-                okhttp, converterFactory, cardIdPriority, tokenInvalidator, sharedPreferences)
+            __ -> GetUserTimelineRequest.of(url, limit, offset, packages, bodyInterceptor, okhttp,
+                converterFactory, cardIdPriority, tokenInvalidator, sharedPreferences)
                 .observe(true)
                 .toSingle())
         .flatMapSingle(timelineResponse -> {
