@@ -29,8 +29,9 @@ public class PullSocialNotificationRequest
   private final String id;
 
   protected PullSocialNotificationRequest(String id, Map<String, String> options,
-      OkHttpClient okHttpClient, Converter.Factory converterFactory) {
-    super(okHttpClient, converterFactory);
+      OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      SharedPreferences sharedPreferences) {
+    super(okHttpClient, converterFactory, sharedPreferences);
     this.options = options;
     this.id = id;
   }
@@ -61,7 +62,7 @@ public class PullSocialNotificationRequest
     }
 
     return new PullSocialNotificationRequest(uniqueIdentifier, options, httpClient,
-        converterFactory);
+        converterFactory, sharedPreferences);
   }
 
   @Override
