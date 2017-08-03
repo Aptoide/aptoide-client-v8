@@ -21,8 +21,7 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
-public class GridAppWidget
-    extends Widget<GridAppDisplayable> {
+public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
 
   private TextView name;
   private ImageView icon;
@@ -44,7 +43,7 @@ public class GridAppWidget
     tvAddedTime = (TextView) itemView.findViewById(R.id.added_time);
   }
 
-  @Override public void bindView(GridAppDisplayable displayable) {
+  @Override public void bindView(T displayable) {
     final App pojo = displayable.getPojo();
     final long appId = pojo.getId();
     final FragmentActivity context = getContext();
