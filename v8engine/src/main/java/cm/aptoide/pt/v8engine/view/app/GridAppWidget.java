@@ -20,9 +20,9 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.functions.Action1;
 
-public class GridAppWidget
-    extends Widget<GridAppDisplayable> {
+public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
 
   private TextView name;
   private ImageView icon;
@@ -44,7 +44,7 @@ public class GridAppWidget
     tvAddedTime = (TextView) itemView.findViewById(R.id.added_time);
   }
 
-  @Override public void bindView(GridAppDisplayable displayable) {
+  @Override public void bindView(T displayable) {
     final App pojo = displayable.getPojo();
     final long appId = pojo.getId();
     final FragmentActivity context = getContext();
@@ -68,15 +68,20 @@ public class GridAppWidget
         .getTimeDiffString(context, pojo.getAdded()
             .getTime(), getContext().getResources()));
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(v -> {
-          // FIXME
-          Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-              .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
-                  .getAppearance()
-                  .getTheme(), tvStoreName.getText()
-                  .toString()));
-        }, throwable -> CrashReport.getInstance()
+        .subscribe(newOnClickListener(displayable, pojo, appId),
+            throwable -> CrashReport.getInstance()
             .log(throwable)));
+  }
+
+  @NonNull protected Action1<Void> newOnClickListener(T displayable, App pojo, long appId) {
+    return v -> {
+      // FIXME
+      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
+              .getAppearance()
+              .getTheme(), tvStoreName.getText()
+              .toString()));
+    };
   }
 }
