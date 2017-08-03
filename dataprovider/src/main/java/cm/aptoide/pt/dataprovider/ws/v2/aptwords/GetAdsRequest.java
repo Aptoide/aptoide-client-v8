@@ -64,7 +64,7 @@ import rx.Observable;
         googlePlayServicesAvailable, oemid, mature);
   }
 
-  private static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID,
+  public static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID,
       boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     return of(location, "__NULL__", limit, aptoideClientUUID, googlePlayServicesAvailable, oemid,
         mature);

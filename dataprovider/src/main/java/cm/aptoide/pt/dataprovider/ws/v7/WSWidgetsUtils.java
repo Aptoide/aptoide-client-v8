@@ -6,6 +6,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.util.Pair;
+
+import cm.aptoide.pt.dataprovider.AdsOptimizer;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
@@ -18,6 +20,8 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.preferences.Application;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -69,13 +73,22 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case ADS:
-          return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
-              mature, Application.getConfiguration().numberOfAdsRowOnHomepage())
-              .observe()
-              .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
-              .onErrorResumeNext(throwable -> Observable.empty())
-              .map(listApps -> wsWidget);
+          return AdsOptimizer.optimizeAds(GetAdsRequest.Location.homepage, true,
+                  Type.ADS.getPerLineCount() *
+                          Application.getConfiguration().numberOfAdsRowOnHomepage(),
+                  aptoideClientUuid, googlePlayServicesAvailable, oemid, mature, new ArrayList<>(),
+                  "__NULL__", null, null, null)
+                  .observeOn(Schedulers.io())
+                  .doOnNext(wsWidget::setViewObject)
+                  .onErrorResumeNext(throwable -> Observable.empty())
+                  .map(listApps -> wsWidget);
+          //return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
+          //    mature, Application.getConfiguration().numberOfAdsRowOnHomepage())
+          //    .observe()
+          //    .observeOn(Schedulers.io())
+          //    .doOnNext(wsWidget::setViewObject)
+          //    .onErrorResumeNext(throwable -> Observable.empty())
+          //    .map(listApps -> wsWidget);
 
         case STORE_META:
           return GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
