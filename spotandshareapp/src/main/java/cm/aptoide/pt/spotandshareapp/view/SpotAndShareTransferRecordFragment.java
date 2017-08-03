@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -66,6 +67,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private RecyclerView pickAppsRecyclerView;
   private View pickAppsProgressBarContainer;
   private PublishSubject connectedFriends;
+  private MenuItem friendsItem;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -112,6 +114,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_spotandshare_transfer, menu);
+    this.friendsItem = menu.findItem(R.id.spotandshare_connected_friends);
   }
 
   private void configureBottomSheet() {
@@ -175,7 +178,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         new SpotAndShareTransferRecordPresenter(this,
             ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
             new SpotAndShareTransferRecordManager(getContext()),
-            new SpotAndShareInstallManager(getActivity().getApplicationContext()));
+            new SpotAndShareInstallManager(getActivity().getApplicationContext()),
+            new DrawableBitmapMapper(getActivity().getApplicationContext()));
 
     SpotAndSharePickAppsPresenter appSelectionPresenter =
         new SpotAndSharePickAppsPresenter(this, false,
@@ -326,6 +330,14 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void openConnectedFriendsFragment() {
     getFragmentNavigator().navigateTo(SpotAndShareConnectedFriendsFragment.newInstance());
+  }
+
+  @Override public void updateFriendsNumber(int friendsList) {
+    friendsItem.setTitle(friendsList);
+  }
+
+  @Override public void updateFriendsAvatar(Drawable friendAvatar) {
+    friendsItem.setIcon(friendAvatar);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

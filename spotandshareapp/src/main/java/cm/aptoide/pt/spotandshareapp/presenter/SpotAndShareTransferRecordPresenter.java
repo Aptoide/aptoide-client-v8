@@ -1,13 +1,16 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import java.util.Collection;
 import java.util.LinkedList;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -21,14 +24,17 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
   private SpotAndShare spotAndShare;
   private SpotAndShareTransferRecordManager transferRecordManager;
   private SpotAndShareInstallManager spotAndShareInstallManager;
+  private final DrawableBitmapMapper drawableBitmapMapper;
 
   public SpotAndShareTransferRecordPresenter(SpotAndShareTransferRecordView view,
       SpotAndShare spotAndShare, SpotAndShareTransferRecordManager transferRecordManager,
-      SpotAndShareInstallManager spotAndShareInstallManager) {
+      SpotAndShareInstallManager spotAndShareInstallManager,
+      DrawableBitmapMapper drawableBitmapMapper) {
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.transferRecordManager = transferRecordManager;
     this.spotAndShareInstallManager = spotAndShareInstallManager;
+    this.drawableBitmapMapper = drawableBitmapMapper;
   }
 
   @Override public void present() {
@@ -87,6 +93,23 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> spotAndShare.observeFriends())
+        .doOnNext(friendsList -> updateFriendsList(friendsList))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
+  }
+
+  private void updateFriendsList(Collection<Friend> friendsList) {
+    if (friendsList.size() == 1) {
+      view.updateFriendsAvatar(drawableBitmapMapper.convertBitmapToDrawable(
+          ((Friend) friendsList.toArray()[0]).getAvatar()));
+    } else {
+      view.updateFriendsNumber(friendsList.size());
+    }
   }
 
   private void leaveGroup() {
