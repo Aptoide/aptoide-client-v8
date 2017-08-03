@@ -52,7 +52,7 @@
 
         <RelativeLayout
             android:id="@+id/my_account_user"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
 
@@ -99,6 +99,7 @@
           <Button
               android:id="@+id/my_account_edit_user_profile"
               android:layout_alignBottom="@+id/my_account_userinfo"
+              android:layout_alignParentEnd="true"
               android:layout_alignParentRight="true"
               android:layout_marginEnd="16dp"
               android:layout_marginRight="16dp"
@@ -124,7 +125,7 @@
 
         <RelativeLayout
             android:id="@+id/my_account_store"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
 
@@ -172,6 +173,7 @@
           <Button
               android:id="@+id/my_account_edit_user_store"
               android:layout_alignBottom="@+id/my_account_storeinfo"
+              android:layout_alignParentEnd="true"
               android:layout_alignParentRight="true"
               android:layout_marginEnd="16dp"
               android:layout_marginRight="16dp"

@@ -68,16 +68,31 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         >
+
+      <Button
+          android:id="@+id/explore_button"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="13dp"
+          android:layout_marginRight="13dp"
+          android:text="@string/create_store_displayable_explore_button"
+          android:textColor="@color/black"
+          style="@style/StoreWhiteButton"
+          />
       <TextView
           android:id="@+id/created_store_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
           android:layout_alignParentStart="true"
           android:layout_marginEnd="10dp"
           android:layout_marginLeft="10dp"
           android:layout_marginRight="10dp"
           android:layout_marginStart="10dp"
           android:layout_marginTop="10dp"
+          android:layout_toLeftOf="@id/explore_button"
           android:layout_toStartOf="@+id/explore_button"
           android:text="@string/create_store_displayable_created_store_short_term_message"
           android:textColor="@color/white"
@@ -88,6 +103,7 @@
           android:id="@+id/create_store_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
           android:layout_alignParentStart="true"
           android:layout_below="@id/created_store_text"
           android:layout_marginBottom="10dp"
@@ -95,22 +111,11 @@
           android:layout_marginLeft="10dp"
           android:layout_marginRight="10dp"
           android:layout_marginStart="10dp"
+          android:layout_toLeftOf="@id/explore_button"
           android:layout_toStartOf="@+id/explore_button"
           android:text="@string/create_store_displayable_explore_message"
           android:textColor="@color/white"
           android:textSize="@dimen/text_size_medium"
-          />
-
-      <Button
-          android:id="@+id/explore_button"
-          android:layout_alignParentRight="true"
-          android:layout_centerHorizontal="true"
-          android:layout_centerVertical="true"
-          android:layout_marginEnd="13dp"
-          android:layout_marginRight="13dp"
-          android:text="@string/create_store_displayable_explore_button"
-          android:textColor="@color/black"
-          style="@style/StoreWhiteButton"
           />
     </RelativeLayout>
 
