@@ -48,7 +48,8 @@ public class AppViewSuggestedAppsWidget
       // TODO: 01-08-2017 neuro fill app tag
       app.getStore()
           .setAppearance(new Store.Appearance());
-      displayables.add(new AppViewSuggestedAppDisplayable(app));
+      displayables.add(
+          new AppViewSuggestedAppDisplayable(app, displayable.getAppViewSimilarAppAnalytics()));
     }
 
     BaseAdapter adapter = new BaseAdapter(displayables) {
