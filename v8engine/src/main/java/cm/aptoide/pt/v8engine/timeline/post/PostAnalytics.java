@@ -32,13 +32,13 @@ public class PostAnalytics {
 
   public void sendOpenEvent(OpenSource source) {
     Bundle bundle = new Bundle();
-    bundle.putSerializable("source", source);
+    bundle.putString("source", String.valueOf(source));
     analytics.sendEvent(new FacebookEvent(facebook, OPEN_EVENT_NAME, bundle));
   }
 
   public void sendClosePostEvent(CloseType closeType) {
     Bundle bundle = new Bundle();
-    bundle.putSerializable("New_Post_Close", closeType);
+    bundle.putString("New_Post_Close", String.valueOf(closeType));
     analytics.sendEvent(new FacebookEvent(facebook, NEW_POST_EVENT_NAME, bundle));
   }
 
@@ -53,11 +53,11 @@ public class PostAnalytics {
       boolean hasSelectedApp, String packageName, boolean hasComment, boolean hasUrl, String url,
       boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putBoolean(RELATED_APPS_AVAILABLE, relatedAppsAvailable);
-    bundle.putBoolean(HAS_SELECTED_APP, hasSelectedApp);
-    bundle.putBoolean(HAS_COMMENT, hasComment);
-    bundle.putBoolean(HAS_URL, hasUrl);
-    bundle.putBoolean(HAS_URL_PREVIEW, hasUrlPreview);
+    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
+    bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
+    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
+    bundle.putString(HAS_URL, String.valueOf(hasUrl));
+    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
     bundle.putString(PACKAGE_NAME, packageName);
     bundle.putString(URL, url);
     bundle.putString(STATUS, "fail");
@@ -75,11 +75,11 @@ public class PostAnalytics {
   private Bundle createPostCompleteNoSelectedAppEventBundle(boolean relatedAppsAvailable,
       boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putBoolean(RELATED_APPS_AVAILABLE, relatedAppsAvailable);
-    bundle.putBoolean(HAS_SELECTED_APP, false);
-    bundle.putBoolean(HAS_COMMENT, hasComment);
-    bundle.putBoolean(HAS_URL, hasUrl);
-    bundle.putBoolean(HAS_URL_PREVIEW, hasUrlPreview);
+    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
+    bundle.putString(HAS_SELECTED_APP, String.valueOf(false));
+    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
+    bundle.putString(HAS_URL, String.valueOf(hasUrl));
+    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
     bundle.putString(PACKAGE_NAME, "");
     bundle.putString(URL, url);
     bundle.putString(STATUS, "fail");
@@ -97,11 +97,11 @@ public class PostAnalytics {
   private Bundle createNoLoginEventBundle(boolean relatedAppsAvailable, boolean hasSelectedApp,
       String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putBoolean(RELATED_APPS_AVAILABLE, relatedAppsAvailable);
-    bundle.putBoolean(HAS_SELECTED_APP, hasSelectedApp);
-    bundle.putBoolean(HAS_COMMENT, hasComment);
-    bundle.putBoolean(HAS_URL, hasUrl);
-    bundle.putBoolean(HAS_URL_PREVIEW, hasUrlPreview);
+    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
+    bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
+    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
+    bundle.putString(HAS_URL, String.valueOf(hasUrl));
+    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
     bundle.putString(PACKAGE_NAME, packageName);
     bundle.putString(URL, url);
     bundle.putString(STATUS, "fail");
@@ -119,11 +119,11 @@ public class PostAnalytics {
   private Bundle createNoAppFoundEventBundle(boolean relatedAppsAvailable, boolean hasSelectedApp,
       String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putBoolean(RELATED_APPS_AVAILABLE, relatedAppsAvailable);
-    bundle.putBoolean(HAS_SELECTED_APP, hasSelectedApp);
-    bundle.putBoolean(HAS_COMMENT, hasComment);
-    bundle.putBoolean(HAS_URL, hasUrl);
-    bundle.putBoolean(HAS_URL_PREVIEW, hasUrlPreview);
+    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
+    bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
+    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
+    bundle.putString(HAS_URL, String.valueOf(hasUrl));
+    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
     bundle.putString(PACKAGE_NAME, packageName);
     bundle.putString(URL, url);
     bundle.putString(STATUS, "fail");
@@ -143,11 +143,11 @@ public class PostAnalytics {
       boolean hasSelectedApp, String packageName, boolean hasComment, boolean hasUrl, String url,
       boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putBoolean(RELATED_APPS_AVAILABLE, relatedAppsAvailable);
-    bundle.putBoolean(HAS_SELECTED_APP, hasSelectedApp);
-    bundle.putBoolean(HAS_COMMENT, hasComment);
-    bundle.putBoolean(HAS_URL, hasUrl);
-    bundle.putBoolean(HAS_URL_PREVIEW, hasUrlPreview);
+    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
+    bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
+    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
+    bundle.putString(HAS_URL, String.valueOf(hasUrl));
+    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
     bundle.putString(PACKAGE_NAME, packageName);
     bundle.putString(URL, url);
     bundle.putString(STATUS, "fail");
@@ -165,11 +165,11 @@ public class PostAnalytics {
   private Bundle createPostCompletedSuccessEventBundle(boolean relatedAppsAvailable,
       String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putBoolean(RELATED_APPS_AVAILABLE, relatedAppsAvailable);
-    bundle.putBoolean(HAS_SELECTED_APP, true);
-    bundle.putBoolean(HAS_COMMENT, hasComment);
-    bundle.putBoolean(HAS_URL, hasUrl);
-    bundle.putBoolean(HAS_URL_PREVIEW, hasUrlPreview);
+    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
+    bundle.putString(HAS_SELECTED_APP, String.valueOf(true));
+    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
+    bundle.putString(HAS_URL, String.valueOf(hasUrl));
+    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
     bundle.putString(PACKAGE_NAME, packageName);
     bundle.putString(URL, url);
     bundle.putString(STATUS, "success");
