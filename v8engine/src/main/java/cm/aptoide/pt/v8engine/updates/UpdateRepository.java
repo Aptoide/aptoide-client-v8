@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.updates;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
@@ -33,7 +32,6 @@ public class UpdateRepository {
   private static final String TAG = UpdateRepository.class.getName();
 
   private final IdsRepository idsRepository;
-  private final AptoideAccountManager accountManager;
   private final UpdateAccessor updateAccessor;
   private final StoreAccessor storeAccessor;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
@@ -44,13 +42,12 @@ public class UpdateRepository {
   private final PackageManager packageManager;
 
   public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
-      AptoideAccountManager accountManager, IdsRepository idsRepository,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, PackageManager packageManager) {
+      IdsRepository idsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      PackageManager packageManager) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
-    this.accountManager = accountManager;
     this.idsRepository = idsRepository;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
