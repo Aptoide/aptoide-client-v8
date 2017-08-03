@@ -19,6 +19,10 @@ retrolambda {
   jvmArgs '-noverify'
 }
 
+ext {
+  STORE_NAME = "dfloureiro"
+}
+
 android {
 
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -29,21 +33,26 @@ android {
 
   // keep the "applicationId" var in third place for the jenkins build script hack
   defaultConfig {
-    applicationId "${APPLICATION_ID}"
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-    manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
-                            suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider",
-                            storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider",
-                            currentApplicationId            : "cm.aptoide.pt",
-                            fabricApiKey                    : project.FABRIC_API_KEY]
+    manifestPlaceholders =
+        [toolboxProviderAuthority        : applicationId + ".StubProvider." + applicationIdSuffix,
+         suggestionProviderAuthority     : applicationId +
+             ".v8engine.provider.SearchSuggestionProvider." +
+             applicationIdSuffix,
+         storeSuggestionProviderAuthority: applicationId +
+             ".v8engine.provider.StoreSearchSuggestionProvider." +
+             applicationIdSuffix,
+         currentApplicationId            : applicationId + "." + applicationIdSuffix,
+         fabricApiKey                    : project.FABRIC_API_KEY]
 
     multiDexEnabled true
-    resValue "string", "authenticator_account_type", APPLICATION_ID
+    resValue "string", "authenticator_account_type", applicationId + "." + applicationIdSuffix
     versionCode project.PROD_VERSION_CODE.toInteger()
     versionName "8.4.0.0"
-    resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
-    buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
+    resValue "string", "content_authority", applicationId + ".StubProvider." + applicationIdSuffix
+    buildConfigField "String", "CONTENT_AUTHORITY",
+        "\"" + applicationId + ".StubProvider." + applicationIdSuffix + "\""
     buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
     buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
     buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
@@ -83,9 +92,35 @@ android {
     }
   }
 
+  flavorDimensions "product", "mode"
   productFlavors {
 
+    vanilla {
+      dimension "product"
+      applicationId "${VANILLA_APPLICATION_ID}"
+
+      manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider",
+                              suggestionProviderAuthority     : applicationId +
+                                  ".v8engine.provider.SearchSuggestionProvider",
+                              storeSuggestionProviderAuthority: applicationId +
+                                  ".v8engine.provider.StoreSearchSuggestionProvider",
+                              currentApplicationId            : applicationId,
+                              fabricApiKey                    : project.FABRIC_API_KEY]
+
+      resValue "string", "authenticator_account_type", applicationId
+      resValue "string", "content_authority", applicationId + ".StubProvider"
+      buildConfigField "String", "CONTENT_AUTHORITY",
+          "\"" + applicationId + ".StubProvider.\""
+    }
+
+    partner {
+      dimension "product"
+      applicationId "${PARTNER_APPLICATION_ID}"
+      applicationIdSuffix STORE_NAME
+    }
+
     internal {
+      dimension "mode"
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
@@ -102,39 +137,25 @@ android {
       buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
       buildConfigField "String", "TWITTER_SECRET",
           "\"" + project.TWITTER_SECRET_INTERNAL + "\""
-
-      resValue "string", "authenticator_account_type", APPLICATION_ID + ".internal"
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.internal"
-      buildConfigField "String", "CONTENT_AUTHORITY",
-          "\"" + APPLICATION_ID + ".StubProvider.internal\""
-
-      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.internal",
-                              suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider.internal",
-                              storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider.internal",
-                              currentApplicationId            : "cm.aptoide.pt.internal"]
     }
 
     dev {
+      dimension "mode"
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".dev"
 
 
       versionName "8.4.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
-
-      resValue "string", "authenticator_account_type", APPLICATION_ID + ".dev"
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.dev"
-      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider.dev\""
-
-      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.dev",
-                              suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider.dev",
-                              storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider.dev",
-                              currentApplicationId            : "cm.aptoide.pt.dev"]
     }
 
-    prod {}
+    prod {
+      dimension "mode"
+    }
 
-    leak {}
+    leak {
+      dimension "mode"
+    }
   }
 
   buildTypes {
