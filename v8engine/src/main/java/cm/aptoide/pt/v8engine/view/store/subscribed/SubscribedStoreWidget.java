@@ -45,6 +45,7 @@ import com.jakewharton.rxbinding.view.RxView;
 
     storeLayout.setBackgroundColor(Color.WHITE);
     compositeSubscription.add(RxView.clicks(storeLayout)
+        //// TODO: 03/08/17 followed store click
         .subscribe(__ -> {
           final Fragment fragment = V8Engine.getFragmentProvider()
               .newStoreFragment(displayable.getPojo()

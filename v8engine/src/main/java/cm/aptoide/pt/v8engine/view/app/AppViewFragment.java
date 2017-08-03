@@ -303,8 +303,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
     installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
