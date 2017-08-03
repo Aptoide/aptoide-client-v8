@@ -433,7 +433,7 @@
 
 
   <!-- Comments -->
-  <string name="commentlist_title_comment">Comment</string>
+  <string name="dialog_title_comment">Comment</string>
   <string name="dialog_button_comment">Comment</string>
   <string name="reply_to">Reply to %s</string>
   <string name="comment_submitted">Your comment was successfully submitted</string>
