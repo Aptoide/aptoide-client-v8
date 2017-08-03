@@ -38,7 +38,7 @@ public class PostAnalytics {
 
   public void sendClosePostEvent(CloseType closeType) {
     Bundle bundle = new Bundle();
-    bundle.putString("New_Post_Close", String.valueOf(closeType));
+    bundle.putString("method", String.valueOf(closeType));
     analytics.sendEvent(new FacebookEvent(facebook, NEW_POST_EVENT_NAME, bundle));
   }
 
