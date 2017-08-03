@@ -270,17 +270,20 @@ public class TimelinePresenter implements Presenter {
   private void onBottomReachedShowMorePosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(create -> view.reachesBottom())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(create -> view.showLoadMoreProgressIndicator())
-        .flatMapSingle(bottomReached -> timeline.getNextCards())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
+        .flatMap(create -> view.reachesBottom()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(created -> view.showLoadMoreProgressIndicator())
+            .flatMapSingle(bottomReached -> timeline.getNextCards())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
+            .doOnError(throwable -> {
+              crashReport.log(throwable);
+              view.showGenericError();
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
-          crashReport.log(throwable);
-          view.showGenericError();
         });
   }
 

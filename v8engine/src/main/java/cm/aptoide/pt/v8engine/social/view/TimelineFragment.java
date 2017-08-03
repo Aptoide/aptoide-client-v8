@@ -112,9 +112,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private StoreContext storeContext;
   private AptoideAccountManager accountManager;
   private ShareDialogInterface<Object> shareDialog;
-  private SpannableFactory spannableFactory;
   private TabNavigator tabNavigator;
-  private TimelineAnalytics timelineAnalytics;
   private ShareDialogFactory shareDialogFactory;
   private PublishSubject<ShareEvent> sharePostPublishSubject;
   private PublishRelay<View> loginPrompt;
@@ -164,7 +162,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
-    spannableFactory = new SpannableFactory();
     shareDialogFactory =
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
@@ -218,14 +215,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     coordinatorLayout = view.findViewById(R.id.coordinator_layout);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
-    spannableFactory = new SpannableFactory();
+    SpannableFactory spannableFactory = new SpannableFactory();
     adapter = new PostAdapter(Collections.emptyList(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
                 postTouchEventPublishSubject)), new ProgressCard());
     list.setAdapter(adapter);
 
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+    TimelineAnalytics timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
@@ -267,6 +264,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     listState = list.getLayoutManager()
         .onSaveInstanceState();
     adapter.clearPosts();
+    adapter = null;
+    genericError = null;
+    list = null;
+    swipeRefreshLayout = null;
+    coordinatorLayout = null;
+    helper = null;
+    retryButton = null;
+    floatingActionButton = null;
     timelinePostsRepository.clearLoading();
     hideLoadMoreProgressIndicator();
   }
@@ -360,7 +365,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     Logger.d(this.getClass()
         .getName(), "hide indicator called");
     bottomAlreadyReached = false;
-    adapter.removeLoadMoreProgress();
+    if (adapter != null) {
+      adapter.removeLoadMoreProgress();
+    }
   }
 
   @Override public Observable<Void> floatingActionButtonClicked() {
