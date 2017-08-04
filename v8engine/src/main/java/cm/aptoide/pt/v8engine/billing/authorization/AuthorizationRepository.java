@@ -26,16 +26,17 @@ public class AuthorizationRepository {
     this.payer = payer;
   }
 
-  public Single<Authorization> createAuthorization(int paymentId) {
+  public Single<Authorization> createAuthorization(int paymentMethodId) {
     return payer.getId()
-        .flatMap(payerId -> authorizationService.createAuthorization(payerId, paymentId)
+        .flatMap(payerId -> authorizationService.createAuthorization(payerId, paymentMethodId)
             .flatMap(authorization -> authorizationPersistence.saveAuthorization(authorization)
                 .andThen(Single.just(authorization))));
   }
 
-  public Observable<Authorization> getAuthorization(int paymentId) {
+  public Observable<Authorization> getAuthorization(int paymentMethodId) {
     return payer.getId()
-        .flatMapObservable(payerId -> syncScheduler.scheduleAuthorizationSync(paymentId)
-            .andThen(authorizationPersistence.getAuthorization(paymentId, payerId)));
+        .doOnSuccess(__ -> syncScheduler.syncAuthorization(paymentMethodId))
+        .flatMapObservable(
+            payerId -> authorizationPersistence.getAuthorization(payerId, paymentMethodId));
   }
 }

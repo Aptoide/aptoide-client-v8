@@ -19,6 +19,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.IdUtils;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.install.AppAction;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.view.updates.UpdateDisplayable;
 import io.realm.RealmList;
@@ -327,7 +328,7 @@ public class DownloadFactory {
     download.setIcon(scheduled.getIcon());
     String path = scheduled.getPath();
     String alternativePath = scheduled.getAlternativeApkPath();
-    switch (scheduled.getAppActionAsEnum()) {
+    switch (AppAction.valueOf(scheduled.getAppAction())) {
       case DOWNGRADE:
         download.setAction(Download.ACTION_DOWNGRADE);
         path += DOWNGRADE_ACTION;

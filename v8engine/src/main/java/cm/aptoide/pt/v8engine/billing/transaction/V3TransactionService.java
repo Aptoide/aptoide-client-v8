@@ -72,14 +72,14 @@ public class V3TransactionService implements TransactionService {
             return CreateTransactionRequest.ofInApp(product.getId(), paymentMethodId,
                 ((InAppProduct) product).getDeveloperPayload(), metadata, bodyInterceptorV3,
                 httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-                ((InAppProduct) product).getPackageVersionCode())
+                ((InAppProduct) product).getPackageVersionCode(), product.getTitle())
                 .observe(true)
                 .toSingle();
           }
           return CreateTransactionRequest.ofPaidApp(product.getId(), paymentMethodId,
               ((PaidAppProduct) product).getStoreName(), metadata, bodyInterceptorV3, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences,
-              ((PaidAppProduct) product).getPackageVersionCode())
+              ((PaidAppProduct) product).getPackageVersionCode(), product.getTitle())
               .observe(true)
               .toSingle();
         })
@@ -106,14 +106,14 @@ public class V3TransactionService implements TransactionService {
             return CreateTransactionRequest.ofInApp(product.getId(), paymentMethodId,
                 ((InAppProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient,
                 converterFactory, tokenInvalidator, sharedPreferences,
-                ((InAppProduct) product).getPackageVersionCode())
+                ((InAppProduct) product).getPackageVersionCode(), product.getTitle())
                 .observe(true)
                 .toSingle();
           }
           return CreateTransactionRequest.ofPaidApp(product.getId(), paymentMethodId,
               ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences,
-              ((PaidAppProduct) product).getPackageVersionCode())
+              ((PaidAppProduct) product).getPackageVersionCode(), product.getTitle())
               .observe(true)
               .toSingle();
         })

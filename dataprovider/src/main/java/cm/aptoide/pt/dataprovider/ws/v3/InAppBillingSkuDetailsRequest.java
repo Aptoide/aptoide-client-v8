@@ -27,15 +27,15 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, String type, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      List<String> skuList, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabskudetails");
-    args.put("purchasetype", type);
+    args.put("purchasetype", "inapp");
 
     if (!skuList.isEmpty()) {
       final StringBuilder stringBuilder = new StringBuilder();

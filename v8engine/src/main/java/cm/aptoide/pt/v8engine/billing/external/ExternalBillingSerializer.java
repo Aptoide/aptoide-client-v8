@@ -22,8 +22,7 @@ public class ExternalBillingSerializer {
     final List<String> serializedProducts = new ArrayList<>();
     for (Product product : products) {
       serializedProducts.add(new ObjectMapper().writeValueAsString(
-          new SKU(((InAppProduct) product).getSku(), ((InAppProduct) product).getType(),
-              getPrice(product), product.getPrice()
+          new SKU(((InAppProduct) product).getSku(), "inapp", getPrice(product), product.getPrice()
               .getCurrency(), (long) (product.getPrice()
               .getAmount() * 1000000), product.getTitle(), product.getDescription())));
     }

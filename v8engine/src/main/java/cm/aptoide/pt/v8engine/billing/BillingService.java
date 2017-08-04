@@ -12,14 +12,13 @@ public interface BillingService {
 
   Completable deletePurchase(int apiVersion, String packageName, String purchaseToken);
 
-  Single<List<Purchase>> getPurchases(int apiVersion, String packageName, String type);
+  Single<List<Purchase>> getPurchases(int apiVersion, String packageName);
 
-  Single<List<Product>> getProducts(int apiVersion, String packageName, List<String> skus,
-      String type);
+  Single<List<Product>> getProducts(int apiVersion, String packageName, List<String> skus);
 
   Single<Purchase> getPurchase(Product product);
 
-  Single<Product> getProduct(int apiVersion, String packageName, String sku, String type,
+  Single<Product> getProduct(int apiVersion, String packageName, String sku,
       String developerPayload);
 
   Single<Product> getProduct(long appId, boolean sponsored, String storeName);

@@ -69,8 +69,8 @@ public class V3BillingService implements BillingService {
     if (product instanceof InAppProduct) {
       return getServerSKUs(((InAppProduct) product).getApiVersion(),
           ((InAppProduct) product).getPackageName(),
-          Collections.singletonList(((InAppProduct) product).getSku()),
-          ((InAppProduct) product).getType(), false).map(response -> response.getPaymentServices())
+          Collections.singletonList(((InAppProduct) product).getSku()), false).map(
+          response -> response.getPaymentServices())
           .map(response -> paymentMethodMapper.map(response));
     }
 
@@ -125,9 +125,8 @@ public class V3BillingService implements BillingService {
         });
   }
 
-  @Override
-  public Single<List<Purchase>> getPurchases(int apiVersion, String packageName, String type) {
-    return getServerInAppPurchase(apiVersion, packageName, type, true).first()
+  @Override public Single<List<Purchase>> getPurchases(int apiVersion, String packageName) {
+    return getServerInAppPurchase(apiVersion, packageName, true).first()
         .toSingle()
         .map(purchaseInformation -> purchaseMapper.map(purchaseInformation))
         .onErrorResumeNext(throwable -> {
@@ -140,16 +139,15 @@ public class V3BillingService implements BillingService {
   }
 
   @Override
-  public Single<List<Product>> getProducts(int apiVersion, String packageName, List<String> skus,
-      String type) {
-    return getServerSKUs(apiVersion, packageName, skus, type, false).flatMap(
+  public Single<List<Product>> getProducts(int apiVersion, String packageName, List<String> skus) {
+    return getServerSKUs(apiVersion, packageName, skus, false).flatMap(
         response -> mapToProducts(apiVersion, packageName, null, response));
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
     if (product instanceof InAppProduct) {
       return getServerInAppPurchase(((InAppProduct) product).getApiVersion(),
-          ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getType(), true).map(
+          ((InAppProduct) product).getPackageName(), true).map(
           purchaseInformation -> purchaseMapper.map(purchaseInformation,
               ((InAppProduct) product).getSku()))
           .toSingle()
@@ -168,11 +166,9 @@ public class V3BillingService implements BillingService {
         + PaidAppProduct.class.getSimpleName());
   }
 
-  @Override
-  public Single<Product> getProduct(int apiVersion, String packageName, String sku, String type,
+  @Override public Single<Product> getProduct(int apiVersion, String packageName, String sku,
       String developerPayload) {
-    return getServerSKUs(apiVersion, packageName, Collections.singletonList(sku), type,
-        false).flatMap(
+    return getServerSKUs(apiVersion, packageName, Collections.singletonList(sku), false).flatMap(
         response -> mapToProducts(apiVersion, packageName, developerPayload, response))
         .flatMap(products -> {
           if (products.isEmpty()) {
@@ -188,9 +184,9 @@ public class V3BillingService implements BillingService {
   }
 
   private Single<InAppBillingSkuDetailsResponse> getServerSKUs(int apiVersion, String packageName,
-      List<String> skuList, String type, boolean bypassCache) {
-    return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, type,
-        bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+      List<String> skuList, boolean bypassCache) {
+    return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, bodyInterceptorV3,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(bypassCache)
         .first()
         .toSingle()
@@ -204,10 +200,10 @@ public class V3BillingService implements BillingService {
   }
 
   private Observable<InAppBillingPurchasesResponse> getServerInAppPurchase(int apiVersion,
-      String packageName, String type, boolean bypassCache) {
+      String packageName, boolean bypassCache) {
     return packageRepository.getPackageVersionCode(packageName)
         .flatMapObservable(
-            packageVersionCode -> InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
+            packageVersionCode -> InAppBillingPurchasesRequest.of(apiVersion, packageName,
                 bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator,
                 sharedPreferences, packageVersionCode)
                 .observe(bypassCache)

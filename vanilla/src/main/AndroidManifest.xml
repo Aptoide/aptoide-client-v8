@@ -97,18 +97,6 @@
       </intent-filter>
     </service>
 
-    <service
-        android:name="cm.aptoide.pt.v8engine.sync.adapter.AptoideSyncService"
-        android:exported="true">
-      <intent-filter>
-        <action android:name="android.content.SyncAdapter"/>
-      </intent-filter>
-
-      <meta-data
-          android:name="android.content.SyncAdapter"
-          android:resource="@xml/sync"/>
-    </service>
-
     <meta-data
         android:name="cm.aptoide.pt.v8engine.networking.image.GlideModifications"
         android:value="GlideModule"/>

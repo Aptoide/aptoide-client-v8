@@ -31,29 +31,25 @@ public class TransactionRepository {
     return payer.getId()
         .flatMap(payerId -> transactionService.createTransaction(product, paymentMethodId, payerId))
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
-            .andThen(syncTransaction(product))
             .andThen(Single.just(transaction)));
   }
 
   public Observable<Transaction> getTransaction(Product product) {
     return payer.getId()
-        .flatMapObservable(payerId -> syncTransaction(product).andThen(
-            transactionPersistence.getTransaction(product.getId(), payerId)));
+        .doOnSuccess(__ -> syncScheduler.syncTransaction(product))
+        .flatMapObservable(payer -> transactionPersistence.getTransaction(product.getId(), payer));
   }
 
   public Single<Transaction> createTransaction(int paymentMethodId, Product product,
       String metadata) {
     return payer.getId()
         .flatMap(payerId -> transactionPersistence.createTransaction(product.getId(), metadata,
-            Transaction.Status.PENDING, payerId, paymentMethodId))
-        .flatMap(transaction -> syncTransaction(product).andThen(Single.just(transaction)));
+            Transaction.Status.PENDING, payerId, paymentMethodId));
   }
 
   public Completable remove(int productId) {
-    return transactionPersistence.removeTransaction(productId);
-  }
-
-  private Completable syncTransaction(Product product) {
-    return syncScheduler.scheduleTransactionSync(product);
+    return payer.getId()
+        .flatMapCompletable(
+            payerId -> transactionPersistence.removeTransaction(payerId, productId));
   }
 }

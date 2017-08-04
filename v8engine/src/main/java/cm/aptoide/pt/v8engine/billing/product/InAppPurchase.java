@@ -8,12 +8,15 @@ public class InAppPurchase implements Purchase {
   private final String signatureData;
   private final String sku;
   private final boolean completed;
+  private final String token;
 
-  public InAppPurchase(String signature, String signatureData, String sku, boolean completed) {
+  public InAppPurchase(String signature, String signatureData, String sku, boolean completed,
+      String token) {
     this.signature = signature;
     this.signatureData = signatureData;
     this.sku = sku;
     this.completed = completed;
+    this.token = token;
   }
 
   public String getSignature() {
@@ -30,5 +33,9 @@ public class InAppPurchase implements Purchase {
 
   @Override public boolean isCompleted() {
     return completed;
+  }
+
+  public String getToken() {
+    return token;
   }
 }
