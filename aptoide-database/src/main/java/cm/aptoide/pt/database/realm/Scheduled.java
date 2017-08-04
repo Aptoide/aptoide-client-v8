@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.database.realm;
 
-import cm.aptoide.pt.database.AppAction;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -97,10 +96,6 @@ public class Scheduled extends RealmObject {
 
   public void setAppAction(String appAction) {
     this.appAction = appAction;
-  }
-
-  public AppAction getAppActionAsEnum() {
-    return AppAction.valueOf(appAction);
   }
 
   public String getIcon() {

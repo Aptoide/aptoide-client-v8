@@ -225,7 +225,7 @@ public class HomeFragment extends StoreFragment {
     super.setupViews();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+        new AccountNavigator(getFragmentNavigator(), accountManager);
     setupNavigationView();
   }
 

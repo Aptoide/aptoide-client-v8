@@ -224,8 +224,8 @@ public class PostFragment extends FragmentView implements PostView {
     presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        urlProvider, tabNavigator, analytics);
+        new AccountNavigator(getFragmentNavigator(), accountManager), urlProvider, tabNavigator,
+        analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
     attachPresenter(presenter, null);
   }

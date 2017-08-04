@@ -107,7 +107,9 @@ public abstract class FragmentView extends LeakFragment implements View {
    */
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == android.R.id.home) {
-      getFragmentNavigator().popBackStack();
+      if (!getFragmentNavigator().popBackStack()) {
+        getActivityNavigator().navigateBack();
+      }
       return true;
     }
     return super.onOptionsItemSelected(item);

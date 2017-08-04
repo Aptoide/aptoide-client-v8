@@ -99,7 +99,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       final List<String> serializedProducts =
-          billing.getProducts(packageName, apiVersion, type, itemIdList)
+          billing.getProducts(packageName, apiVersion, itemIdList)
               .flatMap(products -> {
                 try {
                   return Single.just(serializer.serializeProducts(products));
@@ -127,7 +127,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     try {
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putParcelable(BUY_INTENT, PendingIntent.getActivity(context, 0,
-          PaymentActivity.getIntent(context, apiVersion, packageName, sku, type, developerPayload),
+          PaymentActivity.getIntent(context, apiVersion, packageName, sku, developerPayload),
           PendingIntent.FLAG_UPDATE_CURRENT));
     } catch (Exception exception) {
       crashReport.log(exception);
@@ -143,7 +143,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     final Bundle result = new Bundle();
     try {
 
-      final List<Purchase> purchases = billing.getPurchases(packageName, apiVersion, type)
+      final List<Purchase> purchases = billing.getPurchases(packageName, apiVersion)
           .toBlocking()
           .value();
 

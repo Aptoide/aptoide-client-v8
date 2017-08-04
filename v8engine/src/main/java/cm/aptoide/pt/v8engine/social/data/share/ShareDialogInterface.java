@@ -5,7 +5,10 @@ import rx.Observable;
 
 public interface ShareDialogInterface<T> extends DialogInterface {
   Observable<ShareEvent> shares();
+
   Observable<ShareEvent> cancels();
+
   void show();
+
   void setup(T post);
 }

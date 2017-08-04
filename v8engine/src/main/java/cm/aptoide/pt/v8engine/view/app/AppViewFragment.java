@@ -32,7 +32,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -76,6 +75,7 @@ import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.AppAction;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
@@ -267,8 +267,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     purchaseBundleMapper =
         ((V8Engine) getContext().getApplicationContext()).getPurchaseBundleMapper();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     permissionManager = new PermissionManager();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
@@ -443,11 +442,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getName(), sponsored), PAY_APP_REQUEST_CODE);
   }
 
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
     if (requestCode == PAY_APP_REQUEST_CODE) {
       try {
+        final Bundle data = (intent != null) ? intent.getExtras() : null;
         final PaidAppPurchase purchase =
-            (PaidAppPurchase) purchaseBundleMapper.map(data.getExtras(), resultCode);
+            (PaidAppPurchase) purchaseBundleMapper.map(resultCode, data);
 
         FragmentActivity fragmentActivity = getActivity();
         Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
@@ -462,7 +462,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         }
       }
     } else {
-      super.onActivityResult(requestCode, resultCode, data);
+      super.onActivityResult(requestCode, resultCode, intent);
     }
   }
 
