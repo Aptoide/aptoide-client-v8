@@ -10,9 +10,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.billing.sync.BillingSyncManager;
 import cm.aptoide.pt.v8engine.billing.view.braintree.BraintreeActivity;
 
 public class PaymentActivity extends BraintreeActivity {
+
+  private BillingSyncManager syncManager;
 
   public static Intent getIntent(Context context, long appId, String storeName, boolean sponsored) {
     final Intent intent = new Intent(context, PaymentActivity.class);
@@ -21,10 +25,9 @@ public class PaymentActivity extends BraintreeActivity {
   }
 
   public static Intent getIntent(Context context, int apiVersion, String packageName, String sku,
-      String type, String developerPayload) {
+      String developerPayload) {
     final Intent intent = new Intent(context, PaymentActivity.class);
-    intent.putExtras(
-        ProductProvider.createBundle(apiVersion, packageName, type, sku, developerPayload));
+    intent.putExtras(ProductProvider.createBundle(apiVersion, packageName, sku, developerPayload));
     return intent;
   }
 
@@ -36,5 +39,12 @@ public class PaymentActivity extends BraintreeActivity {
       getFragmentNavigator().navigateToWithoutBackSave(
           PaymentFragment.create(getIntent().getExtras()));
     }
+
+    syncManager = ((V8Engine) getApplication()).getBillingSyncManager();
+  }
+
+  @Override protected void onDestroy() {
+    syncManager.cancelAll();
+    super.onDestroy();
   }
 }

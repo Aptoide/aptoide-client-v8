@@ -9,6 +9,10 @@ import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
 import com.facebook.appevents.AppEventsLogger;
+import java.net.HttpRetryException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import org.apache.http.conn.ConnectTimeoutException;
 
 public class BillingAnalytics {
 
@@ -46,9 +50,11 @@ public class BillingAnalytics {
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Page", bundle));
   }
 
-  public void sendPurchaseNetworkRetryEvent(Product product) {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, "Payment_Purchase_Retry", getProductBundle(product)));
+  public void sendPurchaseErrorEvent(Product product, Throwable throwable) {
+    if (isNetworkError(throwable)) {
+      analytics.sendEvent(
+          new FacebookEvent(facebook, "Payment_Purchase_Retry", getProductBundle(product)));
+    }
   }
 
   public void sendPurchaseStatusEvent(Transaction transaction, Product product) {
@@ -69,8 +75,10 @@ public class BillingAnalytics {
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Page", bundle));
   }
 
-  public void sendPaymentAuthorizationNetworkRetryEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Retry"));
+  public void sendPaymentAuthorizationErrorEvent(Throwable throwable) {
+    if (isNetworkError(throwable)) {
+      analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Retry"));
+    }
   }
 
   public void sendAuthorizationCompleteEvent(Authorization paymentAuthorization) {
@@ -153,5 +161,12 @@ public class BillingAnalytics {
     bundle.putString("purchase_currency", currency);
     bundle.putString("package_name_seller", packageName);
     return bundle;
+  }
+
+  private boolean isNetworkError(Throwable throwable) {
+    return throwable instanceof UnknownHostException
+        || throwable instanceof ConnectTimeoutException
+        || throwable instanceof SocketTimeoutException
+        || throwable instanceof HttpRetryException;
   }
 }

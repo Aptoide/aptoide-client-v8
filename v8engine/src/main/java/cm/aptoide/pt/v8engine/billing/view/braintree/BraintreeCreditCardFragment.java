@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
@@ -53,6 +54,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private TextView productDescription;
   private TextView productPrice;
   private int paymentId;
+  private AptoideAccountManager accountManager;
 
   public static Fragment create(Bundle bundle, int paymentMethodId) {
     final BraintreeCreditCardFragment fragment = new BraintreeCreditCardFragment();
@@ -76,6 +78,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     productProvider = ProductProvider.fromBundle(billing, getArguments());
     paymentId = getArguments().getInt(EXTRA_PAYMENT_METHOD_ID);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Nullable @Override
@@ -123,8 +126,8 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     });
     attachPresenter(new BraintreePresenter(this, braintree, productProvider, billing,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator()), AndroidSchedulers.mainThread(),
-        paymentId), savedInstanceState);
+            getActivityNavigator(), getFragmentNavigator(), accountManager),
+        AndroidSchedulers.mainThread(), paymentId), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

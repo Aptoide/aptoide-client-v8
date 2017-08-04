@@ -66,7 +66,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+        new AccountNavigator(getFragmentNavigator(), accountManager);
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 

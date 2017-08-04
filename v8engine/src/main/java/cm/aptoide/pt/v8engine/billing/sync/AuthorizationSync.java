@@ -3,21 +3,20 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.sync.adapter;
+package cm.aptoide.pt.v8engine.billing.sync;
 
-import android.content.SyncResult;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
-import java.io.IOException;
+import cm.aptoide.pt.v8engine.sync.Sync;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class AuthorizationSync extends ScheduledSync {
+public class AuthorizationSync extends Sync {
 
   private final int paymentId;
   private final Payer payer;
@@ -26,8 +25,9 @@ public class AuthorizationSync extends ScheduledSync {
   private final AuthorizationPersistence authorizationPersistence;
 
   public AuthorizationSync(int paymentId, Payer payer, BillingAnalytics billingAnalytics,
-      AuthorizationService authorizationService,
-      AuthorizationPersistence authorizationPersistence) {
+      AuthorizationService authorizationService, AuthorizationPersistence authorizationPersistence,
+      boolean periodic, boolean exact, long interval, long trigger) {
+    super(String.valueOf(paymentId), periodic, exact, trigger, interval);
     this.paymentId = paymentId;
     this.payer = payer;
     this.billingAnalytics = billingAnalytics;
@@ -35,20 +35,13 @@ public class AuthorizationSync extends ScheduledSync {
     this.authorizationPersistence = authorizationPersistence;
   }
 
-  @Override public void sync(SyncResult syncResult) {
-    try {
-      payer.getId()
-          .flatMapCompletable(payerId -> authorizationService.getAuthorizations(payerId, paymentId)
-              .flatMap(authorizations -> saveAuthorizations(payerId, authorizations))
-              .doOnSuccess(
-                  authorizations -> reschedulePendingAuthorizations(authorizations, syncResult))
-              .doOnError(throwable -> rescheduleOnNetworkError(syncResult, throwable))
-              .toCompletable()
-              .onErrorComplete())
-          .await();
-    } catch (RuntimeException e) {
-      rescheduleSync(syncResult);
-    }
+  @Override public Completable execute() {
+    return payer.getId()
+        .flatMapCompletable(payerId -> authorizationService.getAuthorizations(payerId, paymentId)
+            .flatMap(authorizations -> saveAuthorizations(payerId, authorizations))
+            .doOnSuccess(authorizations -> sendAuthorizationAnalytics(authorizations))
+            .doOnError(throwable -> billingAnalytics.sendPaymentAuthorizationErrorEvent(throwable))
+            .toCompletable());
   }
 
   private Single<List<Authorization>> saveAuthorizations(String payerId,
@@ -61,34 +54,15 @@ public class AuthorizationSync extends ScheduledSync {
   private Completable createLocalAuthorization(String payerId, List<Authorization> authorizations) {
     return Observable.from(authorizations)
         .filter(authorization -> authorization.getPaymentId() == paymentId)
-        .switchIfEmpty(authorizationPersistence.createAuthorization(paymentId, payerId,
+        .switchIfEmpty(authorizationPersistence.createAuthorization(payerId, paymentId,
             Authorization.Status.INACTIVE)
             .toObservable())
         .toCompletable();
   }
 
-  private void reschedulePendingAuthorizations(List<Authorization> authorizations,
-      SyncResult syncResult) {
-
-    boolean reschedule = false;
+  private void sendAuthorizationAnalytics(List<Authorization> authorizations) {
     for (Authorization authorization : authorizations) {
-
-      if (authorization.isPending()) {
-        reschedule = true;
-      }
-
       billingAnalytics.sendAuthorizationCompleteEvent(authorization);
-    }
-
-    if (reschedule) {
-      rescheduleSync(syncResult);
-    }
-  }
-
-  private void rescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
-    if (throwable instanceof IOException) {
-      billingAnalytics.sendPaymentAuthorizationNetworkRetryEvent();
-      rescheduleSync(syncResult);
     }
   }
 }

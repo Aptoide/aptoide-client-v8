@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import rx.Observable;
 
 public interface ActivityNavigator {
 
-  Observable<Result> navigateForResult(Class<? extends AppCompatActivity> activityClass,
-      int requestCode);
-
   void navigateForResult(Class<? extends Activity> activityClass, int requestCode, Bundle bundle);
+
+  void navigateForResult(Class<? extends Activity> activityClass, int requestCode);
 
   Observable<Result> results(int requestCode);
 
@@ -20,11 +18,13 @@ public interface ActivityNavigator {
 
   Observable<Result> navigateForResultWithOutput(String action, Uri outputUri, int requestCode);
 
-  void navigateTo(Class<? extends AppCompatActivity> activityClass);
+  void navigateTo(Class<? extends Activity> activityClass);
 
-  void navigateTo(Class<? extends AppCompatActivity> activityClass, Bundle bundle);
+  void navigateTo(Class<? extends Activity> activityClass, Bundle bundle);
 
-  void finish(int code, Bundle bundle);
+  void navigateBackWithResult(int resultCode, Bundle bundle);
+
+  void navigateBack();
 
   class Result {
 

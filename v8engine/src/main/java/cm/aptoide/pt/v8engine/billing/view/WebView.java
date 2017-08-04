@@ -18,9 +18,9 @@ public interface WebView extends View {
 
   Observable<Void> redirectUrlEvent();
 
-  Observable<Void> backButtonEvent();
+  Observable<Void> loadUrlErrorEvent();
 
-  Observable<Void> urlLoadedEvent();
+  Observable<Void> backButtonEvent();
 
   void showError();
 

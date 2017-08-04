@@ -191,7 +191,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onViewCreated() {
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
+        new AccountNavigator(getFragmentNavigator(), accountManager),
         baseBodyInterceptor, httpClient, converterFactory, installedRepository, tokenInvalidator,
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());

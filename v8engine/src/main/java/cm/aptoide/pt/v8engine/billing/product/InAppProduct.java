@@ -14,17 +14,15 @@ public class InAppProduct extends AbstractProduct {
   private final String packageName;
   private final String developerPayload;
   private final String applicationName;
-  private final String type;
 
   public InAppProduct(int id, String icon, String title, String description, int apiVersion,
-      String sku, String packageName, String developerPayload, String type, Price price,
-      int packageVersionCode, String applicationName) {
+      String sku, String packageName, String developerPayload, Price price, int packageVersionCode,
+      String applicationName) {
     super(id, icon, title, description, price, packageVersionCode);
     this.apiVersion = apiVersion;
     this.sku = sku;
     this.packageName = packageName;
     this.developerPayload = developerPayload;
-    this.type = type;
     this.applicationName = applicationName;
   }
 
@@ -48,7 +46,4 @@ public class InAppProduct extends AbstractProduct {
     return developerPayload;
   }
 
-  public String getType() {
-    return type;
-  }
 }

@@ -56,7 +56,7 @@ public class PurchaseMapper {
             return new InAppPurchase(response.getPurchaseInformation()
                 .getSignatureList()
                 .get(i), serializer.serializePurchase(responsePurchase), responseSku,
-                responsePurchase.getPurchaseState() == 0);
+                responsePurchase.getPurchaseState() == 0, responsePurchase.getPurchaseToken());
           }
         }
       }
@@ -95,7 +95,8 @@ public class PurchaseMapper {
               .getPurchaseList()
               .get(i)), response.getPurchaseInformation()
               .getSkuList()
-              .get(i), responsePurchase.getPurchaseState() == 0));
+              .get(i), responsePurchase.getPurchaseState() == 0,
+              responsePurchase.getPurchaseToken()));
         }
       }
     } catch (JsonProcessingException ignored) {
