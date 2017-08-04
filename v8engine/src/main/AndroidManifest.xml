@@ -76,6 +76,7 @@
 
     <activity
         android:name=".billing.view.PaymentActivity"
+        android:screenOrientation="sensor"
         android:theme="@style/AppBaseTheme.NoTitle.Transparent"/>
 
     <activity android:name=".view.account.LoginActivity"/>
