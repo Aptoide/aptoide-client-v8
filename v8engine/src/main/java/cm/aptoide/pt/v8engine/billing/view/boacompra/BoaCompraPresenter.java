@@ -45,8 +45,6 @@ public class BoaCompraPresenter implements Presenter {
 
     onViewCreatedShowBoaCompraError();
 
-    onViewCreatedShowBoaCompraPendingLoading();
-
     handleUrlLoadErrorEvent();
 
     handleBackButtonEvent();
@@ -108,6 +106,7 @@ public class BoaCompraPresenter implements Presenter {
   private void onViewCreatedAuthorizeBoaCompra() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> view.showLoading())
         .flatMap(product -> billing.getAuthorization(paymentMethodId))
         .first(authorization -> authorization.isInactive())
         .observeOn(AndroidSchedulers.mainThread())
@@ -138,18 +137,6 @@ public class BoaCompraPresenter implements Presenter {
         .first(authorization -> authorization.isFailed())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> showError())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> showError());
-  }
-
-  private void onViewCreatedShowBoaCompraPendingLoading() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
-        .first(authorization -> authorization.isFailed())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(loaded -> view.showLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> showError());
