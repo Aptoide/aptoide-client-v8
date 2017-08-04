@@ -121,12 +121,12 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
   private int loadChosenAvatar() {
     return spotAndShareUserManager.getUser()
         .getAvatar()
-        .getResourceID();
+        .getAvatarId();
   }
 
   private void saveUser(SpotAndShareUser user) {
     Log.d("saving user", user.getUsername() + " -  " + user.getAvatar()
-        .getResourceID());
+        .getAvatarId());
     if (spotAndShareUserManager.getUser() == null) {
       spotAndShareUserManager.createUser(user);
     } else if (spotAndShareUserManager.getUser() != user) {

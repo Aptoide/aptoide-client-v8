@@ -107,7 +107,7 @@ public class SpotAndShareMainFragment extends FragmentView
   @Override public void loadProfileInformation(SpotAndShareUser user) {
     username.setText(user.getUsername());
     setAvatar(user.getAvatar()
-        .getResourceID());
+        .getAvatarId());
   }
 
   private void setAvatar(int resourceID) {

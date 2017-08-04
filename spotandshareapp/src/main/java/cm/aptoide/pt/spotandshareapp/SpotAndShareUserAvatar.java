@@ -1,17 +1,30 @@
 package cm.aptoide.pt.spotandshareapp;
 
+import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAvatar;
+
 /**
  * Created by filipe on 23-06-2017.
  */
 
-public class SpotAndShareUserAvatar {
-  private int resourceID;
+public class SpotAndShareUserAvatar implements SpotAndShareAvatar {
 
-  public SpotAndShareUserAvatar(int resourceID) {
-    this.resourceID = resourceID;
+  private String avatarString;
+  private int avatarId;
+
+  public SpotAndShareUserAvatar(String avatarString, int avatarId) {
+    this.avatarString = avatarString;
+    this.avatarId = avatarId;
   }
 
-  public int getResourceID() {
-    return resourceID;
+  @Override public byte[] serialize() {
+    return new byte[0];
+  }
+
+  @Override public String getString() {
+    return avatarString;
+  }
+
+  @Override public int getAvatarId() {
+    return avatarId;
   }
 }

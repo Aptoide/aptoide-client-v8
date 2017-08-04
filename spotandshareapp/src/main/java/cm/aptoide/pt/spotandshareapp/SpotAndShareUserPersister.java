@@ -23,13 +23,13 @@ public class SpotAndShareUserPersister {
         .apply();
     sharedPreferences.edit()
         .putInt(SPOTANDSHARE_ACCOUNT_AVATAR, user.getAvatar()
-            .getResourceID())
+            .getAvatarId())
         .apply();
   }
 
   public SpotAndShareUser get() {
     String username = sharedPreferences.getString(SPOTANDSHARE_ACCOUNT_USERNAME, "userwithnoname");
     int avatar = sharedPreferences.getInt(SPOTANDSHARE_ACCOUNT_AVATAR, 0);
-    return new SpotAndShareUser(username, new SpotAndShareUserAvatar(avatar));
+    return new SpotAndShareUser(username, new SpotAndShareUserAvatar("", avatar));
   }
 }
