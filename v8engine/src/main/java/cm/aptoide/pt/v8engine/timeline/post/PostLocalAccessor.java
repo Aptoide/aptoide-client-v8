@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.timeline.post;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import java.util.List;
-import rx.Completable;
 import rx.Single;
 
 public class PostLocalAccessor implements PostAccessor {
@@ -14,8 +13,8 @@ public class PostLocalAccessor implements PostAccessor {
     this.installedRepository = installedRepository;
   }
 
-  @Override public Completable postOnTimeline(String url, String content, String packageName) {
-    return Completable.error(new NoSuchMethodException());
+  @Override public Single<String> postOnTimeline(String url, String content, String packageName) {
+    return Single.error(new NoSuchMethodException());
   }
 
   @Override public Single<List<PostRemoteAccessor.RelatedApp>> getRelatedApps(String url) {

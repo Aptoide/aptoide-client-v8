@@ -10,13 +10,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -45,21 +45,22 @@ import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
-import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
+import cm.aptoide.pt.v8engine.social.data.share.ShareDialogFactory;
+import cm.aptoide.pt.v8engine.social.data.share.ShareDialogInterface;
+import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
+import cm.aptoide.pt.v8engine.social.data.share.SharePostViewSetup;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
-import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -68,7 +69,6 @@ import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -114,13 +114,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private Long storeId;
   private StoreContext storeContext;
   private AptoideAccountManager accountManager;
-  private AlertDialog shareDialog;
-  private SharePreviewFactory sharePreviewFactory;
+  private ShareDialogInterface<Object> shareDialog;
   private SpannableFactory spannableFactory;
   private TabNavigator tabNavigator;
-  private String postIdForTimelineRequest;
   private TimelineAnalytics timelineAnalytics;
+  private ShareDialogFactory shareDialogFactory;
+  private PublishSubject<ShareEvent> sharePostPublishSubject;
   private PublishRelay<View> loginPrompt;
+  private TimelineService timelineService;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -151,12 +152,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tabNavigator.navigation()
-        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(tabNavigation -> postIdForTimelineRequest = tabNavigation.getBundle()
-            .getString(AppsTimelineTabNavigation.CARD_ID_KEY), err -> CrashReport.getInstance()
-            .log(err));
     newRefresh = true;
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
@@ -164,22 +159,34 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    sharePreviewFactory = new SharePreviewFactory(accountManager);
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
     sharePreviewPublishSubject = PublishSubject.create();
+    sharePostPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
     final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
     spannableFactory = new SpannableFactory();
+    shareDialogFactory = new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
     adapter = new PostAdapter(Collections.emptyList(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
                 postTouchEventPublishSubject)), new ProgressCard());
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
+
+    int limit = 20;
+    int initialOffset = 0;
+
+    timelineService = new TimelineService(getArguments().getString(ACTION_KEY), userId,
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+        WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
+        LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(),
+        linksHandlerFactory, limit, initialOffset, Integer.MAX_VALUE, tokenInvalidator,
+        sharedPreferences);
   }
 
   @Nullable @Override
@@ -218,23 +225,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     StoreCredentialsProviderImpl storeCredentialsProvider =
         new StoreCredentialsProviderImpl(storeAccessor);
 
-    int limit = 20;
-    int initialOffset = 0;
-
-    TimelineService timelineService =
-        new TimelineService(getArguments().getString(ACTION_KEY), postIdForTimelineRequest, userId,
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, limit,
-            initialOffset, Integer.MAX_VALUE, tokenInvalidator, sharedPreferences);
-
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
-        getContext().getString(R.string.timeline_title_likes));
+        getContext().getString(R.string.timeline_title_likes), tabNavigator);
 
     StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
@@ -319,8 +314,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return postTouchEventPublishSubject;
   }
 
-  @Override public Observable<Post> shareConfirmation() {
-    return sharePreviewPublishSubject;
+  @Override public Observable<ShareEvent> shareConfirmation() {
+    return sharePostPublishSubject;
   }
 
   @Override public Observable<PostComment> commentPosted() {
@@ -413,17 +408,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .show();
   }
 
-  @Override public void showSharePreview(Post post) {
-    shareDialog =
-        new AlertDialog.Builder(getContext()).setTitle(R.string.timeline_title_shared_card_preview)
-            .setMessage(R.string.social_timeline_you_will_share)
-            .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
-            .setPositiveButton(R.string.share,
-                (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
-            .setNegativeButton(android.R.string.cancel,
-                (dialogInterface, i) -> timelineAnalytics.sendSocialCardPreviewActionEvent(
-                    TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL))
-            .create();
+  @Override public void showSharePreview(Post post, Account account) {
+    shareDialog = shareDialogFactory.createDialogFor(post, account);
+    shareDialog.setup(post);
+
+    shareDialog.cancels()
+        .doOnNext(__ -> shareDialog.dismiss())
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe();
+
+    shareDialog.shares()
+        .doOnNext(event -> sharePostPublishSubject.onNext(event))
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe();
     shareDialog.show();
   }
 
@@ -460,13 +457,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> loginActionClick() {
     return loginPrompt.map(__ -> null);
-  }
-
-  @Override public void showSetUserOrStorePublicMessage() {
-    Snackbar.make(getView(),
-        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
-        Snackbar.LENGTH_LONG)
-        .show();
   }
 
   @Override public void showCreateStoreMessage(SocialAction socialAction) {

@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import android.text.TextUtils;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -74,5 +75,13 @@ public class LocalAccount implements Account {
 
   @Override public Store getStore() {
     return store;
+  }
+
+  @Override public boolean hasStore() {
+    return store != null && !TextUtils.isEmpty(store.getName());
+  }
+
+  @Override public boolean isPublicUser() {
+    return getAccess() == Access.PUBLIC;
   }
 }
