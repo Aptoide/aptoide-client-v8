@@ -44,8 +44,8 @@ import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
-import com.facebook.appevents.AppEventsLogger;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
@@ -225,8 +225,7 @@ public class PostFragment extends FragmentView implements PostView {
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        urlProvider, tabNavigator);
-        urlProvider, analytics);
+        urlProvider, tabNavigator, analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
     attachPresenter(presenter, null);
   }

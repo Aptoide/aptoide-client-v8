@@ -7,8 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
+import rx.Observable;
 
-public class PostActivity extends BackButtonActivity implements PostFragment.PostUrlProvider {
+public class PostActivity extends BackButtonActivity
+    implements PostFragment.PostUrlProvider, TabNavigator {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -40,5 +44,17 @@ public class PostActivity extends BackButtonActivity implements PostFragment.Pos
       toShare = intent.getStringExtra(Intent.EXTRA_TEXT);
     }
     return toShare;
+  }
+
+  @Override public void navigate(TabNavigation tabNavigation) {
+
+  }
+
+  @Override public Observable<TabNavigation> navigation() {
+    return null;
+  }
+
+  @Override public void clearNavigation() {
+
   }
 }

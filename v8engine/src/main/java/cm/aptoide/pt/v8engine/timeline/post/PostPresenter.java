@@ -9,8 +9,8 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
-import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
+import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
@@ -42,9 +42,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   public PostPresenter(PostFragment view, CrashReport crashReport, PostManager postManager,
       FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
       AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider,
-      PostAnalytics analytics) {
-      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider,
-      TabNavigator tabNavigator) {
+      TabNavigator tabNavigator, PostAnalytics analytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
