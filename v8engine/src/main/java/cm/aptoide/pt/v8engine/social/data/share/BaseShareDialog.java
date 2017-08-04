@@ -75,7 +75,6 @@ abstract class BaseShareDialog<T extends Post> implements ShareDialogInterface<T
     private final LayoutInflater layoutInflater;
     private int positiveStringRes = Integer.MAX_VALUE;
     private int negativeStringRes = Integer.MAX_VALUE;
-    ;
 
     public Builder(Context context, SharePostViewSetup sharePostViewSetup, Account account,
         @LayoutRes int layoutId) {
