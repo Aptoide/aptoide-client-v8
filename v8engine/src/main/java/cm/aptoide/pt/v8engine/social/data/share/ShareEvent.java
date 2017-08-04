@@ -7,6 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class ShareEvent {
+  public static final int SHARE = 0;
+  public static final int CANCEL = -1;
   private final @EventType int event;
   private final Post post;
   private Account.Access access;
@@ -14,10 +16,6 @@ public class ShareEvent {
   ShareEvent(@EventType int event, Post post) {
     this.event = event;
     this.post = post;
-  }
-
-  void setAccess(Account.Access access) {
-    this.access = access;
   }
 
   public @EventType int getEvent() {
@@ -32,9 +30,9 @@ public class ShareEvent {
     return access;
   }
 
-  @Retention(RetentionPolicy.SOURCE)
-  @IntDef({SHARE, CANCEL})
-  public @interface EventType {}
-  public static final int SHARE = 0;
-  public static final int CANCEL = -1;
+  void setAccess(Account.Access access) {
+    this.access = access;
+  }
+  @Retention(RetentionPolicy.SOURCE) @IntDef({ SHARE, CANCEL }) public @interface EventType {
+  }
 }

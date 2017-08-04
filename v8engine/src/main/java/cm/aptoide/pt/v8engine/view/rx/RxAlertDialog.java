@@ -21,8 +21,8 @@ public class RxAlertDialog implements DialogInterface {
   private final CancelEvent cancelEvent;
   private final DismissEvent dismissEvent;
 
-  protected RxAlertDialog(AlertDialog dialog, View view, DialogClick positiveClick, DialogClick negativeClick,
-      CancelEvent cancelEvent, DismissEvent dismissEvent) {
+  protected RxAlertDialog(AlertDialog dialog, View view, DialogClick positiveClick,
+      DialogClick negativeClick, CancelEvent cancelEvent, DismissEvent dismissEvent) {
     this.dialog = dialog;
     this.view = view;
     this.positiveClick = positiveClick;
@@ -31,7 +31,7 @@ public class RxAlertDialog implements DialogInterface {
     this.dismissEvent = dismissEvent;
   }
 
-  public View getDialogView(){
+  public View getDialogView() {
     return view;
   }
 
@@ -123,7 +123,8 @@ public class RxAlertDialog implements DialogInterface {
       final DismissEvent dismissEvent = new DismissEvent(PublishRelay.create());
       dialog.setOnCancelListener(cancelEvent);
       dialog.setOnDismissListener(dismissEvent);
-      return new RxAlertDialog(dialog, view, positiveClick, negativeClick, cancelEvent, dismissEvent);
+      return new RxAlertDialog(dialog, view, positiveClick, negativeClick, cancelEvent,
+          dismissEvent);
     }
   }
 
