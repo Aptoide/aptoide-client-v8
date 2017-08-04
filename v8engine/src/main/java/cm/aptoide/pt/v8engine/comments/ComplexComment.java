@@ -1,13 +1,13 @@
 package cm.aptoide.pt.v8engine.comments;
 
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
-import rx.Observable;
+import rx.Completable;
 
 public class ComplexComment extends Comment {
-  private final Observable<Void> onClickReplyAction;
+  private final Completable onClickReplyAction;
   private final int level;
 
-  public ComplexComment(CommentNode commentNode, Observable<Void> onClickReplyAction) {
+  public ComplexComment(CommentNode commentNode, Completable onClickReplyAction) {
     this.level = commentNode.getLevel();
     Comment comment = commentNode.getComment();
     this.setAdded(comment.getAdded());
@@ -21,7 +21,7 @@ public class ComplexComment extends Comment {
     this.onClickReplyAction = onClickReplyAction;
   }
 
-  public Observable<Void> observeReplySubmission() {
+  public Completable observeReplySubmission() {
     return onClickReplyAction;
   }
 

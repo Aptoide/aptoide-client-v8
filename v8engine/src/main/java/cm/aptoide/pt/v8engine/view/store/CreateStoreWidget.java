@@ -36,8 +36,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
   @Override public void bindView(CreateStoreDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
 
     compositeSubscription.add(RxView.clicks(button)
         .flatMapSingle(__ -> accountManager.accountStatus()

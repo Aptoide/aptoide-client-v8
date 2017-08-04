@@ -22,7 +22,6 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
@@ -39,6 +38,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
+import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
@@ -91,7 +91,6 @@ import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.BillingService;
-import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodSelector;
@@ -102,10 +101,12 @@ import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationService;
-import cm.aptoide.pt.v8engine.billing.authorization.RealmAuthorizationPersistence;
+import cm.aptoide.pt.v8engine.billing.authorization.InMemoryAuthorizationPersistence;
 import cm.aptoide.pt.v8engine.billing.authorization.V3AuthorizationService;
 import cm.aptoide.pt.v8engine.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.product.ProductFactory;
+import cm.aptoide.pt.v8engine.billing.sync.BillingSyncFactory;
+import cm.aptoide.pt.v8engine.billing.sync.BillingSyncManager;
 import cm.aptoide.pt.v8engine.billing.transaction.RealmTransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionMapper;
@@ -146,6 +147,8 @@ import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.notification.NotificationsCleaner;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
+import cm.aptoide.pt.v8engine.notification.sync.NotificationSyncFactory;
+import cm.aptoide.pt.v8engine.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -155,10 +158,9 @@ import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.sync.adapter.BillingSyncAdapterScheduler;
-import cm.aptoide.pt.v8engine.sync.adapter.ProductBundleMapper;
-import cm.aptoide.pt.v8engine.sync.alarm.NotificationAlarmManagerScheduler;
-import cm.aptoide.pt.v8engine.sync.alarm.NotificationSyncService;
+import cm.aptoide.pt.v8engine.sync.SyncScheduler;
+import cm.aptoide.pt.v8engine.sync.SyncService;
+import cm.aptoide.pt.v8engine.sync.SyncStorage;
 import cm.aptoide.pt.v8engine.view.account.store.StoreManager;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
@@ -180,10 +182,13 @@ import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -236,10 +241,7 @@ public abstract class V8Engine extends Application {
   private BillingAnalytics billingAnalytics;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
-  private BillingSyncScheduler billingSyncScheduler;
-  private Payer accountPayer;
   private ExternalBillingSerializer inAppBillingSerialzer;
-  private AuthorizationFactory authorizationFactory;
   private Billing billing;
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
@@ -259,13 +261,19 @@ public abstract class V8Engine extends Application {
   private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   private AdsRepository adsRepository;
   private ABTestManager abTestManager;
-  private TransactionPersistence realmTransactionPersistence;
   private Database database;
+  private NotificationProvider notificationProvider;
+  private SyncStorage syncStorage;
+  private SyncScheduler syncScheduler;
   private TransactionFactory transactionFactory;
-  private TransactionService v3TransactionService;
   private TransactionMapper transactionMapper;
-  private AuthorizationService v3AuthorizationService;
-  private AuthorizationPersistence realmAuthorizationPersistence;
+  private TransactionService transactionService;
+  private Payer payer;
+  private AuthorizationFactory authorizationFactory;
+  private AuthorizationService authorizationService;
+  private TransactionPersistence transactionPersistence;
+  private AuthorizationPersistence authorizationPersistence;
+  private BillingSyncManager billingSyncManager;
 
   /**
    * call after this instance onCreate()
@@ -439,8 +447,7 @@ public abstract class V8Engine extends Application {
           AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
               Notification.class);
 
-      final NotificationProvider notificationProvider =
-          new NotificationProvider(notificationAccessor, Schedulers.io());
+      final NotificationProvider notificationProvider = getNotificationProvider();
 
       notificationCenter = new NotificationCenter(getNotificationHandler(), notificationProvider,
           getNotificationSyncScheduler(), systemNotificationShower, CrashReport.getInstance(),
@@ -448,6 +455,15 @@ public abstract class V8Engine extends Application {
           new NotificationsCleaner(notificationAccessor), getAccountManager());
     }
     return notificationCenter;
+  }
+
+  public NotificationProvider getNotificationProvider() {
+    if (notificationProvider == null) {
+      notificationProvider = new NotificationProvider(
+          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
+              Notification.class), Schedulers.io());
+    }
+    return notificationProvider;
   }
 
   public StoreManager getStoreManager() {
@@ -461,27 +477,22 @@ public abstract class V8Engine extends Application {
     return storeManager;
   }
 
-  @NonNull public NotificationSyncScheduler getNotificationSyncScheduler() {
+  public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
-
-      long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
-      if (ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences()) > 0) {
-        pushNotificationSocialPeriodicity =
-            ToolboxManager.getPushNotificationPullingInterval(getDefaultSharedPreferences());
-      }
-
-      final List<NotificationAlarmManagerScheduler.Schedule> scheduleList = Arrays.asList(
-          new NotificationAlarmManagerScheduler.Schedule(
-              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY),
-          new NotificationAlarmManagerScheduler.Schedule(
-              NotificationSyncService.NOTIFICATIONS_SOCIAL_ACTION,
-              pushNotificationSocialPeriodicity));
-
-      notificationSyncScheduler = new NotificationAlarmManagerScheduler(this,
-          (AlarmManager) getSystemService(ALARM_SERVICE), NotificationSyncService.class,
-          scheduleList, true);
+      notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
+          new NotificationSyncFactory(getDefaultSharedPreferences(),
+              getNotificationNetworkService(), getNotificationProvider()));
     }
     return notificationSyncScheduler;
+  }
+
+  public SyncScheduler getSyncScheduler() {
+    if (syncScheduler == null) {
+      syncScheduler =
+          new SyncScheduler(this, SyncService.class, (AlarmManager) getSystemService(ALARM_SERVICE),
+              getSyncStorage());
+    }
+    return syncScheduler;
   }
 
   public SharedPreferences getDefaultSharedPreferences() {
@@ -751,26 +762,17 @@ public abstract class V8Engine extends Application {
     return billingAnalytics;
   }
 
-  public BillingSyncScheduler getBillingSyncScheduler() {
-    if (billingSyncScheduler == null) {
-      billingSyncScheduler =
-          new BillingSyncAdapterScheduler(new ProductBundleMapper(), getAndroidAccountProvider(),
-              getConfiguration().getContentAuthority());
-    }
-    return billingSyncScheduler;
-  }
-
   public Billing getBilling() {
 
     if (billing == null) {
 
       final TransactionRepository transactionRepository =
-          new TransactionRepository(getRealmTransactionPersistence(), getBillingSyncScheduler(),
-              getAccountPayer(), getV3TransactionService());
+          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(), getPayer(),
+              getTransactionService());
 
       final AuthorizationRepository authorizationRepository =
-          new AuthorizationRepository(getBillingSyncScheduler(), getAccountPayer(),
-              getV3AuthorizationService(), getRealmAuthorizationPersistence());
+          new AuthorizationRepository(getBillingSyncManager(), getPayer(),
+              getAuthorizationService(), getAuthorizationPersistence());
 
       final BillingService billingService =
           new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
@@ -784,37 +786,71 @@ public abstract class V8Engine extends Application {
               getDefaultSharedPreferences());
 
       billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentMethodSelector, getRealmTransactionPersistence());
+          paymentMethodSelector, getPayer());
     }
     return billing;
   }
 
-  public AuthorizationPersistence getRealmAuthorizationPersistence() {
-    if (realmAuthorizationPersistence == null) {
-      realmAuthorizationPersistence =
-          new RealmAuthorizationPersistence(getDatabase(), getAuthorizationFactory());
+  public BillingSyncManager getBillingSyncManager() {
+    if (billingSyncManager == null) {
+      billingSyncManager = new BillingSyncManager(
+          new BillingSyncFactory(getPayer(), getBillingAnalytics(), getTransactionService(),
+              getAuthorizationService(), geTransactionPersistence(), getAuthorizationPersistence()),
+          getSyncScheduler(), new HashSet<>());
     }
-    return realmAuthorizationPersistence;
+    return billingSyncManager;
   }
 
-  public TransactionService getV3TransactionService() {
-    if (v3TransactionService == null) {
-      v3TransactionService =
-          new V3TransactionService(getTransactionMapper(), getBaseBodyInterceptorV3(),
-              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), getTransactionFactory());
+  public AuthorizationPersistence getAuthorizationPersistence() {
+    if (authorizationPersistence == null) {
+      authorizationPersistence =
+          new InMemoryAuthorizationPersistence(new HashMap<>(), PublishRelay.create(),
+              getAuthorizationFactory());
     }
-    return v3TransactionService;
+    return authorizationPersistence;
   }
 
-  public AuthorizationService getV3AuthorizationService() {
-    if (v3AuthorizationService == null) {
-      v3AuthorizationService =
+  public TransactionPersistence geTransactionPersistence() {
+    if (transactionPersistence == null) {
+      transactionPersistence =
+          new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
+              getTransactionMapper(), getTransactionFactory());
+    }
+    return transactionPersistence;
+  }
+
+  public AuthorizationService getAuthorizationService() {
+    if (authorizationService == null) {
+      authorizationService =
           new V3AuthorizationService(getAuthorizationFactory(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences());
     }
-    return v3AuthorizationService;
+    return authorizationService;
+  }
+
+  public AuthorizationFactory getAuthorizationFactory() {
+    if (authorizationFactory == null) {
+      authorizationFactory = new AuthorizationFactory();
+    }
+    return authorizationFactory;
+  }
+
+  public Payer getPayer() {
+    if (payer == null) {
+      payer = new AccountPayer(getAccountManager());
+    }
+    return payer;
+  }
+
+  public TransactionService getTransactionService() {
+    if (transactionService == null) {
+      transactionService =
+          new V3TransactionService(getTransactionMapper(), getBaseBodyInterceptorV3(),
+              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
+              getDefaultSharedPreferences(), getTransactionFactory());
+    }
+    return transactionService;
   }
 
   public TransactionMapper getTransactionMapper() {
@@ -831,19 +867,15 @@ public abstract class V8Engine extends Application {
     return transactionFactory;
   }
 
-  public TransactionPersistence getRealmTransactionPersistence() {
-    if (realmTransactionPersistence == null) {
-      realmTransactionPersistence =
-          new RealmTransactionPersistence(getDatabase(), getTransactionMapper(),
-              getTransactionFactory());
-    }
-    return realmTransactionPersistence;
-  }
-
   public Database getDatabase() {
     if (database == null) {
+      final RealmConfiguration realmConfiguration =
+          new RealmConfiguration.Builder(this).name(BuildConfig.REALM_FILE_NAME)
+              .schemaVersion(BuildConfig.REALM_SCHEMA_VERSION)
+              .migration(new RealmToRealmDatabaseMigration())
+              .build();
+      Realm.setDefaultConfiguration(realmConfiguration);
       database = new Database();
-      database.initialize(this);
     }
     return database;
   }
@@ -874,20 +906,6 @@ public abstract class V8Engine extends Application {
       inAppBillingSerialzer = new ExternalBillingSerializer();
     }
     return inAppBillingSerialzer;
-  }
-
-  public AuthorizationFactory getAuthorizationFactory() {
-    if (authorizationFactory == null) {
-      authorizationFactory = new AuthorizationFactory();
-    }
-    return authorizationFactory;
-  }
-
-  public Payer getAccountPayer() {
-    if (accountPayer == null) {
-      accountPayer = new AccountPayer(getAccountManager());
-    }
-    return accountPayer;
   }
 
   public NetworkOperatorManager getNetworkOperatorManager() {
@@ -1248,5 +1266,12 @@ public abstract class V8Engine extends Application {
               .getPartnerId(), new MinimalAdMapper());
     }
     return adsRepository;
+  }
+
+  public SyncStorage getSyncStorage() {
+    if (syncStorage == null) {
+      syncStorage = new SyncStorage(new HashMap());
+    }
+    return syncStorage;
   }
 }
