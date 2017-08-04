@@ -67,8 +67,8 @@ public class MolPresenter implements Presenter {
               view.hideLoading();
               view.loadWebsite(transaction.getConfirmationUrl(), transaction.getSuccessUrl());
             }))
-        .observeOn(AndroidSchedulers.mainThread()).compose(
-        view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> showError());
   }

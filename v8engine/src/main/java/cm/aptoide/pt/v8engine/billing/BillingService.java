@@ -18,7 +18,8 @@ public interface BillingService {
 
   Single<Purchase> getPurchase(Product product);
 
-  Single<Product> getProduct(int apiVersion, String packageName, String sku, String developerPayload);
+  Single<Product> getProduct(int apiVersion, String packageName, String sku,
+      String developerPayload);
 
   Single<Product> getProduct(long appId, boolean sponsored, String storeName);
 }

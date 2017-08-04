@@ -33,6 +33,7 @@ public class ShareEvent {
   void setAccess(Account.Access access) {
     this.access = access;
   }
+
   @Retention(RetentionPolicy.SOURCE) @IntDef({ SHARE, CANCEL }) public @interface EventType {
   }
 }
