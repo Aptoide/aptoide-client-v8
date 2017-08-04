@@ -870,8 +870,8 @@ public abstract class V8Engine extends Application {
   public Database getDatabase() {
     if (database == null) {
       final RealmConfiguration realmConfiguration =
-          new RealmConfiguration.Builder(this).name("aptoide.realm.db")
-              .schemaVersion(8087)
+          new RealmConfiguration.Builder(this).name(BuildConfig.REALM_FILE_NAME)
+              .schemaVersion(BuildConfig.REALM_SCHEMA_VERSION)
               .migration(new RealmToRealmDatabaseMigration())
               .build();
       Realm.setDefaultConfiguration(realmConfiguration);

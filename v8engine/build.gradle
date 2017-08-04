@@ -44,7 +44,9 @@ android {
         project.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS
     buildConfigField "int", "PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS",
         project.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS
-
+    buildConfigField "int", "REALM_SCHEMA_VERSION",
+        project.REALM_SCHEMA_VERSION
+    buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
 
     multiDexEnabled true
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
