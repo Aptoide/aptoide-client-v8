@@ -10,9 +10,11 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
 import cm.aptoide.pt.v8engine.view.BackButton;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +31,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
   private final PostFragment.PostUrlProvider postUrlProvider;
+  private final TabNavigator tabNavigator;
   private PostAnalytics analytics;
   private UrlValidator urlValidator;
   private AccountNavigator accountNavigator;
@@ -40,6 +43,8 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
       FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
       AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider,
       PostAnalytics analytics) {
+      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider,
+      TabNavigator tabNavigator) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
@@ -47,6 +52,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
     this.urlValidator = urlValidator;
     this.accountNavigator = accountNavigator;
     this.postUrlProvider = postUrlProvider;
+    this.tabNavigator = tabNavigator;
     this.analytics = analytics;
   }
 
@@ -270,14 +276,17 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
                   : view.getCurrentSelected()
                       .getPackageName())
                   .observeOn(AndroidSchedulers.mainThread())
-                  .doOnCompleted(() -> {
+                  .doOnSuccess(postId -> {
                     view.showSuccessMessage();
                     analytics.sendPostCompleteEvent(postManager.remoteRelatedAppsAvailable(),
                         view.getCurrentSelected()
                             .getPackageName(), hasComment, hasUrl, url == null ? "" : url,
                         android.view.View.VISIBLE == view.getPreviewVisibility());
                   })
-                  .doOnCompleted(() -> goBack());
+                  .doOnSuccess(
+                      postId -> tabNavigator.navigate(new AppsTimelineTabNavigation(postId)))
+                  .doOnSuccess(postId -> goBack())
+                  .toCompletable();
             })
             .doOnError(throwable -> handleError(throwable))
             .retry())

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.post;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
@@ -72,6 +74,7 @@ public class PostFragment extends FragmentView implements PostView {
   private PostPresenter presenter;
   private View inputSeparator;
   private PostAnalytics analytics;
+  private TabNavigator tabNavigator;
 
   public static Fragment newInstanceFromExternalSource() {
     return newInstance(PostAnalytics.OpenSource.EXTERNAL);
@@ -87,6 +90,17 @@ public class PostFragment extends FragmentView implements PostView {
 
   public static Fragment newInstanceFromTimeline() {
     return newInstance(PostAnalytics.OpenSource.APP_TIMELINE);
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -211,6 +225,7 @@ public class PostFragment extends FragmentView implements PostView {
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
+        urlProvider, tabNavigator);
         urlProvider, analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
     attachPresenter(presenter, null);

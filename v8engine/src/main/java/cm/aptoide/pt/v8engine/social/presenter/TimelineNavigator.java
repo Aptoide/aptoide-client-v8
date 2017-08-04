@@ -3,11 +3,15 @@ package cm.aptoide.pt.v8engine.social.presenter;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.view.account.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.view.account.MyAccountFragment;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
+import rx.Observable;
 
 /**
  * Created by jdandrade on 30/06/2017.
@@ -16,11 +20,14 @@ import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 public class TimelineNavigator implements TimelineNavigation {
 
   private final FragmentNavigator fragmentNavigator;
-  private String likesTitle;
+  private final String likesTitle;
+  private final TabNavigator tabNavigator;
 
-  public TimelineNavigator(FragmentNavigator fragmentNavigator, String likesTitle) {
+  public TimelineNavigator(FragmentNavigator fragmentNavigator, String likesTitle,
+      TabNavigator tabNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.likesTitle = likesTitle;
+    this.tabNavigator = tabNavigator;
   }
 
   @Override
@@ -108,5 +115,13 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override public void navigateToComments(String cardId) {
     fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
         .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId));
+  }
+
+  @Override public Observable<String> postNavigation() {
+    return tabNavigator.navigation()
+        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
+        .doOnNext(tabNavigation -> tabNavigator.clearNavigation())
+        .map(tabNavigation -> tabNavigation.getBundle()
+            .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
   }
 }

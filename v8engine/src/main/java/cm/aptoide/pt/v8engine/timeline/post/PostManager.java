@@ -9,7 +9,6 @@ import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import rx.Completable;
 import rx.Single;
 
 public class PostManager {
@@ -27,24 +26,23 @@ public class PostManager {
     this.accountManager = accountManager;
   }
 
-  public Completable post(String url, String content, String packageName) {
+  public Single<String> post(String url, String content, String packageName) {
     return validateLogin().flatMap(userLogged -> validateInsertedText(content, packageName, url))
-        .flatMapCompletable(
-            validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
-                getContent(url, content), packageName))
+        .flatMap(validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
+            getContent(url, content), packageName))
         .onErrorResumeNext(throwable -> handleErrors(throwable));
   }
 
-  private Completable handleErrors(Throwable throwable) {
+  private Single handleErrors(Throwable throwable) {
     if (throwable instanceof AptoideWsV7Exception) {
       if (((AptoideWsV7Exception) throwable).getBaseResponse()
           .getError()
           .getCode()
           .equals(APP_NOT_FOUND_ERROR_CODE)) {
-        return Completable.error(new PostException(PostException.ErrorCode.NO_APP_FOUND));
+        return Single.error(new PostException(PostException.ErrorCode.NO_APP_FOUND));
       }
     }
-    return Completable.error(throwable);
+    return Single.error(throwable);
   }
 
   private String getContent(String url, String content) {

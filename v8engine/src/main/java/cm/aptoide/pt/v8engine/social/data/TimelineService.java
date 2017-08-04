@@ -46,9 +46,8 @@ public class TimelineService {
   private SharedPreferences sharedPreferences;
   private String cardIdPriority;
 
-  public TimelineService(String url, String cardIdPriority, Long userId,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
-      Converter.Factory converterFactory, PackageRepository packageRepository,
+  public TimelineService(String url, Long userId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient okhttp, Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
@@ -95,7 +94,10 @@ public class TimelineService {
         })
         .toSingle())
         .doOnError(__ -> loading = false)
-        .doOnSuccess(__ -> loading = false)
+        .doOnSuccess(__ -> {
+          loading = false;
+          cardIdPriority = null;
+        })
         .map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
   }
 
@@ -180,5 +182,11 @@ public class TimelineService {
           }
         })
         .toCompletable();
+  }
+
+  public Single<List<Post>> getCards(String cardId) {
+    mapper.clearCachedPostsIds();
+    cardIdPriority = cardId;
+    return getCards(limit, initialOffset);
   }
 }
