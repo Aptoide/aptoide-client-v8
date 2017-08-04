@@ -84,7 +84,7 @@
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
 
-    <service android:name=".aptoide.account.AccountAuthenticatorService">
+    <service android:name=".account.AccountAuthenticatorService">
       <intent-filter>
         <action android:name="android.accounts.AccountAuthenticator"/>
       </intent-filter>
