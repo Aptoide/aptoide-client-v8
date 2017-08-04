@@ -143,6 +143,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void onDestroyView() {
     destroyLoading(previewLoading);
+    hideKeyboard();
     previewLoading = null;
     userInput = null;
     previewImage = null;

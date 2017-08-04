@@ -7,12 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
+import cm.aptoide.pt.v8engine.view.account.LoginBottomSheet;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import rx.Observable;
 
 public class PostActivity extends BackButtonActivity
-    implements PostFragment.PostUrlProvider, TabNavigator {
+    implements PostFragment.PostUrlProvider, TabNavigator, LoginBottomSheet {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -56,5 +57,17 @@ public class PostActivity extends BackButtonActivity
 
   @Override public void clearNavigation() {
 
+  }
+
+  @Override public void expand() {
+
+  }
+
+  @Override public void collapse() {
+
+  }
+
+  @Override public Observable<State> state() {
+    return null;
   }
 }
