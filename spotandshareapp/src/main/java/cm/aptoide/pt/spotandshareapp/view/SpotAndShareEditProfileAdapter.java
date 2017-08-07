@@ -20,7 +20,7 @@ import rx.subjects.PublishSubject;
 public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
 
   private List<SpotAndShareAvatar> avatarList;
-  private final Context context;
+  private Context context;
   private PublishSubject<SpotAndShareAvatar> pickAvatarSubject;
 
   public SpotAndShareEditProfileAdapter(Context context,
@@ -50,6 +50,15 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
       return avatarList.size();
     }
     return 0;
+  }
+
+  public void removeAll() {
+    if (avatarList != null) {
+      avatarList.clear();
+      avatarList = null;
+    }
+    pickAvatarSubject = null;
+    context = null;
   }
 
   public Observable<SpotAndShareAvatar> onSelectedAvatar() {

@@ -23,7 +23,6 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatar;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -38,7 +37,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   private EditText usernameEditText;
   private Button saveProfile;
   private Button cancel;
-  private List<ImageView> defaultAvatarList;
   private Toolbar toolbar;
   private int selectedAvatar = 0;
   private RecyclerView avatarsRecyclerView;
@@ -78,8 +76,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
   @Override public void selectedAvatar(int avatar) {
     selectedAvatar = avatar;
-    defaultAvatarList.get(avatar)
-        .setImageDrawable(getResources().getDrawable(R.drawable.spotandshare_avatar_highlighter));
   }
 
   @Override public void setActualAvatar(Integer avatar) {
@@ -142,6 +138,10 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     cancel = null;
     saveProfile = null;
     toolbar = null;
+
+    pickAvatarAdapter.removeAll();
+    pickAvatarAdapter = null;
+    avatarsRecyclerView = null;
     super.onDestroyView();
   }
 
