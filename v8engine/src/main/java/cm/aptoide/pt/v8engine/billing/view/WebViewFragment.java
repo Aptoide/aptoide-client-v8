@@ -10,45 +10,49 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public class WebViewFragment extends PermissionServiceFragment
+public abstract class WebViewFragment extends PermissionServiceFragment
     implements cm.aptoide.pt.v8engine.billing.view.WebView {
 
   private WebView webView;
-  private View progressBarContainer;
+  private View indeterminateProgressBar;
   private RxAlertDialog unknownErrorDialog;
-  private PublishRelay<Void> mainUrlSubject;
+  private PublishRelay<Void> urlLoadErrorSubject;
   private PublishRelay<Void> redirectUrlSubject;
   private PublishRelay<Void> backButtonSelectionSubject;
   private ClickHandler clickHandler;
+  private ProgressBar determinateProgressBar;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mainUrlSubject = PublishRelay.create();
     redirectUrlSubject = PublishRelay.create();
+    urlLoadErrorSubject = PublishRelay.create();
     backButtonSelectionSubject = PublishRelay.create();
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_payment_web_view, container, false);
+    return inflater.inflate(R.layout.fragment_web_view, container, false);
   }
 
   @SuppressLint("SetJavaScriptEnabled") @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    webView = (WebView) view.findViewById(R.id.activity_boa_compra_authorization_web_view);
+    webView = (WebView) view.findViewById(R.id.fragment_web_view);
     webView.getSettings()
         .setJavaScriptEnabled(true);
     webView.setWebChromeClient(new WebChromeClient());
-    progressBarContainer = view.findViewById(R.id.activity_web_authorization_preogress_bar);
-
+    indeterminateProgressBar = view.findViewById(R.id.fragment_web_view_indeterminate_progress_bar);
+    determinateProgressBar =
+        (ProgressBar) view.findViewById(R.id.fragment_web_view_determinate_progress_bar);
+    determinateProgressBar.setMax(100);
     unknownErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
             .setPositiveButton(R.string.ok)
@@ -63,27 +67,31 @@ public class WebViewFragment extends PermissionServiceFragment
   @Override public void onDestroyView() {
     ((ViewGroup) webView.getParent()).removeView(webView);
     webView.setWebViewClient(null);
+    webView.setWebChromeClient(null);
     webView.destroy();
     webView = null;
     unknownErrorDialog.dismiss();
     unknownErrorDialog = null;
     unregisterClickHandler(clickHandler);
     clickHandler = null;
-    progressBarContainer = null;
     super.onDestroyView();
   }
 
-  public void showLoading() {
-    progressBarContainer.setVisibility(View.VISIBLE);
+  @Override public void showLoading() {
+    indeterminateProgressBar.setVisibility(View.VISIBLE);
   }
 
-  public void hideLoading() {
-    progressBarContainer.setVisibility(View.GONE);
+  @Override public void hideLoading() {
+    indeterminateProgressBar.setVisibility(View.GONE);
   }
 
-  public void loadWebsite(String mainUrl, String redirectUrl) {
+  @Override public void loadWebsite(String mainUrl, String redirectUrl) {
+    webView.setWebChromeClient(new WebChromeClient() {
+      @Override public void onProgressChanged(WebView view, int progress) {
+        determinateProgressBar.setProgress(progress);
+      }
+    });
     webView.setWebViewClient(new WebViewClient() {
-
       @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
         if (url.equals(redirectUrl)) {
@@ -91,31 +99,31 @@ public class WebViewFragment extends PermissionServiceFragment
         }
       }
 
-      @Override public void onPageFinished(WebView view, String url) {
-        super.onPageFinished(view, url);
-        mainUrlSubject.call(null);
+      @Override public void onReceivedError(WebView view, int errorCode, String description,
+          String failingUrl) {
+        urlLoadErrorSubject.call(null);
       }
     });
     webView.loadUrl(mainUrl);
   }
 
-  public Observable<Void> redirectUrlEvent() {
+  @Override public Observable<Void> redirectUrlEvent() {
     return redirectUrlSubject;
   }
 
-  public Observable<Void> backButtonEvent() {
+  @Override public Observable<Void> loadUrlErrorEvent() {
+    return urlLoadErrorSubject;
+  }
+
+  @Override public Observable<Void> backButtonEvent() {
     return backButtonSelectionSubject;
   }
 
-  public Observable<Void> urlLoadedEvent() {
-    return mainUrlSubject;
-  }
-
-  public void showError() {
+  @Override public void showError() {
     unknownErrorDialog.show();
   }
 
-  public Observable<Void> errorDismissedEvent() {
+  @Override public Observable<Void> errorDismissedEvent() {
     return unknownErrorDialog.dismisses()
         .map(dialogInterface -> null);
   }

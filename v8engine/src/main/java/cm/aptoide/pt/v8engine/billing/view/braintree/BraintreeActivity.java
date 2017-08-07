@@ -58,20 +58,28 @@ public abstract class BraintreeActivity extends BackButtonActivity
 
   @Override public void createConfiguration(String clientToken) {
 
-    if (braintreeFragment != null) {
+    if (configuration == null && braintreeFragment != null) {
       getFragmentManager().beginTransaction()
           .remove(braintreeFragment)
           .commit();
+      braintreeFragment = null;
     }
 
-    try {
-      braintreeFragment = BraintreeFragment.newInstance(this, clientToken);
-    } catch (InvalidArgumentException exception) {
-      throw new IllegalArgumentException(exception);
+    if (braintreeFragment == null) {
+      try {
+        braintreeFragment = BraintreeFragment.newInstance(this, clientToken);
+      } catch (InvalidArgumentException exception) {
+        throw new IllegalArgumentException(exception);
+      }
     }
   }
 
   @Override public Observable<Configuration> getConfiguration() {
-    return configurationRelay;
+    return configurationRelay.startWith(Observable.defer(() -> {
+      if (configuration != null) {
+        return Observable.just(configuration);
+      }
+      return Observable.empty();
+    }));
   }
 }

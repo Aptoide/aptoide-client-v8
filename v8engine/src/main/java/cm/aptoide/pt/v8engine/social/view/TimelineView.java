@@ -79,7 +79,5 @@ public interface TimelineView extends View {
 
   Observable<Void> loginActionClick();
 
-  void showSetUserOrStorePublicMessage();
-
   void showCreateStoreMessage(SocialAction socialAction);
 }

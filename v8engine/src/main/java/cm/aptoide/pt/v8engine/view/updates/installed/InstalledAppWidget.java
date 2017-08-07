@@ -75,7 +75,7 @@ import retrofit2.Converter;
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
 
     final AccountNavigator accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+        new AccountNavigator(getFragmentNavigator(), accountManager);
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(),

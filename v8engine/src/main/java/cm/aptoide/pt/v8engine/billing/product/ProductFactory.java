@@ -73,7 +73,7 @@ public class ProductFactory {
 
       products.add(new InAppProduct(id, icon, purchaseDataObject.getTitle(),
           purchaseDataObject.getDescription(), apiVersion, purchaseDataObject.getProductId(),
-          packageName, developerPayload, purchaseDataObject.getType(),
+          packageName, developerPayload,
           new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(), sign,
               taxRate), packageVersionCode, applicationName));
     }

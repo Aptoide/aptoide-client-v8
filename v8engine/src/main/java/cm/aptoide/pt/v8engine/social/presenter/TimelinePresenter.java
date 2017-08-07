@@ -147,6 +147,8 @@ public class TimelinePresenter implements Presenter {
     listenToScrollDown();
 
     handleFabClick();
+
+    handlePostNavigation();
   }
 
   @Override public void saveState(Bundle state) {
@@ -154,6 +156,24 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handlePostNavigation() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> timelineNavigation.postNavigation()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(__ -> view.showProgressIndicator())
+            .flatMapSingle(cardId -> Single.zip(
+                accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+                    : timeline.getTimelineStatisticsPost(), timeline.getCards(cardId),
+                (post, posts) -> mergeStatsPostWithPosts(post, posts)))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cards -> showCardsAndHideProgress(cards))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cards -> {
+        }, throwable -> view.showGenericError());
   }
 
   private void listenToScrollUp() {
@@ -189,7 +209,7 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.floatingActionButtonClicked()
-            .doOnNext(__2 -> fragmentNavigator.navigateTo(new PostFragment())))
+            .doOnNext(__2 -> fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());

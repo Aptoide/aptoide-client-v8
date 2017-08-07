@@ -51,7 +51,11 @@ public class Transaction {
     return paymentMethodId;
   }
 
+  public boolean isUnknown() {
+    return Status.UNKNOWN.equals(status);
+  }
+
   public enum Status {
-    NEW, CREATED, PENDING_USER_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
+    UNKNOWN, NEW, CREATED, PENDING_USER_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
   }
 }

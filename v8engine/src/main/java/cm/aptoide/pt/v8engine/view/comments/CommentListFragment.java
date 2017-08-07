@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,7 +64,9 @@ import java.util.Date;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.functions.Action1;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
@@ -170,8 +173,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     View v = super.onCreateView(inflater, container, savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyDecorator = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     return v;
   }
 
@@ -248,10 +250,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       floatingActionButton.setImageDrawable(drawable);
       floatingActionButton.setVisibility(View.VISIBLE);
     }
+    final CrashReport crashReport = CrashReport.getInstance();
     if (showCommentInputDialogOnFirstRun) {
-      createNewCommentFragment(elementIdAsString).subscribe(__ -> {
-      }, throwable -> CrashReport.getInstance()
-          .log(throwable));
+      createNewCommentFragment(elementIdAsString).subscribe(() -> {
+      }, throwable -> crashReport.log(throwable));
     }
   }
 
@@ -367,13 +369,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
-  public Observable<Void> createNewCommentFragment(final String timelineArticleId,
+  public Completable createNewCommentFragment(final String timelineArticleId,
       final long previousCommentId) {
 
-    return Observable.just(accountManager.isLoggedIn())
-        .flatMap(isLoggedIn -> {
-
-          if (isLoggedIn) {
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMapCompletable(account -> {
+          if (account.isLoggedIn()) {
             // show fragment CommentDialog
             FragmentManager fm = CommentListFragment.this.getActivity()
                 .getSupportFragmentManager();
@@ -385,20 +388,20 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             return commentDialogFragment.lifecycle()
                 .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
                 .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-                .flatMap(event -> Observable.empty());
+                .toCompletable();
           }
 
           return showSignInMessage();
         });
   }
 
-  private Observable<Void> createNewCommentFragment(long storeId, long previousCommentId,
+  private Completable createNewCommentFragment(long storeId, long previousCommentId,
       String storeName) {
-
-    return Observable.just(accountManager.isLoggedIn())
-        .flatMap(isLoggedIn -> {
-
-          if (isLoggedIn) {
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMapCompletable(account -> {
+          if (account.isLoggedIn()) {
             // show fragment CommentDialog
             FragmentManager fm = CommentListFragment.this.getActivity()
                 .getSupportFragmentManager();
@@ -410,7 +413,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             return commentDialogFragment.lifecycle()
                 .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
                 .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-                .flatMap(event -> Observable.empty());
+                .toCompletable();
           }
 
           return showSignInMessage();
@@ -425,11 +428,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   // Timeline Articles comments methods
   //
 
-  private Observable<Void> showSignInMessage() {
-    return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
-        R.string.login, snackView -> accountNavigator.navigateToAccountView(
-            Analytics.Account.AccountOrigins.COMMENT_LIST))
-        .toObservable();
+  private Completable showSignInMessage() {
+    return Single.just(floatingActionButton)
+        .flatMapCompletable(view -> Completable.fromAction(() -> {
+          Snackbar.make(view, R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
+              .setAction(R.string.login, snackView -> accountNavigator.navigateToAccountView(
+                  Analytics.Account.AccountOrigins.COMMENT_LIST))
+              .show();
+        }));
   }
 
   private Observable<Void> reloadComments() {
@@ -448,9 +454,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     RxView.clicks(floatingActionButton)
         .flatMap(a -> {
           if (commentType == CommentType.TIMELINE) {
-            return createNewCommentFragment(elementIdAsString);
+            return createNewCommentFragment(elementIdAsString).toObservable();
           }
-          return createNewCommentFragment(elementIdAsLong, storeName);
+          return createNewCommentFragment(elementIdAsLong, storeName).toObservable();
         })
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(a -> {
@@ -466,36 +472,37 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     return new HorizontalDividerItemDecoration(getContext(), 0);
   }
 
-  public Observable<Void> createNewCommentFragment(String timelineArticleId) {
-
-    return Observable.just(accountManager.isLoggedIn())
-        .flatMap(isLoggedIn -> {
-
-          if (isLoggedIn) {
+  public Completable createNewCommentFragment(String timelineArticleId) {
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMapCompletable(account -> {
+          if (account.isLoggedIn()) {
             // show fragment CommentDialog
             FragmentManager fm = CommentListFragment.this.getActivity()
                 .getSupportFragmentManager();
             CommentDialogFragment commentDialogFragment =
                 CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
             commentDialogFragment.setCommentDialogCallbackContract(this);
+
             return commentDialogFragment.lifecycle()
                 .doOnSubscribe(() -> {
                   commentDialogFragment.show(fm, "fragment_comment_dialog");
                 })
                 .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-                .flatMap(event -> Observable.empty());
+                .toCompletable();
           }
 
           return showSignInMessage();
         });
   }
 
-  public Observable<Void> createNewCommentFragment(long storeCommentId, String storeName) {
-
-    return Observable.just(accountManager.isLoggedIn())
-        .flatMap(isLoggedIn -> {
-
-          if (isLoggedIn) {
+  public Completable createNewCommentFragment(long storeCommentId, String storeName) {
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMapCompletable(account -> {
+          if (account.isLoggedIn()) {
             // show fragment CommentDialog
             FragmentManager fm = CommentListFragment.this.getActivity()
                 .getSupportFragmentManager();
@@ -508,7 +515,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
                   commentDialogFragment.show(fm, "fragment_comment_dialog");
                 })
                 .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-                .flatMap(event -> Observable.empty());
+                .toCompletable();
           }
 
           return showSignInMessage();

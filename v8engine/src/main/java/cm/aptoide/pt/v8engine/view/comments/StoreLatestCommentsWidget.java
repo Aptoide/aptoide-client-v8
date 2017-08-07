@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.comments;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +14,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -64,8 +65,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 
@@ -135,15 +135,15 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
       addDisplayables(displayables);
     }
 
-    private Observable<Void> showStoreCommentFragment(final long storeId,
-        @NonNull final Comment comment, @NonNull final String storeName,
-        @NonNull final FragmentManager fragmentManager, @NonNull final View view,
-        Observable<Void> reloadComments) {
+    private Completable showStoreCommentFragment(final long storeId, @NonNull final Comment comment,
+        @NonNull final String storeName, @NonNull final FragmentManager fragmentManager,
+        @NonNull final View view, Observable<Void> reloadComments) {
 
-      return Observable.just(accountManager.isLoggedIn())
-          .flatMap(isLoggedIn -> {
-
-            if (isLoggedIn) {
+      return accountManager.accountStatus()
+          .first()
+          .toSingle()
+          .flatMapCompletable(account -> {
+            if (account.isLoggedIn()) {
               // show fragment CommentDialog
               CommentDialogFragment commentDialogFragment =
                   CommentDialogFragment.newInstanceStoreCommentReply(storeId, comment.getId(),
@@ -153,18 +153,22 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
                   .doOnSubscribe(() -> commentDialogFragment.show(fragmentManager,
                       "fragment_comment_dialog_latest"))
                   .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-                  .flatMap(event -> reloadComments);
+                  .flatMap(event -> reloadComments)
+                  .toCompletable();
             }
 
             return showSignInMessage(view);
           });
     }
 
-    private Observable<Void> showSignInMessage(@NonNull final View view) {
-      return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> accountNavigator.navigateToAccountView(
-              Analytics.Account.AccountOrigins.LATEST_COMMENTS_STORE))
-          .toObservable();
+    private Completable showSignInMessage(@NonNull final View view) {
+      // R.string.you_need_to_be_logged_in, R.string.login,
+      return Completable.fromAction(() -> {
+        Snackbar.make(view, R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
+            .setAction(R.string.login, snackView -> accountNavigator.navigateToAccountView(
+                Analytics.Account.AccountOrigins.LATEST_COMMENTS_STORE))
+            .show();
+      });
     }
   }
 }

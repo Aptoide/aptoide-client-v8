@@ -9,9 +9,12 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
+import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +23,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-class PostPresenter implements Presenter {
+class PostPresenter implements Presenter, BackButton.ClickHandler {
   public static final String UPLOADER_PACKAGENAME = "pt.caixamagica.aptoide.uploader";
   private static final String TAG = PostPresenter.class.getSimpleName();
   private final PostView view;
@@ -28,12 +31,18 @@ class PostPresenter implements Presenter {
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
   private final PostFragment.PostUrlProvider postUrlProvider;
+  private final TabNavigator tabNavigator;
+  private PostAnalytics analytics;
   private UrlValidator urlValidator;
   private AccountNavigator accountNavigator;
+  private boolean hasComment;
+  private boolean hasUrl;
+  private String url;
 
   public PostPresenter(PostFragment view, CrashReport crashReport, PostManager postManager,
       FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
-      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider) {
+      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider,
+      TabNavigator tabNavigator, PostAnalytics analytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
@@ -41,6 +50,8 @@ class PostPresenter implements Presenter {
     this.urlValidator = urlValidator;
     this.accountNavigator = accountNavigator;
     this.postUrlProvider = postUrlProvider;
+    this.tabNavigator = tabNavigator;
+    this.analytics = analytics;
   }
 
   @Override public void present() {
@@ -147,6 +158,7 @@ class PostPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonPressed()
+            .doOnNext(click -> analytics.sendClosePostEvent(PostAnalytics.CloseType.X))
             .doOnNext(__2 -> goBack()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -238,7 +250,10 @@ class PostPresenter implements Presenter {
         .andThen(postManager.getSuggestionApps(url))
         .observeOn(AndroidSchedulers.mainThread())
         .toObservable()
-        .doOnNext(relatedApps -> view.addRelatedApps(relatedApps))
+        .doOnNext(relatedApps -> {
+          view.addRelatedApps(relatedApps);
+          postManager.setRemoteRelatedAppsAvailable(relatedApps.size() > 0);
+        })
         .doOnCompleted(() -> view.hideRelatedAppsLoading())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.hideRelatedAppsLoading())
@@ -252,14 +267,24 @@ class PostPresenter implements Presenter {
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())
             .flatMapCompletable(textToShare -> {
-              String url;
               url = getUrl(textToShare);
+              hasComment = !textToShare.isEmpty();
+              hasUrl = url != null;
               return postManager.post(url, textToShare, view.getCurrentSelected() == null ? null
                   : view.getCurrentSelected()
                       .getPackageName())
                   .observeOn(AndroidSchedulers.mainThread())
-                  .doOnCompleted(() -> view.showSuccessMessage())
-                  .doOnCompleted(() -> goBack());
+                  .doOnSuccess(postId -> {
+                    view.showSuccessMessage();
+                    analytics.sendPostCompleteEvent(postManager.remoteRelatedAppsAvailable(),
+                        view.getCurrentSelected()
+                            .getPackageName(), hasComment, hasUrl, url == null ? "" : url,
+                        android.view.View.VISIBLE == view.getPreviewVisibility());
+                  })
+                  .doOnSuccess(
+                      postId -> tabNavigator.navigate(new AppsTimelineTabNavigation(postId)))
+                  .doOnSuccess(postId -> goBack())
+                  .toCompletable();
             })
             .doOnError(throwable -> handleError(throwable))
             .retry())
@@ -283,23 +308,47 @@ class PostPresenter implements Presenter {
 
   private void handleError(Throwable throwable) {
     Logger.e(TAG, throwable);
+    boolean isSelected = view.getCurrentSelected() != null;
+    String packageName = view.getCurrentSelected() == null ? "" : view.getCurrentSelected()
+        .getPackageName();
     if (throwable instanceof PostException) {
       switch (((PostException) throwable).getErrorCode()) {
         case INVALID_TEXT:
           view.showInvalidTextError();
+          analytics.sendPostCompleteNoTextEvent(postManager.remoteRelatedAppsAvailable(),
+              isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
+              android.view.View.VISIBLE == view.getPreviewVisibility());
           break;
         case INVALID_PACKAGE:
           view.showInvalidPackageError();
+          analytics.sendPostCompleteNoSelectedAppEvent(postManager.remoteRelatedAppsAvailable(),
+              hasComment, hasUrl, url == null ? "" : url,
+              android.view.View.VISIBLE == view.getPreviewVisibility());
           break;
         case NO_LOGIN:
           view.showNoLoginError();
+          analytics.sendPostCompleteNoLoginEvent(postManager.remoteRelatedAppsAvailable(),
+              isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
+              android.view.View.VISIBLE == view.getPreviewVisibility());
           break;
         case NO_APP_FOUND:
           view.showAppNotFoundError();
+          analytics.sendPostCompleteNoAppFoundEvent(postManager.remoteRelatedAppsAvailable(),
+              isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
+              android.view.View.VISIBLE == view.getPreviewVisibility());
           break;
       }
     } else {
       view.showGenericError();
+      analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),
+          isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
+          android.view.View.VISIBLE == view.getPreviewVisibility());
     }
+  }
+
+  @Override public boolean handle() {
+    analytics.sendClosePostEvent(PostAnalytics.CloseType.BACK);
+    goBack();
+    return true;
   }
 }
