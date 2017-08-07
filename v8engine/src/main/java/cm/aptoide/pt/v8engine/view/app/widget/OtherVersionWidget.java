@@ -15,11 +15,10 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.app.OtherVersionDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
 
-@Displayables({ OtherVersionDisplayable.class }) public class OtherVersionWidget
+public class OtherVersionWidget
     extends Widget<OtherVersionDisplayable> implements View.OnClickListener {
 
   private static final String TAG = OtherVersionWidget.class.getSimpleName();

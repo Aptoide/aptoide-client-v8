@@ -54,6 +54,7 @@ import cm.aptoide.pt.v8engine.view.app.GridAppWidget;
 import cm.aptoide.pt.v8engine.view.app.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.app.OfficialAppWidget;
 import cm.aptoide.pt.v8engine.view.app.OtherVersionDisplayable;
+import cm.aptoide.pt.v8engine.view.app.displayable.AppViewAdDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewFlagThisDisplayable;
@@ -74,7 +75,6 @@ import cm.aptoide.pt.v8engine.view.app.widget.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewRateResultsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewScreenshotsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewStoreWidget;
-import cm.aptoide.pt.v8engine.view.app.widget.AppViewSuggestedAppWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.comments.CommentDisplayable;
@@ -100,6 +100,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.MessageWhiteBgDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.ProgressBarDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.AppViewAdWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.AppViewSuggestedAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.FooterRowWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.FooterWidget;
@@ -321,6 +323,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppWidget.class,
         AppViewSuggestedAppDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(AppViewAdWidget.class, AppViewAdDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(OtherVersionWidget.class, OtherVersionDisplayable.class));

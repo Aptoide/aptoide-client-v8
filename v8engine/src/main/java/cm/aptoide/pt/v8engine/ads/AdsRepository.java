@@ -22,6 +22,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 7/27/16.
@@ -139,7 +140,7 @@ public class AdsRepository {
             converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
             sharedPreferences, connectivityManager, resources, versionCodeProvider)
-            .observe());
+            .observe()).subscribeOn(Schedulers.io());
   }
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
