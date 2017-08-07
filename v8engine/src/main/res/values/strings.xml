@@ -347,7 +347,7 @@
   <string name="login_separator_text">Or connect using your email</string>
 
   <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Find exclusive and taylored content in different stores</string>
+  <string name="add_store_dialog_title">Find exclusive and tailored content in different stores</string>
   <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
   <string name="add_store_dialog_top_stores_small_text">and find great apps!</string>
 
@@ -433,7 +433,7 @@
 
 
   <!-- Comments -->
-  <string name="commentlist_title_comment">Comment</string>
+  <string name="dialog_title_comment">Comment</string>
   <string name="dialog_button_comment">Comment</string>
   <string name="reply_to">Reply to %s</string>
   <string name="comment_submitted">Your comment was successfully submitted</string>

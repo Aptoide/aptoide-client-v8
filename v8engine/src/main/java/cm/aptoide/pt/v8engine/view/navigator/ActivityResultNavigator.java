@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.v8engine.NavigationProvider;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -38,20 +37,18 @@ public abstract class ActivityResultNavigator extends LeakActivity
     resultRelay.call(new Result(requestCode, resultCode, data));
   }
 
-  @Override
-  public Observable<Result> navigateForResult(Class<? extends AppCompatActivity> activityClass,
-      int requestCode) {
-    final Intent intent = new Intent();
-    intent.setComponent(new ComponentName(this, activityClass));
-    startActivityForResult(intent, requestCode);
-    return resultRelay.filter(result -> result.getRequestCode() == requestCode);
-  }
-
   @Override public void navigateForResult(Class<? extends Activity> activityClass, int requestCode,
       Bundle bundle) {
     final Intent intent = new Intent();
     intent.setComponent(new ComponentName(this, activityClass));
     intent.putExtras(bundle);
+    startActivityForResult(intent, requestCode);
+  }
+
+  @Override
+  public void navigateForResult(Class<? extends Activity> activityClass, int requestCode) {
+    final Intent intent = new Intent();
+    intent.setComponent(new ComponentName(this, activityClass));
     startActivityForResult(intent, requestCode);
   }
 
@@ -75,22 +72,25 @@ public abstract class ActivityResultNavigator extends LeakActivity
     return Observable.empty();
   }
 
-  @Override public void navigateTo(Class<? extends AppCompatActivity> activityClass) {
+  @Override public void navigateTo(Class<? extends Activity> activityClass) {
     final Intent intent = new Intent();
     intent.setComponent(new ComponentName(this, activityClass));
     startActivity(intent);
   }
 
-  @Override
-  public void navigateTo(Class<? extends AppCompatActivity> activityClass, Bundle bundle) {
+  @Override public void navigateTo(Class<? extends Activity> activityClass, Bundle bundle) {
     final Intent intent = new Intent();
     intent.setComponent(new ComponentName(this, activityClass));
     intent.putExtras(bundle);
     startActivity(intent);
   }
 
-  @Override public void finish(int code, Bundle bundle) {
-    setResult(code, new Intent().putExtras(bundle));
+  @Override public void navigateBackWithResult(int resultCode, Bundle bundle) {
+    setResult(resultCode, new Intent().putExtras(bundle));
+    finish();
+  }
+
+  @Override public void navigateBack() {
     finish();
   }
 

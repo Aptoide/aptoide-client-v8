@@ -5,19 +5,20 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
-import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.PackageRepository;
 import java.util.Set;
 import rx.Observable;
+import rx.Single;
 import rx.functions.Func1;
 
 public class TimelineCardFilter {
   private final TimelineCardDuplicateFilter duplicateFilter;
-  private final InstalledRepository installedRepository;
+  private final PackageRepository packageRepository;
 
   public TimelineCardFilter(TimelineCardDuplicateFilter duplicateFilter,
-      InstalledRepository installedRepository) {
+      PackageRepository packageRepository) {
     this.duplicateFilter = duplicateFilter;
-    this.installedRepository = installedRepository;
+    this.packageRepository = packageRepository;
   }
 
   public void clear() {
@@ -36,9 +37,8 @@ public class TimelineCardFilter {
       TimelineItem<TimelineCard> timelineItem) {
     String packageName = getPackageNameFrom(timelineItem);
     if (!TextUtils.isEmpty(packageName)) {
-      return installedRepository.isInstalled(packageName)
-          .firstOrDefault(false)
-          .flatMap(installed -> {
+      return packageRepository.isPackageInstalled(packageName)
+          .flatMapObservable(installed -> {
             if (!installed) {
               return Observable.just(timelineItem);
             }
@@ -64,11 +64,10 @@ public class TimelineCardFilter {
       TimelineItem<TimelineCard> timelineItem) {
     String packageName = getPackageNameFrom(timelineItem);
     if (!TextUtils.isEmpty(packageName)) {
-      return installedRepository.getInstalled(packageName)
-          .firstOrDefault(null)
-          .flatMap(installed -> {
-            if (installed != null
-                && installed.getVersionCode() == ((AppUpdate) timelineItem).getFile()
+      return packageRepository.getPackageVersionCode(packageName)
+          .onErrorResumeNext(err -> Single.just(null))
+          .flatMapObservable(versionCode -> {
+            if (versionCode != null && versionCode == ((AppUpdate) timelineItem).getFile()
                 .getVercode()) {
               return Observable.empty();
             }

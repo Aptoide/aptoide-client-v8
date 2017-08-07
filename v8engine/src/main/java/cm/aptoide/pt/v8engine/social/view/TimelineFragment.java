@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.social.view;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
@@ -10,13 +11,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -30,7 +31,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -39,29 +39,30 @@ import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
-import cm.aptoide.pt.v8engine.social.data.SharePreviewFactory;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineCardFilter;
+import cm.aptoide.pt.v8engine.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
+import cm.aptoide.pt.v8engine.social.data.share.ShareDialogFactory;
+import cm.aptoide.pt.v8engine.social.data.share.ShareDialogInterface;
+import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
+import cm.aptoide.pt.v8engine.social.data.share.SharePostViewSetup;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
-import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -70,7 +71,6 @@ import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -84,12 +84,11 @@ import rx.subjects.PublishSubject;
 
 public class TimelineFragment extends FragmentView implements TimelineView {
 
-  public static final int LATEST_PACKAGES_COUNT = 20;
-  public static final int RANDOM_PACKAGES_COUNT = 10;
   private static final String ACTION_KEY = "action";
   private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String STORE_ID = "STORE_ID";
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
+  private static final String LIST_STATE_KEY = "LIST_STATE";
 
   /**
    * The minimum number of items to have below your current scroll position before loading more.
@@ -98,9 +97,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private boolean bottomAlreadyReached;
   private PostAdapter adapter;
   private PublishSubject<CardTouchEvent> postTouchEventPublishSubject;
-  private PublishSubject<Post> sharePreviewPublishSubject;
   private PublishSubject<PostComment> commentPostResponseSubject;
   private RecyclerView list;
+  private Parcelable listState;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
   private View coordinatorLayout;
@@ -108,22 +107,21 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private View genericError;
   private View retryButton;
   private TokenInvalidator tokenInvalidator;
-  private LinksHandlerFactory linksHandlerFactory;
   private SharedPreferences sharedPreferences;
   private FloatingActionButton floatingActionButton;
   private InstallManager installManager;
-  private boolean newRefresh;
   private Long userId;
   private Long storeId;
   private StoreContext storeContext;
   private AptoideAccountManager accountManager;
-  private AlertDialog shareDialog;
-  private SharePreviewFactory sharePreviewFactory;
-  private SpannableFactory spannableFactory;
+  private ShareDialogInterface<Object> shareDialog;
   private TabNavigator tabNavigator;
-  private String postIdForTimelineRequest;
-  private TimelineAnalytics timelineAnalytics;
+  private ShareDialogFactory shareDialogFactory;
+  private PublishSubject<ShareEvent> sharePostPublishSubject;
   private PublishRelay<View> loginPrompt;
+  private TimelineService timelineService;
+  private TimelinePostsRepository timelinePostsRepository;
+  private DateCalculator dateCalculator;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -154,35 +152,43 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tabNavigator.navigation()
-        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(tabNavigation -> postIdForTimelineRequest = tabNavigation.getBundle()
-            .getString(AppsTimelineTabNavigation.CARD_ID_KEY), err -> CrashReport.getInstance()
-            .log(err));
-    newRefresh = true;
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
-    linksHandlerFactory = new LinksHandlerFactory(getContext());
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    sharePreviewFactory = new SharePreviewFactory(accountManager);
     sharedPreferences =
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
-    sharePreviewPublishSubject = PublishSubject.create();
+    sharePostPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
-    final DateCalculator dateCalculator = new DateCalculator(getContext().getApplicationContext(),
+    dateCalculator = new DateCalculator(getContext().getApplicationContext(),
         getContext().getApplicationContext()
             .getResources());
-    spannableFactory = new SpannableFactory();
-    adapter = new PostAdapter(Collections.emptyList(),
-        new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
-            new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject)), new ProgressCard());
+    shareDialogFactory =
+        new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
+
+    timelinePostsRepository =
+        ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
+            getArguments().getString(ACTION_KEY));
+
+
+    timelineService = new TimelineService(userId,
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+        WebService.getDefaultConverter(), new TimelineResponseCardMapper(), tokenInvalidator,
+        sharedPreferences);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    if (list != null) {
+      outState.putParcelable(LIST_STATE_KEY, list.getLayoutManager()
+          .onSaveInstanceState());
+    }
   }
 
   @Nullable @Override
@@ -193,11 +199,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
+        listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+        savedInstanceState.putParcelable(LIST_STATE_KEY, null);
+      }
+    }
     genericError = view.findViewById(R.id.generic_error);
     retryButton = genericError.findViewById(R.id.retry);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
-    list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     loginPrompt = PublishRelay.create();
     helper = RecyclerViewPositionHelper.createHelper(list);
@@ -208,7 +219,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     coordinatorLayout = view.findViewById(R.id.coordinator_layout);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+    SpannableFactory spannableFactory = new SpannableFactory();
+    adapter = new PostAdapter(Collections.emptyList(),
+        new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
+            new MinimalCardViewFactory(dateCalculator, spannableFactory,
+                postTouchEventPublishSubject)), new ProgressCard());
+    list.setAdapter(adapter);
+
+    TimelineAnalytics timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
@@ -221,32 +239,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     StoreCredentialsProviderImpl storeCredentialsProvider =
         new StoreCredentialsProviderImpl(storeAccessor);
 
-    int limit = 20;
-    int initialOffset = 0;
-
-    final HashSet<String> postIds = new HashSet<>();
-    final InstalledRepository installedRepository =
-        RepositoryFactory.getInstalledRepository(getContext());
-    //final PostFilter.PostDuplicateFilter postDuplicateFilter =
-    //    new PostFilter.PostDuplicateFilter(postIds);
-    //final PostFilter postFilter = new PostFilter(postDuplicateFilter, installedRepository);
-    final TimelineCardFilter.TimelineCardDuplicateFilter duplicateFilter = new TimelineCardFilter.TimelineCardDuplicateFilter(postIds);
-    final TimelineCardFilter postFilter = new TimelineCardFilter(duplicateFilter, installedRepository);
-
-    final TimelineService timelineService =
-        new TimelineService(getArguments().getString(ACTION_KEY), postIdForTimelineRequest, userId,
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            new PackageRepository(getContext().getPackageManager()), LATEST_PACKAGES_COUNT,
-            RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(), linksHandlerFactory, limit,
-            initialOffset, Integer.MAX_VALUE, tokenInvalidator, sharedPreferences, postFilter);
-
     Timeline timeline =
-        new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics);
+        new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics,
+            timelinePostsRepository);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
-        getContext().getString(R.string.timeline_title_likes));
+        getContext().getString(R.string.timeline_title_likes), tabNavigator);
 
     StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
@@ -267,11 +265,29 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    hideLoadMoreProgressIndicator();
+    progressBar = null;
+    listState = list.getLayoutManager()
+        .onSaveInstanceState();
+    adapter.clearPosts();
+    adapter = null;
+    genericError = null;
+    list = null;
+    swipeRefreshLayout = null;
+    coordinatorLayout = null;
+    helper = null;
+    retryButton = null;
+    floatingActionButton = null;
+    bottomAlreadyReached = false;
+    timelinePostsRepository.clearLoading();
   }
 
   @Override public void showCards(List<Post> cards) {
     adapter.updatePosts(cards);
+    if (listState != null) {
+      list.getLayoutManager()
+          .onRestoreInstanceState(listState);
+      listState = null;
+    }
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     list.setVisibility(View.VISIBLE);
@@ -316,6 +332,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public Observable<Void> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
         .filter(event -> !bottomAlreadyReached
+            && helper.getItemCount() > visibleThreshold
             && helper != null
             && event.view()
             .isAttachedToWindow()
@@ -331,8 +348,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return postTouchEventPublishSubject;
   }
 
-  @Override public Observable<Post> shareConfirmation() {
-    return sharePreviewPublishSubject;
+  @Override public Observable<ShareEvent> shareConfirmation() {
+    return sharePostPublishSubject;
   }
 
   @Override public Observable<PostComment> commentPosted() {
@@ -353,13 +370,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     Logger.d(this.getClass()
         .getName(), "hide indicator called");
     bottomAlreadyReached = false;
-    adapter.removeLoadMoreProgress();
-  }
-
-  @Override public boolean isNewRefresh() {
-    boolean b = newRefresh;
-    newRefresh = false;
-    return b;
+    if (adapter != null) {
+      adapter.removeLoadMoreProgress();
+    }
   }
 
   @Override public Observable<Void> floatingActionButtonClicked() {
@@ -425,17 +438,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .show();
   }
 
-  @Override public void showSharePreview(Post post) {
-    shareDialog =
-        new AlertDialog.Builder(getContext()).setTitle(R.string.timeline_title_shared_card_preview)
-            .setMessage(R.string.social_timeline_you_will_share)
-            .setView(sharePreviewFactory.getSharePreviewView(post, getContext()))
-            .setPositiveButton(R.string.share,
-                (dialogInterface, i) -> sharePreviewPublishSubject.onNext(post))
-            .setNegativeButton(android.R.string.cancel,
-                (dialogInterface, i) -> timelineAnalytics.sendSocialCardPreviewActionEvent(
-                    TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL))
-            .create();
+  @Override public void showSharePreview(Post post, Account account) {
+    shareDialog = shareDialogFactory.createDialogFor(post, account);
+    shareDialog.setup(post);
+
+    shareDialog.cancels()
+        .doOnNext(__ -> shareDialog.dismiss())
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe();
+
+    shareDialog.shares()
+        .doOnNext(event -> sharePostPublishSubject.onNext(event))
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe();
     shareDialog.show();
   }
 
@@ -472,13 +487,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> loginActionClick() {
     return loginPrompt.map(__ -> null);
-  }
-
-  @Override public void showSetUserOrStorePublicMessage() {
-    Snackbar.make(getView(),
-        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
-        Snackbar.LENGTH_LONG)
-        .show();
   }
 
   @Override public void showCreateStoreMessage(SocialAction socialAction) {

@@ -127,9 +127,8 @@ import rx.functions.Action1;
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository(),
-        tokenInvalidator,
+        new AccountNavigator(getFragmentNavigator(), accountManager), bodyInterceptor, httpClient,
+        converterFactory, displayable.getInstalledRepository(), tokenInvalidator,
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
     appName = app.getName();

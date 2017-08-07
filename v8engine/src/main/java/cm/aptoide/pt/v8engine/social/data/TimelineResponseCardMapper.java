@@ -42,18 +42,16 @@ import cm.aptoide.pt.v8engine.social.data.publisher.MediaPublisher;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
 import cm.aptoide.pt.v8engine.social.data.publisher.PublisherAvatar;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by jdandrade on 31/05/2017.
  */
 
 public class TimelineResponseCardMapper {
-  private final Set<String> postIds = new HashSet<>();
 
-  public List<Post> map(List<TimelineItem<TimelineCard>> cardList, LinksHandlerFactory linksFactory) {
+  public List<Post> map(List<TimelineItem<TimelineCard>> cardList,
+      LinksHandlerFactory linksFactory) {
     final List<Post> cards = new ArrayList();
 
     for (TimelineItem<TimelineCard> item : cardList) {
@@ -79,10 +77,6 @@ public class TimelineResponseCardMapper {
           .getUrl();
     }
 
-    if (postIds.contains(item.getData()
-        .getCardId())) {
-      return;
-    }
     if (item instanceof ArticleTimelineItem) {
       final Article article = ((ArticleTimelineItem) item).getData();
       cards.add(new Media(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
@@ -472,17 +466,11 @@ public class TimelineResponseCardMapper {
           .getApps(), aggregatedSocialStoreLatestApps.getDate(),
           aggregatedSocialStoreLatestApps.getApps(), abUrl, CardType.AGGREGATED_SOCIAL_STORE));
     }
-    postIds.add(item.getData()
-        .getCardId());
   }
 
   public Post map(TimelineStats timelineStats) {
     return new TimelineStatsPost(timelineStats.getData()
         .getFollowers(), timelineStats.getData()
         .getFollowing(), CardType.TIMELINE_STATS);
-  }
-
-  public void clearCachedPostsIds() {
-    postIds.clear();
   }
 }

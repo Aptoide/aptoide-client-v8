@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.billing;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import rx.Observable;
 import rx.Single;
 
 public class AccountPayer implements Payer {
@@ -22,5 +23,10 @@ public class AccountPayer implements Payer {
           return Single.error(
               new IllegalStateException("User not logged in can not obtain payer id"));
         });
+  }
+
+  @Override public Observable<Boolean> isAuthenticated() {
+    return accountManager.accountStatus()
+        .map(account -> account.isLoggedIn());
   }
 }

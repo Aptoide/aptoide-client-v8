@@ -9,8 +9,8 @@ import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
+import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
-import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
 import java.util.List;
 import rx.Completable;
@@ -23,16 +23,20 @@ public class Billing {
   private final BillingService billingService;
   private final AuthorizationRepository authorizationRepository;
   private final PaymentMethodSelector paymentMethodSelector;
-  private final TransactionPersistence transactionPersistence;
+  private final Payer payer;
 
   public Billing(TransactionRepository transactionRepository, BillingService billingService,
       AuthorizationRepository authorizationRepository, PaymentMethodSelector paymentMethodSelector,
-      TransactionPersistence transactionPersistence) {
+      Payer payer) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
     this.paymentMethodSelector = paymentMethodSelector;
-    this.transactionPersistence = transactionPersistence;
+    this.payer = payer;
+  }
+
+  public Payer getPayer() {
+    return payer;
   }
 
   public Single<Boolean> isSupported(String packageName, int apiVersion, String type) {
@@ -50,24 +54,30 @@ public class Billing {
     return billingService.getProduct(appId, sponsored, storeName);
   }
 
-  public Single<Product> getProduct(String packageName, int apiVersion, String type, String sku,
+  public Single<Product> getProduct(String packageName, int apiVersion, String sku,
       String developerPayload) {
-    return billingService.getProduct(apiVersion, packageName, sku, type, developerPayload);
+    return billingService.getProduct(apiVersion, packageName, sku, developerPayload);
   }
 
-  public Single<List<Product>> getProducts(String packageName, int apiVersion, String type,
-      List<String> skus) {
-    return billingService.getProducts(apiVersion, packageName, skus, type);
+  public Single<List<Product>> getProducts(String packageName, int apiVersion, List<String> skus) {
+    return billingService.getProducts(apiVersion, packageName, skus);
   }
 
-  public Single<List<Purchase>> getPurchases(String packageName, int apiVersion, String type) {
-    return billingService.getPurchases(apiVersion, packageName, type);
+  public Single<List<Purchase>> getPurchases(String packageName, int apiVersion) {
+    return billingService.getPurchases(apiVersion, packageName);
   }
 
   public Completable consumePurchase(String packageName, int apiVersion, String purchaseToken) {
-    return billingService.deletePurchase(apiVersion, packageName, purchaseToken)
-        // TODO sync all payment confirmations instead. For now there is no web service for that.
-        .andThen(transactionPersistence.removeAllTransactions());
+    return billingService.getPurchases(apiVersion, packageName)
+        .flatMapObservable(purchases -> Observable.from(purchases))
+        .cast(InAppPurchase.class)
+        .filter(purchase -> purchaseToken.equals(purchase.getToken()))
+        .first()
+        .toSingle()
+        .flatMapCompletable(purchase -> getProduct(packageName, apiVersion, purchase.getSku(),
+            null).flatMapCompletable(
+            product -> billingService.deletePurchase(apiVersion, packageName, purchaseToken)
+                .andThen(transactionRepository.remove(product.getId()))));
   }
 
   public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
@@ -98,8 +108,7 @@ public class Billing {
   }
 
   public Observable<Transaction> getTransaction(Product product) {
-    return transactionRepository.getTransaction(product)
-        .distinctUntilChanged(transaction -> transaction.getStatus());
+    return transactionRepository.getTransaction(product);
   }
 
   public Single<Purchase> getPurchase(Product product) {
