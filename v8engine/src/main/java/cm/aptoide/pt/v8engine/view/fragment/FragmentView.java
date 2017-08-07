@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -24,11 +25,14 @@ import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import lombok.Getter;
 import rx.Observable;
 
 public abstract class FragmentView extends LeakFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
+
+  @Getter private boolean startActivityForResultCalled;
 
   private Presenter presenter;
   private NavigationProvider navigationProvider;
@@ -164,5 +168,16 @@ public abstract class FragmentView extends LeakFragment implements View {
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
+  }
+
+  @Override public void startActivityForResult(Intent intent, int requestCode) {
+    startActivityForResultCalled = true;
+    super.startActivityForResult(intent, requestCode);
+  }
+
+  @Override
+  public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+    startActivityForResultCalled = true;
+    super.startActivityForResult(intent, requestCode, options);
   }
 }
