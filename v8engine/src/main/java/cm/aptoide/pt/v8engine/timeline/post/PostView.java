@@ -57,6 +57,8 @@ interface PostView extends View {
 
   void clearAllRelated();
 
+  int getPreviewVisibility();
+
   class PostPreview {
     private final String url;
     private final String image;
