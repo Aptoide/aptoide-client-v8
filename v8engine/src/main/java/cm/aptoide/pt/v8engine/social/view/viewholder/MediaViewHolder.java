@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
@@ -38,6 +39,10 @@ public class MediaViewHolder extends PostViewHolder<Media> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final ImageView latestCommentMainAvatar;
+  private final TextView socialCommentBody;
+  private final LinearLayout socialCommentBar;
+  private final TextView socialCommentUsername;
 
   public MediaViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
@@ -59,6 +64,10 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     likeView = itemView.findViewById(R.id.social_like);
     commentButton = (TextView) itemView.findViewById(R.id.social_comment);
     shareButton = (TextView) itemView.findViewById(R.id.social_share);
+    socialCommentBar = (LinearLayout) itemView.findViewById(R.id.social_latest_comment_bar);
+    socialCommentUsername = (TextView) itemView.findViewById(R.id.social_latest_comment_user_name);
+    latestCommentMainAvatar = (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
+    socialCommentBody = (TextView) itemView.findViewById(R.id.social_latest_comment_body);
   }
 
   @Override public void setPost(Media media, int position) {
@@ -86,6 +95,8 @@ public class MediaViewHolder extends PostViewHolder<Media> {
         .loadWithShadowCircleTransform(media.getPublisherAvatarURL(), publisherAvatar);
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(media.getMediaThumbnailUrl(), articleThumbnail);
+
+    handleCommentsInformation(media);
 
     articleThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
@@ -119,6 +130,24 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     } else {
       cardIcon.setImageDrawable(itemView.getResources()
           .getDrawable(drawableId));
+    }
+  }
+
+  private void handleCommentsInformation(Media post) {
+    if (post.getCommentsNumber() > 0) {
+      socialCommentBar.setVisibility(View.VISIBLE);
+      ImageLoader.with(itemView.getContext())
+          .loadWithShadowCircleTransform(post.getComments()
+              .get(0)
+              .getAvatar(), latestCommentMainAvatar);
+      socialCommentUsername.setText(post.getComments()
+          .get(0)
+          .getName());
+      socialCommentBody.setText(post.getComments()
+          .get(0)
+          .getBody());
+    } else {
+      socialCommentBar.setVisibility(View.GONE);
     }
   }
 }

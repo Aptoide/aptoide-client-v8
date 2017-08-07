@@ -1,9 +1,12 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.social.data.publisher.Publisher;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jdandrade on 31/05/2017.
@@ -21,6 +24,7 @@ public class Media implements Post {
   private final Link publisherLink;
   private final Link mediaLink;
   private final CardType cardType;
+  private final List<SocialCard.CardComment> comments;
   private boolean isLiked;
   private boolean likeFromClick;
 
@@ -40,6 +44,7 @@ public class Media implements Post {
     this.mediaLink = mediaLink;
     this.isLiked = isLiked;
     this.cardType = cardType;
+    this.comments = new ArrayList<>();
   }
 
   public String getCardId() {
@@ -65,6 +70,14 @@ public class Media implements Post {
 
   @Override public boolean isLikeFromClick() {
     return likeFromClick;
+  }
+
+  public List<SocialCard.CardComment> getComments() {
+    return comments;
+  }
+
+  public long getCommentsNumber() {
+    return comments.size();
   }
 
   public void setLikedFromClick(boolean likeFromClick) {
