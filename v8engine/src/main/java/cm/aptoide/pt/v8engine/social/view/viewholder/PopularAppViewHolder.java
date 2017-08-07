@@ -69,6 +69,8 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
     this.appName.setText(card.getAppName());
     this.appRating.setRating(card.getAppAverageRating());
     showFriendsAvatars(card, itemView.getContext());
+    this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {

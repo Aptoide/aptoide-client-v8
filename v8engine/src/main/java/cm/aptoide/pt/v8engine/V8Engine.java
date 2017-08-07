@@ -132,6 +132,7 @@ import cm.aptoide.pt.v8engine.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.v8engine.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.v8engine.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
@@ -152,6 +153,9 @@ import cm.aptoide.pt.v8engine.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.social.TimelineRepositoryFactory;
+import cm.aptoide.pt.v8engine.social.data.TimelinePostsRepository;
+import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
@@ -274,6 +278,7 @@ public abstract class V8Engine extends Application {
   private TransactionPersistence transactionPersistence;
   private AuthorizationPersistence authorizationPersistence;
   private BillingSyncManager billingSyncManager;
+  private TimelineRepositoryFactory timelineRepositoryFactory;
 
   /**
    * call after this instance onCreate()
@@ -1274,4 +1279,16 @@ public abstract class V8Engine extends Application {
     }
     return syncStorage;
   }
+
+  public TimelinePostsRepository getTimelineRepository(String action) {
+    if (timelineRepositoryFactory == null) {
+      timelineRepositoryFactory =
+          new TimelineRepositoryFactory(new HashMap<>(), getBaseBodyInterceptorV7(),
+              getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
+              new LinksHandlerFactory(this), getPackageRepository(),
+              WebService.getDefaultConverter(), new TimelineResponseCardMapper());
+    }
+    return timelineRepositoryFactory.create(action);
+  }
 }
+

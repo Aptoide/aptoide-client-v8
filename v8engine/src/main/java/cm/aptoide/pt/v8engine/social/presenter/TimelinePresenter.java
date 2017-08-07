@@ -167,7 +167,7 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(__ -> view.showProgressIndicator())
             .flatMapSingle(cardId -> Single.zip(
                 accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineStatisticsPost(), timeline.getCards(cardId),
+                    : timeline.getTimelineLoginPost(), timeline.getFreshCards(cardId),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cards -> showCardsAndHideProgress(cards))
@@ -219,7 +219,6 @@ public class TimelinePresenter implements Presenter {
   private void onCreateShowPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .filter(__ -> view.isNewRefresh())
         .doOnNext(__ -> view.showProgressIndicator())
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
@@ -227,7 +226,7 @@ public class TimelinePresenter implements Presenter {
         .observeOn(Schedulers.io())
         .flatMapSingle(account -> Single.zip(
             account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                : timeline.getTimelineLoginPost(), timeline.getCards(),
             (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> {
@@ -255,7 +254,7 @@ public class TimelinePresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> Single.zip(
                 account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                    : timeline.getTimelineLoginPost(), timeline.getFreshCards(),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cards -> showCardsAndHideRefresh(cards))
@@ -272,17 +271,21 @@ public class TimelinePresenter implements Presenter {
   private void onBottomReachedShowMorePosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(create -> view.reachesBottom())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(create -> view.showLoadMoreProgressIndicator())
-        .flatMapSingle(bottomReached -> timeline.getNextCards())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
+        .flatMap(create -> view.reachesBottom()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(created -> view.showLoadMoreProgressIndicator())
+            .flatMapSingle(bottomReached -> timeline.getNextCards())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
+            .doOnError(throwable -> {
+              crashReport.log(throwable);
+              view.showGenericError();
+              view.hideLoadMoreProgressIndicator();
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
-          crashReport.log(throwable);
-          view.showGenericError();
         });
   }
 
@@ -298,7 +301,7 @@ public class TimelinePresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> Single.zip(
                 account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineStatisticsPost(), timeline.getCards(),
+                    : timeline.getTimelineLoginPost(), timeline.getCards(),
                 (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(posts -> {
@@ -374,7 +377,7 @@ public class TimelinePresenter implements Presenter {
             card.getMediaLink()
                 .launch();
           } else {
-            if (type.equals(CardType.RECOMMENDATION)) {
+            if (type.equals(CardType.RECOMMENDATION) || type.equals(CardType.SIMILAR)) {
               Recommendation card = (Recommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
@@ -489,13 +492,6 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
-  }
-
-  private boolean showSetUserOrStoreToPublic(Account account) {
-    //TODO missing this part... at the moment we don't know if the store is public or private, after login
-    //return account != null && !account.isPublicUser() && account.hasStore() && !account.isPublicStore();
-    // user is private and has a private store
-    return account != null && !account.isPublicUser() && account.hasStore();
   }
 
   private boolean showCreateStore(Account account) {
@@ -696,16 +692,6 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
-        });
-  }
-
-  private Completable syncAccount(Account account, ShareEvent shareEvent) {
-    return Single.fromCallable(() -> account.getAccess() != shareEvent.getAccess())
-        .flatMapCompletable(shouldUpdateAccount -> {
-          if (shouldUpdateAccount) {
-            return accountManager.syncCurrentAccount(shareEvent.getAccess());
-          }
-          return Completable.complete();
         });
   }
 
