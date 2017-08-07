@@ -64,6 +64,7 @@ public abstract class WebService<T, U> {
       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
       objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
       objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
+      objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
       DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
       objectMapper.setDateFormat(df);
