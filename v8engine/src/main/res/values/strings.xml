@@ -664,5 +664,5 @@
   <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
 
-
+  <string name="suggested_searchable_authority" translatable="false"/>
 </resources>
