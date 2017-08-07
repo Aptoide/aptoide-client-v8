@@ -76,8 +76,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
 
     compositeSubscription.add(accountManager.accountStatus()
         .doOnNext(account -> updateAccount(account))

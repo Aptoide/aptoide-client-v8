@@ -13,5 +13,6 @@ public interface AuthorizationPersistence {
 
   Completable saveAuthorizations(List<Authorization> authorizations);
 
-  Single<Authorization> createAuthorization(String payerId, int paymentId, Authorization.Status status);
+  Single<Authorization> createAuthorization(String payerId, int paymentId,
+      Authorization.Status status);
 }

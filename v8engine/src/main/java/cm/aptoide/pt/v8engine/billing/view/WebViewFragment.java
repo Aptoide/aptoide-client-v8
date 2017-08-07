@@ -77,6 +77,14 @@ public abstract class WebViewFragment extends PermissionServiceFragment
     super.onDestroyView();
   }
 
+  @Override public void showLoading() {
+    indeterminateProgressBar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideLoading() {
+    indeterminateProgressBar.setVisibility(View.GONE);
+  }
+
   @Override public void loadWebsite(String mainUrl, String redirectUrl) {
     webView.setWebChromeClient(new WebChromeClient() {
       @Override public void onProgressChanged(WebView view, int progress) {
@@ -84,27 +92,19 @@ public abstract class WebViewFragment extends PermissionServiceFragment
       }
     });
     webView.setWebViewClient(new WebViewClient() {
-      @Override public void onReceivedError(WebView view, int errorCode, String description,
-          String failingUrl) {
-        urlLoadErrorSubject.call(null);
-      }
-
       @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
         if (url.equals(redirectUrl)) {
           redirectUrlSubject.call(null);
         }
       }
+
+      @Override public void onReceivedError(WebView view, int errorCode, String description,
+          String failingUrl) {
+        urlLoadErrorSubject.call(null);
+      }
     });
     webView.loadUrl(mainUrl);
-  }
-
-  @Override public void showLoading() {
-    indeterminateProgressBar.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hideLoading() {
-    indeterminateProgressBar.setVisibility(View.GONE);
   }
 
   @Override public Observable<Void> redirectUrlEvent() {

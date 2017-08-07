@@ -13,19 +13,19 @@
 
   <ProgressBar
       android:id="@+id/fragment_web_view_determinate_progress_bar"
-      android:indeterminate="false"
-      tools:progress="20"
-      tools:max="100"
-      style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
       android:layout_width="match_parent"
       android:layout_height="4dp"
+      android:indeterminate="false"
+      tools:max="100"
+      tools:progress="20"
+      style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
       />
 
   <WebView
-      android:layout_below="@id/fragment_web_view_determinate_progress_bar"
       android:id="@+id/fragment_web_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_below="@id/fragment_web_view_determinate_progress_bar"
       />
 
   <LinearLayout

@@ -45,5 +45,4 @@ public class InAppProduct extends AbstractProduct {
   public String getDeveloperPayload() {
     return developerPayload;
   }
-
 }

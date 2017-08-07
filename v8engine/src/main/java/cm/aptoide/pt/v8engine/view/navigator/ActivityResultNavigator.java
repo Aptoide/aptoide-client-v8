@@ -45,12 +45,12 @@ public abstract class ActivityResultNavigator extends LeakActivity
     startActivityForResult(intent, requestCode);
   }
 
-  @Override public void navigateForResult(Class<? extends Activity> activityClass, int requestCode) {
+  @Override
+  public void navigateForResult(Class<? extends Activity> activityClass, int requestCode) {
     final Intent intent = new Intent();
     intent.setComponent(new ComponentName(this, activityClass));
     startActivityForResult(intent, requestCode);
   }
-
 
   @Override public Observable<Result> results(int requestCode) {
     return resultRelay.filter(result -> result.getRequestCode() == requestCode);

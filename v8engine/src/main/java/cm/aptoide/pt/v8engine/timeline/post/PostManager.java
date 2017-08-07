@@ -17,6 +17,7 @@ public class PostManager {
   private final PostAccessor postRemoteRepository;
   private final PostAccessor postLocalRepository;
   private AptoideAccountManager accountManager;
+  private boolean remoteRelatedAppsAvailable = false;
 
   public PostManager(PostRemoteAccessor postRemoteRepository, PostAccessor postLocalRepository,
       AptoideAccountManager accountManager) {
@@ -80,15 +81,14 @@ public class PostManager {
 
   public Single<List<RelatedApp>> getSuggestionAppsOnStart(@Nullable String url) {
     if (url != null && !url.isEmpty()) {
-      return Single.zip(getSuggestionApps(),
-          postRemoteRepository.getRelatedApps(addProtocolIfNeeded(url))
-              .onErrorResumeNext(throwable -> Single.just(Collections.emptyList())),
-          (localApps, remoteApps) -> {
-            ArrayList<RelatedApp> list = new ArrayList<>();
-            list.addAll(remoteApps);
-            list.addAll(localApps);
-            return list;
-          });
+      return Single.zip(getSuggestionApps(), getSuggestionApps(url).onErrorResumeNext(
+          throwable -> Single.just(Collections.emptyList())), (localApps, remoteApps) -> {
+        ArrayList<RelatedApp> list = new ArrayList<>();
+        list.addAll(remoteApps);
+        remoteRelatedAppsAvailable = remoteApps.size() > 0;
+        list.addAll(localApps);
+        return list;
+      });
     }
     return getSuggestionApps();
   }
@@ -103,6 +103,14 @@ public class PostManager {
   public Single<PostView.PostPreview> getPreview(String url) {
     return postRemoteRepository.getCardPreview(addProtocolIfNeeded(url))
         .onErrorReturn(throwable -> new PostView.PostPreview(null, null, url));
+  }
+
+  public boolean remoteRelatedAppsAvailable() {
+    return remoteRelatedAppsAvailable;
+  }
+
+  public void setRemoteRelatedAppsAvailable(boolean remoteRelatedAppsAvailable) {
+    this.remoteRelatedAppsAvailable = remoteRelatedAppsAvailable;
   }
 
   enum Origin {
