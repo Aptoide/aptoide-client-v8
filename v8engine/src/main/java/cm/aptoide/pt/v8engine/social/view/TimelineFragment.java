@@ -468,11 +468,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     commentDialogFragment.show(fm, "fragment_comment_dialog");
   }
 
-  @Override public void showCommentSuccess() {
-    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_LONG)
-        .show();
-  }
-
   @Override public void showGenericError() {
     Snackbar.make(getView(), R.string.all_message_general_error, Snackbar.LENGTH_LONG)
         .show();

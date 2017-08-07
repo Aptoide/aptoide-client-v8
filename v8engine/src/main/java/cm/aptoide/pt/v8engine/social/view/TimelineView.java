@@ -70,8 +70,6 @@ public interface TimelineView extends View {
 
   void showCommentDialog(SocialCardTouchEvent touchEvent);
 
-  void showCommentSuccess();
-
   void showGenericError();
 
   void showLoginPromptWithAction();
