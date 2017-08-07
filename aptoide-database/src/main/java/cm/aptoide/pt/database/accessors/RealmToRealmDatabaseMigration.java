@@ -42,6 +42,8 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     // Access the Realm schema in order to create, modify or delete classes and their fields.
 
     // DynamicRealm exposes an editable schema
+    Logger.w(TAG, "migrate(): from: " + oldVersion + " to: " + newVersion);
+
     RealmSchema schema = realm.getSchema();
 
     //  Migrate from version 0 (<=8075) to version 1 (8076)
@@ -288,6 +290,15 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .transform(obj -> obj.setInt("status", Installed.STATUS_COMPLETED))
           .addField("type", int.class)
           .transform(obj -> obj.setInt("type", Installed.TYPE_UNKNOWN));
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 8085) {
+      schema.get("MinimalAd")
+          .addField("downloads", Integer.class)
+          .addField("stars", Integer.class)
+          .addField("modified", Long.class);
 
       oldVersion++;
     }

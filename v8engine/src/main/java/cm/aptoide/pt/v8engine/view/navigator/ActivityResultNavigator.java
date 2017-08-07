@@ -63,4 +63,10 @@ public class ActivityResultNavigator extends LeakActivity implements ActivityNav
     intent.putExtras(bundle);
     startActivity(intent);
   }
+
+  @Override public void navigateTo(Uri uri) {
+    final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
+  }
 }

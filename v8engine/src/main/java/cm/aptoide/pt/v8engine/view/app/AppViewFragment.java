@@ -48,10 +48,12 @@ import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.Group;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -69,6 +71,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
+import cm.aptoide.pt.v8engine.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
@@ -87,6 +90,7 @@ import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreEnum;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -108,6 +112,7 @@ import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
@@ -158,7 +163,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private Subscription subscription;
   private AdsRepository adsRepository;
   private boolean sponsored;
-  private List<MinimalAd> suggestedAds;
   // buy app vars
   private String storeName;
   private AppViewInstallDisplayable installDisplayable;
@@ -169,6 +173,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Partners @Getter private String appName;
   @Partners @Getter private String wUrl;
   private GetAppMeta.App app;
+  private Group group;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
   private AptoideAccountManager accountManager;
@@ -187,8 +192,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
+  @Getter private boolean suggestedShowing;
+  private List<String> keywords;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -297,6 +305,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
@@ -339,6 +349,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onDestroyView() {
     super.onDestroyView();
     header = null;
+    suggestedShowing = false;
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
           .getDefaultTheme()));
@@ -362,7 +373,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -372,7 +383,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -384,7 +395,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -597,28 +608,30 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
   }
 
-  @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
-    List<String> keywords = getApp1.getNodes()
+  @NonNull private Observable<GetApp> setKeywords(GetApp getApp) {
+    keywords = getApp.getNodes()
         .getMeta()
         .getData()
         .getMedia()
         .getKeywords();
-    String packageName = getApp1.getNodes()
-        .getMeta()
-        .getData()
-        .getPackageName();
 
-    return adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
-        .map(minimalAds -> {
-          suggestedAds = minimalAds;
-          return getApp1;
-        });
+    return Observable.just(getApp);
   }
 
   private void setupAppView(GetApp getApp) {
     app = getApp.getNodes()
         .getMeta()
         .getData();
+
+    List<Group> groupsList = getApp.getNodes()
+        .getGroups()
+        .getDatalist()
+        .getList();
+
+    if (groupsList.size() > 0) {
+      group = groupsList.get(0);
+    }
+
     updateLocalVars(app);
     if (storeTheme == null) {
       storeTheme = getApp.getNodes()
@@ -755,7 +768,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
-            installAppRelay);
+            installAppRelay, this);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
@@ -769,9 +782,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     displayables.add(new AppViewDescriptionDisplayable(getApp, appViewAnalytics));
 
     displayables.add(new AppViewFlagThisDisplayable(getApp, appViewAnalytics));
-    if (suggestedAds != null) {
-      displayables.add(new AppViewSuggestedAppsDisplayable(suggestedAds, appViewAnalytics));
-    }
     displayables.add(new AppViewDeveloperDisplayable(getApp));
 
     return displayables;
@@ -894,6 +904,24 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void itemChanged(int pos) {
     getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
+  }
+
+  public void showSuggestedApps() {
+    appViewSimilarAppAnalytics.similarAppsIsShown();
+
+    adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
+        .onErrorReturn(throwable -> Collections.emptyList())
+        .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
+            group != null ? group.getId() : null, 5, ListAppsRequest.Sort.trending30d)
+            .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
+            listApps.getDatalist()
+                .getList(), appViewSimilarAppAnalytics))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(appViewSuggestedAppsDisplayable -> {
+          addDisplayableWithAnimation(1, appViewSuggestedAppsDisplayable);
+          suggestedShowing = true;
+        }, Throwable::printStackTrace);
   }
 
   @Partners protected enum BundleKeys {

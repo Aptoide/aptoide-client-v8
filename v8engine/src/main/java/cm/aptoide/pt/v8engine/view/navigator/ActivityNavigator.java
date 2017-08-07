@@ -19,6 +19,8 @@ public interface ActivityNavigator {
 
   void navigateTo(Class<? extends AppCompatActivity> activityClass, Bundle bundle);
 
+  void navigateTo(Uri uri);
+
   class Result {
 
     private final int requestCode;

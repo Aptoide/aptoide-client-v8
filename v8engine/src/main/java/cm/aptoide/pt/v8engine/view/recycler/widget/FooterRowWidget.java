@@ -13,7 +13,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.FooterRowDisplayable;
 /**
  * Created on 27/06/16.
  */
-@Displayables({ FooterRowDisplayable.class }) public class FooterRowWidget
+public class FooterRowWidget
     extends Widget<FooterRowDisplayable> {
   private TextView title;
 

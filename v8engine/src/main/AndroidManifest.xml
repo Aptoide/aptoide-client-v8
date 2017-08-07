@@ -130,6 +130,11 @@
         <data
             android:host="market.android.com"
             android:scheme="https"/>
+
+        <data
+            android:host="market.android.com"
+            android:scheme="http"/>
+
       </intent-filter>
 
       <intent-filter>

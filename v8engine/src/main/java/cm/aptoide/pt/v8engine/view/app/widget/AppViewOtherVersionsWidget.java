@@ -8,14 +8,13 @@ package cm.aptoide.pt.v8engine.view.app.widget;
 import android.view.View;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewOtherVersionsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created on 04/05/16.
  */
-@Deprecated @Displayables({ AppViewOtherVersionsDisplayable.class })
-public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDisplayable> {
+@Deprecated public class AppViewOtherVersionsWidget
+    extends Widget<AppViewOtherVersionsDisplayable> {
 
   public AppViewOtherVersionsWidget(View itemView) {
     super(itemView);

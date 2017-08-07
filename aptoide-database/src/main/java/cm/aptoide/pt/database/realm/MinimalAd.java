@@ -34,13 +34,16 @@ public class MinimalAd extends RealmObject implements Parcelable {
   @Getter private String cpiUrl;
   @Getter private String name;
   @Getter private String iconPath;
+  @Getter private Integer downloads;
+  @Getter private Integer stars;
+  @Getter private Long modified;
 
   public MinimalAd() {
   }
 
   public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl,
       String cpdUrl, long appId, long adId, String cpiUrl, String name, String iconPath,
-      String description) {
+      String description, int downloads, int stars, Long modified) {
     this.packageName = packageName;
     this.networkId = networkId;
     this.clickUrl = clickUrl;
@@ -52,6 +55,9 @@ public class MinimalAd extends RealmObject implements Parcelable {
     this.name = name;
     this.iconPath = iconPath;
     this.description = description;
+    this.downloads = downloads;
+    this.stars = stars;
+    this.modified = modified;
   }
 
   protected MinimalAd(Parcel in) {
@@ -66,6 +72,9 @@ public class MinimalAd extends RealmObject implements Parcelable {
     this.cpiUrl = in.readString();
     this.name = in.readString();
     this.iconPath = in.readString();
+    this.downloads = in.readInt();
+    this.stars = in.readInt();
+    this.modified = in.readLong();
   }
 
   @Override public int describeContents() {
@@ -84,5 +93,8 @@ public class MinimalAd extends RealmObject implements Parcelable {
     dest.writeString(this.cpiUrl);
     dest.writeString(this.name);
     dest.writeString(this.iconPath);
+    dest.writeInt(this.downloads);
+    dest.writeInt(this.stars);
+    dest.writeLong(this.modified);
   }
 }
