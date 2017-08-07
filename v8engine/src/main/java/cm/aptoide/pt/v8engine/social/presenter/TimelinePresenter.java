@@ -493,13 +493,6 @@ public class TimelinePresenter implements Presenter {
             .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
-  private boolean showSetUserOrStoreToPublic(Account account) {
-    //TODO missing this part... at the moment we don't know if the store is public or private, after login
-    //return account != null && !account.isPublicUser() && account.hasStore() && !account.isPublicStore();
-    // user is private and has a private store
-    return account != null && !account.isPublicUser() && account.hasStore();
-  }
-
   private boolean showCreateStore(Account account) {
     // user is private and does not have a store
     return account != null && !account.isPublicUser() && !account.hasStore();
@@ -690,16 +683,6 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
-        });
-  }
-
-  private Completable syncAccount(Account account, ShareEvent shareEvent) {
-    return Single.fromCallable(() -> account.getAccess() != shareEvent.getAccess())
-        .flatMapCompletable(shouldUpdateAccount -> {
-          if (shouldUpdateAccount) {
-            return accountManager.syncCurrentAccount(shareEvent.getAccess());
-          }
-          return Completable.complete();
         });
   }
 

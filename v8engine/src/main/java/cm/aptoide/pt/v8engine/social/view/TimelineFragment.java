@@ -261,6 +261,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    progressBar = null;
     listState = list.getLayoutManager()
         .onSaveInstanceState();
     adapter.clearPosts();
