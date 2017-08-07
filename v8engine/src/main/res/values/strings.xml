@@ -5,410 +5,325 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <string name="dark">تیره</string>
-  <string name="light">روشن</string>
-  <string name="updates_filter_summary">با انتخاب این گزینه، درمورد نسخه بتای برنامه‌ها مطلع نخواهید
-    شد.
-  </string>
-  <string name="updates_filter_setting_title">فقط به‌روزرسانی برنامه‌های معتبر را نشان بده</string>
-  <string name="include_system_apps_title">شامل اپ‌های سیستمی</string>
-  <string name="include_system_apps_summary">با انتخاب این گزینه از به‌روزرسانی اپ‌های سیستمی یعنی
-    آن‌هایی که توسط سازنده روی گوشی شما نصب شده‌اند، مطلع می‌شوید.
-  </string>
+  <string name="dark">ጨለማ</string>
+  <string name="light">ብርሀን</string>
+  <string name="updates_filter_summary">ይህንን እያጣሩ, በቤታ ስሪት ሊያውቁ አይችሉም.</string>
+  <string name="updates_filter_setting_title">የተረጋጋ የኤፒፒ ስሪቱን ብቻ አሳይ</string>
+  <string name="include_system_apps_title">ሲስተም ኤፒፒዎችን ጨምሮ</string>
+  <string name="include_system_apps_summary">ይህንን ዳግም እየተመለከቱ የኤፒፒ ሲስተሞች መረጃ እድሳት ይደርስዎታል(በፋብሪካው የተጫኑ ኤፒፒዎች)</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
   <!-- Permission pop-ups messages -->
-  <string name="access_to_get_accounts_rationale">نیاز است که اجازه دسترسی به حساب کاربری‌تان را
-    بدهید
-  </string>
-  <string name="unsubscribe">لغو اشتراک</string>
-  <string name="developer_website">وب‌سایت: %s</string>
+  <string name="access_to_get_accounts_rationale">አካውንተዎትን ለመጠቀም ፍቃድ ያስፈልጋል</string>
+  <string name="unsubscribe">ከደንበኝነት ምዝገባ ይውጡ</string>
+  <string name="developer_website">ድህረ-ገፅ፡ %s</string>
   <string name="not_available">N/A</string>
-  <string name="developer_email">ایمیل: %s</string>
-  <string name="developer_privacy_policy">حریم شخصی: %s</string>
-  <string name="open">باز کردن</string>
-  <string name="button_header_more">بیش‌تر</string>
-  <string name="search">جست‌وجو</string>
-  <string name="update">به‌روزرسانی</string>
-  <string name="uninstall">حذف</string>
-  <string name="downgrade">بازگشت به نسخه قدیمی‌تر</string>
-  <string name="appview_followers_count_text">%1$s دنبال‌کننده‌ها</string>
-  <string name="other_versions_downloads_count_text">%1$s دانلودها</string>
+  <string name="developer_email">ኢሜይል: %s</string>
+  <string name="developer_privacy_policy">የግል መመሪያ: %s</string>
+  <string name="open">መክፈት</string>
+  <string name="button_header_more">ተጨማሪ</string>
+  <string name="search">መፈልግ</string>
+  <string name="update">ማሻሻል</string>
+  <string name="uninstall">አልተጫነም</string>
+  <string name="downgrade">ወደ ታች ማውረድ</string>
+  <string name="appview_followers_count_text">%1$s ተከታዮች</string>
+  <string name="other_versions_downloads_count_text">%1$s ማውረድ</string>
   <!-- Common (menu) -->
-  <string name="menu_select_all">انتخاب همه</string>
-  <string name="menu_select_none">لغو انتخاب</string>
-  <string name="clear">پاک کردن</string>
+  <string name="menu_select_all">ሁሉን መምረጥ</string>
+  <string name="menu_select_none">ምንም አለመምረጥ</string>
+  <string name="clear">ግልጽ</string>
   <!-- Excluded Updates Fragment -->
-  <string name="excluded_updates">به‌روزرسانی‌های کنار گذاشته شده</string>
-  <string name="no_excluded_updates_msg">نسخه جدید اپ روی دستگاه شما کار نمی‌کند یا برخی از قسمت‌های
-    آن نشان داده نمی‌شود؟ به‌روز‌رسانی برنامه را متوقف کنید. به قسمت به‌روزرسانی‌ها رفته و
-    بر روی برنامه‌ای که می‌خواهید به‌روزرسانی آن را متوقف کنید،
-    کلیک کنید.
-  </string>
+  <string name="excluded_updates">መሻሻያዎችን አያካትትም</string>
+  <string name="no_excluded_updates_msg">አዲሱ ኤፒፒ  በመሣሪያዎ ላይ አይሰራም ወይም ጥቂት ባህሪያት ጠፍተዋል? ኤፒፒ እንዳይሻሻል ታግዶል. ማሻሻል የሚለውን  ለረዝም ደቂቃ በመጫን ኤፒፒ ማሻሻሉን ማቋረጥ ይፈልጋሉ.</string>
   <!-- Excluded Updates Fragment (menu) -->
-  <string name="restore_updates">بازیابی به‌روزرسانی‌ها</string>
-  <string name="open_apps_manager">باز کردن Apps Manager</string>
+  <string name="restore_updates">ለውጦችን ወደነበሩበት ይመልሱ</string>
+  <string name="open_apps_manager">ኤፒፒ ማኔጀሩን መክፈት</string>
   <!-- Rollback Fragment -->
-  <string name="rollback">بازگرداندن</string>
-  <string name="no_rollbacks_msg">با نگه داشتن تاریخچه نصب برنامه‌ها، می‌توانید مشکل ناهم‌خوانی
-    برنامه با گوشی را با بازگرداندن برنامه (با %s)
-    به نسخه‌های پایین‌تر برطرف کنید.
-  </string>
+  <string name="rollback">መልሶ መመለስ</string>
+  <string name="no_rollbacks_msg">ማንኛዉንም ከዜህ በፊት የነበረዉ የኤፒፒ ስሪትን ማዉረድ እና የማይመሳሰሉትን  ይፍቱ. ሁሉንም የተጫኑ  ኤፒፒ (via%s) በመያዝ የስሪቱን ግዜ ከቀኑ ጋር ይጫኑ.</string>
   <!-- Timeline Fragment -->
-  <string name="menu_card_timeline_clear">پاک کردن</string>
-  <string name="fragment_social_timeline_aptoide_team">تیم اَپ‌توید</string>
-  <string name="fragment_social_timeline_no_connection">به اینترنت متصل نیستید</string>
-  <string name="fragment_social_timeline_general_error">مشکلی پیش آمده است. آیا می توانید بعدا
-    دوباره سعی کنید؟
-  </string>
-  <string name="displayable_social_timeline_store_latest_apps_headline">برنامه‌های جدیدی به این
-    فروشگاه اضافه شده است
-  </string>
-  <string name="displayable_social_timeline_app_update_name">برنامه %1$s</string>
-  <string name="displayable_social_timeline_app_has_update">%1$s دارد</string>
-  <string name="displayable_social_timeline_article_get_app_button">دریافت برنامه %1$s</string>
-  <string name="displayable_social_timeline_app_update">به‌روزرسانی</string>
-  <string name="displayable_social_timeline_app_update_version">نسخه %1$s</string>
-  <string name="displayable_social_timeline_app_update_button">به‌روزرسانی %1$s</string>
-  <string name="appview_other_versions">
-    <u>دیگر نسخه‌ها</u>
-  </string>
-  <string name="appview_latest_version_text">آخرین نسخه</string>
-  <string name="appview_rate_this_app">به این برنامه امتیاز دهید</string>
-  <string name="appview_read_all">مطالعه همه <![CDATA[>]]>;</string>
-  <string name="zero">۰</string>
-  <string name="working_well">به درستی کار می‌کند</string>
-  <string name="needs_license">نیاز به مجوز دارد</string>
-  <string name="fake_app">اپ جعلی</string>
-  <string name="virus">ویروس</string>
-  <string name="additional_information">اطلاعات تکمیلی</string>
-  <string name="displayable_social_timeline_app_update_updated">به‌روزرسانی شده</string>
-  <string name="displayable_social_timeline_app_update_updating">در حال به‌روزرسانی</string>
-  <string name="displayable_social_timeline_app_update_error">خطا در به‌روزرسانی</string>
+  <string name="menu_card_timeline_clear">ግልጽ</string>
+  <string name="fragment_social_timeline_aptoide_team">የአፕቶይድ ቡድን</string>
+  <string name="fragment_social_timeline_no_connection">ኔት-ወርክ የለም</string>
+  <string name="fragment_social_timeline_general_error">የተወሰነ ችግር ተፈጥሮል. በኃላ ላይ ሊሞክሩት ይችላሉ?</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">ይህ ማከማቻ አዲስ ኤፒፒ ይዟል</string>
+  <string name="displayable_social_timeline_app_update_name">ኤፒፒ %1$s</string>
+  <string name="displayable_social_timeline_app_has_update">has an %1$s</string>
+  <string name="displayable_social_timeline_article_get_app_button">ያግኙ ኤፒፒ %1$s</string>
+  <string name="displayable_social_timeline_app_update">ማሻሻል</string>
+  <string name="displayable_social_timeline_app_update_version">ስሪት %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">ማሻሻል %1$s</string>
+  <string name="appview_other_versions"><u>ሌላ ስሪት</u></string>
+  <string name="appview_latest_version_text">የቅርብ ጊዜ ስሪት</string>
+  <string name="appview_rate_this_app">የኤፒፒ ደረጃ</string>
+  <string name="appview_read_all">ሁሉንም ማንበብ <![CDATA[>]]></string>
+  <string name="zero">ኦ</string>
+  <string name="working_well">በትክክል በመስራት ላይ ነዉ</string>
+  <string name="needs_license">ፍቃድ መፈልግ</string>
+  <string name="fake_app">የተሳሳተ ኤፒፒ</string>
+  <string name="virus">ቫይረስ</string>
+  <string name="additional_information">ተጨማሪ መረጃ</string>
+  <string name="displayable_social_timeline_app_update_updated">ተሻሽሏል</string>
+  <string name="displayable_social_timeline_app_update_updating">እየተሻሻለ ነው</string>
+  <string name="displayable_social_timeline_app_update_error">እየተሻሻለ ስህተት ተፈጥሯል</string>
   <!-- need translation -->
-  <string name="appview_good_app_guaranteed">از سلامت برنامه مطمئن باشید!</string>
-  <string name="appview_good_app_description">این برنامه تست‌های امنیتی را گذرانده است و هیچ
-    ویروس و بدافزاری ندارد!
-  </string>
+  <string name="appview_good_app_guaranteed">ዋስትና ያለዉ ጥሩ ኤፒፒ!</string>
+  <string name="appview_good_app_description">ይህ አፕሊኬሽን ከቫይረስ, ማልዌር እና ሌሎች ማልሽያዎችን የደህንነት ሙከራ አልፋል ምንም እይነት ችግሮች አልታዩበትም!</string>
   <!-- -->
   <!-- Preferences -->
   <!-- "Other <app name> versions on different Stores" -->
-  <string name="other_versions_partial_title_1">سایر</string>
-  <string name="other_versions_partial_title_2">نسخه‌های موجود در سایر فروشگاه‌ها</string>
-  <string name="displayable_social_timeline_recommendation_similar_to">مشابه %1$s</string>
-  <string name="displayable_social_timeline_recommendation_similar_and">و</string>
-  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s توصیه
-    می‌کند
-  </string>
-  <string name="social_facebook_screen_title">فیسبوک</string>
-  <string name="social_twitter_screen_title">تويتر</string>
-  <string name="top_comments">نظرهای برگزیده</string>
-  <string name="rate">امتیاز</string>
-  <string name="rate_app">امتیاز %s</string>
-  <string name="title">عنوان</string>
-  <string name="tap_a_star">با کلیک برروی ستاره‌ها امتیاز دهید</string>
+  <string name="other_versions_partial_title_1">ሌላ</string>
+  <string name="other_versions_partial_title_2">ሌላኛው ስሪት በተለየ ማከማቻ ላይ ነዉ</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">የተመሰረተ %1$s</string>
+  <string name="displayable_social_timeline_recommendation_similar_and">እና</string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s ይመክራል</string>
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">ዋና አስተያየት</string>
+  <string name="rate">ደረጃ</string>
+  <string name="rate_app">ደረጃ %s</string>
+  <string name="title">ርእስ</string>
+  <string name="tap_a_star">ደረጃ ለመስጠት አንድ ኮከብ መታ ያድርጉ</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
-  <string name="other_versions_on_different_stores">نسخه‌های دیگر در فروشگاه‌های دیگر</string>
-  <string name="review_optional">نقد و بررسی (اختیاری)</string>
-  <string name="feedback_not_valid">نظر شما باید دارای عنوان باشد!</string>
-  <string name="thank_you_for_your_opinion">تشکر!</string>
-  <string name="ignore_update">نادیده گرفتن به‌روز‌رسانی</string>
-  <string name="five_numeric">۵</string>
-  <string name="four_numeric">۴</string>
-  <string name="three_numeric">۳</string>
-  <string name="two_numeric">۲</string>
-  <string name="one_numeric">۱</string>
-  <string name="just_reviews">فقط نقد و بررسی‌ها</string>
-  <string name="downgrading_msg">در حال بازگشت به نسخه قدیمی‌تر</string>
-  <string name="updating_msg">در حال به‌روزرسانی</string>
-  <string name="installing_msg">در حال نصب</string>
-  <string name="needs_permission_to_fs">برای استفاده از File System نیاز به اجازه شما داریم</string>
-  <string name="added_to_scheduled">به «منو&gt; دانلودهای زمان‌بندی شده» اضافه شد</string>
-  <string name="pause_all_downloads">توقف دانلودها</string>
-  <string name="all_stores">تمام فروشگاه‌ها</string>
-  <string name="followed_stores">فروشگاه‌های دنبال شده</string>
-  <string name="storage_access_permission_request_message">برای دانلود و نصب این برنامه لازم است به
-    اَپ‌توید اجازه دسترسی به حافظه گوشی‌تان را دهید.
-  </string>
-  <string name="remote_install_menu_title">نصب روی تلویزیون</string>
-  <string name="install_on_tv_mobile_error">برای استفاده از این امکان، از اتصال گوشی خود به اینترنت
-    مطمئن شوید.
-  </string>
-  <string name="remote_install_title">دستگاه مورد نظرتان را انتخاب کنید</string>
-  <string name="remote_install_success">این برنامه در حال نصب شدن است</string>
-  <string name="remote_install_fail">نصب با خطا مواجه شد</string>
-  <string name="remote_install_nodevices">دستگاهی پیدا نشد</string>
-  <string name="remote_install_notinstallated">آیا اپ‌توید را روی تلویزیون خود نصب کرده‌اید؟
-    http://aptoi.de/tv
-  </string>
-  <string name="remote_install_nowifi">اتصال وای‌فای قطع است</string>
-  <string name="remote_install_nowifi_tip">به وای‌فای متصل شوید</string>
-  <string name="remote_install_empty_list">در حال جست‌وجو…</string>
-  <string name="remote_install_tip">از اتصال تلویزیون اندرویدی خود به وای‌فای مطمئن شوید</string>
-  <string name="remote_install_retry">تلاش مجدد</string>
-  <string name="remote_install_help">کمک</string>
+  <string name="other_versions_on_different_stores">ሌላኛው ቅጂ በተለየ ማከማቻ ላይ ነዉ</string>
+  <string name="review_optional">ግምገማ (አማራጭ)</string>
+  <string name="feedback_not_valid">እባክዎ ልክ የሆነ ጉዳይ ያስገቡ!</string>
+  <string name="thank_you_for_your_opinion">ስለአመለካከትዎ አመሰግናለሁ!</string>
+  <string name="ignore_update">ማደሱን ይርሱት</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">ክለሳ ብቻ</string>
+  <string name="downgrading_msg">ስሪት ማውረድ</string>
+  <string name="updating_msg">እየተሻሻለ ነው</string>
+  <string name="installing_msg">እየተጫነ ነው</string>
+  <string name="needs_permission_to_fs">ውጪያዊ የሆነ የፋይል አሰራር ለመጠቀም ፈቃድ ያስፈልጋል</string>
+  <string name="added_to_scheduled">ሜኑ ላይ ጨምሮል &gt; በተራ አውርዶል</string>
+  <string name="pause_all_downloads">ማዉረዱን አቆመ</string>
+  <string name="all_stores">ሁሉም ማከማቻ</string>
+  <string name="followed_stores">ማከማቻውን ይከተሉ</string>
+  <string name="storage_access_permission_request_message">እባክዎ ስልክዎ ማከማቻ እንዲኖረው ይፍቀድ እንዲህ በማድረግ ኤፒፒ ማውረድ እና መጫን ይችላሉ.</string>
+  <string name="remote_install_menu_title">ቲቪው ላይ መጫን</string>
+  <string name="install_on_tv_mobile_error">መሳሪያዎ ከዋይፋይ ጋር መገናኘቱን እርግጠኛ ይሁኑ ይህን ገፅ ለመጠቀም.</string>
+  <string name="remote_install_title">ዋነኛ መሣሪያ ይምረጡ</string>
+  <string name="remote_install_success">ኤፒፒው አሁን እየተጫነ ነው</string>
+  <string name="remote_install_fail">በርቀት መጫኑ አልተሳካም</string>
+  <string name="remote_install_nodevices">ምንም መሳሪያ አልተገኘም</string>
+  <string name="remote_install_notinstallated">በእርስዎ Android ቴሌቪዥን ላይ Aptoid ቴሌቪዥን ተጭኗል?\n http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">የዋይፋይ ግንኙነት የለም</string>
+  <string name="remote_install_nowifi_tip">እባክዎ የዋይፋይ ግንኙነት እንዲኖር እና እንዲገናኝ ያስችሉ</string>
+  <string name="remote_install_empty_list">በፍለጋ ላይ ነዉ…</string>
+  <string name="remote_install_tip">እባክዎ ከኔትዎርክ ጋር የተገናኘ አንድሮይድ ቲቪ መኖሩን እርግጠኛ ይሁኑ</string>
+  <string name="remote_install_retry">ደግመው ይሞክሩ</string>
+  <string name="remote_install_help">እርዳታ</string>
   <!-- WIZARD -->
-  <string name="wizard_skip">
-    <b>رد کردن</b>
-  </string>
+  <string name="wizard_skip"><b>ይዝለሉት</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_welcome_message">خوش آمدید</string>
-  <string name="wizard_sub_title_viewpager_one">سفری <b>امن</b> و <b>لذت‌بخش</b> را شروع کنید
-  </string>
-  <string name="wizard_description_part_one_viewpager_one">تیک سبز کنار اپ نشانه سلامت و امنیت
-    برنامه است
-  </string>
-  <string name="wizard_description_part_two_viewpager_one">اپ‌هایی را که همیشه به دنبالشان می‌گشتید
-    در این‌جا به آسانی دانلود کنید
-  </string>
+  <string name="wizard_welcome_message"><b>እንኳን ደህና መጡ!</b></string>
+  <string name="wizard_sub_title_viewpager_one">ጀምር<b>ደህንነት</b> እና<b>አስደሳች</b>ጉዞ.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>መፈለግ</b>ኤፒፒዎች\nየሚታመን ባጅ ለ\n ደህንነቱ የተጠበቀ መጫኛ.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>ፈልግ</b>ኤፒፒ\nየሚፈልጉት, ግን\nፈጽሞ አልተገኘም.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">تایم‌لاین اپ‌ها
-  </string>
-  <string name="wizard_sub_title_viewpager_two">جدیدترین برنامه‌ها را دانلود ‌کنید، فروشگاه‌های
-    موضوعی را دنبال کنید و محتوای اختصاصی خود را دریافت کنید
-  </string>
+  <string name="wizard_title_viewpager_two"><b>ኤፒፒ ገፅ</b></string>
+  <string name="wizard_sub_title_viewpager_two">አግኝ <b>የቅርብ ጊዜ ኤፒፒ</b>, ፈልግ <b>ተያያዥነት ያላቸው ማከማቻዎች</b>\nእና በማየት<b>ግላዊነት የተላበሰ ይዘት.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">به جمع اَپ‌تویدی‌ها بپیوندید</string>
-  <string name="wizard_description_part_one_viewpager_three">دوستان خود را دنبال کنید</string>
-  <string name="wizard_description_part_two_viewpager_three">نقد و بررسی بنویسید و به برنامه‌ها
-    امتیاز بدهید
-  </string>
-  <string name="wizard_description_part_three_viewpager_three">فروشگاه خود را
-    <b>بسازید</b>
-  </string>
-  <string name="wizard_register_now_button">ثبت‌نام کنید</string>
-  <string name="wizard_be_a_part_of_aptoide">عضوی از خانواده اَپ‌توید باشید</string>
-  <string name="wizard_or_login">یا وارد شوید</string>
-  <string name="you_need_to_be_logged_in">باید وارد شوید</string>
-  <string name="follow">دنبال کردن</string>
+  <string name="wizard_title_viewpager_three"><b>ማህበረሰቡን ይቀላቀሉ</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>ይከተሉ</b>ጓደኞችዎ</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>ግምገማ</b> እና የኤፒፒ ደረጃን ይስጡ</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>መፍጠር</b> ማከማቻዎን</string>
+  <string name="wizard_register_now_button">አሁን ይመዝገቡ</string>
+  <string name="wizard_be_a_part_of_aptoide">የአፕቶይድ አካል!</string>
+  <string name="wizard_or_login"><u>ወይም መግቢያ</u></string>
+  <string name="you_need_to_be_logged_in">መግባት ያስፈልግዎታል</string>
+  <string name="follow">መከተል</string>
   <!--need translation-->
-  <string name="followed">دنبال می‌کنید</string>
-  <string name="unfollow_yes_no">تصمیم‌تان برای دنبال نکردن قطعی است؟</string>
-  <string name="unfollow">دنبال نکردن</string>
-  <string name="appview_follow_store_button_text">دنبال می‌کنید؟</string>
-  <string name="unfollowing_store_message">دنبال نکردن %s</string>
-  <string name="store_followed">فروشگاه %s دنبال شده است</string>
-  <string name="subscribers">مشترک‌ها</string>
-  <string name="apps">اپلیکیشن‌ها</string>
+  <string name="followed">በመከተል ላይ</string>
+  <string name="unfollow_yes_no">እርግጠኛ ነዎት አለመከተል ይፈልጋሉ?</string>
+  <string name="unfollow">አለመከተል</string>
+  <string name="appview_follow_store_button_text">መከተል?</string>
+  <string name="unfollowing_store_message">አለመከተል %s</string>
+  <string name="store_followed">ማከማቻ %s ተከትሏል</string>
+  <string name="subscribers">የተመዘገቡ</string>
+  <string name="apps">ኤፒፒ</string>
   <!---->
-  <string name="be_the_first_to_rate_this_app">اولین نفری باشید که امتیاز می‌دهید</string>
-  <string name="rate_this_app">به این اپ امتیاز دهید</string>
-  <string name="dialog_install_warning_proceed_button">پیش رفتن</string>
-  <string name="dialog_install_warning_search_for_trusted_app_button">جست‌و‌جو</string>
-  <string name="dialog_install_warning_trusted_app_button">برنامه مورد اعتماد</string>
-  <string name="dialog_install_warning_careful_text">در نصب این برنامه محتاط باشید. ممکن است شامل
-    ویروس یا بدافزار باشد.
-  </string>
-  <string name="dialog_install_warning_credibility_text">ابتدا اعتبار فروشگاه و
-    نظرهای مشترکان را بررسی کنید. توصیه اَپ‌توید نصب برنامه‌های مورد %1$s اعتماد است.
-  </string>
-  <string name="dialog_install_warning_trusted_version_button">نسخه قابل اعتماد</string>
-  <string name="dialog_install_warning_get_trusted_version_button">گرفتن</string>
-  <string name="flag_results">نتایج نشان‌گذاری</string>
-  <string name="helpful">حال کردم</string>
-  <string name="not_helpful">خوب نبود</string>
-  <string name="description_not_available">توضیحی برای این برنامه وارد نشده است</string>
-  <string name="top_stores_fragment_title">بهترین فروشگاه‌ها</string>
+  <string name="be_the_first_to_rate_this_app">ለኤፒፒው ደረጃ ለመስጠት ቀዳሚ ይሁኑ</string>
+  <string name="rate_this_app">ይህንን ኤፒፒ ደረጃ ይስጡ</string>
+  <string name="dialog_install_warning_proceed_button">ቀጥል</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">ለመፈለግ</string>
+  <string name="dialog_install_warning_trusted_app_button">የሚታመን ኤፒፒ</string>
+  <string name="dialog_install_warning_careful_text">ይህንን ኤፒፒ ለመጫን ምርጫዎ ካደረጉ ይጠንቀቁ. ምናልባትም በቫይረስ ወይም በማልዌር የተጠቃ ሊሆን ይችላል.</string>
+  <string name="dialog_install_warning_credibility_text">ከመቀጠልዎ በፊት ማከማቻዎ ታማኝ መሆኑንና ሌሎች አስተያየቶችን ይመልከቱ. አፕቶይድ ሁልጊዜ የሚታመን %1$s ኤፒፒ እንዲጭኑ ይመከራል.</string>
+  <string name="dialog_install_warning_trusted_version_button">የሚታመን ስሪት</string>
+  <string name="dialog_install_warning_get_trusted_version_button">ማግኘት</string>
+  <string name="flag_results">የሰንደቅ ዓላማ ውጤቶች</string>
+  <string name="helpful">ጠቃሚ</string>
+  <string name="not_helpful">የማይጠቅም</string>
+  <string name="description_not_available">ለዚህ ኤፒፒ ምንም አይነት ገለፃ የለም</string>
+  <string name="top_stores_fragment_title">ዋና ማከማቻ</string>
   <!--server translations hammered-->
-  <string name="home_title">خانه</string>
-  <string name="community">حلقه</string>
-  <string name="stores">فروشگاه‌ها</string>
-  <string name="updates">به‌روزرسانی‌ها</string>
-  <string name="social_timeline">تایم‌لاین</string>
-  <string name="downloads">دانلودها</string>
-  <string name="apps_timeline">
-    <b>تایم‌لاین اپ‌ها</b>
-  </string>
-  <string name="latest_reviews">جدیدترین نقد و بررسی‌ها</string>
-  <string name="latest_comments">جدیدترین نظرها</string>
-  <string name="action">اکشن</string>
-  <string name="adventure">ماجرایی</string>
-  <string name="all">همه</string>
-  <string name="applications">برنامه‌ها</string>
-  <string name="arcade">امتیازی</string>
-  <string name="arcade_action">اکشن و امتیازی</string>
-  <string name="board">تخته‌ای</string>
-  <string name="books_reference">کتاب‌ها و منابع</string>
-  <string name="brain_puzzle">فکری و معمایی</string>
-  <string name="business">کسب و کار</string>
-  <string name="card">کارتی</string>
-  <string name="cards_casino">کارتی و کازینو</string>
-  <string name="casino">كازينو</string>
-  <string name="casual">تفننی</string>
-  <string name="comics">کمیک</string>
-  <string name="communication">پیام‌رسان‌ها‫ و برنامه‌های ارتباطی</string>
-  <string name="demo">دمو</string>
-  <string name="education">آموزش</string>
-  <string name="educational">آموزشی</string>
-  <string name="entertainment">سرگرمی</string>
-  <string name="family">خانوادگی</string>
-  <string name="finance">امور مالی</string>
-  <string name="games">بازی‌ها</string>
-  <string name="health">سلامت</string>
-  <string name="health_fitness">سلامت و تندرستی</string>
-  <string name="highlighted">پیشنهاد ما</string>
-  <string name="local_top_apps">برنامه‌های برگزیده</string>
-  <string name="lifestyle">سبک زندگی</string>
-  <string name="media_video">ویدئو و رسانه</string>
-  <string name="medical">دارو و درمان</string>
-  <string name="multimedia">چندرسانه‌ای</string>
-  <string name="music">موسیقایی</string>
-  <string name="music_audio">صوت و موسیقی</string>
-  <string name="news_magazines">خبرها و نشریه‌ها</string>
-  <string name="news_weather">اخبار و هواشناسی</string>
-  <string name="personalization">شخصی‌سازی و تصاویر زنده</string>
-  <string name="photography">عکاسی</string>
-  <string name="productivity">کاربردی</string>
-  <string name="puzzle">معمایی</string>
-  <string name="racing">ماشین‌سواری</string>
-  <string name="reference">مراجع</string>
-  <string name="role_playing">نقش‌آفرینی</string>
-  <string name="simulation">شبیه‌سازی</string>
-  <string name="social">شبکه‌های اجتماعی</string>
-  <string name="software_libraries">نرم‌افزارها</string>
-  <string name="sports">ورزشی</string>
-  <string name="sports_games">بازی‌های ورزشی</string>
-  <string name="strategy">استراتژی</string>
-  <string name="themes">تِم‌ها و تصایر پس‌زمینه</string>
-  <string name="tools">ابزارها</string>
-  <string name="top_apps">برنامه‌های برگزیده</string>
-  <string name="top_games">بازی‌های برگزیده</string>
-  <string name="transport">حمل و نقل</string>
-  <string name="transportation">رفت و آمد</string>
-  <string name="travel">سفر</string>
-  <string name="travel_local">سیر و سفر</string>
-  <string name="trending">برنامه‌های در حال پیشرفت</string>
-  <string name="trivia">دانستنی‌ها</string>
-  <string name="word">کلمات</string>
-  <string name="libraries_demo">دمو و منابع نرم‌افزاری</string>
-  <string name="shopping">خرید</string>
-  <string name="weather">آب و هوا</string>
-  <string name="latest_applications">جدیدترین برنامه‌ها</string>
-  <string name="top_apps_in_store">برنامه‌های برگزیده‌ی این فروشگاه</string>
-  <string name="apps_for_kids">برنامه‌های ویژه کودکان</string>
-  <string name="aptoide_publishers">%s ناشرها</string>
-  <string name="music_video">موسیقی و ویدئو</string>
-  <string name="essential_apps">برنامه‌های ضروری</string>
-  <string name="summer_apps">برنامه‌های تابستانی</string>
-  <string name="play_it">بازی کنید!</string>
+  <string name="home_title">ቤት</string>
+  <string name="community">ማህበረሰብ</string>
+  <string name="stores">ማከማቻ</string>
+  <string name="updates">የሚሻሻሉ</string>
+  <string name="social_timeline">ማህበራዊ ገፆች</string>
+  <string name="downloads">በመጫን ላይ</string>
+  <string name="apps_timeline"><b>ኤፒፒ ገፅ</b></string>
+  <string name="latest_reviews">የቅርብ ጊዜ ክለሳዎች</string>
+  <string name="latest_comments">የቅርብ ጊዜ አስተያየቶች</string>
+  <string name="action">ድርጊት</string>
+  <string name="adventure">ጀብድ</string>
+  <string name="all">ሁሉም</string>
+  <string name="applications">አፕልኬሽኖች</string>
+  <string name="arcade">Arcade</string>
+  <string name="arcade_action">Arcade &amp; ድርጊት</string>
+  <string name="board">ቦርድ</string>
+  <string name="books_reference">መጽሐፍቶች &amp; ማጣቀሻ</string>
+  <string name="brain_puzzle">አእምሮ &amp; እንቆቅልሽ</string>
+  <string name="business">ንግድ</string>
+  <string name="card">ካርድ</string>
+  <string name="cards_casino">ካርድ &amp; ቁማር</string>
+  <string name="casino">ቁማር</string>
+  <string name="casual">ድንገተኛ</string>
+  <string name="comics">አስቂኞች</string>
+  <string name="communication">ግንኙነት</string>
+  <string name="demo">ማሳያ</string>
+  <string name="education">ትምህርት</string>
+  <string name="educational">ትምህርታዊ</string>
+  <string name="entertainment">መዝናኛ</string>
+  <string name="family">ቤተሰብ</string>
+  <string name="finance">ፋይናንስ</string>
+  <string name="games">ጨዋታ</string>
+  <string name="health">ጤና</string>
+  <string name="health_fitness">ጤና &amp; አካል ብቃት</string>
+  <string name="highlighted">የደመቀ</string>
+  <string name="local_top_apps">አካባቢያዊ ከፍተኛ ኤፒፒ</string>
+  <string name="lifestyle">የአኗኗር ሁኔታ</string>
+  <string name="media_video">ሚዲያ &amp; ቪዲዮ</string>
+  <string name="medical">ሕክምና</string>
+  <string name="multimedia">መገናኛ ብዙሀን</string>
+  <string name="music">ሙዚቃ</string>
+  <string name="music_audio">ሙዚቃ &amp; ድምፅ</string>
+  <string name="news_magazines">ዜናዎች &amp; መፅሄቶች</string>
+  <string name="news_weather">ዜናዎች&amp; የዓየር ጠባይ</string>
+  <string name="personalization">የግል ጉዳይ</string>
+  <string name="photography">ፎቶግራፍ</string>
+  <string name="productivity">ምርታማነት</string>
+  <string name="puzzle">እንቆቅልሽ</string>
+  <string name="racing">ውድድር</string>
+  <string name="reference">ማጣቀሻ</string>
+  <string name="role_playing">እየተጫወተ ያለው ሚና</string>
+  <string name="simulation">ማስመሰል</string>
+  <string name="social">ማህበራዊ</string>
+  <string name="software_libraries">ሶፍትዌር ላይብራሪዎች</string>
+  <string name="sports">ስፖርት</string>
+  <string name="sports_games">የስፖርት ጨዋታዎች</string>
+  <string name="strategy">ስልት</string>
+  <string name="themes">ገፅታዎች</string>
+  <string name="tools">መሳሪያ</string>
+  <string name="top_apps">ከፍተኛ ኤፒፒ</string>
+  <string name="top_games">ምርጥ ጨዋታዎች</string>
+  <string name="transport">መጓጓዣ</string>
+  <string name="transportation">ትራንስፖርት</string>
+  <string name="travel">ጉዞ</string>
+  <string name="travel_local">ጉዞ &amp; የአካባቢው</string>
+  <string name="trending">በመታየት ላይ ያሉ</string>
+  <string name="trivia">ትሪቪያ</string>
+  <string name="word">ቃል</string>
+  <string name="libraries_demo">ላይብረሪ &amp; ማሳያ</string>
+  <string name="shopping">ግብይት</string>
+  <string name="weather">የአየር ሁኔታ</string>
+  <string name="latest_applications">የቅርብ ጊዜ ኤፒፒ</string>
+  <string name="top_apps_in_store">በዚህ ማከማቻ ውስጥ ዋና ኤፒፒ አለ</string>
+  <string name="apps_for_kids">ኤፒፒ ለህፃናት</string>
+  <string name="aptoide_publishers">%s አታሚዎች</string>
+  <string name="music_video">ሙዚቃ &amp; ቪዲዮ</string>
+  <string name="essential_apps">አስፈላጊ ኤፒፒ</string>
+  <string name="summer_apps">የበጋ ኤፒፒ</string>
+  <string name="play_it">አጫውተው!</string>
   <!--AppsTimeline new string-->
-  <string name="displayable_social_timeline_article_related_to">مربوط به %1$s</string>
-  <string name="appstimeline_update_app">برنامه</string>
+  <string name="displayable_social_timeline_article_related_to">የተዛመደ %1$s</string>
+  <string name="appstimeline_update_app">ኤፒፒ</string>
   <!--custom tabs-->
-  <string name="customtabs_open_native_app">باز کردن درون اپ</string>
+  <string name="customtabs_open_native_app">በኤፒፒ ክፈት</string>
   <!--Download fragment-->
-  <string name="fragment_download_no_connection">هیچ برنامه‌ای دانلود نشده است</string>
-  <string name="fragment_download_no_connection_subtitle">برنامه‌های جدید به محض شروعِ دانلود در
-    اینجا می‌آیند!
-  </string>
-  <string name="newer_version_available">دیدن نسخه‌های جدیدتر</string>
-  <string name="add_store">اضافه کردن فروشگاه</string>
-  <string name="downgrade_warning_dialog">با بازگشت به نسخه قدیمی‌تر، ممکن است اطلاعات شما پاک شود و
-    از حساب کاربری‌تان هم خارج شوید.
-  </string>
-  <string name="displayable_social_timeline_similar_to">مشابه %1$s</string>
-  <string name="freed_space">%s فضا آزاد شد</string>
-  <string name="storage_dialog_title">پاک کردن حافظه اَپ‌توید</string>
-  <string name="clear_cache_dialog_message">آیا می‌خواهید همه اطلاعات مانند آیکون‌ها، تصاویر،
-    فایل‌ها و… را پاک کنید
-  </string>
-  <string name="clear_cache_summary">پاک کردن آیکون‌ها، تصاویر، فایل‌ها و …</string>
-  <string name="clearcache_title">پاک کردن حافظه</string>
+  <string name="fragment_download_no_connection">ምንም የወረደ ኤፒፒ የለም</string>
+  <string name="fragment_download_no_connection_subtitle">አዲስ ኤፒፒ ልክ ማውረድ እንደጀመሩ እዚህ ይታያል!</string>
+  <string name="newer_version_available">አዲስ ስሪት ይገኛል</string>
+  <string name="add_store">ማከማቻ ጨምር</string>
+  <string name="downgrade_warning_dialog">በማውረድ ላይ እያሉ ኤፒፒ ጋር የተዛመድ ዳታ ሊያጡ ይችላሉ እናም ከኤፒፒ አካውንትዎ ሊወጡ ይችላሉ.</string>
+  <string name="displayable_social_timeline_similar_to">ተመሳሳይ %1$s</string>
+  <string name="freed_space">%s ነፃ</string>
+  <string name="storage_dialog_title">የአፕቶይድ ማከማቻውን ማፅዳት</string>
+  <string name="clear_cache_dialog_message">እርግጠኛ ኖዎት ሁሉንም አይከኖች, የሚወርደውን apk, obbs, webservice ዳታውን ማጥፋት ይፈልጋሉ,…</string>
+  <string name="clear_cache_summary">መለያዎችን ማጥፋት, ምስሎችን, apk ማውረድ, obb, webservice data,…</string>
+  <string name="clearcache_title">ማከማቻወን ማፅዳት</string>
   <!-- Stores tab -->
-  <string name="recommended_stores">فروشگاه‌های پیشنهادی</string>
-  <string name="create_store_displayable_message">فروشگاه‌ خود را بسازید و اپ‌های مورد علاقه‌تان را
-    به اشتراک بگذارید!
-  </string>
-  <string name="create_store_displayable_button">ساخت فروشگاه</string>
-  <string name="my_store_created_displayable_message">فروشگاه اندرویدی شما</string>
-  <string name="create_store_displayable_created_store_message">فروشگاه خودتان را هم اکنون ساختید!
-  </string>
-  <string name="create_store_displayable_explore_message">به دنیای اَپ‌توید قدم بگذارید</string>
-  <string name="create_store_displayable_explore_button">گشت و گذار</string>
+  <string name="recommended_stores">የሚመከር ማከማቻ</string>
+  <string name="create_store_displayable_message">ማከማቻዎን ይፍጠሩ እና የእርስዎን ኤፒፒ ማጋራት ይጀምሩ!</string>
+  <string name="create_store_displayable_button">ማከማቻ መፍጠር</string>
+  <string name="my_store_created_displayable_message">የእርስዎ የአንድሮይድ ኤፒፒ ማከማቻ</string>
+  <string name="create_store_displayable_created_store_message">አሁን ማከማቻዎን ፈጥረዋል!</string>
+  <string name="create_store_displayable_explore_message">ሁሉንም አማራጮች አስገባ እና አስስ</string>
+  <string name="create_store_displayable_explore_button">ማሰስ</string>
   <!-- stores tab > my store with no apps -->
-  <string name="install_app_outter_pt1">هنوز برنامه‌ای در فروشگاه شما قرار نگرفته است.</string>
-  <string name="install_app_outter_pt2">با بارگذاری برنامه‌ها آن‌ها را با دیگران به اشتراک
-    بگذارید!
-  </string>
-  <string name="install_app_inner">%1$s نصب</string>
-  <string name="open_app_inner">باز کردن %1$s</string>
-  <string name="downloads_count">دانلودها: %1$s</string>
-  <string name="version_number">نسخه: %1$s</string>
-  <string name="app_size">حجم: %1$s</string>
-  <string name="comment_on_store">درباره فروشگاه %1$s نظر بدهید</string>
-  <string name="word_this">این</string>
+  <string name="install_app_outter_pt1">የእርስዎ ማከማቻ ገና አፕልኬሽን የለውም.</string>
+  <string name="install_app_outter_pt2">እና ከአለም ጋር ለመጋራት ኤፒፒ ያስገቡ!</string>
+  <string name="install_app_inner">\u0020 መጫን %1$s\u0020</string>
+  <string name="open_app_inner">\u0020 መክፈት %1$s\u0020</string>
+  <string name="downloads_count">ማውረድ: %1$s</string>
+  <string name="version_number">ስሪት: %1$s</string>
+  <string name="app_size">መጠን: %1$s</string>
+  <string name="comment_on_store">አስተየት %1$s ማከማቻ</string>
+  <string name="word_this">ይህ</string>
   <!-- social apps timeline -->
-  <string name="social_timeline_you_will_share">چیزی که دنبال‌کننده‌هایتان می‌بینند:</string>
-  <string name="social_timeline_share_title">اشتراک‌گذاریِ پیش‌نمایش</string>
-  <string name="social_timeline_share_title_checkbox">پروفایل من در تایم‌لاین اَپ‌توید را خصوصی کن و
-    تنها اطلاعات فروشگاهم را نشان بده.
-  </string>
-  <string name="social_timeline_share_title_checkbox_fb">پروفایل کاربری من را در تایم‌لاین اَپ‌توید
-    عمومی کن
-  </string>
-  <string name="social_timeline_share_dialog_title">خدا قوت قهرمان!</string>
-  <string name="social_timeline_share_dialog_opt_in_text_1">دوستان‌تان می‌توانند شما را پیدا و دنبال
-    کنند.
-  </string>
-  <string name="social_timeline_share_dialog_opt_in_text_2">اگر می‌خواهید پروفایل‌تان در تایم‌لاین
-    خصوصی باشد، تنظیمات حساب خود را در &lt;b&gt;www.aptoide.com&lt;b&gt; تغییر دهید.<b>
-      www.aptoide.com</b>.
-  </string>
-  <string name="social_timeline_share_dialog_opt_out_text_1">با مخفی کردن پروفایل خود، دیگر کسی
-    نمی‌تواند فعالیت شما را در تایم‌لاین ببیند و دنبال‌تان کند.
-  </string>
-  <string name="social_timeline_share_dialog_opt_out_text_2">برای تغییر تنظیمات حریم شخصی به <b>
-    www.aptoide.com
-  </b> رفته و بعد از ورود به حساب کاربری‌تان به قسمت <b>تنظیمات</b> رجوع کنید.
-  </string>
-  <string name="social_timeline_share_dialog_installed_and_recommended">نصب این برنامه(ها) پیشنهاد
-    می‌شود
-  </string>
-  <string name="social_timeline_share_bar_login">دوستان‌تان چه اپ‌هایی نصب می‌کنند؟</string>
-  <string name="social_timeline_share_bar_following">فروشگاه‌های دیگر و دوستان‌تان را دنبال کنید.
-  </string>
-  <string name="social_timeline_share_bar_followers">با ارتقای فروشگاه خود توجه افراد بیشتری را جلب
-    کنید.
-  </string>
-  <string name="social_timeline_followers_fragment_title">دنبال‌کننده‌(ها)</string>
-  <string name="social_timeline_following_fragment_title">دنبال کردن دیگران</string>
-  <string name="social_timeline_share_soon">به زودی منتشر خواهد شد</string>
-  <string name="social_timeline_recommends">توصیه می‌کند</string>
-  <string name="private_profile_create_store">با ساخت یک فروشگاه، پروفایل خود را شخصی کنید</string>
-  <string name="social_timeline_shared_by">به اشتراک گذاشته شده توسط %1$s</string>
-  <string name="social_timeline_who_liked">کسانی که لایک کرده‌اند</string>
-  <string name="social_timeline_users_private">%d خصوصی هستند</string>
+  <string name="social_timeline_you_will_share">ተከታዮችዎ ምን ያያሉ:</string>
+  <string name="social_timeline_share_title">የካርድ ምልከታዎን ያጋሩ</string>
+  <string name="social_timeline_share_title_checkbox">የእኔን የተጠቃሚ ግለታሪክ የግል መጠቀሚያ በኤፒፒ ገፅ ስራ. ማሳየት ብቻ/ የማከማቻዬን መረጃ አጋራ.</string>
+  <string name="social_timeline_share_title_checkbox_fb">በኤፒፒ ገፅ ላይ የእኔን የተጠቃሚ ግለታሪክ ለህዝብ እንዲደርስ አድርግ</string>
+  <string name="social_timeline_share_dialog_title">ለሌሎች ስላካፈሉ አመሰግናለሁ</string>
+  <string name="social_timeline_share_dialog_opt_in_text_1">ጓደኞችዎ እርስዎን ፈልገው ማግኘትና መከተል ይችላሉ.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">ግለታሪክዎ በኤፒፒ ገፅ ላይ በሚስጥር እንዲቀመጥ ወይም በግልዎ እንዲያዩት, የግል ማስተካከያዎትን ያስተካክሉ <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">የግል ታሪክዎ እንዲደበቅ በማድረግ, በኤፒፒ ገፅ ላይ ያሉ ጓደኞችዎ እንዳይፈልጉዎ እና እንዳይከተልዎ ማድረግ ይችላሉ.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2">በመክፈት <b>www.aptoid.com</b>, ወደ አካውንትዎ በመግባት እናም <b>ሴቲንግ</b> የግል ገፅዎን ትርጉም መቀየር.</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">ተጭኗል እናም ይመከራል</string>
+  <string name="social_timeline_share_bar_login">ጓደኞችዎ ምን እየጫኑ ነው?</string>
+  <string name="social_timeline_share_bar_following">ብዙ ማከማቻዎችን በመከተል ከጓደኞችዎ ጋር ይገናኙ.</string>
+  <string name="social_timeline_share_bar_followers">ብዙ ተከታዮች እንዲኖርዎት ማከማቻዎን ያሻሽሉ.</string>
+  <string name="social_timeline_followers_fragment_title">%d ተከታይ(s)</string>
+  <string name="social_timeline_following_fragment_title">የሚከታተሉ %d ሰው(ዎች)</string>
+  <string name="social_timeline_share_soon">ለሌሎች ያካፈሉት በቶሎ ይፋ ይሆናል</string>
+  <string name="social_timeline_recommends">ይመከራል</string>
+  <string name="private_profile_create_store">የግል ማህደር እንዲኖርዎ ማከማቻ መፍጠር ይኖርብዎታል</string>
+  <string name="social_timeline_shared_by">ለሌሎች የተጋሩ %1$s</string>
+  <string name="social_timeline_who_liked">ማነው የወደደው</string>
+  <string name="social_timeline_users_private">%d የግል ናቸው</string>
   <!-- Store Meta widget -->
-  <string name="edit_store">ویرایش</string>
+  <string name="edit_store">ማስተካከል</string>
   <!-- Comments on store -->
-  <string name="comment_store">نظر بدهید</string>
-  <string name="comment_store_title">دیدگاه‌ها برای این فروشگاه</string>
-  <string name="be_the_first_to_send_feedback_about_this_store">نخستین کسی باشید که درباره این
-    فروشگاه نظر می‌دهد
-  </string>
+  <string name="comment_store">የማከማቻ አስተያየት</string>
+  <string name="comment_store_title">በዚህ ማከማቻ ላይ አስተያየት ይስጡ</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">ስለዚህ ማከማቻ ግብረመልስ ለመላክ የመጀመሪያው ይሁኑ</string>
   <!-- Followers and following -->
-  <string name="timeline_followers">دنبال‌کننده‌ها %d</string>
-  <string name="timeline_followed">دنبال می‌کنید %d</string>
-  <string name="timeline_stats_followers">فالوئرها</string>
-  <string name="timeline_login_message">دوستان‌تان چه اپ‌هایی نصب می‌کنند؟</string>
-  <string name="private_followers_message">%d دنبال‌کننده‌ها دارای پروفایل خصوصی هستند</string>
-  <string name="private_following_message">شما %d فروشگاه/کاربر خصوصی را دنبال می‌کنید</string>
+  <string name="timeline_followers">ተከታዮች %d</string>
+  <string name="timeline_followed">እየተከታተሉ %d</string>
+  <string name="timeline_stats_followers">ተከታይ</string>
+  <string name="timeline_login_message">ጓደኞችዎ ምን እየጫኑ ነው?</string>
+  <string name="private_followers_message">%d ተከታዮችዎ የግልዎ ናቸው</string>
+  <string name="private_following_message">እየተከታተሉት ያሉት %d የግል ተጠቃሚዎች/ማከማቻዎች</string>
   <!-- Payments -->
-  <string name="item_payment_button_use">استفاده کردن</string>
-  <string name="item_payment_button_register">ثبت نام</string>
-  <string name="item_payment_approving_text">در حال تایید …</string>
-  <string name="activity_payment_more_payments_button">از روش پرداخت دیگری استفاده کنید</string>
-  <string name="reviews_expand_button">%d پاسخ‌ها</string>
-  <string name="out_of_space_dialog_title">حجم حافظه‌ی دستگاه شما کافی نیست</string>
-  <string name="out_of_space_dialog_message">برای ادامه کار، باید بخشی از حافظه دستگاه خود را پاک
-    کنید.
-  </string>
+  <string name="item_payment_button_use">መጠቀም</string>
+  <string name="item_payment_button_register">መመዝገብ</string>
+  <string name="item_payment_approving_text">ማፅደቅ...</string>
+  <string name="activity_payment_more_payments_button">ሌላ የክፍያ ዘዴ ተጠቀም</string>
+  <string name="reviews_expand_button">%d ምላሾች</string>
+  <string name="out_of_space_dialog_title">ቦታ የለዉም</string>
+  <string name="out_of_space_dialog_message">እባክዎ, ለመጠቀም ክፍተት ይፍጠሩ.</string>
   <!--new setting options-->
-  <string name="languages">زبان‌ها</string>
-  <string name="language_dialog">زبانی را انتخاب کنید</string>
-  <string name="topAppsNotification">پیشنهاد اپلیکیشن‌های برتر</string>
-  <string name="topAppsNotification_dialog">فاصله زمانی برای اطلاع‌رسانی اپلیکیشن‌های برتر را انتخاب
-    کنید
-  </string>
+  <string name="languages">ቋንቋ</string>
+  <string name="language_dialog">ቋንቋ መምረጥ</string>
+  <string name="topAppsNotification">ከፍተኛ የኤፒፒ ምክሮች</string>
+  <string name="topAppsNotification_dialog">ከፍተኛ የኤፒፒ ማሳወቂያ ድግግሞሽ መምረጥ</string>
   <string name="remote_install_help_url">http://blog.aptoide.com/remote-tv-install</string>
 </resources>

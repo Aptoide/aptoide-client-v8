@@ -783,7 +783,7 @@ public class AptoideUtils {
     }
 
     public static String getCountryCode() {
-      return "fa_IR";
+      return "am_ER";
     }
 
     public static PackageInfo getPackageInfo(String packageName) {
