@@ -39,7 +39,6 @@ import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineStatsPost;
 import cm.aptoide.pt.v8engine.social.data.TimelineStatsTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -677,16 +676,19 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.commentPosted())
         .flatMapCompletable(comment -> timeline.sharePost(comment.getPost()
             .getCardId())
-            .flatMapCompletable(responseCardId -> {
-              comment.getPost()
-                  .addComment(new SocialCard.CardComment(-1, comment.getCommentText(),
-                      accountManager.getAccount()
-                          .getNickname(), accountManager.getAccount()
-                      .getAvatar()));
-              return timeline.postComment(responseCardId, comment.getCommentText());
-            })
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.updatePost(comment.getPostPosition())))
+            .flatMapCompletable(
+                responseCardId -> timeline.postComment(responseCardId, comment.getCommentText())
+                    .andThen(accountManager.accountStatus()
+                        .first()
+                        .toSingle()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .flatMapCompletable(account -> {
+                          comment.getPost()
+                              .addComment(new SocialCard.CardComment(-1, comment.getCommentText(),
+                                  account.getNickname(), account.getAvatar()));
+                          return Completable.fromAction(
+                              () -> view.updatePost(comment.getPostPosition()));
+                        }))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
