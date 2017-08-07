@@ -29,12 +29,6 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
   @Override public void present() {
 
     createLifeCycleSubscription(cancelChanges());
-    createLifeCycleSubscription(chosenFirstAvatar());
-    createLifeCycleSubscription(chosenSecondAvatar());
-    createLifeCycleSubscription(chosenThirdAvatar());
-    createLifeCycleSubscription(chosenFourthAvatar());
-    createLifeCycleSubscription(chosenFifthAvatar());
-    createLifeCycleSubscription(chosenSixthAvatar());
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
@@ -74,42 +68,6 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
     return view.cancelProfileChanges()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cancel -> view.goBack());
-  }
-
-  private Observable<Void> chosenFirstAvatar() {
-    return view.selectedFirstAvatar()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cancel -> view.selectedAvatar(0));
-  }
-
-  private Observable<Void> chosenSecondAvatar() {
-    return view.selectedSecondAvatar()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cancel -> view.selectedAvatar(1));
-  }
-
-  private Observable<Void> chosenThirdAvatar() {
-    return view.selectedThirdAvatar()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cancel -> view.selectedAvatar(2));
-  }
-
-  private Observable<Void> chosenFourthAvatar() {
-    return view.selectedFourthAvatar()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cancel -> view.selectedAvatar(3));
-  }
-
-  private Observable<Void> chosenFifthAvatar() {
-    return view.selectedFifthAvatar()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cancel -> view.selectedAvatar(4));
-  }
-
-  private Observable<Void> chosenSixthAvatar() {
-    return view.selectedSixthAvatar()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cancel -> view.selectedAvatar(5));
   }
 
   private Observable<SpotAndShareUser> saveProfileChanges() {

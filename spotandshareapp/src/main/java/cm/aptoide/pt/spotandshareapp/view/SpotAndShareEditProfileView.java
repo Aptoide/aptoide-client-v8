@@ -16,19 +16,9 @@ public interface SpotAndShareEditProfileView extends View {
 
   Observable<SpotAndShareUser> saveProfileChanges();
 
+  Observable<SpotAndShareAvatar> selectedAvatar();
+
   void goBack();
-
-  Observable<Void> selectedFirstAvatar();
-
-  Observable<Void> selectedSecondAvatar();
-
-  Observable<Void> selectedThirdAvatar();
-
-  Observable<Void> selectedFourthAvatar();
-
-  Observable<Void> selectedFifthAvatar();
-
-  Observable<Void> selectedSixthAvatar();
 
   void selectedAvatar(int avatar);
 

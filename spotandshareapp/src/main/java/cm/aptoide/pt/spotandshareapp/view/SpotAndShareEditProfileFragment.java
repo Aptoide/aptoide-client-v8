@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -21,9 +23,9 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatar;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by filipe on 21-06-2017.
@@ -32,12 +34,6 @@ import rx.Observable;
 public class SpotAndShareEditProfileFragment extends FragmentView
     implements SpotAndShareEditProfileView {
 
-  private ImageView firstAvatar;
-  private ImageView secondAvatar;
-  private ImageView thirdAvatar;
-  private ImageView fourthAvatar;
-  private ImageView fifthAvatar;
-  private ImageView sixthAvatar;
   private ImageView actualAvatar;
   private EditText usernameEditText;
   private Button saveProfile;
@@ -45,6 +41,9 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   private List<ImageView> defaultAvatarList;
   private Toolbar toolbar;
   private int selectedAvatar = 0;
+  private RecyclerView avatarsRecyclerView;
+  private SpotAndShareEditProfileAdapter pickAvatarAdapter;
+  private PublishSubject<SpotAndShareAvatar> pickAvatarSubject;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareEditProfileFragment();
@@ -53,6 +52,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    pickAvatarSubject = PublishSubject.create();
   }
 
   @Override public void finish() {
@@ -68,37 +68,16 @@ public class SpotAndShareEditProfileFragment extends FragmentView
         .map(aVoid -> new SpotAndShareUser(getUsername(), getAvatar()));
   }
 
+  @Override public Observable<SpotAndShareAvatar> selectedAvatar() {
+    return pickAvatarAdapter.onSelectedAvatar();
+  }
+
   @Override public void goBack() {
     getFragmentNavigator().popBackStack();
   }
 
-  @Override public Observable<Void> selectedFirstAvatar() {
-    return RxView.clicks(firstAvatar);
-  }
-
-  @Override public Observable<Void> selectedSecondAvatar() {
-    return RxView.clicks(secondAvatar);
-  }
-
-  @Override public Observable<Void> selectedThirdAvatar() {
-    return RxView.clicks(thirdAvatar);
-  }
-
-  @Override public Observable<Void> selectedFourthAvatar() {
-    return RxView.clicks(fourthAvatar);
-  }
-
-  @Override public Observable<Void> selectedFifthAvatar() {
-    return RxView.clicks(fifthAvatar);
-  }
-
-  @Override public Observable<Void> selectedSixthAvatar() {
-    return RxView.clicks(sixthAvatar);
-  }
-
   @Override public void selectedAvatar(int avatar) {
     selectedAvatar = avatar;
-    deselectAllAvatars();
     defaultAvatarList.get(avatar)
         .setImageDrawable(getResources().getDrawable(R.drawable.spotandshare_avatar_highlighter));
   }
@@ -132,24 +111,8 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     }
   }
 
-  private void deselectAllAvatars() {
-    for (int i = 0; i < defaultAvatarList.size(); i++) {
-      if (defaultAvatarList.get(i)
-          .getDrawable() != null) {
-        defaultAvatarList.get(i)
-            .setImageDrawable(null);
-      }
-    }
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    firstAvatar = (ImageView) view.findViewById(R.id.first_option_avatar);
-    secondAvatar = (ImageView) view.findViewById(R.id.second_option_avatar);
-    thirdAvatar = (ImageView) view.findViewById(R.id.third_option_avatar);
-    fourthAvatar = (ImageView) view.findViewById(R.id.fourth_option_avatar);
-    fifthAvatar = (ImageView) view.findViewById(R.id.fifth_option_avatar);
-    sixthAvatar = (ImageView) view.findViewById(R.id.sixth_option_avatar);
     actualAvatar = (ImageView) view.findViewById(R.id.actual_avatar);
     usernameEditText = (EditText) view.findViewById(R.id.username_edit_text);
     cancel = (Button) view.findViewById(R.id.cancel_profile_edition_button);
@@ -158,35 +121,28 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
     setupToolbar();
 
-    buildImageViewList();
+    avatarsRecyclerView = (RecyclerView) view.findViewById(R.id.pick_avatar_recyclerView);
+    pickAvatarAdapter = new SpotAndShareEditProfileAdapter(getContext(), pickAvatarSubject);
+    avatarsRecyclerView.setAdapter(pickAvatarAdapter);
+    setupAvatarsListLayoutManager();
+    avatarsRecyclerView.setHasFixedSize(true);
 
     attachPresenter(new SpotAndShareEditProfilePresenter(this,
             ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager()),
         savedInstanceState);
   }
 
+  private void setupAvatarsListLayoutManager() {
+    GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
+    avatarsRecyclerView.setLayoutManager(gridLayoutManager);
+  }
+
   @Override public void onDestroyView() {
-    firstAvatar = null;
-    secondAvatar = null;
-    thirdAvatar = null;
-    fourthAvatar = null;
-    fifthAvatar = null;
-    sixthAvatar = null;
     usernameEditText = null;
     cancel = null;
     saveProfile = null;
     toolbar = null;
     super.onDestroyView();
-  }
-
-  private void buildImageViewList() {
-    defaultAvatarList = new ArrayList<>();
-    defaultAvatarList.add(firstAvatar);
-    defaultAvatarList.add(secondAvatar);
-    defaultAvatarList.add(thirdAvatar);
-    defaultAvatarList.add(fourthAvatar);
-    defaultAvatarList.add(fifthAvatar);
-    defaultAvatarList.add(sixthAvatar);
   }
 
   private void setupToolbar() {
