@@ -46,6 +46,7 @@ import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
+import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
@@ -429,12 +430,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
   }
 
-  @Override public void showCommentDialog(String cardId) {
+  @Override public void showCommentDialog(SocialCardTouchEvent touchEvent) {
     FragmentManager fm = getFragmentManager();
     CommentDialogFragment commentDialogFragment =
-        CommentDialogFragment.newInstanceTimelineArticleComment(cardId);
+        CommentDialogFragment.newInstanceTimelineArticleComment(touchEvent.getCard()
+            .getCardId());
     commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
-      PostComment postComment = new PostComment(cardId, inputText);
+      PostComment postComment =
+          new PostComment(touchEvent.getCard(), inputText, touchEvent.getPostPosition());
       commentPostResponseSubject.onNext(postComment);
     });
     commentDialogFragment.show(fm, "fragment_comment_dialog");

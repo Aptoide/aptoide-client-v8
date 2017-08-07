@@ -24,7 +24,7 @@ public class Media implements Post {
   private final Link publisherLink;
   private final Link mediaLink;
   private final CardType cardType;
-  private final List<SocialCard.CardComment> comments;
+  private List<SocialCard.CardComment> comments;
   private boolean isLiked;
   private boolean likeFromClick;
 
@@ -72,12 +72,16 @@ public class Media implements Post {
     return likeFromClick;
   }
 
-  public List<SocialCard.CardComment> getComments() {
+  @Override public List<SocialCard.CardComment> getComments() {
     return comments;
   }
 
-  public long getCommentsNumber() {
+  @Override public long getCommentsNumber() {
     return comments.size();
+  }
+
+  @Override public void addComment(SocialCard.CardComment postComment) {
+    comments.add(postComment);
   }
 
   public void setLikedFromClick(boolean likeFromClick) {

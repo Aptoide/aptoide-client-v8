@@ -121,6 +121,7 @@
         android:background="@color/timeline_separator"
         android:visibility="visible"
         />
+    <include layout="@layout/social_last_comment_bar"/>
     <include layout="@layout/social_bar_timeline"/>
   </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -7,6 +7,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -22,7 +23,6 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
@@ -31,6 +31,7 @@ import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.RatedRecommendation;
 import cm.aptoide.pt.v8engine.social.data.Recommendation;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
+import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreCardTouchEvent;
@@ -470,7 +471,7 @@ public class TimelinePresenter implements Presenter {
                     } else {
                       cardTouchEvent.getCard()
                           .setLiked(true);
-                      view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                      view.updatePost(((SocialCardTouchEvent) cardTouchEvent).getPostPosition());
                     }
                   }
                 })
@@ -536,7 +537,7 @@ public class TimelinePresenter implements Presenter {
                     } else {
                       cardTouchEvent.getCard()
                           .setLiked(true);
-                      view.updatePost(((LikeCardTouchEvent) cardTouchEvent).getPostPosition());
+                      view.updatePost(((SocialCardTouchEvent) cardTouchEvent).getPostPosition());
                     }
                   }
                 })
@@ -608,8 +609,8 @@ public class TimelinePresenter implements Presenter {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE));
                 }
-                return Completable.fromAction(() -> view.showCommentDialog(cardTouchEvent.getCard()
-                    .getCardId()));
+                return Completable.fromAction(
+                    () -> view.showCommentDialog((SocialCardTouchEvent) cardTouchEvent));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction());
             }))
@@ -678,10 +679,18 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.commentPosted())
-        .flatMapCompletable((comment) -> timeline.sharePost(comment.getCardId())
-            .flatMapCompletable(
-                responseCardId -> timeline.postComment(responseCardId, comment.getCommentText()))
-            .doOnCompleted(() -> view.showCommentSuccess()))
+        .flatMapCompletable(comment -> timeline.sharePost(comment.getPost()
+            .getCardId())
+            .flatMapCompletable(responseCardId -> {
+              comment.getPost()
+                  .addComment(new SocialCard.CardComment(-1, comment.getCommentText(),
+                      accountManager.getAccount()
+                          .getNickname(), accountManager.getAccount()
+                      .getAvatar()));
+              return timeline.postComment(responseCardId, comment.getCommentText());
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> view.updatePost(comment.getPostPosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
