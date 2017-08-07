@@ -122,24 +122,30 @@ public class PaymentPresenter implements Presenter {
             .isAuthenticated())
         .filter(authenticated -> authenticated)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> view.showTransactionLoading())
+        .doOnNext(__ -> view.showPurchaseLoading())
         .flatMapSingle(loading -> productProvider.getProduct())
-        .flatMap(product -> billing.getTransaction(product)
+        .flatMap(product -> billing.getPurchase(product)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(transaction -> {
-              if (transaction.isPending() || transaction.isCompleted() || transaction.isUnknown()) {
-                view.showTransactionLoading();
+            .doOnNext(purchase -> {
+              if (purchase.isPending()) {
+                view.showPurchaseLoading();
               } else {
-                view.hideTransactionLoading();
+                view.hidePurchaseLoading();
               }
-            })
-            .first(transaction -> transaction.isCompleted())
-            .flatMapSingle(__ -> billing.getPurchase(product)))
+
+              if (purchase.isCompleted()) {
+                navigator.popPaymentViewWithResult(purchase);
+              }
+
+              if (purchase.isFailed()) {
+                view.showUnknownError();
+              }
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(purchase -> view.hideTransactionLoading())
-        .subscribe(purchase -> navigator.popPaymentViewWithResult(purchase), throwable -> {
-          view.hideTransactionLoading();
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.hidePurchaseLoading();
           showError(throwable);
         });
   }

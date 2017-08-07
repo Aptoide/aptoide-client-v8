@@ -10,6 +10,7 @@ import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
+import cm.aptoide.pt.v8engine.billing.product.SimplePurchase;
 import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
 import java.util.List;
@@ -111,20 +112,25 @@ public class Billing {
     return transactionRepository.getTransaction(product);
   }
 
-  public Single<Purchase> getPurchase(Product product) {
-    return billingService.getPurchase(product)
+  public Observable<Purchase> getPurchase(Product product) {
+    return getTransaction(product).flatMapSingle(transaction -> {
+
+      if (transaction.isPending() || transaction.isUnknown()) {
+        return Single.just(new SimplePurchase(SimplePurchase.Status.PENDING));
+      }
+
+      if (transaction.isNew() || transaction.isFailed() || transaction.isPendingAuthorization()) {
+        return Single.just(new SimplePurchase(SimplePurchase.Status.NEW));
+      }
+
+      return billingService.getPurchase(product);
+    })
         .flatMap(purchase -> {
-          if (purchase.isCompleted()) {
-            return Single.just(purchase);
-          }
-          return Single.error(new IllegalArgumentException("Purchase is not completed"));
-        })
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof IllegalArgumentException) {
+          if (purchase.isFailed()) {
             return transactionRepository.remove(product.getId())
-                .andThen(Single.error(throwable));
+                .andThen(Observable.just(purchase));
           }
-          return Single.error(throwable);
+          return Observable.just(purchase);
         });
   }
 

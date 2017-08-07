@@ -8,4 +8,8 @@ package cm.aptoide.pt.v8engine.billing;
 public interface Purchase {
 
   boolean isCompleted();
+
+  boolean isPending();
+
+  boolean isFailed();
 }

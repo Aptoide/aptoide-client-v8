@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.v8engine.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
+import cm.aptoide.pt.v8engine.billing.product.SimplePurchase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class PurchaseMapper {
   public Purchase map(PaidApp response) {
     return new PaidAppPurchase(response.getPath()
         .getStringPath(), response.getPayment()
-        .isPaid());
+        .isPaid() ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.FAILED);
   }
 
   public Purchase map(InAppBillingPurchasesResponse response, String sku) {
@@ -56,14 +57,16 @@ public class PurchaseMapper {
             return new InAppPurchase(response.getPurchaseInformation()
                 .getSignatureList()
                 .get(i), serializer.serializePurchase(responsePurchase), responseSku,
-                responsePurchase.getPurchaseState() == 0, responsePurchase.getPurchaseToken());
+                responsePurchase.getPurchaseToken(),
+                responsePurchase.getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED
+                    : SimplePurchase.Status.FAILED);
           }
         }
       }
     } catch (JsonProcessingException ignored) {
     }
 
-    throw new IllegalArgumentException("Could not map purchase");
+    return new SimplePurchase(SimplePurchase.Status.FAILED);
   }
 
   public List<Purchase> map(InAppBillingPurchasesResponse response) {
@@ -95,8 +98,9 @@ public class PurchaseMapper {
               .getPurchaseList()
               .get(i)), response.getPurchaseInformation()
               .getSkuList()
-              .get(i), responsePurchase.getPurchaseState() == 0,
-              responsePurchase.getPurchaseToken()));
+              .get(i), responsePurchase.getPurchaseToken(),
+              responsePurchase.getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED
+                  : SimplePurchase.Status.NEW));
         }
       }
     } catch (JsonProcessingException ignored) {

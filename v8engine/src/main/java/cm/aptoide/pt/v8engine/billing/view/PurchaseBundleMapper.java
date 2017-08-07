@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.external.ExternalBillingBinder;
 import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
+import cm.aptoide.pt.v8engine.billing.product.SimplePurchase;
 
 public class PurchaseBundleMapper {
 
@@ -51,7 +52,7 @@ public class PurchaseBundleMapper {
       if (data != null) {
 
         if (data.containsKey(APK_PATH)) {
-          return new PaidAppPurchase(data.getString(APK_PATH), true);
+          return new PaidAppPurchase(data.getString(APK_PATH), SimplePurchase.Status.COMPLETED);
         }
 
         throw new IllegalArgumentException("Intent does not contain paid app apk path");
