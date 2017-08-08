@@ -676,19 +676,17 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.commentPosted())
         .flatMapCompletable(comment -> timeline.sharePost(comment.getPost()
             .getCardId())
-            .flatMapCompletable(
-                responseCardId -> timeline.postComment(responseCardId, comment.getCommentText())
-                    .andThen(accountManager.accountStatus()
-                        .first()
-                        .toSingle()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .flatMapCompletable(account -> {
-                          comment.getPost()
-                              .addComment(new SocialCard.CardComment(-1, comment.getCommentText(),
-                                  account.getNickname(), account.getAvatar()));
-                          return Completable.fromAction(
-                              () -> view.updatePost(comment.getPostPosition()));
-                        }))))
+            .flatMapCompletable(responseCardId -> accountManager.accountStatus()
+                .first()
+                .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapCompletable(account -> {
+                  comment.getPost()
+                      .addComment(new SocialCard.CardComment(-1, comment.getCommentText(),
+                          account.getNickname(), account.getAvatar()));
+                  return Completable.fromAction(() -> view.updatePost(comment.getPostPosition()));
+                })
+                .andThen(timeline.postComment(responseCardId, comment.getCommentText()))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
