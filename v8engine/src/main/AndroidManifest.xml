@@ -43,7 +43,7 @@
       />
 
   <application
-      android:allowBackup="true"
+      android:allowBackup="false"
       >
 
     <activity android:name=".view.search.SearchActivity">
