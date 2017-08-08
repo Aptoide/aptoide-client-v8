@@ -27,6 +27,7 @@ import org.json.JSONObject;
 public class BootConfigJSONUtils {
 
   private static final String TAG = BootConfigJSONUtils.class.getSimpleName();
+  private static final String FEEDBACK_EMAIL = "support@aptoide.com";
 
   /**
    * get remote boot config that was saved
@@ -149,7 +150,7 @@ public class BootConfigJSONUtils {
     }
     if (newRemoteBootConfig.getData().getPartner().getFeedback().getEmail() == null
         || newRemoteBootConfig.getData().getPartner().getFeedback().getEmail().isEmpty()) {
-      newRemoteBootConfig.getData().getPartner().getFeedback().setEmail("support@aptoide.com");
+      newRemoteBootConfig.getData().getPartner().getFeedback().setEmail(FEEDBACK_EMAIL);
     }
     return true;
   }

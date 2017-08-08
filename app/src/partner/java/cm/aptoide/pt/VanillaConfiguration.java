@@ -31,7 +31,6 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   private static final String APP_ID = BuildConfig.APPLICATION_ID;
   private static String AUTO_UPDATE_URL;
   private static String DEFAULT_STORE;
-  private static final String FEEDBACK_EMAIL = "support@aptoide.com";
   private final SharedPreferences sharedPreferences;
 
   public VanillaConfiguration(SharedPreferences sharedPreferences, Context context) {
@@ -134,9 +133,8 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   @Override public boolean isLoginAvailable(SocialLogin loginType) {
     switch (loginType) {
       case FACEBOOK:
-        //return PartnersLoginConfiguration.allowFacebookLogin();
+        return bootConfig.getPartner().getSocial().getLogin().isFacebook();
       case GOOGLE:
-        //return PartnersLoginConfiguration.allowGoogleLogin();
     }
     return false;
   }
