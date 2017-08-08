@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import com.jakewharton.rxrelay.PublishRelay;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private Button installButton;
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
+  @Getter private AppViewFragment appViewFragment;
 
   public AppViewInstallDisplayable() {
     super();
@@ -46,7 +48,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
-      PublishRelay installAppRelay, DownloadFactory downloadFactory) {
+      PublishRelay installAppRelay, DownloadFactory downloadFactory,
+      AppViewFragment appViewFragment) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -69,14 +72,17 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.installAppRelay = installAppRelay;
     this.installedRepository = installedRepository;
     this.timelineAnalytics = timelineAnalytics;
+    this.appViewFragment = appViewFragment;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay) {
+      AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
+      AppViewFragment appViewFragment) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory);
+        installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory,
+        appViewFragment);
   }
 
   public void startInstallationProcess() {

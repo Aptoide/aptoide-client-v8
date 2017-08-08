@@ -26,6 +26,6 @@ public class SearchAdDisplayable extends DisplayablePojo<MinimalAd> {
   }
 
   @Override public int getViewLayout() {
-    return R.layout.suggested_app_search;
+    return R.layout.search_ad;
   }
 }

@@ -179,14 +179,26 @@ public class DeepLinkIntentReceiver extends ActivityView {
       startFromPackageName(uri.split("aptoidesearch://")[1]);
     } else if (uri.startsWith("aptoidevoicesearch://")) {
       aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
-    } else if (uri.startsWith("market")) {
-      String params = uri.split("&")[0];
-      String[] param = params.split("=");
-      String packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
-      if (packageName.contains("pname:")) {
-        packageName = packageName.substring(6);
-      } else if (packageName.contains("pub:")) {
-        packageName = packageName.substring(4);
+    } else if (u != null && "market".equalsIgnoreCase(u.getScheme())) {
+      /*
+       * market schema:
+       * could come from a search or a to open an app
+       */
+      String packageName = "";
+      if ("details".equalsIgnoreCase(u.getHost())) {
+        packageName = u.getQueryParameter("id");
+      } else if ("search".equalsIgnoreCase(u.getHost())) {
+        packageName = u.getQueryParameter("q");
+      } else {
+        //old code
+        String params = uri.split("&")[0];
+        String[] param = params.split("=");
+        packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
+        if (packageName.contains("pname:")) {
+          packageName = packageName.substring(6);
+        } else if (packageName.contains("pub:")) {
+          packageName = packageName.substring(4);
+        }
       }
       startFromPackageName(packageName);
     } else if (uri.startsWith("http://market.android.com/details?id=")) {

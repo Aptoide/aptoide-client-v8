@@ -11,7 +11,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.ProgressBarDisplayable;
 /**
  * Created by neuro on 07-06-2016.
  */
-@Displayables({ ProgressBarDisplayable.class }) public class ProgressBarWidget
+public class ProgressBarWidget
     extends Widget<ProgressBarDisplayable> {
 
   public ProgressBarWidget(View itemView) {

@@ -61,7 +61,6 @@ import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.install.InstallWarningDialog;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
@@ -71,8 +70,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created on 06/05/16.
  */
-@Displayables({ AppViewInstallDisplayable.class }) public class AppViewInstallWidget
-    extends Widget<AppViewInstallDisplayable> {
+public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
   private static final String TAG = AppViewInstallWidget.class.getSimpleName();
 
@@ -511,37 +509,44 @@ import rx.android.schedulers.AndroidSchedulers;
               .getNodes()
               .getMeta()
               .getData(), downloadAction))
-          .flatMapCompletable(download -> installManager.install(download)
-              .doOnSubscribe(subcription -> setupEvents(download))
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> {
-                if (accountManager.isLoggedIn()
-                    && ManagerPreferences.isShowPreviewDialog(
-                    ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
-                    && Application.getConfiguration()
-                    .isCreateStoreAndSetUserPrivacyAvailable()) {
-                  SharePreviewDialog sharePreviewDialog =
-                      new SharePreviewDialog(displayable, accountManager, true,
-                          SharePreviewDialog.SharePreviewOpenMode.SHARE,
-                          displayable.getTimelineAnalytics(),
-                          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
-                  AlertDialog.Builder alertDialog =
-                      sharePreviewDialog.getPreviewDialogBuilder(getContext());
+          .flatMapCompletable(download -> {
+            if (!displayable.getAppViewFragment()
+                .isSuggestedShowing()) {
+              displayable.getAppViewFragment()
+                  .showSuggestedApps();
+            }
+            return installManager.install(download)
+                .doOnSubscribe(subcription -> setupEvents(download))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  if (accountManager.isLoggedIn()
+                      && ManagerPreferences.isShowPreviewDialog(
+                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+                      && Application.getConfiguration()
+                      .isCreateStoreAndSetUserPrivacyAvailable()) {
+                    SharePreviewDialog sharePreviewDialog =
+                        new SharePreviewDialog(displayable, accountManager, true,
+                            SharePreviewDialog.SharePreviewOpenMode.SHARE,
+                            displayable.getTimelineAnalytics(),
+                            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                    AlertDialog.Builder alertDialog =
+                        sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
-                  sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
-                          .getNodes()
-                          .getMeta()
-                          .getData()
-                          .getPackageName(), displayable.getPojo()
-                          .getNodes()
-                          .getMeta()
-                          .getData()
-                          .getStore()
-                          .getId(), "install", context, sharePreviewDialog, alertDialog,
-                      socialRepository);
-                }
-                ShowMessage.asSnack(v, installOrUpgradeMsg);
-              }))
+                    sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
+                            .getNodes()
+                            .getMeta()
+                            .getData()
+                            .getPackageName(), displayable.getPojo()
+                            .getNodes()
+                            .getMeta()
+                            .getData()
+                            .getStore()
+                            .getId(), "install", context, sharePreviewDialog, alertDialog,
+                        socialRepository);
+                  }
+                  ShowMessage.asSnack(v, installOrUpgradeMsg);
+                });
+          })
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
           }, err -> {

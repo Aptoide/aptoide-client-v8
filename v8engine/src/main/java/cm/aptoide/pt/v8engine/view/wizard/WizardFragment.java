@@ -137,7 +137,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   }
 
   @Override public void goToNextPage() {
-    // safety check. should not be needed
     if (viewPager.getCurrentItem() < viewPagerAdapter.getCount() - 1) {
       viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
     }
@@ -155,8 +154,14 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
    * @param selectedPage Position index of the new selected page.
    */
   @Override public void handleSelectedPage(int selectedPage) {
-    wizardButtons.get(selectedPage)
-        .setChecked(true);
+    if (wizardButtons == null || selectedPage >= wizardButtons.size()) {
+      return;
+    }
+
+    RadioButton radioButton = wizardButtons.get(selectedPage);
+    if (radioButton != null) {
+      radioButton.setChecked(true);
+    }
   }
 
   @Override public int getWizardButtonsCount() {

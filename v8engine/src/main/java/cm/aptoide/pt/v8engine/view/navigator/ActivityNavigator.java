@@ -26,6 +26,8 @@ public interface ActivityNavigator {
 
   void navigateBack();
 
+  void navigateTo(Uri uri);
+
   class Result {
 
     private final int requestCode;
