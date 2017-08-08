@@ -20,5 +20,6 @@ import lombok.EqualsAndHashCode;
 
     private GetAppMeta meta;
     private ListAppVersions versions;
+    private GroupDatalist groups;
   }
 }

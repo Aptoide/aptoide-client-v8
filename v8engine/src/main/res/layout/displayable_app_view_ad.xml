@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 02/05/2016.
+  ~ Modified on 24/06/2016.
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,14 +9,14 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:paddingBottom="6dp"
-    android:foreground="?selectableItemBackground"
+    android:background="@color/white"
     >
 
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
-      android:background="@color/white"
+      style="?attr/backgroundCard"
       >
 
     <ImageView
@@ -26,6 +26,24 @@
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
+        />
+
+    <TextView
+        android:layout_alignStart="@id/icon"
+        android:layout_alignBottom="@id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-3dp"
+        android:layout_marginBottom="-3dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:text="@string/ad"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_medium_small"
+        android:textStyle="bold"
+        android:background="@drawable/ad_icon"
         />
 
     <LinearLayout
@@ -69,7 +87,6 @@
           android:visibility="gone"
           />
 
-      <!--style="?android:attr/ratingBarStyleIndicator"-->
       <RatingBar
           android:id="@+id/ratingbar"
           android:layout_width="wrap_content"
@@ -80,25 +97,6 @@
           android:numStars="5"
           style="?attr/gridItemRatingBar"
           android:layout_gravity="center"
-          />
-
-      <TextView
-          android:id="@+id/store_name"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="?android:attr/textColorSecondary"
-          android:textSize="@dimen/text_size_small"
-          android:visibility="gone"
-          />
-
-      <TextView
-          android:id="@+id/added_time"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:drawableLeft="@drawable/ic_timestamp"
-          android:drawableStart="@drawable/ic_timestamp"
-          android:textSize="@dimen/text_size_small"
-          android:visibility="gone"
           />
 
     </LinearLayout>

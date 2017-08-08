@@ -18,14 +18,13 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created
  */
-@Displayables({ ScheduledDownloadDisplayable.class }) public class ScheduledDownloadWidget
+public class ScheduledDownloadWidget
     extends Widget<ScheduledDownloadDisplayable> {
 
   private ImageView appIcon;

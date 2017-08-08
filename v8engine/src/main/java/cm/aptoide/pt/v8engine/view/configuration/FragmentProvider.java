@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface FragmentProvider {
 
-  Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem);
+  @Deprecated Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem);
 
   Fragment newSendFeedbackFragment(String screenshotFilePath);
 
