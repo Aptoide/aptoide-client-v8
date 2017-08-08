@@ -1187,7 +1187,7 @@ public abstract class V8Engine extends Application {
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Aptoide");
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getConfiguration().getMarketName());
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
         Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
     intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");

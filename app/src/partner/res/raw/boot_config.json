@@ -5,19 +5,19 @@
       "uid": "8dfcf6e932be5ad55e84834a10f437d8",
       "type": "mobile",
       "feedback": {
-        "email": "diogo.loureiro@aptoide.com"
+        "email": ""
       },
       "store": {
         "id": 1180850,
         "name": "dfloureiro",
-        "label": "Mercado do Loureiro",
+        "label": "Loureiro Market",
         "credentials": {
           "username": null,
           "password": null
         }
       },
       "appearance": {
-        "theme": "brown",
+        "theme": "green",
         "splash": {
           "enable": true,
           "portrait": "http://pool.img.aptoide.com/imgs/3c23aa6b2759042d2297528bcf5d5c3f_splashscreen_portrait.jpg",
@@ -26,20 +26,20 @@
         },
         "toolbar": {
           "icon": {
-            "enable": false
+            "enable": true
           }
         }
       },
       "switches": {
         "mature": {
           "enable": true,
-          "value": true
+          "value": false
         },
         "options": {
           "shortcut": true,
           "multistore": {
             "enable": false,
-            "search": true
+            "search": false
           },
           "first_install": {
             "enable": true,

@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
@@ -12,10 +13,11 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.BootConfigServices;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
-import cm.aptoide.pt.view.entry.EntryActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,6 +41,7 @@ public class PartnersLaunchActivity extends ActivityView {
         .getSplash()
         .isEnable();
     if (usesSplashScreen) {
+      setTheme(Application.getConfiguration().getDefaultThemeRes());
       setContentView(R.layout.partners_launch);
       ImageLoader.with(this)
           .load(((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
@@ -48,6 +51,7 @@ public class PartnersLaunchActivity extends ActivityView {
               .getPortrait(), (ImageView) findViewById(R.id.splashscreen));
     }
     intent = getIntent();
+    disableWizard();
     getBootConfigRequest(this);
   }
 
@@ -86,6 +90,14 @@ public class PartnersLaunchActivity extends ActivityView {
     });
   }
 
+  private void disableWizard() {
+    final SharedPreferences sharedPreferences =
+        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    final SharedPreferences securePreferences =
+        SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
+    SecurePreferences.setWizardAvailable(false, securePreferences);
+  }
+
   /**
    * startMainActivityPartners
    */
@@ -106,7 +118,7 @@ public class PartnersLaunchActivity extends ActivityView {
   }
 
   private void startActivity() {
-    Intent i = new Intent(this, EntryActivity.class);
+    Intent i = new Intent(this, MainActivity.class);
     if (intent.getExtras() != null) {
       i.putExtras(intent.getExtras());
     }

@@ -63,6 +63,10 @@
     <activity
         android:name=".view.entry.EntryActivity"
         android:theme="@style/Theme.AppCompat.Translucent">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
     </activity>
 
     <activity

@@ -21,6 +21,7 @@ retrolambda {
 
 ext {
   STORE_NAME = "dfloureiro"
+  MARKET_NAME = "Loureiro Market"
 }
 
 android {
@@ -117,6 +118,7 @@ android {
       dimension "product"
       applicationId "${PARTNER_APPLICATION_ID}"
       applicationIdSuffix STORE_NAME
+      resValue "string", "market_name", MARKET_NAME
     }
 
     internal {
