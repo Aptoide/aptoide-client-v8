@@ -46,11 +46,11 @@ import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.social.data.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.timeline.TimelineRepository;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginDisplayable;
@@ -70,7 +70,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -274,10 +273,13 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(
             InstallerFactory.ROLLBACK);
 
-    timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
-        new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            installedRepository), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences);
+    //final TimelineCardFilter filter =
+    //    new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
+    //        installedRepository);
+    final TimelineCardFilter filter = null;
+    timelineRepository =
+        new TimelineRepository(getArguments().getString(ACTION_KEY), filter, bodyInterceptor,
+            httpClient, converterFactory, tokenInvalidator, sharedPreferences);
 
     final ConnectivityManager connectivityManager =
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);

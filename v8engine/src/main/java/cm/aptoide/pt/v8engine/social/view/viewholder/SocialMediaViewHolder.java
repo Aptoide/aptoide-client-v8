@@ -17,8 +17,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
-import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialMedia;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -152,10 +152,10 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     showLikesPreview(card);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
 
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
+        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(

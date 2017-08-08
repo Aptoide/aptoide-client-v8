@@ -37,6 +37,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
@@ -45,7 +46,9 @@ import cm.aptoide.pt.v8engine.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
+import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
+import cm.aptoide.pt.v8engine.social.data.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
@@ -70,6 +73,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -170,6 +174,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelinePostsRepository =
         ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
             getArguments().getString(ACTION_KEY));
+
 
     timelineService = new TimelineService(userId,
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
@@ -454,20 +459,17 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     ShowMessage.asSnack(getView(), R.string.social_timeline_share_dialog_title);
   }
 
-  @Override public void showCommentDialog(String cardId) {
+  @Override public void showCommentDialog(SocialCardTouchEvent touchEvent) {
     FragmentManager fm = getFragmentManager();
     CommentDialogFragment commentDialogFragment =
-        CommentDialogFragment.newInstanceTimelineArticleComment(cardId);
+        CommentDialogFragment.newInstanceTimelineArticleComment(touchEvent.getCard()
+            .getCardId());
     commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
-      PostComment postComment = new PostComment(cardId, inputText);
+      PostComment postComment =
+          new PostComment(touchEvent.getCard(), inputText, touchEvent.getPostPosition());
       commentPostResponseSubject.onNext(postComment);
     });
     commentDialogFragment.show(fm, "fragment_comment_dialog");
-  }
-
-  @Override public void showCommentSuccess() {
-    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_LONG)
-        .show();
   }
 
   @Override public void showGenericError() {

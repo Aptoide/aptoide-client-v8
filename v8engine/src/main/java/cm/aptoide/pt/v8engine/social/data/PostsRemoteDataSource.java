@@ -31,6 +31,7 @@ public class PostsRemoteDataSource {
   private final LinksHandlerFactory linksHandlerFactory;
   private final int limit;
   private final int initialOffset;
+  private final TimelineCardFilter postFilter;
   private int currentOffset;
   private boolean loading;
   private int total;
@@ -42,7 +43,8 @@ public class PostsRemoteDataSource {
       OkHttpClient okhttp, Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      TimelineCardFilter postFilter) {
     this.url = url;
     this.bodyInterceptor = bodyInterceptor;
     this.okhttp = okhttp;
@@ -57,10 +59,7 @@ public class PostsRemoteDataSource {
     this.total = initialTotal;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-  }
-
-  public Single<List<Post>> getNextCards() {
-    return getCards(limit, currentOffset);
+    this.postFilter = postFilter;
   }
 
   @NonNull private Single<List<Post>> getCards(int limit, int offset) {
@@ -87,6 +86,13 @@ public class PostsRemoteDataSource {
           loading = false;
           cardIdPriority = null;
         })
+        .map(timelineResponse -> timelineResponse.getDataList()
+            .getList())
+        .toObservable()
+        .flatMapIterable(list -> list)
+        .flatMap(element -> postFilter.filter(element))
+        .toList()
+        .toSingle()
         .map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
   }
 
@@ -97,13 +103,17 @@ public class PostsRemoteDataSource {
         .toSingle();
   }
 
+  public Single<List<Post>> getNextCards() {
+    return getCards(limit, currentOffset);
+  }
+
   public Single<List<Post>> getCards() {
-    mapper.clearCachedPostsIds();
+    postFilter.clear();
     return getCards(limit, initialOffset);
   }
 
   public Single<List<Post>> getCards(String cardId) {
-    mapper.clearCachedPostsIds();
+    postFilter.clear();
     cardIdPriority = cardId;
     return getCards(limit, initialOffset);
   }

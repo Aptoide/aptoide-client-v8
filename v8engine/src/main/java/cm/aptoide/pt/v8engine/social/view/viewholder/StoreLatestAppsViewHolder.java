@@ -13,7 +13,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -81,10 +81,13 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
     } else {
       likeButton.setHeartState(false);
     }
+
+    handleCommentsInformation(card);
+
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
+        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
   }
