@@ -136,8 +136,6 @@ import cm.aptoide.pt.v8engine.view.store.my.MyStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.store.my.MyStoreWidget;
 import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoreWidget;
-import cm.aptoide.pt.v8engine.view.store.subscribed.SubscribedStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.store.subscribed.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.updates.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.updates.UpdateWidget;
 import cm.aptoide.pt.v8engine.view.updates.UpdatesHeaderDisplayable;
@@ -203,8 +201,6 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(AppBrickWidget.class, AppBrickDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(FooterWidget.class, FooterDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(SubscribedStoreWidget.class,
-        SubscribedStoreDisplayable.class));
 
     // grid widgets / displayables
     displayableWidgetMappings.add(
