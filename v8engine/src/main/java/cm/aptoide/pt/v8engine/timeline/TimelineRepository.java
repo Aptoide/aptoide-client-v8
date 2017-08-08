@@ -17,6 +17,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
+import cm.aptoide.pt.v8engine.social.data.TimelineCardFilter;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -81,7 +82,7 @@ public class TimelineRepository {
   }
 
   @NonNull private DataList<TimelineCard> getTimelineCardDatalist(
-      DataList<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
+      DataList<TimelineItem<TimelineCard>> itemDataList, List<TimelineItem<TimelineCard>> list) {
     DataList<TimelineCard> cardDataList = new DataList<>();
     cardDataList.setCount(itemDataList.getCount());
     cardDataList.setOffset(itemDataList.getOffset());
@@ -90,8 +91,16 @@ public class TimelineRepository {
     cardDataList.setLoaded(itemDataList.isLoaded());
     cardDataList.setLimit(itemDataList.getLimit());
     cardDataList.setNext(itemDataList.getNext());
-    cardDataList.setList(list);
+    cardDataList.setList(getCardsFromList(list));
     return cardDataList;
+  }
+
+  private List<TimelineCard> getCardsFromList(List<TimelineItem<TimelineCard>> timelineItems) {
+    ArrayList<TimelineCard> cards = new ArrayList<>(timelineItems.size());
+    for (TimelineItem<TimelineCard> timelineCardTimelineItem : timelineItems) {
+      cards.add(timelineCardTimelineItem.getData());
+    }
+    return cards;
   }
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache, Long userId) {
