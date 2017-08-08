@@ -287,26 +287,18 @@ public class TimelineFragment extends FragmentView implements TimelineView {
           .onRestoreInstanceState(listState);
       listState = null;
     }
-    //genericError.setVisibility(View.GONE);
-    //progressBar.setVisibility(View.GONE);
-    //list.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showProgressIndicator() {
+  @Override public void showGeneralProgressIndicator() {
     progressIndicator = true;
     list.setVisibility(View.GONE);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
-  @Override public void hideProgressIndicator() {
+  @Override public void hideGeneralProgressIndicator() {
     progressIndicator = false;
-    if (!postIndicator) {
-      list.setVisibility(View.VISIBLE);
-      swipeRefreshLayout.setVisibility(View.VISIBLE);
-      coordinatorLayout.setVisibility(View.VISIBLE);
-      progressBar.setVisibility(View.GONE);
-    }
+    hideProgressIndicator();
   }
 
   @Override public void hideRefresh() {
@@ -505,7 +497,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void hidePostProgressIndicator() {
     postIndicator = false;
-    if (!progressIndicator) {
+    hideProgressIndicator();
+  }
+
+  private void hideProgressIndicator() {
+    if (!postIndicator && !progressIndicator) {
       list.setVisibility(View.VISIBLE);
       swipeRefreshLayout.setVisibility(View.VISIBLE);
       coordinatorLayout.setVisibility(View.VISIBLE);

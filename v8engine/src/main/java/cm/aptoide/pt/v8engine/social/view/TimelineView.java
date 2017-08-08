@@ -20,9 +20,9 @@ public interface TimelineView extends View {
 
   void showCards(List<Post> cards);
 
-  void showProgressIndicator();
+  void showGeneralProgressIndicator();
 
-  void hideProgressIndicator();
+  void hideGeneralProgressIndicator();
 
   void hideRefresh();
 

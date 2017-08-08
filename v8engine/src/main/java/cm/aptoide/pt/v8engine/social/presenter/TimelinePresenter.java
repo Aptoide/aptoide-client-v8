@@ -218,7 +218,7 @@ public class TimelinePresenter implements Presenter {
   private void onCreateShowPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> view.showProgressIndicator())
+        .doOnNext(__ -> view.showGeneralProgressIndicator())
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
             .toSingle())
@@ -293,7 +293,7 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.retry()
-            .doOnNext(__2 -> view.showProgressIndicator())
+            .doOnNext(__2 -> view.showGeneralProgressIndicator())
             .flatMapSingle(__3 -> accountManager.accountStatus()
                 .first()
                 .toSingle())
@@ -816,7 +816,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void showCardsAndHideProgress(List<Post> cards) {
-    view.hideProgressIndicator();
+    view.hideGeneralProgressIndicator();
     view.showCards(cards);
   }
 
