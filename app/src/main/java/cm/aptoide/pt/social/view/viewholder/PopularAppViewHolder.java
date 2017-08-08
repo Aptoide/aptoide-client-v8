@@ -41,7 +41,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
 
   public PopularAppViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
     this.headerSubTitle =

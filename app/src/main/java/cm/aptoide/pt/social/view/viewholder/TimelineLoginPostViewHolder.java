@@ -17,7 +17,7 @@ public class TimelineLoginPostViewHolder extends PostViewHolder<TimelineLoginPos
 
   public TimelineLoginPostViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.button = (Button) itemView.findViewById(R.id.login_button);
   }

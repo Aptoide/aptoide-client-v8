@@ -7,7 +7,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.Post;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by jdandrade on 08/06/2017.
@@ -16,10 +18,12 @@ import cm.aptoide.pt.social.data.Post;
 public abstract class PostViewHolder<T extends Post> extends RecyclerView.ViewHolder {
   private final ImageView latestCommentMainAvatar;
   private final TextView socialCommentBody;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final LinearLayout socialCommentBar;
   private final TextView socialCommentUsername;
 
-  public PostViewHolder(View itemView) {
+  public PostViewHolder(View itemView,
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
     super(itemView);
     this.socialCommentBar = (LinearLayout) itemView.findViewById(R.id.social_latest_comment_bar);
     this.socialCommentUsername =
@@ -27,13 +31,16 @@ public abstract class PostViewHolder<T extends Post> extends RecyclerView.ViewHo
     this.latestCommentMainAvatar =
         (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.socialCommentBody = (TextView) itemView.findViewById(R.id.social_latest_comment_body);
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
   }
 
   public abstract void setPost(T card, int position);
 
-  void handleCommentsInformation(Post post) {
+  protected void handleCommentsInformation(Post post) {
     if (post.getCommentsNumber() > 0) {
       socialCommentBar.setVisibility(View.VISIBLE);
+      socialCommentBar.setOnClickListener(view -> cardTouchEventPublishSubject.onNext(
+          new CardTouchEvent(post, CardTouchEvent.Type.LAST_COMMENT)));
       ImageLoader.with(itemView.getContext())
           .loadWithShadowCircleTransform(post.getComments()
               .get(0)

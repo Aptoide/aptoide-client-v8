@@ -52,7 +52,7 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
   public AggregatedStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, MinimalCardViewFactory minimalCardViewFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;

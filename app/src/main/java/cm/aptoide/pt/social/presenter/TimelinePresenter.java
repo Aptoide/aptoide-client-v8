@@ -10,6 +10,8 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
@@ -48,6 +50,7 @@ import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.store.StoreFragment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -150,6 +153,8 @@ public class TimelinePresenter implements Presenter {
 
     handleFabClick();
 
+    onViewCreatedClickOnLastComment();
+
     handlePostNavigation();
 
     handleNativeAdError();
@@ -176,6 +181,25 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void onViewCreatedClickOnLastComment() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> view.postClicked()
+            .filter(cardClicked -> cardClicked.getActionType()
+                .equals(CardTouchEvent.Type.LAST_COMMENT))
+            .doOnNext(cardTouchEvent -> fragmentNavigator.navigateTo(StoreFragment.newInstance(
+                cardTouchEvent.getCard()
+                    .getComments()
+                    .get(cardTouchEvent.getCard()
+                        .getComments()
+                        .size() - 1)
+                    .getUserId(), "DEFAULT", Event.Name.getUserTimeline,
+                StoreFragment.OpenType.GetHome))))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cards -> {
+        }, throwable -> view.showGenericError());
   }
 
   private void onViewCreatedHandleVisibleItems() {
@@ -725,7 +749,8 @@ public class TimelinePresenter implements Presenter {
                 .flatMapCompletable(account -> {
                   comment.getPost()
                       .addComment(new SocialCard.CardComment(-1, comment.getCommentText(),
-                          account.getNickname(), account.getAvatar()));
+                          account.getNickname(), account.getAvatar(),
+                          Long.valueOf(account.getId())));
                   return Completable.fromAction(() -> view.updatePost(comment.getPostPosition()));
                 })
                 .andThen(timeline.postComment(responseCardId, comment.getCommentText()))))

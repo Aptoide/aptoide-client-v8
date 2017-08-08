@@ -26,6 +26,7 @@ import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
+import cm.aptoide.pt.v8engine.social.view.viewholder.SocialPostViewHolder;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 28/06/2017.
  */
 
-public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
+public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final LayoutInflater inflater;
@@ -75,7 +76,7 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
   public SocialStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -299,30 +300,6 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
     } else {
       numberLikes.setVisibility(View.INVISIBLE);
       numberLikesOneLike.setVisibility(View.INVISIBLE);
-    }
-  }
-
-  private void handleCommentsInformation(SocialStore post) {
-    if (post.getCommentsNumber() > 0) {
-      numberComments.setVisibility(View.VISIBLE);
-      numberComments.setText(itemView.getContext()
-          .getResources()
-          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber(),
-              (int) post.getCommentsNumber()));
-      socialCommentBar.setVisibility(View.VISIBLE);
-      ImageLoader.with(itemView.getContext())
-          .loadWithShadowCircleTransform(post.getComments()
-              .get(0)
-              .getAvatar(), latestCommentMainAvatar);
-      socialCommentUsername.setText(post.getComments()
-          .get(0)
-          .getName());
-      socialCommentBody.setText(post.getComments()
-          .get(0)
-          .getBody());
-    } else {
-      numberComments.setVisibility(View.INVISIBLE);
-      socialCommentBar.setVisibility(View.GONE);
     }
   }
 
