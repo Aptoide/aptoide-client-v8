@@ -31,6 +31,10 @@ public class SocialStore extends StoreLatestApps {
     this.comments = comments;
   }
 
+  public long getCommentsNumber() {
+    return commentsNumber;
+  }
+
   public long getLikesNumber() {
     return likesNumber;
   }
@@ -41,10 +45,6 @@ public class SocialStore extends StoreLatestApps {
 
   public List<SocialCard.CardComment> getComments() {
     return comments;
-  }
-
-  public long getCommentsNumber() {
-    return commentsNumber;
   }
 
   public Poster getPoster() {

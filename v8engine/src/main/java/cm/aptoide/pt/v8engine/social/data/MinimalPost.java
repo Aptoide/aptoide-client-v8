@@ -4,7 +4,6 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.social.data.publisher.Poster;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public class MinimalPost implements Post {
   private final long commentsNumber;
   private final long likesNumber;
   private final List<UserTimeline> likes;
-  private final LinkedList<SocialCard.CardComment> comments;
+  private final List<SocialCard.CardComment> comments;
   private final CardType cardType;
   private boolean liked;
   private boolean likedFromClick;
@@ -32,7 +31,7 @@ public class MinimalPost implements Post {
     this.commentsNumber = commentsNumber;
     this.likesNumber = likesNumber;
     this.likes = likes;
-    this.comments = (LinkedList<SocialCard.CardComment>) comments;
+    this.comments = comments;
     this.cardType = cardType;
     this.liked = liked;
   }
@@ -88,7 +87,7 @@ public class MinimalPost implements Post {
   }
 
   @Override public void addComment(SocialCard.CardComment postComment) {
-    comments.add(postComment);
+    comments.add(0, postComment);
   }
 
   public void setLikedFromClick(boolean likedFromClick) {
