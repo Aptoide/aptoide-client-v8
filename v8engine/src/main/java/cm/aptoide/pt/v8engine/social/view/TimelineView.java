@@ -77,4 +77,8 @@ public interface TimelineView extends View {
   Observable<Void> loginActionClick();
 
   void showCreateStoreMessage(SocialAction socialAction);
+
+  void showPostProgressIndicator();
+
+  void hidePostProgressIndicator();
 }

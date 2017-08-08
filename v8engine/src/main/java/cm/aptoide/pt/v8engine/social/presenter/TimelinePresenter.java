@@ -163,13 +163,13 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> timelineNavigation.postNavigation()
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(__ -> view.showProgressIndicator())
+            .doOnNext(__ -> view.showPostProgressIndicator())
             .flatMapSingle(cardId -> Single.zip(
                 accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                     : timeline.getTimelineLoginPost(), timeline.getFreshCards(cardId),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> showCardsAndHideProgress(cards))
+            .doOnNext(cards -> showCardsAndHidePostProgress(cards))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
@@ -817,6 +817,11 @@ public class TimelinePresenter implements Presenter {
 
   private void showCardsAndHideProgress(List<Post> cards) {
     view.hideProgressIndicator();
+    view.showCards(cards);
+  }
+
+  private void showCardsAndHidePostProgress(List<Post> cards) {
+    view.hidePostProgressIndicator();
     view.showCards(cards);
   }
 
