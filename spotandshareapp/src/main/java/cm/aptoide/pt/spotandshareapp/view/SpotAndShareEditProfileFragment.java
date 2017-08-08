@@ -172,7 +172,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   }
 
   private SpotAndShareUserAvatar getAvatar() {
-    return new SpotAndShareUserAvatar(selectedAvatar, "");
+    return new SpotAndShareUserAvatar(selectedAvatar, "", false);
   }
 
   private String getUsername() {

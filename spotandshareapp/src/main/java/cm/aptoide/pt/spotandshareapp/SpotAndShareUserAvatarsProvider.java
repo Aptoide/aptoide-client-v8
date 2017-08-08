@@ -16,19 +16,19 @@ public class SpotAndShareUserAvatarsProvider {
 
     spotAndShareAvatars.add(new SpotAndShareUserAvatar(1,
         Uri.parse("android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_01")
-            .toString()));
+            .toString(), false));
 
     spotAndShareAvatars.add(new SpotAndShareUserAvatar(2,
         Uri.parse("android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_02")
-            .toString()));
+            .toString(), false));
 
     spotAndShareAvatars.add(new SpotAndShareUserAvatar(3,
         Uri.parse("android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_03")
-            .toString()));
+            .toString(), false));
 
     spotAndShareAvatars.add(new SpotAndShareUserAvatar(4,
         Uri.parse("android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_04")
-            .toString()));
+            .toString(), false));
     return spotAndShareAvatars;
   }
 }

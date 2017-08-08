@@ -11,4 +11,6 @@ public interface SpotAndShareAvatar {
   String getString();
 
   int getAvatarId();
+
+  boolean isSelected();
 }
