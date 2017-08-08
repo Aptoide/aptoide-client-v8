@@ -36,20 +36,12 @@ public class MinimalPost implements Post {
     this.liked = liked;
   }
 
-  public long getCommentsNumber() {
-    return commentsNumber;
-  }
-
   public long getLikesNumber() {
     return likesNumber;
   }
 
   public List<UserTimeline> getLikes() {
     return likes;
-  }
-
-  public List<SocialCard.CardComment> getComments() {
-    return comments;
   }
 
   public Date getDate() {
@@ -84,6 +76,18 @@ public class MinimalPost implements Post {
 
   @Override public boolean isLikeFromClick() {
     return likedFromClick;
+  }
+
+  public List<SocialCard.CardComment> getComments() {
+    return comments;
+  }
+
+  public long getCommentsNumber() {
+    return commentsNumber;
+  }
+
+  @Override public void addComment(SocialCard.CardComment postComment) {
+    comments.add(0, postComment);
   }
 
   public void setLikedFromClick(boolean likedFromClick) {

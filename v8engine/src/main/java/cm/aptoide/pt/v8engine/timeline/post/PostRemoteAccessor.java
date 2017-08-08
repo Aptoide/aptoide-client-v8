@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
-import cm.aptoide.pt.v8engine.timeline.response.StillProcessingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

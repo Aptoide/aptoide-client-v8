@@ -39,7 +39,7 @@
         android:paddingEnd="6dp"
         android:paddingBottom="3dp"
         android:paddingTop="3dp"
-        android:text="@string/ad"
+        android:text="@string/all_title_ad"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_medium_small"
         android:textStyle="bold"

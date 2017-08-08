@@ -49,6 +49,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Group;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
@@ -113,6 +114,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
@@ -919,16 +921,28 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
         .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
-            group != null ? group.getId() : null, 5, ListAppsRequest.Sort.trending30d)
+            group != null ? group.getId() : null, 6, ListAppsRequest.Sort.latest)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
-            listApps.getDataList()
-                .getList(), appViewSimilarAppAnalytics))
+            removeCurrentAppFromSuggested(listApps.getDataList()
+                .getList()), appViewSimilarAppAnalytics))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {
           addDisplayableWithAnimation(1, appViewSuggestedAppsDisplayable);
           suggestedShowing = true;
         }, Throwable::printStackTrace);
+  }
+
+  private List<App> removeCurrentAppFromSuggested(List<App> list) {
+    Iterator<App> iterator = list.iterator();
+    while (iterator.hasNext()) {
+      App next = iterator.next();
+      if (next.getPackageName()
+          .equals(packageName)) {
+        iterator.remove();
+      }
+    }
+    return list;
   }
 
   @Partners protected enum BundleKeys {

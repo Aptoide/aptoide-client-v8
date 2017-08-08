@@ -7,9 +7,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import cm.aptoide.pt.v8engine.NavigationProvider;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.leak.LeakActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
@@ -35,6 +37,13 @@ public abstract class ActivityResultNavigator extends LeakActivity
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     resultRelay.call(new Result(requestCode, resultCode, data));
+
+    Fragment fragment = getFragmentNavigator().getFragment();
+    if (fragment != null
+        && fragment instanceof FragmentView
+        && !((FragmentView) fragment).isStartActivityForResultCalled()) {
+      fragment.onActivityResult(requestCode, resultCode, data);
+    }
   }
 
   @Override public void navigateForResult(Class<? extends Activity> activityClass, int requestCode,

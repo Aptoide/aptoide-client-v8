@@ -6,6 +6,7 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
+import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
 import java.util.List;
 import rx.Completable;
@@ -67,9 +68,7 @@ public interface TimelineView extends View {
 
   void showShareSuccessMessage();
 
-  void showCommentDialog(String cardId);
-
-  void showCommentSuccess();
+  void showCommentDialog(SocialCardTouchEvent touchEvent);
 
   void showGenericError();
 
