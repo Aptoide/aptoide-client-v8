@@ -36,6 +36,7 @@
   <!--General-->
   <string name="install">Install</string>
   <string name="open">Open</string>
+  <string name="all_title_ad">Ad</string>
 
 
   <!-- Permission pop-ups messages -->
@@ -576,7 +577,6 @@
   <string name="facebook_friends_list_using_timeline_empty">timeline allows you to share your applications with your Facebook friends. Do you want to join the network?</string>
   <string name="X_download_number">%s down.</string>
   <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
-  <string name="ad">Ad</string>
   <string name="friends_installs">Your friends installs</string>
   <string name="highlighted_apps">Highlighted</string>
   <string name="button_more">More</string>
