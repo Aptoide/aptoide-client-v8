@@ -37,7 +37,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
-import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
@@ -48,7 +47,6 @@ import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
 import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
-import cm.aptoide.pt.v8engine.social.data.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
@@ -73,7 +71,6 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -123,6 +120,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TimelineService timelineService;
   private TimelinePostsRepository timelinePostsRepository;
   private DateCalculator dateCalculator;
+  private boolean postIndicator;
+  private boolean progressIndicator;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -174,7 +173,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelinePostsRepository =
         ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
             getArguments().getString(ACTION_KEY));
-
 
     timelineService = new TimelineService(userId,
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
@@ -289,22 +287,18 @@ public class TimelineFragment extends FragmentView implements TimelineView {
           .onRestoreInstanceState(listState);
       listState = null;
     }
-    genericError.setVisibility(View.GONE);
-    progressBar.setVisibility(View.GONE);
-    list.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showProgressIndicator() {
+  @Override public void showGeneralProgressIndicator() {
+    progressIndicator = true;
     list.setVisibility(View.GONE);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
-  @Override public void hideProgressIndicator() {
-    list.setVisibility(View.VISIBLE);
-    swipeRefreshLayout.setVisibility(View.VISIBLE);
-    coordinatorLayout.setVisibility(View.VISIBLE);
-    progressBar.setVisibility(View.GONE);
+  @Override public void hideGeneralProgressIndicator() {
+    progressIndicator = false;
+    hideProgressIndicator();
   }
 
   @Override public void hideRefresh() {
@@ -492,6 +486,27 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         R.string.timeline_message_error_you_need_to_create_store_with_social_action,
         Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public void showPostProgressIndicator() {
+    postIndicator = true;
+    list.setVisibility(View.GONE);
+    genericError.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hidePostProgressIndicator() {
+    postIndicator = false;
+    hideProgressIndicator();
+  }
+
+  private void hideProgressIndicator() {
+    if (!postIndicator && !progressIndicator) {
+      list.setVisibility(View.VISIBLE);
+      swipeRefreshLayout.setVisibility(View.VISIBLE);
+      coordinatorLayout.setVisibility(View.VISIBLE);
+      progressBar.setVisibility(View.GONE);
+    }
   }
 
   // TODO: 07/07/2017 migrate this behaviour to mvp

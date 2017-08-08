@@ -163,13 +163,13 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> timelineNavigation.postNavigation()
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(__ -> view.showProgressIndicator())
+            .doOnNext(__ -> view.showPostProgressIndicator())
             .flatMapSingle(cardId -> Single.zip(
                 accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                     : timeline.getTimelineLoginPost(), timeline.getFreshCards(cardId),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> showCardsAndHideProgress(cards))
+            .doOnNext(cards -> showCardsAndHidePostProgress(cards))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
@@ -218,7 +218,7 @@ public class TimelinePresenter implements Presenter {
   private void onCreateShowPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> view.showProgressIndicator())
+        .doOnNext(__ -> view.showGeneralProgressIndicator())
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
             .toSingle())
@@ -293,7 +293,7 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.retry()
-            .doOnNext(__2 -> view.showProgressIndicator())
+            .doOnNext(__2 -> view.showGeneralProgressIndicator())
             .flatMapSingle(__3 -> accountManager.accountStatus()
                 .first()
                 .toSingle())
@@ -816,7 +816,12 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void showCardsAndHideProgress(List<Post> cards) {
-    view.hideProgressIndicator();
+    view.hideGeneralProgressIndicator();
+    view.showCards(cards);
+  }
+
+  private void showCardsAndHidePostProgress(List<Post> cards) {
+    view.hidePostProgressIndicator();
     view.showCards(cards);
   }
 
