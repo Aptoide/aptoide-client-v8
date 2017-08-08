@@ -51,9 +51,8 @@ public class TimelineRepositoryFactory {
   public TimelinePostsRepository create(String action) {
     if (!repositories.containsKey(action)) {
 
-
-      final TimelineCardFilter.TimelineCardDuplicateFilter duplicateFilter = new TimelineCardFilter.TimelineCardDuplicateFilter(
-          new HashSet<>());
+      final TimelineCardFilter.TimelineCardDuplicateFilter duplicateFilter =
+          new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>());
       final TimelineCardFilter postFilter =
           new TimelineCardFilter(duplicateFilter, packageRepository);
 

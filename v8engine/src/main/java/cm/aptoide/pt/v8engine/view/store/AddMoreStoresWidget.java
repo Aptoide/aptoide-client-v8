@@ -14,8 +14,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created by neuro on 11-05-2016.
  */
-public class AddMoreStoresWidget
-    extends Widget<AddMoreStoresDisplayable> {
+public class AddMoreStoresWidget extends Widget<AddMoreStoresDisplayable> {
 
   private Button addMoreStores;
 

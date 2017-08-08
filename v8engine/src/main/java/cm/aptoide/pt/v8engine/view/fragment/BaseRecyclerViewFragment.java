@@ -89,14 +89,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return this;
   }
 
-  @CallSuper public BaseRecyclerViewFragment addDisplayableWithAnimation(int position,
-      Displayable displayable) {
-    adapter.addDisplayableWithAnimation(position, displayable);
-    this.displayables.add(position, displayable);
-
-    return this;
-  }
-
   @Override @CallSuper
   public BaseRecyclerViewFragment replaceDisplayable(int position, Displayable displayable,
       boolean finishedLoading) {
@@ -165,6 +157,14 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
 
   @Override public boolean hasDisplayables() {
     return displayables != null && displayables.size() > 0;
+  }
+
+  @CallSuper public BaseRecyclerViewFragment addDisplayableWithAnimation(int position,
+      Displayable displayable) {
+    adapter.addDisplayableWithAnimation(position, displayable);
+    this.displayables.add(position, displayable);
+
+    return this;
   }
 
   @Partners @CallSuper @Override

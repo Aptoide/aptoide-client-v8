@@ -33,8 +33,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created on 30/06/16.
  */
-public class AppViewFlagThisWidget
-    extends Widget<AppViewFlagThisDisplayable> {
+public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 
   private static final String TAG = AppViewFlagThisWidget.class.getSimpleName();
 

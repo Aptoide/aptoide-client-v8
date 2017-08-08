@@ -58,8 +58,7 @@ import rx.functions.Action1;
 /**
  * Created on 30/06/16.
  */
-public class AppViewRateAndReviewsWidget
-    extends Widget<AppViewRateAndCommentsDisplayable> {
+public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDisplayable> {
 
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();

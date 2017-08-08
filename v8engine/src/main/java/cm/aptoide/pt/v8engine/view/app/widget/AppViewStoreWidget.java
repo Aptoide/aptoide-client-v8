@@ -34,8 +34,7 @@ import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public class AppViewStoreWidget
-    extends Widget<AppViewStoreDisplayable> {
+public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
   private ImageView storeAvatarView;
   private TextView storeNameView;

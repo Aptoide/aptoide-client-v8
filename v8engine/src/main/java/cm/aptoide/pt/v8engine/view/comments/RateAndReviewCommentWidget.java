@@ -45,8 +45,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class RateAndReviewCommentWidget
-    extends Widget<RateAndReviewCommentDisplayable> {
+public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDisplayable> {
 
   public static final int FULL_COMMENTS_LIMIT = 3;
   private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();

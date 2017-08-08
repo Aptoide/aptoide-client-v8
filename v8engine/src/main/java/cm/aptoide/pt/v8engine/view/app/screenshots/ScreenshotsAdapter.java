@@ -158,7 +158,8 @@ public class ScreenshotsAdapter
     }
 
     private boolean viewIsInPortrait(String orient) {
-      return !TextUtils.isEmpty(orient) && orient.toUpperCase().equals(PORTRAIT);
+      return !TextUtils.isEmpty(orient) && orient.toUpperCase()
+          .equals(PORTRAIT);
     }
   }
 }

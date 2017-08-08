@@ -19,8 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-public class AppViewSuggestedAppsWidget
-    extends Widget<AppViewSuggestedAppsDisplayable> {
+public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDisplayable> {
 
   private RecyclerView recyclerView;
   private TextView similarAppsToTextView;

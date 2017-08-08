@@ -12,7 +12,8 @@ public class AppViewNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final ActivityNavigator activityNavigator;
 
-  public AppViewNavigator(FragmentNavigator fragmentNavigator, ActivityNavigator activityNavigator) {
+  public AppViewNavigator(FragmentNavigator fragmentNavigator,
+      ActivityNavigator activityNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.activityNavigator = activityNavigator;
   }

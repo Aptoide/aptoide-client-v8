@@ -12,8 +12,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created on 15/06/16.
  */
-public class ExcludedUpdateWidget
-    extends Widget<ExcludedUpdateDisplayable> {
+public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 
   private ImageView icon;
   private TextView name;

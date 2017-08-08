@@ -18,8 +18,8 @@ import cm.aptoide.pt.v8engine.view.app.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
 
-public class OtherVersionWidget
-    extends Widget<OtherVersionDisplayable> implements View.OnClickListener {
+public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
+    implements View.OnClickListener {
 
   private static final String TAG = OtherVersionWidget.class.getSimpleName();
   private static final Locale DEFAULT_LOCALE = Locale.getDefault();

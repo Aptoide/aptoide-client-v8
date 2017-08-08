@@ -70,7 +70,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(newOnClickListener(displayable, pojo, appId),
             throwable -> CrashReport.getInstance()
-            .log(throwable)));
+                .log(throwable)));
   }
 
   @NonNull protected Action1<Void> newOnClickListener(T displayable, App pojo, long appId) {

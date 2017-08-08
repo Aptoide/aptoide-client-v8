@@ -94,12 +94,6 @@ public abstract class ActivityResultNavigator extends LeakActivity
     startActivity(intent);
   }
 
-  @Override public void navigateTo(Uri uri) {
-    final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    startActivity(intent);
-  }
-
   @Override public void navigateBackWithResult(int resultCode, Bundle bundle) {
     setResult(resultCode, new Intent().putExtras(bundle));
     finish();
@@ -107,6 +101,12 @@ public abstract class ActivityResultNavigator extends LeakActivity
 
   @Override public void navigateBack() {
     finish();
+  }
+
+  @Override public void navigateTo(Uri uri) {
+    final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
   }
 
   @Override public ActivityNavigator getActivityNavigator() {

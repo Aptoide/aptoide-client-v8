@@ -50,7 +50,6 @@ class ListAppsRequestFactory {
     return new ListAppsRequest(
         new ListAppsRequest.Body(storeCredentialsProvider.get(storeId), groupId, limit,
             sharedPreferences, sort), bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator,
-        sharedPreferences);
+        tokenInvalidator, sharedPreferences);
   }
 }

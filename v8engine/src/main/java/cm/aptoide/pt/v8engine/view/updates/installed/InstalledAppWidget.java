@@ -30,8 +30,7 @@ import retrofit2.Converter;
 /**
  * Created by neuro on 17-05-2016.
  */
-public class InstalledAppWidget
-    extends Widget<InstalledAppDisplayable> {
+public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
   private static final Locale LOCALE = Locale.getDefault();
   private static final String TAG = InstalledAppWidget.class.getSimpleName();

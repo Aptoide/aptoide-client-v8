@@ -21,8 +21,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 
-public class GridStoreWidget
-    extends Widget<GridStoreDisplayable> {
+public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 
   private ImageView storeAvatar;
   private TextView storeName;

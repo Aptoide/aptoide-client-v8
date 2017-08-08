@@ -83,6 +83,17 @@ public abstract class FragmentView extends LeakFragment implements View {
     }
   }
 
+  @Override public void startActivityForResult(Intent intent, int requestCode) {
+    startActivityForResultCalled = true;
+    super.startActivityForResult(intent, requestCode);
+  }
+
+  @Override
+  public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+    startActivityForResultCalled = true;
+    super.startActivityForResult(intent, requestCode, options);
+  }
+
   @Override public void onSaveInstanceState(Bundle outState) {
     if (presenter != null) {
       presenter.saveState(outState);
@@ -168,16 +179,5 @@ public abstract class FragmentView extends LeakFragment implements View {
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
-  }
-
-  @Override public void startActivityForResult(Intent intent, int requestCode) {
-    startActivityForResultCalled = true;
-    super.startActivityForResult(intent, requestCode);
-  }
-
-  @Override
-  public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
-    startActivityForResultCalled = true;
-    super.startActivityForResult(intent, requestCode, options);
   }
 }

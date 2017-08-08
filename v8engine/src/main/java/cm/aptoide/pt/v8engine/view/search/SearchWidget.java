@@ -30,8 +30,7 @@ import rx.functions.Action1;
 /**
  * Created by neuro on 01-06-2016.
  */
-public class SearchWidget
-    extends Widget<SearchDisplayable> {
+public class SearchWidget extends Widget<SearchDisplayable> {
 
   private TextView nameTextView;
   private ImageView iconImageView;
