@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-  <corners android:radius="0dp"/>
-  <stroke
-      android:color="@color/black"
-      android:width="5dp"/>
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+      android:drawable="@android:color/transparent"
+      android:state_pressed="false"
+      android:state_selected="false"/>
+
+  <item
+      android:state_selected="true">
+    <shape
+        android:innerRadius="1dp"
+        android:shape="ring"
+        android:thicknessRatio="2"
+        android:useLevel="false">
+      <solid android:color="@color/default_color"/>
+    </shape>
+  </item>
+
+</selector>
