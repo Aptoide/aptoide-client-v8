@@ -61,6 +61,7 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
   private final TextView socialCommentUsername;
   private final TextView socialCommentBody;
   private final ImageView latestCommentMainAvatar;
+  private final TextView sharedBy;
 
   private int marginOfTheNextLikePreview = 60;
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
@@ -104,6 +105,7 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
     this.latestCommentMainAvatar =
         (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.inflater = LayoutInflater.from(itemView.getContext());
+    this.sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
   }
@@ -146,6 +148,14 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
       }
     } else {
       likeButton.setHeartState(false);
+    }
+    if (card.getSharedByName() != null) {
+      sharedBy.setText(spannableFactory.createColorSpan(itemView.getContext()
+              .getString(R.string.social_timeline_shared_by, card.getSharedByName()),
+          ContextCompat.getColor(itemView.getContext(), R.color.black), card.getSharedByName()));
+      sharedBy.setVisibility(View.VISIBLE);
+    } else {
+      sharedBy.setVisibility(View.GONE);
     }
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     showSocialInformationBar(card);
