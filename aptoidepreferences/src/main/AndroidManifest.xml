@@ -7,7 +7,7 @@
     package="cm.aptoide.pt.preferences">
 
   <application
-      android:allowBackup="true"
+      android:allowBackup="false"
       >
 
   </application>
