@@ -37,6 +37,9 @@
       android:id="@+id/pick_avatar_recyclerView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_below="@id/username_edit_text"
+      android:layout_marginLeft="32dp"
+      android:layout_marginRight="32dp"
       >
 
   </android.support.v7.widget.RecyclerView>

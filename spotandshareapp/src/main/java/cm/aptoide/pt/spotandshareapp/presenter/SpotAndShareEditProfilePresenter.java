@@ -3,6 +3,7 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 import android.os.Bundle;
 import android.util.Log;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatarsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareEditProfileView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -18,12 +19,15 @@ import rx.android.schedulers.AndroidSchedulers;
 public class SpotAndShareEditProfilePresenter implements Presenter {
 
   private SpotAndShareEditProfileView view;
-  private SpotAndShareUserManager spotAndShareUserManager;
+  private final SpotAndShareUserManager spotAndShareUserManager;
+  private final SpotAndShareUserAvatarsProvider avatarsProvider;
 
   public SpotAndShareEditProfilePresenter(SpotAndShareEditProfileView view,
-      SpotAndShareUserManager spotAndShareUserManager) {
+      SpotAndShareUserManager spotAndShareUserManager,
+      SpotAndShareUserAvatarsProvider spotAndShareUserAvatarsProvider) {
     this.view = view;
     this.spotAndShareUserManager = spotAndShareUserManager;
+    this.avatarsProvider = spotAndShareUserAvatarsProvider;
   }
 
   @Override public void present() {
@@ -31,7 +35,7 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
     createLifeCycleSubscription(cancelChanges());
 
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(
             created -> saveProfileChanges().compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -39,9 +43,17 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         }, error -> error.printStackTrace());
 
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(resumed -> loadChosenAvatar())
         .doOnNext(avatar -> view.setActualAvatar(avatar))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .map(created -> avatarsProvider.getAvailableAvatars())
+        .doOnNext(list -> view.setAvatarsList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, error -> error.printStackTrace());

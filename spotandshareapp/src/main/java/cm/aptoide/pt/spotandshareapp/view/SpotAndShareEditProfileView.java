@@ -2,6 +2,7 @@ package cm.aptoide.pt.spotandshareapp.view;
 
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.v8engine.presenter.View;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -23,4 +24,6 @@ public interface SpotAndShareEditProfileView extends View {
   void selectedAvatar(int avatar);
 
   void setActualAvatar(Integer avatar);
+
+  void setAvatarsList(List<SpotAndShareAvatar> list);
 }

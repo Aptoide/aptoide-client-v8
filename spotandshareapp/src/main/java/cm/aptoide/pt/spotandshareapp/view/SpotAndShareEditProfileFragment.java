@@ -20,9 +20,11 @@ import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatar;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatarsProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
+import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -107,6 +109,11 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     }
   }
 
+  @Override public void setAvatarsList(List<SpotAndShareAvatar> list) {
+    pickAvatarAdapter.setAvatarList(list);
+    pickAvatarAdapter.notifyDataSetChanged();
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     actualAvatar = (ImageView) view.findViewById(R.id.actual_avatar);
@@ -124,12 +131,12 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     avatarsRecyclerView.setHasFixedSize(true);
 
     attachPresenter(new SpotAndShareEditProfilePresenter(this,
-            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager()),
-        savedInstanceState);
+        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
+        new SpotAndShareUserAvatarsProvider()), savedInstanceState);
   }
 
   private void setupAvatarsListLayoutManager() {
-    GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
+    GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 4);
     avatarsRecyclerView.setLayoutManager(gridLayoutManager);
   }
 
