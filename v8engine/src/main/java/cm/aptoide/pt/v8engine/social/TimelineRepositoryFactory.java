@@ -7,8 +7,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.PostsRemoteDataSource;
+import cm.aptoide.pt.v8engine.social.data.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
+import java.util.HashSet;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -48,10 +50,17 @@ public class TimelineRepositoryFactory {
 
   public TimelinePostsRepository create(String action) {
     if (!repositories.containsKey(action)) {
+
+
+      final TimelineCardFilter.TimelineCardDuplicateFilter duplicateFilter = new TimelineCardFilter.TimelineCardDuplicateFilter(
+          new HashSet<>());
+      final TimelineCardFilter postFilter =
+          new TimelineCardFilter(duplicateFilter, packageRepository);
+
       repositories.put(action, new TimelinePostsRepository(
           new PostsRemoteDataSource(action, baseBodyInterceptorV7, defaultClient, defaultConverter,
               packageRepository, 20, 10, mapper, linksHandlerFactory, 20, 0, Integer.MAX_VALUE,
-              tokenInvalidator, defaultSharedPreferences)));
+              tokenInvalidator, defaultSharedPreferences, postFilter)));
     }
     return repositories.get(action);
   }

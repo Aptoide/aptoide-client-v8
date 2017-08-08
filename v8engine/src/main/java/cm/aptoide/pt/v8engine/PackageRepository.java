@@ -117,6 +117,19 @@ public class PackageRepository {
     });
   }
 
+  public Single<Boolean> isPackageInstalled(String packageName) {
+    return Single.defer(() -> {
+      try {
+        final PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+        return Single.just(packageInfo != null);
+      } catch (PackageManager.NameNotFoundException e) {
+        return Single.just(Boolean.FALSE);
+      } catch (Exception e) {
+        return Single.error(e);
+      }
+    });
+  }
+
   public Observable<String> getRandomInstalledPackages(int count) {
     return getInstalledPackages().map(packageInfos -> {
       Collections.shuffle(packageInfos);
