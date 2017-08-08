@@ -134,9 +134,9 @@ public class MinimalCardViewFactory {
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
     like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikeCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
     commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(post, CardTouchEvent.Type.COMMENT)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(originalPost, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(

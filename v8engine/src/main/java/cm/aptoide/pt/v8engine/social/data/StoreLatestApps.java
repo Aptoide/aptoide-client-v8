@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class StoreLatestApps implements Post {
   private final Long storeId;
   private boolean isLiked;
   private boolean likedFromClick;
+  private List<SocialCard.CardComment> comments;
 
   public StoreLatestApps(String cardId, Long storeId, String storeName, String storeAvatar,
       String storeTheme, int subscribers, int appsNumber, Date latestUpdate, List<App> apps,
@@ -38,6 +41,7 @@ public class StoreLatestApps implements Post {
     this.abUrl = abUrl;
     this.isLiked = isLiked;
     this.cardType = cardType;
+    this.comments = new ArrayList<>();
   }
 
   public String getStoreTheme() {
@@ -91,6 +95,18 @@ public class StoreLatestApps implements Post {
 
   @Override public boolean isLikeFromClick() {
     return likedFromClick;
+  }
+
+  @Override public List<SocialCard.CardComment> getComments() {
+    return comments;
+  }
+
+  @Override public long getCommentsNumber() {
+    return comments.size();
+  }
+
+  @Override public void addComment(SocialCard.CardComment postComment) {
+    comments.add(0, postComment);
   }
 
   public Long getStoreId() {

@@ -2,8 +2,11 @@ package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.v8engine.Install;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jdandrade on 21/06/2017.
@@ -29,6 +32,7 @@ public class AppUpdate implements Post {
   private boolean isLiked;
   private Install.InstallationStatus installationStatus;
   private boolean likedFromClick;
+  private List<SocialCard.CardComment> comments;
 
   public AppUpdate(String cardId, String storeName, String storeAvatar, String storeTheme,
       Long storeId, String appUpdateIcon, String appUpdateName, long appUpdateId,
@@ -52,6 +56,7 @@ public class AppUpdate implements Post {
     this.file = file;
     this.obb = obb;
     this.installationStatus = installationStatus;
+    this.comments = new ArrayList<>();
   }
 
   public Long getStoreId() {
@@ -129,6 +134,18 @@ public class AppUpdate implements Post {
 
   @Override public boolean isLikeFromClick() {
     return likedFromClick;
+  }
+
+  @Override public List<SocialCard.CardComment> getComments() {
+    return comments;
+  }
+
+  @Override public long getCommentsNumber() {
+    return comments.size();
+  }
+
+  @Override public void addComment(SocialCard.CardComment postComment) {
+    comments.add(0, postComment);
   }
 
   public float getAppUpdateAverageRating() {
