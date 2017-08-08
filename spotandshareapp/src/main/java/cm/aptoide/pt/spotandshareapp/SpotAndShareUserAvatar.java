@@ -11,9 +11,9 @@ public class SpotAndShareUserAvatar implements SpotAndShareAvatar {
   private String avatarString;
   private int avatarId;
 
-  public SpotAndShareUserAvatar(String avatarString, int avatarId) {
-    this.avatarString = avatarString;
+  public SpotAndShareUserAvatar(int avatarId, String avatarString) {
     this.avatarId = avatarId;
+    this.avatarString = avatarString;
   }
 
   @Override public byte[] serialize() {
