@@ -51,7 +51,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private boolean transactionLoading;
   private boolean buyLoading;
 
-  private ProductProvider productProvider;
   private Billing billing;
   private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
@@ -66,7 +65,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
-    productProvider = ProductProvider.fromBundle(billing, getArguments());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator =
@@ -108,9 +106,10 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .setPositiveButton(android.R.string.ok)
             .build();
 
-    attachPresenter(
-        new PaymentPresenter(this, billing, billingNavigator, billingAnalytics, productProvider),
-        savedInstanceState);
+    attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
+        getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
+        getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

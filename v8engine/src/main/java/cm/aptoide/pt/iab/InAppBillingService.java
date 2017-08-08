@@ -21,7 +21,8 @@ public class InAppBillingService extends Service {
     billingBinder = new ExternalBillingBinder(this,
         ((V8Engine) getApplicationContext()).getInAppBillingSerializer(),
         ((V8Engine) getApplicationContext()).getPaymentThrowableCodeMapper(),
-        ((V8Engine) getApplicationContext()).getBilling(), CrashReport.getInstance());
+        ((V8Engine) getApplicationContext()).getBilling(), CrashReport.getInstance(),
+        ((V8Engine) getApplicationContext()).getBillingIdResolver());
   }
 
   @Override public IBinder onBind(Intent intent) {

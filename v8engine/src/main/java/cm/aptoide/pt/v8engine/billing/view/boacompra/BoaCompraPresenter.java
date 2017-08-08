@@ -10,7 +10,6 @@ import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.authorization.boacompra.BoaCompraAuthorization;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.billing.view.WebView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -21,18 +20,20 @@ public class BoaCompraPresenter implements Presenter {
   private final WebView view;
   private final Billing billing;
   private final BillingAnalytics analytics;
-  private final ProductProvider productProvider;
   private final BillingNavigator navigator;
-  private final int paymentMethodId;
+  private final String applicationId;
+  private final String productId;
+  private final String payload;
 
   public BoaCompraPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      ProductProvider productProvider, BillingNavigator navigator, int paymentMethodId) {
+      BillingNavigator navigator, String applicationId, String productId, String payload) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
-    this.productProvider = productProvider;
     this.navigator = navigator;
-    this.paymentMethodId = paymentMethodId;
+    this.applicationId = applicationId;
+    this.productId = productId;
+    this.payload = payload;
   }
 
   @Override public void present() {
@@ -67,7 +68,7 @@ public class BoaCompraPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
+        .flatMap(product -> billing.getAuthorization(applicationId, productId))
         .first(authorization -> authorization.isInitialized())
         .cast(BoaCompraAuthorization.class)
         .observeOn(AndroidSchedulers.mainThread())
@@ -84,14 +85,14 @@ public class BoaCompraPresenter implements Presenter {
   private void onViewCreatedProcessAuthorizedBoaCompra() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
+        .flatMap(product -> billing.getAuthorization(applicationId, productId))
         .first(authorization -> authorization.isAuthorized())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMapCompletable(authorization -> productProvider.getProduct()
-            .flatMapCompletable(product -> billing.processPayment(paymentMethodId, product)
+        .flatMapCompletable(
+            authorization -> billing.processPayment(applicationId, productId, payload)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> popAuthorizationView())))
+                .doOnCompleted(() -> popAuthorizationView()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -107,10 +108,10 @@ public class BoaCompraPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
+        .flatMap(product -> billing.getAuthorization(applicationId, productId))
         .first(authorization -> authorization.isInactive())
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMapCompletable(authorization -> billing.authorize(paymentMethodId))
+        .flatMapCompletable(authorization -> billing.authorize(applicationId, productId))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -122,7 +123,7 @@ public class BoaCompraPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.redirectUrlEvent()
             .doOnNext(backToStorePressed -> view.showLoading())
-            .flatMapSingle(loading -> productProvider.getProduct())
+            .flatMapSingle(loading -> billing.getProduct(applicationId, productId))
             .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product)))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -133,7 +134,7 @@ public class BoaCompraPresenter implements Presenter {
   private void onViewCreatedShowBoaCompraError() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
+        .flatMap(product -> billing.getAuthorization(applicationId, productId))
         .first(authorization -> authorization.isFailed())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> showError())
@@ -157,7 +158,7 @@ public class BoaCompraPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.backButtonEvent())
-        .flatMapSingle(backButtonPressed -> productProvider.getProduct())
+        .flatMapSingle(backButtonPressed -> billing.getProduct(applicationId, productId))
         .doOnNext(product -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

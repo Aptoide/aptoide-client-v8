@@ -14,7 +14,7 @@ public class PaymentConfirmation extends RealmObject {
   public static final String PRODUCT_ID = "productId";
   public static final String PAYER_ID = "payerId";
 
-  @PrimaryKey private int productId;
+  @PrimaryKey private String productId;
   @Required private String payerId;
   @Required private String status;
 
@@ -24,12 +24,14 @@ public class PaymentConfirmation extends RealmObject {
   private String confirmationUrl;
   private String successUrl;
   private String clientToken;
+  private String payload;
 
   public PaymentConfirmation() {
   }
 
-  public PaymentConfirmation(String localMetadata, int productId, String status, String payerId,
-      int paymentMethodId, String confirmationUrl, String successUrl, String clientToken) {
+  public PaymentConfirmation(String localMetadata, String productId, String status, String payerId,
+      int paymentMethodId, String confirmationUrl, String successUrl, String clientToken,
+      String payload) {
     this.paymentConfirmationId = localMetadata;
     this.status = status;
     this.productId = productId;
@@ -38,6 +40,7 @@ public class PaymentConfirmation extends RealmObject {
     this.confirmationUrl = confirmationUrl;
     this.successUrl = successUrl;
     this.clientToken = clientToken;
+    this.payload = payload;
   }
 
   public String getPayerId() {
@@ -48,7 +51,7 @@ public class PaymentConfirmation extends RealmObject {
     return paymentConfirmationId;
   }
 
-  public int getProductId() {
+  public String getProductId() {
     return productId;
   }
 
@@ -70,5 +73,9 @@ public class PaymentConfirmation extends RealmObject {
 
   public String getClientToken() {
     return clientToken;
+  }
+
+  public String getPayload() {
+    return payload;
   }
 }

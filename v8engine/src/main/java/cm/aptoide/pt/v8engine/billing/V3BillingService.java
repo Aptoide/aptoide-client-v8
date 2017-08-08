@@ -47,12 +47,13 @@ public class V3BillingService implements BillingService {
   private final PackageRepository packageRepository;
   private final PaymentMethodMapper paymentMethodMapper;
   private final Resources resources;
+  private final BillingIdResolver idResolver;
 
   public V3BillingService(BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, PurchaseMapper purchaseMapper,
       ProductFactory productFactory, PackageRepository packageRepository,
-      PaymentMethodMapper paymentMethodMapper, Resources resources) {
+      PaymentMethodMapper paymentMethodMapper, Resources resources, BillingIdResolver idResolver) {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -63,6 +64,7 @@ public class V3BillingService implements BillingService {
     this.packageRepository = packageRepository;
     this.paymentMethodMapper = paymentMethodMapper;
     this.resources = resources;
+    this.idResolver = idResolver;
   }
 
   @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
@@ -88,9 +90,10 @@ public class V3BillingService implements BillingService {
         + PaidAppProduct.class.getSimpleName());
   }
 
-  @Override public Completable getBilling(int apiVersion, String packageName, String type) {
-    return InAppBillingAvailableRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+  @Override public Completable getBilling(String applicationId, String type) {
+    return InAppBillingAvailableRequest.of(idResolver.resolveApiVersion(applicationId),
+        idResolver.resolvePackageName(applicationId), type, bodyInterceptorV3, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -107,10 +110,10 @@ public class V3BillingService implements BillingService {
         });
   }
 
-  @Override
-  public Completable deletePurchase(int apiVersion, String packageName, String purchaseToken) {
-    return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+  @Override public Completable deletePurchase(String applicationId, String purchaseToken) {
+    return InAppBillingConsumeRequest.of(idResolver.resolveApiVersion(applicationId),
+        idResolver.resolvePackageName(applicationId), purchaseToken, bodyInterceptorV3, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .first()
         .toSingle()
@@ -125,8 +128,9 @@ public class V3BillingService implements BillingService {
         });
   }
 
-  @Override public Single<List<Purchase>> getPurchases(int apiVersion, String packageName) {
-    return getServerInAppPurchase(apiVersion, packageName, true).first()
+  @Override public Single<List<Purchase>> getPurchases(String applicationId) {
+    return getServerInAppPurchase(idResolver.resolveApiVersion(applicationId),
+        idResolver.resolvePackageName(applicationId), true).first()
         .toSingle()
         .map(purchaseInformation -> purchaseMapper.map(purchaseInformation))
         .onErrorResumeNext(throwable -> {
@@ -139,9 +143,11 @@ public class V3BillingService implements BillingService {
   }
 
   @Override
-  public Single<List<Product>> getProducts(int apiVersion, String packageName, List<String> skus) {
-    return getServerSKUs(apiVersion, packageName, skus, false).flatMap(
-        response -> mapToProducts(apiVersion, packageName, null, response));
+  public Single<List<Product>> getProducts(String applicationId, List<String> productIds) {
+    return getServerSKUs(idResolver.resolveApiVersion(applicationId),
+        idResolver.resolvePackageName(applicationId), productIds, false).flatMap(
+        response -> mapToProducts(idResolver.resolveApiVersion(applicationId),
+            idResolver.resolvePackageName(applicationId), response));
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
@@ -166,21 +172,36 @@ public class V3BillingService implements BillingService {
         + PaidAppProduct.class.getSimpleName());
   }
 
-  @Override public Single<Product> getProduct(int apiVersion, String packageName, String sku,
-      String developerPayload) {
-    return getServerSKUs(apiVersion, packageName, Collections.singletonList(sku), false).flatMap(
-        response -> mapToProducts(apiVersion, packageName, developerPayload, response))
+  @Override public Single<Product> getProduct(String applicationId, String productId) {
+    if (idResolver.isInAppId(productId)) {
+      return getInAppProduct(applicationId, productId);
+    }
+    if (idResolver.isPaidAppId(productId)) {
+      return getPaidAppProduct(productId);
+    }
+
+    return Single.error(new IllegalArgumentException("Invalid product id " + productId));
+  }
+
+  private Single<Product> getInAppProduct(String applicationId, String productId) {
+    return getServerSKUs(idResolver.resolveApiVersion(applicationId),
+        idResolver.resolvePackageName(applicationId),
+        Collections.singletonList(idResolver.resolveSku(productId)), false).flatMap(
+        response -> mapToProducts(idResolver.resolveApiVersion(applicationId),
+            idResolver.resolvePackageName(applicationId), response))
         .flatMap(products -> {
           if (products.isEmpty()) {
-            return Single.error(new ProductNotFoundException("No product found for sku: " + sku));
+            return Single.error(new ProductNotFoundException(
+                "No product found for sku: " + idResolver.resolveSku(productId)));
           }
           return Single.just(products.get(0));
         });
   }
 
-  @Override public Single<Product> getProduct(long appId, boolean sponsored, String storeName) {
-    return getServerPaidApp(false, appId, sponsored, storeName).map(
-        paidApp -> productFactory.create(paidApp, sponsored));
+  public Single<Product> getPaidAppProduct(String productId) {
+    return getServerPaidApp(false, idResolver.resolveAppId(productId),
+        idResolver.resolveSponsored(productId), idResolver.resolveStoreName(productId)).map(
+        paidApp -> productFactory.create(paidApp, idResolver.resolveSponsored(productId)));
   }
 
   private Single<InAppBillingSkuDetailsResponse> getServerSKUs(int apiVersion, String packageName,
@@ -242,10 +263,10 @@ public class V3BillingService implements BillingService {
   }
 
   private Single<List<Product>> mapToProducts(int apiVersion, String packageName,
-      String developerPayload, InAppBillingSkuDetailsResponse response) {
+      InAppBillingSkuDetailsResponse response) {
     return Single.zip(packageRepository.getPackageVersionCode(packageName),
         packageRepository.getPackageLabel(packageName),
-        (packageVersionCode, applicationName) -> productFactory.create(apiVersion, developerPayload,
-            packageName, response, packageVersionCode, applicationName));
+        (packageVersionCode, applicationName) -> productFactory.create(apiVersion, packageName,
+            response, packageVersionCode, applicationName));
   }
 }

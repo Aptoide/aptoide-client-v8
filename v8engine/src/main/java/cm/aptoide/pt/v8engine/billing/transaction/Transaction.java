@@ -1,23 +1,30 @@
 package cm.aptoide.pt.v8engine.billing.transaction;
 
 public class Transaction {
-  private final int productId;
+  private final String productId;
   private final String payerId;
   private final Status status;
   private final int paymentMethodId;
+  private final String payload;
 
-  public Transaction(int productId, String payerId, Status status, int paymentMethodId) {
+  public Transaction(String productId, String payerId, Status status, int paymentMethodId,
+      String payload) {
     this.productId = productId;
     this.payerId = payerId;
     this.status = status;
     this.paymentMethodId = paymentMethodId;
+    this.payload = payload;
+  }
+
+  public String getPayload() {
+    return payload;
   }
 
   public String getPayerId() {
     return payerId;
   }
 
-  public int getProductId() {
+  public String getProductId() {
     return productId;
   }
 

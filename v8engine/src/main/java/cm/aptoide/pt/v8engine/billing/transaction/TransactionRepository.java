@@ -27,9 +27,10 @@ public class TransactionRepository {
     this.transactionService = transactionService;
   }
 
-  public Single<Transaction> createTransaction(int paymentMethodId, Product product) {
+  public Single<Transaction> createTransaction(int paymentMethodId, Product product, String payload) {
     return payer.getId()
-        .flatMap(payerId -> transactionService.createTransaction(product, paymentMethodId, payerId))
+        .flatMap(payerId -> transactionService.createTransaction(product, paymentMethodId, payerId,
+            payload))
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }
@@ -41,13 +42,13 @@ public class TransactionRepository {
   }
 
   public Single<Transaction> createTransaction(int paymentMethodId, Product product,
-      String metadata) {
+      String metadata, String payload) {
     return payer.getId()
         .flatMap(payerId -> transactionPersistence.createTransaction(product.getId(), metadata,
-            Transaction.Status.PENDING, payerId, paymentMethodId));
+            Transaction.Status.PENDING, payerId, paymentMethodId, payload));
   }
 
-  public Completable remove(int productId) {
+  public Completable remove(String productId) {
     return payer.getId()
         .flatMapCompletable(
             payerId -> transactionPersistence.removeTransaction(payerId, productId));

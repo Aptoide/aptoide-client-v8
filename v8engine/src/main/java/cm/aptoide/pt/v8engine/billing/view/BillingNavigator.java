@@ -5,12 +5,8 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
-import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
-import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.billing.view.boacompra.BoaCompraFragment;
 import cm.aptoide.pt.v8engine.billing.view.braintree.BraintreeCreditCardFragment;
 import cm.aptoide.pt.v8engine.billing.view.mol.MolFragment;
@@ -53,28 +49,30 @@ public class BillingNavigator {
         .map(account -> account.isLoggedIn());
   }
 
-  public void navigateToTransactionAuthorizationView(PaymentMethod paymentMethod, Product product) {
-    switch (paymentMethod.getId()) {
+  public void navigateToTransactionAuthorizationView(String applicationId, String productId,
+      String developerPayload, int paymentMethodId) {
+    switch (paymentMethodId) {
       case PaymentMethodMapper.PAYPAL:
         fragmentNavigator.navigateTo(
-            PayPalFragment.create(getProductBundle(product), paymentMethod.getId()));
+            PayPalFragment.create(getProductBundle(applicationId, productId, developerPayload)));
         break;
       case PaymentMethodMapper.MOL_POINTS:
-        fragmentNavigator.navigateTo(MolFragment.create(getProductBundle(product)));
+        fragmentNavigator.navigateTo(
+            MolFragment.create(getProductBundle(applicationId, productId, developerPayload)));
         break;
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
         fragmentNavigator.navigateTo(
-            BoaCompraFragment.create(getProductBundle(product), paymentMethod.getId()));
+            BoaCompraFragment.create(getProductBundle(applicationId, productId, developerPayload)));
         break;
       case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
-        fragmentNavigator.navigateTo(
-            BraintreeCreditCardFragment.create(getProductBundle(product), paymentMethod.getId()));
+        fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(
+            getProductBundle(applicationId, productId, developerPayload)));
         break;
       case PaymentMethodMapper.SANDBOX:
       default:
         throw new IllegalArgumentException("Invalid payment method id "
-            + paymentMethod.getId()
+            + paymentMethodId
             + " can not navigate to authorization view");
     }
   }
@@ -118,17 +116,16 @@ public class BillingNavigator {
         bundleMapper.mapCancellation());
   }
 
-  private Bundle getProductBundle(Product product) {
-    if (product instanceof InAppProduct) {
-      return ProductProvider.createBundle(((InAppProduct) product).getApiVersion(),
-          ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getSku(),
-          ((InAppProduct) product).getSku());
-    } else if (product instanceof PaidAppProduct) {
-      return ProductProvider.createBundle(((PaidAppProduct) product).getAppId(),
-          ((PaidAppProduct) product).getStoreName(), ((PaidAppProduct) product).isSponsored());
-    } else {
-      throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
+  private Bundle getProductBundle(String applicationId, String productId, String developerPayload) {
+    if (productId != null && applicationId != null) {
+      final Bundle bundle = new Bundle();
+      bundle.putString(PaymentActivity.EXTRA_PRODUCT_ID, productId);
+      bundle.putString(PaymentActivity.EXTRA_APPLICATION_ID, applicationId);
+      bundle.putString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD, developerPayload);
+      return bundle;
     }
+
+    throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
   }
 
   private PayPalResult map(ActivityNavigator.Result result) {

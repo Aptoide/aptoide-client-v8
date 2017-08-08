@@ -34,15 +34,15 @@ public class RealmTransactionPersistence implements TransactionPersistence {
     this.transactionFactory = transactionFactory;
   }
 
-  @Override public Single<Transaction> createTransaction(int productId, String metadata,
-      Transaction.Status status, String payerId, int paymentMethodId) {
+  @Override public Single<Transaction> createTransaction(String productId, String metadata,
+      Transaction.Status status, String payerId, int paymentMethodId, String payload) {
     final Transaction transaction =
         transactionFactory.create(productId, payerId, status, paymentMethodId, metadata, null, null,
-            null);
+            null, payload);
     return saveTransaction(transaction).andThen(Single.just(transaction));
   }
 
-  @Override public Observable<Transaction> getTransaction(int productId, String payerId) {
+  @Override public Observable<Transaction> getTransaction(String productId, String payerId) {
     return transactionRelay.flatMap(
         transaction -> resolveTransaction(payerId, productId, transaction))
         .startWith(resolveTransaction(payerId, productId,
@@ -50,7 +50,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  @Override public Completable removeTransaction(String payerId, int productId) {
+  @Override public Completable removeTransaction(String payerId, String productId) {
     return Completable.fromAction(() -> {
       removeLocalTransaction(payerId, productId);
       nonLocalTransactions.remove(getServerTransactionsKey(payerId, productId));
@@ -74,7 +74,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
     });
   }
 
-  private Observable<Transaction> resolveTransaction(String payerId, int productId,
+  private Observable<Transaction> resolveTransaction(String payerId, String productId,
       Transaction nonLocalTransaction) {
 
     final Transaction localTransaction = getLocalTransaction(payerId, productId);
@@ -102,7 +102,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
     return Observable.just(nonLocalTransaction);
   }
 
-  private Transaction getLocalTransaction(String payerId, int productId) {
+  private Transaction getLocalTransaction(String payerId, String productId) {
     @Cleanup Realm realm = localTransactions.get();
 
     final PaymentConfirmation realmTransaction = getRealmTransaction(payerId, productId, realm);
@@ -114,7 +114,7 @@ public class RealmTransactionPersistence implements TransactionPersistence {
     return localTransaction;
   }
 
-  private void removeLocalTransaction(String payerId, int productId) {
+  private void removeLocalTransaction(String payerId, String productId) {
     @Cleanup final Realm realm = localTransactions.get();
 
     final PaymentConfirmation realmTransaction = getRealmTransaction(payerId, productId, realm);
@@ -126,14 +126,14 @@ public class RealmTransactionPersistence implements TransactionPersistence {
     }
   }
 
-  private PaymentConfirmation getRealmTransaction(String payerId, int productId, Realm realm) {
+  private PaymentConfirmation getRealmTransaction(String payerId, String productId, Realm realm) {
     return realm.where(PaymentConfirmation.class)
         .equalTo(PaymentConfirmation.PRODUCT_ID, productId)
         .equalTo(PaymentConfirmation.PAYER_ID, payerId)
         .findFirst();
   }
 
-  private String getServerTransactionsKey(String payerId, int productId) {
+  private String getServerTransactionsKey(String payerId, String productId) {
     return payerId + productId;
   }
 }

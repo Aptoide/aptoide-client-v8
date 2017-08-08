@@ -303,9 +303,12 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
     if (oldVersion == 8086) {
       realm.delete("PaymentConfirmation");
       schema.get("PaymentConfirmation")
+          .removeField("productId")
+          .addField("productId", String.class, FieldAttribute.PRIMARY_KEY)
           .addField("clientToken", String.class)
           .addField("successUrl", String.class)
-          .addField("confirmationUrl", String.class);
+          .addField("confirmationUrl", String.class)
+          .addField("payload", String.class);
 
       realm.delete("PaymentAuthorization");
 

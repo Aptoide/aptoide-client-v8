@@ -43,94 +43,97 @@ public class V3TransactionService implements TransactionService {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
-            return GetTransactionRequest.of(product.getId(),
+            return GetTransactionRequest.of(((InAppProduct) product).getInternalId(),
                 ((InAppProduct) product).getApiVersion(), bodyInterceptorV3, httpClient,
                 converterFactory, tokenInvalidator, sharedPreferences)
                 .observe()
                 .cast(TransactionResponse.class)
                 .toSingle();
           }
-          return GetTransactionRequest.of(product.getId(), bodyInterceptorV3, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences)
+          return GetTransactionRequest.of(((PaidAppProduct) product).getInternalId(),
+              bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
               .observe()
               .toSingle();
         })
         .map(response -> {
           if (response != null && response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId);
+            return transactionMapper.map(product.getId(), response, payerId, null);
           }
-          return getErrorTransaction(response.getErrors(), payerId, product, -1, null);
+          return getErrorTransaction(response.getErrors(), payerId, product, -1, null, null);
         });
   }
 
   @Override
   public Single<Transaction> createTransaction(Product product, int paymentMethodId, String payerId,
-      String metadata) {
+      String metadata, String payload) {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
-            return CreateTransactionRequest.ofInApp(product.getId(), paymentMethodId,
-                ((InAppProduct) product).getDeveloperPayload(), metadata, bodyInterceptorV3,
-                httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+            return CreateTransactionRequest.ofInApp(((InAppProduct) product).getInternalId(),
+                paymentMethodId, payload, metadata, bodyInterceptorV3, httpClient, converterFactory,
+                tokenInvalidator, sharedPreferences,
                 ((InAppProduct) product).getPackageVersionCode(), product.getTitle())
                 .observe(true)
                 .toSingle();
           }
-          return CreateTransactionRequest.ofPaidApp(product.getId(), paymentMethodId,
-              ((PaidAppProduct) product).getStoreName(), metadata, bodyInterceptorV3, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences,
+          return CreateTransactionRequest.ofPaidApp(((PaidAppProduct) product).getInternalId(),
+              paymentMethodId, ((PaidAppProduct) product).getStoreName(), metadata,
+              bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
               ((PaidAppProduct) product).getPackageVersionCode(), product.getTitle())
               .observe(true)
               .toSingle();
         })
         .map(response -> {
           if (response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId);
+            return transactionMapper.map(product.getId(), response, payerId, payload);
           }
           return getErrorTransaction(response.getErrors(), payerId, product, paymentMethodId,
-              metadata);
+              metadata, payload);
         });
   }
 
-  @Override public Single<Transaction> createTransaction(Product product, int paymentMethodId,
-      String payerId) {
+  @Override
+  public Single<Transaction> createTransaction(Product product, int paymentMethodId, String payerId,
+      String payload) {
 
     if (paymentMethodId == PaymentMethodMapper.PAYPAL) {
       return Single.just(transactionFactory.create(product.getId(), payerId,
-          Transaction.Status.PENDING_USER_AUTHORIZATION, paymentMethodId, null, null, null, null));
+          Transaction.Status.PENDING_USER_AUTHORIZATION, paymentMethodId, null, null, null, null,
+          payload));
     }
 
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
-            return CreateTransactionRequest.ofInApp(product.getId(), paymentMethodId,
-                ((InAppProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient,
-                converterFactory, tokenInvalidator, sharedPreferences,
+            return CreateTransactionRequest.ofInApp(((InAppProduct) product).getInternalId(),
+                paymentMethodId, payload, bodyInterceptorV3, httpClient, converterFactory,
+                tokenInvalidator, sharedPreferences,
                 ((InAppProduct) product).getPackageVersionCode(), product.getTitle())
                 .observe(true)
                 .toSingle();
           }
-          return CreateTransactionRequest.ofPaidApp(product.getId(), paymentMethodId,
-              ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences,
+          return CreateTransactionRequest.ofPaidApp(((PaidAppProduct) product).getInternalId(),
+              paymentMethodId, ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3,
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences,
               ((PaidAppProduct) product).getPackageVersionCode(), product.getTitle())
               .observe(true)
               .toSingle();
         })
         .map(response -> {
           if (response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId);
+            return transactionMapper.map(product.getId(), response, payerId, payload);
           }
-          return getErrorTransaction(response.getErrors(), payerId, product, paymentMethodId, null);
+          return getErrorTransaction(response.getErrors(), payerId, product, paymentMethodId, null,
+              payload);
         });
   }
 
   private Transaction getErrorTransaction(List<ErrorResponse> errors, String payerId,
-      Product product, int paymentMethodId, String metadata) {
+      Product product, int paymentMethodId, String metadata, String payload) {
 
     Transaction transaction =
         transactionFactory.create(product.getId(), payerId, Transaction.Status.FAILED,
-            paymentMethodId, metadata, null, null, null);
+            paymentMethodId, metadata, null, null, null, payload);
 
     if (errors == null || errors.isEmpty()) {
       return transaction;
@@ -141,23 +144,23 @@ public class V3TransactionService implements TransactionService {
     if ("PRODUCT-204".equals(error.code) || "PRODUCT-209".equals(error.code)) {
       transaction = transactionFactory.create(product.getId(), payerId,
           Transaction.Status.PENDING_USER_AUTHORIZATION, paymentMethodId, metadata, null, null,
-          null);
+          null, payload);
     }
 
     if ("PRODUCT-200".equals(error.code)) {
       transaction =
           transactionFactory.create(product.getId(), payerId, Transaction.Status.COMPLETED,
-              paymentMethodId, metadata, null, null, null);
+              paymentMethodId, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-214".equals(error.code)) {
       transaction = transactionFactory.create(product.getId(), payerId, Transaction.Status.NEW,
-          paymentMethodId, metadata, null, null, null);
+          paymentMethodId, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-216".equals(error.code)) {
       transaction = transactionFactory.create(product.getId(), payerId, Transaction.Status.PENDING,
-          paymentMethodId, metadata, null, null, null);
+          paymentMethodId, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-7".equals(error.code)
@@ -171,7 +174,7 @@ public class V3TransactionService implements TransactionService {
         || "PRODUCT-215".equals(error.code)
         || "PRODUCT-217".equals(error.code)) {
       transaction = transactionFactory.create(product.getId(), payerId, Transaction.Status.FAILED,
-          paymentMethodId, metadata, null, null, null);
+          paymentMethodId, metadata, null, null, null, payload);
     }
 
     return transaction;

@@ -7,7 +7,6 @@ import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
@@ -20,22 +19,24 @@ public class PayPalPresenter implements Presenter {
   private static final int PAY_APP_REQUEST_CODE = 12;
   private final PayPalView view;
   private final Billing billing;
-  private final ProductProvider productProvider;
   private final BillingAnalytics analytics;
   private final BillingNavigator billingNavigator;
   private final Scheduler viewScheduler;
-  private final int paymentMethodId;
+  private final String applicationId;
+  private final String productId;
+  private final String developerPayload;
 
-  public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
-      BillingAnalytics analytics, BillingNavigator billingNavigator, Scheduler viewScheduler,
-      int paymentMethodId) {
+  public PayPalPresenter(PayPalView view, Billing billing, BillingAnalytics analytics,
+      BillingNavigator billingNavigator, Scheduler viewScheduler, String applicationId,
+      String productId, String developerPayload) {
     this.view = view;
     this.billing = billing;
-    this.productProvider = productProvider;
     this.analytics = analytics;
     this.billingNavigator = billingNavigator;
     this.viewScheduler = viewScheduler;
-    this.paymentMethodId = paymentMethodId;
+    this.applicationId = applicationId;
+    this.productId = productId;
+    this.developerPayload = developerPayload;
   }
 
   @Override public void present() {
@@ -58,7 +59,7 @@ public class PayPalPresenter implements Presenter {
   private void onViewCreatedShowPayPalPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(created -> productProvider.getProduct())
+        .flatMapSingle(created -> billing.getProduct(applicationId, productId))
         .observeOn(viewScheduler)
         .doOnNext(product -> billingNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
             product.getPrice()
@@ -98,9 +99,8 @@ public class PayPalPresenter implements Presenter {
   private Completable processPayPalPayment(BillingNavigator.PayPalResult result) {
     switch (result.getStatus()) {
       case BillingNavigator.PayPalResult.SUCCESS:
-        return productProvider.getProduct()
-            .flatMapCompletable(product -> billing.processLocalPayment(paymentMethodId, product,
-                result.getPaymentConfirmationId()));
+        return billing.processLocalPayment(applicationId, productId, developerPayload,
+            result.getPaymentConfirmationId());
       case BillingNavigator.PayPalResult.CANCELLED:
       case BillingNavigator.PayPalResult.ERROR:
       default:

@@ -61,7 +61,7 @@ public class TransactionSync extends Sync {
         .toSingle()
         .flatMap(localTransaction -> transactionService.createTransaction(product,
             localTransaction.getPaymentMethodId(), localTransaction.getPayerId(),
-            localTransaction.getLocalMetadata()))
+            localTransaction.getLocalMetadata(), localTransaction.getPayload()))
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }

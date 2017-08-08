@@ -90,6 +90,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.BillingService;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
@@ -279,6 +280,7 @@ public abstract class V8Engine extends Application {
   private AuthorizationPersistence authorizationPersistence;
   private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
+  private BillingIdResolver billingiIdResolver;
 
   /**
    * call after this instance onCreate()
@@ -783,8 +785,8 @@ public abstract class V8Engine extends Application {
           new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences(), new PurchaseMapper(getInAppBillingSerializer()),
-              new ProductFactory(), getPackageRepository(), new PaymentMethodMapper(),
-              getResources());
+              new ProductFactory(getBillingIdResolver()), getPackageRepository(),
+              new PaymentMethodMapper(), getResources(), getBillingIdResolver());
 
       final PaymentMethodSelector paymentMethodSelector =
           new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
@@ -794,6 +796,13 @@ public abstract class V8Engine extends Application {
           paymentMethodSelector, getPayer());
     }
     return billing;
+  }
+
+  public BillingIdResolver getBillingIdResolver() {
+    if (billingiIdResolver == null) {
+      billingiIdResolver = new BillingIdResolver(3, getAptoidePackage());
+    }
+    return billingiIdResolver;
   }
 
   public BillingSyncManager getBillingSyncManager() {
