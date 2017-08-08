@@ -19,12 +19,13 @@ public class RatedRecommendation extends AppPost {
   private final List<UserTimeline> likes;
   private final List<SocialCard.CardComment> comments;
   private final String content;
+  private final String sharedByName;
 
   public RatedRecommendation(String cardId, Poster poster, long appId, String packageName,
       String appName, String appIcon, Long storeId, float ratingAverage, Date timestamp,
       String abUrl, boolean isLiked, long commentsNumber, long likesNumber,
-      List<UserTimeline> likes, List<SocialCard.CardComment> comments, String content,
-      CardType cardType) {
+      List<UserTimeline> likes, List<SocialCard.CardComment> comments, String sharedByName,
+      String content, CardType cardType) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage,
         storeId, isLiked);
     this.poster = poster;
@@ -32,15 +33,12 @@ public class RatedRecommendation extends AppPost {
     this.likesNumber = likesNumber;
     this.likes = likes;
     this.comments = comments;
+    this.sharedByName = sharedByName;
     this.content = content;
   }
 
   public String getContent() {
     return content;
-  }
-
-  public long getCommentsNumber() {
-    return commentsNumber;
   }
 
   public long getLikesNumber() {
@@ -57,5 +55,13 @@ public class RatedRecommendation extends AppPost {
 
   public List<SocialCard.CardComment> getComments() {
     return comments;
+  }
+
+  public long getCommentsNumber() {
+    return commentsNumber;
+  }
+
+  public String getSharedByName() {
+    return sharedByName;
   }
 }

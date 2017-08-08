@@ -200,9 +200,12 @@ public class TimelineResponseCardMapper {
             .getAvg(), socialRecommendation.getDate(), abUrl, socialRecommendation.getMy()
             .isLiked(), socialRecommendation.getStats()
             .getComments(), socialRecommendation.getStats()
-            .getLikes(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
+            .getLikes(), socialRecommendation.getLikes(), socialRecommendation.getComments(), null,
             socialRecommendation.getContent(), CardType.SOCIAL_POST_RECOMMENDATION));
       } else {
+        String sharedByName =
+            socialRecommendation.getUserSharer() != null ? socialRecommendation.getUserSharer()
+                .getName() : null;
         cards.add(new RatedRecommendation(socialRecommendation.getCardId(),
             new Poster(user.getUser(), user.getStore()), socialRecommendation.getApp()
             .getId(), socialRecommendation.getApp()
@@ -217,10 +220,12 @@ public class TimelineResponseCardMapper {
             .isLiked(), socialRecommendation.getStats()
             .getComments(), socialRecommendation.getStats()
             .getLikes(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
-            socialRecommendation.getContent(), CardType.SOCIAL_RECOMMENDATION));
+            sharedByName, socialRecommendation.getContent(), CardType.SOCIAL_RECOMMENDATION));
       }
     } else if (item instanceof SocialInstallTimelineItem) {
       final SocialInstall socialInstall = ((SocialInstallTimelineItem) item).getData();
+      String sharedByName = socialInstall.getUserSharer() != null ? socialInstall.getUserSharer()
+          .getName() : null;
       UserSharerTimeline user =
           new UserSharerTimeline(socialInstall.getUser(), socialInstall.getStore());
       cards.add(new RatedRecommendation(socialInstall.getCardId(),
@@ -236,7 +241,7 @@ public class TimelineResponseCardMapper {
           .getAvg(), socialInstall.getDate(), abUrl, socialInstall.getMy()
           .isLiked(), socialInstall.getStats()
           .getComments(), socialInstall.getStats()
-          .getLikes(), socialInstall.getLikes(), socialInstall.getComments(), "",
+          .getLikes(), socialInstall.getLikes(), socialInstall.getComments(), sharedByName, "",
           CardType.SOCIAL_INSTALL));
     } else if (item instanceof SocialArticleTimelineItem) {
       final SocialArticle socialArticle = ((SocialArticleTimelineItem) item).getData();
@@ -256,9 +261,11 @@ public class TimelineResponseCardMapper {
                 socialArticle.getMy()
                     .isLiked(), socialArticle.getStats()
                 .getComments(), socialArticle.getStats()
-                .getLikes(), socialArticle.getLikes(), socialArticle.getComments(),
+                .getLikes(), socialArticle.getLikes(), socialArticle.getComments(), null,
                 socialArticle.getContent(), CardType.SOCIAL_POST_ARTICLE));
       } else {
+        String sharedByName = socialArticle.getUserSharer() != null ? socialArticle.getUserSharer()
+            .getName() : null;
         cards.add(
             new SocialMedia(socialArticle.getCardId(), new Poster(user.getUser(), user.getStore()),
                 socialArticle.getTitle(), socialArticle.getThumbnailUrl(), socialArticle.getDate(),
@@ -272,7 +279,7 @@ public class TimelineResponseCardMapper {
                 socialArticle.getMy()
                     .isLiked(), socialArticle.getStats()
                 .getComments(), socialArticle.getStats()
-                .getLikes(), socialArticle.getLikes(), socialArticle.getComments(),
+                .getLikes(), socialArticle.getLikes(), socialArticle.getComments(), sharedByName,
                 socialArticle.getContent(), CardType.SOCIAL_ARTICLE));
       }
     } else if (item instanceof SocialVideoTimelineItem) {
@@ -294,9 +301,11 @@ public class TimelineResponseCardMapper {
                 socialVideo.getMy()
                     .isLiked(), socialVideo.getStats()
                 .getComments(), socialVideo.getStats()
-                .getLikes(), socialVideo.getLikes(), socialVideo.getComments(),
+                .getLikes(), socialVideo.getLikes(), socialVideo.getComments(), null,
                 socialVideo.getContent(), CardType.SOCIAL_POST_VIDEO));
       } else {
+        String sharedByName = socialVideo.getUserSharer() != null ? socialVideo.getUserSharer()
+            .getName() : null;
         cards.add(
             new SocialMedia(socialVideo.getCardId(), new Poster(user.getUser(), user.getStore()),
                 socialVideo.getTitle(), socialVideo.getThumbnailUrl(), socialVideo.getDate(),
@@ -310,7 +319,7 @@ public class TimelineResponseCardMapper {
                 socialVideo.getMy()
                     .isLiked(), socialVideo.getStats()
                 .getComments(), socialVideo.getStats()
-                .getLikes(), socialVideo.getLikes(), socialVideo.getComments(),
+                .getLikes(), socialVideo.getLikes(), socialVideo.getComments(), sharedByName,
                 socialVideo.getContent(), CardType.SOCIAL_VIDEO));
       }
     } else if (item instanceof SocialStoreLatestAppsTimelineItem) {
@@ -318,6 +327,9 @@ public class TimelineResponseCardMapper {
           ((SocialStoreLatestAppsTimelineItem) item).getData();
       UserSharerTimeline user = new UserSharerTimeline(socialStoreLatestApps.getUser(),
           socialStoreLatestApps.getOwnerStore());
+      String sharedByName =
+          socialStoreLatestApps.getUserSharer() != null ? socialStoreLatestApps.getUserSharer()
+              .getName() : null;
       cards.add(new SocialStore(socialStoreLatestApps.getCardId(),
           new Poster(user.getUser(), user.getStore()), socialStoreLatestApps.getSharedStore()
           .getId(), socialStoreLatestApps.getSharedStore()
@@ -333,7 +345,7 @@ public class TimelineResponseCardMapper {
               .isLiked(), socialStoreLatestApps.getStats()
           .getComments(), socialStoreLatestApps.getStats()
           .getLikes(), socialStoreLatestApps.getLikes(), socialStoreLatestApps.getComments(),
-          CardType.SOCIAL_STORE));
+          sharedByName, CardType.SOCIAL_STORE));
     } else if (item instanceof AggregatedSocialArticleTimelineItem) {
       final AggregatedSocialArticle aggregatedSocialArticle =
           ((AggregatedSocialArticleTimelineItem) item).getData();

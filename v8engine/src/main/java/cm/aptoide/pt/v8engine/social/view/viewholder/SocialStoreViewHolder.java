@@ -67,6 +67,7 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
   private final TextView socialCommentUsername;
   private final TextView socialCommentBody;
   private final ImageView latestCommentMainAvatar;
+  private final TextView sharedBy;
 
   private int marginOfTheNextLikePreview = 60;
 
@@ -110,6 +111,7 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
     this.socialCommentBody = (TextView) itemView.findViewById(R.id.social_latest_comment_body);
     this.latestCommentMainAvatar =
         (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
+    this.sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   }
 
@@ -160,6 +162,14 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
       } else {
         likeButton.setHeartStateWithoutAnimation(true);
       }
+    }
+    if (card.getSharedByName() != null) {
+      sharedBy.setText(spannableFactory.createColorSpan(itemView.getContext()
+              .getString(R.string.social_timeline_shared_by, card.getSharedByName()),
+          ContextCompat.getColor(itemView.getContext(), R.color.black), card.getSharedByName()));
+      sharedBy.setVisibility(View.VISIBLE);
+    } else {
+      sharedBy.setVisibility(View.GONE);
     }
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     showSocialInformationBar(card);
