@@ -31,18 +31,17 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
 
   public void setAvatarList(List<SpotAndShareAvatar> avatarList) {
     this.avatarList = avatarList;
-    notifyDataSetChanged();
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.fragment_spotandshare_pick_apps_item, parent, false);
+        .inflate(R.layout.fragment_spotandshare_edit_profile_item, parent, false);
     return new AvatarViewHolder(view);
   }
 
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     AvatarViewHolder avatarViewHolder = (AvatarViewHolder) holder;
-    avatarViewHolder.setAppModelItem(avatarList.get(position - 1));
+    avatarViewHolder.setAvatar(avatarList.get(position));
   }
 
   @Override public int getItemCount() {
@@ -74,7 +73,7 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
       avatarImageView = (ImageView) itemView.findViewById(R.id.avatar_image_view);
     }
 
-    public void setAppModelItem(SpotAndShareAvatar avatar) {
+    public void setAvatar(SpotAndShareAvatar avatar) {
       ImageLoader.with(context)
           .load(avatar.getString(), avatarImageView);
       avatarImageView.setOnClickListener(v -> pickAvatarSubject.onNext(avatar));
