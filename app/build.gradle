@@ -380,7 +380,7 @@ dependencies {
   compile "com.braintreepayments:card-form:${BRAINTREE_CARD_FORM_VERSION}"
 }
 
-String getDate() {
+static String getDate() {
   def date = new Date()
   def formattedDate = date.format('yyyyMMdd')
   return formattedDate
