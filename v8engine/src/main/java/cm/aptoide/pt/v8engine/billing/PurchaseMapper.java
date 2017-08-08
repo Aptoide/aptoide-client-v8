@@ -18,15 +18,19 @@ import java.util.List;
 public class PurchaseMapper {
 
   private final ExternalBillingSerializer serializer;
+  private final BillingIdResolver idResolver;
 
-  public PurchaseMapper(ExternalBillingSerializer serializer) {
+  public PurchaseMapper(ExternalBillingSerializer serializer, BillingIdResolver idResolver) {
     this.serializer = serializer;
+    this.idResolver = idResolver;
   }
 
   public Purchase map(PaidApp response) {
     return new PaidAppPurchase(response.getPath()
         .getStringPath(), response.getPayment()
-        .isPaid() ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.FAILED);
+        .isPaid() ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.FAILED,
+        idResolver.resolveProductId(response.getPath()
+            .getAppId()));
   }
 
   public Purchase map(InAppBillingPurchasesResponse response, String sku) {
@@ -59,14 +63,15 @@ public class PurchaseMapper {
                 .get(i), serializer.serializePurchase(responsePurchase), responseSku,
                 responsePurchase.getPurchaseToken(),
                 responsePurchase.getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED
-                    : SimplePurchase.Status.FAILED);
+                    : SimplePurchase.Status.FAILED,
+                idResolver.resolveProductId(responsePurchase.getProductId()));
           }
         }
       }
     } catch (JsonProcessingException ignored) {
     }
 
-    return new SimplePurchase(SimplePurchase.Status.FAILED);
+    return new SimplePurchase(SimplePurchase.Status.FAILED, idResolver.resolveProductId(sku));
   }
 
   public List<Purchase> map(InAppBillingPurchasesResponse response) {
@@ -100,7 +105,8 @@ public class PurchaseMapper {
               .getSkuList()
               .get(i), responsePurchase.getPurchaseToken(),
               responsePurchase.getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED
-                  : SimplePurchase.Status.NEW));
+                  : SimplePurchase.Status.NEW,
+              idResolver.resolveProductId(responsePurchase.getProductId())));
         }
       }
     } catch (JsonProcessingException ignored) {

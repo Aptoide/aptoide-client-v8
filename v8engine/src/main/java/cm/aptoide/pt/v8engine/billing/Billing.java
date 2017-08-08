@@ -9,7 +9,6 @@ import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
-import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.product.SimplePurchase;
 import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
@@ -40,8 +39,8 @@ public class Billing {
     return payer;
   }
 
-  public Single<Boolean> isSupported(String applicationId, String type) {
-    return billingService.getBilling(applicationId, type)
+  public Single<Boolean> isSupported(String sellerId, String type) {
+    return billingService.getBilling(sellerId, type)
         .andThen(Single.just(true))
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof IllegalArgumentException) {
@@ -51,40 +50,34 @@ public class Billing {
         });
   }
 
-  public Single<Product> getProduct(String applicationId, String productId) {
-    return billingService.getProduct(applicationId, productId);
+  public Single<Product> getProduct(String sellerId, String productId) {
+    return billingService.getProduct(sellerId, productId);
   }
 
-  public Single<List<Product>> getProducts(String applicationId, List<String> productIds) {
-    return billingService.getProducts(applicationId, productIds);
+  public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
+    return billingService.getProducts(sellerId, productIds);
   }
 
-  public Single<List<Purchase>> getPurchases(String applicationId) {
-    return billingService.getPurchases(applicationId);
+  public Single<List<Purchase>> getPurchases(String sellerId) {
+    return billingService.getPurchases(sellerId);
   }
 
-  public Completable consumePurchase(String applicationId, String purchaseToken) {
-    return getPurchases(applicationId).flatMapObservable(purchases -> Observable.from(purchases))
-        .cast(InAppPurchase.class)
-        .filter(purchase -> purchaseToken.equals(purchase.getToken()))
-        .first()
-        .toSingle()
-        .flatMapCompletable(
-            purchase -> getProduct(applicationId, purchase.getSku()).flatMapCompletable(
-                product -> billingService.deletePurchase(applicationId, purchaseToken)
-                    .andThen(transactionRepository.remove(product.getId()))));
+  public Completable consumePurchase(String sellerId, String purchaseToken) {
+    return billingService.getPurchase(sellerId, purchaseToken)
+        .flatMapCompletable(purchase -> billingService.deletePurchase(sellerId, purchaseToken)
+            .andThen(transactionRepository.remove(purchase.getProductId(), sellerId)));
   }
 
-  public Single<List<PaymentMethod>> getPaymentMethods(String applicationId, String productId) {
-    return getProduct(applicationId, productId).flatMap(
+  public Single<List<PaymentMethod>> getPaymentMethods(String sellerId, String productId) {
+    return getProduct(sellerId, productId).flatMap(
         product -> billingService.getPaymentMethods(product));
   }
 
-  public Completable processPayment(String applicationId, String productId, String payload) {
-    return getSelectedPaymentMethod(applicationId, productId).flatMap(
-        paymentMethod -> getProduct(applicationId, productId).flatMap(
-            product -> transactionRepository.createTransaction(paymentMethod.getId(), product,
-                payload)))
+  public Completable processPayment(String sellerId, String productId, String payload) {
+    return getSelectedPaymentMethod(sellerId, productId).flatMap(
+        paymentMethod -> getProduct(sellerId, productId).flatMap(
+            product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),
+                product, payload)))
         .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
             return Completable.error(
@@ -99,68 +92,68 @@ public class Billing {
         });
   }
 
-  public Completable processLocalPayment(String applicationId, String productId, String payload,
+  public Completable processLocalPayment(String sellerId, String productId, String payload,
       String localMetadata) {
-    return getSelectedPaymentMethod(applicationId, productId).flatMap(
-        paymentMethod -> getProduct(applicationId, productId).flatMap(
-            product -> transactionRepository.createTransaction(paymentMethod.getId(), product,
-                localMetadata, payload)))
+    return getSelectedPaymentMethod(sellerId, productId).flatMap(
+        paymentMethod -> getProduct(sellerId, productId).flatMap(
+            product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),
+                product, localMetadata, payload)))
         .toCompletable();
   }
 
-  public Observable<Transaction> getTransaction(String applicationId, String productId) {
-    return getProduct(applicationId, productId).flatMapObservable(
-        product -> transactionRepository.getTransaction(product));
+  public Observable<Transaction> getTransaction(String sellerId, String productId) {
+    return getProduct(sellerId, productId).flatMapObservable(
+        product -> transactionRepository.getTransaction(product, sellerId));
   }
 
-  public Observable<Purchase> getPurchase(String applicationId, String productId) {
-    return getTransaction(applicationId, productId).flatMapSingle(transaction -> {
+  public Observable<Purchase> getPurchase(String sellerId, String productId) {
+    return getTransaction(sellerId, productId).flatMapSingle(transaction -> {
 
       if (transaction.isPending() || transaction.isUnknown()) {
-        return Single.just(new SimplePurchase(SimplePurchase.Status.PENDING));
+        return Single.just(new SimplePurchase(SimplePurchase.Status.PENDING, productId));
       }
 
       if (transaction.isNew() || transaction.isFailed() || transaction.isPendingAuthorization()) {
-        return Single.just(new SimplePurchase(SimplePurchase.Status.NEW));
+        return Single.just(new SimplePurchase(SimplePurchase.Status.NEW, productId));
       }
 
-      return getProduct(applicationId, productId).flatMap(
+      return getProduct(sellerId, productId).flatMap(
           product -> billingService.getPurchase(product));
     })
         .flatMap(purchase -> {
           if (purchase.isFailed()) {
-            return transactionRepository.remove(productId)
+            return transactionRepository.remove(productId, sellerId)
                 .andThen(Observable.just(purchase));
           }
           return Observable.just(purchase);
         });
   }
 
-  public Observable<Authorization> getAuthorization(String applicationId, String productId) {
-    return getSelectedPaymentMethod(applicationId, productId).flatMapObservable(
+  public Observable<Authorization> getAuthorization(String sellerId, String productId) {
+    return getSelectedPaymentMethod(sellerId, productId).flatMapObservable(
         paymentMethod -> authorizationRepository.getAuthorization(paymentMethod.getId()));
   }
 
-  public Completable authorize(String applicationId, String productId) {
-    return getSelectedPaymentMethod(applicationId, productId).flatMap(
+  public Completable authorize(String sellerId, String productId) {
+    return getSelectedPaymentMethod(sellerId, productId).flatMap(
         paymentMethod -> authorizationRepository.createAuthorization(paymentMethod.getId()))
         .toCompletable();
   }
 
-  public Completable selectPaymentMethod(int paymentMethodId, String applicationId,
+  public Completable selectPaymentMethod(int paymentMethodId, String sellerId,
       String productId) {
-    return getPaymentMethod(paymentMethodId, applicationId, productId).flatMapCompletable(
+    return getPaymentMethod(paymentMethodId, sellerId, productId).flatMapCompletable(
         paymentMethod -> paymentMethodSelector.selectPaymentMethod(paymentMethod));
   }
 
-  public Single<PaymentMethod> getSelectedPaymentMethod(String applicationId, String productId) {
-    return getPaymentMethods(applicationId, productId).flatMap(
+  public Single<PaymentMethod> getSelectedPaymentMethod(String sellerId, String productId) {
+    return getPaymentMethods(sellerId, productId).flatMap(
         paymentMethods -> paymentMethodSelector.selectedPaymentMethod(paymentMethods));
   }
 
-  private Single<PaymentMethod> getPaymentMethod(int paymentMethodId, String applicationId,
+  private Single<PaymentMethod> getPaymentMethod(int paymentMethodId, String sellerId,
       String productId) {
-    return getPaymentMethods(applicationId, productId).flatMapObservable(
+    return getPaymentMethods(sellerId, productId).flatMapObservable(
         payments -> Observable.from(payments)
             .filter(payment -> payment.getId() == paymentMethodId)
             .switchIfEmpty(Observable.error(

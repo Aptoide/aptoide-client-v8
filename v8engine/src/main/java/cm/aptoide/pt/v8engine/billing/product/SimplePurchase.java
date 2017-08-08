@@ -5,9 +5,15 @@ import cm.aptoide.pt.v8engine.billing.Purchase;
 public class SimplePurchase implements Purchase {
 
   private final Status status;
+  private final String productId;
 
-  public SimplePurchase(Status status) {
+  public SimplePurchase(Status status, String productId) {
     this.status = status;
+    this.productId = productId;
+  }
+
+  @Override public String getProductId() {
+    return productId;
   }
 
   @Override public boolean isCompleted() {

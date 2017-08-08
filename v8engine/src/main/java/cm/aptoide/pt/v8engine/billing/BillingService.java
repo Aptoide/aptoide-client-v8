@@ -8,16 +8,17 @@ public interface BillingService {
 
   Single<List<PaymentMethod>> getPaymentMethods(Product product);
 
-  Completable getBilling(String applicationId, String type);
+  Completable getBilling(String sellerId, String type);
 
-  Completable deletePurchase(String applicationId, String purchaseToken);
+  Completable deletePurchase(String sellerId, String purchaseToken);
 
-  Single<List<Purchase>> getPurchases(String applicationId);
+  Single<List<Purchase>> getPurchases(String sellerId);
 
-  Single<List<Product>> getProducts(String applicationId, List<String> productIds);
+  Single<Purchase> getPurchase(String sellerId, String purchaseToken);
+
+  Single<List<Product>> getProducts(String sellerId, List<String> productIds);
 
   Single<Purchase> getPurchase(Product product);
 
-  Single<Product> getProduct(String applicationId, String productId);
-
+  Single<Product> getProduct(String sellerId, String productId);
 }

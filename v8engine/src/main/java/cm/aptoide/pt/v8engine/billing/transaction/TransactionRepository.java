@@ -27,30 +27,33 @@ public class TransactionRepository {
     this.transactionService = transactionService;
   }
 
-  public Single<Transaction> createTransaction(int paymentMethodId, Product product, String payload) {
+  public Single<Transaction> createTransaction(String sellerId, int paymentMethodId,
+      Product product, String payload) {
     return payer.getId()
-        .flatMap(payerId -> transactionService.createTransaction(product, paymentMethodId, payerId,
-            payload))
+        .flatMap(payerId -> transactionService.createTransaction(sellerId, payerId, paymentMethodId,
+            product, payload))
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }
 
-  public Observable<Transaction> getTransaction(Product product) {
+  public Observable<Transaction> getTransaction(Product product, String sellerId) {
     return payer.getId()
-        .doOnSuccess(__ -> syncScheduler.syncTransaction(product))
-        .flatMapObservable(payer -> transactionPersistence.getTransaction(product.getId(), payer));
+        .doOnSuccess(__ -> syncScheduler.syncTransaction(sellerId, product))
+        .flatMapObservable(
+            payer -> transactionPersistence.getTransaction(sellerId, payer, product.getId()));
   }
 
-  public Single<Transaction> createTransaction(int paymentMethodId, Product product,
-      String metadata, String payload) {
+  public Single<Transaction> createTransaction(String sellerId, int paymentMethodId,
+      Product product, String metadata, String payload) {
     return payer.getId()
-        .flatMap(payerId -> transactionPersistence.createTransaction(product.getId(), metadata,
-            Transaction.Status.PENDING, payerId, paymentMethodId, payload));
+        .flatMap(
+            payerId -> transactionPersistence.createTransaction(sellerId, payerId, paymentMethodId,
+                product.getId(), Transaction.Status.PENDING, payload, metadata));
   }
 
-  public Completable remove(String productId) {
+  public Completable remove(String productId, String sellerId) {
     return payer.getId()
         .flatMapCompletable(
-            payerId -> transactionPersistence.removeTransaction(payerId, productId));
+            payerId -> transactionPersistence.removeTransaction(sellerId, payerId, productId));
   }
 }

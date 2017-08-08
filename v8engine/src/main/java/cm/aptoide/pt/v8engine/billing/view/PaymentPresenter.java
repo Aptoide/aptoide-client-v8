@@ -28,17 +28,17 @@ public class PaymentPresenter implements Presenter {
   private final Billing billing;
   private final BillingNavigator navigator;
   private final BillingAnalytics analytics;
-  private final String applicationId;
+  private final String sellerId;
   private final String productId;
   private final String payload;
 
   public PaymentPresenter(PaymentView view, Billing billing, BillingNavigator navigator,
-      BillingAnalytics analytics, String applicationId, String productId, String payload) {
+      BillingAnalytics analytics, String sellerId, String productId, String payload) {
     this.view = view;
     this.billing = billing;
     this.navigator = navigator;
     this.analytics = analytics;
-    this.applicationId = applicationId;
+    this.sellerId = sellerId;
     this.productId = productId;
     this.payload = payload;
   }
@@ -105,8 +105,8 @@ public class PaymentPresenter implements Presenter {
         .filter(authenticated -> authenticated)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showPaymentLoading())
-        .flatMapSingle(loading -> billing.getProduct(applicationId, productId))
-        .flatMapCompletable(product -> billing.getPaymentMethods(applicationId, productId)
+        .flatMapSingle(loading -> billing.getProduct(sellerId, productId))
+        .flatMapCompletable(product -> billing.getPaymentMethods(sellerId, productId)
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(payments -> showPaymentInformation(product, payments))
             .doOnCompleted(() -> view.hidePaymentLoading()))
@@ -127,7 +127,7 @@ public class PaymentPresenter implements Presenter {
         .filter(authenticated -> authenticated)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showPurchaseLoading())
-        .flatMap(__ -> billing.getPurchase(applicationId, productId)
+        .flatMap(__ -> billing.getPurchase(sellerId, productId)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(purchase -> {
               if (purchase.isPending()) {
@@ -186,7 +186,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(created -> view.paymentSelection())
         .flatMapCompletable(
             paymentMethodViewModel -> billing.selectPaymentMethod(paymentMethodViewModel.getId(),
-                applicationId, productId))
+                sellerId, productId))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> navigator.popPaymentViewWithResult(throwable));
@@ -197,13 +197,13 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(__ -> view.buySelection()
             .doOnNext(buySelection -> view.showBuyLoading())
-            .flatMapSingle(selection -> billing.getProduct(applicationId, productId))
+            .flatMapSingle(selection -> billing.getProduct(sellerId, productId))
             .flatMapCompletable(
-                product -> billing.getSelectedPaymentMethod(applicationId, productId)
+                product -> billing.getSelectedPaymentMethod(sellerId, productId)
                     .doOnSuccess(payment -> analytics.sendPaymentBuyButtonPressedEvent(product,
                         payment.getName()))
                     .flatMapCompletable(
-                        payment -> billing.processPayment(applicationId, productId, payload)
+                        payment -> billing.processPayment(sellerId, productId, payload)
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnCompleted(() -> view.hideBuyLoading())
                             .onErrorResumeNext(
@@ -221,7 +221,7 @@ public class PaymentPresenter implements Presenter {
 
   private Completable navigateToAuthorizationView(PaymentMethod payment, Throwable throwable) {
     if (throwable instanceof PaymentMethodNotAuthorizedException) {
-      navigator.navigateToTransactionAuthorizationView(applicationId, productId, payload,
+      navigator.navigateToTransactionAuthorizationView(sellerId, productId, payload,
           payment.getId());
       return Completable.complete();
     }
@@ -254,16 +254,16 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Completable sendCancellationAnalytics() {
-    return billing.getProduct(applicationId, productId)
-        .flatMapCompletable(product -> billing.getSelectedPaymentMethod(applicationId, productId)
+    return billing.getProduct(sellerId, productId)
+        .flatMapCompletable(product -> billing.getSelectedPaymentMethod(sellerId, productId)
             .doOnSuccess(payment -> analytics.sendPaymentCancelButtonPressedEvent(product,
                 payment.getName()))
             .toCompletable());
   }
 
   private Completable sendTapOutsideAnalytics() {
-    return billing.getProduct(applicationId, productId)
-        .flatMapCompletable(product -> billing.getSelectedPaymentMethod(applicationId, productId)
+    return billing.getProduct(sellerId, productId)
+        .flatMapCompletable(product -> billing.getSelectedPaymentMethod(sellerId, productId)
             .doOnSuccess(
                 payment -> analytics.sendPaymentTapOutsideEvent(product, payment.getName()))
             .toCompletable());
@@ -284,7 +284,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Completable showSelectedPaymentMethod() {
-    return billing.getSelectedPaymentMethod(applicationId, productId)
+    return billing.getSelectedPaymentMethod(sellerId, productId)
         .observeOn(AndroidSchedulers.mainThread())
         .map(payment -> mapToPaymentMethodViewModel(payment))
         .doOnSuccess(payment -> view.selectPayment(payment))

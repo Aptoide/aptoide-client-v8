@@ -22,19 +22,19 @@ public class PayPalPresenter implements Presenter {
   private final BillingAnalytics analytics;
   private final BillingNavigator billingNavigator;
   private final Scheduler viewScheduler;
-  private final String applicationId;
+  private final String sellerId;
   private final String productId;
   private final String developerPayload;
 
   public PayPalPresenter(PayPalView view, Billing billing, BillingAnalytics analytics,
-      BillingNavigator billingNavigator, Scheduler viewScheduler, String applicationId,
+      BillingNavigator billingNavigator, Scheduler viewScheduler, String sellerId,
       String productId, String developerPayload) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
     this.billingNavigator = billingNavigator;
     this.viewScheduler = viewScheduler;
-    this.applicationId = applicationId;
+    this.sellerId = sellerId;
     this.productId = productId;
     this.developerPayload = developerPayload;
   }
@@ -59,7 +59,7 @@ public class PayPalPresenter implements Presenter {
   private void onViewCreatedShowPayPalPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(created -> billing.getProduct(applicationId, productId))
+        .flatMapSingle(created -> billing.getProduct(sellerId, productId))
         .observeOn(viewScheduler)
         .doOnNext(product -> billingNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
             product.getPrice()
@@ -99,7 +99,7 @@ public class PayPalPresenter implements Presenter {
   private Completable processPayPalPayment(BillingNavigator.PayPalResult result) {
     switch (result.getStatus()) {
       case BillingNavigator.PayPalResult.SUCCESS:
-        return billing.processLocalPayment(applicationId, productId, developerPayload,
+        return billing.processLocalPayment(sellerId, productId, developerPayload,
             result.getPaymentConfirmationId());
       case BillingNavigator.PayPalResult.CANCELLED:
       case BillingNavigator.PayPalResult.ERROR:

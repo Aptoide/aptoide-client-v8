@@ -8,8 +8,8 @@ public class InAppPurchase extends SimplePurchase {
   private final String token;
 
   public InAppPurchase(String signature, String signatureData, String sku, String token,
-      Status status) {
-    super(status);
+      Status status, String productId) {
+    super(status, productId);
     this.signature = signature;
     this.signatureData = signatureData;
     this.sku = sku;

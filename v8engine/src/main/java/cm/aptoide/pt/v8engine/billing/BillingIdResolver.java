@@ -7,52 +7,43 @@ public class BillingIdResolver {
 
   private final String divider;
   private final String applicationPackage;
-  private final int billingApiVersion;
+  private final String paidAppId;
+  private final String inAppId;
 
-  public BillingIdResolver(int billingApiVersion, String applicationPackage) {
-    this.divider = "/";
+  public BillingIdResolver(String applicationPackage, String divider, String paidAppId,
+      String inAppId) {
+    this.divider = divider;
     this.applicationPackage = applicationPackage;
-    this.billingApiVersion = billingApiVersion;
+    this.paidAppId = paidAppId;
+    this.inAppId = inAppId;
   }
 
-  public String resolveApplicationId(String packageName, int apiVersion) {
-    return apiVersion + divider + packageName;
+  public String resolveSellerId(String packageName) {
+    return packageName;
   }
 
-  public String resolveApplicationId() {
-    return billingApiVersion + divider + applicationPackage;
+  public String resolveStoreSellerId(String storeName) {
+    return applicationPackage + divider + storeName;
   }
 
   public String resolveProductId(String sku) {
-    return sku;
+    return sku + divider + inAppId;
   }
 
-  public String resolveProductId(long appId, String storeName, boolean sponsored) {
-    return appId + divider + storeName + divider + sponsored;
+  public String resolveProductId(long appId) {
+    return appId + divider + paidAppId;
   }
 
-  public String resolvePackageName(String applicationId) {
-    return applicationId.split(divider)[1];
+  public String resolvePackageName(String sellerId) {
+    return sellerId;
   }
 
   public boolean isPaidAppId(String productId) {
-    final String[] values = productId.split(divider);
-
-    if (values.length == 3) {
-      return true;
-    }
-
-    return false;
+    return productId.split(divider)[1].equals(paidAppId);
   }
 
   public boolean isInAppId(String productId) {
-    final String[] values = productId.split(divider);
-
-    if (values.length == 1) {
-      return true;
-    }
-
-    return false;
+    return productId.split(divider)[1].equals(inAppId);
   }
 
   public String resolveSku(String productId) {
@@ -63,23 +54,15 @@ public class BillingIdResolver {
     return Long.valueOf(productId.split(divider)[0]);
   }
 
-  public String resolveStoreName(String productId) {
-    return productId.split(divider)[1];
-  }
-
-  public boolean resolveSponsored(String productId) {
-    return Boolean.valueOf(productId.split(divider)[2]);
-  }
-
-  public int resolveApiVersion(String applicationId) {
-    return Integer.valueOf(applicationId.split(divider)[0]);
-  }
-
   public List<String> resolveProductIds(List<String> skuList) {
     final List<String> productIds = new ArrayList<>();
     for (String sku : skuList) {
       productIds.add(resolveProductId(sku));
     }
     return productIds;
+  }
+
+  public String resolveStoreName(String sellerId) {
+    return sellerId.split(divider)[1];
   }
 }

@@ -6,14 +6,16 @@ public class Transaction {
   private final Status status;
   private final int paymentMethodId;
   private final String payload;
+  private final String sellerId;
 
   public Transaction(String productId, String payerId, Status status, int paymentMethodId,
-      String payload) {
+      String payload, String sellerId) {
     this.productId = productId;
     this.payerId = payerId;
     this.status = status;
     this.paymentMethodId = paymentMethodId;
     this.payload = payload;
+    this.sellerId = sellerId;
   }
 
   public String getPayload() {
@@ -60,6 +62,10 @@ public class Transaction {
 
   public boolean isUnknown() {
     return Status.UNKNOWN.equals(status);
+  }
+
+  public String getSellerId() {
+    return sellerId;
   }
 
   public enum Status {

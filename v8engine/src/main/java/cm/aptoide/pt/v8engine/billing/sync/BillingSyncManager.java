@@ -30,8 +30,8 @@ public class BillingSyncManager implements BillingSyncScheduler {
     syncScheduler.schedule(sync);
   }
 
-  @Override public void syncTransaction(Product product) {
-    final Sync sync = syncFactory.createTransactionSync(product);
+  @Override public void syncTransaction(String sellerId, Product product) {
+    final Sync sync = syncFactory.createTransactionSync(sellerId, product);
     currentSyncs.add(sync.getId());
     syncScheduler.schedule(sync);
   }

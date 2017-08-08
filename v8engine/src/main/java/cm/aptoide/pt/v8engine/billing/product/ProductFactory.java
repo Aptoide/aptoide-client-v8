@@ -22,7 +22,7 @@ public class ProductFactory {
     this.idResolver = idResolver;
   }
 
-  public Product create(PaidApp app, boolean sponsored) {
+  public Product create(PaidApp app) {
 
     final String icon = app.getPath()
         .getIcon() == null ? app.getPath()
@@ -38,13 +38,10 @@ public class ProductFactory {
     final double taxRate = (paymentService != null) ? paymentService.getTaxRate() : 0.0;
 
     return new PaidAppProduct(idResolver.resolveProductId(app.getPath()
-        .getAppId(), app.getPath()
-        .getStoreName(), sponsored), productId, icon, app.getApp()
+        .getAppId()), productId, icon, app.getApp()
         .getName(), app.getApp()
         .getDescription(), app.getPath()
-        .getAppId(), app.getPath()
-        .getStoreName(), new Price(payment.getAmount(), currency, payment.getSymbol(), taxRate),
-        sponsored, app.getPath()
+        .getAppId(), new Price(payment.getAmount(), currency, payment.getSymbol(), taxRate), app.getPath()
         .getVersionCode());
   }
 

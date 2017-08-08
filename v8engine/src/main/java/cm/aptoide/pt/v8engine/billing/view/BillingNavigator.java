@@ -49,25 +49,25 @@ public class BillingNavigator {
         .map(account -> account.isLoggedIn());
   }
 
-  public void navigateToTransactionAuthorizationView(String applicationId, String productId,
+  public void navigateToTransactionAuthorizationView(String sellerId, String productId,
       String developerPayload, int paymentMethodId) {
     switch (paymentMethodId) {
       case PaymentMethodMapper.PAYPAL:
         fragmentNavigator.navigateTo(
-            PayPalFragment.create(getProductBundle(applicationId, productId, developerPayload)));
+            PayPalFragment.create(getProductBundle(sellerId, productId, developerPayload)));
         break;
       case PaymentMethodMapper.MOL_POINTS:
         fragmentNavigator.navigateTo(
-            MolFragment.create(getProductBundle(applicationId, productId, developerPayload)));
+            MolFragment.create(getProductBundle(sellerId, productId, developerPayload)));
         break;
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
         fragmentNavigator.navigateTo(
-            BoaCompraFragment.create(getProductBundle(applicationId, productId, developerPayload)));
+            BoaCompraFragment.create(getProductBundle(sellerId, productId, developerPayload)));
         break;
       case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
         fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(
-            getProductBundle(applicationId, productId, developerPayload)));
+            getProductBundle(sellerId, productId, developerPayload)));
         break;
       case PaymentMethodMapper.SANDBOX:
       default:
@@ -116,11 +116,11 @@ public class BillingNavigator {
         bundleMapper.mapCancellation());
   }
 
-  private Bundle getProductBundle(String applicationId, String productId, String developerPayload) {
-    if (productId != null && applicationId != null) {
+  private Bundle getProductBundle(String sellerId, String productId, String developerPayload) {
+    if (productId != null && sellerId != null) {
       final Bundle bundle = new Bundle();
       bundle.putString(PaymentActivity.EXTRA_PRODUCT_ID, productId);
-      bundle.putString(PaymentActivity.EXTRA_APPLICATION_ID, applicationId);
+      bundle.putString(PaymentActivity.EXTRA_APPLICATION_ID, sellerId);
       bundle.putString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD, developerPayload);
       return bundle;
     }

@@ -19,14 +19,14 @@ public class TransactionMapper {
   }
 
   public Transaction map(String productId, TransactionResponse response, String payerId,
-      String payload) {
-    return transactionFactory.create(productId, payerId,
-        Transaction.Status.valueOf(response.getTransactionStatus()), response.getPaymentMethodId(),
-        response.getLocalMetadata(), response.getConfirmationUrl(), response.getSuccessUrl(),
-        response.getClientToken(), payload);
+      String payload, String sellerId) {
+    return transactionFactory.create(sellerId, payerId, response.getPaymentMethodId(), productId,
+        Transaction.Status.valueOf(response.getTransactionStatus()), response.getLocalMetadata(),
+        response.getConfirmationUrl(), response.getSuccessUrl(), response.getClientToken(),
+        payload);
   }
 
-  public PaymentConfirmation map(Transaction transaction) {
+  public PaymentConfirmation map(Transaction transaction, String id) {
     String metadata = null;
     String confirmationUrl = null;
     String successUrl = null;
@@ -47,17 +47,19 @@ public class TransactionMapper {
       successUrl = ((MolTransaction) transaction).getSuccessUrl();
     }
 
-    return new PaymentConfirmation(metadata, transaction.getProductId(), transaction.getStatus()
+    return new PaymentConfirmation(id, metadata, transaction.getProductId(),
+        transaction.getSellerId(), transaction.getStatus()
         .name(), transaction.getPayerId(), transaction.getPaymentMethodId(), confirmationUrl,
         successUrl, clientToken, transaction.getPayload());
   }
 
   public Transaction map(PaymentConfirmation persistedTransaction) {
-    return transactionFactory.create(persistedTransaction.getProductId(),
-        persistedTransaction.getPayerId(),
+    return transactionFactory.create(persistedTransaction.getSellerId(),
+        persistedTransaction.getPayerId(), persistedTransaction.getPaymentMethodId(),
+        persistedTransaction.getProductId(),
         Transaction.Status.valueOf(persistedTransaction.getStatus()),
-        persistedTransaction.getPaymentMethodId(), persistedTransaction.getLocalMetadata(),
-        persistedTransaction.getConfirmationUrl(), persistedTransaction.getSuccessUrl(),
-        persistedTransaction.getClientToken(), persistedTransaction.getPayload());
+        persistedTransaction.getLocalMetadata(), persistedTransaction.getConfirmationUrl(),
+        persistedTransaction.getSuccessUrl(), persistedTransaction.getClientToken(),
+        persistedTransaction.getPayload());
   }
 }

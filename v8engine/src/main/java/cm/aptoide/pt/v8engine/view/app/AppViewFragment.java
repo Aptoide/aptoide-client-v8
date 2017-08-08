@@ -452,10 +452,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     billingAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
         .getPrice(), app.getPay()
         .getCurrency());
-    startActivityForResult(PaymentActivity.getIntent(getActivity(),
-        billingIdResolver.resolveProductId(app.getId(), app.getStore()
-            .getName(), sponsored), billingIdResolver.resolveApplicationId(), null),
-        PAY_APP_REQUEST_CODE);
+    startActivityForResult(
+        PaymentActivity.getIntent(getActivity(), billingIdResolver.resolveProductId(app.getId()),
+            billingIdResolver.resolveStoreSellerId(app.getStore()
+                .getName()), null), PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {

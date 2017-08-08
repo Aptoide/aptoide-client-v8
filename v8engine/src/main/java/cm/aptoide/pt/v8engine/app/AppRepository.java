@@ -81,11 +81,7 @@ public class AppRepository {
     return getPaidApp(getApp.getNodes()
         .getMeta()
         .getData()
-        .getId(), sponsored, getApp.getNodes()
-        .getMeta()
-        .getData()
-        .getStore()
-        .getName(), true).map(paidApp -> {
+        .getId(), true).map(paidApp -> {
       if (paidApp.getPayment()
           .isPaid()) {
         getApp.getNodes()
@@ -111,17 +107,16 @@ public class AppRepository {
         });
   }
 
-  private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
-      boolean refresh) {
-    return GetApkInfoRequest.of(appId, sponsored, storeName, bodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, resources)
+  private Observable<PaidApp> getPaidApp(long appId, boolean refresh) {
+    return GetApkInfoRequest.of(appId, bodyInterceptorV3, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences, resources)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {
             return Observable.just(response);
           } else {
-            return Observable.error(new RepositoryItemNotFoundException(
-                "No paid app found for app id " + appId + " in store " + storeName));
+            return Observable.error(
+                new RepositoryItemNotFoundException("No paid app found for app id " + appId));
           }
         });
   }

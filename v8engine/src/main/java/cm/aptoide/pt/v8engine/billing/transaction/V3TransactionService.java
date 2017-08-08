@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetTransactionRequest;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
@@ -25,11 +26,13 @@ public class V3TransactionService implements TransactionService {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final TransactionFactory transactionFactory;
+  private final BillingIdResolver idResolver;
 
   public V3TransactionService(TransactionMapper transactionMapper,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, TransactionFactory transactionFactory) {
+      SharedPreferences sharedPreferences, TransactionFactory transactionFactory,
+      BillingIdResolver idResolver) {
     this.transactionMapper = transactionMapper;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
@@ -37,9 +40,11 @@ public class V3TransactionService implements TransactionService {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.transactionFactory = transactionFactory;
+    this.idResolver = idResolver;
   }
 
-  @Override public Single<Transaction> getTransaction(Product product, String payerId) {
+  @Override
+  public Single<Transaction> getTransaction(String sellerId, String payerId, Product product) {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
@@ -57,15 +62,16 @@ public class V3TransactionService implements TransactionService {
         })
         .map(response -> {
           if (response != null && response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId, null);
+            return transactionMapper.map(product.getId(), response, payerId, null, sellerId);
           }
-          return getErrorTransaction(response.getErrors(), payerId, product, -1, null, null);
+          return getErrorTransaction(sellerId, response.getErrors(), payerId, product, -1,
+              null, null);
         });
   }
 
   @Override
-  public Single<Transaction> createTransaction(Product product, int paymentMethodId, String payerId,
-      String metadata, String payload) {
+  public Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
+      Product product, String metadata, String payload) {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
@@ -77,7 +83,7 @@ public class V3TransactionService implements TransactionService {
                 .toSingle();
           }
           return CreateTransactionRequest.ofPaidApp(((PaidAppProduct) product).getInternalId(),
-              paymentMethodId, ((PaidAppProduct) product).getStoreName(), metadata,
+              paymentMethodId, idResolver.resolveStoreName(sellerId), metadata,
               bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
               ((PaidAppProduct) product).getPackageVersionCode(), product.getTitle())
               .observe(true)
@@ -85,21 +91,21 @@ public class V3TransactionService implements TransactionService {
         })
         .map(response -> {
           if (response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId, payload);
+            return transactionMapper.map(product.getId(), response, payerId, payload, sellerId);
           }
-          return getErrorTransaction(response.getErrors(), payerId, product, paymentMethodId,
-              metadata, payload);
+          return getErrorTransaction(sellerId, response.getErrors(), payerId, product,
+              paymentMethodId, metadata, payload);
         });
   }
 
   @Override
-  public Single<Transaction> createTransaction(Product product, int paymentMethodId, String payerId,
-      String payload) {
+  public Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
+      Product product, String payload) {
 
     if (paymentMethodId == PaymentMethodMapper.PAYPAL) {
-      return Single.just(transactionFactory.create(product.getId(), payerId,
-          Transaction.Status.PENDING_USER_AUTHORIZATION, paymentMethodId, null, null, null, null,
-          payload));
+      return Single.just(
+          transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+              Transaction.Status.PENDING_USER_AUTHORIZATION, null, null, null, null, payload));
     }
 
     return Single.just(product instanceof InAppProduct)
@@ -113,7 +119,7 @@ public class V3TransactionService implements TransactionService {
                 .toSingle();
           }
           return CreateTransactionRequest.ofPaidApp(((PaidAppProduct) product).getInternalId(),
-              paymentMethodId, ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3,
+              paymentMethodId, idResolver.resolveStoreName(sellerId), bodyInterceptorV3,
               httpClient, converterFactory, tokenInvalidator, sharedPreferences,
               ((PaidAppProduct) product).getPackageVersionCode(), product.getTitle())
               .observe(true)
@@ -121,19 +127,19 @@ public class V3TransactionService implements TransactionService {
         })
         .map(response -> {
           if (response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId, payload);
+            return transactionMapper.map(product.getId(), response, payerId, payload, sellerId);
           }
-          return getErrorTransaction(response.getErrors(), payerId, product, paymentMethodId, null,
-              payload);
+          return getErrorTransaction(sellerId, response.getErrors(), payerId, product,
+              paymentMethodId, null, payload);
         });
   }
 
-  private Transaction getErrorTransaction(List<ErrorResponse> errors, String payerId,
-      Product product, int paymentMethodId, String metadata, String payload) {
+  private Transaction getErrorTransaction(String sellerId, List<ErrorResponse> errors,
+      String payerId, Product product, int paymentMethodId, String metadata, String payload) {
 
     Transaction transaction =
-        transactionFactory.create(product.getId(), payerId, Transaction.Status.FAILED,
-            paymentMethodId, metadata, null, null, null, payload);
+        transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+            Transaction.Status.FAILED, metadata, null, null, null, payload);
 
     if (errors == null || errors.isEmpty()) {
       return transaction;
@@ -142,25 +148,27 @@ public class V3TransactionService implements TransactionService {
     final ErrorResponse error = errors.get(0);
 
     if ("PRODUCT-204".equals(error.code) || "PRODUCT-209".equals(error.code)) {
-      transaction = transactionFactory.create(product.getId(), payerId,
-          Transaction.Status.PENDING_USER_AUTHORIZATION, paymentMethodId, metadata, null, null,
-          null, payload);
+      transaction =
+          transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+              Transaction.Status.PENDING_USER_AUTHORIZATION, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-200".equals(error.code)) {
       transaction =
-          transactionFactory.create(product.getId(), payerId, Transaction.Status.COMPLETED,
-              paymentMethodId, metadata, null, null, null, payload);
+          transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+              Transaction.Status.COMPLETED, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-214".equals(error.code)) {
-      transaction = transactionFactory.create(product.getId(), payerId, Transaction.Status.NEW,
-          paymentMethodId, metadata, null, null, null, payload);
+      transaction =
+          transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+              Transaction.Status.NEW, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-216".equals(error.code)) {
-      transaction = transactionFactory.create(product.getId(), payerId, Transaction.Status.PENDING,
-          paymentMethodId, metadata, null, null, null, payload);
+      transaction =
+          transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+              Transaction.Status.PENDING, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-7".equals(error.code)
@@ -173,8 +181,9 @@ public class V3TransactionService implements TransactionService {
         || "PRODUCT-208".equals(error.code)
         || "PRODUCT-215".equals(error.code)
         || "PRODUCT-217".equals(error.code)) {
-      transaction = transactionFactory.create(product.getId(), payerId, Transaction.Status.FAILED,
-          paymentMethodId, metadata, null, null, null, payload);
+      transaction =
+          transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+              Transaction.Status.FAILED, metadata, null, null, null, payload);
     }
 
     return transaction;

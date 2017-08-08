@@ -304,7 +304,9 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
       realm.delete("PaymentConfirmation");
       schema.get("PaymentConfirmation")
           .removeField("productId")
-          .addField("productId", String.class, FieldAttribute.PRIMARY_KEY)
+          .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+          .addField("productId", String.class, FieldAttribute.REQUIRED)
+          .addField("sellerId", String.class, FieldAttribute.REQUIRED)
           .addField("clientToken", String.class)
           .addField("successUrl", String.class)
           .addField("confirmationUrl", String.class)
