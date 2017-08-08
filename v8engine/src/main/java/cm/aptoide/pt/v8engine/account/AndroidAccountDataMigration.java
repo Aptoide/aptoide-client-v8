@@ -90,9 +90,12 @@ public class AndroidAccountDataMigration {
   private Completable cleanShareDialogShowPref() {
     String versionName = V8Engine.getConfiguration()
         .getVersionName();
-    if (!ManagerPreferences.getPreviewDialogPrefVersionCleaned(defaultSharedPreferences)
-        .equals(versionName)) {
-      if (versionName.endsWith(".0.0")) {
+    String oldVersionName =
+        ManagerPreferences.getPreviewDialogPrefVersionCleaned(defaultSharedPreferences);
+    if (!oldVersionName.equals(versionName)) {
+
+      if (getMajorIntFromVersionName(oldVersionName) < getMajorIntFromVersionName(versionName)) {
+
         return Completable.defer(() -> Completable.fromCallable(() -> {
           ManagerPreferences.setShowPreviewDialog(true, defaultSharedPreferences);
           ManagerPreferences.setPreviewDialogPrefVersionCleaned(versionName,
@@ -102,6 +105,23 @@ public class AndroidAccountDataMigration {
       }
     }
     return Completable.complete();
+  }
+
+  private int getMajorIntFromVersionName(String versionName) {
+    int res = 0;
+    Log.v("analara", "versionName: " + versionName + "=" + res);
+    if (versionName != null) {
+      String[] parts = versionName.split("\\.");
+      if (parts != null && parts.length > 1) {
+        try {
+          res = Integer.parseInt(parts[1]);
+          Log.v("analara", "versionName: " + versionName + "=" + res);
+        } catch (Exception e) {
+
+        }
+      }
+    }
+    return res;
   }
 
   private Completable migrateAccountFromVersion59To60() {
