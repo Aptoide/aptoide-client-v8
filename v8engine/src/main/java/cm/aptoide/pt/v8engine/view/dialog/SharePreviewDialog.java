@@ -13,10 +13,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -25,27 +23,9 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialArticleDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialStoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialVideoDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AppUpdateDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.ArticleDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.PopularAppDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.RecommendationDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialArticleDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialCardDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialInstallDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialRecommendationDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialVideoDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.StoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import java.util.HashMap;
-import java.util.Map;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -98,114 +78,7 @@ public class SharePreviewDialog {
     LinearLayout socialInfoBar;
     LinearLayout socialCommentBar;
 
-    if (displayable instanceof ArticleDisplayable) {
-      view = factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
-      TextView articleTitle =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
-      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
-
-      ratingBar.setVisibility(View.INVISIBLE);
-      articleTitle.setMaxLines(1);
-      articleTitle.setText(((ArticleDisplayable) displayable).getArticleTitle());
-      relatedTo.setVisibility(View.GONE);
-      ImageLoader.with(context)
-          .load(((ArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
-    } else if (displayable instanceof VideoDisplayable) {
-      view = factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
-      TextView articleTitle =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
-      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
-
-      ratingBar.setVisibility(View.INVISIBLE);
-      articleTitle.setMaxLines(1);
-      articleTitle.setText(((VideoDisplayable) displayable).getVideoTitle());
-
-      relatedTo.setVisibility(View.GONE);
-      ImageLoader.with(context)
-          .load(((VideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
-    } else if (displayable instanceof StoreLatestAppsDisplayable) {
-      view = factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps_preview,
-          null);
-
-      TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
-      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
-      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
-      LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_popular_app_users_container);
-      RelativeLayout followStoreBar = (RelativeLayout) view.findViewById(R.id.follow_store_bar);
-
-      Map<View, Long> apps = new HashMap<>();
-      Map<Long, String> appsPackages = new HashMap<>();
-
-      followStoreBar.setVisibility(View.GONE);
-      sharedStoreTitleName.setText(((StoreLatestAppsDisplayable) displayable).getStoreName());
-      sharedStoreName.setText(((StoreLatestAppsDisplayable) displayable).getStoreName());
-      ImageLoader.with(context)
-          .loadWithShadowCircleTransform(((StoreLatestAppsDisplayable) displayable).getAvatarUrl(),
-              sharedStoreAvatar);
-      View latestAppView;
-      ImageView latestAppIcon;
-      TextView latestAppName;
-      for (StoreLatestAppsDisplayable.LatestApp latestApp : ((StoreLatestAppsDisplayable) displayable).getLatestApps()) {
-        latestAppView =
-            factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
-        latestAppIcon =
-            (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
-        latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
-        ImageLoader.with(context)
-            .load(latestApp.getIconUrl(), latestAppIcon);
-        latestAppName.setMaxLines(1);
-        latestAppName.setText(latestApp.getName());
-        latestAppsContainer.addView(latestAppView);
-        apps.put(latestAppView, latestApp.getAppId());
-        appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
-      }
-    } else if (displayable instanceof RecommendationDisplayable) {
-      view =
-          factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
-      ImageView appIcon =
-          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView getApp = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_get_app_button);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-
-      ImageLoader.with(context)
-          .load(((RecommendationDisplayable) displayable).getAppIcon(), appIcon);
-      appName.setText(((RecommendationDisplayable) displayable).getAppName());
-      ratingBar.setRating(((RecommendationDisplayable) displayable).getAppRating());
-      SpannableFactory spannableFactory = new SpannableFactory();
-
-      getApp.setText(spannableFactory.createColorSpan(
-          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (displayable instanceof AppUpdateDisplayable) {
-      view =
-          factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
-      ImageView appIcon =
-          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView getApp = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_get_app_button);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-
-      ImageLoader.with(context)
-          .load(((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
-      appName.setText(((AppUpdateDisplayable) displayable).getAppName());
-      ratingBar.setRating(((AppUpdateDisplayable) displayable).getAppRating());
-
-      SpannableFactory spannableFactory = new SpannableFactory();
-
-      getApp.setText(spannableFactory.createColorSpan(
-          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (displayable instanceof AppViewInstallDisplayable) {
+    if (displayable instanceof AppViewInstallDisplayable) {
       view = factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
       ImageView appIcon =
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
@@ -239,219 +112,6 @@ public class SharePreviewDialog {
       getApp.setText(spannableFactory.createColorSpan(
           context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
           ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (displayable instanceof SocialArticleDisplayable) {
-      view = factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
-      TextView articleTitle =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
-      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
-      ratingBar.setVisibility(View.INVISIBLE);
-      articleTitle.setMaxLines(1);
-      articleTitle.setText(((SocialArticleDisplayable) displayable).getArticleTitle());
-      relatedTo.setVisibility(View.GONE);
-
-      ImageLoader.with(context)
-          .load(((SocialArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
-    } else if (displayable instanceof SocialVideoDisplayable) {
-      view = factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
-      TextView articleTitle =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
-      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
-      ratingBar.setVisibility(View.INVISIBLE);
-      articleTitle.setMaxLines(1);
-      articleTitle.setText(((SocialVideoDisplayable) displayable).getVideoTitle());
-
-      relatedTo.setVisibility(View.GONE);
-
-      ImageLoader.with(context)
-          .load(((SocialVideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
-    } else if (displayable instanceof SocialRecommendationDisplayable) {
-      view =
-          factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
-      ImageView appIcon =
-          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_similar_apps);
-
-      TextView getApp = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.with(context)
-          .load(((SocialRecommendationDisplayable) displayable).getAppIcon(), appIcon);
-      appName.setText(((SocialRecommendationDisplayable) displayable).getAppName());
-
-      SpannableFactory spannableFactory = new SpannableFactory();
-
-      getApp.setText(spannableFactory.createColorSpan(
-          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (displayable instanceof SocialStoreLatestAppsDisplayable) {
-      view = factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps_preview,
-          null);
-      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
-      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
-      TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
-
-      LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_container);
-
-      Map<View, Long> apps = new HashMap<>();
-      Map<Long, String> appsPackages = new HashMap<>();
-
-      sharedStoreTitleName.setText(((SocialStoreLatestAppsDisplayable) displayable).getSharedStore()
-          .getName());
-      sharedStoreName.setText(((SocialStoreLatestAppsDisplayable) displayable).getSharedStore()
-          .getName());
-      ImageLoader.with(context)
-          .loadWithShadowCircleTransform(
-              ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore()
-                  .getAvatar(), sharedStoreAvatar);
-      View latestAppView;
-      ImageView latestAppIcon;
-      for (SocialStoreLatestAppsDisplayable.LatestApp latestApp : ((SocialStoreLatestAppsDisplayable) displayable).getLatestApps()) {
-        latestAppView =
-            factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
-        latestAppIcon =
-            (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
-        ImageLoader.with(context)
-            .load(latestApp.getIconUrl(), latestAppIcon);
-        latestAppsContainer.addView(latestAppView);
-        apps.put(latestAppView, latestApp.getAppId());
-        appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
-      }
-    } else if (displayable instanceof SocialInstallDisplayable) {
-      view = factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
-
-      ImageView appIcon =
-          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView getApp = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_get_app_button);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-      ImageLoader.with(context)
-          .load(((SocialInstallDisplayable) displayable).getAppIcon(), appIcon);
-      appName.setText(((SocialInstallDisplayable) displayable).getAppName());
-      ratingBar.setRating(((SocialInstallDisplayable) displayable).getRating());
-      SpannableFactory spannableFactory = new SpannableFactory();
-
-      getApp.setText(spannableFactory.createColorSpan(
-          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (displayable instanceof PopularAppDisplayable) {
-      view =
-          factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
-      ImageView appIcon =
-          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView getApp = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_get_app_button);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-
-      ImageLoader.with(context)
-          .load(((PopularAppDisplayable) displayable).getAppIcon(), appIcon);
-      appName.setText(((PopularAppDisplayable) displayable).getAppName());
-      ratingBar.setRating(((PopularAppDisplayable) displayable).getAppAverageRating());
-
-      SpannableFactory spannableFactory = new SpannableFactory();
-
-      getApp.setText(spannableFactory.createColorSpan(
-          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (displayable instanceof AggregatedSocialArticleDisplayable) {
-      AggregatedSocialArticleDisplayable aggregatedSocialArticleDisplayable =
-          ((AggregatedSocialArticleDisplayable) displayable);
-      view = factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
-
-      TextView articleTitle =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
-      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
-      ratingBar.setVisibility(View.INVISIBLE);
-      articleTitle.setMaxLines(1);
-      articleTitle.setText((aggregatedSocialArticleDisplayable).getTitle());
-      relatedTo.setVisibility(View.GONE);
-
-      ImageLoader.with(context)
-          .load((aggregatedSocialArticleDisplayable).getThumbnailUrl(), thumbnail);
-    } else if (displayable instanceof AggregatedSocialVideoDisplayable) {
-      AggregatedSocialVideoDisplayable aggregatedSocialVideoDisplayable =
-          ((AggregatedSocialVideoDisplayable) displayable);
-      view = factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
-      TextView articleTitle =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
-      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
-      ratingBar.setVisibility(View.INVISIBLE);
-      articleTitle.setMaxLines(1);
-      articleTitle.setText(aggregatedSocialVideoDisplayable.getTitle());
-
-      relatedTo.setVisibility(View.GONE);
-
-      ImageLoader.with(context)
-          .load(aggregatedSocialVideoDisplayable.getThumbnailUrl(), thumbnail);
-    } else if (displayable instanceof AggregatedSocialInstallDisplayable) {
-      AggregatedSocialInstallDisplayable aggregatedSocialInstallDisplayable =
-          ((AggregatedSocialInstallDisplayable) displayable);
-      view = factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
-
-      ImageView appIcon =
-          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView getApp = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_get_app_button);
-      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-      ImageLoader.with(context)
-          .load(aggregatedSocialInstallDisplayable.getAppIcon(), appIcon);
-      appName.setText(aggregatedSocialInstallDisplayable.getAppName());
-      ratingBar.setRating(aggregatedSocialInstallDisplayable.getAppRatingAverage());
-      SpannableFactory spannableFactory = new SpannableFactory();
-
-      getApp.setText(spannableFactory.createColorSpan(
-          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (displayable instanceof AggregatedSocialStoreLatestAppsDisplayable) {
-      AggregatedSocialStoreLatestAppsDisplayable aggregatedSocialStoreLatestAppsDisplayable =
-          ((AggregatedSocialStoreLatestAppsDisplayable) displayable);
-
-      view = factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps_preview,
-          null);
-      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
-      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
-      TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
-
-      LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_container);
-
-      Map<View, Long> apps = new HashMap<>();
-      Map<Long, String> appsPackages = new HashMap<>();
-
-      sharedStoreTitleName.setText(aggregatedSocialStoreLatestAppsDisplayable.getSharedStore()
-          .getName());
-      sharedStoreName.setText(aggregatedSocialStoreLatestAppsDisplayable.getSharedStore()
-          .getName());
-      ImageLoader.with(context)
-          .loadWithShadowCircleTransform(aggregatedSocialStoreLatestAppsDisplayable.getSharedStore()
-              .getAvatar(), sharedStoreAvatar);
-      View latestAppView;
-      ImageView latestAppIcon;
-      for (App latestApp : aggregatedSocialStoreLatestAppsDisplayable.getLatestApps()) {
-        latestAppView =
-            factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
-        latestAppIcon =
-            (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
-        ImageLoader.with(context)
-            .load(latestApp.getIcon(), latestAppIcon);
-        latestAppsContainer.addView(latestAppView);
-        apps.put(latestAppView, latestApp.getId());
-        appsPackages.put(latestApp.getId(), latestApp.getPackageName());
-      }
     } else {
       throw new IllegalStateException(
           "The Displayable " + displayable + " is not being handled " + "in SharePreviewDialog");
@@ -498,16 +158,11 @@ public class SharePreviewDialog {
       alertadd.setView(view)
           .setCancelable(false);
 
-      if (!(displayable instanceof SocialCardDisplayable)) {
-        storeName.setText(accountManager.getAccount()
-            .getStore()
-            .getName());
-        setCardHeader(context, storeName, userName, storeAvatar, userAvatar);
-      } else {
-        sharedBy = (TextView) view.findViewById(R.id.social_shared_by);
-        setSharedByText(context, sharedBy);
-        setSocialCardHeader(context, storeName, userName, storeAvatar, userAvatar);
-      }
+      storeName.setText(accountManager.getAccount()
+          .getStore()
+          .getName());
+      setCardHeader(context, storeName, userName, storeAvatar, userAvatar);
+
       if (!accountManager.isAccountAccessConfirmed()) {
         privacyText.setOnClickListener(click -> checkBox.toggle());
         checkBox.setClickable(true);
@@ -568,85 +223,6 @@ public class SharePreviewDialog {
         storeName.setText(accountManager.getAccount()
             .getNickname());
         userName.setVisibility(View.GONE);
-      }
-    }
-  }
-
-  private void setSharedByText(Context context, TextView sharedBy) {
-    sharedBy.setVisibility(View.VISIBLE);
-
-    if (accountManager.getAccount()
-        .isPublicUser()) {
-      sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
-          accountManager.getAccount()
-              .getNickname()));
-    } else {
-      sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
-          accountManager.getAccount()
-              .getStore()
-              .getName()));
-    }
-  }
-
-  private void setSocialCardHeader(Context context, TextView storeName, TextView userName,
-      ImageView storeAvatar, ImageView userAvatar) {
-    if (((SocialCardDisplayable) displayable).getStore() != null) {
-      storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
-      storeName.setVisibility(View.VISIBLE);
-      storeAvatar.setVisibility(View.VISIBLE);
-      if (((SocialCardDisplayable) displayable).getStore()
-          .getName() != null) {
-        storeName.setText(((SocialCardDisplayable) displayable).getStore()
-            .getName());
-      }
-      if (((SocialCardDisplayable) displayable).getStore()
-          .getAvatar() != null) {
-        ImageLoader.with(context)
-            .loadWithShadowCircleTransform(((SocialCardDisplayable) displayable).getStore()
-                .getAvatar(), storeAvatar);
-      }
-
-      if (((SocialCardDisplayable) displayable).getUser() != null) {
-        userName.setVisibility(View.VISIBLE);
-        userAvatar.setVisibility(View.VISIBLE);
-        if (((SocialCardDisplayable) displayable).getUser()
-            .getName() != null) {
-          userName.setText(((SocialCardDisplayable) displayable).getUser()
-              .getName());
-        }
-
-        if (((SocialCardDisplayable) displayable).getUser()
-            .getAvatar() != null) {
-          ImageLoader.with(context)
-              .loadWithShadowCircleTransform(((SocialCardDisplayable) displayable).getUser()
-                  .getAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-        userAvatar.setVisibility(View.GONE);
-      }
-    } else {
-      userAvatar.setVisibility(View.INVISIBLE);
-      userName.setVisibility(View.GONE);
-
-      if (((SocialCardDisplayable) displayable).getUser() != null) {
-        storeName.setVisibility(View.VISIBLE);
-        storeAvatar.setVisibility(View.VISIBLE);
-        if (((SocialCardDisplayable) displayable).getUser()
-            .getName() != null) {
-          storeName.setText(((SocialCardDisplayable) displayable).getUser()
-              .getName());
-        }
-
-        if (((SocialCardDisplayable) displayable).getUser()
-            .getAvatar() != null) {
-          ImageLoader.with(context)
-              .loadWithShadowCircleTransform(((SocialCardDisplayable) displayable).getUser()
-                  .getAvatar(), storeAvatar);
-        }
-      } else {
-        storeName.setVisibility(View.GONE);
-        storeAvatar.setVisibility(View.GONE);
       }
     }
   }
