@@ -109,13 +109,11 @@ public class AndroidAccountDataMigration {
 
   private int getMajorIntFromVersionName(String versionName) {
     int res = 0;
-    Log.v("analara", "versionName: " + versionName + "=" + res);
     if (versionName != null) {
       String[] parts = versionName.split("\\.");
       if (parts != null && parts.length > 1) {
         try {
           res = Integer.parseInt(parts[1]);
-          Log.v("analara", "versionName: " + versionName + "=" + res);
         } catch (Exception e) {
 
         }
