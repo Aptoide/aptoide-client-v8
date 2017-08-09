@@ -79,17 +79,20 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
    * @param selectAvatar - avatar that was selected
    */
   public void selectAvatar(SpotAndShareAvatar selectAvatar) {
-    System.out.println("Selected avatar : " + selectAvatar.getAvatarId());
-    if (selectAvatar.isSelected()) {
-      selectAvatar =
-          new SpotAndShareUserAvatar(selectAvatar.getAvatarId(), selectAvatar.getString(), false);
-    } else {
-      selectAvatar =
-          new SpotAndShareUserAvatar(selectAvatar.getAvatarId(), selectAvatar.getString(), true);
+    if (selectedAvatar != null) {
+      unselectAvatar(selectedAvatar);
     }
+    selectAvatar =
+        new SpotAndShareUserAvatar(selectAvatar.getAvatarId(), selectAvatar.getString(), true);
     avatarList.set(selectAvatar.getAvatarId(), selectAvatar);
-    notifyDataSetChanged();
     selectedAvatar = selectAvatar;
+
+    notifyDataSetChanged();
+  }
+
+  private void unselectAvatar(SpotAndShareAvatar avatar) {
+    avatarList.set(avatar.getAvatarId(),
+        new SpotAndShareUserAvatar(avatar.getAvatarId(), avatar.getString(), false));
   }
 
   class AvatarViewHolder extends ViewHolder {
