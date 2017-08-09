@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.link;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -84,7 +83,8 @@ public class CustomTabsHelper {
     CustomTabsIntent.Builder builder = getBuilder(context);
     CustomTabsIntent customTabsIntent = builder.build();
     addRefererHttpHeader(context, customTabsIntent);
-    customTabsIntent.launchUrl((Activity) context, Uri.parse(url));
+    customTabsIntent.intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    customTabsIntent.launchUrl(context, Uri.parse(url));
   }
 
   @NonNull private CustomTabsIntent.Builder getBuilder(Context context) {
