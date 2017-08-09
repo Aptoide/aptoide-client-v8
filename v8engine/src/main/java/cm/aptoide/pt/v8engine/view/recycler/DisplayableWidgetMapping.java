@@ -84,8 +84,6 @@ import cm.aptoide.pt.v8engine.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.search.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.search.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.search.SearchWidget;
-import cm.aptoide.pt.v8engine.view.store.AddMoreStoresDisplayable;
-import cm.aptoide.pt.v8engine.view.store.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.store.CreateStoreWidget;
 import cm.aptoide.pt.v8engine.view.store.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.store.GridStoreDisplayable;
@@ -165,8 +163,6 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(EmptyWidget.class, EmptyDisplayable.class));
 
     // common widgets / displayables
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AddMoreStoresWidget.class, AddMoreStoresDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AppBrickWidget.class, AppBrickDisplayable.class));
     displayableWidgetMappings.add(

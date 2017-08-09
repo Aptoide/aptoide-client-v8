@@ -53,7 +53,7 @@ public class StoreAnalytics {
         createStoreInteractFlurryDataMap(action, storeAppsNumber, storeFollowers)));
   }
 
-  //// TODO: 19/07/17 done: appview, mystorewidget(view own store), recommended stores, more recomended stores, followed, more followed
+  //// TODO: 19/07/17 missing timeline
   public void sendStoreOpenEvent(String source, String storeName) {
     analytics.sendEvent(
         new FacebookEvent(facebook, STORES_OPEN, createStoreOpenFacebookBundle(source, storeName)));
