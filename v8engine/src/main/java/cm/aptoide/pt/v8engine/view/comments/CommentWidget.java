@@ -73,7 +73,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     }
 
     compositeSubscription.add(RxView.clicks(itemView)
-        .doOnNext(click -> displayable.itemClicked())
+        .doOnNext(click -> displayable.itemClicked(itemView))
         .subscribe(__ -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));

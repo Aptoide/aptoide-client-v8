@@ -1,10 +1,13 @@
 package cm.aptoide.pt.v8engine.view.comments;
 
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 
 /**
  * Created by trinkes on 8/4/16.
@@ -38,9 +41,14 @@ public class CommentDisplayable extends Displayable {
     return comment;
   }
 
-  public void itemClicked() {
-    //TODO AN-1492 - revert - waiting for api change
-    //fragmentNavigator.navigateTo(fragmentProvider.newStoreFragment(comment.getUser()
-    //    .getId(), "DEFAULT", StoreFragment.OpenType.GetHome));
+  public void itemClicked(View view) {
+    if (comment.getUser()
+        .getAccess() == Comment.Access.PUBLIC) {
+      fragmentNavigator.navigateTo(fragmentProvider.newStoreFragment(comment.getUser()
+          .getId(), "DEFAULT", StoreFragment.OpenType.GetHome));
+    } else {
+      Snackbar.make(view, R.string.stores_message_private_user, Snackbar.LENGTH_SHORT)
+          .show();
+    }
   }
 }

@@ -665,4 +665,8 @@
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
 
   <string name="suggested_searchable_authority" translatable="false"/>
+  <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
+
+  <!--comments-->
+
 </resources>
