@@ -72,20 +72,34 @@ public class MinimalAd extends RealmObject implements Parcelable, MinimalAdInter
     this.name = in.readString();
     this.iconPath = in.readString();
   }
-
   public static MinimalAd from(@NonNull GetAdsResponse.Ad ad) {
-    GetAdsResponse.Partner partner = ad.getPartner();
+    GetAdsResponse.Network partner = ad.getNetwork();
+    GetAdsResponse.Urls urls = ad.getUrls();
     int id = 0;
     String clickUrl = null;
     if (partner != null) {
-      id = partner.getInfo().getId();
-      clickUrl = partner.getData().getClickUrl();
+      id = partner.getId();
+      clickUrl = urls.getReferrers().get(0);
     }
-    return new MinimalAd(ad.getData().getPackageName(), id, clickUrl, ad.getInfo().getCpcUrl(),
-        ad.getInfo().getCpdUrl(), ad.getData().getId(), ad.getInfo().getAdId(),
-        ad.getInfo().getCpiUrl(), ad.getData().getName(), ad.getData().getIcon(),
-        ad.getData().getDescription());
+    return new MinimalAd(ad.getData().getApp().getPackageName(), id, clickUrl, ad.getUrls().getClicks().get(0),
+            ad.getUrls().getDownloads().get(0), ad.getData().getApp().getId(), ad.getId(),
+            ad.getUrls().getInstalls().get(0), ad.getData().getApp().getName(), ad.getData().getApp().getIcon(),
+            ""); //Description does not exist in new version
   }
+
+  //public static MinimalAd from(@NonNull GetAdsResponse.Ad ad) {
+  //  GetAdsResponse.Partner partner = ad.getPartner();
+  //  int id = 0;
+  //  String clickUrl = null;
+  //  if (partner != null) {
+  //    id = partner.getInfo().getId();
+  //    clickUrl = partner.getData().getClickUrl();
+  //  }
+  //  return new MinimalAd(ad.getData().getPackageName(), id, clickUrl, ad.getInfo().getCpcUrl(),
+  //      ad.getInfo().getCpdUrl(), ad.getData().getId(), ad.getInfo().getAdId(),
+  //      ad.getInfo().getCpiUrl(), ad.getData().getName(), ad.getData().getIcon(),
+  //      ad.getData().getDescription());
+  //}
 
   @Override public int describeContents() {
     return 0;

@@ -69,8 +69,9 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case ADS:
-          return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
-              mature, Application.getConfiguration().numberOfAdsRowOnHomepage())
+          return GetAdsRequest.ofHomepage(accessToken, aptoideClientUuid,
+                  googlePlayServicesAvailable, oemid, mature,
+                  Application.getConfiguration().numberOfAdsRowOnHomepage())
               .observe()
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
