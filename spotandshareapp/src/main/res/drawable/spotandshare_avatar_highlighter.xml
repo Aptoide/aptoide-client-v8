@@ -8,12 +8,13 @@
   <item
       android:state_selected="true">
     <shape
-        android:innerRadius="1dp"
+        android:innerRadius="5dp"
         android:shape="ring"
         android:thicknessRatio="2"
         android:useLevel="false">
-      <solid android:color="@color/default_color"/>
+      <stroke android:color="@color/default_color" android:width="2dp"/>
     </shape>
   </item>
+
 
 </selector>
