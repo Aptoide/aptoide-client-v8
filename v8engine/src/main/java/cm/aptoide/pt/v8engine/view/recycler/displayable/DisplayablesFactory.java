@@ -88,7 +88,7 @@ public class DisplayablesFactory {
 
         case STORES_GROUP:
           return Observable.just(
-              getStores(widget, storeTheme, storeContext, windowManager, resources));
+              getStores(widget, storeTheme, storeContext, windowManager, resources, context));
 
         case DISPLAYS:
           return Observable.just(
@@ -255,7 +255,8 @@ public class DisplayablesFactory {
   }
 
   private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      StoreContext storeContext, WindowManager windowManager, Resources resources) {
+      StoreContext storeContext, WindowManager windowManager, Resources resources,
+      Context context) {
     Object viewObject = wsWidget.getViewObject();
     ListStores listStores = (ListStores) viewObject;
     if (listStores == null) {
@@ -267,7 +268,8 @@ public class DisplayablesFactory {
     tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext));
     for (Store store : stores) {
 
-      GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
+      GridStoreDisplayable diplayable = new GridStoreDisplayable(store, "Home",
+          new StoreAnalytics(AppEventsLogger.newLogger(context), Analytics.getInstance()));
       tmp.add(diplayable);
     }
     return new DisplayableGroup(tmp, windowManager, resources);

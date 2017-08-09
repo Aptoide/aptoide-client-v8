@@ -47,10 +47,13 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 
     //// TODO: 03/08/17 followed store click
     final Action1<Void> handleStoreClick = v -> {
-      if (!gridStoreDisplayable.getOrigin()
-          .isEmpty()) {
+      String origin = gridStoreDisplayable.getOrigin();
+      if (!origin.isEmpty()) {
         gridStoreDisplayable.getStoreAnalytics()
-            .sendStoreInteractEvent(gridStoreDisplayable.getOrigin());
+            .sendStoreInteractEvent(origin);
+        gridStoreDisplayable.getStoreAnalytics()
+            .sendStoreOpenEvent(origin, gridStoreDisplayable.getPojo()
+                .getName());
       }
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(gridStoreDisplayable.getPojo()
