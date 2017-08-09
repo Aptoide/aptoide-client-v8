@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.store;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -15,11 +16,24 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridStoreDisplayable extends DisplayablePojo<Store> {
 
+  private String origin = "";
+  private StoreAnalytics storeAnalytics;
+
+  public GridStoreDisplayable(Store pojo, String origin, StoreAnalytics storeAnalytics) {
+    super(pojo);
+    this.origin = origin;
+    this.storeAnalytics = storeAnalytics;
+  }
+
   public GridStoreDisplayable(Store pojo) {
     super(pojo);
   }
 
   public GridStoreDisplayable() {
+  }
+
+  public StoreAnalytics getStoreAnalytics() {
+    return storeAnalytics;
   }
 
   @Override protected Configs getConfig() {
@@ -29,5 +43,9 @@ public class GridStoreDisplayable extends DisplayablePojo<Store> {
 
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_store;
+  }
+
+  public String getOrigin() {
+    return origin;
   }
 }

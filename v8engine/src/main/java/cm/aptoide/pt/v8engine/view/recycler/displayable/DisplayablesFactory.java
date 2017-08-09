@@ -30,9 +30,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -50,6 +52,7 @@ import cm.aptoide.pt.v8engine.view.store.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.store.featured.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.store.my.MyStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoreDisplayable;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -81,7 +84,7 @@ public class DisplayablesFactory {
 
         case MY_STORES_SUBSCRIBED:
           return getMyStores(widget, storeRepository, storeTheme, storeContext, windowManager,
-              resources);
+              resources, context);
 
         case STORES_GROUP:
           return Observable.just(
@@ -214,7 +217,7 @@ public class DisplayablesFactory {
 
   private static Observable<Displayable> getMyStores(GetStoreWidgets.WSWidget wsWidget,
       StoreRepository storeRepository, String storeTheme, StoreContext storeContext,
-      WindowManager windowManager, Resources resources) {
+      WindowManager windowManager, Resources resources, Context context) {
     return loadLocalSubscribedStores(storeRepository).map(stores -> {
       List<Displayable> tmp = new ArrayList<>(stores.size());
       int maxStoresToShow = stores.size();
@@ -233,7 +236,9 @@ public class DisplayablesFactory {
             || stores.get(i - 1)
             .getId() != stores.get(i)
             .getId()) {
-          GridStoreDisplayable diplayable = new GridStoreDisplayable(stores.get(i));
+          GridStoreDisplayable diplayable =
+              new GridStoreDisplayable(stores.get(i), "Open a Followed Store",
+                  new StoreAnalytics(AppEventsLogger.newLogger(context), Analytics.getInstance()));
           tmp.add(diplayable);
         }
       }

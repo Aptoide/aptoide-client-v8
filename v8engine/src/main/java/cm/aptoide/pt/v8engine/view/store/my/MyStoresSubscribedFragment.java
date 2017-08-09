@@ -19,8 +19,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.database.AccessorFactory;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -29,6 +31,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.store.GetStoreEndlessFragment;
 import cm.aptoide.pt.v8engine.view.store.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoreDisplayable;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -49,6 +52,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private StoreAnalytics storeAnalytics;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -60,6 +64,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
@@ -117,7 +123,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
                       ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
                   storeCredentialsProvider));
         } else {
-          storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
+          storesDisplayables.add(
+              new GridStoreDisplayable(list.get(i), "More Followed Stores", storeAnalytics));
         }
       }
     }

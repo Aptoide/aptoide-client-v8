@@ -48,11 +48,17 @@ import rx.functions.Action1;
     storeLayout.setBackgroundColor(Color.WHITE);
 
     //// TODO: 03/08/17 followed store click
-    final Action1<Void> handleStoreClick = v -> getFragmentNavigator().navigateTo(
-        V8Engine.getFragmentProvider()
-            .newStoreFragment(gridStoreDisplayable.getPojo()
-                .getName(), store.getAppearance()
-                .getTheme()));
+    final Action1<Void> handleStoreClick = v -> {
+      if (!gridStoreDisplayable.getOrigin()
+          .isEmpty()) {
+        gridStoreDisplayable.getStoreAnalytics()
+            .sendStoreInteractEvent(gridStoreDisplayable.getOrigin());
+      }
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(gridStoreDisplayable.getPojo()
+              .getName(), store.getAppearance()
+              .getTheme()));
+    };
     compositeSubscription.add(RxView.clicks(storeLayout)
         .subscribe(handleStoreClick));
 
