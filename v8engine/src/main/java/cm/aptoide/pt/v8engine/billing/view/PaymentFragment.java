@@ -55,6 +55,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
   private BillingNavigator billingNavigator;
+  private ImageView creditCardsImage;
 
   public static Fragment create(Bundle bundle) {
     final PaymentFragment fragment = new PaymentFragment();
@@ -84,6 +85,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     overlay = view.findViewById(R.id.fragment_payment_overlay);
     progressView = view.findViewById(R.id.fragment_payment_global_progress_bar);
     noPaymentsText = (TextView) view.findViewById(R.id.fragment_payment_no_payments_text);
+    creditCardsImage = (ImageView) view.findViewById(R.id.include_payment_credit_cards_image);
 
     productIcon = (ImageView) view.findViewById(R.id.include_payment_product_icon);
     productName = (TextView) view.findViewById(R.id.include_payment_product_name);
@@ -113,6 +115,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   }
 
   @Override public void onDestroyView() {
+    creditCardsImage = null;
     spannableFactory = null;
     overlay = null;
     progressView = null;
@@ -175,6 +178,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void showPayments(List<PaymentMethodViewModel> payments) {
     paymentRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
+    creditCardsImage.setVisibility(View.VISIBLE);
     buyButton.setVisibility(View.VISIBLE);
     paymentMap.clear();
 
@@ -231,6 +235,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   @Override public void showPaymentsNotFoundMessage() {
     noPaymentsText.setVisibility(View.VISIBLE);
+    creditCardsImage.setVisibility(View.GONE);
     buyButton.setVisibility(View.GONE);
   }
 

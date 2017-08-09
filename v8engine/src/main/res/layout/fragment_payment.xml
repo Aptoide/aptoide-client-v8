@@ -37,6 +37,17 @@
         android:padding="16dp"
         >
 
+      <ImageView
+          android:id="@+id/include_payment_credit_cards_image"
+          android:layout_width="136dp"
+          android:layout_height="24dp"
+          android:layout_gravity="end"
+          android:layout_margin="4dp"
+          android:src="@drawable/credit_cards"
+          tools:ignore="contentDescription"
+          tools:visibility="gone"
+          />
+
       <include layout="@layout/include_payment_product"/>
 
 
