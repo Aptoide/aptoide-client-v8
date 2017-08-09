@@ -23,4 +23,5 @@
   <string name="spotandshare_message_app_sender_info_sending">%1$s is sending</string>
   <string name="spotandshare_message_app_sender_info_sent">%1$s sent</string>
   <string name="spotandshare_short_connected_friends">Friends</string>
+  <string name="spotandshare_message_choose_name_avatar">Choose a name and an avatar</string>
 </resources>

@@ -12,12 +12,24 @@
       />
 
 
+  <TextView
+      android:id="@+id/edit_profile_instruction"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/spotandshare_toolbar"
+      android:layout_centerHorizontal="true"
+      android:layout_marginLeft="38dp"
+      android:layout_marginRight="38dp"
+      android:text="@string/spotandshare_message_choose_name_avatar"
+      android:textColor="@color/red_700"
+      style="@style/Aptoide.TextView.Regular.L"
+      />
 
   <EditText
       android:id="@+id/username_edit_text"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/spotandshare_toolbar"
+      android:layout_below="@id/edit_profile_instruction"
       android:layout_gravity="center"
       android:layout_marginBottom="20dp"
       android:layout_marginLeft="20dp"
