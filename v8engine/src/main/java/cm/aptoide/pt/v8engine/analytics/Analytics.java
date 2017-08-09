@@ -17,6 +17,9 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.FirstLaunchAnalytics;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.events.FabricEvent;
+import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
+import cm.aptoide.pt.v8engine.analytics.events.FlurryEvent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -184,11 +187,24 @@ public class Analytics {
   }
 
   public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key, event);
+    saver.save(key + event.getClass()
+        .getName(), event);
   }
 
   public @Nullable Event get(String key, Class<? extends Event> clazz) {
     return saver.get(key + clazz.getName());
+  }
+
+  public FacebookEvent getFacebookEvent(String key) {
+    return (FacebookEvent) get(key, FacebookEvent.class);
+  }
+
+  public FlurryEvent getFlurryEvent(String key) {
+    return (FlurryEvent) get(key, FlurryEvent.class);
+  }
+
+  public FabricEvent getFabricEvent(String key) {
+    return (FabricEvent) get(key, FabricEvent.class);
   }
 
   public void sendEvent(Event event) {
@@ -696,50 +712,6 @@ public class Analytics {
         parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper()
             .getName());
         logFacebookEvents(EVENT_NAME, parameters);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  public static class DownloadComplete {
-
-    public static final String EVENT_NAME = "Download Complete";
-    private static final String PARTIAL_EVENT_NAME = "Editors Choice_Download_Complete";
-
-    private static final String PACKAGE_NAME = "Package Name";
-    private static final String TRUSTED_BADGE = "Trusted Badge";
-    private static final String SOURCE = "Source";
-
-    private static HashMap<Long, String> applicationsInstallClicked = new HashMap<>();
-
-    public static void installClicked(long id) {
-      String lastStep = Analytics.AppViewViewedFrom.getLastStep();
-      applicationsInstallClicked.put(id, lastStep);
-    }
-
-    public static void downloadComplete(GetAppMeta.App app) {
-
-      try {
-
-        String lastStep = applicationsInstallClicked.get(app.getId());
-        if (TextUtils.isEmpty(lastStep)) {
-          return;
-        } else if (lastStep.contains("editor") && lastStep.contains("choice")) {
-          track(PARTIAL_EVENT_NAME, PACKAGE_NAME, app.getPackageName(), FLURRY);
-        }
-
-        HashMap<String, String> map = new HashMap<>();
-        map.put(SOURCE, lastStep);
-        map.put(PACKAGE_NAME, app.getPackageName());
-        map.put(TRUSTED_BADGE, app.getFile()
-            .getMalware()
-            .getRank()
-            .name());
-
-        track(EVENT_NAME, map, ALL);
-        logFacebookEvents(EVENT_NAME, map);
-        applicationsInstallClicked.remove(app.getId());
       } catch (Exception e) {
         e.printStackTrace();
       }

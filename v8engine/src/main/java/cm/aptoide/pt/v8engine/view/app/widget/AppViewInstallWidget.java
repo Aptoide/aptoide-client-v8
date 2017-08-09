@@ -499,7 +499,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     final View.OnClickListener installHandler = v -> {
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
-        Analytics.DownloadComplete.installClicked(app.getId());
+        displayable.installAppClicked();
       }
 
       showRootInstallWarningPopup(context);

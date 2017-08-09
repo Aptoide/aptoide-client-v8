@@ -8,9 +8,11 @@ package cm.aptoide.pt.v8engine.view.app.displayable;
 import android.widget.Button;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
@@ -39,6 +41,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   @Getter private AppViewFragment appViewFragment;
+  private DownloadCompleteAnalytics analytics;
 
   public AppViewInstallDisplayable() {
     super();
@@ -49,7 +52,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
       PublishRelay installAppRelay, DownloadFactory downloadFactory,
-      AppViewFragment appViewFragment) {
+      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -73,16 +76,17 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.installedRepository = installedRepository;
     this.timelineAnalytics = timelineAnalytics;
     this.appViewFragment = appViewFragment;
+    this.analytics = analytics;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
-      AppViewFragment appViewFragment) {
+      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
         installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory,
-        appViewFragment);
+        appViewFragment, analytics);
   }
 
   public void startInstallationProcess() {
@@ -117,5 +121,15 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public Observable<Void> getInstallAppRelay() {
     return installAppRelay;
+  }
+
+  public void installAppClicked() {
+    GetAppMeta.App app = getPojo().getNodes()
+        .getMeta()
+        .getData();
+    analytics.installClicked(app.getMd5(), app.getPackageName(), app.getFile()
+        .getMalware()
+        .getRank()
+        .name());
   }
 }

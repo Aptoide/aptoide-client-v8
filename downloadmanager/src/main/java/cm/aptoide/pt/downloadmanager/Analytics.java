@@ -8,4 +8,6 @@ import cm.aptoide.pt.database.realm.Download;
 
 public interface Analytics {
   void onError(Download download, Throwable throwable);
+
+  void onDownloadComplete(Download download);
 }
