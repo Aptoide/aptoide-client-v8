@@ -11,21 +11,13 @@
       android:background="?attr/colorPrimary"
       />
 
-  <ImageView
-      android:id="@+id/actual_avatar"
-      android:layout_width="72dp"
-      android:layout_height="72dp"
-      android:layout_below="@id/spotandshare_toolbar"
-      android:layout_centerHorizontal="true"
-      android:layout_margin="20dp"
-      android:src="@drawable/unknown_avatar"
-      />
+
 
   <EditText
       android:id="@+id/username_edit_text"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/actual_avatar"
+      android:layout_below="@id/spotandshare_toolbar"
       android:layout_gravity="center"
       android:layout_marginBottom="20dp"
       android:layout_marginLeft="20dp"

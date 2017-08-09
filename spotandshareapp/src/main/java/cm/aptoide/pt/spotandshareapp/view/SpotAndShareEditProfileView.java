@@ -23,7 +23,5 @@ public interface SpotAndShareEditProfileView extends View {
 
   void selectAvatar(SpotAndShareAvatar avatar);
 
-  void setActualAvatar(Integer avatar);
-
   void setAvatarsList(List<SpotAndShareAvatar> list);
 }

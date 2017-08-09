@@ -44,14 +44,6 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .map(resumed -> loadChosenAvatar())
-        .doOnNext(avatar -> view.setActualAvatar(avatar))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(created -> avatarsProvider.getAvailableAvatars())
         .doOnNext(list -> view.setAvatarsList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

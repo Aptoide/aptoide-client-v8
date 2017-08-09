@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
@@ -34,7 +32,6 @@ import rx.subjects.PublishSubject;
 public class SpotAndShareEditProfileFragment extends FragmentView
     implements SpotAndShareEditProfileView {
 
-  private ImageView actualAvatar;
   private EditText usernameEditText;
   private Button saveProfile;
   private Button cancel;
@@ -78,34 +75,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     pickAvatarAdapter.selectAvatar(avatar);
   }
 
-  @Override public void setActualAvatar(Integer avatar) {
-    switch (avatar) {
-      case 0:
-        actualAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
-        break;
-      case 1:
-        actualAvatar.setImageDrawable(
-            new ColorDrawable(getResources().getColor(R.color.aptoide_orange)));
-        break;
-      case 2:
-        actualAvatar.setImageDrawable(
-            new ColorDrawable(getResources().getColor(R.color.light_blue)));
-        break;
-      case 3:
-        actualAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.amber)));
-        break;
-      case 4:
-        actualAvatar.setImageDrawable(
-            new ColorDrawable(getResources().getColor(R.color.grey_fog_normal)));
-        break;
-      case 5:
-        actualAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.teal_700)));
-        break;
-      default:
-        actualAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
-        break;
-    }
-  }
 
   @Override public void setAvatarsList(List<SpotAndShareAvatar> list) {
     pickAvatarAdapter.setAvatarList(list);
@@ -114,7 +83,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    actualAvatar = (ImageView) view.findViewById(R.id.actual_avatar);
     usernameEditText = (EditText) view.findViewById(R.id.username_edit_text);
     cancel = (Button) view.findViewById(R.id.cancel_profile_edition_button);
     saveProfile = (Button) view.findViewById(R.id.save_profile_edition_button);
