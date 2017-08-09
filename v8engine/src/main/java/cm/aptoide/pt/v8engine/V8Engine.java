@@ -90,6 +90,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.BillingService;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
@@ -279,6 +280,7 @@ public abstract class V8Engine extends Application {
   private AuthorizationPersistence authorizationPersistence;
   private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
+  private BillingIdResolver billingiIdResolver;
 
   /**
    * call after this instance onCreate()
@@ -782,9 +784,11 @@ public abstract class V8Engine extends Application {
       final BillingService billingService =
           new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), new PurchaseMapper(getInAppBillingSerializer()),
-              new ProductFactory(), getPackageRepository(), new PaymentMethodMapper(),
-              getResources());
+              getDefaultSharedPreferences(),
+              new PurchaseMapper(getInAppBillingSerializer(), getBillingIdResolver()),
+              new ProductFactory(getBillingIdResolver()), getPackageRepository(),
+              new PaymentMethodMapper(), getResources(), getBillingIdResolver(),
+              BuildConfig.IN_BILLING_SUPPORTED_API_VERSION);
 
       final PaymentMethodSelector paymentMethodSelector =
           new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
@@ -794,6 +798,13 @@ public abstract class V8Engine extends Application {
           paymentMethodSelector, getPayer());
     }
     return billing;
+  }
+
+  public BillingIdResolver getBillingIdResolver() {
+    if (billingiIdResolver == null) {
+      billingiIdResolver = new BillingIdResolver(getAptoidePackage(), "/", "paid-app", "in-app");
+    }
+    return billingiIdResolver;
   }
 
   public BillingSyncManager getBillingSyncManager() {
@@ -853,7 +864,7 @@ public abstract class V8Engine extends Application {
       transactionService =
           new V3TransactionService(getTransactionMapper(), getBaseBodyInterceptorV3(),
               WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), getTransactionFactory());
+              getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
     }
     return transactionService;
   }

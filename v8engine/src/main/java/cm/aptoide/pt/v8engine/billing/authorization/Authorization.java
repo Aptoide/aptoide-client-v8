@@ -34,7 +34,9 @@ public class Authorization {
   }
 
   public boolean isInactive() {
-    return Status.INACTIVE.equals(status);
+    return Status.INACTIVE.equals(status)
+        || Status.EXPIRED.equals(status)
+        || Status.SESSION_EXPIRED.equals(status);
   }
 
   public boolean isInitialized() {
@@ -42,10 +44,7 @@ public class Authorization {
   }
 
   public boolean isFailed() {
-    return Status.CANCELLED.equals(status)
-        || Status.EXPIRED.equals(status)
-        || Status.SESSION_EXPIRED.equals(status)
-        || Status.UNKNOWN_ERROR.equals(status);
+    return Status.CANCELLED.equals(status) || Status.UNKNOWN_ERROR.equals(status);
   }
 
   public Status getStatus() {

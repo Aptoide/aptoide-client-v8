@@ -24,7 +24,7 @@ public interface PaymentView extends View {
 
   void showPaymentLoading();
 
-  void showTransactionLoading();
+  void showPurchaseLoading();
 
   void showBuyLoading();
 
@@ -34,7 +34,7 @@ public interface PaymentView extends View {
 
   void hidePaymentLoading();
 
-  void hideTransactionLoading();
+  void hidePurchaseLoading();
 
   void hideBuyLoading();
 

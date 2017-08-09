@@ -9,43 +9,37 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
+import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.billing.view.WebViewFragment;
 
 public class BoaCompraFragment extends WebViewFragment {
 
-  private static final String EXTRA_PAYMENT_METHOD_ID =
-      "cm.aptoide.pt.v8engine.billing.view.extra.PAYMENT_METHOD_ID";
-
   private Billing billing;
   private BillingAnalytics billingAnalytics;
-  private ProductProvider productProvider;
-  private int paymentMethodId;
   private AptoideAccountManager accountManager;
 
-  public static Fragment create(Bundle bundle, int paymentMethodId) {
+  public static Fragment create(Bundle bundle) {
     final BoaCompraFragment fragment = new BoaCompraFragment();
-    bundle.putInt(EXTRA_PAYMENT_METHOD_ID, paymentMethodId);
     fragment.setArguments(bundle);
     return fragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    paymentMethodId = getArguments().getInt(BoaCompraFragment.EXTRA_PAYMENT_METHOD_ID);
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
-    productProvider = ProductProvider.fromBundle(billing, getArguments());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    attachPresenter(new BoaCompraPresenter(this, billing, billingAnalytics, productProvider,
-            new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-                getActivityNavigator(), getFragmentNavigator(), accountManager), paymentMethodId),
-        savedInstanceState);
+    attachPresenter(new BoaCompraPresenter(this, billing, billingAnalytics,
+        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+            getActivityNavigator(), getFragmentNavigator(), accountManager),
+        getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
+        getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 }

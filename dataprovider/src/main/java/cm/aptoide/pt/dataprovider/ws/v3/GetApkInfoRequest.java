@@ -27,18 +27,13 @@ public class GetApkInfoRequest extends V3<PaidApp> {
         sharedPreferences);
   }
 
-  public static GetApkInfoRequest of(long appId, boolean sponsored, String storeName,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+  public static GetApkInfoRequest of(long appId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources) {
     BaseBody args = new BaseBody();
     args.put("identif", "id:" + appId);
-    args.put("repo", storeName);
     args.put("mode", "json");
 
-    if (sponsored) {
-      args.put("adview", "1");
-    }
     addOptions(args, resources);
     return new GetApkInfoRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);

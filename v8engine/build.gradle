@@ -47,6 +47,9 @@ android {
     buildConfigField "int", "REALM_SCHEMA_VERSION",
         project.REALM_SCHEMA_VERSION
     buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
+    buildConfigField "int", "IN_BILLING_SUPPORTED_API_VERSION",
+        project.IN_BILLING_SUPPORTED_API_VERSION
+
 
     multiDexEnabled true
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

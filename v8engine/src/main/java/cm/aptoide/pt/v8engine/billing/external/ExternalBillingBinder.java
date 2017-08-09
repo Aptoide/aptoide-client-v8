@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
 import cm.aptoide.pt.v8engine.billing.Billing;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
@@ -56,20 +57,30 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
   private final PaymentThrowableCodeMapper errorCodeFactory;
   private final Billing billing;
   private final CrashReport crashReport;
+  private final BillingIdResolver idResolver;
+  private final int supportedApiVersion;
 
   public ExternalBillingBinder(Context context, ExternalBillingSerializer serializer,
-      PaymentThrowableCodeMapper errorCodeFactory, Billing billing, CrashReport crashReport) {
+      PaymentThrowableCodeMapper errorCodeFactory, Billing billing, CrashReport crashReport,
+      BillingIdResolver idResolver, int apiVersion) {
     this.context = context;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
     this.billing = billing;
     this.crashReport = crashReport;
+    this.idResolver = idResolver;
+    this.supportedApiVersion = apiVersion;
   }
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
       throws RemoteException {
     try {
-      return billing.isSupported(packageName, apiVersion, type)
+
+      if (apiVersion != supportedApiVersion) {
+        return RESULT_BILLING_UNAVAILABLE;
+      }
+
+      return billing.isSupported(idResolver.resolveSellerId(packageName), type)
           .map(available -> available ? RESULT_OK : RESULT_BILLING_UNAVAILABLE)
           .toBlocking()
           .value();
@@ -85,7 +96,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
     final Bundle result = new Bundle();
 
-    if (!skusBundle.containsKey(ITEM_ID_LIST)) {
+    if (!skusBundle.containsKey(ITEM_ID_LIST) || apiVersion != supportedApiVersion) {
       result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
       return result;
     }
@@ -99,7 +110,8 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       final List<String> serializedProducts =
-          billing.getProducts(packageName, apiVersion, itemIdList)
+          billing.getProducts(idResolver.resolveSellerId(packageName),
+              idResolver.resolveProductIds(itemIdList))
               .flatMap(products -> {
                 try {
                   return Single.just(serializer.serializeProducts(products));
@@ -124,10 +136,17 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
       String developerPayload) throws RemoteException {
 
     final Bundle result = new Bundle();
+
+    if (apiVersion != supportedApiVersion) {
+      result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
+      return result;
+    }
+
     try {
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putParcelable(BUY_INTENT, PendingIntent.getActivity(context, 0,
-          PaymentActivity.getIntent(context, apiVersion, packageName, sku, developerPayload),
+          PaymentActivity.getIntent(context, idResolver.resolveProductId(sku),
+              idResolver.resolveSellerId(packageName), developerPayload),
           PendingIntent.FLAG_UPDATE_CURRENT));
     } catch (Exception exception) {
       crashReport.log(exception);
@@ -141,11 +160,18 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
       String continuationToken) throws RemoteException {
 
     final Bundle result = new Bundle();
+
+    if (apiVersion != supportedApiVersion) {
+      result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
+      return result;
+    }
+
     try {
 
-      final List<Purchase> purchases = billing.getPurchases(packageName, apiVersion)
-          .toBlocking()
-          .value();
+      final List<Purchase> purchases =
+          billing.getPurchases(idResolver.resolveSellerId(packageName))
+              .toBlocking()
+              .value();
 
       final List<String> dataList = new ArrayList<>();
       final List<String> signatureList = new ArrayList<>();
@@ -171,8 +197,13 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
   @Override public int consumePurchase(int apiVersion, String packageName, String purchaseToken)
       throws RemoteException {
+
+    if (apiVersion != supportedApiVersion) {
+      return RESULT_DEVELOPER_ERROR;
+    }
+
     try {
-      return billing.consumePurchase(packageName, apiVersion, purchaseToken)
+      return billing.consumePurchase(idResolver.resolveSellerId(packageName), purchaseToken)
           .andThen(Single.just(RESULT_OK))
           .toBlocking()
           .value();

@@ -72,6 +72,7 @@ import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.exception.BillingException;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
@@ -199,6 +200,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private PublishRelay installAppRelay;
   @Getter private boolean suggestedShowing;
   private List<String> keywords;
+  private BillingIdResolver billingIdResolver;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -272,6 +274,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    billingIdResolver = ((V8Engine) getContext().getApplicationContext()).getBillingIdResolver();
     adMapper = new MinimalAdMapper();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
     purchaseBundleMapper =
@@ -451,8 +454,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     billingAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
         .getPrice(), app.getPay()
         .getCurrency());
-    startActivityForResult(PaymentActivity.getIntent(getActivity(), app.getId(), app.getStore()
-        .getName(), sponsored), PAY_APP_REQUEST_CODE);
+    startActivityForResult(
+        PaymentActivity.getIntent(getActivity(), billingIdResolver.resolveProductId(app.getId()),
+            billingIdResolver.resolveStoreSellerId(app.getStore()
+                .getName()), null), PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
