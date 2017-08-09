@@ -5,7 +5,6 @@ import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.transaction.mol.MolTransaction;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.billing.view.WebView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -16,29 +15,31 @@ public class MolPresenter implements Presenter {
   private final WebView view;
   private final Billing billing;
   private final BillingAnalytics analytics;
-  private final ProductProvider productProvider;
   private final BillingNavigator navigator;
-  private final int paymentMethodId;
+  private final String sellerId;
+  private final String paymentMethodName;
+  private final String productId;
 
   public MolPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      ProductProvider productProvider, BillingNavigator navigator, int paymentMethodId) {
+      BillingNavigator navigator, String sellerId, String paymentMethodName, String productId) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
-    this.productProvider = productProvider;
     this.navigator = navigator;
-    this.paymentMethodId = paymentMethodId;
+    this.sellerId = sellerId;
+    this.paymentMethodName = paymentMethodName;
+    this.productId = productId;
   }
 
   @Override public void present() {
 
     onViewCreatedAuthorizeMolPayment();
 
-    onViewCreatedShowMolPaymentError();
+    onViewCreatedCheckTransactionError();
 
-    handleWebsiteLoadedEvent();
+    onViewCreatedCheckTransactionCompleted();
 
-    handleBackButtonEvent();
+    handleUrlLoadErrorEvent();
 
     handleRedirectUrlEvent();
 
@@ -56,44 +57,54 @@ public class MolPresenter implements Presenter {
   private void onViewCreatedAuthorizeMolPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(__ -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(product -> view.showLoading())
-        .flatMap(product -> billing.getTransaction(product)
+        .doOnNext(__ -> view.showLoading())
+        .flatMap(__ -> billing.getTransaction(sellerId, productId)
             .first(transaction -> transaction.isPendingAuthorization())
             .cast(MolTransaction.class)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(transaction -> view.loadWebsite(transaction.getConfirmationUrl(),
-                transaction.getSuccessUrl())))
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.showError();
-          view.hideLoading();
-        });
-  }
-
-  private void onViewCreatedShowMolPaymentError() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(__ -> productProvider.getProduct())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(product -> view.showLoading())
-        .flatMap(product -> billing.getTransaction(product)
-            .first(transaction -> !transaction.isPendingAuthorization())
-            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(transaction -> {
-              view.showError();
               view.hideLoading();
+              view.loadWebsite(transaction.getConfirmationUrl(), transaction.getSuccessUrl());
             }))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.showError();
-          view.hideLoading();
-        });
+        }, throwable -> showError());
+  }
+
+  private void onViewCreatedCheckTransactionError() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(__ -> view.showLoading())
+        .flatMap(__ -> billing.getTransaction(sellerId, productId)
+            .first(transaction -> transaction.isFailed())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(transaction -> showError()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> showError());
+  }
+
+  private void onViewCreatedCheckTransactionCompleted() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(__ -> view.showLoading())
+        .flatMap(__ -> billing.getTransaction(sellerId, productId)
+            .first(transaction -> transaction.isCompleted())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(transaction -> {
+              view.hideLoading();
+              analytics.sendAuthorizationSuccessEvent(paymentMethodName);
+              navigator.popTransactionAuthorizationView();
+            }))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> showError());
   }
 
   private void handleRedirectUrlEvent() {
@@ -101,53 +112,40 @@ public class MolPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.redirectUrlEvent()
             .doOnNext(backToStorePressed -> view.showLoading())
-            .flatMapSingle(loading -> productProvider.getProduct())
-            .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product))
+            .flatMapSingle(loading -> billing.getProduct(sellerId, productId))
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(sent -> navigator.popTransactionAuthorizationView()))
+            .doOnNext(sent -> view.showLoading()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
-  private void handleWebsiteLoadedEvent() {
+  private void handleUrlLoadErrorEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.urlLoadedEvent())
-        .doOnNext(loaded -> view.hideLoading())
+        .flatMap(created -> view.loadUrlErrorEvent())
+        .first()
+        .doOnNext(loaded -> showError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
-  }
-
-  private void handleBackButtonEvent() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.backButtonEvent())
-        .flatMapSingle(backButtonPressed -> productProvider.getProduct())
-        .doOnNext(product -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void handleDismissEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
+        .doOnNext(dismiss -> {
+          analytics.sendAuthorizationErrorEvent(paymentMethodName);
+          navigator.popTransactionAuthorizationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+  }
+
+  private void showError() {
+    view.hideLoading();
+    view.showError();
   }
 }

@@ -1,6 +1,9 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jdandrade on 26/06/2017.
@@ -17,6 +20,7 @@ abstract class AppPost implements Post {
   protected final long appId;
   protected final float appAverageRating;
   private final Long storeId;
+  private List<SocialCard.CardComment> comments;
   private boolean isLiked;
   private boolean likedFromClick;
 
@@ -34,6 +38,7 @@ abstract class AppPost implements Post {
     this.appAverageRating = appAverageRating;
     this.storeId = storeId;
     this.isLiked = isLiked;
+    comments = new ArrayList<>();
   }
 
   public Long getStoreId() {
@@ -91,5 +96,17 @@ abstract class AppPost implements Post {
 
   @Override public boolean isLikeFromClick() {
     return likedFromClick;
+  }
+
+  @Override public List<SocialCard.CardComment> getComments() {
+    return comments;
+  }
+
+  @Override public long getCommentsNumber() {
+    return comments.size();
+  }
+
+  @Override public void addComment(SocialCard.CardComment postComment) {
+    comments.add(0, postComment);
   }
 }

@@ -8,10 +8,8 @@ package cm.aptoide.pt.v8engine.billing.view.boacompra;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
-import cm.aptoide.pt.v8engine.billing.BillingSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.authorization.boacompra.BoaCompraAuthorization;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.billing.view.WebView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -22,21 +20,23 @@ public class BoaCompraPresenter implements Presenter {
   private final WebView view;
   private final Billing billing;
   private final BillingAnalytics analytics;
-  private final BillingSyncScheduler syncScheduler;
-  private final ProductProvider productProvider;
   private final BillingNavigator navigator;
-  private final int paymentMethodId;
+  private final String paymentMethodName;
+  private final String sellerId;
+  private final String productId;
+  private final String payload;
 
   public BoaCompraPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      BillingSyncScheduler syncScheduler, ProductProvider productProvider,
-      BillingNavigator navigator, int paymentMethodId) {
+      BillingNavigator navigator, String paymentMethodName, String sellerId, String productId,
+      String payload) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
-    this.syncScheduler = syncScheduler;
-    this.productProvider = productProvider;
     this.navigator = navigator;
-    this.paymentMethodId = paymentMethodId;
+    this.paymentMethodName = paymentMethodName;
+    this.sellerId = sellerId;
+    this.productId = productId;
+    this.payload = payload;
   }
 
   @Override public void present() {
@@ -49,9 +49,7 @@ public class BoaCompraPresenter implements Presenter {
 
     onViewCreatedShowBoaCompraError();
 
-    onViewCreatedShowBoaCompraPendingLoading();
-
-    handleWebsiteLoadedEvent();
+    handleUrlLoadErrorEvent();
 
     handleBackButtonEvent();
 
@@ -73,151 +71,118 @@ public class BoaCompraPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
+        .flatMap(product -> billing.getAuthorization(sellerId, productId))
         .first(authorization -> authorization.isInitialized())
         .cast(BoaCompraAuthorization.class)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(authorization -> view.loadWebsite(authorization.getUrl(),
-            authorization.getRedirectUrl()))
+        .doOnNext(authorization -> {
+          view.hideLoading();
+          view.loadWebsite(authorization.getUrl(), authorization.getRedirectUrl());
+        })
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void onViewCreatedProcessAuthorizedBoaCompra() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
+        .flatMap(product -> billing.getAuthorization(sellerId, productId))
         .first(authorization -> authorization.isAuthorized())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMapCompletable(authorization -> productProvider.getProduct()
-            .flatMapCompletable(product -> billing.processPayment(paymentMethodId, product)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  view.hideLoading();
-                  navigator.popTransactionAuthorizationView();
-                })))
+        .flatMapCompletable(authorization -> billing.processPayment(sellerId, productId, payload)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> {
+              analytics.sendAuthorizationSuccessEvent(paymentMethodName);
+              popAuthorizationView();
+            }))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
+  }
+
+  private void popAuthorizationView() {
+    view.hideLoading();
+    navigator.popTransactionAuthorizationView();
   }
 
   private void onViewCreatedAuthorizeBoaCompra() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
+        .doOnNext(__ -> view.showLoading())
+        .flatMap(product -> billing.getAuthorization(sellerId, productId))
         .first(authorization -> authorization.isInactive())
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMapCompletable(authorization -> billing.authorize(paymentMethodId))
+        .flatMapCompletable(authorization -> billing.authorize(sellerId, productId))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void handleRedirectUrlEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.redirectUrlEvent()
-            .doOnNext(backToStorePressed -> view.showLoading())
-            .flatMapSingle(loading -> productProvider.getProduct())
-            .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product)))
-        // Optimization to accelerate authorization sync once user interacts with the UI, should
-        // be removed once we have a better sync implementation
-        .flatMapCompletable(
-            analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentMethodId))
+            .doOnNext(backToStorePressed -> view.showLoading()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void onViewCreatedShowBoaCompraError() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
+        .flatMap(product -> billing.getAuthorization(sellerId, productId))
         .first(authorization -> authorization.isFailed())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> {
-          view.hideLoading();
-          view.showError();
-        })
+        .doOnNext(__ -> showError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
-  private void onViewCreatedShowBoaCompraPendingLoading() {
+  private void handleUrlLoadErrorEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(product -> billing.getAuthorization(paymentMethodId))
-        .first(authorization -> authorization.isFailed())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(loaded -> view.showLoading())
+        .flatMap(created -> view.loadUrlErrorEvent())
+        .first()
+        .doOnNext(loaded -> showError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
-  }
-
-  private void handleWebsiteLoadedEvent() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.urlLoadedEvent())
-        .doOnNext(loaded -> view.hideLoading())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError();
-        });
+        }, throwable -> showError());
   }
 
   private void handleBackButtonEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.backButtonEvent())
-        .flatMapSingle(backButtonPressed -> productProvider.getProduct())
-        .doOnNext(product -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
+        .doOnNext(__ -> analytics.sendAuthorizationCancelEvent(paymentMethodName))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          navigator.popTransactionAuthorizationView();
-        });
+        }, throwable -> popAuthorizationView());
   }
 
   private void handleDismissEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
+        .doOnNext(dismiss -> {
+          analytics.sendAuthorizationErrorEvent(paymentMethodName);
+          popAuthorizationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          navigator.popTransactionAuthorizationView();
-        });
+        }, throwable -> popAuthorizationView());
+  }
+
+  private void showError() {
+    view.hideLoading();
+    view.showError();
   }
 }

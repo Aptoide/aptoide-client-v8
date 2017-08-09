@@ -20,7 +20,6 @@ import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -33,7 +32,6 @@ import rx.android.schedulers.AndroidSchedulers;
 public class PaymentFragment extends PermissionServiceFragment implements PaymentView {
 
   private View overlay;
-  private View body;
   private View progressView;
   private RadioGroup paymentRadioGroup;
   private ImageView productIcon;
@@ -53,12 +51,11 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private boolean transactionLoading;
   private boolean buyLoading;
 
-  private ProductProvider productProvider;
   private Billing billing;
   private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
-  private AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
+  private ImageView creditCardsImage;
 
   public static Fragment create(Bundle bundle) {
     final PaymentFragment fragment = new PaymentFragment();
@@ -69,14 +66,11 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
-    productProvider = ProductProvider.fromBundle(billing, getArguments());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     billingNavigator =
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator());
+            getActivityNavigator(), getFragmentNavigator(), accountManager);
   }
 
   @Nullable @Override
@@ -91,12 +85,12 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     overlay = view.findViewById(R.id.fragment_payment_overlay);
     progressView = view.findViewById(R.id.fragment_payment_global_progress_bar);
     noPaymentsText = (TextView) view.findViewById(R.id.fragment_payment_no_payments_text);
+    creditCardsImage = (ImageView) view.findViewById(R.id.include_payment_credit_cards_image);
 
     productIcon = (ImageView) view.findViewById(R.id.include_payment_product_icon);
     productName = (TextView) view.findViewById(R.id.include_payment_product_name);
     productDescription = (TextView) view.findViewById(R.id.include_payment_product_description);
 
-    body = view.findViewById(R.id.fragment_payment_body);
     productPrice = (TextView) view.findViewById(R.id.include_payment_product_price);
     paymentRadioGroup = (RadioGroup) view.findViewById(R.id.fragment_payment_list);
 
@@ -114,12 +108,14 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .setPositiveButton(android.R.string.ok)
             .build();
 
-    attachPresenter(
-        new PaymentPresenter(this, billing, accountManager, accountNavigator, billingNavigator,
-            billingAnalytics, productProvider), savedInstanceState);
+    attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
+        getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
+        getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
+    creditCardsImage = null;
     spannableFactory = null;
     overlay = null;
     progressView = null;
@@ -127,7 +123,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productIcon = null;
     productName = null;
     productDescription = null;
-    body = null;
     productPrice = null;
     paymentRadioGroup = null;
     cancelButton = null;
@@ -143,25 +138,19 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     super.onDestroyView();
   }
 
-  @Override public Observable<PaymentMethodViewModel> paymentSelection() {
+  @Override public Observable<PaymentMethodViewModel> selectPaymentEvent() {
     return RxRadioGroup.checkedChanges(paymentRadioGroup)
         .map(paymentId -> paymentMap.get(paymentId))
         .filter(paymentMethodViewModel -> paymentMethodViewModel != null);
   }
 
-  @Override public Observable<Void> cancellationSelection() {
-    return RxView.clicks(cancelButton)
+  @Override public Observable<Void> cancelEvent() {
+    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
-  @Override public Observable<Void> tapOutsideSelection() {
-    return RxView.clicks(overlay)
-        .subscribeOn(AndroidSchedulers.mainThread())
-        .unsubscribeOn(AndroidSchedulers.mainThread());
-  }
-
-  @Override public Observable<Void> buySelection() {
+  @Override public Observable<Void> buyEvent() {
     return RxView.clicks(buyButton)
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
@@ -176,7 +165,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showTransactionLoading() {
+  @Override public void showPurchaseLoading() {
     transactionLoading = true;
     progressView.setVisibility(View.VISIBLE);
   }
@@ -189,7 +178,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void showPayments(List<PaymentMethodViewModel> payments) {
     paymentRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
-    body.setVisibility(View.VISIBLE);
+    creditCardsImage.setVisibility(View.VISIBLE);
     buyButton.setVisibility(View.VISIBLE);
     paymentMap.clear();
 
@@ -230,7 +219,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     }
   }
 
-  @Override public void hideTransactionLoading() {
+  @Override public void hidePurchaseLoading() {
     transactionLoading = false;
     if (!paymentLoading && !buyLoading) {
       progressView.setVisibility(View.GONE);
@@ -245,8 +234,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   }
 
   @Override public void showPaymentsNotFoundMessage() {
-    body.setVisibility(View.GONE);
     noPaymentsText.setVisibility(View.VISIBLE);
+    creditCardsImage.setVisibility(View.GONE);
     buyButton.setVisibility(View.GONE);
   }
 

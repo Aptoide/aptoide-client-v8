@@ -9,7 +9,6 @@ import cm.aptoide.pt.v8engine.timeline.post.exceptions.PostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import rx.Completable;
 import rx.Single;
 
 public class PostManager {
@@ -18,6 +17,7 @@ public class PostManager {
   private final PostAccessor postRemoteRepository;
   private final PostAccessor postLocalRepository;
   private AptoideAccountManager accountManager;
+  private boolean remoteRelatedAppsAvailable = false;
 
   public PostManager(PostRemoteAccessor postRemoteRepository, PostAccessor postLocalRepository,
       AptoideAccountManager accountManager) {
@@ -26,24 +26,23 @@ public class PostManager {
     this.accountManager = accountManager;
   }
 
-  public Completable post(String url, String content, String packageName) {
+  public Single<String> post(String url, String content, String packageName) {
     return validateLogin().flatMap(userLogged -> validateInsertedText(content, packageName, url))
-        .flatMapCompletable(
-            validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
-                getContent(url, content), packageName))
+        .flatMap(validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
+            getContent(url, content), packageName))
         .onErrorResumeNext(throwable -> handleErrors(throwable));
   }
 
-  private Completable handleErrors(Throwable throwable) {
+  private Single handleErrors(Throwable throwable) {
     if (throwable instanceof AptoideWsV7Exception) {
       if (((AptoideWsV7Exception) throwable).getBaseResponse()
           .getError()
           .getCode()
           .equals(APP_NOT_FOUND_ERROR_CODE)) {
-        return Completable.error(new PostException(PostException.ErrorCode.NO_APP_FOUND));
+        return Single.error(new PostException(PostException.ErrorCode.NO_APP_FOUND));
       }
     }
-    return Completable.error(throwable);
+    return Single.error(throwable);
   }
 
   private String getContent(String url, String content) {
@@ -82,15 +81,14 @@ public class PostManager {
 
   public Single<List<RelatedApp>> getSuggestionAppsOnStart(@Nullable String url) {
     if (url != null && !url.isEmpty()) {
-      return Single.zip(getSuggestionApps(),
-          postRemoteRepository.getRelatedApps(addProtocolIfNeeded(url))
-              .onErrorResumeNext(throwable -> Single.just(Collections.emptyList())),
-          (localApps, remoteApps) -> {
-            ArrayList<RelatedApp> list = new ArrayList<>();
-            list.addAll(remoteApps);
-            list.addAll(localApps);
-            return list;
-          });
+      return Single.zip(getSuggestionApps(), getSuggestionApps(url).onErrorResumeNext(
+          throwable -> Single.just(Collections.emptyList())), (localApps, remoteApps) -> {
+        ArrayList<RelatedApp> list = new ArrayList<>();
+        list.addAll(remoteApps);
+        remoteRelatedAppsAvailable = remoteApps.size() > 0;
+        list.addAll(localApps);
+        return list;
+      });
     }
     return getSuggestionApps();
   }
@@ -105,6 +103,14 @@ public class PostManager {
   public Single<PostView.PostPreview> getPreview(String url) {
     return postRemoteRepository.getCardPreview(addProtocolIfNeeded(url))
         .onErrorReturn(throwable -> new PostView.PostPreview(null, null, url));
+  }
+
+  public boolean remoteRelatedAppsAvailable() {
+    return remoteRelatedAppsAvailable;
+  }
+
+  public void setRemoteRelatedAppsAvailable(boolean remoteRelatedAppsAvailable) {
+    this.remoteRelatedAppsAvailable = remoteRelatedAppsAvailable;
   }
 
   enum Origin {

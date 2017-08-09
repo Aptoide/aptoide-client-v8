@@ -17,13 +17,11 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 
-@Displayables({ GridStoreDisplayable.class }) public class GridStoreWidget
-    extends Widget<GridStoreDisplayable> {
+public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 
   private ImageView storeAvatar;
   private TextView storeName;

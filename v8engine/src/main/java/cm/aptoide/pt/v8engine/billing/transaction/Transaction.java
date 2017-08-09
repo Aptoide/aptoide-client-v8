@@ -1,23 +1,32 @@
 package cm.aptoide.pt.v8engine.billing.transaction;
 
 public class Transaction {
-  private final int productId;
+  private final String productId;
   private final String payerId;
   private final Status status;
   private final int paymentMethodId;
+  private final String payload;
+  private final String sellerId;
 
-  public Transaction(int productId, String payerId, Status status, int paymentMethodId) {
+  public Transaction(String productId, String payerId, Status status, int paymentMethodId,
+      String payload, String sellerId) {
     this.productId = productId;
     this.payerId = payerId;
     this.status = status;
     this.paymentMethodId = paymentMethodId;
+    this.payload = payload;
+    this.sellerId = sellerId;
+  }
+
+  public String getPayload() {
+    return payload;
   }
 
   public String getPayerId() {
     return payerId;
   }
 
-  public int getProductId() {
+  public String getProductId() {
     return productId;
   }
 
@@ -51,7 +60,15 @@ public class Transaction {
     return paymentMethodId;
   }
 
+  public boolean isUnknown() {
+    return Status.UNKNOWN.equals(status);
+  }
+
+  public String getSellerId() {
+    return sellerId;
+  }
+
   public enum Status {
-    NEW, CREATED, PENDING_USER_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
+    UNKNOWN, NEW, CREATED, PENDING_USER_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
   }
 }

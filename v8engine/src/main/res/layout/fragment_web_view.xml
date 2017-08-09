@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Marcelo Benites on 11/11/2016.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+
+  <ProgressBar
+      android:id="@+id/fragment_web_view_determinate_progress_bar"
+      android:layout_width="match_parent"
+      android:layout_height="4dp"
+      android:indeterminate="false"
+      tools:max="100"
+      tools:progress="20"
+      style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+      />
+
+  <WebView
+      android:id="@+id/fragment_web_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/fragment_web_view_determinate_progress_bar"
+      />
+
+  <LinearLayout
+      android:id="@+id/fragment_web_view_indeterminate_progress_bar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/white"
+      android:clickable="true"
+      android:focusable="true"
+      android:gravity="center"
+      android:orientation="vertical"
+      android:visibility="gone"
+      >
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+  </LinearLayout>
+
+</RelativeLayout>

@@ -7,13 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
+import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -22,20 +23,16 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class PayPalFragment extends PermissionServiceFragment implements PayPalView {
 
-  private static final String EXTRA_PAYMENT_METHOD_ID =
-      "cm.aptoide.pt.v8engine.billing.view.extra.PAYMENT_METHOD_ID";
   private ProgressBar progressBar;
   private RxAlertDialog unknownErrorDialog;
   private RxAlertDialog networkErrorDialog;
 
   private Billing billing;
-  private ProductProvider productProvider;
   private BillingAnalytics billingAnalytics;
-  private int paymentMethodId;
+  private AptoideAccountManager accountManager;
 
-  public static Fragment create(Bundle bundle, int paymentMethodId) {
+  public static Fragment create(Bundle bundle) {
     final PayPalFragment fragment = new PayPalFragment();
-    bundle.putInt(EXTRA_PAYMENT_METHOD_ID, paymentMethodId);
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -43,9 +40,8 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
-    productProvider = ProductProvider.fromBundle(billing, getArguments());
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
-    paymentMethodId = getArguments().getInt(EXTRA_PAYMENT_METHOD_ID);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Nullable @Override
@@ -67,10 +63,14 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
             .setPositiveButton(R.string.ok)
             .build();
 
-    attachPresenter(new PayPalPresenter(this, billing, productProvider, billingAnalytics,
+    attachPresenter(new PayPalPresenter(this, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator()), AndroidSchedulers.mainThread(),
-        paymentMethodId), savedInstanceState);
+            getActivityNavigator(), getFragmentNavigator(), accountManager),
+        AndroidSchedulers.mainThread(),
+        getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
+        getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD),
+        getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME)), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

@@ -2,9 +2,9 @@ package cm.aptoide.pt.v8engine.billing.view.braintree;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.transaction.braintree.BraintreeTransaction;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Completable;
@@ -15,22 +15,28 @@ public class BraintreePresenter implements Presenter {
 
   private final BraintreeCreditCardView view;
   private final Braintree braintree;
-  private final ProductProvider productProvider;
   private final Billing billing;
+  private final BillingAnalytics analytics;
   private final BillingNavigator navigator;
   private final Scheduler viewScheduler;
-  private final int paymentMethodId;
+  private final String paymentMethodName;
+  private final String sellerId;
+  private final String productId;
+  private final String developerPayload;
 
-  public BraintreePresenter(BraintreeCreditCardView view, Braintree braintree,
-      ProductProvider productProvider, Billing billing, BillingNavigator navigator,
-      Scheduler viewScheduler, int paymentMethodId) {
+  public BraintreePresenter(BraintreeCreditCardView view, Braintree braintree, Billing billing,
+      BillingAnalytics analytics, BillingNavigator navigator, Scheduler viewScheduler,
+      String sellerId, String productId, String paymentMethodName, String developerPayload) {
     this.view = view;
     this.braintree = braintree;
-    this.productProvider = productProvider;
     this.billing = billing;
+    this.analytics = analytics;
     this.navigator = navigator;
     this.viewScheduler = viewScheduler;
-    this.paymentMethodId = paymentMethodId;
+    this.sellerId = sellerId;
+    this.productId = productId;
+    this.paymentMethodName = paymentMethodName;
+    this.developerPayload = developerPayload;
   }
 
   @Override public void present() {
@@ -45,7 +51,7 @@ public class BraintreePresenter implements Presenter {
 
     handleErrorDismissEvent();
 
-    handleCancellationEvent();
+    handleCancelEvent();
   }
 
   @Override public void saveState(Bundle state) {
@@ -56,11 +62,14 @@ public class BraintreePresenter implements Presenter {
 
   }
 
-  private void handleCancellationEvent() {
+  private void handleCancelEvent() {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMap(product -> Observable.merge(view.cancellationEvent(), view.tapOutsideSelection()))
-        .doOnNext(__ -> navigator.popTransactionAuthorizationView())
+        .flatMap(product -> view.cancelEvent())
+        .doOnNext(__ -> {
+          analytics.sendAuthorizationCancelEvent(paymentMethodName);
+          navigator.popTransactionAuthorizationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> navigator.popTransactionAuthorizationView());
@@ -70,7 +79,10 @@ public class BraintreePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
+        .doOnNext(dismiss -> {
+          analytics.sendAuthorizationErrorEvent(paymentMethodName);
+          navigator.popTransactionAuthorizationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
@@ -79,25 +91,26 @@ public class BraintreePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> braintree.getNonce())
-        .flatMapCompletable(nonce -> productProvider.getProduct()
-            .observeOn(viewScheduler)
-            .flatMapCompletable(product -> {
-              switch (nonce.getStatus()) {
-                case Braintree.NonceResult.SUCCESS:
-                  return billing.processLocalPayment(paymentMethodId, product, nonce.getNonce())
-                      .observeOn(viewScheduler)
-                      .doOnCompleted(() -> {
-                        view.hideLoading();
-                        navigator.popTransactionAuthorizationView();
-                      });
-                case Braintree.NonceResult.ERROR:
-                  view.showError();
-                case Braintree.NonceResult.CANCELLED:
-                default:
-                  view.hideLoading();
-                  return Completable.complete();
-              }
-            }))
+        .observeOn(viewScheduler)
+        .flatMapCompletable(nonce -> {
+          switch (nonce.getStatus()) {
+            case Braintree.NonceResult.SUCCESS:
+              return billing.processLocalPayment(sellerId, productId, developerPayload,
+                  nonce.getNonce())
+                  .observeOn(viewScheduler)
+                  .doOnCompleted(() -> {
+                    analytics.sendAuthorizationSuccessEvent(paymentMethodName);
+                    view.hideLoading();
+                    navigator.popTransactionAuthorizationView();
+                  });
+            case Braintree.NonceResult.ERROR:
+              view.showError();
+            case Braintree.NonceResult.CANCELLED:
+            default:
+              view.hideLoading();
+              return Completable.complete();
+          }
+        })
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -127,7 +140,7 @@ public class BraintreePresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> braintree.getConfiguration()
-            .flatMapSingle(configuration -> productProvider.getProduct()
+            .flatMapSingle(configuration -> billing.getProduct(sellerId, productId)
                 .observeOn(viewScheduler)
                 .doOnSuccess(product -> {
                   view.showCreditCardForm(configuration);
@@ -145,8 +158,7 @@ public class BraintreePresenter implements Presenter {
   private void onViewCreatedValidatePendingTransaction() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMapSingle(__ -> productProvider.getProduct())
-        .flatMapSingle(product -> billing.getTransaction(product)
+        .flatMapSingle(__ -> billing.getTransaction(sellerId, productId)
             .first()
             .toSingle())
         .cast(BraintreeTransaction.class)

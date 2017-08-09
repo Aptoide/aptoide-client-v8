@@ -1,19 +1,19 @@
 package cm.aptoide.pt.v8engine.billing.product;
 
-import cm.aptoide.pt.v8engine.billing.Purchase;
-
-public class InAppPurchase implements Purchase {
+public class InAppPurchase extends SimplePurchase {
 
   private final String signature;
   private final String signatureData;
   private final String sku;
-  private final boolean completed;
+  private final String token;
 
-  public InAppPurchase(String signature, String signatureData, String sku, boolean completed) {
+  public InAppPurchase(String signature, String signatureData, String sku, String token,
+      Status status, String productId) {
+    super(status, productId);
     this.signature = signature;
     this.signatureData = signatureData;
     this.sku = sku;
-    this.completed = completed;
+    this.token = token;
   }
 
   public String getSignature() {
@@ -28,7 +28,7 @@ public class InAppPurchase implements Purchase {
     return sku;
   }
 
-  @Override public boolean isCompleted() {
-    return completed;
+  public String getToken() {
+    return token;
   }
 }

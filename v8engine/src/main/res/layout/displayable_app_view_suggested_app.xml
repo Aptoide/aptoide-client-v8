@@ -1,71 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified on 04/08/2016.
+  ~ Modified by Neurophobic Animal on 02/05/2016.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/app_view_suggested"
-    android:layout_width="213.7dp"
-    android:layout_height="100dp"
-    android:layout_marginEnd="5dp"
-    android:layout_marginRight="5dp"
-    android:background="@drawable/displayable_app_view_suggested_app_border"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:layout_height="match_parent"
     android:clickable="true"
-    android:orientation="horizontal"
-    style="@style/AppViewWidget"
+    android:foreground="?selectableItemBackground"
+    android:paddingBottom="6dp"
     >
 
-  <ImageView
-      android:id="@+id/icon"
-      android:layout_width="81.3dp"
-      android:layout_height="81.3dp"
-      android:layout_gravity="center_vertical"
-      />
-
-  <LinearLayout
+  <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginLeft="15dp"
-      android:layout_marginStart="15dp"
+      android:background="@color/white"
       android:orientation="vertical"
       >
 
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/black"
-        android:textSize="15.5sp"
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
         />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="@string/sponsored"
-        android:textAllCaps="true"
-        android:textColor="#bebebe"
-        android:textSize="9sp"
-        android:textStyle="bold"
-        />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/icon"
+        android:orientation="vertical"
+        android:paddingEnd="3dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingStart="3dp"
+        android:paddingTop="3dp"
+        >
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:shadowColor="@color/amber"
-        android:textColor="#969696"
-        android:textSize="9sp"
-        />
+      <TextView
+          android:id="@+id/name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:lines="2"
+          android:paddingEnd="3dp"
+          android:paddingLeft="3dp"
+          android:paddingRight="3dp"
+          android:paddingStart="3dp"
+          android:textAlignment="center"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="14sp"
+          />
 
-  </LinearLayout>
+      <TextView
+          android:id="@+id/downloads"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:maxLines="1"
+          android:paddingEnd="3dp"
+          android:paddingLeft="3dp"
+          android:paddingRight="3dp"
+          android:paddingStart="3dp"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="12sp"
+          android:visibility="gone"
+          />
 
-</LinearLayout>
+      <!--style="?android:attr/ratingBarStyleIndicator"-->
+      <RatingBar
+          android:id="@+id/ratingbar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginTop="10dp"
+          android:clickable="false"
+          android:isIndicator="true"
+          android:numStars="5"
+          style="?attr/gridItemRatingBar"
+          />
+
+      <TextView
+          android:id="@+id/store_name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="@dimen/text_size_small"
+          android:visibility="gone"
+          />
+
+      <TextView
+          android:id="@+id/added_time"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:drawableLeft="@drawable/ic_timestamp"
+          android:drawableStart="@drawable/ic_timestamp"
+          android:textSize="@dimen/text_size_small"
+          android:visibility="gone"
+          />
+
+    </LinearLayout>
+
+  </RelativeLayout>
+
+</FrameLayout>

@@ -41,7 +41,6 @@ import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.DialogUtils;
 import cm.aptoide.pt.v8engine.view.recycler.LinearLayoutManagerWithSmoothScroller;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
@@ -59,8 +58,7 @@ import rx.functions.Action1;
 /**
  * Created on 30/06/16.
  */
-@Displayables({ AppViewRateAndCommentsDisplayable.class }) public class AppViewRateAndReviewsWidget
-    extends Widget<AppViewRateAndCommentsDisplayable> {
+public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDisplayable> {
 
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
@@ -127,9 +125,8 @@ import rx.functions.Action1;
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository(),
-        tokenInvalidator,
+        new AccountNavigator(getFragmentNavigator(), accountManager), bodyInterceptor, httpClient,
+        converterFactory, displayable.getInstalledRepository(), tokenInvalidator,
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
     appName = app.getName();

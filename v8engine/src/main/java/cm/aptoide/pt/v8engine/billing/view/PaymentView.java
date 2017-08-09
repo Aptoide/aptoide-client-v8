@@ -12,19 +12,17 @@ import rx.Observable;
 
 public interface PaymentView extends View {
 
-  Observable<PaymentMethodViewModel> paymentSelection();
+  Observable<PaymentMethodViewModel> selectPaymentEvent();
 
-  Observable<Void> cancellationSelection();
+  Observable<Void> cancelEvent();
 
-  Observable<Void> tapOutsideSelection();
-
-  Observable<Void> buySelection();
+  Observable<Void> buyEvent();
 
   void selectPayment(PaymentMethodViewModel payment);
 
   void showPaymentLoading();
 
-  void showTransactionLoading();
+  void showPurchaseLoading();
 
   void showBuyLoading();
 
@@ -34,7 +32,7 @@ public interface PaymentView extends View {
 
   void hidePaymentLoading();
 
-  void hideTransactionLoading();
+  void hidePurchaseLoading();
 
   void hideBuyLoading();
 

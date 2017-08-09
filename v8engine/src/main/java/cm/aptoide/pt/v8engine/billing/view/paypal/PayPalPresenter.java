@@ -7,7 +7,6 @@ import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
@@ -20,22 +19,26 @@ public class PayPalPresenter implements Presenter {
   private static final int PAY_APP_REQUEST_CODE = 12;
   private final PayPalView view;
   private final Billing billing;
-  private final ProductProvider productProvider;
   private final BillingAnalytics analytics;
   private final BillingNavigator billingNavigator;
+  private final String paymentMethodName;
   private final Scheduler viewScheduler;
-  private final int paymentMethodId;
+  private final String sellerId;
+  private final String productId;
+  private final String developerPayload;
 
-  public PayPalPresenter(PayPalView view, Billing billing, ProductProvider productProvider,
-      BillingAnalytics analytics, BillingNavigator billingNavigator, Scheduler viewScheduler,
-      int paymentMethodId) {
+  public PayPalPresenter(PayPalView view, Billing billing, BillingAnalytics analytics,
+      BillingNavigator billingNavigator, Scheduler viewScheduler, String sellerId, String productId,
+      String developerPayload, String paymentMethodName) {
     this.view = view;
     this.billing = billing;
-    this.productProvider = productProvider;
     this.analytics = analytics;
     this.billingNavigator = billingNavigator;
+    this.paymentMethodName = paymentMethodName;
     this.viewScheduler = viewScheduler;
-    this.paymentMethodId = paymentMethodId;
+    this.sellerId = sellerId;
+    this.productId = productId;
+    this.developerPayload = developerPayload;
   }
 
   @Override public void present() {
@@ -58,7 +61,7 @@ public class PayPalPresenter implements Presenter {
   private void onViewCreatedShowPayPalPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(created -> productProvider.getProduct())
+        .flatMapSingle(created -> billing.getProduct(sellerId, productId))
         .observeOn(viewScheduler)
         .doOnNext(product -> billingNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
             product.getPrice()
@@ -74,7 +77,6 @@ public class PayPalPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billingNavigator.payPalResults(PAY_APP_REQUEST_CODE)
             .doOnNext(result -> view.showLoading())
-            .doOnNext(result -> analytics.sendPayPalResultEvent(result))
             .flatMapCompletable(result -> processPayPalPayment(result).observeOn(viewScheduler)
                 .doOnCompleted(() -> {
                   view.hideLoading();
@@ -89,7 +91,10 @@ public class PayPalPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismisses())
-        .doOnNext(product -> billingNavigator.popTransactionAuthorizationView())
+        .doOnNext(product -> {
+          analytics.sendAuthorizationErrorEvent(paymentMethodName);
+          billingNavigator.popTransactionAuthorizationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> hideLoadingAndShowError(throwable));
@@ -98,11 +103,14 @@ public class PayPalPresenter implements Presenter {
   private Completable processPayPalPayment(BillingNavigator.PayPalResult result) {
     switch (result.getStatus()) {
       case BillingNavigator.PayPalResult.SUCCESS:
-        return productProvider.getProduct()
-            .flatMapCompletable(product -> billing.processLocalPayment(paymentMethodId, product,
-                result.getPaymentConfirmationId()));
+        analytics.sendAuthorizationSuccessEvent(paymentMethodName);
+        return billing.processLocalPayment(sellerId, productId, developerPayload,
+            result.getPaymentConfirmationId());
       case BillingNavigator.PayPalResult.CANCELLED:
+        analytics.sendAuthorizationCancelEvent(paymentMethodName);
+        return Completable.complete();
       case BillingNavigator.PayPalResult.ERROR:
+        analytics.sendAuthorizationErrorEvent(paymentMethodName);
       default:
         return Completable.complete();
     }

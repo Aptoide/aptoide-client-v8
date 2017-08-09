@@ -9,7 +9,7 @@ public class Authorization {
 
   private final int paymentId;
   private final String payerId;
-  private Status status;
+  private final Status status;
 
   public Authorization(int paymentId, String payerId, Status status) {
     this.paymentId = paymentId;
@@ -34,7 +34,9 @@ public class Authorization {
   }
 
   public boolean isInactive() {
-    return Status.INACTIVE.equals(status);
+    return Status.INACTIVE.equals(status)
+        || Status.EXPIRED.equals(status)
+        || Status.SESSION_EXPIRED.equals(status);
   }
 
   public boolean isInitialized() {
@@ -42,10 +44,7 @@ public class Authorization {
   }
 
   public boolean isFailed() {
-    return Status.CANCELLED.equals(status)
-        || Status.EXPIRED.equals(status)
-        || Status.SESSION_EXPIRED.equals(status)
-        || Status.UNKNOWN_ERROR.equals(status);
+    return Status.CANCELLED.equals(status) || Status.UNKNOWN_ERROR.equals(status);
   }
 
   public Status getStatus() {
@@ -53,6 +52,6 @@ public class Authorization {
   }
 
   public enum Status {
-    NONE, INACTIVE, ACTIVE, INITIATED, PENDING, CANCELLED, EXPIRED, SESSION_EXPIRED, UNKNOWN_ERROR
+    UNKNOWN, NONE, INACTIVE, ACTIVE, INITIATED, PENDING, CANCELLED, EXPIRED, SESSION_EXPIRED, UNKNOWN_ERROR
   }
 }

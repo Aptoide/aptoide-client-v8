@@ -4,7 +4,7 @@ package cm.aptoide.pt.v8engine.social.data;
  * Created by jdandrade on 05/07/2017.
  */
 
-public class TimelineStatsPost implements Post {
+public class TimelineStatsPost extends DummyPost {
   private final long followers;
   private final long following;
   private final CardType cardType;
@@ -29,22 +29,5 @@ public class TimelineStatsPost implements Post {
 
   @Override public CardType getType() {
     return cardType;
-  }
-
-  @Override public String getAbUrl() {
-    //supposed to be null
-    return null;
-  }
-
-  @Override public boolean isLiked() {
-    return false;
-  }
-
-  @Override public void setLiked(boolean liked) {
-    // do nothing
-  }
-
-  @Override public boolean isLikeFromClick() {
-    return false;
   }
 }

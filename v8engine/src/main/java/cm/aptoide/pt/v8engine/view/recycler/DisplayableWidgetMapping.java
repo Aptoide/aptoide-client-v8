@@ -6,46 +6,14 @@ import android.view.View;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.timeline.view.FeatureDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialArticleDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialStoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialVideoDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.AppUpdateDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowUserDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.PopularAppDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.RecommendationDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialArticleDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialInstallDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialRecommendationDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialVideoDisplayable;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsWidget;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.VideoDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.follow.FollowStoreWidget;
 import cm.aptoide.pt.v8engine.timeline.view.follow.FollowUserWidget;
 import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.AggregatedSocialArticleWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.AggregatedSocialInstallWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.AggregatedSocialStoreLatestAppsWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.AggregatedSocialVideoWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.AppUpdateWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.ArticleWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.FeatureWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.PopularAppWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.RecommendationWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.SocialArticleWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.SocialInstallWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.SocialRecommendationWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.SocialStoreLatestAppsWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.SocialVideoWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.StoreLatestAppsWidget;
-import cm.aptoide.pt.v8engine.timeline.view.widget.VideoWidget;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.app.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.app.GridAppListDisplayable;
@@ -54,6 +22,7 @@ import cm.aptoide.pt.v8engine.view.app.GridAppWidget;
 import cm.aptoide.pt.v8engine.view.app.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.app.OfficialAppWidget;
 import cm.aptoide.pt.v8engine.view.app.OtherVersionDisplayable;
+import cm.aptoide.pt.v8engine.view.app.displayable.AppViewAdDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewFlagThisDisplayable;
@@ -74,7 +43,6 @@ import cm.aptoide.pt.v8engine.view.app.widget.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewRateResultsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewScreenshotsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewStoreWidget;
-import cm.aptoide.pt.v8engine.view.app.widget.AppViewSuggestedAppWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.app.widget.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.comments.CommentDisplayable;
@@ -100,6 +68,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.MessageWhiteBgDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.ProgressBarDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.AppViewAdWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.AppViewSuggestedAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.FooterRowWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.FooterWidget;
@@ -234,41 +204,6 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(UpdatesHeaderWidget.class, UpdatesHeaderDisplayable.class));
 
-    // Social Timeline
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(ArticleWidget.class, ArticleDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(FeatureWidget.class, FeatureDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(StoreLatestAppsWidget.class,
-        StoreLatestAppsDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AppUpdateWidget.class, AppUpdateDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(VideoWidget.class, VideoDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(RecommendationWidget.class, RecommendationDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(SocialArticleWidget.class, SocialArticleDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(SocialVideoWidget.class, SocialVideoDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(SocialStoreLatestAppsWidget.class,
-        SocialStoreLatestAppsDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(SocialInstallWidget.class, SocialInstallDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(SocialRecommendationWidget.class,
-        SocialRecommendationDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(PopularAppWidget.class, PopularAppDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AggregatedSocialInstallWidget.class,
-        AggregatedSocialInstallDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AggregatedSocialArticleWidget.class,
-        AggregatedSocialArticleDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AggregatedSocialVideoWidget.class,
-        AggregatedSocialVideoDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AggregatedSocialStoreLatestAppsWidget.class,
-            AggregatedSocialStoreLatestAppsDisplayable.class));
-
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));
 
@@ -317,6 +252,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppWidget.class,
         AppViewSuggestedAppDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(AppViewAdWidget.class, AppViewAdDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(OtherVersionWidget.class, OtherVersionDisplayable.class));

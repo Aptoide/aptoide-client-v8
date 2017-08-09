@@ -1,10 +1,13 @@
 package cm.aptoide.pt.v8engine.social.view;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
 import cm.aptoide.pt.v8engine.social.data.PostComment;
 import cm.aptoide.pt.v8engine.social.data.SocialAction;
+import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -17,9 +20,9 @@ public interface TimelineView extends View {
 
   void showCards(List<Post> cards);
 
-  void showProgressIndicator();
+  void showGeneralProgressIndicator();
 
-  void hideProgressIndicator();
+  void hideGeneralProgressIndicator();
 
   void hideRefresh();
 
@@ -33,7 +36,7 @@ public interface TimelineView extends View {
 
   Observable<CardTouchEvent> postClicked();
 
-  Observable<Post> shareConfirmation();
+  Observable<ShareEvent> shareConfirmation();
 
   Observable<PostComment> commentPosted();
 
@@ -42,8 +45,6 @@ public interface TimelineView extends View {
   void showLoadMoreProgressIndicator();
 
   void hideLoadMoreProgressIndicator();
-
-  boolean isNewRefresh();
 
   Observable<Void> floatingActionButtonClicked();
 
@@ -63,13 +64,11 @@ public interface TimelineView extends View {
 
   void showStoreUnsubscribedMessage(String storeName);
 
-  void showSharePreview(Post post);
+  void showSharePreview(Post post, Account account);
 
   void showShareSuccessMessage();
 
-  void showCommentDialog(String cardId);
-
-  void showCommentSuccess();
+  void showCommentDialog(SocialCardTouchEvent touchEvent);
 
   void showGenericError();
 
@@ -77,7 +76,9 @@ public interface TimelineView extends View {
 
   Observable<Void> loginActionClick();
 
-  void showSetUserOrStorePublicMessage();
-
   void showCreateStoreMessage(SocialAction socialAction);
+
+  void showPostProgressIndicator();
+
+  void hidePostProgressIndicator();
 }

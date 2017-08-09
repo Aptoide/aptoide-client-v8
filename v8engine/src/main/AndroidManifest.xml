@@ -43,7 +43,7 @@
       />
 
   <application
-      android:allowBackup="true"
+      android:allowBackup="false"
       >
 
     <activity
@@ -76,6 +76,7 @@
 
     <activity
         android:name=".billing.view.PaymentActivity"
+        android:screenOrientation="sensor"
         android:theme="@style/AppBaseTheme.NoTitle.Transparent"/>
 
     <activity android:name=".view.account.LoginActivity"/>
@@ -135,6 +136,11 @@
         <data
             android:host="market.android.com"
             android:scheme="https"/>
+
+        <data
+            android:host="market.android.com"
+            android:scheme="http"/>
+
       </intent-filter>
 
       <intent-filter>
@@ -215,7 +221,7 @@
     </receiver>
 
     <service android:name=".notification.PullingContentService"/>
-    <service android:name=".sync.alarm.NotificationSyncService"/>
+    <service android:name=".sync.SyncService"/>
 
     <receiver android:name=".notification.NotificationReceiver">
       <intent-filter>

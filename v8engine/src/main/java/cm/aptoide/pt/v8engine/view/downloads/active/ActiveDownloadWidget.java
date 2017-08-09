@@ -10,7 +10,6 @@ import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -19,8 +18,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 7/18/16.
  */
-@Displayables({ ActiveDownloadDisplayable.class }) public class ActiveDownloadWidget
-    extends Widget<ActiveDownloadDisplayable> {
+public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 
   private TextView appName;
   private ProgressBar progressBar;

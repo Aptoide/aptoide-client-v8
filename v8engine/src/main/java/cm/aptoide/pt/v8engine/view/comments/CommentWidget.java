@@ -3,13 +3,13 @@ package cm.aptoide.pt.v8engine.view.comments;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Dimension;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.comments.ComplexComment;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -103,8 +103,9 @@ public class CommentWidget extends Widget<CommentDisplayable> {
       compositeSubscription.add(RxView.clicks(replyLayout)
           .flatMap(aVoid -> complexComment.observeReplySubmission()
               .doOnError(err -> {
-                ShowMessage.asSnack(userAvatar, R.string.error_occured);
-              }))
+                Snackbar.make(userAvatar, R.string.error_occured, Snackbar.LENGTH_SHORT);
+              })
+              .toObservable())
           .retry()
           .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
             CrashReport.getInstance()

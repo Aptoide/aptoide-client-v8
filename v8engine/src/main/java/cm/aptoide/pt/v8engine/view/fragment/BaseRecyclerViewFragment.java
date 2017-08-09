@@ -159,6 +159,14 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return displayables != null && displayables.size() > 0;
   }
 
+  @CallSuper public BaseRecyclerViewFragment addDisplayableWithAnimation(int position,
+      Displayable displayable) {
+    adapter.addDisplayableWithAnimation(position, displayable);
+    this.displayables.add(position, displayable);
+
+    return this;
+  }
+
   @Partners @CallSuper @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     if (adapter == null) {

@@ -27,7 +27,6 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
@@ -35,8 +34,7 @@ import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-@Displayables({ AppViewStoreDisplayable.class }) public class AppViewStoreWidget
-    extends Widget<AppViewStoreDisplayable> {
+public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
   private ImageView storeAvatarView;
   private TextView storeNameView;

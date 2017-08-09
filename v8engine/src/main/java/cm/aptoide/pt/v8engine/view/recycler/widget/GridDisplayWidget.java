@@ -26,8 +26,7 @@ import rx.functions.Action1;
 /**
  * Created on 02/05/16.
  */
-@Displayables({ GridDisplayDisplayable.class }) public class GridDisplayWidget
-    extends Widget<GridDisplayDisplayable> {
+public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
 
   private static final String TAG = GridDisplayWidget.class.getName();
 

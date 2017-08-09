@@ -11,13 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
+import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
-import cm.aptoide.pt.v8engine.billing.view.ProductProvider;
 import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
@@ -35,8 +37,6 @@ import rx.android.schedulers.AndroidSchedulers;
 public class BraintreeCreditCardFragment extends PermissionServiceFragment
     implements BraintreeCreditCardView {
 
-  private static final String EXTRA_PAYMENT_METHOD_ID =
-      "cm.aptoide.pt.v8engine.billing.view.extra.PAYMENT_METHOD_ID";
   private Braintree braintree;
   private PublishRelay<CardBuilder> cardBuilderRelay;
   private View progressBar;
@@ -44,7 +44,6 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private CardForm cardForm;
   private CardType cardType;
   private RxAlertDialog unknownErrorDialog;
-  private ProductProvider productProvider;
   private Billing billing;
   private Button buyButton;
   private Button cancelButton;
@@ -52,11 +51,11 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private TextView productName;
   private TextView productDescription;
   private TextView productPrice;
-  private int paymentId;
+  private AptoideAccountManager accountManager;
+  private BillingAnalytics billingAnalytics;
 
-  public static Fragment create(Bundle bundle, int paymentMethodId) {
+  public static Fragment create(Bundle bundle) {
     final BraintreeCreditCardFragment fragment = new BraintreeCreditCardFragment();
-    bundle.putInt(EXTRA_PAYMENT_METHOD_ID, paymentMethodId);
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -74,8 +73,8 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     super.onCreate(savedInstanceState);
     cardBuilderRelay = PublishRelay.create();
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
-    productProvider = ProductProvider.fromBundle(billing, getArguments());
-    paymentId = getArguments().getInt(EXTRA_PAYMENT_METHOD_ID);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
   }
 
   @Nullable @Override
@@ -121,10 +120,14 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     cardForm.setOnCardFormSubmitListener(() -> {
       cardBuilderRelay.call(createCard());
     });
-    attachPresenter(new BraintreePresenter(this, braintree, productProvider, billing,
+    attachPresenter(new BraintreePresenter(this, braintree, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator()), AndroidSchedulers.mainThread(),
-        paymentId), savedInstanceState);
+            getActivityNavigator(), getFragmentNavigator(), accountManager),
+        AndroidSchedulers.mainThread(),
+        getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
+        getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
+        getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME),
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -185,14 +188,8 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
         .map(dialogInterface -> null);
   }
 
-  @Override public Observable<Void> cancellationEvent() {
-    return RxView.clicks(cancelButton)
-        .subscribeOn(AndroidSchedulers.mainThread())
-        .unsubscribeOn(AndroidSchedulers.mainThread());
-  }
-
-  @Override public Observable<Void> tapOutsideSelection() {
-    return RxView.clicks(overlay)
+  @Override public Observable<Void> cancelEvent() {
+    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }

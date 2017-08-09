@@ -30,7 +30,6 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.updates.UpdatesAnalytics;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
@@ -40,8 +39,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 17-05-2016.
  */
-@Displayables({ UpdateDisplayable.class }) public class UpdateWidget
-    extends Widget<UpdateDisplayable> {
+public class UpdateWidget extends Widget<UpdateDisplayable> {
 
   private static final String TAG = UpdateWidget.class.getSimpleName();
 

@@ -73,6 +73,11 @@ public class RequestFactory {
     return this.listAppsRequestFactory.newListAppsRequest(url);
   }
 
+  public ListAppsRequest newListAppsRequest(int storeId, Long groupId, int limit,
+      ListAppsRequest.Sort sort) {
+    return this.listAppsRequestFactory.newListAppsRequest(storeId, groupId, limit, sort);
+  }
+
   public ListFullReviewsRequest newListFullReviews(String url, boolean refresh) {
     return this.listFullReviewsRequestFactory.newListFullReviews(url, refresh,
         storeCredentialsProvider.fromUrl(url));

@@ -13,15 +13,13 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by neuro on 09-05-2016.
  */
-@Displayables({ AppBrickDisplayable.class }) public class AppBrickWidget
-    extends Widget<AppBrickDisplayable> {
+public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 
   private ImageView graphic;
 

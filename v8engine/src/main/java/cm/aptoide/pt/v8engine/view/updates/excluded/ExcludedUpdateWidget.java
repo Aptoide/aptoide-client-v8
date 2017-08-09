@@ -7,14 +7,12 @@ import android.widget.TextView;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created on 15/06/16.
  */
-@Displayables({ ExcludedUpdateDisplayable.class }) public class ExcludedUpdateWidget
-    extends Widget<ExcludedUpdateDisplayable> {
+public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 
   private ImageView icon;
   private TextView name;

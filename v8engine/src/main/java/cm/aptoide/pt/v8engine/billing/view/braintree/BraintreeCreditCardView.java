@@ -22,7 +22,6 @@ public interface BraintreeCreditCardView extends View {
 
   Observable<Void> errorDismissedEvent();
 
-  Observable<Void> cancellationEvent();
+  Observable<Void> cancelEvent();
 
-  Observable<Void> tapOutsideSelection();
 }

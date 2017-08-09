@@ -9,8 +9,8 @@ import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentMethodNotAuthorizedException;
+import cm.aptoide.pt.v8engine.billing.product.SimplePurchase;
 import cm.aptoide.pt.v8engine.billing.transaction.Transaction;
-import cm.aptoide.pt.v8engine.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.v8engine.billing.transaction.TransactionRepository;
 import java.util.List;
 import rx.Completable;
@@ -23,20 +23,24 @@ public class Billing {
   private final BillingService billingService;
   private final AuthorizationRepository authorizationRepository;
   private final PaymentMethodSelector paymentMethodSelector;
-  private final TransactionPersistence transactionPersistence;
+  private final Payer payer;
 
   public Billing(TransactionRepository transactionRepository, BillingService billingService,
       AuthorizationRepository authorizationRepository, PaymentMethodSelector paymentMethodSelector,
-      TransactionPersistence transactionPersistence) {
+      Payer payer) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
     this.paymentMethodSelector = paymentMethodSelector;
-    this.transactionPersistence = transactionPersistence;
+    this.payer = payer;
   }
 
-  public Single<Boolean> isSupported(String packageName, int apiVersion, String type) {
-    return billingService.getBilling(apiVersion, packageName, type)
+  public Payer getPayer() {
+    return payer;
+  }
+
+  public Single<Boolean> isSupported(String sellerId, String type) {
+    return billingService.getBilling(sellerId, type)
         .andThen(Single.just(true))
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof IllegalArgumentException) {
@@ -46,36 +50,34 @@ public class Billing {
         });
   }
 
-  public Single<Product> getProduct(long appId, String storeName, boolean sponsored) {
-    return billingService.getProduct(appId, sponsored, storeName);
+  public Single<Product> getProduct(String sellerId, String productId) {
+    return billingService.getProduct(sellerId, productId);
   }
 
-  public Single<Product> getProduct(String packageName, int apiVersion, String type, String sku,
-      String developerPayload) {
-    return billingService.getProduct(apiVersion, packageName, sku, type, developerPayload);
+  public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
+    return billingService.getProducts(sellerId, productIds);
   }
 
-  public Single<List<Product>> getProducts(String packageName, int apiVersion, String type,
-      List<String> skus) {
-    return billingService.getProducts(apiVersion, packageName, skus, type);
+  public Single<List<Purchase>> getPurchases(String sellerId) {
+    return billingService.getPurchases(sellerId);
   }
 
-  public Single<List<Purchase>> getPurchases(String packageName, int apiVersion, String type) {
-    return billingService.getPurchases(apiVersion, packageName, type);
+  public Completable consumePurchase(String sellerId, String purchaseToken) {
+    return billingService.getPurchase(sellerId, purchaseToken)
+        .flatMapCompletable(purchase -> billingService.deletePurchase(sellerId, purchaseToken)
+            .andThen(transactionRepository.remove(purchase.getProductId(), sellerId)));
   }
 
-  public Completable consumePurchase(String packageName, int apiVersion, String purchaseToken) {
-    return billingService.deletePurchase(apiVersion, packageName, purchaseToken)
-        // TODO sync all payment confirmations instead. For now there is no web service for that.
-        .andThen(transactionPersistence.removeAllTransactions());
+  public Single<List<PaymentMethod>> getPaymentMethods(String sellerId, String productId) {
+    return getProduct(sellerId, productId).flatMap(
+        product -> billingService.getPaymentMethods(product));
   }
 
-  public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
-    return billingService.getPaymentMethods(product);
-  }
-
-  public Completable processPayment(int paymentMethodId, Product product) {
-    return transactionRepository.createTransaction(paymentMethodId, product)
+  public Completable processPayment(String sellerId, String productId, String payload) {
+    return getSelectedPaymentMethod(sellerId, productId).flatMap(
+        paymentMethod -> getProduct(sellerId, productId).flatMap(
+            product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),
+                product, payload)))
         .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
             return Completable.error(
@@ -90,59 +92,72 @@ public class Billing {
         });
   }
 
-  public Completable processLocalPayment(int paymentMethodId, Product product,
+  public Completable processLocalPayment(String sellerId, String productId, String payload,
       String localMetadata) {
-    return getPaymentMethod(paymentMethodId, product).flatMapCompletable(
-        payment -> transactionRepository.createTransaction(paymentMethodId, product, localMetadata)
-            .toCompletable());
-  }
-
-  public Observable<Transaction> getTransaction(Product product) {
-    return transactionRepository.getTransaction(product)
-        .distinctUntilChanged(transaction -> transaction.getStatus());
-  }
-
-  public Single<Purchase> getPurchase(Product product) {
-    return billingService.getPurchase(product)
-        .flatMap(purchase -> {
-          if (purchase.isCompleted()) {
-            return Single.just(purchase);
-          }
-          return Single.error(new IllegalArgumentException("Purchase is not completed"));
-        })
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof IllegalArgumentException) {
-            return transactionRepository.remove(product.getId())
-                .andThen(Single.error(throwable));
-          }
-          return Single.error(throwable);
-        });
-  }
-
-  public Observable<Authorization> getAuthorization(int paymentMethodId) {
-    return authorizationRepository.getAuthorization(paymentMethodId);
-  }
-
-  public Completable authorize(int paymentMethodId) {
-    return authorizationRepository.createAuthorization(paymentMethodId)
+    return getSelectedPaymentMethod(sellerId, productId).flatMap(
+        paymentMethod -> getProduct(sellerId, productId).flatMap(
+            product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),
+                product, localMetadata, payload)))
         .toCompletable();
   }
 
-  public Completable selectPaymentMethod(int paymentMethodId, Product product) {
-    return getPaymentMethod(paymentMethodId, product).flatMapCompletable(
+  public Observable<Transaction> getTransaction(String sellerId, String productId) {
+    return getProduct(sellerId, productId).flatMapObservable(
+        product -> transactionRepository.getTransaction(product, sellerId));
+  }
+
+  public Observable<Purchase> getPurchase(String sellerId, String productId) {
+    return getTransaction(sellerId, productId).flatMapSingle(transaction -> {
+
+      if (transaction.isPending() || transaction.isUnknown()) {
+        return Single.just(new SimplePurchase(SimplePurchase.Status.PENDING, productId));
+      }
+
+      if (transaction.isNew() || transaction.isFailed() || transaction.isPendingAuthorization()) {
+        return Single.just(new SimplePurchase(SimplePurchase.Status.NEW, productId));
+      }
+
+      return getProduct(sellerId, productId).flatMap(
+          product -> billingService.getPurchase(product));
+    })
+        .flatMap(purchase -> {
+          if (purchase.isFailed()) {
+            return transactionRepository.remove(productId, sellerId)
+                .andThen(Observable.just(purchase));
+          }
+          return Observable.just(purchase);
+        });
+  }
+
+  public Observable<Authorization> getAuthorization(String sellerId, String productId) {
+    return getSelectedPaymentMethod(sellerId, productId).flatMapObservable(
+        paymentMethod -> authorizationRepository.getAuthorization(paymentMethod.getId()));
+  }
+
+  public Completable authorize(String sellerId, String productId) {
+    return getSelectedPaymentMethod(sellerId, productId).flatMap(
+        paymentMethod -> authorizationRepository.createAuthorization(paymentMethod.getId()))
+        .toCompletable();
+  }
+
+  public Completable selectPaymentMethod(int paymentMethodId, String sellerId,
+      String productId) {
+    return getPaymentMethod(paymentMethodId, sellerId, productId).flatMapCompletable(
         paymentMethod -> paymentMethodSelector.selectPaymentMethod(paymentMethod));
   }
 
-  public Single<PaymentMethod> getSelectedPaymentMethod(Product product) {
-    return getPaymentMethods(product).flatMap(
+  public Single<PaymentMethod> getSelectedPaymentMethod(String sellerId, String productId) {
+    return getPaymentMethods(sellerId, productId).flatMap(
         paymentMethods -> paymentMethodSelector.selectedPaymentMethod(paymentMethods));
   }
 
-  private Single<PaymentMethod> getPaymentMethod(int paymentMethodId, Product product) {
-    return getPaymentMethods(product).flatMapObservable(payments -> Observable.from(payments)
-        .filter(payment -> payment.getId() == paymentMethodId)
-        .switchIfEmpty(Observable.error(
-            new IllegalArgumentException("Payment " + paymentMethodId + " not found."))))
+  private Single<PaymentMethod> getPaymentMethod(int paymentMethodId, String sellerId,
+      String productId) {
+    return getPaymentMethods(sellerId, productId).flatMapObservable(
+        payments -> Observable.from(payments)
+            .filter(payment -> payment.getId() == paymentMethodId)
+            .switchIfEmpty(Observable.error(
+                new IllegalArgumentException("Payment " + paymentMethodId + " not found."))))
         .first()
         .toSingle();
   }

@@ -7,12 +7,10 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.Translator;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
-@Displayables({ StoreGridHeaderDisplayable.class }) public class StoreGridHeaderWidget
-    extends Widget<StoreGridHeaderDisplayable> {
+public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
 
   private TextView title;
   private Button more;

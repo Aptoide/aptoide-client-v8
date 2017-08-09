@@ -18,12 +18,11 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.functions.Action1;
 
-@Displayables({ GridAppDisplayable.class }) public class GridAppWidget
-    extends Widget<GridAppDisplayable> {
+public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
 
   private TextView name;
   private ImageView icon;
@@ -45,7 +44,7 @@ import com.jakewharton.rxbinding.view.RxView;
     tvAddedTime = (TextView) itemView.findViewById(R.id.added_time);
   }
 
-  @Override public void bindView(GridAppDisplayable displayable) {
+  @Override public void bindView(T displayable) {
     final App pojo = displayable.getPojo();
     final long appId = pojo.getId();
     final FragmentActivity context = getContext();
@@ -69,15 +68,20 @@ import com.jakewharton.rxbinding.view.RxView;
         .getTimeDiffString(context, pojo.getAdded()
             .getTime(), getContext().getResources()));
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(v -> {
-          // FIXME
-          Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-              .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
-                  .getAppearance()
-                  .getTheme(), tvStoreName.getText()
-                  .toString()));
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable)));
+        .subscribe(newOnClickListener(displayable, pojo, appId),
+            throwable -> CrashReport.getInstance()
+                .log(throwable)));
+  }
+
+  @NonNull protected Action1<Void> newOnClickListener(T displayable, App pojo, long appId) {
+    return v -> {
+      // FIXME
+      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
+              .getAppearance()
+              .getTheme(), tvStoreName.getText()
+              .toString()));
+    };
   }
 }

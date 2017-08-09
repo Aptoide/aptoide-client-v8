@@ -18,8 +18,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialStore;
 import cm.aptoide.pt.v8engine.social.data.StoreAppCardTouchEvent;
@@ -67,6 +67,7 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
   private final TextView socialCommentUsername;
   private final TextView socialCommentBody;
   private final ImageView latestCommentMainAvatar;
+  private final TextView sharedBy;
 
   private int marginOfTheNextLikePreview = 60;
 
@@ -110,6 +111,7 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
     this.socialCommentBody = (TextView) itemView.findViewById(R.id.social_latest_comment_body);
     this.latestCommentMainAvatar =
         (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
+    this.sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   }
 
@@ -161,15 +163,23 @@ public class SocialStoreViewHolder extends PostViewHolder<SocialStore> {
         likeButton.setHeartStateWithoutAnimation(true);
       }
     }
+    if (card.getSharedByName() != null) {
+      sharedBy.setText(spannableFactory.createColorSpan(itemView.getContext()
+              .getString(R.string.social_timeline_shared_by, card.getSharedByName()),
+          ContextCompat.getColor(itemView.getContext(), R.color.black), card.getSharedByName()));
+      sharedBy.setVisibility(View.VISIBLE);
+    } else {
+      sharedBy.setVisibility(View.GONE);
+    }
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     showSocialInformationBar(card);
     showLikesPreview(card);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
 
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
+        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
