@@ -87,6 +87,7 @@ import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
@@ -605,7 +606,9 @@ public abstract class V8Engine extends Application {
           AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
               Download.class), getCacheHelper(),
           new FileUtils(action -> Analytics.File.moveFile(action)),
-          new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
+          new DownloadAnalytics(Analytics.getInstance(),
+              new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
+                  AppEventsLogger.newLogger(this))), FileDownloader.getImpl(),
           getConfiguration().getCachePath(), apkPath, obbPath);
     }
     return downloadManager;

@@ -83,6 +83,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
             if (updatedDownload.getOverallProgress() == AptoideDownloadManager.PROGRESS_MAX_VALUE
                 && download.getOverallDownloadStatus() != Download.COMPLETED) {
               setDownloadStatus(Download.COMPLETED, download);
+              analytics.onDownloadComplete(download);
               downloadManager.currentDownloadFinished();
             }
             return true;

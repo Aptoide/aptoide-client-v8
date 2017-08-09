@@ -15,8 +15,7 @@ public class AnalyticsDataSaver {
   }
 
   public void save(String key, Event event) {
-    map.put(key + event.getClass()
-        .getName(), event);
+    map.put(key, event);
   }
 
   public Event get(String key) {
