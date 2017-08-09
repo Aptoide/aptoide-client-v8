@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import cm.aptoide.pt.spotandshareapp.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatar;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatarsProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
@@ -40,7 +39,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   private Button saveProfile;
   private Button cancel;
   private Toolbar toolbar;
-  private int selectedAvatar = 0;
   private RecyclerView avatarsRecyclerView;
   private SpotAndShareEditProfileAdapter pickAvatarAdapter;
   private PublishSubject<SpotAndShareAvatar> pickAvatarSubject;
@@ -65,10 +63,10 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
   @Override public Observable<SpotAndShareUser> saveProfileChanges() {
     return RxView.clicks(saveProfile)
-        .map(aVoid -> new SpotAndShareUser(getUsername(), getAvatar()));
+        .map(aVoid -> new SpotAndShareUser(getUsername(), pickAvatarAdapter.getSelectedAvatar()));
   }
 
-  @Override public Observable<SpotAndShareAvatar> selectedAvatar() {
+  @Override public Observable<SpotAndShareAvatar> onSelectedAvatar() {
     return pickAvatarAdapter.onSelectedAvatar();
   }
 
@@ -76,8 +74,8 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     getFragmentNavigator().popBackStack();
   }
 
-  @Override public void selectedAvatar(int avatar) {
-    selectedAvatar = avatar;
+  @Override public void selectAvatar(SpotAndShareAvatar avatar) {
+    pickAvatarAdapter.selectAvatar(avatar);
   }
 
   @Override public void setActualAvatar(Integer avatar) {
@@ -169,10 +167,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     return super.onOptionsItemSelected(item);
-  }
-
-  private SpotAndShareUserAvatar getAvatar() {
-    return new SpotAndShareUserAvatar(selectedAvatar, "", false);
   }
 
   private String getUsername() {

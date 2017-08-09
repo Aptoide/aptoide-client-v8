@@ -17,11 +17,11 @@ public interface SpotAndShareEditProfileView extends View {
 
   Observable<SpotAndShareUser> saveProfileChanges();
 
-  Observable<SpotAndShareAvatar> selectedAvatar();
+  Observable<SpotAndShareAvatar> onSelectedAvatar();
 
   void goBack();
 
-  void selectedAvatar(int avatar);
+  void selectAvatar(SpotAndShareAvatar avatar);
 
   void setActualAvatar(Integer avatar);
 

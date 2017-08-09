@@ -57,6 +57,14 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.onSelectedAvatar())
+        .doOnNext(avatar -> view.selectAvatar(avatar))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, error -> error.printStackTrace());
   }
 
   @Override public void saveState(Bundle state) {

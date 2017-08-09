@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatar;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import java.util.List;
 import rx.Observable;
@@ -22,6 +23,7 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
   private List<SpotAndShareAvatar> avatarList;
   private Context context;
   private PublishSubject<SpotAndShareAvatar> pickAvatarSubject;
+  private SpotAndShareAvatar selectedAvatar;
 
   public SpotAndShareEditProfileAdapter(Context context,
       PublishSubject<SpotAndShareAvatar> pickAvatarSubject) {
@@ -64,6 +66,32 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
     return pickAvatarSubject;
   }
 
+  public SpotAndShareUserAvatar getSelectedAvatar() {
+    if (selectedAvatar == null) {
+      return (SpotAndShareUserAvatar) avatarList.get(0);
+    }
+    return (SpotAndShareUserAvatar) selectedAvatar;
+  }
+
+  /**
+   * Rebuild the avatar with select flag. Using the avatar ID as index in the avatar list.
+   *
+   * @param selectAvatar - avatar that was selected
+   */
+  public void selectAvatar(SpotAndShareAvatar selectAvatar) {
+    System.out.println("Selected avatar : " + selectAvatar.getAvatarId());
+    if (selectAvatar.isSelected()) {
+      selectAvatar =
+          new SpotAndShareUserAvatar(selectAvatar.getAvatarId(), selectAvatar.getString(), false);
+    } else {
+      selectAvatar =
+          new SpotAndShareUserAvatar(selectAvatar.getAvatarId(), selectAvatar.getString(), true);
+    }
+    avatarList.set(selectAvatar.getAvatarId(), selectAvatar);
+    notifyDataSetChanged();
+    selectedAvatar = selectAvatar;
+  }
+
   class AvatarViewHolder extends ViewHolder {
 
     private ImageView avatarImageView;
@@ -74,9 +102,12 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
     }
 
     public void setAvatar(SpotAndShareAvatar avatar) {
+      avatarImageView.setOnClickListener(v -> pickAvatarSubject.onNext(avatar));
       ImageLoader.with(context)
           .load(avatar.getString(), avatarImageView);
-      avatarImageView.setOnClickListener(v -> pickAvatarSubject.onNext(avatar));
+      System.out.println(
+          "Drawing avatar : " + avatar.getAvatarId() + " it is selected " + avatar.isSelected());
+      avatarImageView.setSelected(avatar.isSelected());
     }
   }
 }
