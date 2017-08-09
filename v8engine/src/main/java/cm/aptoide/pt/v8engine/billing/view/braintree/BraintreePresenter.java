@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.billing.view.braintree;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Billing;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.transaction.braintree.BraintreeTransaction;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -15,22 +16,26 @@ public class BraintreePresenter implements Presenter {
   private final BraintreeCreditCardView view;
   private final Braintree braintree;
   private final Billing billing;
+  private final BillingAnalytics analytics;
   private final BillingNavigator navigator;
   private final Scheduler viewScheduler;
+  private final String paymentMethodName;
   private final String sellerId;
   private final String productId;
   private final String developerPayload;
 
   public BraintreePresenter(BraintreeCreditCardView view, Braintree braintree, Billing billing,
-      BillingNavigator navigator, Scheduler viewScheduler, String sellerId, String productId,
-      String developerPayload) {
+      BillingAnalytics analytics, BillingNavigator navigator, Scheduler viewScheduler,
+      String sellerId, String productId, String paymentMethodName, String developerPayload) {
     this.view = view;
     this.braintree = braintree;
     this.billing = billing;
+    this.analytics = analytics;
     this.navigator = navigator;
     this.viewScheduler = viewScheduler;
     this.sellerId = sellerId;
     this.productId = productId;
+    this.paymentMethodName = paymentMethodName;
     this.developerPayload = developerPayload;
   }
 
@@ -46,7 +51,7 @@ public class BraintreePresenter implements Presenter {
 
     handleErrorDismissEvent();
 
-    handleCancellationEvent();
+    handleCancelEvent();
   }
 
   @Override public void saveState(Bundle state) {
@@ -57,11 +62,14 @@ public class BraintreePresenter implements Presenter {
 
   }
 
-  private void handleCancellationEvent() {
+  private void handleCancelEvent() {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMap(product -> Observable.merge(view.cancellationEvent(), view.tapOutsideSelection()))
-        .doOnNext(__ -> navigator.popTransactionAuthorizationView())
+        .flatMap(product -> view.cancelEvent())
+        .doOnNext(__ -> {
+          analytics.sendAuthorizationCancelEvent(paymentMethodName);
+          navigator.popTransactionAuthorizationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> navigator.popTransactionAuthorizationView());
@@ -71,7 +79,10 @@ public class BraintreePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
+        .doOnNext(dismiss -> {
+          analytics.sendAuthorizationErrorEvent(paymentMethodName);
+          navigator.popTransactionAuthorizationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
@@ -88,6 +99,7 @@ public class BraintreePresenter implements Presenter {
                   nonce.getNonce())
                   .observeOn(viewScheduler)
                   .doOnCompleted(() -> {
+                    analytics.sendAuthorizationSuccessEvent(paymentMethodName);
                     view.hideLoading();
                     navigator.popTransactionAuthorizationView();
                   });

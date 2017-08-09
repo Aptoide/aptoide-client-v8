@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
 import cm.aptoide.pt.v8engine.billing.Billing;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.product.InAppPurchase;
@@ -59,10 +60,11 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
   private final CrashReport crashReport;
   private final BillingIdResolver idResolver;
   private final int supportedApiVersion;
+  private final BillingAnalytics analytics;
 
   public ExternalBillingBinder(Context context, ExternalBillingSerializer serializer,
       PaymentThrowableCodeMapper errorCodeFactory, Billing billing, CrashReport crashReport,
-      BillingIdResolver idResolver, int apiVersion) {
+      BillingIdResolver idResolver, int apiVersion, BillingAnalytics analytics) {
     this.context = context;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
@@ -70,6 +72,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     this.crashReport = crashReport;
     this.idResolver = idResolver;
     this.supportedApiVersion = apiVersion;
+    this.analytics = analytics;
   }
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
@@ -148,6 +151,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
           PaymentActivity.getIntent(context, idResolver.resolveProductId(sku),
               idResolver.resolveSellerId(packageName), developerPayload),
           PendingIntent.FLAG_UPDATE_CURRENT));
+      analytics.sendPaymentViewShowEvent();
     } catch (Exception exception) {
       crashReport.log(exception);
       result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));

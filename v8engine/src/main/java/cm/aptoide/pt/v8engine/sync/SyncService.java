@@ -5,16 +5,19 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 
 public class SyncService extends Service {
 
   private SyncScheduler scheduler;
   private SyncStorage storage;
+  private CrashReport crashReport;
 
   @Override public void onCreate() {
     super.onCreate();
     scheduler = ((V8Engine) getApplicationContext()).getSyncScheduler();
     storage = ((V8Engine) getApplicationContext()).getSyncStorage();
+    crashReport = CrashReport.getInstance();
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -36,7 +39,7 @@ public class SyncService extends Service {
               stopSelf(startId);
             })
             .subscribe(() -> {
-            }, throwable -> throwable.printStackTrace());
+            }, throwable -> crashReport.log(throwable));
       } else {
         scheduler.cancel(syncId);
       }

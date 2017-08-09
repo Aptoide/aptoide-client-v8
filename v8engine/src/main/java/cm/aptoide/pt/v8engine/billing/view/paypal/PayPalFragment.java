@@ -69,7 +69,8 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
         AndroidSchedulers.mainThread(),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
-        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD),
+        getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME)), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

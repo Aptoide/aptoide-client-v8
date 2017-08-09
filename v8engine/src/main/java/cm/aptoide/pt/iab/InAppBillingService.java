@@ -24,7 +24,8 @@ public class InAppBillingService extends Service {
         ((V8Engine) getApplicationContext()).getPaymentThrowableCodeMapper(),
         ((V8Engine) getApplicationContext()).getBilling(), CrashReport.getInstance(),
         ((V8Engine) getApplicationContext()).getBillingIdResolver(),
-        BuildConfig.IN_BILLING_SUPPORTED_API_VERSION);
+        BuildConfig.IN_BILLING_SUPPORTED_API_VERSION,
+        ((V8Engine) getApplicationContext()).getBillingAnalytics());
   }
 
   @Override public IBinder onBind(Intent intent) {

@@ -451,9 +451,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    billingAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
-        .getPrice(), app.getPay()
-        .getCurrency());
+    billingAnalytics.sendPaymentViewShowEvent();
     startActivityForResult(
         PaymentActivity.getIntent(getActivity(), billingIdResolver.resolveProductId(app.getId()),
             billingIdResolver.resolveStoreSellerId(app.getStore()

@@ -135,25 +135,19 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     super.onDestroyView();
   }
 
-  @Override public Observable<PaymentMethodViewModel> paymentSelection() {
+  @Override public Observable<PaymentMethodViewModel> selectPaymentEvent() {
     return RxRadioGroup.checkedChanges(paymentRadioGroup)
         .map(paymentId -> paymentMap.get(paymentId))
         .filter(paymentMethodViewModel -> paymentMethodViewModel != null);
   }
 
-  @Override public Observable<Void> cancellationSelection() {
-    return RxView.clicks(cancelButton)
+  @Override public Observable<Void> cancelEvent() {
+    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
-  @Override public Observable<Void> tapOutsideSelection() {
-    return RxView.clicks(overlay)
-        .subscribeOn(AndroidSchedulers.mainThread())
-        .unsubscribeOn(AndroidSchedulers.mainThread());
-  }
-
-  @Override public Observable<Void> buySelection() {
+  @Override public Observable<Void> buyEvent() {
     return RxView.clicks(buyButton)
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());

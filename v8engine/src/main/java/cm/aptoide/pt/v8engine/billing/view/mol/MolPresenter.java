@@ -17,15 +17,17 @@ public class MolPresenter implements Presenter {
   private final BillingAnalytics analytics;
   private final BillingNavigator navigator;
   private final String sellerId;
+  private final String paymentMethodName;
   private final String productId;
 
   public MolPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      BillingNavigator navigator, String sellerId, String productId) {
+      BillingNavigator navigator, String sellerId, String paymentMethodName, String productId) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
     this.navigator = navigator;
     this.sellerId = sellerId;
+    this.paymentMethodName = paymentMethodName;
     this.productId = productId;
   }
 
@@ -38,8 +40,6 @@ public class MolPresenter implements Presenter {
     onViewCreatedCheckTransactionCompleted();
 
     handleUrlLoadErrorEvent();
-
-    handleBackButtonEvent();
 
     handleRedirectUrlEvent();
 
@@ -98,6 +98,7 @@ public class MolPresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(transaction -> {
               view.hideLoading();
+              analytics.sendAuthorizationSuccessEvent(paymentMethodName);
               navigator.popTransactionAuthorizationView();
             }))
         .observeOn(AndroidSchedulers.mainThread())
@@ -131,23 +132,14 @@ public class MolPresenter implements Presenter {
         }, throwable -> showError());
   }
 
-  private void handleBackButtonEvent() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.backButtonEvent())
-        .flatMapSingle(backButtonPressed -> billing.getProduct(sellerId, productId))
-        .doOnNext(product -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> showError());
-  }
-
   private void handleDismissEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismissedEvent())
-        .doOnNext(dismiss -> navigator.popTransactionAuthorizationView())
+        .doOnNext(dismiss -> {
+          analytics.sendAuthorizationErrorEvent(paymentMethodName);
+          navigator.popTransactionAuthorizationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

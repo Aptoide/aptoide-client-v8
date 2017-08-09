@@ -723,13 +723,6 @@ public abstract class V8Engine extends Application {
     return preferences;
   }
 
-  private String getAbHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_SIXPACK_HOST;
-  }
-
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
     if (securePreferences == null) {
       securePreferences =
@@ -810,9 +803,9 @@ public abstract class V8Engine extends Application {
   public BillingSyncManager getBillingSyncManager() {
     if (billingSyncManager == null) {
       billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(getPayer(), getBillingAnalytics(), getTransactionService(),
-              getAuthorizationService(), geTransactionPersistence(), getAuthorizationPersistence()),
-          getSyncScheduler(), new HashSet<>());
+          new BillingSyncFactory(getPayer(), getTransactionService(), getAuthorizationService(),
+              geTransactionPersistence(), getAuthorizationPersistence()), getSyncScheduler(),
+          new HashSet<>());
     }
     return billingSyncManager;
   }

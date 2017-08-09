@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.billing.sync;
 
-import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.authorization.Authorization;
 import cm.aptoide.pt.v8engine.billing.authorization.AuthorizationPersistence;
@@ -20,17 +19,15 @@ public class AuthorizationSync extends Sync {
 
   private final int paymentId;
   private final Payer payer;
-  private final BillingAnalytics billingAnalytics;
   private final AuthorizationService authorizationService;
   private final AuthorizationPersistence authorizationPersistence;
 
-  public AuthorizationSync(int paymentId, Payer payer, BillingAnalytics billingAnalytics,
-      AuthorizationService authorizationService, AuthorizationPersistence authorizationPersistence,
-      boolean periodic, boolean exact, long interval, long trigger) {
+  public AuthorizationSync(int paymentId, Payer payer, AuthorizationService authorizationService,
+      AuthorizationPersistence authorizationPersistence, boolean periodic, boolean exact,
+      long interval, long trigger) {
     super(String.valueOf(paymentId), periodic, exact, trigger, interval);
     this.paymentId = paymentId;
     this.payer = payer;
-    this.billingAnalytics = billingAnalytics;
     this.authorizationService = authorizationService;
     this.authorizationPersistence = authorizationPersistence;
   }
@@ -39,8 +36,6 @@ public class AuthorizationSync extends Sync {
     return payer.getId()
         .flatMapCompletable(payerId -> authorizationService.getAuthorizations(payerId, paymentId)
             .flatMap(authorizations -> saveAuthorizations(payerId, authorizations))
-            .doOnSuccess(authorizations -> sendAuthorizationAnalytics(authorizations))
-            .doOnError(throwable -> billingAnalytics.sendPaymentAuthorizationErrorEvent(throwable))
             .toCompletable());
   }
 
@@ -58,11 +53,5 @@ public class AuthorizationSync extends Sync {
             Authorization.Status.INACTIVE)
             .toObservable())
         .toCompletable();
-  }
-
-  private void sendAuthorizationAnalytics(List<Authorization> authorizations) {
-    for (Authorization authorization : authorizations) {
-      billingAnalytics.sendAuthorizationCompleteEvent(authorization);
-    }
   }
 }

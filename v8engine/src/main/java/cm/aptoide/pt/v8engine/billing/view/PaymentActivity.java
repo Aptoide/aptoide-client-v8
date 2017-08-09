@@ -22,6 +22,8 @@ public class PaymentActivity extends BraintreeActivity {
       "cm.aptoide.pt.v8engine.view.payment.intent.extra.PRODUCT_ID";
   public static final String EXTRA_APPLICATION_ID =
       "cm.aptoide.pt.v8engine.view.payment.intent.extra.APPLICATION_ID";
+  public static final String EXTRA_PAYMENT_METHOD_NAME =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PAYMENT_METHOD_NAME";
 
   private BillingSyncManager syncManager;
 

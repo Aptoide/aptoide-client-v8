@@ -15,6 +15,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.view.BillingNavigator;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
@@ -51,6 +52,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private TextView productDescription;
   private TextView productPrice;
   private AptoideAccountManager accountManager;
+  private BillingAnalytics billingAnalytics;
 
   public static Fragment create(Bundle bundle) {
     final BraintreeCreditCardFragment fragment = new BraintreeCreditCardFragment();
@@ -72,6 +74,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     cardBuilderRelay = PublishRelay.create();
     billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
   }
 
   @Nullable @Override
@@ -117,12 +120,13 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     cardForm.setOnCardFormSubmitListener(() -> {
       cardBuilderRelay.call(createCard());
     });
-    attachPresenter(new BraintreePresenter(this, braintree, billing,
+    attachPresenter(new BraintreePresenter(this, braintree, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
             getActivityNavigator(), getFragmentNavigator(), accountManager),
         AndroidSchedulers.mainThread(),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
+        getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME),
         getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 
@@ -184,14 +188,8 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
         .map(dialogInterface -> null);
   }
 
-  @Override public Observable<Void> cancellationEvent() {
-    return RxView.clicks(cancelButton)
-        .subscribeOn(AndroidSchedulers.mainThread())
-        .unsubscribeOn(AndroidSchedulers.mainThread());
-  }
-
-  @Override public Observable<Void> tapOutsideSelection() {
-    return RxView.clicks(overlay)
+  @Override public Observable<Void> cancelEvent() {
+    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }

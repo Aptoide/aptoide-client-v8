@@ -9,7 +9,7 @@ public class Authorization {
 
   private final int paymentId;
   private final String payerId;
-  private Status status;
+  private final Status status;
 
   public Authorization(int paymentId, String payerId, Status status) {
     this.paymentId = paymentId;

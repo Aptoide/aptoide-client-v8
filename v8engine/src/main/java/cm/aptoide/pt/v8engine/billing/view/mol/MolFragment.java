@@ -39,6 +39,7 @@ public class MolFragment extends WebViewFragment {
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
             getActivityNavigator(), getFragmentNavigator(), accountManager),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
+        getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID)), savedInstanceState);
   }
 }

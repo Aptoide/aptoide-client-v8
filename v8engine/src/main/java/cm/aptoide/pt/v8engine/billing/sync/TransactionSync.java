@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.billing.sync;
 
-import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.transaction.LocalTransaction;
@@ -24,33 +23,28 @@ public class TransactionSync extends Sync {
   private final Product product;
   private final TransactionPersistence transactionPersistence;
   private final Payer payer;
-  private final BillingAnalytics analytics;
   private final TransactionService transactionService;
   private final String sellerId;
 
   public TransactionSync(Product product, TransactionPersistence transactionPersistence,
-      Payer payer, BillingAnalytics analytics, TransactionService transactionService,
-      boolean periodic, boolean exact, long interval, long trigger, String sellerId) {
+      Payer payer, TransactionService transactionService, boolean periodic, boolean exact,
+      long interval, long trigger, String sellerId) {
     super(String.valueOf(product.getId()), periodic, exact, trigger, interval);
     this.product = product;
     this.transactionPersistence = transactionPersistence;
     this.payer = payer;
-    this.analytics = analytics;
     this.transactionService = transactionService;
     this.sellerId = sellerId;
   }
 
   @Override public Completable execute() {
     return payer.getId()
-        .flatMap(
-            payerId -> syncLocalTransaction(payerId, sellerId).onErrorResumeNext(throwable -> {
-              if (throwable instanceof NoSuchElementException) {
-                return syncTransaction(payerId, sellerId);
-              }
-              return Single.error(throwable);
-            }))
-        .doOnSuccess(transaction -> analytics.sendPurchaseStatusEvent(transaction, product))
-        .doOnError(throwable -> analytics.sendPurchaseErrorEvent(product, throwable))
+        .flatMap(payerId -> syncLocalTransaction(payerId, sellerId).onErrorResumeNext(throwable -> {
+          if (throwable instanceof NoSuchElementException) {
+            return syncTransaction(payerId, sellerId);
+          }
+          return Single.error(throwable);
+        }))
         .toCompletable();
   }
 
@@ -62,9 +56,10 @@ public class TransactionSync extends Sync {
         .filter(transaction -> transaction.isPending())
         .cast(LocalTransaction.class)
         .toSingle()
-        .flatMap(localTransaction -> transactionService.createTransaction(
-            localTransaction.getSellerId(), localTransaction.getPayerId(),
-            localTransaction.getPaymentMethodId(), product, localTransaction.getLocalMetadata(), localTransaction.getPayload()))
+        .flatMap(
+            localTransaction -> transactionService.createTransaction(localTransaction.getSellerId(),
+                localTransaction.getPayerId(), localTransaction.getPaymentMethodId(), product,
+                localTransaction.getLocalMetadata(), localTransaction.getPayload()))
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }
