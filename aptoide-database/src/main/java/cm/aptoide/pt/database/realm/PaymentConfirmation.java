@@ -13,8 +13,11 @@ public class PaymentConfirmation extends RealmObject {
 
   public static final String PRODUCT_ID = "productId";
   public static final String PAYER_ID = "payerId";
+  public static final String SELLER_ID = "sellerId";
 
-  @PrimaryKey private int productId;
+  @PrimaryKey private String id;
+  @Required private String productId;
+  @Required private String sellerId;
   @Required private String payerId;
   @Required private String status;
 
@@ -24,13 +27,17 @@ public class PaymentConfirmation extends RealmObject {
   private String confirmationUrl;
   private String successUrl;
   private String clientToken;
+  private String payload;
 
   public PaymentConfirmation() {
   }
 
-  public PaymentConfirmation(String localMetadata, int productId, String status, String payerId,
-      int paymentMethodId, String confirmationUrl, String successUrl, String clientToken) {
+  public PaymentConfirmation(String id, String localMetadata, String productId, String sellerId,
+      String status, String payerId, int paymentMethodId, String confirmationUrl, String successUrl,
+      String clientToken, String payload) {
+    this.id = id;
     this.paymentConfirmationId = localMetadata;
+    this.sellerId = sellerId;
     this.status = status;
     this.productId = productId;
     this.payerId = payerId;
@@ -38,6 +45,15 @@ public class PaymentConfirmation extends RealmObject {
     this.confirmationUrl = confirmationUrl;
     this.successUrl = successUrl;
     this.clientToken = clientToken;
+    this.payload = payload;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getSellerId() {
+    return sellerId;
   }
 
   public String getPayerId() {
@@ -48,7 +64,7 @@ public class PaymentConfirmation extends RealmObject {
     return paymentConfirmationId;
   }
 
-  public int getProductId() {
+  public String getProductId() {
     return productId;
   }
 
@@ -70,5 +86,9 @@ public class PaymentConfirmation extends RealmObject {
 
   public String getClientToken() {
     return clientToken;
+  }
+
+  public String getPayload() {
+    return payload;
   }
 }

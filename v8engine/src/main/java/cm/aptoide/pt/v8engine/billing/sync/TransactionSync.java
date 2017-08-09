@@ -26,48 +26,51 @@ public class TransactionSync extends Sync {
   private final Payer payer;
   private final BillingAnalytics analytics;
   private final TransactionService transactionService;
+  private final String sellerId;
 
   public TransactionSync(Product product, TransactionPersistence transactionPersistence,
       Payer payer, BillingAnalytics analytics, TransactionService transactionService,
-      boolean periodic, boolean exact, long interval, long trigger) {
+      boolean periodic, boolean exact, long interval, long trigger, String sellerId) {
     super(String.valueOf(product.getId()), periodic, exact, trigger, interval);
     this.product = product;
     this.transactionPersistence = transactionPersistence;
     this.payer = payer;
     this.analytics = analytics;
     this.transactionService = transactionService;
+    this.sellerId = sellerId;
   }
 
   @Override public Completable execute() {
     return payer.getId()
-        .flatMap(payerId -> syncLocalTransaction(payerId).onErrorResumeNext(throwable -> {
-          if (throwable instanceof NoSuchElementException) {
-            return syncTransaction(payerId);
-          }
-          return Single.error(throwable);
-        }))
+        .flatMap(
+            payerId -> syncLocalTransaction(payerId, sellerId).onErrorResumeNext(throwable -> {
+              if (throwable instanceof NoSuchElementException) {
+                return syncTransaction(payerId, sellerId);
+              }
+              return Single.error(throwable);
+            }))
         .doOnSuccess(transaction -> analytics.sendPurchaseStatusEvent(transaction, product))
         .doOnError(throwable -> analytics.sendPurchaseErrorEvent(product, throwable))
         .toCompletable();
   }
 
-  private Single<Transaction> syncLocalTransaction(String payerId) {
-    return transactionPersistence.getTransaction(product.getId(), payerId)
+  private Single<Transaction> syncLocalTransaction(String payerId, String sellerId) {
+    return transactionPersistence.getTransaction(sellerId, payerId, product.getId())
         .timeout(1, TimeUnit.SECONDS, Observable.empty())
         .first()
         .filter(transaction -> transaction instanceof LocalTransaction)
         .filter(transaction -> transaction.isPending())
         .cast(LocalTransaction.class)
         .toSingle()
-        .flatMap(localTransaction -> transactionService.createTransaction(product,
-            localTransaction.getPaymentMethodId(), localTransaction.getPayerId(),
-            localTransaction.getLocalMetadata()))
+        .flatMap(localTransaction -> transactionService.createTransaction(
+            localTransaction.getSellerId(), localTransaction.getPayerId(),
+            localTransaction.getPaymentMethodId(), product, localTransaction.getLocalMetadata(), localTransaction.getPayload()))
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }
 
-  private Single<Transaction> syncTransaction(String payerId) {
-    return transactionService.getTransaction(product, payerId)
+  private Single<Transaction> syncTransaction(String payerId, String sellerId) {
+    return transactionService.getTransaction(sellerId, payerId, product)
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }

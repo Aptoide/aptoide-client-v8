@@ -6,12 +6,12 @@ import rx.Single;
 
 public interface TransactionPersistence {
 
-  Single<Transaction> createTransaction(int productId, String metadata, Transaction.Status status,
-      String payerId, int paymentMethodId);
+  Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
+      String productId, Transaction.Status status, String payload, String metadata);
 
-  Observable<Transaction> getTransaction(int productId, String payerId);
+  Observable<Transaction> getTransaction(String sellerId, String payerId, String productId);
 
-  Completable removeTransaction(String payerId, int productId);
+  Completable removeTransaction(String sellerId, String payerId, String productId);
 
   Completable saveTransaction(Transaction transaction);
 }

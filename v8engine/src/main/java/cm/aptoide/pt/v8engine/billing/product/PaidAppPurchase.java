@@ -1,22 +1,15 @@
 package cm.aptoide.pt.v8engine.billing.product;
 
-import cm.aptoide.pt.v8engine.billing.Purchase;
-
-public class PaidAppPurchase implements Purchase {
+public class PaidAppPurchase extends SimplePurchase {
 
   private final String apkPath;
-  private final boolean completed;
 
-  public PaidAppPurchase(String apkPath, boolean completed) {
+  public PaidAppPurchase(String apkPath, Status status, String productId) {
+    super(status, productId);
     this.apkPath = apkPath;
-    this.completed = completed;
   }
 
   public String getApkPath() {
     return apkPath;
-  }
-
-  @Override public boolean isCompleted() {
-    return completed;
   }
 }

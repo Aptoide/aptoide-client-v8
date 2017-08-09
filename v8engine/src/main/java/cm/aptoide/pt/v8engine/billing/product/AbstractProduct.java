@@ -11,15 +11,17 @@ import cm.aptoide.pt.v8engine.billing.Product;
 public abstract class AbstractProduct implements Product {
 
   private final int packageVersionCode;
-  private final int id;
+  private final String id;
+  private final int internalId;
   private final String icon;
   private final String title;
   private final String description;
   private final Price price;
 
-  public AbstractProduct(int id, String icon, String title, String description, Price price,
-      int packageVersionCode) {
+  public AbstractProduct(String id, int internalId, String icon, String title, String description,
+      Price price, int packageVersionCode) {
     this.id = id;
+    this.internalId = internalId;
     this.icon = icon;
     this.title = title;
     this.description = description;
@@ -27,7 +29,7 @@ public abstract class AbstractProduct implements Product {
     this.packageVersionCode = packageVersionCode;
   }
 
-  @Override public int getId() {
+  @Override public String getId() {
     return id;
   }
 
@@ -49,5 +51,9 @@ public abstract class AbstractProduct implements Product {
 
   public int getPackageVersionCode() {
     return packageVersionCode;
+  }
+
+  public int getInternalId() {
+    return internalId;
   }
 }

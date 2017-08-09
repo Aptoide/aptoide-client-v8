@@ -8,17 +8,21 @@ package cm.aptoide.pt.v8engine.billing.product;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.Price;
 import cm.aptoide.pt.v8engine.billing.Product;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by marcelobenites on 8/16/16.
- */
 public class ProductFactory {
 
-  public Product create(PaidApp app, boolean sponsored) {
+  private final BillingIdResolver idResolver;
+
+  public ProductFactory(BillingIdResolver idResolver) {
+    this.idResolver = idResolver;
+  }
+
+  public Product create(PaidApp app) {
 
     final String icon = app.getPath()
         .getIcon() == null ? app.getPath()
@@ -33,16 +37,15 @@ public class ProductFactory {
     final String currency = (paymentService != null) ? paymentService.getCurrency() : "";
     final double taxRate = (paymentService != null) ? paymentService.getTaxRate() : 0.0;
 
-    return new PaidAppProduct(productId, icon, app.getApp()
+    return new PaidAppProduct(idResolver.resolveProductId(app.getPath()
+        .getAppId()), productId, icon, app.getApp()
         .getName(), app.getApp()
         .getDescription(), app.getPath()
-        .getAppId(), app.getPath()
-        .getStoreName(), new Price(payment.getAmount(), currency, payment.getSymbol(), taxRate),
-        sponsored, app.getPath()
+        .getAppId(), new Price(payment.getAmount(), currency, payment.getSymbol(), taxRate), app.getPath()
         .getVersionCode());
   }
 
-  public List<Product> create(int apiVersion, String developerPayload, String packageName,
+  public List<Product> create(int apiVersion, String packageName,
       InAppBillingSkuDetailsResponse response, int packageVersionCode, String applicationName) {
 
     final PaymentServiceResponse paymentServiceResponse =
@@ -71,11 +74,12 @@ public class ProductFactory {
     for (InAppBillingSkuDetailsResponse.PurchaseDataObject purchaseDataObject : response.getPublisherResponse()
         .getDetailList()) {
 
-      products.add(new InAppProduct(id, icon, purchaseDataObject.getTitle(),
-          purchaseDataObject.getDescription(), apiVersion, purchaseDataObject.getProductId(),
-          packageName, developerPayload,
-          new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(), sign,
-              taxRate), packageVersionCode, applicationName));
+      products.add(
+          new InAppProduct(idResolver.resolveProductId(purchaseDataObject.getProductId()), id, icon,
+              purchaseDataObject.getTitle(), purchaseDataObject.getDescription(), apiVersion,
+              purchaseDataObject.getProductId(), packageName,
+              new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(), sign,
+                  taxRate), packageVersionCode, applicationName));
     }
 
     return products;

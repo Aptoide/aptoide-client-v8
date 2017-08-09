@@ -6,24 +6,26 @@ import cm.aptoide.pt.v8engine.billing.transaction.mol.MolTransaction;
 
 public class TransactionFactory {
 
-  public Transaction create(int productId, String payerId, Transaction.Status status,
-      int paymentMethodId, String metadata, String confirmationUrl, String successUrl,
-      String clientToken) {
+  public Transaction create(String sellerId, String payerId, int paymentMethodId,
+      String productId, Transaction.Status status, String metadata, String confirmationUrl,
+      String successUrl, String clientToken, String payload) {
     switch (paymentMethodId) {
       case PaymentMethodMapper.PAYPAL:
       case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
         if (clientToken == null) {
-          return new LocalTransaction(productId, payerId, status, paymentMethodId, metadata);
+          return new LocalTransaction(productId, payerId, status, paymentMethodId, metadata,
+              payload, sellerId);
         }
-        return new BraintreeTransaction(productId, payerId, status, paymentMethodId, clientToken);
+        return new BraintreeTransaction(productId, payerId, status, paymentMethodId, clientToken,
+            payload, sellerId);
       case PaymentMethodMapper.MOL_POINTS:
         return new MolTransaction(productId, payerId, status, paymentMethodId, confirmationUrl,
-            successUrl);
+            successUrl, payload, sellerId);
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
       case PaymentMethodMapper.SANDBOX:
       default:
-        return new Transaction(productId, payerId, status, paymentMethodId);
+        return new Transaction(productId, payerId, status, paymentMethodId, payload, sellerId);
     }
   }
 }

@@ -7,5 +7,11 @@ package cm.aptoide.pt.v8engine.billing;
 
 public interface Purchase {
 
+  String getProductId();
+
   boolean isCompleted();
+
+  boolean isPending();
+
+  boolean isFailed();
 }
