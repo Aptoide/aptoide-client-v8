@@ -11,6 +11,7 @@
   <color name="black_87_alpha">#de000000</color>
   <color name="blue_grey_87_alpha">#de607d8b</color>
   <color name="white">#FFF</color>
+  <color name="transparent">#0000</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>
