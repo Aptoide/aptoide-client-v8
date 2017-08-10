@@ -131,8 +131,7 @@ public class V3BillingService implements BillingService {
   }
 
   @Override public Single<List<Purchase>> getPurchases(String sellerId) {
-    return getServerInAppPurchase(apiVersion, idResolver.resolvePackageName(sellerId),
-        true).first()
+    return getServerInAppPurchase(apiVersion, idResolver.resolvePackageName(sellerId), true).first()
         .toSingle()
         .map(purchaseInformation -> purchaseMapper.map(purchaseInformation))
         .onErrorResumeNext(throwable -> {
@@ -151,12 +150,10 @@ public class V3BillingService implements BillingService {
         .toSingle();
   }
 
-  @Override
-  public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
-    return getServerSKUs(apiVersion, idResolver.resolvePackageName(sellerId), productIds,
-        false).flatMap(
-        response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId),
-            response));
+  @Override public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
+    return getServerSKUs(apiVersion, idResolver.resolvePackageName(sellerId),
+        idResolver.resolveSkus(productIds), false).flatMap(
+        response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId), response));
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
@@ -194,8 +191,7 @@ public class V3BillingService implements BillingService {
   private Single<Product> getInAppProduct(String sellerId, String productId) {
     return getServerSKUs(apiVersion, idResolver.resolvePackageName(sellerId),
         Collections.singletonList(idResolver.resolveSku(productId)), false).flatMap(
-        response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId),
-            response))
+        response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId), response))
         .flatMap(products -> {
           if (products.isEmpty()) {
             return Single.error(new ProductNotFoundException(
