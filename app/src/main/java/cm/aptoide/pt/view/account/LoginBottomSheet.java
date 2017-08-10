@@ -11,6 +11,6 @@ public interface LoginBottomSheet {
   Observable<State> state();
 
   enum State {
-    EXPANDED, COLLAPSED;
+    EXPANDED, COLLAPSED
   }
 }

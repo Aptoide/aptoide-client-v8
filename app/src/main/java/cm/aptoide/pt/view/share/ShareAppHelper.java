@@ -10,18 +10,16 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.spotandshare.view.RadarActivity;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -36,7 +34,6 @@ public class ShareAppHelper {
   private final InstalledRepository installedRepository;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
-  private final SpotAndShareAnalytics spotAndShareAnalytics;
   private final Activity activity;
   private final TimelineAnalytics timelineAnalytics;
   private final SharedPreferences sharedPreferences;
@@ -44,13 +41,12 @@ public class ShareAppHelper {
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
-      SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics,
-      PublishRelay installAppRelay, SharedPreferences sharedPreferences) {
+      TimelineAnalytics timelineAnalytics, PublishRelay installAppRelay,
+      SharedPreferences sharedPreferences) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.activity = activity;
-    this.spotAndShareAnalytics = spotAndShareAnalytics;
     this.timelineAnalytics = timelineAnalytics;
     this.sharedPreferences = sharedPreferences;
     this.installAppRelay = installAppRelay;
@@ -140,14 +136,12 @@ public class ShareAppHelper {
   }
 
   private void caseSpotAndShareShare(String appName, String packageName, String origin) {
-    spotAndShareAnalytics.clickShareApps(origin);
-
     String filepath = getFilepath(packageName);
     String appNameToShare = filterAppName(appName);
 
-    Intent intent = RadarActivity.buildIntent(activity, filepath, appNameToShare);
-
-    activity.startActivity(intent);
+    //Intent intent = RadarActivity.buildIntent(activity, filepath, appNameToShare);
+    // FIXME: 10-08-2017 implement this way to spotandshare v2
+    //activity.startActivity(intent);
   }
 
   private String getFilepath(String packageName) {

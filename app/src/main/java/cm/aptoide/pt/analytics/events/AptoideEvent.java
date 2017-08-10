@@ -1,11 +1,11 @@
 package cm.aptoide.pt.analytics.events;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.analytics.Event;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.AnalyticsEventRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.analytics.Event;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

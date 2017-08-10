@@ -2,9 +2,10 @@ package cm.aptoide.pt.spotandshareapp;
 
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
-import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
  * Created by filipe on 27-06-2017.

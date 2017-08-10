@@ -1,9 +1,9 @@
 package cm.aptoide.pt.install.installer;
 
 import android.content.Context;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;

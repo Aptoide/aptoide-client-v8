@@ -34,17 +34,17 @@ public class RealmTransactionPersistence implements TransactionPersistence {
     this.transactionFactory = transactionFactory;
   }
 
-  @Override public Single<Transaction> createTransaction(String sellerId, String payerId,
-      int paymentMethodId, String productId, Transaction.Status status, String payload,
-      String metadata) {
+  @Override
+  public Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
+      String productId, Transaction.Status status, String payload, String metadata) {
     final Transaction transaction =
-        transactionFactory.create(sellerId, payerId, paymentMethodId, productId, status,
-            metadata, null, null, null, payload);
+        transactionFactory.create(sellerId, payerId, paymentMethodId, productId, status, metadata,
+            null, null, null, payload);
     return saveTransaction(transaction).andThen(Single.just(transaction));
   }
 
-  @Override public Observable<Transaction> getTransaction(String sellerId, String payerId,
-      String productId) {
+  @Override
+  public Observable<Transaction> getTransaction(String sellerId, String payerId, String productId) {
     return transactionRelay.flatMap(
         transaction -> resolveTransaction(payerId, productId, transaction, sellerId))
         .startWith(resolveTransaction(payerId, productId,

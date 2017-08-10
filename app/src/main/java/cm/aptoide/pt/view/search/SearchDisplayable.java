@@ -5,11 +5,11 @@
 
 package cm.aptoide.pt.view.search;
 
-import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.abtesting.ABTest;
 import cm.aptoide.pt.abtesting.SearchTabOptions;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 import rx.functions.Action0;

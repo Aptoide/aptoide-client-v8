@@ -5,12 +5,12 @@
 
 package cm.aptoide.pt.billing.product;
 
-import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.Price;
 import cm.aptoide.pt.billing.Product;
+import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +41,9 @@ public class ProductFactory {
         .getAppId()), productId, icon, app.getApp()
         .getName(), app.getApp()
         .getDescription(), app.getPath()
-        .getAppId(), new Price(payment.getAmount(), currency, payment.getSymbol(), taxRate), app.getPath()
-        .getVersionCode());
+        .getAppId(), new Price(payment.getAmount(), currency, payment.getSymbol(), taxRate),
+        app.getPath()
+            .getVersionCode());
   }
 
   public List<Product> create(int apiVersion, String packageName,

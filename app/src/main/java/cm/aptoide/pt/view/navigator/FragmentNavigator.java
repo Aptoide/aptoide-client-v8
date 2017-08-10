@@ -5,11 +5,11 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.view.store.home.HomeFragment;
 
 public class FragmentNavigator {

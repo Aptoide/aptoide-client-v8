@@ -6,9 +6,9 @@ import cm.aptoide.pt.billing.transaction.mol.MolTransaction;
 
 public class TransactionFactory {
 
-  public Transaction create(String sellerId, String payerId, int paymentMethodId,
-      String productId, Transaction.Status status, String metadata, String confirmationUrl,
-      String successUrl, String clientToken, String payload) {
+  public Transaction create(String sellerId, String payerId, int paymentMethodId, String productId,
+      Transaction.Status status, String metadata, String confirmationUrl, String successUrl,
+      String clientToken, String payload) {
     switch (paymentMethodId) {
       case PaymentMethodMapper.PAYPAL:
       case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:

@@ -1,14 +1,13 @@
 package cm.aptoide.pt.view.configuration.implementation;
 
 import android.support.v4.app.Fragment;
+import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.social.view.TimelineFragment;
-import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
@@ -322,7 +321,7 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newSpotShareFragment(boolean showToolbar) {
-    return SpotSharePreviewFragment.newInstance(showToolbar);
+    return null;//// FIXME: 10-08-2017 open spot and share
   }
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {

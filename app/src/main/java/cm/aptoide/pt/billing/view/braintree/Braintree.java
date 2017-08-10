@@ -15,7 +15,7 @@ public interface Braintree {
 
   Observable<Configuration> getConfiguration();
 
-  public static class NonceResult {
+  class NonceResult {
 
     public static final int CANCELLED = 0;
     public static final int ERROR = -1;

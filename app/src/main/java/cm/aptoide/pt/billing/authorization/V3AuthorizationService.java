@@ -37,11 +37,12 @@ public class V3AuthorizationService implements AuthorizationService {
         converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
-        .flatMap(response -> Single.just(authorizationFactory.map(response, payerId,
-            paymentMethodId)));
+        .flatMap(
+            response -> Single.just(authorizationFactory.map(response, payerId, paymentMethodId)));
   }
 
-  @Override public Single<List<Authorization>> getAuthorizations(String payerId, int paymentMethodId) {
+  @Override
+  public Single<List<Authorization>> getAuthorizations(String payerId, int paymentMethodId) {
     return GetPaymentAuthorizationsRequest.of(bodyInterceptorV3, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe()

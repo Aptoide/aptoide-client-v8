@@ -2,12 +2,12 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
 import android.util.Log;
+import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatarsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareEditProfileView;
-import cm.aptoide.pt.v8engine.presenter.Presenter;
-import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;

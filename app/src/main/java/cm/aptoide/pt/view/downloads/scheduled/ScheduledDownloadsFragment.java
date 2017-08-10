@@ -13,25 +13,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.Install;
+import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.database.accessors.ScheduledAccessor;
+import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.Install;
-import cm.aptoide.pt.InstallManager;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -40,7 +36,10 @@ import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -298,9 +297,9 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         ScheduledDownloadDisplayable displayable =
             (ScheduledDownloadDisplayable) adapter.getDisplayable(i);
         if (displayable.isSelected()) {
-          displayable.removeFromDatabase(((ScheduledAccessor) AccessorFactory.getAccessorFor(
+          displayable.removeFromDatabase(AccessorFactory.getAccessorFor(
               ((V8Engine) getContext().getApplicationContext()
-                  .getApplicationContext()).getDatabase(), Scheduled.class)));
+                  .getApplicationContext()).getDatabase(), Scheduled.class));
         }
       }
       return true;

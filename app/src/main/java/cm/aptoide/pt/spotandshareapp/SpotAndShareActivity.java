@@ -3,9 +3,10 @@ package cm.aptoide.pt.spotandshareapp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShareSender;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareMainFragment;
-import cm.aptoide.pt.v8engine.view.BackButtonActivity;
+import cm.aptoide.pt.view.BackButtonActivity;
 import rx.functions.Action1;
 
 /**
@@ -20,7 +21,7 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_main);
+    setContentView(R.layout.activity_spotandshare_main);
     if (savedInstanceState == null) {
       spotAndShare = ((SpotAndShareApplication) getApplicationContext()).getSpotAndShare();
       openSpotAndShareStart();

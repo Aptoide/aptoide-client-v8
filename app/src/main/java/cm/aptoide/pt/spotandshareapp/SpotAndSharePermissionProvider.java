@@ -1,7 +1,7 @@
 package cm.aptoide.pt.spotandshareapp;
 
 import android.Manifest;
-import cm.aptoide.pt.v8engine.view.permission.PermissionProvider;
+import cm.aptoide.pt.view.permission.PermissionProvider;
 import java.util.List;
 import rx.Observable;
 

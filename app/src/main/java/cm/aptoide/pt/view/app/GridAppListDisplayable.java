@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.view.app;
 
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**

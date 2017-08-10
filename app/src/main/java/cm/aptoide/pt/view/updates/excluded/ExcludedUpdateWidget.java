@@ -4,8 +4,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 

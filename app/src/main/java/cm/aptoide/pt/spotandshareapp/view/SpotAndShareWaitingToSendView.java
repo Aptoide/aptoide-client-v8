@@ -1,7 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
+import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareapp.AppModel;
-import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
 /**

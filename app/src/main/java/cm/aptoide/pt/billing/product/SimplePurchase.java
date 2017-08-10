@@ -28,7 +28,7 @@ public class SimplePurchase implements Purchase {
     return Status.FAILED.equals(status);
   }
 
-  public static enum Status {
+  public enum Status {
     PENDING, COMPLETED, NEW, FAILED
   }
 }

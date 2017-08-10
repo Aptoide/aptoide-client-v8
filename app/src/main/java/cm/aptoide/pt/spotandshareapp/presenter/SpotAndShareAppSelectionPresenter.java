@@ -1,10 +1,10 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
-import cm.aptoide.pt.v8engine.presenter.Presenter;
-import cm.aptoide.pt.v8engine.presenter.View;
 
 /**
  * Created by filipe on 28-07-2017.

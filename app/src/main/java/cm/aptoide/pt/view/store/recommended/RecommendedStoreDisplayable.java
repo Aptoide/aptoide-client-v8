@@ -2,10 +2,10 @@ package cm.aptoide.pt.view.store.recommended;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;

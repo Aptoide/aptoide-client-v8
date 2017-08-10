@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.view.fragment.FragmentView;
 
 /**
  * Created by filipe on 02-08-2017.

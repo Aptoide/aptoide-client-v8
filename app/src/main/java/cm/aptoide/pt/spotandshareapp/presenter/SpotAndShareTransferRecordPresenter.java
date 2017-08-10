@@ -1,6 +1,8 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
@@ -8,8 +10,6 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
-import cm.aptoide.pt.v8engine.presenter.Presenter;
-import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.Collection;
 import java.util.LinkedList;
 import rx.android.schedulers.AndroidSchedulers;

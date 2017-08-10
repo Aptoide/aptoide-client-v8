@@ -7,10 +7,10 @@ package cm.aptoide.pt.view;
 
 import android.os.Build;
 import android.os.Bundle;
-import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.view.permission.PermissionProviderActivity;
 import lombok.Getter;
 

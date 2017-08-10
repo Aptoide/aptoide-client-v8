@@ -10,7 +10,7 @@ package android.content.pm;
  */
 public interface IPackageInstallObserver extends android.os.IInterface {
 
-  public abstract static class Stub extends android.os.Binder
+  abstract class Stub extends android.os.Binder
       implements android.content.pm.IPackageInstallObserver {
 
     public Stub() {

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.comments;
 
-import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.comments.CommentAdder;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
 import java.util.List;

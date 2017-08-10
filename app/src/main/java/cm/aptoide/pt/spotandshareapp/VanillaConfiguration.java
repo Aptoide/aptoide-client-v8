@@ -7,9 +7,11 @@ package cm.aptoide.pt.spotandshareapp;
 
 import android.content.SharedPreferences;
 import android.os.Environment;
+import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.v8engine.store.StoreTheme;
+import cm.aptoide.pt.store.StoreTheme;
 
 /**
  * Created by neuro on 10-05-2016.

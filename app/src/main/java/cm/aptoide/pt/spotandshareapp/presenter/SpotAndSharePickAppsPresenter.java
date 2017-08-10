@@ -1,6 +1,8 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
@@ -10,8 +12,6 @@ import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndSharePickAppsView;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.presenter.Presenter;
-import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

@@ -63,7 +63,7 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
   protected abstract WebSocket reconnect();
 
   @Override public void onOpen(WebSocket webSocket, Response response) {
-    this.webSocket = webSocket;
+    WebSocketManager.webSocket = webSocket;
   }
 
   @Override public void onMessage(WebSocket webSocket, String responseMessage) {
@@ -90,7 +90,7 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
   @Override public void onClosing(WebSocket webSocket, int code, String reason) {
     Log.d(TAG, reason);
     webSocket.close(1000, null);
-    this.webSocket = null;
+    WebSocketManager.webSocket = null;
   }
 
   @Override public void onClosed(WebSocket webSocket, int code, String reason) {
@@ -102,7 +102,7 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
   @Override public void onFailure(WebSocket webSocket, Throwable t, Response response) {
     Log.d(TAG, "Error was:", t);
     super.onFailure(webSocket, t, response);
-    this.webSocket = null;
+    WebSocketManager.webSocket = null;
   }
 
   protected void addRow(MatrixCursor matrixCursor, String string, int i) {

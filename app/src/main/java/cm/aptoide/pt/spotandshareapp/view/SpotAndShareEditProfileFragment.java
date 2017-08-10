@@ -14,12 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import cm.aptoide.pt.spotandshareapp.R;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatarsProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
 import rx.Observable;
@@ -74,7 +74,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   @Override public void selectAvatar(SpotAndShareAvatar avatar) {
     pickAvatarAdapter.selectAvatar(avatar);
   }
-
 
   @Override public void setAvatarsList(List<SpotAndShareAvatar> list) {
     pickAvatarAdapter.setAvatarList(list);

@@ -378,6 +378,7 @@ dependencies {
 
   compile "com.braintreepayments.api:braintree:${BRAINTREE_VERSION}"
   compile "com.braintreepayments:card-form:${BRAINTREE_CARD_FORM_VERSION}"
+  compile project(path: ':spotandshareandroid')
 }
 
 String getDate() {

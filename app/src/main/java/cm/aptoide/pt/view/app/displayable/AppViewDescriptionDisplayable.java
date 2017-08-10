@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.view.app.displayable;
 
-import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 
 /**
  * Created on 10/05/16.

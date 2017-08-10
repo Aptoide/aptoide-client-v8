@@ -19,20 +19,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.DrawerAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.SearchUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.custom.BadgeView;
@@ -279,7 +278,8 @@ public class HomeFragment extends StoreFragment {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
             drawerAnalytics.drawerInteract("Spot&Share");
-            getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
+            //getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
+            // FIXME: 10-08-2017 NAVIGATE TO SPOTANDSHARE NEW VERSION
           } else if (itemId == R.id.navigation_item_rollback) {
             drawerAnalytics.drawerInteract("Rollback");
             navigator.navigateTo(V8Engine.getFragmentProvider()

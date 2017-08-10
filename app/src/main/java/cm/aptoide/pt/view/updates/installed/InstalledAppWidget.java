@@ -6,17 +6,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -82,8 +80,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
         getContext().getResources());
     shareAppHelper = new ShareAppHelper(
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()),
-        accountManager, accountNavigator, getContext(),
-        new SpotAndShareAnalytics(Analytics.getInstance()), displayable.getTimelineAnalytics(),
+        accountManager, accountNavigator, getContext(), displayable.getTimelineAnalytics(),
         PublishRelay.create(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     appName = pojo.getName();
@@ -97,8 +94,8 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
     shareButtonLayout.setVisibility(View.VISIBLE);
     compositeSubscription.add(RxView.clicks(shareButtonLayout)
-        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, pojo.getIcon(),
-            SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_UPDATES_TAB),
+        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, pojo.getIcon(), ""),
+            //// FIXME: 10-08-2017 pass origin atribute/string from udpates tab
             err -> CrashReport.getInstance()
                 .log(err)));
   }

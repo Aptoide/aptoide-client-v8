@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.billing.authorization;
 
-import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationResponse;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.authorization.boacompra.BoaCompraAuthorization;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationResponse;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import java.util.ArrayList;
 import java.util.List;
 

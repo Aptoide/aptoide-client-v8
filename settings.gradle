@@ -5,7 +5,6 @@
 
 include 'app',
     ':spotandshareandroid',
-    ':spotandshareapp',
     ':dataprovider',
     ':aptoidepreferences',
     ':crashreports',

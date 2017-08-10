@@ -28,7 +28,8 @@ public class GetApkInfoRequest extends V3<PaidApp> {
   }
 
   public static GetApkInfoRequest of(long appId, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources) {
     BaseBody args = new BaseBody();
     args.put("identif", "id:" + appId);

@@ -31,12 +31,9 @@ public class ReceiverDevice {
   }
 
   public boolean isSameDevice(ReceiverDevice device) {
-    if (address.getHostAddress()
+    return address.getHostAddress()
         .equals(device.getAddress()
-            .getHostAddress())) {
-      return true;
-    }
-    return false;
+            .getHostAddress());
   }
 
   public InetAddress getAddress() {

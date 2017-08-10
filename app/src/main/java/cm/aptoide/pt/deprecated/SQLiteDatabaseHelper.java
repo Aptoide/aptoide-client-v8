@@ -6,21 +6,21 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.deprecated.tables.Downloads;
 import cm.aptoide.pt.deprecated.tables.Excluded;
 import cm.aptoide.pt.deprecated.tables.Repo;
 import cm.aptoide.pt.deprecated.tables.Rollback;
 import cm.aptoide.pt.deprecated.tables.Scheduled;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
