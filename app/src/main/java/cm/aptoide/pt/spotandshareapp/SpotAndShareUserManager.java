@@ -1,17 +1,18 @@
 package cm.aptoide.pt.spotandshareapp;
 
+import cm.aptoide.pt.V8Engine;
+
 /**
  * Created by filipe on 23-06-2017.
  */
 
 public class SpotAndShareUserManager {
 
-  private SpotAndShareApplication spotAndShareApplication;
+  private V8Engine v8Engine;
   private SpotAndShareUserPersister persister;
 
-  public SpotAndShareUserManager(SpotAndShareApplication spotAndShareApplication,
-      SpotAndShareUserPersister persister) {
-    this.spotAndShareApplication = spotAndShareApplication;
+  public SpotAndShareUserManager(V8Engine v8Engine, SpotAndShareUserPersister persister) {
+    this.v8Engine = v8Engine;
     this.persister = persister;
   }
 
@@ -30,6 +31,6 @@ public class SpotAndShareUserManager {
   }
 
   private void updateFriendOnSpotAndShare() {
-    spotAndShareApplication.updateFriendProfileOnSpotAndShare();
+    v8Engine.updateFriendProfileOnSpotAndShare();
   }
 }

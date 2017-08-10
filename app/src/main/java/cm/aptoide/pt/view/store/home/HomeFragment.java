@@ -29,6 +29,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareActivity;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -278,7 +279,7 @@ public class HomeFragment extends StoreFragment {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
             drawerAnalytics.drawerInteract("Spot&Share");
-            //getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
+            getActivityNavigator().navigateTo(SpotAndShareActivity.class);
             // FIXME: 10-08-2017 NAVIGATE TO SPOTANDSHARE NEW VERSION
           } else if (itemId == R.id.navigation_item_rollback) {
             drawerAnalytics.drawerInteract("Rollback");

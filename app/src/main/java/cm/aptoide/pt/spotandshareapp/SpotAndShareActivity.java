@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShareSender;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareMainFragment;
 import cm.aptoide.pt.view.BackButtonActivity;
@@ -23,7 +24,7 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
 
     setContentView(R.layout.activity_spotandshare_main);
     if (savedInstanceState == null) {
-      spotAndShare = ((SpotAndShareApplication) getApplicationContext()).getSpotAndShare();
+      spotAndShare = ((V8Engine) getApplicationContext()).getSpotAndShare();
       openSpotAndShareStart();
     }
   }

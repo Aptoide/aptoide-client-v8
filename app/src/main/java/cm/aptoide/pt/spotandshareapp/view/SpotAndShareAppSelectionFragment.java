@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
@@ -21,7 +22,6 @@ import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndSharePickAppsPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -98,13 +98,13 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private void attachPresenters() {
     SpotAndShareAppSelectionPresenter spotAndShareAppSelectionPresenter =
         new SpotAndShareAppSelectionPresenter(this,
-            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare());
+            ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare());
 
     SpotAndSharePickAppsPresenter spotAndSharePickAppsPresenter =
         new SpotAndSharePickAppsPresenter(this, shouldCreateGroup,
             new InstalledRepositoryDummy(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
-            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
             new DrawableBitmapMapper(getActivity().getApplicationContext()),
             new AppModelToAndroidAppInfoMapper(new ObbsProvider()));
 

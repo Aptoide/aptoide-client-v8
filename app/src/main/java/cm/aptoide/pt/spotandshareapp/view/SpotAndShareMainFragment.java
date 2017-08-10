@@ -20,9 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.WriteSettingsPermissionProvider;
@@ -148,7 +148,7 @@ public class SpotAndShareMainFragment extends FragmentView
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
     presenter = new SpotAndShareMainFragmentPresenter(this,
-        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
+        ((V8Engine) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
         spotAndSharePermissionProvider);
     attachPresenter(presenter, savedInstanceState);
   }

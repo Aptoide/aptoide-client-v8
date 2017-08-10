@@ -13,11 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToSendPresenter;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -96,7 +96,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     refreshButton = (ImageView) view.findViewById(R.id.sync_image);
 
     attachPresenter(new SpotAndShareWaitingToSendPresenter(this,
-        ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
         new AppModelToAndroidAppInfoMapper(new ObbsProvider())), savedInstanceState);
   }
 

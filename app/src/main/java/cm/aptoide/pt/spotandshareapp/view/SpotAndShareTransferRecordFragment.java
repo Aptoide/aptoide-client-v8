@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
@@ -28,7 +29,6 @@ import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
@@ -176,7 +176,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
     SpotAndShareTransferRecordPresenter transferRecordPresenter =
         new SpotAndShareTransferRecordPresenter(this,
-            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
             new SpotAndShareTransferRecordManager(getContext()),
             new SpotAndShareInstallManager(getActivity().getApplicationContext()),
             new DrawableBitmapMapper(getActivity().getApplicationContext()));
@@ -185,7 +185,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         new SpotAndSharePickAppsPresenter(this, false,
             new InstalledRepositoryDummy(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
-            ((SpotAndShareApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
             new DrawableBitmapMapper(getActivity().getApplicationContext()),
             new AppModelToAndroidAppInfoMapper(new ObbsProvider()));
 
