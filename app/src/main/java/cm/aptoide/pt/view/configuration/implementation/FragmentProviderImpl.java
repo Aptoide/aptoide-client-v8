@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.social.view.TimelineFragment;
+import cm.aptoide.pt.spotandshareapp.view.SpotAndShareMainFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
@@ -320,8 +321,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return InviteFriendsFragment.newInstance(openMode, tag);
   }
 
-  @Override public Fragment newSpotShareFragment(boolean showToolbar) {
-    return null;//// FIXME: 10-08-2017 open spot and share
+  @Override public Fragment newSpotShareFragment() {
+    return SpotAndShareMainFragment.newInstance();
   }
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {

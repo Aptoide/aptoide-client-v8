@@ -157,7 +157,7 @@ public interface FragmentProvider {
 
   Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode, String tag);
 
-  Fragment newSpotShareFragment(boolean showToolbar);
+  Fragment newSpotShareFragment();
 
   Fragment newThankYouConnectingFragment(String tag);
 
