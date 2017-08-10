@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.billing.view;
 
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
@@ -12,13 +13,13 @@ import rx.Observable;
 
 public interface PaymentView extends View {
 
-  Observable<PaymentMethodViewModel> selectPaymentEvent();
+  Observable<PaymentMethod> selectPaymentEvent();
 
   Observable<Void> cancelEvent();
 
   Observable<Void> buyEvent();
 
-  void selectPayment(PaymentMethodViewModel payment);
+  void selectPayment(PaymentMethod payment);
 
   void showPaymentLoading();
 
@@ -26,7 +27,7 @@ public interface PaymentView extends View {
 
   void showBuyLoading();
 
-  void showPayments(List<PaymentMethodViewModel> paymentList);
+  void showPayments(List<PaymentMethod> paymentList);
 
   void showProduct(Product product);
 
@@ -41,29 +42,4 @@ public interface PaymentView extends View {
   void showNetworkError();
 
   void showUnknownError();
-
-  class PaymentMethodViewModel {
-
-    private final int id;
-    private final String name;
-    private final String description;
-
-    public PaymentMethodViewModel(int id, String name, String description) {
-      this.id = id;
-      this.name = name;
-      this.description = description;
-    }
-
-    public int getId() {
-      return id;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public String getDescription() {
-      return description;
-    }
-  }
 }

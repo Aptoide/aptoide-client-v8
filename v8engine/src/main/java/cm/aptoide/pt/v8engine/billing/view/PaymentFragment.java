@@ -12,12 +12,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
@@ -44,7 +46,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private RxAlertDialog networkErrorDialog;
   private RxAlertDialog unknownErrorDialog;
-  private SparseArray<PaymentMethodViewModel> paymentMap;
+  private SparseArray<PaymentMethod> paymentMap;
   private SpannableFactory spannableFactory;
 
   private boolean paymentLoading;
@@ -55,7 +57,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
   private BillingNavigator billingNavigator;
-  private ImageView creditCardsImage;
+  private ScrollView scroll;
 
   public static Fragment create(Bundle bundle) {
     final PaymentFragment fragment = new PaymentFragment();
@@ -83,9 +85,9 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     super.onViewCreated(view, savedInstanceState);
     spannableFactory = new SpannableFactory();
     overlay = view.findViewById(R.id.fragment_payment_overlay);
+    scroll = (ScrollView) view.findViewById(R.id.fragment_payment_scroll);
     progressView = view.findViewById(R.id.fragment_payment_global_progress_bar);
     noPaymentsText = (TextView) view.findViewById(R.id.fragment_payment_no_payments_text);
-    creditCardsImage = (ImageView) view.findViewById(R.id.include_payment_credit_cards_image);
 
     productIcon = (ImageView) view.findViewById(R.id.include_payment_product_icon);
     productName = (TextView) view.findViewById(R.id.include_payment_product_name);
@@ -115,7 +117,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   }
 
   @Override public void onDestroyView() {
-    creditCardsImage = null;
+    scroll = null;
     spannableFactory = null;
     overlay = null;
     progressView = null;
@@ -138,10 +140,10 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     super.onDestroyView();
   }
 
-  @Override public Observable<PaymentMethodViewModel> selectPaymentEvent() {
+  @Override public Observable<PaymentMethod> selectPaymentEvent() {
     return RxRadioGroup.checkedChanges(paymentRadioGroup)
         .map(paymentId -> paymentMap.get(paymentId))
-        .filter(paymentMethodViewModel -> paymentMethodViewModel != null);
+        .filter(PaymentMethod -> PaymentMethod != null);
   }
 
   @Override public Observable<Void> cancelEvent() {
@@ -156,7 +158,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
-  @Override public void selectPayment(PaymentMethodViewModel payment) {
+  @Override public void selectPayment(PaymentMethod payment) {
     paymentRadioGroup.check(payment.getId());
   }
 
@@ -175,19 +177,24 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showPayments(List<PaymentMethodViewModel> payments) {
+  @Override public void showPayments(List<PaymentMethod> payments) {
     paymentRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
-    creditCardsImage.setVisibility(View.VISIBLE);
     buyButton.setVisibility(View.VISIBLE);
     paymentMap.clear();
 
     RadioButton radioButton;
     CharSequence radioText;
-    for (PaymentMethodViewModel payment : payments) {
+    for (PaymentMethod payment : payments) {
+
       radioButton = (RadioButton) getActivity().getLayoutInflater()
           .inflate(R.layout.payment_item, paymentRadioGroup, false);
       radioButton.setId(payment.getId());
+
+      if (payment.hasIcon()) {
+        radioButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, payment.getIcon(), 0);
+      }
+
       if (TextUtils.isEmpty(payment.getDescription())) {
         radioText = payment.getName();
       } else {
@@ -220,6 +227,17 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   }
 
   @Override public void hidePurchaseLoading() {
+
+    if (transactionLoading) {
+      scroll.postDelayed(new Runnable() {
+        @Override public void run() {
+          if (scroll != null) {
+            scroll.fullScroll(View.FOCUS_DOWN);
+          }
+        }
+      }, 500);
+    }
+
     transactionLoading = false;
     if (!paymentLoading && !buyLoading) {
       progressView.setVisibility(View.GONE);
@@ -235,7 +253,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   @Override public void showPaymentsNotFoundMessage() {
     noPaymentsText.setVisibility(View.VISIBLE);
-    creditCardsImage.setVisibility(View.GONE);
     buyButton.setVisibility(View.GONE);
   }
 

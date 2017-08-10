@@ -16,8 +16,6 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
 import java.util.List;
 import rx.Completable;
-import rx.Observable;
-import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class PaymentPresenter implements Presenter {
@@ -227,20 +225,16 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Completable showPaymentInformation(Product product, List<PaymentMethod> paymentMethods) {
-    return getPaymentMethodsViewModels(paymentMethods).doOnSuccess(paymentViewModels -> {
-      view.showProduct(product);
-      if (paymentViewModels.isEmpty()) {
-        view.showPaymentsNotFoundMessage();
-      } else {
-        view.showPayments(paymentViewModels);
-      }
-    })
-        .flatMapCompletable(paymentViewModels -> {
-          if (paymentViewModels.isEmpty()) {
-            return Completable.complete();
-          }
-          return showSelectedPaymentMethod();
-        });
+    view.showProduct(product);
+    if (paymentMethods.isEmpty()) {
+      view.showPaymentsNotFoundMessage();
+    } else {
+      view.showPayments(paymentMethods);
+    }
+    if (paymentMethods.isEmpty()) {
+      return Completable.complete();
+    }
+    return showSelectedPaymentMethod();
   }
 
   private Completable sendPaymentCancelAnalytics() {
@@ -250,24 +244,9 @@ public class PaymentPresenter implements Presenter {
             .toCompletable());
   }
 
-  private Single<List<PaymentView.PaymentMethodViewModel>> getPaymentMethodsViewModels(
-      List<PaymentMethod> paymentMethods) {
-    return Observable.from(paymentMethods)
-        .map(payment -> mapToPaymentMethodViewModel(payment))
-        .toList()
-        .toSingle();
-  }
-
-  private PaymentView.PaymentMethodViewModel mapToPaymentMethodViewModel(
-      PaymentMethod paymentMethod) {
-    return new PaymentView.PaymentMethodViewModel(paymentMethod.getId(), paymentMethod.getName(),
-        paymentMethod.getDescription());
-  }
-
   private Completable showSelectedPaymentMethod() {
     return billing.getSelectedPaymentMethod(sellerId, productId)
         .observeOn(AndroidSchedulers.mainThread())
-        .map(payment -> mapToPaymentMethodViewModel(payment))
         .doOnSuccess(payment -> view.selectPayment(payment))
         .toCompletable();
   }
