@@ -121,6 +121,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onDestroyView() {
     endlessRecyclerOnScrollListener = null;
+    mapPackages = new HashMap<>();
     clearDisplayables();
     super.onDestroyView();
   }
