@@ -144,12 +144,15 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
             }
 
             loading = false;
-            totalItemCount = mRecyclerViewHelper.getItemCount();
+            if (mRecyclerViewHelper != null) {
+              totalItemCount = mRecyclerViewHelper.getItemCount();
+            }
 
             if (shouldLoadMore()) {
               onLoadMore(bypassCache);
             }
           }, error -> {
+            error.printStackTrace();
             //remove spinner if webservice respond with error
             if (adapter.getItemCount() > 0) {
               adapter.popDisplayable();
