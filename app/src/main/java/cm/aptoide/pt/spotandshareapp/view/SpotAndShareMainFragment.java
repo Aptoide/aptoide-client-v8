@@ -1,7 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
@@ -106,36 +106,12 @@ public class SpotAndShareMainFragment extends FragmentView
 
   @Override public void loadProfileInformation(SpotAndShareUser user) {
     username.setText(user.getUsername());
-    setAvatar(user.getAvatar()
-        .getAvatarId());
+    setAvatar(user.getAvatar());
   }
 
-  private void setAvatar(int resourceID) {
-    switch (resourceID) {
-      case 0:
-        userAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
-        break;
-      case 1:
-        userAvatar.setImageDrawable(
-            new ColorDrawable(getResources().getColor(R.color.aptoide_orange)));
-        break;
-      case 2:
-        userAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.light_blue)));
-        break;
-      case 3:
-        userAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.amber)));
-        break;
-      case 4:
-        userAvatar.setImageDrawable(
-            new ColorDrawable(getResources().getColor(R.color.grey_fog_normal)));
-        break;
-      case 5:
-        userAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.teal_700)));
-        break;
-      default:
-        userAvatar.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
-        break;
-    }
+  private void setAvatar(SpotAndShareAvatar avatar) {
+    ImageLoader.with(getContext())
+        .load(avatar.getString(), userAvatar);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

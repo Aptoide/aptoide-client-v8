@@ -1,5 +1,7 @@
 package cm.aptoide.pt.spotandshareapp;
 
+import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAvatar;
+
 /**
  * Created by filipe on 23-06-2017.
  */
@@ -7,9 +9,9 @@ package cm.aptoide.pt.spotandshareapp;
 public class SpotAndShareUser {
 
   private String username;
-  private SpotAndShareUserAvatar avatar;
+  private SpotAndShareAvatar avatar;
 
-  public SpotAndShareUser(String username, SpotAndShareUserAvatar avatar) {
+  public SpotAndShareUser(String username, SpotAndShareAvatar avatar) {
     this.username = username;
     this.avatar = avatar;
   }
@@ -18,7 +20,7 @@ public class SpotAndShareUser {
     return username;
   }
 
-  public SpotAndShareUserAvatar getAvatar() {
+  public SpotAndShareAvatar getAvatar() {
     return avatar;
   }
 }
