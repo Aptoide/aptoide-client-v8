@@ -7,6 +7,9 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.social.data.viewedposts.PostReadReporter;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import java.io.IOException;
@@ -31,15 +34,17 @@ public class Timeline {
   private final DownloadFactory downloadFactory;
   private final TimelineAnalytics timelineAnalytics;
   private final TimelinePostsRepository timelinePostsRepository;
+  private PostReadReporter postReadReporter;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      TimelinePostsRepository timelinePostsRepository) {
+      TimelinePostsRepository timelinePostsRepository, PostReadReporter postReadReporter) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.timelinePostsRepository = timelinePostsRepository;
+    this.postReadReporter = postReadReporter;
   }
 
   public Single<List<Post>> getCards() {
@@ -156,8 +161,8 @@ public class Timeline {
         });
   }
 
-  public void clearLoading() {
-    timelinePostsRepository.clearLoading();
+  public Completable setPostRead(String cardId, CardType cardType) {
+    return postReadReporter.postRead(cardId, cardType.name());
   }
 }
 

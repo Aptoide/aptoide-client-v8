@@ -46,6 +46,7 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.store.StoreAnalytics;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
@@ -151,6 +152,8 @@ public class TimelinePresenter implements Presenter {
     handleFabClick();
 
     handlePostNavigation();
+
+    onViewCreatedHandleVisibleItems();
   }
 
   @Override public void saveState(Bundle state) {
@@ -158,6 +161,19 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void onViewCreatedHandleVisibleItems() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(lifecycleEvent -> view.getVisibleItems()
+            .filter(post -> !post.getType()
+                .isDummy())
+            .flatMapCompletable(post -> timeline.setPostRead(post.getCardId(), post.getType()))
+            .doOnError(throwable -> Logger.e(this, throwable))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   private void handlePostNavigation() {

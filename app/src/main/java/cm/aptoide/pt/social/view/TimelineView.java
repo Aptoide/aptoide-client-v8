@@ -83,4 +83,6 @@ public interface TimelineView extends View {
   void showPostProgressIndicator();
 
   void hidePostProgressIndicator();
+
+  Observable<Post> getVisibleItems();
 }
