@@ -154,6 +154,10 @@ import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
+import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -277,6 +281,8 @@ public abstract class V8Engine extends Application {
   private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private BillingIdResolver billingiIdResolver;
+  private SpotAndShare spotAndShare;
+  private SpotAndShareUserManager spotAndShareUserManager;
 
   /**
    * call after this instance onCreate()
@@ -1285,6 +1291,29 @@ public abstract class V8Engine extends Application {
               WebService.getDefaultConverter(), new TimelineResponseCardMapper());
     }
     return timelineRepositoryFactory.create(action);
+  }
+
+  public SpotAndShareUserManager getSpotAndShareUserManager() {
+    if (spotAndShareUserManager == null) {
+      spotAndShareUserManager = new SpotAndShareUserManager(this, new SpotAndShareUserPersister(
+          getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
+              Context.MODE_PRIVATE)));
+    }
+    return spotAndShareUserManager;
+  }
+
+  public cm.aptoide.pt.spotandshareandroid.SpotAndShare getSpotAndShare() {
+    if (spotAndShare == null) {
+      Friend friend = new Friend(getSpotAndShareUserManager().getUser()
+          .getUsername());
+      spotAndShare = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(this, friend);
+    }
+    return spotAndShare;
+  }
+
+  public void updateFriendProfileOnSpotAndShare() {
+    spotAndShare = null;
+    getSpotAndShare();
   }
 }
 
