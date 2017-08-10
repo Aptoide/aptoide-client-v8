@@ -124,7 +124,7 @@ public class AddStoreDialog extends BaseDialog {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(click -> {
           addStoreAction();
-          storeAnalytics.sendStoreInteractEvent("Add Store");
+          storeAnalytics.sendStoreTabInteractEvent("Add Store");
         });
     RxView.clicks(topStoresButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

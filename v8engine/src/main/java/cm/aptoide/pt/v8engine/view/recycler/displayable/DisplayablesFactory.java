@@ -124,7 +124,7 @@ public class DisplayablesFactory {
           return Observable.from(createReviewsGroupDisplayables(widget, windowManager, resources));
 
         case MY_STORE_META:
-          return Observable.from(createMyStoreDisplayables(widget.getViewObject()));
+          return Observable.from(createMyStoreDisplayables(widget.getViewObject(), context));
 
         case STORES_RECOMMENDED:
           return Observable.just(
@@ -340,12 +340,13 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  private static List<Displayable> createMyStoreDisplayables(Object viewObject) {
+  private static List<Displayable> createMyStoreDisplayables(Object viewObject, Context context) {
     LinkedList<Displayable> displayables = new LinkedList<>();
     if (viewObject instanceof GetHomeMeta && ((GetHomeMeta) viewObject).getData() != null) {
       displayables.add(new MyStoreDisplayable(((GetHomeMeta) viewObject)));
     } else {
-      displayables.add(new CreateStoreDisplayable());
+      displayables.add(new CreateStoreDisplayable(
+          new StoreAnalytics(AppEventsLogger.newLogger(context), Analytics.getInstance())));
     }
     return displayables;
   }

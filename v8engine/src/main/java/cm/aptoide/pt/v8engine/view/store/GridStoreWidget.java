@@ -50,7 +50,7 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
       String origin = gridStoreDisplayable.getOrigin();
       if (!origin.isEmpty()) {
         gridStoreDisplayable.getStoreAnalytics()
-            .sendStoreInteractEvent(origin);
+            .sendStoreTabInteractEvent(origin);
         gridStoreDisplayable.getStoreAnalytics()
             .sendStoreOpenEvent(origin, gridStoreDisplayable.getPojo()
                 .getName());

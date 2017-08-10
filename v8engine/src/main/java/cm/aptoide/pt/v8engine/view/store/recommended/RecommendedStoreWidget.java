@@ -67,10 +67,10 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
           if (!displayable.getOrigin()
               .isEmpty()) {
             storeAnalytics.sendStoreOpenEvent(displayable.getOrigin(), store.getName());
-            storeAnalytics.sendStoreInteractEvent("More Recommended Stores");
+            storeAnalytics.sendStoreTabInteractEvent("More Recommended Stores");
           } else {
             storeAnalytics.sendStoreOpenEvent("Recommended Stores", store.getName());
-            storeAnalytics.sendStoreInteractEvent("Open a Recommended Store");
+            storeAnalytics.sendStoreTabInteractEvent("Open a Recommended Store");
           }
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
@@ -80,7 +80,8 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     compositeSubscription.add(RxView.clicks(followButton)
         .flatMap(click -> {
           followButton.setEnabled(false);
-          storeAnalytics.sendStoreInteractEvent("Follow a Recommended Store", displayable.getPojo()
+          storeAnalytics.sendStoreTabInteractEvent("Follow a Recommended Store",
+              displayable.getPojo()
               .getStats()
               .getApps(), displayable.getPojo()
               .getStats()
