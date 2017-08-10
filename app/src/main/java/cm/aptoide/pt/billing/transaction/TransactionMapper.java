@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.billing.transaction;
 
-import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.billing.transaction.braintree.BraintreeTransaction;
 import cm.aptoide.pt.billing.transaction.mol.MolTransaction;
+import cm.aptoide.pt.database.realm.PaymentConfirmation;
+import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 
 public class TransactionMapper {
 

@@ -3,10 +3,10 @@ package cm.aptoide.pt.presenter;
 import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
+import cm.aptoide.pt.preferences.Application;
 
 /**
  * Created by jdandrade on 23/02/2017.

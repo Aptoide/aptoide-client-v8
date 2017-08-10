@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.StringRes;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountValidationException;
-import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.ErrorsMapper;
+import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 
 public class AccountErrorMapper implements ThrowableToStringMapper {

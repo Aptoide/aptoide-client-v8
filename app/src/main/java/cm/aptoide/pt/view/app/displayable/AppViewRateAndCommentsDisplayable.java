@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.view.app.displayable;
 
-import cm.aptoide.pt.dataprovider.model.v7.GetApp;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import lombok.Getter;

@@ -1,9 +1,9 @@
 package cm.aptoide.pt.view.updates;
 
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.DownloadInstallBaseEvent;

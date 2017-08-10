@@ -3,6 +3,8 @@ package cm.aptoide.pt.view.store.recommended;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
@@ -10,8 +12,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -27,6 +27,7 @@ import rx.functions.Action1;
  */
 
 public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStores> {
+  //// TODO(pedro): 19/07/17 More recommended store events here
 
   private AptoideAccountManager accountManager;
   private StoreUtilsProxy storeUtilsProxy;
@@ -59,7 +60,7 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
         .flatMapIterable(getStoreWidgets -> getStoreWidgets.getDataList()
             .getList())
         .map(store -> new RecommendedStoreDisplayable(store, storeRepository, accountManager,
-            storeUtilsProxy, storeCredentialsProvider))
+            storeUtilsProxy, storeCredentialsProvider, "Recommended Stores More"))
         .toList()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(disp -> addDisplayables(new ArrayList<>(disp), true));

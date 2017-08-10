@@ -1,9 +1,9 @@
 package cm.aptoide.pt.view;
 
 import android.content.Context;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.R;
 
 /**
  * Created by pedroribeiro on 02/05/16.

@@ -9,7 +9,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
-import cm.aptoide.pt.iab.AptoideInAppBillingService;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdResolver;
@@ -18,6 +17,7 @@ import cm.aptoide.pt.billing.product.InAppPurchase;
 import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.iab.AptoideInAppBillingService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,10 +172,9 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
 
-      final List<Purchase> purchases =
-          billing.getPurchases(idResolver.resolveSellerId(packageName))
-              .toBlocking()
-              .value();
+      final List<Purchase> purchases = billing.getPurchases(idResolver.resolveSellerId(packageName))
+          .toBlocking()
+          .value();
 
       final List<String> dataList = new ArrayList<>();
       final List<String> signatureList = new ArrayList<>();

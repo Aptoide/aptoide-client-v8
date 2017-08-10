@@ -1,7 +1,7 @@
 package cm.aptoide.pt.download;
 
-import cm.aptoide.pt.downloadmanager.Constants;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.downloadmanager.Constants;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.Interceptor;

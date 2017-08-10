@@ -7,9 +7,9 @@ package cm.aptoide.pt.view.recycler.widget;
 
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.displayable.FooterDisplayable;
 import com.jakewharton.rxbinding.view.RxView;

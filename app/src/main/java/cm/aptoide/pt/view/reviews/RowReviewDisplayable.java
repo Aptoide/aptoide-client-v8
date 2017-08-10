@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.reviews;
 
-import cm.aptoide.pt.dataprovider.model.v7.FullReview;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.FullReview;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 public class RowReviewDisplayable extends DisplayablePojo<FullReview> {

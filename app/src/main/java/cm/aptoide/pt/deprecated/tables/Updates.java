@@ -10,11 +10,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.Update;
 import io.realm.RealmObject;
 
 /**

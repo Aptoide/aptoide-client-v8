@@ -1,8 +1,8 @@
 package cm.aptoide.pt.util;
 
 import android.support.v4.util.LongSparseArray;
-import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.comments.CommentNode;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

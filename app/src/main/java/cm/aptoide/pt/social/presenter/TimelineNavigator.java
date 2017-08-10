@@ -1,8 +1,8 @@
 package cm.aptoide.pt.social.presenter;
 
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.view.account.LoginSignUpFragment;
 import cm.aptoide.pt.view.account.MyAccountFragment;

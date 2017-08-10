@@ -2,11 +2,11 @@ package cm.aptoide.pt.social.data;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.PackageRepository;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
-import cm.aptoide.pt.PackageRepository;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import java.util.Collections;
 import java.util.List;

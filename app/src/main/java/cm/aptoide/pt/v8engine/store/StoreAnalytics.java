@@ -1,10 +1,10 @@
 package cm.aptoide.pt.v8engine.store;
 
 import android.os.Bundle;
+import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.events.FacebookEvent;
+import cm.aptoide.pt.analytics.events.FlurryEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
-import cm.aptoide.pt.v8engine.analytics.events.FlurryEvent;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;

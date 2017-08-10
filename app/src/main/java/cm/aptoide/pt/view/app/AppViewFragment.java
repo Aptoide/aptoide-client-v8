@@ -29,9 +29,28 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.app.AppBoughtReceiver;
+import cm.aptoide.pt.app.AppRepository;
+import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
+import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.billing.BillingIdResolver;
+import cm.aptoide.pt.billing.exception.BillingException;
+import cm.aptoide.pt.billing.product.PaidAppPurchase;
+import cm.aptoide.pt.billing.view.PaymentActivity;
+import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -53,38 +72,14 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.SimpleSubscriber;
-import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.InstallManager;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
-import cm.aptoide.pt.app.AppBoughtReceiver;
-import cm.aptoide.pt.app.AppRepository;
-import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
-import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.BillingIdResolver;
-import cm.aptoide.pt.billing.exception.BillingException;
-import cm.aptoide.pt.billing.product.PaidAppPurchase;
-import cm.aptoide.pt.billing.view.PaymentActivity;
-import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -95,6 +90,12 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.util.StoreEnum;
 import cm.aptoide.pt.util.referrer.ReferrerUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewDescriptionDisplayable;
@@ -197,6 +198,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private StoreAnalytics storeAnalytics;
   private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
@@ -326,6 +328,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     downloadFactory = new DownloadFactory();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -782,7 +787,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())));
     displayables.add(installDisplayable);
-    displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
+    displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
             installedRepository));

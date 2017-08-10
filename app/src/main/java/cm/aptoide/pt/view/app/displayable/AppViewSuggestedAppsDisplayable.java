@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.view.app.displayable;
 
-import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
+import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
 import lombok.Data;

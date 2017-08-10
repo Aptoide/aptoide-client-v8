@@ -1,8 +1,8 @@
 package cm.aptoide.pt.view.store;
 
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import lombok.Getter;
 import lombok.Setter;

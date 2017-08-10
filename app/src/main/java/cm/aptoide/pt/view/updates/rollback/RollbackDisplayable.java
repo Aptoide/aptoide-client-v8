@@ -6,10 +6,10 @@
 package cm.aptoide.pt.view.updates.rollback;
 
 import android.content.Context;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;

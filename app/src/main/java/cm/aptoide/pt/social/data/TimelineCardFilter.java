@@ -1,11 +1,11 @@
 package cm.aptoide.pt.social.data;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.PackageRepository;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
-import cm.aptoide.pt.PackageRepository;
 import java.util.Set;
 import rx.Observable;
 import rx.Single;

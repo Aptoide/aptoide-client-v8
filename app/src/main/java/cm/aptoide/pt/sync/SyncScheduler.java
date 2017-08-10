@@ -11,8 +11,7 @@ import android.os.SystemClock;
 public class SyncScheduler {
 
   public static final String ACTION_SYNC = "cm.aptoide.pt.sync.alarm.action.SYNC";
-  public static final String EXTRA_RESCHEDULE =
-      "cm.aptoide.pt.sync.alarm.extra.RESCHEDULE";
+  public static final String EXTRA_RESCHEDULE = "cm.aptoide.pt.sync.alarm.extra.RESCHEDULE";
 
   private static final String URI_SCHEME = "aptoide";
   private static final String URI_SCHEME_SPECIFIC_PART = "cm.aptoide.pt.sync.alarm";

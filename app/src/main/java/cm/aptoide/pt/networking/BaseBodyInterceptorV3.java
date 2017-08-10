@@ -4,14 +4,14 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.FacebookAccount;
+import cm.aptoide.pt.account.GoogleAccount;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.account.FacebookAccount;
-import cm.aptoide.pt.account.GoogleAccount;
 import rx.Single;
 import rx.schedulers.Schedulers;
 

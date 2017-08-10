@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.view.updates.installed;
 
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
