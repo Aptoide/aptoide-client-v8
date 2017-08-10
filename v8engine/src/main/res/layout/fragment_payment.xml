@@ -20,7 +20,7 @@
       />
 
   <ScrollView
-      android:id="@+id/fragment_payment_card"
+      android:id="@+id/fragment_payment_scroll"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
@@ -36,17 +36,6 @@
         android:orientation="vertical"
         android:padding="16dp"
         >
-
-      <ImageView
-          android:id="@+id/include_payment_credit_cards_image"
-          android:layout_width="136dp"
-          android:layout_height="24dp"
-          android:layout_gravity="end"
-          android:layout_margin="4dp"
-          android:src="@drawable/credit_cards"
-          tools:ignore="contentDescription"
-          tools:visibility="gone"
-          />
 
       <include layout="@layout/include_payment_product"/>
 
@@ -79,12 +68,12 @@
       android:id="@+id/fragment_payment_global_progress_bar"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_alignBottom="@id/fragment_payment_card"
-      android:layout_alignEnd="@id/fragment_payment_card"
-      android:layout_alignLeft="@id/fragment_payment_card"
-      android:layout_alignRight="@id/fragment_payment_card"
-      android:layout_alignStart="@id/fragment_payment_card"
-      android:layout_alignTop="@id/fragment_payment_card"
+      android:layout_alignBottom="@id/fragment_payment_scroll"
+      android:layout_alignEnd="@id/fragment_payment_scroll"
+      android:layout_alignLeft="@id/fragment_payment_scroll"
+      android:layout_alignRight="@id/fragment_payment_scroll"
+      android:layout_alignStart="@id/fragment_payment_scroll"
+      android:layout_alignTop="@id/fragment_payment_scroll"
       android:background="@drawable/dialog_bg"
       android:clickable="true"
       android:gravity="center"
