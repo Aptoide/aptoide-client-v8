@@ -173,7 +173,7 @@
 
 
     <activity
-        android:name=".SpotAndShareActivity"
+        android:name=".spotandshareapp.SpotAndShareActivity"
         android:theme="@style/Theme.AppCompat.NoActionBar">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -353,48 +353,6 @@
     <service android:name=".InstallService"/>
 
     <service android:name=".install.InstalledIntentService"/>
-
-    <!-- spotandshare -->
-    <activity
-        android:name=".spotandshare.view.RadarActivity"
-        android:screenOrientation="portrait">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
-
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.SEND"/>
-
-        <category android:name="android.intent.category.DEFAULT"/>
-
-        <data android:mimeType="application/vnd.android.package-archive"/>
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.SEND_MULTIPLE"/>
-
-        <category android:name="android.intent.category.DEFAULT"/>
-
-        <data android:mimeType="application/vnd.android.package-archive"/>
-      </intent-filter>
-    </activity>
-    <activity android:name=".spotandshare.view.AppSelectionActivity"/>
-
-    <service
-        android:name=".spotandshare.transference.ClientService"
-        android:enabled="true"
-        android:exported="true"/>
-    <service
-        android:name=".spotandshare.transference.ServerService"
-        android:enabled="true"
-        android:exported="true"/>
-
-    <activity
-        android:name=".spotandshare.view.TransferRecordActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize">
-    </activity>
-    <activity android:name=".spotandshare.view.ShareAptoideActivity">
-    </activity>
 
   </application>
 
