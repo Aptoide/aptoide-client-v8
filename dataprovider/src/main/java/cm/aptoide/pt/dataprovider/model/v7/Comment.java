@@ -21,10 +21,15 @@ import lombok.Data;
   private Long parentReview;
   private Parent parent;
 
+  public enum Access {
+    PUBLIC, PRIVATE, UNLISTED
+  }
+
   @Data public static class User {
     private long id;
     private String name;
     private String avatar;
+    private Access access;
   }
 
   @Data public static class Parent {

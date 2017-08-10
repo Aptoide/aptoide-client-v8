@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -27,11 +26,18 @@ public abstract class Notifications<U> extends WebService<Service, U> {
   }
 
   public static String getHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
+    /*
+     * Check https://aptoide.atlassian.net/browse/AN-1739
+     * Roolback on https => USE http
+     */
+    return "http://"
         + BuildConfig.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST
         + "/pnp/v1/notifications/";
+    //return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+    //    : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+    //    + "://"
+    //    + BuildConfig.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST
+    //    + "/pnp/v1/notifications/";
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {
