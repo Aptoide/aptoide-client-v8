@@ -111,7 +111,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
           .observeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
-            if (adapter.getItemCount() > 0) {
+            if (adapter.getItemCount() > 0 && (adapter.getDisplayable(
+                adapter.getItemCount() - 1) instanceof ProgressBarDisplayable)) {
               adapter.popDisplayable();
             }
             if (response.hasData()) {
@@ -154,7 +155,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
           }, error -> {
             error.printStackTrace();
             //remove spinner if webservice respond with error
-            if (adapter.getItemCount() > 0) {
+            if (adapter.getItemCount() > 0 && (adapter.getDisplayable(
+                adapter.getItemCount() - 1) instanceof ProgressBarDisplayable)) {
               adapter.popDisplayable();
             }
             errorRequestListener.onError(error);
