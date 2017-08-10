@@ -13,7 +13,7 @@
   <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
 
   <application
-      android:allowBackup="true"
+      android:allowBackup="false"
       >
 
   </application>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/spotandshare_toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="?attr/colorPrimary"
+      />
+
+  <TextView
+      android:id="@+id/waiting_for_friends"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_above="@+id/sync_image"
+      android:layout_centerInParent="true"
+      android:layout_marginBottom="30dp"
+      android:layout_marginLeft="35dp"
+      android:layout_marginRight="35dp"
+      android:text="@string/spotandshare_message_waiting_for_friends_to_send"
+      android:textAlignment="center"
+      style="@style/Aptoide.TextView.Regular.L.Grey"
+      />
+
+  <ImageView
+      android:id="@+id/sync_image"
+      android:layout_width="36dp"
+      android:layout_height="36dp"
+      android:layout_centerInParent="true"
+      android:layout_marginTop="20dp"
+      android:background="@color/grey_fog_normal"
+      android:src="@android:drawable/stat_notify_sync"
+      />
+
+  <TextView
+      android:id="@+id/order_to_friend"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_centerInParent="true"
+      android:layout_marginBottom="20dp"
+      android:layout_marginLeft="35dp"
+      android:layout_marginRight="35dp"
+      android:layout_marginTop="20dp"
+      android:text="@string/spotandshare_message_instruction_for_friend_to_send"
+      android:textAlignment="center"
+      style="@style/Aptoide.TextView.Regular.L.Grey"
+      />
+
+
+</RelativeLayout>

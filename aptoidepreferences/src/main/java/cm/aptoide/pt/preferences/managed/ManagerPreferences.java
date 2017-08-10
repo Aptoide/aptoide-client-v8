@@ -160,6 +160,18 @@ public class ManagerPreferences {
         .apply();
   }
 
+  public static String getPreviewDialogPrefVersionCleaned(
+      SharedPreferences defaultSharedPreferences) {
+    return defaultSharedPreferences.getString(ManagedKeys.DONT_SHOW_CLEANED_VERSION, "");
+  }
+
+  public static void setPreviewDialogPrefVersionCleaned(String previewDialogPrefCleaned,
+      SharedPreferences sharedPreferences) {
+    sharedPreferences.edit()
+        .putString(ManagedKeys.DONT_SHOW_CLEANED_VERSION, previewDialogPrefCleaned)
+        .apply();
+  }
+
   public static boolean isFirstRunV7(SharedPreferences defaultSharedPreferences) {
     return defaultSharedPreferences.getBoolean(ManagedKeys.FIRST_RUN_V7, true);
   }

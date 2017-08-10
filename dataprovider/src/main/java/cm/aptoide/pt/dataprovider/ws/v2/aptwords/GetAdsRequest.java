@@ -161,7 +161,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
       Resources resources, AdsApplicationVersionCodeProvider versionCodeProvider) {
 
     GetAdsRequest getAdsRequest =
-        of(Location.middleappview, 3, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
+        of(Location.middleappview, 1, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
             httpClient, converterFactory, q, sharedPreferences, connectivityManager, resources,
             versionCodeProvider);
 

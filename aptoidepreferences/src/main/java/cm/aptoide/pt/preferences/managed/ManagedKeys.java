@@ -27,7 +27,8 @@ public class ManagedKeys {
   public static final String SCHEDULE_DOWNLOAD_SETTING = "schDwnBox";
   public static final String ALLOW_ROOT_INSTALATION = "allowRoot";
   public static final String PRIVACY_CONFIRMATION = "privacyconfirmation";
-  public static final String DONT_SHOW_ME_AGAIN = "dontshowmeagain";
+  public static final String DONT_SHOW_ME_AGAIN = "dontshowpreviewdialogagain";
+  public static final String DONT_SHOW_CLEANED_VERSION = "dontshowpreviewdialogcleanpref";
   public static final String FIRST_RUN_V7 = "firstrun";
   public static final String ADDRESS_BOOK_SYNC = "address_book_sync";
   public static final String TWITTER_SYNC = "twitter_sync";

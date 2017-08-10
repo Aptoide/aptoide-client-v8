@@ -93,7 +93,7 @@ android {
 
 dependencies {
   compile 'com.android.support:multidex:1.0.1'
-  compile project(path: ':v8engine', configuration: 'prodRelease')
+//  compile project(path: ':v8engine', configuration: 'prodRelease')
   compile project(':spotandshareandroid')
 }
 
