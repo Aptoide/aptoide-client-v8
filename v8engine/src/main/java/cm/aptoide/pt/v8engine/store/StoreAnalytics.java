@@ -18,6 +18,7 @@ public class StoreAnalytics {
   private static final String STORES_TAB_OPEN = "Stores_Tab_Open";
   private static final String STORES_TAB_INTERACT = "Stores_Tab_Interact";
   private static final String STORES_OPEN = "Store_Open";
+  private static final String STORES_INTERACT = "Store_Interact";
   private static final String ACTION = "action";
   private static final String SOURCE = "source";
   private static final String STORE_NAME = "store_name";
@@ -36,21 +37,20 @@ public class StoreAnalytics {
     analytics.sendEvent(new FlurryEvent(STORES_TAB_OPEN));
   }
 
-  //// TODO: 19/07/1 all done but login ----
   /// "add store" event implemented (according to sunil the information about how many apps/subscribers only needs to be sent when comming from a "follow a recommended store" event
-  public void sendStoreInteractEvent(String action) {
+  public void sendStoreTabInteractEvent(String action) {
     analytics.sendEvent(
         new FacebookEvent(facebook, STORES_TAB_INTERACT, createStoreInteractBundle(action)));
     analytics.sendEvent(
-        new FlurryEvent(STORES_TAB_INTERACT, createStoreInteractFlurryDataMap(action)));
+        new FlurryEvent(STORES_TAB_INTERACT, createStoreTabInteractFlurryDataMap(action)));
   }
 
   //Only for "follow a recommended store event"
-  public void sendStoreInteractEvent(String action, int storeAppsNumber, int storeFollowers) {
+  public void sendStoreTabInteractEvent(String action, int storeAppsNumber, int storeFollowers) {
     analytics.sendEvent(new FacebookEvent(facebook, STORES_TAB_INTERACT,
-        createStoreInteractFacebookBundle(action, storeAppsNumber, storeFollowers)));
+        createStoreTabInteractFacebookBundle(action, storeAppsNumber, storeFollowers)));
     analytics.sendEvent(new FlurryEvent(STORES_TAB_INTERACT,
-        createStoreInteractFlurryDataMap(action, storeAppsNumber, storeFollowers)));
+        createStoreTabInteractFlurryDataMap(action, storeAppsNumber, storeFollowers)));
   }
 
   //// TODO: 19/07/17 missing timeline
@@ -61,7 +61,31 @@ public class StoreAnalytics {
         new FlurryEvent(STORES_OPEN, createStoreOpenFlurryDataMap(source, storeName)));
   }
 
-  private Map<String, String> createStoreInteractFlurryDataMap(String action) {
+  public void sendStoreInteractEvent(String action, String tab, String storeName) {
+    analytics.sendEvent(new FacebookEvent(facebook, STORES_INTERACT,
+        createStoreInteractFacebookBundle(action, tab, storeName)));
+    analytics.sendEvent(new FlurryEvent(STORES_INTERACT,
+        createFlurryStoreInteractFlurryDataMap(action, tab, storeName)));
+  }
+
+  private Map<String, String> createFlurryStoreInteractFlurryDataMap(String action, String tab,
+      String storeName) {
+    Map<String, String> map = new HashMap<>();
+    map.put(ACTION, action);
+    //map.put(TAB, tab);
+    map.put(STORE_NAME, storeName);
+    return map;
+  }
+
+  private Bundle createStoreInteractFacebookBundle(String action, String tab, String storeName) {
+    Bundle bundle = new Bundle();
+    bundle.putString(ACTION, action);
+    //bundle.putString(TAB, tab);
+    bundle.putString(STORE_NAME, storeName);
+    return bundle;
+  }
+
+  private Map<String, String> createStoreTabInteractFlurryDataMap(String action) {
     Map<String, String> map = new HashMap<>();
     map.put(ACTION, action);
     return map;
@@ -87,8 +111,8 @@ public class StoreAnalytics {
     return bundle;
   }
 
-  private Map<String, String> createStoreInteractFlurryDataMap(String action, int storeAppsNumber,
-      int storeFollowers) {
+  private Map<String, String> createStoreTabInteractFlurryDataMap(String action,
+      int storeAppsNumber, int storeFollowers) {
     Map<String, String> map = new HashMap<>();
     map.put(ACTION, action);
     map.put(FOLLOW_STORE_APPS, AptoideUtils.StringU.toString(storeAppsNumber));
@@ -96,7 +120,7 @@ public class StoreAnalytics {
     return map;
   }
 
-  private Bundle createStoreInteractFacebookBundle(String action, int storeAppsNumber,
+  private Bundle createStoreTabInteractFacebookBundle(String action, int storeAppsNumber,
       int storeFollowers) {
     Bundle bundle = new Bundle();
     bundle.putString(ACTION, action);
