@@ -16,7 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.CrashReport;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.LinkedList;
