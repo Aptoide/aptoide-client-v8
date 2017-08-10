@@ -209,6 +209,8 @@ public class DeepLinkIntentReceiver extends Activity {
             break;
         }
         finish();
+      } else if (uri.startsWith("aptoidefirstinstall://")) {
+        parseAptoideFirstInstallUri(uri.substring("aptoidefirstinstall://".length()));
       } else {
         finish();
       }
@@ -327,6 +329,23 @@ public class DeepLinkIntentReceiver extends Activity {
     }
   }
 
+  /**
+   * parse URI to open the first install
+   *
+   * @param uri received uri
+   */
+  private void parseAptoideFirstInstallUri(String uri) {
+    Intent i = new Intent(this, startClass);
+    if (uri.toLowerCase().contains("is_top_apps_week=")) {
+      boolean isTopAppsOfWeek =
+          uri.substring("is_top_apps_week=".length()).equalsIgnoreCase("true");
+      i.putExtra(DeepLinksTargets.FIRST_INSTALL, isTopAppsOfWeek);
+    } else {
+      i.putExtra(DeepLinksTargets.FIRST_INSTALL, false);
+    }
+    startActivity(i);
+  }
+
   private void startGenericDeepLink(Uri parse) {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.GENERIC_DEEPLINK, true);
@@ -439,7 +458,7 @@ public class DeepLinkIntentReceiver extends Activity {
     public static final String SEARCH_FRAGMENT = "searchFragment";
     public static final String GENERIC_DEEPLINK = "generic_deeplink";
     public static final String SCHEDULE_DEEPLINK = "schedule_downloads";
-    public static final String TOP_APPS_WEEK = "top_apps_week";
+    public static final String FIRST_INSTALL = "first_install";
     public static final String TOP_APPS_DAY = "top_apps_day";
   }
 
