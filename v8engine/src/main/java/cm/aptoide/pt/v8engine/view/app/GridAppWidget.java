@@ -57,8 +57,8 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
         .getDownloads();
 
     name.setText(pojo.getName());
-    this.downloads.setText(
-        AptoideUtils.StringU.withSuffix(downloads) + context.getString(R.string._downloads));
+    this.downloads.setText(context.getString(R.string.all_short_downloads_count_text,
+        AptoideUtils.StringU.withSuffix(downloads)));
     ratingBar.setRating(pojo.getStats()
         .getRating()
         .getAvg());

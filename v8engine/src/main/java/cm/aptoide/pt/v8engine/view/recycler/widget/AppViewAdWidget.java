@@ -33,8 +33,8 @@ public class AppViewAdWidget extends GridAdWidget {
     int downloads = displayable.getPojo()
         .getDownloads();
 
-    downloadsTextView.setText(
-        AptoideUtils.StringU.withSuffix(downloads) + getContext().getString(R.string._downloads));
+    downloadsTextView.setText(getContext().getString(R.string.all_short_downloads_count_text,
+        AptoideUtils.StringU.withSuffix(downloads)));
     ratingBar.setRating(displayable.getPojo()
         .getStars());
   }

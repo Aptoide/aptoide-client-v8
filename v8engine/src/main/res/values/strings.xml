@@ -90,7 +90,6 @@
 
 
   <string name="uninstall">Uninstall</string>
-  <string name="other_versions_downloads_count_text">%1$s   downloads</string>
 
   <!-- Common (menu) -->
   <string name="menu_install">Install</string>
@@ -283,6 +282,7 @@
 
   <!--home Fragment-->
   <string name="featured_stores">Featured stores</string>
+  <string name="all_short_downloads_count_text">%1$s downloads</string>
 
   <!--Download fragment-->
   <string name="fragment_download_no_connection">No apps downloaded</string>
@@ -380,7 +380,6 @@
   <string name="active">Active</string>
   <string name="completed">Completed</string>
   <string name="stand_by">Standby</string>
-  <string name="_downloads"> downloads</string>
   <string name="no_description">No description</string>
   <string name="description">Description</string>
   <string name="version">Version</string>
