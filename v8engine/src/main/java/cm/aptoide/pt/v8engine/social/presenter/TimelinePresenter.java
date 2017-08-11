@@ -25,6 +25,7 @@ import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
+import cm.aptoide.pt.v8engine.social.data.MinimalPostTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Post;
@@ -659,6 +660,11 @@ public class TimelinePresenter implements Presenter {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE));
                 }
+                if (cardTouchEvent instanceof MinimalPostTouchEvent) {
+                  return Completable.fromAction(() -> view.showSharePreview(
+                      ((MinimalPostTouchEvent) cardTouchEvent).getOriginalPost(),
+                      (cardTouchEvent).getCard(), account));
+                }
                 return Completable.fromAction(
                     () -> view.showSharePreview(cardTouchEvent.getCard(), account));
               }
@@ -702,7 +708,8 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
             .flatMapSingle(shareEvent -> timeline.sharePost(shareEvent.getPost())
-                .doOnSuccess(cardId -> view.showShareSuccessMessage())))
+                .doOnSuccess(cardId -> view.showShareSuccessMessage()))
+            .retry())
         .doOnNext(cardid -> timelineAnalytics.sendSocialCardPreviewActionEvent(
             TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

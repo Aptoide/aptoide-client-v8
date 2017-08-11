@@ -49,6 +49,11 @@ abstract class BaseShareDialog<T extends Post> implements ShareDialogInterface<T
     setupEvents(post);
   }
 
+  @Override @CallSuper public void setupMinimalPost(T originalPost, T minimalPost) {
+    setupView(dialog.getDialogView(), originalPost);
+    setupEvents(minimalPost);
+  }
+
   private ShareEvent updateEventWithPrivacyCheckbox(ShareEvent shareEvent) {
     CheckBox makeMyProfilePrivate = (CheckBox) dialog.getDialogView()
         .findViewById(R.id.social_preview_checkbox);
