@@ -88,7 +88,8 @@ public class TimelineCardFilter {
     }
 
     @Override public Boolean call(TimelineItem<TimelineCard> card) {
-      return cardIds.add(card.getData()
+      return card.getData()
+          .getCardId() == null || cardIds.add(card.getData()
           .getCardId());
     }
   }
