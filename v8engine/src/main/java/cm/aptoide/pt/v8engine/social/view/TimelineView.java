@@ -66,6 +66,8 @@ public interface TimelineView extends View {
 
   void showSharePreview(Post post, Account account);
 
+  void showSharePreview(Post originalPost, Post card, Account account);
+
   void showShareSuccessMessage();
 
   void showCommentDialog(SocialCardTouchEvent touchEvent);
