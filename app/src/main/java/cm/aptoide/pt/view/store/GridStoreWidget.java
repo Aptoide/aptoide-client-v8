@@ -45,7 +45,6 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 
     storeLayout.setBackgroundColor(Color.WHITE);
 
-    //// TODO: 03/08/17 followed store click
     final Action1<Void> handleStoreClick = v -> {
       String origin = gridStoreDisplayable.getOrigin();
       if (!origin.isEmpty()) {

@@ -50,6 +50,7 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.util.CommentOperations;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
@@ -84,6 +85,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
   private static final String SHOW_INPUT_DIALOG_FIRST_RUN = "show_input_dialog_first_run";
+  private static final String STORE_ANALYTICS_ACTION = "store_analytics_action";
+  private static final String STORE_ANALYTICS = "store_analytics";
   // control setComment retry
   protected long lastTotal;
   //
@@ -114,6 +117,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private String storeAnalyticsAction;
+  private StoreAnalytics storeAnalytics;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -126,12 +131,13 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     return fragment;
   }
 
-  public static Fragment newInstanceUrl(CommentType commentType, String url) {
+  public static Fragment newInstanceUrl(CommentType commentType, String url,
+      String storeAnalyticsAction) {
     Bundle args = new Bundle();
     args.putString(URL_VAL, url);
     args.putString(COMMENT_TYPE, commentType.name());
     args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
-
+    args.putString(STORE_ANALYTICS_ACTION, storeAnalyticsAction);
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
     return fragment;
@@ -174,6 +180,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyDecorator = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
     return v;
   }
 
@@ -215,6 +224,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     url = args.getString(URL_VAL);
     commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
     showCommentInputDialogOnFirstRun = args.getBoolean(SHOW_INPUT_DIALOG_FIRST_RUN);
+    storeAnalytics = (StoreAnalytics) args.getSerializable(STORE_ANALYTICS);
 
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
@@ -254,6 +264,15 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     if (showCommentInputDialogOnFirstRun) {
       createNewCommentFragment(elementIdAsString).subscribe(() -> {
       }, throwable -> crashReport.log(throwable));
+    }
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    //sending view comment event in case this fragment is opened from a store
+    if (commentType == CommentType.STORE) {
+      storeAnalytics.sendStoreInteractEvent(storeAnalyticsAction, "Home",
+          storeName == null ? "unknown" : storeName);
     }
   }
 

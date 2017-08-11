@@ -118,7 +118,9 @@ public class DisplayablesFactory {
               new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
                   ((V8Engine) context.getApplicationContext()
                       .getApplicationContext()).getDatabase(),
-                  cm.aptoide.pt.database.realm.Store.class))));
+                  cm.aptoide.pt.database.realm.Store.class)),
+              new StoreAnalytics(AppEventsLogger.newLogger(context.getApplicationContext()),
+                  Analytics.getInstance())));
 
         case REVIEWS_GROUP:
           return Observable.from(createReviewsGroupDisplayables(widget, windowManager, resources));

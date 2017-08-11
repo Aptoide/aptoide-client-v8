@@ -60,6 +60,7 @@ import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.navigator.TabNavigator;
@@ -254,12 +255,17 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
+    StoreAnalytics storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
+
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
             new PermissionManager(), (PermissionService) getContext(), installManager,
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
-            storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
+            storeContext, getContext().getResources(), getFragmentNavigator(), storeAnalytics),
+        savedInstanceState);
   }
 
   @Override public void onDestroyView() {

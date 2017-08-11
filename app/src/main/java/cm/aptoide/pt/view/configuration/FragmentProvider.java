@@ -144,7 +144,8 @@ public interface FragmentProvider {
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
-  Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
+  Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
+      String storeAnalyticsAction);
 
   Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
       String elementId);

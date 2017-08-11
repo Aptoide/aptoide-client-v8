@@ -266,6 +266,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       GridStoreMetaDisplayable displayable) {
     return aVoid -> {
       if (storeWrapper.isStoreSubscribed()) {
+        displayable.getStoreAnalytics()
+            .sendStoreInteractEvent("Unfollow Store", "Home", storeWrapper.getStore()
+                .getName());
         storeWrapper.setStoreSubscribed(false);
         if (accountManager.isLoggedIn()) {
           accountManager.unsubscribeStore(displayable.getStoreName(),
@@ -281,6 +284,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                 getContext().getResources(), storeWrapper.getStore()
                     .getName()));
       } else {
+        displayable.getStoreAnalytics()
+            .sendStoreInteractEvent("Follow Store", "Home", storeWrapper.getStore()
+                .getName());
         storeWrapper.setStoreSubscribed(true);
         storeUtilsProxy.subscribeStore(storeWrapper.getStore()
             .getName(), subscribedStoreMeta -> {

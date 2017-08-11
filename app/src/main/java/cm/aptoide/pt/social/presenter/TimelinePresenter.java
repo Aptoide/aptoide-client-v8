@@ -44,6 +44,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ public class TimelinePresenter implements Presenter {
   private final StoreContext storeContext;
   private final Resources resources;
   private final FragmentNavigator fragmentNavigator;
+  private final StoreAnalytics storeAnalytics;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
@@ -85,7 +87,7 @@ public class TimelinePresenter implements Presenter {
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
       Long storeId, StoreContext storeContext, Resources resources,
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, StoreAnalytics storeAnalytics) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -103,6 +105,7 @@ public class TimelinePresenter implements Presenter {
     this.storeContext = storeContext;
     this.resources = resources;
     this.fragmentNavigator = fragmentNavigator;
+    this.storeAnalytics = storeAnalytics;
   }
 
   @Override public void present() {
@@ -341,12 +344,18 @@ public class TimelinePresenter implements Presenter {
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
           } else if (postType.equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) post);
+            storeAnalytics.sendStoreOpenEvent("Timeline",
+                ((StoreCardTouchEvent) cardTouchEvent).getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (postType.equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) post);
+            storeAnalytics.sendStoreOpenEvent("Timeline",
+                ((StoreCardTouchEvent) cardTouchEvent).getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (postType.equals(CardType.POPULAR_APP)) {
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
+            storeAnalytics.sendStoreOpenEvent("Timeline",
+                ((StoreCardTouchEvent) cardTouchEvent).getStoreName());
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
                 popularAppTouchEvent.getStoreTheme());
           }
@@ -396,6 +405,8 @@ public class TimelinePresenter implements Presenter {
                         followStoreCardTouchEvent.getStoreName());
                   } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
                     StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
+                    storeAnalytics.sendStoreOpenEvent("Timeline",
+                        ((StoreCardTouchEvent) cardTouchEvent).getStoreName());
                     timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
                         storeCardTouchEvent.getStoreTheme());
                   }
@@ -839,9 +850,11 @@ public class TimelinePresenter implements Presenter {
 
   private void navigateToStoreTimeline(SocialHeaderCardTouchEvent socialHeaderCardTouchEvent) {
     if (socialHeaderCardTouchEvent.getStoreName() != null) {
+      storeAnalytics.sendStoreOpenEvent("Timeline", socialHeaderCardTouchEvent.getStoreName());
       timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getStoreName(),
           socialHeaderCardTouchEvent.getStoreTheme());
     } else {
+      storeAnalytics.sendStoreOpenEvent("Timeline", "unknown");
       timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getUserId(),
           socialHeaderCardTouchEvent.getStoreTheme());
     }

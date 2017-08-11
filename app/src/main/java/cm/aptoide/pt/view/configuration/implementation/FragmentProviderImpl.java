@@ -294,8 +294,9 @@ public class FragmentProviderImpl implements FragmentProvider {
     return CommentListFragment.newInstance(commentType, elementId);
   }
 
-  @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
-    return CommentListFragment.newInstanceUrl(commentType, url);
+  @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
+      String storeAnalyticsAction) {
+    return CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction);
   }
 
   @Override

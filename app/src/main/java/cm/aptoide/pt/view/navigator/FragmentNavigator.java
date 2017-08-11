@@ -39,7 +39,7 @@ public class FragmentNavigator {
       String url = action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
 
       fragment = V8Engine.getFragmentProvider()
-          .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
+          .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url, "View Comments");
     } else {
       fragment = V8Engine.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);
