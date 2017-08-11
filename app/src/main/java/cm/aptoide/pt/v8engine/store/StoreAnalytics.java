@@ -24,6 +24,7 @@ public class StoreAnalytics {
   private static final String STORE_NAME = "store_name";
   private static final String FOLLOW_STORE_APPS = "follow_store_apps";
   private static final String FOLLOW_STORE_FOLLOWERS = "follow_store_followers";
+  private static final String TAB = "tab_name";
   private final AppEventsLogger facebook;
   private final Analytics analytics;
 
@@ -72,7 +73,7 @@ public class StoreAnalytics {
       String storeName) {
     Map<String, String> map = new HashMap<>();
     map.put(ACTION, action);
-    //map.put(TAB, tab);
+    map.put(TAB, tab);
     map.put(STORE_NAME, storeName);
     return map;
   }
@@ -80,7 +81,7 @@ public class StoreAnalytics {
   private Bundle createStoreInteractFacebookBundle(String action, String tab, String storeName) {
     Bundle bundle = new Bundle();
     bundle.putString(ACTION, action);
-    //bundle.putString(TAB, tab);
+    bundle.putString(TAB, tab);
     bundle.putString(STORE_NAME, storeName);
     return bundle;
   }
