@@ -11,7 +11,7 @@ public class SpotAndShareUserPersister {
   public static final String DEFAULT_USERNAME = "userwithnoname";
   public static final int DEFAULT_AVATAR_ID = 0;
   public static final String DEFAULT_AVATAR_PATH =
-      "android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_01";
+      "android.resource://cm.aptoide.pt.dev/drawable/spotandshare_avatar_01";
 
   public static final String SHARED_PREFERENCES_NAME = "cm.aptoide.pt";
   public static final String SPOTANDSHARE_ACCOUNT_USERNAME = "SPOTANDSHARE_ACCOUNT_USERNAME";

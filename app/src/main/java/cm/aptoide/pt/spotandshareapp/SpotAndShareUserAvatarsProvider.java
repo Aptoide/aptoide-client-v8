@@ -15,19 +15,19 @@ public class SpotAndShareUserAvatarsProvider {
     List<SpotAndShareAvatar> spotAndShareAvatars = new LinkedList<>();
 
     spotAndShareAvatars.add(new SpotAndShareUserAvatar(0,
-        Uri.parse("android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_01")
+        Uri.parse("android.resource://cm.aptoide.pt.dev/drawable/spotandshare_avatar_01")
             .toString(), false));
 
     spotAndShareAvatars.add(new SpotAndShareUserAvatar(1,
-        Uri.parse("android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_02")
+        Uri.parse("android.resource://cm.aptoide.pt.dev/drawable/spotandshare_avatar_02")
             .toString(), false));
 
     spotAndShareAvatars.add(new SpotAndShareUserAvatar(2,
-        Uri.parse("android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_03")
+        Uri.parse("android.resource://cm.aptoide.pt.dev/drawable/spotandshare_avatar_03")
             .toString(), false));
 
     spotAndShareAvatars.add(new SpotAndShareUserAvatar(3,
-        Uri.parse("android.resource://spotandshareapp.dev/drawable/spotandshare_avatar_04")
+        Uri.parse("android.resource://cm.aptoide.pt.dev/drawable/spotandshare_avatar_04")
             .toString(), false));
     return spotAndShareAvatars;
   }
