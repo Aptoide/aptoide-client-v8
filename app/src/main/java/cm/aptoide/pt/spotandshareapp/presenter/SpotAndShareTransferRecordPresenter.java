@@ -10,6 +10,7 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import rx.android.schedulers.AndroidSchedulers;
@@ -104,12 +105,14 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
   }
 
   private void updateFriendsList(Collection<Friend> friendsList) {
-    if (friendsList.size() == 1) {
-      view.updateFriendsAvatar(drawableBitmapMapper.convertBitmapToDrawable(
-          ((Friend) friendsList.toArray()[0]).getAvatar()));
-    } else {
-      view.updateFriendsNumber(friendsList.size());
-    }
+    view.updateFriendsNumber(friendsList.size());
+    view.updateFriendsList((new ArrayList<>(friendsList)));
+    //
+    //if (friendsList.size() == 1) {
+    //  view.updateFriendsAvatar(drawableBitmapMapper.convertBitmapToDrawable(
+    //      ((Friend) friendsList.toArray()[0]).getAvatar()));
+    //} else {
+    //}
   }
 
   private void leaveGroup() {

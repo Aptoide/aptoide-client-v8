@@ -12,6 +12,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.presenter.CompositePresenter;
+import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
@@ -38,6 +42,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
@@ -67,7 +72,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private RecyclerView pickAppsRecyclerView;
   private View pickAppsProgressBarContainer;
   private PublishSubject connectedFriends;
-  private MenuItem friendsItem;
+  private Menu toolbarMenu;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -113,8 +118,19 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_spotandshare_transfer, menu);
-    this.friendsItem = menu.findItem(R.id.spotandshare_connected_friends);
+    this.toolbarMenu = menu;
+    //inflater.inflate(R.menu.menu_spotandshare_transfer, menu);
+    //this.friendsItem = menu.findItem(R.id.spotandshare_connected_friends);
+    //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.user_account_white).setBounds(0,0,36,36));
+  }
+
+  private CharSequence menuIconWithText(Drawable r, String title) {
+
+    r.setBounds(0, 0, r.getIntrinsicWidth() / 2, r.getIntrinsicHeight() / 2);
+    SpannableString sb = new SpannableString(" " + title);
+    ImageSpan imageSpan = new ImageSpan(r, ImageSpan.ALIGN_BOTTOM);
+    sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    return sb;
   }
 
   private void configureBottomSheet() {
@@ -333,20 +349,26 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public void updateFriendsNumber(int friendsList) {
-    friendsItem.setTitle(friendsList);
+    // TODO: 11-08-2017 filipe put this number next to the overflow button - custom drawable
   }
 
-  @Override public void updateFriendsAvatar(Drawable friendAvatar) {
-    friendsItem.setIcon(friendAvatar);
+  @Override public void updateFriendsList(ArrayList<Friend> friendsList) {
+    for (int i = 0; i < friendsList.size(); i++) {
+      toolbarMenu.add(0, i, i,
+          menuIconWithText(getResources().getDrawable(R.drawable.spotandshare_avatar_01),
+              friendsList.get(i)
+                  .getUsername()));
+    }
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
     if (id == android.R.id.home) {
       backRelay.call(null);
-    } else if (id == R.id.spotandshare_connected_friends) {
-      connectedFriends.onNext(null);
     }
+    //else if (id == R.id.spotandshare_connected_friends) {
+    //  connectedFriends.onNext(null);
+    //}
     return false;
   }
 }
