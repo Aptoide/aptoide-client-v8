@@ -256,6 +256,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
         } else if (Event.Name.getStore.equals(adapter.getEventName(position))) {
           storeAnalytics.sendStoreTabOpenedEvent();
         }
+        if (storeContext.name()
+            .equals("meta")) {
+          storeAnalytics.sendStoreInteractEvent("Open Tab", adapter.getPageTitle(position)
+              .toString(), storeName);
+        }
       }
     });
     changeToTab(defaultTab);
