@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -19,9 +20,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -102,7 +105,9 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
             .getList();
         displayables = new LinkedList<>();
         for (final FullReview review : reviews) {
-          displayables.add(new RowReviewDisplayable(review));
+          displayables.add(new RowReviewDisplayable(review,
+              new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+                  Analytics.getInstance())));
         }
         addDisplayables(displayables);
       };

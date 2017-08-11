@@ -68,6 +68,14 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
     final FragmentNavigator navigator = getFragmentNavigator();
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(aVoid -> {
+          if (displayable.getStoreAnalytics() != null) {
+            displayable.getStoreAnalytics()
+                .sendStoreInteractEvent("View Review", "Latest Reviews", displayable.getPojo()
+                    .getData()
+                    .getApp()
+                    .getStore()
+                    .getName());
+          }
           navigator.navigateTo(V8Engine.getFragmentProvider()
               .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore()
                   .getName(), app.getPackageName(), review.getId()));
