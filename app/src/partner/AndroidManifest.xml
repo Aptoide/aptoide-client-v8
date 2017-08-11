@@ -13,8 +13,7 @@
       >
 
     <activity
-        android:name=".view.PartnersLaunchView"
-        android:theme="@style/Theme.AppCompat.Translucent">
+        android:name=".view.PartnersLaunchView">
     </activity>
   </application>
 
