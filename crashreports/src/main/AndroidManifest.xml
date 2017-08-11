@@ -2,7 +2,7 @@
     package="pt.aptoide.cm.crashreports">
 
   <application
-      android:allowBackup="true"
+      android:allowBackup="false"
       android:supportsRtl="true"
       >
 
