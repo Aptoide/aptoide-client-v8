@@ -74,7 +74,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
           .getTimeDiffString(getContext(), app.getModified()
               .getTime(), getContext().getResources()));
       downloads.setText(String.format(DEFAULT_LOCALE,
-          getContext().getString(R.string.all_short_downloads_count_text),
+          getContext().getString(R.string.other_versions_downloads_count_text),
           AptoideUtils.StringU.withSuffix(app.getStats()
               .getDownloads())));
 

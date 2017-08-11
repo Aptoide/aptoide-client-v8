@@ -283,6 +283,10 @@
   <!--home Fragment-->
   <string name="featured_stores">Featured stores</string>
   <string name="all_short_downloads_count_text">%1$s downloads</string>
+  <string name="other_versions_downloads_count_text">%1$s   downloads</string>
+  <string name="_downloads"> downloads</string>
+
+
 
   <!--Download fragment-->
   <string name="fragment_download_no_connection">No apps downloaded</string>
