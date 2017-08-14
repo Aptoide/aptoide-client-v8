@@ -45,7 +45,7 @@ android {
     multiDexEnabled true
     resValue "string", "authenticator_account_type", APPLICATION_ID
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.4.0.0"
+    versionName "8.4.0.1"
     resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
     resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
     buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
