@@ -6,6 +6,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.FullReview;
@@ -13,15 +17,14 @@ import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -40,6 +43,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private StoreAnalytics storeAnalytics;
 
   public static LatestReviewsFragment newInstance(long storeId) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -58,6 +62,9 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -102,7 +109,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
             .getList();
         displayables = new LinkedList<>();
         for (final FullReview review : reviews) {
-          displayables.add(new RowReviewDisplayable(review));
+          displayables.add(new RowReviewDisplayable(review, storeAnalytics));
         }
         addDisplayables(displayables);
       };

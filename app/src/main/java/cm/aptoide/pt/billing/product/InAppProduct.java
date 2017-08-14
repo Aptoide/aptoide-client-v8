@@ -14,8 +14,9 @@ public class InAppProduct extends AbstractProduct {
   private final String packageName;
   private final String applicationName;
 
-  public InAppProduct(String id, int internalId, String icon, String title, String description, int apiVersion,
-      String sku, String packageName, Price price, int packageVersionCode, String applicationName) {
+  public InAppProduct(String id, int internalId, String icon, String title, String description,
+      int apiVersion, String sku, String packageName, Price price, int packageVersionCode,
+      String applicationName) {
     super(id, internalId, icon, title, description, price, packageVersionCode);
     this.apiVersion = apiVersion;
     this.sku = sku;

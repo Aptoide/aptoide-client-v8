@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.billing;
 
-import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,9 +39,11 @@ public class PaymentMethodMapper {
   private PaymentMethod map(PaymentServiceResponse response) {
     switch (response.getId()) {
       case BRAINTREE_CREDIT_CARD:
-        return new PaymentMethod(response.getId(), response.getName(), response.getDescription(), R.drawable.credit_cards);
+        return new PaymentMethod(response.getId(), response.getName(), response.getDescription(),
+            R.drawable.credit_cards);
       case PAYPAL:
-        return new PaymentMethod(response.getId(), response.getName(), response.getDescription(), R.drawable.paypal);
+        return new PaymentMethod(response.getId(), response.getName(), response.getDescription(),
+            R.drawable.paypal);
       case BOA_COMPRA:
       case BOA_COMPRA_GOLD:
       case MOL_POINTS:

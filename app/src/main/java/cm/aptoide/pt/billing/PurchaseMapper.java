@@ -5,12 +5,12 @@
 
 package cm.aptoide.pt.billing;
 
-import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
-import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.billing.product.InAppPurchase;
 import cm.aptoide.pt.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.billing.product.SimplePurchase;
+import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
 import java.util.List;

@@ -53,6 +53,8 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
           }
         })
+        .doOnNext(__ -> displayable.getStoreAnalytics()
+            .sendStoreTabInteractEvent("Login"))
         .subscribe(__ -> {
         }, err -> crashReport.log(err)));
   }

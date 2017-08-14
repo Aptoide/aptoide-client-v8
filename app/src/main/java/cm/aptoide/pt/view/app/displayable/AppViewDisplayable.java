@@ -6,8 +6,8 @@
 package cm.aptoide.pt.view.app.displayable;
 
 import cm.aptoide.pt.annotation.Ignore;
-import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import lombok.Setter;
 import rx.functions.Action0;

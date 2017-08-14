@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.util.Date;
 

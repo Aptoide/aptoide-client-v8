@@ -16,8 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
 
 import static cm.aptoide.pt.dataprovider.model.v7.Malware.Reason.Status;
 

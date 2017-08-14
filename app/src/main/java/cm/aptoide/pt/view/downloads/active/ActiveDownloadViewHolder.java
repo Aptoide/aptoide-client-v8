@@ -6,12 +6,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.DownloadsPresenter;
 import cm.aptoide.pt.presenter.DownloadsView;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.RecyclerViewHolder;
 import com.jakewharton.rxbinding.view.RxView;
 

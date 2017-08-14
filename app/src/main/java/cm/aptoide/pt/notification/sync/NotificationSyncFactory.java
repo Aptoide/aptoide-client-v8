@@ -1,10 +1,10 @@
 package cm.aptoide.pt.notification.sync;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.notification.NotificationNetworkService;
 import cm.aptoide.pt.notification.NotificationProvider;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.sync.Sync;
 
 public class NotificationSyncFactory {

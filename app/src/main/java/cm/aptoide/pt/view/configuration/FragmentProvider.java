@@ -1,11 +1,11 @@
 package cm.aptoide.pt.view.configuration;
 
 import android.support.v4.app.Fragment;
+import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
@@ -144,7 +144,8 @@ public interface FragmentProvider {
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
-  Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
+  Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
+      String storeAnalyticsAction);
 
   Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
       String elementId);

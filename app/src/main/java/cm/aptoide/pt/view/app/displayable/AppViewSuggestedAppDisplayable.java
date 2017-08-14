@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.view.app.displayable;
 
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.view.app.GridAppDisplayable;
 import lombok.Getter;
 
