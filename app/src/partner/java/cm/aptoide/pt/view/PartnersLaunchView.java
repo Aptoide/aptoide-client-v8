@@ -3,9 +3,11 @@ package cm.aptoide.pt.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.VanillaConfiguration;
@@ -32,34 +34,74 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PartnersLaunchView extends ActivityView {
 
-  private Intent intent;
   private boolean usesSplashScreen;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().hide();
+    }
+    loadSplashScreen();
+
+    if (savedInstanceState == null) {
+      disableWizard();
+      getBootConfigRequest(this);
+    }
+  }
+
+  /**
+   * don't do anything on back pressed - avoid that users closes the app on splash screen
+   */
+  @Override public void onBackPressed() {
+    //nothing
+  }
+
+  /**
+   * disable vanilla wizard
+   */
+  private void disableWizard() {
+    final SharedPreferences sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    final SharedPreferences securePreferences =
+        SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
+    SecurePreferences.setWizardAvailable(false, securePreferences);
+  }
+
+  /**
+   * check if splash screen is enabled. If it is, loads it, according to the screen orientation
+   */
+  private void loadSplashScreen() {
     usesSplashScreen = ((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
         .getPartner()
         .getAppearance()
         .getSplash()
         .isEnable();
     if (usesSplashScreen) {
+      setContentView(R.layout.partners_launch);
       setTheme(Application.getConfiguration()
           .getDefaultThemeRes());
-      setContentView(R.layout.partners_launch);
+      String url;
+      if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        url = ((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
+            .getPartner()
+            .getAppearance()
+            .getSplash()
+            .getLandscape();
+      } else {
+        url = ((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
+            .getPartner()
+            .getAppearance()
+            .getSplash()
+            .getPortrait();
+      }
       ImageLoader.with(this)
-          .load(((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
-              .getPartner()
-              .getAppearance()
-              .getSplash()
-              .getPortrait(), (ImageView) findViewById(R.id.splashscreen));
+          .load(url, (ImageView) findViewById(R.id.splashscreen));
     }
-    intent = getIntent();
-    disableWizard();
-    getBootConfigRequest(this);
   }
 
   /**
-   * gets the Remote bootconfig from the webservice.
+   * gets the Remote boot config, applies it, and saves it to shared preferences
    */
   private void getBootConfigRequest(Context context) {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
@@ -83,29 +125,21 @@ public class PartnersLaunchView extends ActivityView {
               BootConfigJSONUtils.getSavedRemoteBootConfig(context)
                   .getData());
         }
-        startMainActivityPartners();
+        handleSplashScreenTimer();
       }
 
       @Override public void onFailure(Call<RemoteBootConfig> call, Throwable t) {
-        Logger.e("PartnersConfiguration",
-            "Failed to get First remote boot config: " + t.getMessage());
-        startMainActivityPartners();
+        Logger.e("PartnersConfiguration", "Failed to get remote boot config: " + t.getMessage());
+        handleSplashScreenTimer();
       }
     });
   }
 
-  private void disableWizard() {
-    final SharedPreferences sharedPreferences =
-        ((PartnerApplication) getApplicationContext()).getDefaultSharedPreferences();
-    final SharedPreferences securePreferences =
-        SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
-    SecurePreferences.setWizardAvailable(false, securePreferences);
-  }
-
   /**
-   * startMainActivityPartners
+   * show the splash screen according to the time established by the partner on the configs.
+   * case there's not splash screen, automatically starts the main activity
    */
-  private void startMainActivityPartners() {
+  private void handleSplashScreenTimer() {
     if (usesSplashScreen) {
       new java.util.Timer().schedule(new java.util.TimerTask() {
         @Override public void run() {
@@ -121,10 +155,13 @@ public class PartnersLaunchView extends ActivityView {
     }
   }
 
+  /**
+   * start the main activity
+   */
   private void startActivity() {
     Intent i = new Intent(this, MainActivity.class);
-    if (intent.getExtras() != null) {
-      i.putExtras(intent.getExtras());
+    if (getIntent().getExtras() != null) {
+      i.putExtras(getIntent().getExtras());
     }
     startActivity(i);
     finish();
