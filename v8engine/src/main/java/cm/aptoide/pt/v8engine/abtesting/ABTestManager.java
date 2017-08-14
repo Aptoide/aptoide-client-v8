@@ -20,6 +20,7 @@ import rx.schedulers.Schedulers;
 
 public class ABTestManager {
 
+  public static final String SEARCH_TAB_TEST = "search-result";
   /**
    * There's not test at the moment
    * TODO change this class in order to accept that there's no test

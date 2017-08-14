@@ -7,37 +7,17 @@ package cm.aptoide.pt.v8engine.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.NavigationProvider;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
-import cm.aptoide.pt.v8engine.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.ActivityEvent;
 import rx.Observable;
 
-public abstract class ActivityView extends ActivityResultNavigator
-    implements View, NavigationProvider {
+public abstract class ActivityView extends AnalyticsActivity implements View {
 
   private Presenter presenter;
-  private FragmentNavigator fragmentNavigator;
-
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-    fragmentNavigator =
-        new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
-            android.R.anim.fade_in, android.R.anim.fade_out,
-            ((V8Engine) getApplicationContext()).getDefaultSharedPreferences());
-    // super.onCreate handles fragment creation using FragmentManager.
-    // Make sure navigator instances are already created when fragments are created,
-    // else getFragmentNavigator and getActivityNavigator will return null.
-    super.onCreate(savedInstanceState);
-  }
 
   @Override protected void onDestroy() {
     super.onDestroy();
@@ -89,13 +69,5 @@ public abstract class ActivityView extends ActivityResultNavigator
     }
 
     super.onSaveInstanceState(outState);
-  }
-
-  @Override public ActivityNavigator getActivityNavigator() {
-    return this;
-  }
-
-  @Override public FragmentNavigator getFragmentNavigator() {
-    return fragmentNavigator;
   }
 }

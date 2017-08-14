@@ -51,7 +51,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
       boolean mature, Converter.Factory converterFactory, OkHttpClient httpClient, String q,
       SharedPreferences sharedPreferences, ConnectivityManager connectivityManager,
       Resources resources, AdsApplicationVersionCodeProvider versionCodeProvider) {
-    super(httpClient, converterFactory);
+    super(httpClient, converterFactory, sharedPreferences);
     this.clientUniqueId = clientUniqueId;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     this.oemid = oemid;

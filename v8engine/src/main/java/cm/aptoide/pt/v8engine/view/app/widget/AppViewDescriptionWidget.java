@@ -21,8 +21,7 @@ import com.jakewharton.rxbinding.view.RxView;
 /**
  * Created on 10/05/16.
  */
-public class AppViewDescriptionWidget
-    extends Widget<AppViewDescriptionDisplayable> {
+public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayable> {
 
   private TextView descriptionTextView;
   private Button readMoreBtn;

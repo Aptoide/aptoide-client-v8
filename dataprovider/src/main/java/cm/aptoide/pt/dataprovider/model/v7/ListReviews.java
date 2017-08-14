@@ -8,6 +8,6 @@ package cm.aptoide.pt.dataprovider.model.v7;
 /**
  * Created by neuro on 04-07-2016.
  */
-public class ListReviews extends BaseV7EndlessDatalistResponse<Review> {
+public class ListReviews extends BaseV7EndlessDataListResponse<Review> {
 
 }

@@ -7,9 +7,6 @@ package cm.aptoide.pt.dataprovider;
 
 import android.telephony.TelephonyManager;
 
-/**
- * Created by marcelobenites on 7/27/16.
- */
 public class NetworkOperatorManager {
 
   private final TelephonyManager telephonyManager;

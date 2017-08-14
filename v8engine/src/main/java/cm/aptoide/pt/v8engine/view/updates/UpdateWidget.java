@@ -39,8 +39,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 17-05-2016.
  */
-public class UpdateWidget
-    extends Widget<UpdateDisplayable> {
+public class UpdateWidget extends Widget<UpdateDisplayable> {
 
   private static final String TAG = UpdateWidget.class.getSimpleName();
 

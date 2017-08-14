@@ -45,8 +45,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class RateAndReviewCommentWidget
-    extends Widget<RateAndReviewCommentDisplayable> {
+public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDisplayable> {
 
   public static final int FULL_COMMENTS_LIMIT = 3;
   private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
@@ -109,8 +108,7 @@ public class RateAndReviewCommentWidget
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser()
@@ -225,7 +223,7 @@ public class RateAndReviewCommentWidget
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .execute(listComments -> {
           if (listComments.isOk()) {
-            List<Comment> comments = listComments.getDatalist()
+            List<Comment> comments = listComments.getDataList()
                 .getList();
             commentAdder.addComment(comments);
           } else {

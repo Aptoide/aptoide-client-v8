@@ -30,7 +30,7 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/button_border_grey"
         android:fontFamily="@string/font_family_medium"
-        android:text="@string/button_appview_read_all"
+        android:text="@string/appview_button_read_all"
         android:textAllCaps="true"
         android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"

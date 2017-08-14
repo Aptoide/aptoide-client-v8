@@ -55,7 +55,8 @@ public class DatabaseStoreDataPersist {
 
     public Store fromDatabase(cm.aptoide.pt.database.realm.Store store) {
       return new Store(store.getDownloads(), store.getIconPath(), store.getStoreId(),
-          store.getStoreName(), store.getTheme(), store.getUsername(), store.getPasswordSha1());
+          store.getStoreName(), store.getTheme(), store.getUsername(), store.getPasswordSha1(),
+          true);
     }
   }
 }

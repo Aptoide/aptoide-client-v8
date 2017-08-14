@@ -18,8 +18,8 @@ import rx.Scheduler;
  */
 public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
 
-  protected ScheduledAccessor(Database db, Scheduler observingScheduler) {
-    super(db, observingScheduler, Scheduled.class);
+  public ScheduledAccessor(Database db) {
+    super(db, Scheduled.class);
   }
 
   public Observable<List<Scheduled>> getAll() {
@@ -45,7 +45,7 @@ public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
         md5s[i] = s.getMd5();
       }
 
-      @Cleanup Realm realm = Database.get();
+      @Cleanup Realm realm = database.get();
       realm.beginTransaction();
       realm.insertOrUpdate(scheduledList);
       RealmResults<Scheduled> results = realm.where(Scheduled.class)
@@ -59,23 +59,8 @@ public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
     });
   }
 
-  public Observable<Scheduled> setInstalling(Scheduled scheduled) {
-    return Observable.fromCallable(() -> {
-      scheduled.setDownloading(true);
-
-      @Cleanup Realm realm = Database.get();
-      realm.beginTransaction();
-      Scheduled dbScheduled = realm.where(Scheduled.class)
-          .equalTo(Scheduled.MD5, scheduled.getMd5())
-          .findFirst();
-      dbScheduled.setDownloading(true);
-      realm.commitTransaction();
-      return scheduled;
-    });
-  }
-
   public boolean hasScheduleDownloads() {
-    @Cleanup Realm realm = Database.get();
+    @Cleanup Realm realm = database.get();
     return realm.where(Scheduled.class)
         .findAll()
         .size() != 0;

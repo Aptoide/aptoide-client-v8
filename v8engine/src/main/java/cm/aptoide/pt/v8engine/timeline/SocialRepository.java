@@ -138,8 +138,8 @@ public class SocialRepository {
 
   public void like(String timelineCardId, String cardType, String ownerHash, int rating,
       TimelineSocialActionData timelineSocialActionData) {
-    LikeCardRequest.of(timelineCardId, cardType, ownerHash, rating, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
+    LikeCardRequest.of(timelineCardId, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {

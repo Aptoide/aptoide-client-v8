@@ -7,8 +7,8 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
+import cm.aptoide.pt.v8engine.social.view.TimelineFragment;
 import cm.aptoide.pt.v8engine.spotandshare.view.SpotSharePreviewFragment;
-import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.timeline.view.SocialFragment;
 import cm.aptoide.pt.v8engine.timeline.view.TimeLineLikesFragment;
 import cm.aptoide.pt.v8engine.timeline.view.follow.TimeLineFollowersFragment;
@@ -196,7 +196,7 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
       StoreContext storeContext) {
-    return AppsTimelineFragment.newInstance(action, userId, storeId, storeContext);
+    return TimelineFragment.newInstance(action, userId, storeId, storeContext);
   }
 
   @Override
@@ -247,11 +247,6 @@ public class FragmentProviderImpl implements FragmentProvider {
   @Override public Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId) {
     return RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName, reviewId);
-  }
-
-  @Override public Fragment newDescriptionFragment(long appId, String packageName, String storeName,
-      String storeTheme) {
-    return DescriptionFragment.newInstance(appId, packageName, storeName, storeTheme);
   }
 
   @Override

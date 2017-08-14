@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -45,16 +46,19 @@ public class DeepLinkManager {
   private final TabNavigator tabNavigator;
   private final DeepLinkMessages deepLinkMessages;
   private final SharedPreferences sharedPreferences;
+  private final StoreAccessor storeAccessor;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
-      DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences) {
+      DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
+      StoreAccessor storeAccessor) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
     this.tabNavigator = tabNavigator;
     this.deepLinkMessages = deepLinkMessages;
     this.sharedPreferences = sharedPreferences;
+    this.storeAccessor = storeAccessor;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -78,7 +82,7 @@ public class DeepLinkManager {
       searchDeepLink(intent.getStringExtra(SearchManager.QUERY));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
       newrepoDeepLink(intent, intent.getExtras()
-          .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO));
+          .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO), storeAccessor);
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink();
@@ -126,10 +130,11 @@ public class DeepLinkManager {
         .newSearchFragment(query));
   }
 
-  private void newrepoDeepLink(Intent intent, ArrayList<String> repos) {
+  private void newrepoDeepLink(Intent intent, ArrayList<String> repos,
+      StoreAccessor storeAccessor) {
     if (repos != null) {
       Observable.from(repos)
-          .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName)
+          .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName, storeAccessor)
               .first()
               .observeOn(AndroidSchedulers.mainThread())
               .flatMap(isFollowed -> {

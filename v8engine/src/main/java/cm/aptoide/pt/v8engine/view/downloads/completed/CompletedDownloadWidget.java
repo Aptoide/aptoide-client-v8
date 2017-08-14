@@ -26,8 +26,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 7/18/16.
  */
-public class CompletedDownloadWidget
-    extends Widget<CompletedDownloadDisplayable> {
+public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable> {
 
   private TextView appName;
   private ImageView appIcon;

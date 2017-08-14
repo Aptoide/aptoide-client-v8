@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.search;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
@@ -51,7 +53,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         LinkedList<Displayable> displayables = new LinkedList<>();
 
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
             .getList();
         Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
 
@@ -119,6 +121,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onDestroyView() {
     endlessRecyclerOnScrollListener = null;
+    mapPackages = new HashMap<>();
     clearDisplayables();
     super.onDestroyView();
   }
@@ -137,13 +140,19 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     getRecyclerView().clearOnScrollListeners();
     ListSearchAppsRequest of;
     if (storeName != null) {
-      of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+      of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
+          converterFactory, tokenInvalidator,
           ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     } else {
-      of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(),
-          StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator,
+      of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(
+          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Store.class)),
+          StoreUtils.getSubscribedStoresAuthMap(AccessorFactory.getAccessorFor(
+              ((V8Engine) getContext().getApplicationContext()
+                  .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor,
+          httpClient, converterFactory, tokenInvalidator,
           ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     }
     endlessRecyclerOnScrollListener =

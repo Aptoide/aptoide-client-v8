@@ -10,8 +10,8 @@ import rx.Scheduler;
 
 public class StoredMinimalAdAccessor extends SimpleAccessor<StoredMinimalAd> {
 
-  StoredMinimalAdAccessor(Database db, Scheduler observingScheduler) {
-    super(db, observingScheduler, StoredMinimalAd.class);
+  public StoredMinimalAdAccessor(Database db) {
+    super(db, StoredMinimalAd.class);
   }
 
   public Observable<StoredMinimalAd> get(String packageName) {

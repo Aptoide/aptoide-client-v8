@@ -20,8 +20,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created on 04/05/16.
  */
-public class AppViewDeveloperWidget
-    extends Widget<AppViewDeveloperDisplayable> {
+public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> {
 
   private static final String TAG = AppViewDeveloperWidget.class.getSimpleName();
 

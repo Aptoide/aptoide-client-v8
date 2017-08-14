@@ -21,6 +21,10 @@ import lombok.EqualsAndHashCode;
     this.recommendation = recommendation;
   }
 
+  @Override public Ab getAb() {
+    return this.recommendation.getAb();
+  }
+
   @Override public Recommendation getData() {
     return recommendation;
   }

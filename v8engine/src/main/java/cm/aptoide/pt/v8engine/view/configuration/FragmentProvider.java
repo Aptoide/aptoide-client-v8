@@ -125,9 +125,6 @@ public interface FragmentProvider {
   Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId);
 
-  Fragment newDescriptionFragment(long appId, String packageName, String storeName,
-      String storeTheme);
-
   Fragment newDescriptionFragment(String appName, String description, String storeTheme);
 
   Fragment newSocialFragment(String socialUrl, String pageTitle);

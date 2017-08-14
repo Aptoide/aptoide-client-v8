@@ -5,15 +5,47 @@
 
 package cm.aptoide.pt.v8engine.billing;
 
-import rx.Completable;
+public class PaymentMethod {
 
-public interface PaymentMethod {
+  private final int id;
+  private final String name;
+  private final String description;
+  private final boolean hasIcon;
 
-  int getId();
+  private int icon;
 
-  String getName();
+  public PaymentMethod(int id, String name, String description, int icon) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.icon = icon;
+    this.hasIcon = true;
+  }
 
-  String getDescription();
+  public PaymentMethod(int id, String name, String description) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.hasIcon = false;
+  }
 
-  Completable process(Product product);
+  public int getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public boolean hasIcon() {
+    return hasIcon;
+  }
+
+  public int getIcon() {
+    return icon;
+  }
 }

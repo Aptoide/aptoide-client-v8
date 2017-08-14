@@ -23,8 +23,7 @@ import java.util.Locale;
 /**
  * Created on 04/05/16.
  */
-@Deprecated public class AppViewRateThisWidget
-    extends Widget<AppViewRateThisDisplayable> {
+@Deprecated public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 
   private static final String TAG = AppViewRateThisWidget.class.getSimpleName();
 

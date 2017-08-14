@@ -64,7 +64,7 @@ public class StoreUtilsProxy {
     return StoreUtils.subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences),
-        accountManager, null, null);
+        accountManager, null, null, storeAccessor);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -82,7 +82,7 @@ public class StoreUtilsProxy {
       AptoideAccountManager accountManager, String storeUserName, String storePassword) {
 
     StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener,
-        accountManager, storeUserName, storePassword);
+        accountManager, storeUserName, storePassword, storeAccessor);
   }
 
   public void subscribeStore(String storeName,
@@ -97,7 +97,7 @@ public class StoreUtilsProxy {
 
   public void unSubscribeStore(String storeName,
       StoreCredentialsProvider storeCredentialsProvider) {
-    StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider);
+    StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
   }
 
   public Completable addDefaultStore(GetStoreMetaRequest getStoreMetaRequest,

@@ -13,8 +13,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created on 04/05/16.
  */
-public class AppViewRateResultsWidget
-    extends Widget<AppViewRateResultsDisplayable> {
+public class AppViewRateResultsWidget extends Widget<AppViewRateResultsDisplayable> {
 
   public AppViewRateResultsWidget(View itemView) {
     super(itemView);

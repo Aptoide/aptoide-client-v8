@@ -21,7 +21,7 @@ import cm.aptoide.pt.v8engine.spotandshare.presenter.ShareAptoideView;
 import cm.aptoide.pt.v8engine.spotandshare.shareaptoide.ShareApkSandbox;
 import cm.aptoide.pt.v8engine.spotandshare.shareaptoide.ShareAptoideManager;
 
-public class ShareAptoideActivity extends ActivityView implements ShareAptoideView {
+public class ShareAptoideActivity extends SpotAndShareActivityView implements ShareAptoideView {
 
   private static final String SHARE_APTOIDE_LINK = "http://192.168.43.1:38080";
   private Toolbar mToolbar;

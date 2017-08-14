@@ -58,8 +58,7 @@ import rx.functions.Action1;
 /**
  * Created on 30/06/16.
  */
-public class AppViewRateAndReviewsWidget
-    extends Widget<AppViewRateAndCommentsDisplayable> {
+public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDisplayable> {
 
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
@@ -126,9 +125,8 @@ public class AppViewRateAndReviewsWidget
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository(),
-        tokenInvalidator,
+        new AccountNavigator(getFragmentNavigator(), accountManager), bodyInterceptor, httpClient,
+        converterFactory, displayable.getInstalledRepository(), tokenInvalidator,
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
     appName = app.getName();
@@ -211,7 +209,7 @@ public class AppViewRateAndReviewsWidget
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {
-              List<Review> reviews = listReviews.getDatalist()
+              List<Review> reviews = listReviews.getDataList()
                   .getList();
               if (reviews == null || reviews.isEmpty()) {
                 loadedData(false);
@@ -219,7 +217,7 @@ public class AppViewRateAndReviewsWidget
               }
 
               loadedData(true);
-              final List<Review> list = listReviews.getDatalist()
+              final List<Review> list = listReviews.getDataList()
                   .getList();
               return new TopReviewsAdapter(list.toArray(new Review[list.size()]));
             })

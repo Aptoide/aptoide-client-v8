@@ -70,7 +70,19 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(newOnClickListener(displayable, pojo, appId),
             throwable -> CrashReport.getInstance()
-            .log(throwable)));
+                .log(throwable)));
+  }
+
+  @NonNull protected Action1<Void> newOnClickListener(T displayable, App pojo, long appId) {
+    return v -> {
+      // FIXME
+      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
+              .getAppearance()
+              .getTheme(), tvStoreName.getText()
+              .toString()));
+    };
   }
 
   @NonNull protected Action1<Void> newOnClickListener(T displayable, App pojo, long appId) {

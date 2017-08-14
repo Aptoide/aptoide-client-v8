@@ -8,12 +8,17 @@ import lombok.EqualsAndHashCode;
  * Created by jdandrade on 11/05/2017.
  */
 
-@EqualsAndHashCode class AggregatedSocialInstallTimelineItem implements TimelineItem<TimelineCard> {
+@EqualsAndHashCode public class AggregatedSocialInstallTimelineItem
+    implements TimelineItem<TimelineCard> {
   private final AggregatedSocialInstall aggregatedSocialInstall;
 
   @JsonCreator public AggregatedSocialInstallTimelineItem(
       @JsonProperty("data") AggregatedSocialInstall aggregatedSocialInstall) {
     this.aggregatedSocialInstall = aggregatedSocialInstall;
+  }
+
+  @Override public Ab getAb() {
+    return this.aggregatedSocialInstall.getAb();
   }
 
   @Override public AggregatedSocialInstall getData() {

@@ -19,8 +19,7 @@ import com.jakewharton.rxbinding.view.RxView;
 /**
  * Created by neuro on 09-05-2016.
  */
-public class AppBrickWidget
-    extends Widget<AppBrickDisplayable> {
+public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 
   private ImageView graphic;
 

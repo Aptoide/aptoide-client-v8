@@ -37,7 +37,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAllInstalledSorted() {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .findAllSorted(Installed.NAME, Sort.ASCENDING)
             .asObservable()
@@ -80,7 +80,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<Installed> get(String packageName, int versionCode) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .map(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .equalTo(Installed.VERSION_CODE, versionCode))
@@ -89,7 +89,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAsList(String packageName, int versionCode) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .equalTo(Installed.VERSION_CODE, versionCode)
@@ -101,7 +101,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getInstalledAsList(String packageName) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .findAll()
@@ -113,7 +113,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getInstalled(String[] apps) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .in(Installed.PACKAGE_NAME, apps)
             .findAll()
@@ -133,7 +133,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAllAsList(String packageName) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .findAll()

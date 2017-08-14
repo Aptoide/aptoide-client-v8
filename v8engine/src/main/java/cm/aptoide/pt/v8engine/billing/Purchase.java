@@ -5,9 +5,13 @@
 
 package cm.aptoide.pt.v8engine.billing;
 
-import rx.Completable;
-
 public interface Purchase {
 
-  public Completable consume();
+  String getProductId();
+
+  boolean isCompleted();
+
+  boolean isPending();
+
+  boolean isFailed();
 }

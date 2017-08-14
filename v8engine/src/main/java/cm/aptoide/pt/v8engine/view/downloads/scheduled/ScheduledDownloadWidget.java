@@ -24,8 +24,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created
  */
-public class ScheduledDownloadWidget
-    extends Widget<ScheduledDownloadDisplayable> {
+public class ScheduledDownloadWidget extends Widget<ScheduledDownloadDisplayable> {
 
   private ImageView appIcon;
   private TextView appName;

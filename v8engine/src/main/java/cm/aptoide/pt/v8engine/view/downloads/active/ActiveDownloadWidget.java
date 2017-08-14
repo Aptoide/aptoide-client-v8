@@ -18,8 +18,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 7/18/16.
  */
-public class ActiveDownloadWidget
-    extends Widget<ActiveDownloadDisplayable> {
+public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 
   private TextView appName;
   private ProgressBar progressBar;

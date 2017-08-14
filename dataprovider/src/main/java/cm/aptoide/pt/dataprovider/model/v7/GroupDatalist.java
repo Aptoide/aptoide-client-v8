@@ -11,5 +11,5 @@ import lombok.EqualsAndHashCode;
  * Created by neuro on 22-04-2016.
  */
 @EqualsAndHashCode(callSuper = true) public class GroupDatalist
-    extends BaseV7EndlessDatalistResponse<Group> {
+    extends BaseV7EndlessDataListResponse<Group> {
 }

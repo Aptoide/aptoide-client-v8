@@ -2,52 +2,52 @@
 
   <!--Settings-->
 
-  <string name="settings_title_bar">Settings</string>
+  <string name="settings_title_settings">Settings</string>
 
   <string name="setting_general">General</string>
   <string name="settings_updates_filter_setting_title">Just show me stable app version updates</string>
-  <string name="settings_updates_filter_summary">Checking this, you won’t be notified of beta versions.</string>
+  <string name="settings_updates_filter_summary">Select this if you don\’t want notifications about beta versions.</string>
 
 
-  <string name="setting_general_download_rules">General Download Rules</string>
-  <string name="setting_wifi">WiFi</string>
+  <string name="setting_general_download_rules">Download Options</string>
+  <string name="setting_wifi">Wi-Fi</string>
   <string name="setting_mobile">Mobile 3G/4G</string>
 
 
-  <string name="setting_category_autoupdate">%s Updates</string>
-  <string name="setting_category_autoupdate_title">Get %s Update</string>
+  <string name="setting_category_autoupdate">%s updates</string>
+  <string name="setting_category_autoupdate_title">Update %s</string>
   <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
 
 
   <string name="setting_hwspecstitle">Hardware Specs</string>
-  <string name="setting_hwspecssum">Hardware Info about your phone</string>
-  <string name="setting_appfiltertitle">Filter Applications</string>
-  <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
+  <string name="setting_hwspecssum">Hardware info about your phone</string>
+  <string name="setting_appfiltertitle">Filter apps</string>
+  <string name="setting_appfiltersum">Don\'t show apps that are not compatible with this device</string>
 
 
   <string name="setting_mature_filtering">Adult Content</string>
   <string name="setting_dont_show_mature_content">Show mature content</string>
-  <string name="set_mature_pin_title">Set Adult Content pin</string>
-  <string name="set_mature_pin_summary">Set a Pin that will be required to unlock adult Content</string>
-  <string name="remove_mature_pin_title">Remove Adult Content pin</string>
-  <string name="remove_mature_pin_summary">Remove the Pin required to unlock adult Content</string>
+  <string name="set_mature_pin_title">Set adult content pin</string>
+  <string name="set_mature_pin_summary">Set a pin that will be required to unlock adult content</string>
+  <string name="remove_mature_pin_title">Remove adult content pin</string>
+  <string name="remove_mature_pin_summary">Remove the pin required to unlock adult content</string>
 
 
   <string name="setting_updates">Updates</string>
   <string name="settings_include_system_apps_title">Include system apps</string>
-  <string name="settings_include_system_apps_summary">Checking this, you will be notified of system apps (apps that were installed by the device\'s manufacturer) updates</string>
+  <string name="settings_include_system_apps_summary">Select this if you want notifications about system apps (apps that were installed by the device\'s manufacturer) updates</string>
 
 
   <string name="setting_notifications">Notifications</string>
   <string name="setting_notifications_sub_section_1">App updates</string>
-  <string name="setting_notifications_sub_sub_section_1">Show notifications for App updates</string>
+  <string name="setting_notifications_sub_sub_section_1">Show notifications for spp updates</string>
   <string name="setting_notifications_sub_section_2">Social notifications</string>
-  <string name="setting_notifications_sub_sub_section_2">Social notifications regarding campaigns and social timeline</string>
+  <string name="setting_notifications_sub_sub_section_2">Social notifications regarding campaigns and timeline</string>
 
 
-  <string name="setting_schdwntitle">Scheduled Downloads</string>
-  <string name="setting_schdwninstalltitle">Automatic Install</string>
-  <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a WiFi connection is present</string>
+  <string name="setting_schdwntitle">Scheduled downloads</string>
+  <string name="setting_schdwninstalltitle">Automatic install</string>
+  <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a Wi-Fi connection is present</string>
 
   <string name="setting_clear_memory">Storage</string>
   <string name="settings_clearcache_title">Clear Storage</string>
@@ -69,27 +69,27 @@
 
 
   <!--Dialog: general rules to download-->
-  <string name="general_downloads_dialog_only_mobile_message">"You chose to download only on Mobile 3G/4G. Do you want to change the settings?"</string>
-  <string name="general_downloads_dialog_only_wifi_message">"You chose to download only on WiFi. Do you want to change the settings?"</string>
-  <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Do you want to change the settings?</string>
+  <string name="general_downloads_dialog_only_mobile_message">You chose to download only on Mobile 3G/4G. Change settings?</string>
+  <string name="general_downloads_dialog_only_wifi_message">You chose to download only on Wi-Fi. Change settings?</string>
+  <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Change settings?</string>
 
   <!--Adult content dialogs-->
-  <string name="asksetadultpinmessage">Would you like to set a pin to unlock Adult content?</string>
+  <string name="asksetadultpinmessage">Would you like to set a pin to unlock adult content?</string>
   <string name="request_adult_pin">Insert pin to unlock</string>
-  <string name="adult_pin_wrong">Wrong pin, try again.</string>
+  <string name="adult_pin_wrong">Wrong pin. Try again</string>
   <string name="are_you_adult">Are you at least 21 years old?</string>
 
 
   <!--hardware specs dialog-->
-  <string name="setting_sdk_version">SDK Version</string>
-  <string name="setting_screen_size">Screen Size</string>
-  <string name="setting_esgl_version">ESGL Version</string>
+  <string name="setting_sdk_version">SDK version</string>
+  <string name="setting_screen_size">Screen size</string>
+  <string name="setting_esgl_version">ESGL version</string>
   <string name="screenCode">Screen code</string>
   <string name="cpuAbi">CPU</string>
 
   <!--Clear storage: dialog-->
   <string name="freed_space">%s freed</string>
-  <string name="storage_dialog_title">Clear Aptoide Storage</string>
+  <string name="storage_dialog_title">Clear Aptoide storage</string>
   <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
 
   <!--About dialog-->

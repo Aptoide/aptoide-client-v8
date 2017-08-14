@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import rx.Completable;
 
@@ -72,17 +74,56 @@ public class AndroidAccountDataMigration {
 
         return migrateAccountFromPreviousThan43().andThen(migrateAccountFrom43to59())
             .andThen(migrateAccountFromVersion59To60())
+            .andThen(cleanShareDialogShowPref())
             .doOnCompleted(() -> markMigrated());
       }
     });
   }
 
+  /**
+   * This method is responsible for cleaning a preference that allowing
+   * the share dialog on app install to show. This preference should be cleaned every time
+   * we upgrade to a new major version (X.X.0.0)
+   *
+   * @return
+   */
+  private Completable cleanShareDialogShowPref() {
+    String versionName = V8Engine.getConfiguration()
+        .getVersionName();
+    String oldVersionName =
+        ManagerPreferences.getPreviewDialogPrefVersionCleaned(defaultSharedPreferences);
+    if (!oldVersionName.equals(versionName)) {
+
+      if (getMajorIntFromVersionName(oldVersionName) < getMajorIntFromVersionName(versionName)) {
+
+        return Completable.defer(() -> Completable.fromCallable(() -> {
+          ManagerPreferences.setShowPreviewDialog(true, defaultSharedPreferences);
+          ManagerPreferences.setPreviewDialogPrefVersionCleaned(versionName,
+              defaultSharedPreferences);
+          return Completable.complete();
+        }));
+      }
+    }
+    return Completable.complete();
+  }
+
+  private int getMajorIntFromVersionName(String versionName) {
+    int res = 0;
+    if (versionName != null) {
+      String[] parts = versionName.split("\\.");
+      if (parts != null && parts.length > 1) {
+        try {
+          res = Integer.parseInt(parts[1]);
+        } catch (Exception e) {
+
+        }
+      }
+    }
+    return res;
+  }
+
   private Completable migrateAccountFromVersion59To60() {
     if (oldVersion >= 59) {
-      //String userRepo = defaultSharedPreferences.getString("userRepo", null);
-      //storeMetaProvider.getStore(userRepo, null, null).subscribe(getStoreMeta -> {
-      //
-      //}, Throwable::printStackTrace);
       return Completable.defer(() -> Completable.fromCallable(() -> {
         final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
         final Account oldAccount = accounts[0];

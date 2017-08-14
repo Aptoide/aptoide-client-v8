@@ -20,8 +20,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created on 11/05/16.
  */
-public class AppViewScreenshotsWidget
-    extends Widget<AppViewScreenshotsDisplayable> {
+public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayable> {
 
   private RecyclerView mediaList;
 

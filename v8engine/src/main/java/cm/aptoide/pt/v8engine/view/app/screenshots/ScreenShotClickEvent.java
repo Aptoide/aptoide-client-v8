@@ -20,7 +20,7 @@ public class ScreenShotClickEvent {
     this.uri = uri;
   }
 
-  public ArrayList<String> getImagesUris(){
+  public ArrayList<String> getImagesUris() {
     return imagesUris;
   }
 

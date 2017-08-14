@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = AppUpdateTimelineItem.class, name = "APP_UPDATE"),
     @JsonSubTypes.Type(value = RecommendationTimelineItem.class, name = "RECOMMENDATION"),
     @JsonSubTypes.Type(value = VideoTimelineItem.class, name = "VIDEO"),
-    @JsonSubTypes.Type(value = RecommendationTimelineItem.class, name = "SIMILAR"),
+    @JsonSubTypes.Type(value = SimilarTimelineItem.class, name = "SIMILAR"),
     @JsonSubTypes.Type(value = SocialArticleTimelineItem.class, name = "SOCIAL_ARTICLE"),
     @JsonSubTypes.Type(value = SocialVideoTimelineItem.class, name = "SOCIAL_VIDEO"),
     @JsonSubTypes.Type(value = SocialStoreLatestAppsTimelineItem.class, name = "SOCIAL_STORE"),
@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = AggregatedSocialVideoTimelineItem.class, name = "AGGREGATED_SOCIAL_VIDEO"),
     @JsonSubTypes.Type(value = AggregatedSocialStoreLatestAppsTimelineItem.class, name = "AGGREGATED_SOCIAL_STORE")
 }) public interface TimelineItem<T> {
+
+  Ab getAb();
 
   T getData();
 }
