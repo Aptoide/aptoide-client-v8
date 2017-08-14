@@ -19,9 +19,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,9 +32,28 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.app.AppBoughtReceiver;
+import cm.aptoide.pt.app.AppRepository;
+import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
+import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.billing.BillingIdResolver;
+import cm.aptoide.pt.billing.exception.BillingException;
+import cm.aptoide.pt.billing.product.PaidAppPurchase;
+import cm.aptoide.pt.billing.view.PaymentActivity;
+import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -53,48 +75,31 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.SimpleSubscriber;
-import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.InstallManager;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
-import cm.aptoide.pt.app.AppBoughtReceiver;
-import cm.aptoide.pt.app.AppRepository;
-import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
-import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.BillingIdResolver;
-import cm.aptoide.pt.billing.exception.BillingException;
-import cm.aptoide.pt.billing.product.PaidAppPurchase;
-import cm.aptoide.pt.billing.view.PaymentActivity;
-import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.util.StoreEnum;
 import cm.aptoide.pt.util.referrer.ReferrerUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewDescriptionDisplayable;
@@ -110,6 +115,7 @@ import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.install.remote.RemoteInstallDialog;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.view.share.ShareAppHelper;
 import cm.aptoide.pt.view.store.StoreFragment;
 import com.crashlytics.android.answers.Answers;
@@ -203,6 +209,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Getter private boolean suggestedShowing;
   private List<String> keywords;
   private BillingIdResolver billingIdResolver;
+  private PublishRelay<Void> installButtonClick;
+  private String storeAvatar;
+  private StoreRepository storeRepository;
+  private StoreUtilsProxy storeUtilsProxy;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -326,6 +336,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     downloadFactory = new DownloadFactory();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    storeRepository = RepositoryFactory.getStoreRepository(getContext());
+    installButtonClick = PublishRelay.create();
+    storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((V8Engine) getContext().getApplicationContext()
+                .getApplicationContext()).getDatabase(), Store.class)),
+        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class), httpClient,
+        WebService.getDefaultConverter(),
+        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -354,6 +375,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.bindViews(view);
     header = new AppViewHeader(view);
     setHasOptionsMenu(true);
+    accountManager.accountStatus()
+        .distinctUntilChanged()
+        .switchMap(account -> {
+          if (!account.isLoggedIn()) {
+            return handleFollowStorePopup();
+          } else {
+            return Observable.empty();
+          }
+        })
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   @Override public void onDestroyView() {
@@ -446,6 +480,51 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     // save download bar status
     // TODO: 04/08/16 save download bar status
+  }
+
+  private Observable<Void> handleFollowStorePopup() {
+    return getLifecycle().filter(lifecycleEvent -> lifecycleEvent.equals(LifecycleEvent.CREATE))
+        .flatMap(onViewCreated -> installButtonClick.flatMap(
+            click -> storeRepository.isSubscribed(storeName))
+            .filter(subscribed -> !subscribed)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(
+                storeNotSubscribed -> showFollowStoreDialog(getContext(), storeName, storeAvatar,
+                    StoreTheme.fromName(storeTheme))))
+        .map(__ -> null);
+  }
+
+  public void showFollowStoreDialog(Context context, String storeName, String storeUrl,
+      StoreTheme storeTheme) {
+    SpannableFactory spannableFactory = new SpannableFactory();
+    Spannable spannable = spannableFactory.createColorSpan(
+        context.getString(R.string.appview_message_follow_store_follow, storeName),
+        ContextCompat.getColor(context, storeTheme.getPrimaryColor()), storeName);
+    View view = LayoutInflater.from(context)
+        .inflate(R.layout.dialog_follow_store, null);
+    View header = view.findViewById(R.id.header_view);
+    header.setBackgroundColor(context.getResources()
+        .getColor(storeTheme.getPrimaryColor()));
+    ImageView storeAvatar = (ImageView) view.findViewById(R.id.store_avatar);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(storeUrl, storeAvatar);
+    TextView followText = (TextView) view.findViewById(R.id.follow_store_text);
+    followText.setText(spannable);
+    new AlertDialog.Builder(context).setView(view)
+        .setPositiveButton(R.string.yes,
+            (dialogInterface, i) -> storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+              if (getView() != null) {
+                ShowMessage.asSnack(getView(),
+                    AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                        getContext().getResources(), storeName));
+              }
+            }, err -> {
+              CrashReport.getInstance()
+                  .log(err);
+            }, accountManager))
+        .setNegativeButton(R.string.no, (dialogInterface, i) -> {
+        })
+        .show();
   }
 
   private boolean hasDescription(GetAppMeta.Media media) {
@@ -720,6 +799,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     packageName = app.getPackageName();
     storeName = app.getStore()
         .getName();
+    storeAvatar = app.getStore()
+        .getAvatar();
     storeTheme = app.getStore()
         .getAppearance()
         .getTheme();
@@ -780,7 +861,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
             installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())));
+                AppEventsLogger.newLogger(getContext().getApplicationContext())),
+            installButtonClick);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
