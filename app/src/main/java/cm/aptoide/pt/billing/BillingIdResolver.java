@@ -65,4 +65,12 @@ public class BillingIdResolver {
   public String resolveStoreName(String sellerId) {
     return sellerId.split(divider)[1];
   }
+
+  public List<String> resolveSkus(List<String> productIds) {
+    final List<String> skus = new ArrayList<>();
+    for (String productId : productIds) {
+      skus.add(resolveSku(productId));
+    }
+    return skus;
+  }
 }

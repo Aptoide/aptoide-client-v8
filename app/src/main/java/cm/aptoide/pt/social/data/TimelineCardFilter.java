@@ -35,7 +35,12 @@ public class TimelineCardFilter {
 
   private Observable<TimelineItem<TimelineCard>> filterInstalledRecommendation(
       TimelineItem<TimelineCard> timelineItem) {
-    String packageName = getPackageNameFrom(timelineItem);
+    final TimelineCard card = timelineItem.getData();
+    String packageName = null;
+    if (card instanceof Recommendation) {
+      packageName = ((Recommendation) card).getRecommendedApp()
+          .getPackageName();
+    }
     if (!TextUtils.isEmpty(packageName)) {
       return packageRepository.isPackageInstalled(packageName)
           .flatMapObservable(installed -> {
@@ -48,26 +53,18 @@ public class TimelineCardFilter {
     return Observable.just(timelineItem);
   }
 
-  private String getPackageNameFrom(TimelineItem<TimelineCard> timelineItem) {
-    final TimelineCard card = timelineItem.getData();
-    if (card instanceof Recommendation) {
-      return ((Recommendation) card).getRecommendedApp()
-          .getPackageName();
-    }
-    if (card instanceof AppUpdate) {
-      return ((AppUpdate) card).getPackageName();
-    }
-    return null;
-  }
-
   private Observable<TimelineItem<TimelineCard>> filterAlreadyDoneUpdates(
       TimelineItem<TimelineCard> timelineItem) {
-    String packageName = getPackageNameFrom(timelineItem);
+    final TimelineCard card = timelineItem.getData();
+    String packageName = null;
+    if (card instanceof AppUpdate) {
+      packageName = ((AppUpdate) card).getPackageName();
+    }
     if (!TextUtils.isEmpty(packageName)) {
       return packageRepository.getPackageVersionCode(packageName)
           .onErrorResumeNext(err -> Single.just(null))
           .flatMapObservable(versionCode -> {
-            if (versionCode != null && versionCode == ((AppUpdate) timelineItem).getFile()
+            if (versionCode != null && versionCode == ((AppUpdate) timelineItem.getData()).getFile()
                 .getVercode()) {
               return Observable.empty();
             }
@@ -91,7 +88,8 @@ public class TimelineCardFilter {
     }
 
     @Override public Boolean call(TimelineItem<TimelineCard> card) {
-      return cardIds.add(card.getData()
+      return card.getData()
+          .getCardId() == null || cardIds.add(card.getData()
           .getCardId());
     }
   }

@@ -255,17 +255,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
-    StoreAnalytics storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
-
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
             new PermissionManager(), (PermissionService) getContext(), installManager,
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
-            storeContext, getContext().getResources(), getFragmentNavigator(), storeAnalytics),
-        savedInstanceState);
+            storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -443,16 +438,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     shareDialog = shareDialogFactory.createDialogFor(post, account);
     shareDialog.setup(post);
 
-    shareDialog.cancels()
-        .doOnNext(__ -> shareDialog.dismiss())
-        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe();
+    handleSharePreviewAnswer();
+  }
 
-    shareDialog.shares()
-        .doOnNext(event -> sharePostPublishSubject.onNext(event))
-        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe();
-    shareDialog.show();
+  @Override public void showSharePreview(Post originalPost, Post card, Account account) {
+    shareDialog = shareDialogFactory.createDialogFor(originalPost, account);
+    shareDialog.setupMinimalPost(originalPost, card);
+
+    handleSharePreviewAnswer();
   }
 
   @Override public void showShareSuccessMessage() {
@@ -504,6 +497,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void hidePostProgressIndicator() {
     postIndicator = false;
     hideProgressIndicator();
+  }
+
+  private void handleSharePreviewAnswer() {
+    shareDialog.cancels()
+        .doOnNext(__ -> shareDialog.dismiss())
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe();
+
+    shareDialog.shares()
+        .doOnNext(event -> sharePostPublishSubject.onNext(event))
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe();
+    shareDialog.show();
   }
 
   private void hideProgressIndicator() {

@@ -24,6 +24,7 @@ import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.social.data.Media;
+import cm.aptoide.pt.social.data.MinimalPostTouchEvent;
 import cm.aptoide.pt.social.data.PopularApp;
 import cm.aptoide.pt.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.social.data.Post;
@@ -78,7 +79,6 @@ public class TimelinePresenter implements Presenter {
   private final StoreContext storeContext;
   private final Resources resources;
   private final FragmentNavigator fragmentNavigator;
-  private final StoreAnalytics storeAnalytics;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
@@ -87,7 +87,7 @@ public class TimelinePresenter implements Presenter {
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
       Long storeId, StoreContext storeContext, Resources resources,
-      FragmentNavigator fragmentNavigator, StoreAnalytics storeAnalytics) {
+      FragmentNavigator fragmentNavigator) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -105,7 +105,6 @@ public class TimelinePresenter implements Presenter {
     this.storeContext = storeContext;
     this.resources = resources;
     this.fragmentNavigator = fragmentNavigator;
-    this.storeAnalytics = storeAnalytics;
   }
 
   @Override public void present() {
@@ -328,7 +327,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.HEADER))
-        .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnMediaHeaderEvent(cardTouchEvent))
+        .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnPostHeaderEvent(cardTouchEvent))
         .doOnNext(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()))
         .doOnNext(cardTouchEvent -> {
@@ -344,18 +343,12 @@ public class TimelinePresenter implements Presenter {
             navigateToStoreTimeline(socialHeaderCardTouchEvent);
           } else if (postType.equals(CardType.STORE)) {
             StoreLatestApps card = ((StoreLatestApps) post);
-            storeAnalytics.sendStoreOpenEvent("Timeline",
-                ((StoreCardTouchEvent) cardTouchEvent).getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (postType.equals(CardType.UPDATE)) {
             AppUpdate card = ((AppUpdate) post);
-            storeAnalytics.sendStoreOpenEvent("Timeline",
-                ((StoreCardTouchEvent) cardTouchEvent).getStoreName());
             timelineNavigation.navigateToStoreHome(card.getStoreName(), card.getStoreTheme());
           } else if (postType.equals(CardType.POPULAR_APP)) {
             PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
-            storeAnalytics.sendStoreOpenEvent("Timeline",
-                ((StoreCardTouchEvent) cardTouchEvent).getStoreName());
             timelineNavigation.navigateToStoreTimeline(popularAppTouchEvent.getUserId(),
                 popularAppTouchEvent.getStoreTheme());
           }
@@ -374,7 +367,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.BODY))
-            .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnMediaBodyEvent(cardTouchEvent))
+            .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnPostBodyEvent(cardTouchEvent))
             .doOnNext(cardTouchEvent -> timeline.knockWithSixpackCredentials(
                 cardTouchEvent.getCard()
                     .getAbUrl()))
@@ -405,8 +398,6 @@ public class TimelinePresenter implements Presenter {
                         followStoreCardTouchEvent.getStoreName());
                   } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
                     StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
-                    storeAnalytics.sendStoreOpenEvent("Timeline",
-                        ((StoreCardTouchEvent) cardTouchEvent).getStoreName());
                     timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
                         storeCardTouchEvent.getStoreTheme());
                   }
@@ -670,6 +661,11 @@ public class TimelinePresenter implements Presenter {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE));
                 }
+                if (cardTouchEvent instanceof MinimalPostTouchEvent) {
+                  return Completable.fromAction(() -> view.showSharePreview(
+                      ((MinimalPostTouchEvent) cardTouchEvent).getOriginalPost(),
+                      (cardTouchEvent).getCard(), account));
+                }
                 return Completable.fromAction(
                     () -> view.showSharePreview(cardTouchEvent.getCard(), account));
               }
@@ -713,7 +709,8 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
             .flatMapSingle(shareEvent -> timeline.sharePost(shareEvent.getPost())
-                .doOnSuccess(cardId -> view.showShareSuccessMessage())))
+                .doOnSuccess(cardId -> view.showShareSuccessMessage()))
+            .retry())
         .doOnNext(cardid -> timelineAnalytics.sendSocialCardPreviewActionEvent(
             TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -850,11 +847,9 @@ public class TimelinePresenter implements Presenter {
 
   private void navigateToStoreTimeline(SocialHeaderCardTouchEvent socialHeaderCardTouchEvent) {
     if (socialHeaderCardTouchEvent.getStoreName() != null) {
-      storeAnalytics.sendStoreOpenEvent("Timeline", socialHeaderCardTouchEvent.getStoreName());
       timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getStoreName(),
           socialHeaderCardTouchEvent.getStoreTheme());
     } else {
-      storeAnalytics.sendStoreOpenEvent("Timeline", "unknown");
       timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getUserId(),
           socialHeaderCardTouchEvent.getStoreTheme());
     }
