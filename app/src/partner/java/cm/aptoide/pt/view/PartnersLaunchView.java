@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,8 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.remotebootconfig.BootConfigServices;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
@@ -45,6 +48,7 @@ public class PartnersLaunchView extends ActivityView {
     loadSplashScreen();
 
     if (savedInstanceState == null) {
+      disableWizard();
       getBootConfigRequest(this);
     }
   }
@@ -54,6 +58,17 @@ public class PartnersLaunchView extends ActivityView {
    */
   @Override public void onBackPressed() {
     //nothing
+  }
+
+  /**
+   * disable vanilla wizard
+   */
+  private void disableWizard() {
+    final SharedPreferences sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    final SharedPreferences securePreferences =
+        SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
+    SecurePreferences.setWizardAvailable(false, securePreferences);
   }
 
   /**
