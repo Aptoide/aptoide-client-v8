@@ -3,7 +3,6 @@ package cm.aptoide.pt.account;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 import cm.aptoide.pt.V8Engine;
@@ -285,18 +284,6 @@ public class AndroidAccountDataMigration {
   }
 
   private void generateOldVersion() {
-    int oldVersion = SQLiteDatabaseHelper.DATABASE_VERSION;
-    try {
-      SQLiteDatabase db =
-          SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READONLY, null);
-      oldVersion = db.getVersion();
-      if (db.isOpen()) {
-        db.close();
-      }
-    } catch (Exception ex) {
-      // db does not exist. it's a fresh install
-    }
-    ;
-    this.oldVersion = oldVersion;
+    oldVersion = SQLiteDatabaseHelper.OLD_DATABASE_VERSION;
   }
 }
