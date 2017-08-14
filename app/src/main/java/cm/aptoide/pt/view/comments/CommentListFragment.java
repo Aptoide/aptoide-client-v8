@@ -224,7 +224,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     url = args.getString(URL_VAL);
     commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
     showCommentInputDialogOnFirstRun = args.getBoolean(SHOW_INPUT_DIALOG_FIRST_RUN);
-    storeAnalytics = (StoreAnalytics) args.getSerializable(STORE_ANALYTICS);
+    storeAnalyticsAction = args.getString(STORE_ANALYTICS_ACTION);
 
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {

@@ -43,6 +43,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private StoreAnalytics storeAnalytics;
 
   public static LatestReviewsFragment newInstance(long storeId) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -61,6 +62,9 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -105,9 +109,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
             .getList();
         displayables = new LinkedList<>();
         for (final FullReview review : reviews) {
-          displayables.add(new RowReviewDisplayable(review,
-              new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-                  Analytics.getInstance())));
+          displayables.add(new RowReviewDisplayable(review, storeAnalytics));
         }
         addDisplayables(displayables);
       };

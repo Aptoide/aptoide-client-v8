@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -34,6 +35,7 @@ import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -78,6 +80,9 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
@@ -105,7 +110,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
           return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
               getContext(), accountManager, storeUtilsProxy,
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-              getContext().getResources(), installedRepository);
+              getContext().getResources(), installedRepository, storeAnalytics);
         })
         .toList()
         .first();

@@ -54,7 +54,6 @@ public class StoreAnalytics {
         createStoreTabInteractFlurryDataMap(action, storeAppsNumber, storeFollowers)));
   }
 
-  //// TODO: 19/07/17 missing timeline
   public void sendStoreOpenEvent(String source, String storeName) {
     analytics.sendEvent(
         new FacebookEvent(facebook, STORES_OPEN, createStoreOpenFacebookBundle(source, storeName)));
