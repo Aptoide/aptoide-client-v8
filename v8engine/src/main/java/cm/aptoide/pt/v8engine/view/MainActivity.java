@@ -40,6 +40,7 @@ import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
+import com.appsee.Appsee;
 import com.jakewharton.rxrelay.PublishRelay;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -62,6 +63,12 @@ public class MainActivity extends TabNavigatorActivity
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
+
+    //AppSee initialization
+    Appsee.start(getString(R.string.APPSEE_API_KEY));
+    Appsee.setUserId(((V8Engine) getApplicationContext()).getIdsRepository()
+        .getUniqueIdentifier());
+
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
     final AptoideAccountManager accountManager =

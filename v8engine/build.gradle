@@ -49,6 +49,7 @@ android {
     buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
     buildConfigField "int", "IN_BILLING_SUPPORTED_API_VERSION",
         project.IN_BILLING_SUPPORTED_API_VERSION
+    resValue "string", "APPSEE_API_KEY", "\"" + project.APPSEE_API_KEY + "\""
 
 
     multiDexEnabled true
@@ -250,4 +251,6 @@ dependencies {
 
   compile "com.braintreepayments.api:braintree:${BRAINTREE_VERSION}"
   compile "com.braintreepayments:card-form:${BRAINTREE_CARD_FORM_VERSION}"
+
+  compile 'com.appsee:appsee-android:+'
 }

@@ -41,6 +41,7 @@ import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import cm.aptoide.pt.v8engine.view.store.StorePagerAdapter;
+import com.appsee.Appsee;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
@@ -238,6 +239,7 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
+      Appsee.startScreen("Drawer");
     });
   }
 

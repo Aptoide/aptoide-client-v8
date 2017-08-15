@@ -64,4 +64,12 @@
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
     **[] $VALUES;
     public *;
+
+
+ #AppSee
+ -keep class com.appsee.** { *; }
+ -dontwarn com.appsee.**
+ -keep class android.support.** { *; }
+ -keep interface android.support.** { *; }
+ -keepattributes SourceFile,LineNumberTable
 }
