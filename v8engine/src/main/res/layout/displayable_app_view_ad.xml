@@ -42,8 +42,8 @@
         android:paddingTop="3dp"
         android:text="@string/all_title_ad"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_medium_small"
         android:textStyle="bold"
+        style="@style/Aptoide.TextView.Regular.XXS"
         />
 
     <LinearLayout

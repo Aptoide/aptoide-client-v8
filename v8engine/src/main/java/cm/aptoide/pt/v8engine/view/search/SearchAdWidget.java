@@ -48,8 +48,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
     name.setText(minimalAd.getName());
     final FragmentActivity context = getContext();
-    sponsored.setText((context.getResources()
-        .getText(R.string.all_title_ad) + ""));
+    sponsored.setText(context.getString(R.string.all_title_ad));
     ImageLoader.with(context)
         .load(minimalAd.getIconPath(), icon);
 
