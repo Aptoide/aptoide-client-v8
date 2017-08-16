@@ -77,6 +77,7 @@
   <string name="see_less">See less</string>
   <string name="get_latest">Get latest version</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
+  <string name="appview_message_follow_store_follow">Want to follow %s store and get more updates?</string>
 
 
   <!-- AppView developer area-->

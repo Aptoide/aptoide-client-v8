@@ -45,7 +45,6 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import java.util.ArrayList;

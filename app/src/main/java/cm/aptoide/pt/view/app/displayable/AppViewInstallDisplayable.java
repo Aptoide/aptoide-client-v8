@@ -42,6 +42,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private TimelineAnalytics timelineAnalytics;
   @Getter private AppViewFragment appViewFragment;
   private DownloadCompleteAnalytics analytics;
+  private PublishRelay<Void> installButtonClick;
 
   public AppViewInstallDisplayable() {
     super();
@@ -52,7 +53,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
       PublishRelay installAppRelay, DownloadFactory downloadFactory,
-      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics) {
+      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
+      PublishRelay<Void> installButtonClick) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -77,16 +79,18 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.timelineAnalytics = timelineAnalytics;
     this.appViewFragment = appViewFragment;
     this.analytics = analytics;
+    this.installButtonClick = installButtonClick;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
-      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics) {
+      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
+      PublishRelay<Void> installButtonClick) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
         installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory,
-        appViewFragment, analytics);
+        appViewFragment, analytics, installButtonClick);
   }
 
   public void startInstallationProcess() {
@@ -124,6 +128,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public void installAppClicked() {
+    installButtonClick.call(null);
     GetAppMeta.App app = getPojo().getNodes()
         .getMeta()
         .getData();

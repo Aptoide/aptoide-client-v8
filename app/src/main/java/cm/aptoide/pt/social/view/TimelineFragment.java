@@ -60,7 +60,6 @@ import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.navigator.TabNavigator;
