@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.abtesting;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.logger.Logger;
 import com.seatgeek.sixpack.Alternative;
 import com.seatgeek.sixpack.Sixpack;
 import com.seatgeek.sixpack.SixpackBuilder;

@@ -1,11 +1,11 @@
 package cm.aptoide.pt.view.configuration.implementation;
 
 import android.support.v4.app.Fragment;
+import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
@@ -294,8 +294,9 @@ public class FragmentProviderImpl implements FragmentProvider {
     return CommentListFragment.newInstance(commentType, elementId);
   }
 
-  @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
-    return CommentListFragment.newInstanceUrl(commentType, url);
+  @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
+      String storeAnalyticsAction) {
+    return CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction);
   }
 
   @Override

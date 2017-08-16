@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.view.search;
 
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**

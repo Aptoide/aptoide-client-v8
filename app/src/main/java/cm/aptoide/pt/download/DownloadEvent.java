@@ -1,11 +1,11 @@
 package cm.aptoide.pt.download;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.crashreports.CrashReport;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

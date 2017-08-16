@@ -23,5 +23,4 @@ public interface BraintreeCreditCardView extends View {
   Observable<Void> errorDismissedEvent();
 
   Observable<Void> cancelEvent();
-
 }

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.comments;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListReviews;
@@ -8,7 +9,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.comments.ConcreteItemCommentAdder;

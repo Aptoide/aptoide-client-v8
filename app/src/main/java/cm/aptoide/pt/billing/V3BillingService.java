@@ -7,6 +7,13 @@ package cm.aptoide.pt.billing;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import cm.aptoide.pt.PackageRepository;
+import cm.aptoide.pt.billing.exception.ProductNotFoundException;
+import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
+import cm.aptoide.pt.billing.product.InAppProduct;
+import cm.aptoide.pt.billing.product.InAppPurchase;
+import cm.aptoide.pt.billing.product.PaidAppProduct;
+import cm.aptoide.pt.billing.product.ProductFactory;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
@@ -20,13 +27,6 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.PackageRepository;
-import cm.aptoide.pt.billing.exception.ProductNotFoundException;
-import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
-import cm.aptoide.pt.billing.product.InAppProduct;
-import cm.aptoide.pt.billing.product.InAppPurchase;
-import cm.aptoide.pt.billing.product.PaidAppProduct;
-import cm.aptoide.pt.billing.product.ProductFactory;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -131,8 +131,7 @@ public class V3BillingService implements BillingService {
   }
 
   @Override public Single<List<Purchase>> getPurchases(String sellerId) {
-    return getServerInAppPurchase(apiVersion, idResolver.resolvePackageName(sellerId),
-        true).first()
+    return getServerInAppPurchase(apiVersion, idResolver.resolvePackageName(sellerId), true).first()
         .toSingle()
         .map(purchaseInformation -> purchaseMapper.map(purchaseInformation))
         .onErrorResumeNext(throwable -> {
@@ -151,12 +150,10 @@ public class V3BillingService implements BillingService {
         .toSingle();
   }
 
-  @Override
-  public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
-    return getServerSKUs(apiVersion, idResolver.resolvePackageName(sellerId), productIds,
-        false).flatMap(
-        response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId),
-            response));
+  @Override public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
+    return getServerSKUs(apiVersion, idResolver.resolvePackageName(sellerId),
+        idResolver.resolveSkus(productIds), false).flatMap(
+        response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId), response));
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
@@ -194,8 +191,7 @@ public class V3BillingService implements BillingService {
   private Single<Product> getInAppProduct(String sellerId, String productId) {
     return getServerSKUs(apiVersion, idResolver.resolvePackageName(sellerId),
         Collections.singletonList(idResolver.resolveSku(productId)), false).flatMap(
-        response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId),
-            response))
+        response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId), response))
         .flatMap(products -> {
           if (products.isEmpty()) {
             return Single.error(new ProductNotFoundException(

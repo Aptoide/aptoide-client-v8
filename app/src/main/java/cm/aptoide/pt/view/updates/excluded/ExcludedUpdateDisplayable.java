@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.view.updates.excluded;
 
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**

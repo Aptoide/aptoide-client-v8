@@ -18,9 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.R;
 import lombok.Getter;
 
 // FIXME: 27/2/2017 convert this into a class that extends "BaseDialog"

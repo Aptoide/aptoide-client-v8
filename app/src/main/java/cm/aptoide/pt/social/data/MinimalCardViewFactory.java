@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.publisher.Poster;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
@@ -138,7 +138,7 @@ public class MinimalCardViewFactory {
     commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(originalPost, CardTouchEvent.Type.SHARE)));
+        new MinimalPostTouchEvent(originalPost, post, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW)));

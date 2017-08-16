@@ -4,13 +4,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import cm.aptoide.accountmanager.AccountManagerInterceptorFactory;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.PackageRepository;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.PackageRepository;
 import cm.aptoide.pt.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.networking.IdsRepository;
@@ -18,6 +17,7 @@ import cm.aptoide.pt.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
+import cm.aptoide.pt.utils.q.QManager;
 import okhttp3.RequestBody;
 
 public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerInterceptorFactory {

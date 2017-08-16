@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.cache;
 
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.IOException;
 import okhttp3.Request;
 import okio.Buffer;

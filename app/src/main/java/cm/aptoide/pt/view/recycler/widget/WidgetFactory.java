@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
 

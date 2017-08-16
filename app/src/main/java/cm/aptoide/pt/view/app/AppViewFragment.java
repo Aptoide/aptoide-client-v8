@@ -100,6 +100,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewDescriptionDisplayable;
@@ -203,6 +204,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private StoreAnalytics storeAnalytics;
   private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
@@ -336,6 +338,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     downloadFactory = new DownloadFactory();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
     storeRepository = RepositoryFactory.getStoreRepository(getContext());
     installButtonClick = PublishRelay.create();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
@@ -864,7 +869,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
                 AppEventsLogger.newLogger(getContext().getApplicationContext())),
             installButtonClick);
     displayables.add(installDisplayable);
-    displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
+    displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
             installedRepository));

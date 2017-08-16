@@ -2,8 +2,8 @@ package cm.aptoide.pt.view.account;
 
 import android.content.Context;
 import android.content.res.Resources;
-import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.account.exception.InvalidImageException;
 import rx.Observable;
 

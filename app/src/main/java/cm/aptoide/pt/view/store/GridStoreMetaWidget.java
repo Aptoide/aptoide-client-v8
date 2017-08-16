@@ -13,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -20,16 +24,12 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.account.store.ManageStoreFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
@@ -266,6 +266,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       GridStoreMetaDisplayable displayable) {
     return aVoid -> {
       if (storeWrapper.isStoreSubscribed()) {
+        displayable.getStoreAnalytics()
+            .sendStoreInteractEvent("Unfollow Store", "Home", storeWrapper.getStore()
+                .getName());
         storeWrapper.setStoreSubscribed(false);
         if (accountManager.isLoggedIn()) {
           accountManager.unsubscribeStore(displayable.getStoreName(),
@@ -281,6 +284,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                 getContext().getResources(), storeWrapper.getStore()
                     .getName()));
       } else {
+        displayable.getStoreAnalytics()
+            .sendStoreInteractEvent("Follow Store", "Home", storeWrapper.getStore()
+                .getName());
         storeWrapper.setStoreSubscribed(true);
         storeUtilsProxy.subscribeStore(storeWrapper.getStore()
             .getName(), subscribedStoreMeta -> {

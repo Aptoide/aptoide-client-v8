@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.view.app.displayable;
 
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**
