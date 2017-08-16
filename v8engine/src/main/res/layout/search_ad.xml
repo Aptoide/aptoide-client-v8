@@ -113,7 +113,7 @@
         android:lines="1"
         android:singleLine="true"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_small"
+        style="@style/Aptoide.TextView.Regular.XXS"
         />
 
   </FrameLayout>
