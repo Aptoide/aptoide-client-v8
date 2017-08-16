@@ -63,11 +63,10 @@ public class AndroidAccountDataMigration {
         return Completable.complete();
       }
       synchronized (MIGRATION_LOCK) {
+        generateOldVersion();
         if (isMigrated()) {
           return Completable.complete();
         }
-
-        generateOldVersion();
 
         Log.i(TAG, String.format("Migrating from version %d to %d", oldVersion, currentVersion));
 
@@ -122,7 +121,7 @@ public class AndroidAccountDataMigration {
   }
 
   private Completable migrateAccountFromVersion59To60() {
-    if (oldVersion >= 59) {
+    if (oldVersion <= 59) {
       return Completable.defer(() -> Completable.fromCallable(() -> {
         final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
         final Account oldAccount = accounts[0];
@@ -201,6 +200,9 @@ public class AndroidAccountDataMigration {
 
   //v8
   private Completable migrateAccountFrom43to59() {
+    if (oldVersion < 43 || oldVersion >= 59) {
+      return Completable.complete();
+    }
     return Completable.defer(() -> Completable.fromCallable(() -> {
 
       //
