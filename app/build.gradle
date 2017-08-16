@@ -20,7 +20,9 @@ retrolambda {
 }
 
 ext {
+  packageName = ""
   searchSuggestionProviderAuthority = ""
+  storeName = "apps"
 }
 
 android {
@@ -33,7 +35,6 @@ android {
 
   // keep the "applicationId" var in third place for the jenkins build script hack
   defaultConfig {
-    applicationId "${APPLICATION_ID}"
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
 
@@ -70,21 +71,9 @@ android {
     buildConfigField "int", "IN_BILLING_SUPPORTED_API_VERSION",
         project.IN_BILLING_SUPPORTED_API_VERSION
 
-    searchSuggestionProviderAuthority = "cm.aptoide.pt.provider.SearchSuggestionProvider"
-
-    manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
-                            suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-                            storeSuggestionProviderAuthority: "cm.aptoide.pt.provider.StoreSearchSuggestionProvider",
-                            currentApplicationId            : "cm.aptoide.pt",
-                            fabricApiKey                    : project.FABRIC_API_KEY]
-
     multiDexEnabled true
-    resValue "string", "authenticator_account_type", APPLICATION_ID
     versionCode project.PROD_VERSION_CODE.toInteger()
     versionName "8.4.0.0"
-    resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
-    resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
-    buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
@@ -103,20 +92,35 @@ android {
     }
   }
 
+  flavorDimensions "product", "mode"
   productFlavors {
 
+    vanilla {
+      dimension "product"
+      packageName = "${VANILLA_APPLICATION_ID}"
+    }
+
+    partner {
+      dimension "product"
+      packageName = "${PARTNER_APPLICATION_ID}" + "." + storeName
+    }
+
     internal {
+      dimension "mode"
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
+      applicationId packageName
       applicationIdSuffix ".internal"
-      searchSuggestionProviderAuthority =
-          "cm.aptoide.pt.provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
 
       versionName "8.4.0." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
-      resValue "string", "authenticator_account_type", APPLICATION_ID + ".internal"
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.internal"
-      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
+      searchSuggestionProviderAuthority =
+          "cm.aptoide.pt.provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
+
+      resValue "string", "authenticator_account_type", applicationId + ".internal"
+      resValue "string", "content_authority", applicationId + ".StubProvider.internal"
+      resValue "string", "suggested_searchable_authority",
+          "${searchSuggestionProviderAuthority}"
       buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
@@ -128,37 +132,80 @@ android {
       buildConfigField "String", "TWITTER_SECRET",
           "\"" + project.TWITTER_SECRET_INTERNAL + "\""
       buildConfigField "String", "CONTENT_AUTHORITY",
-          "\"" + APPLICATION_ID + ".StubProvider.internal\""
+          "\"" + applicationId + ".StubProvider.internal\""
 
-      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.internal",
+      manifestPlaceholders = [toolboxProviderAuthority        : applicationId +
+          ".StubProvider.internal",
                               suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-                              storeSuggestionProviderAuthority: "cm.aptoide.pt.provider.StoreSearchSuggestionProvider.internal",
-                              currentApplicationId            : "cm.aptoide.pt.internal"]
+                              storeSuggestionProviderAuthority: applicationId +
+                                  ".provider.StoreSearchSuggestionProvider.internal",
+                              currentApplicationId            : applicationId + ".internal",
+                              fabricApiKey                    : project.FABRIC_API_KEY]
     }
 
     dev {
+      dimension "mode"
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
+      applicationId packageName
       applicationIdSuffix ".dev"
-      searchSuggestionProviderAuthority =
-          "cm.aptoide.pt.provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
 
       versionName "8.4.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
 
-      resValue "string", "authenticator_account_type", APPLICATION_ID + ".dev"
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.dev"
-      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
-      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider.dev\""
+      searchSuggestionProviderAuthority =
+          "cm.aptoide.pt.provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
 
-      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.dev",
+      resValue "string", "authenticator_account_type", applicationId + ".dev"
+      resValue "string", "content_authority", applicationId + ".StubProvider.dev"
+      resValue "string", "suggested_searchable_authority",
+          "${searchSuggestionProviderAuthority}"
+      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + applicationId + ".StubProvider.dev\""
+
+      manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider.dev",
                               suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-                              storeSuggestionProviderAuthority: "cm.aptoide.pt.provider.StoreSearchSuggestionProvider.dev",
-                              currentApplicationId            : "cm.aptoide.pt.dev"]
+                              storeSuggestionProviderAuthority: applicationId +
+                                  ".provider.StoreSearchSuggestionProvider.dev",
+                              currentApplicationId            : applicationId + ".dev",
+                              fabricApiKey                    : project.FABRIC_API_KEY]
     }
 
-    prod {}
+    prod {
+      dimension "mode"
+      applicationId packageName
 
-    leak {}
+      searchSuggestionProviderAuthority = "cm.aptoide.pt.provider.SearchSuggestionProvider"
+
+      manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider",
+                              suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
+                              storeSuggestionProviderAuthority: applicationId +
+                                  ".provider.StoreSearchSuggestionProvider",
+                              currentApplicationId            : applicationId,
+                              fabricApiKey                    : project.FABRIC_API_KEY]
+
+      resValue "string", "authenticator_account_type", applicationId
+      resValue "string", "content_authority", applicationId + ".StubProvider"
+      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
+      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + applicationId + ".StubProvider\""
+    }
+
+    leak {
+      dimension "mode"
+      applicationId packageName
+
+      searchSuggestionProviderAuthority = "cm.aptoide.pt.provider.SearchSuggestionProvider"
+
+      manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider",
+                              suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
+                              storeSuggestionProviderAuthority: applicationId +
+                                  ".provider.StoreSearchSuggestionProvider",
+                              currentApplicationId            : applicationId,
+                              fabricApiKey                    : project.FABRIC_API_KEY]
+
+      resValue "string", "authenticator_account_type", applicationId
+      resValue "string", "content_authority", applicationId + ".StubProvider"
+      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
+      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + applicationId + ".StubProvider\""
+    }
   }
 
   buildTypes {
@@ -206,14 +253,14 @@ android {
 
   applicationVariants.all { variant ->
     variant.outputs.each { output ->
-      def project = "vanilla"
       def SEP = "_"
-      def flavor = variant.productFlavors[0].name
+      def dimension = variant.productFlavors[0].name
+      def flavor = variant.productFlavors[1].name
       def buildType = variant.variantData.variantConfiguration.buildType.name
       def versionName = variant.versionName
       def versionCode = variant.versionCode
 
-      def newApkName = project + SEP +
+      def newApkName = dimension + SEP +
           flavor +
           SEP +
           buildType +
