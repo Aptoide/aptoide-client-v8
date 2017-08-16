@@ -2,21 +2,17 @@ package cm.aptoide.pt.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.VanillaConfiguration;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.BootConfigServices;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
@@ -45,7 +41,6 @@ public class PartnersLaunchView extends ActivityView {
     loadSplashScreen();
 
     if (savedInstanceState == null) {
-      disableWizard();
       getBootConfigRequest(this);
     }
   }
@@ -55,17 +50,6 @@ public class PartnersLaunchView extends ActivityView {
    */
   @Override public void onBackPressed() {
     //nothing
-  }
-
-  /**
-   * disable vanilla wizard
-   */
-  private void disableWizard() {
-    final SharedPreferences sharedPreferences =
-        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
-    final SharedPreferences securePreferences =
-        SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
-    SecurePreferences.setWizardAvailable(false, securePreferences);
   }
 
   /**
@@ -79,8 +63,7 @@ public class PartnersLaunchView extends ActivityView {
         .isEnable();
     if (usesSplashScreen) {
       setContentView(R.layout.partners_launch);
-      setTheme(Application.getConfiguration()
-          .getDefaultThemeRes());
+      setTheme(Application.getConfiguration().getDefaultThemeRes());
       String url;
       if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
         url = ((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
@@ -95,8 +78,7 @@ public class PartnersLaunchView extends ActivityView {
             .getSplash()
             .getPortrait();
       }
-      ImageLoader.with(this)
-          .load(url, (ImageView) findViewById(R.id.splashscreen));
+      ImageLoader.with(this).load(url, (ImageView) findViewById(R.id.splashscreen));
     }
   }
 
@@ -109,21 +91,20 @@ public class PartnersLaunchView extends ActivityView {
         + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
         + "/api/7/client/boot/")
         .addConverterFactory(GsonConverterFactory.create())
-        .client(((PartnerApplication) context.getApplicationContext()).getDefaultClient())
+        .client(((AptoideApplication) context.getApplicationContext()).getDefaultClient())
         .build();
     Call<RemoteBootConfig> call = retrofit.create(BootConfigServices.class)
-        .getRemoteBootConfig(Application.getConfiguration()
-            .getAppId(), Application.getConfiguration()
-            .getVerticalDimension(), Application.getConfiguration()
-            .getPartnerId(), String.valueOf(BuildConfig.VERSION_CODE));
+        .getRemoteBootConfig(Application.getConfiguration().getAppId(),
+            Application.getConfiguration().getVerticalDimension(),
+            Application.getConfiguration().getPartnerId(),
+            String.valueOf(BuildConfig.VERSION_CODE));
     call.enqueue(new Callback<RemoteBootConfig>() {
       @Override
       public void onResponse(Call<RemoteBootConfig> call, Response<RemoteBootConfig> response) {
         if (response.body() != null) {
           BootConfigJSONUtils.saveRemoteBootConfig(context, response.body());
           ((VanillaConfiguration) Application.getConfiguration()).setBootConfig(
-              BootConfigJSONUtils.getSavedRemoteBootConfig(context)
-                  .getData());
+              BootConfigJSONUtils.getSavedRemoteBootConfig(context).getData());
         }
         handleSplashScreenTimer();
       }
