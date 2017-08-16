@@ -12,7 +12,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.spotandshare.connection.ConnectionManager;
 import cm.aptoide.pt.spotandshare.connection.HotspotManager;
@@ -20,6 +19,7 @@ import cm.aptoide.pt.spotandshare.presenter.ShareAptoidePresenter;
 import cm.aptoide.pt.spotandshare.presenter.ShareAptoideView;
 import cm.aptoide.pt.spotandshare.shareaptoide.ShareApkSandbox;
 import cm.aptoide.pt.spotandshare.shareaptoide.ShareAptoideManager;
+import cm.aptoide.pt.utils.design.ShowMessage;
 
 public class ShareAptoideActivity extends SpotAndShareActivityView implements ShareAptoideView {
 

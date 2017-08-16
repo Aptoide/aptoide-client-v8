@@ -3,12 +3,12 @@ package cm.aptoide.pt.timeline;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.social.data.AggregatedRecommendation;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.social.data.AppUpdateCardTouchEvent;
@@ -401,7 +401,7 @@ public class TimelineAnalytics {
         createEvent(OPEN_STORE, createStoreAppData(cardType, source, packageName, store)));
   }
 
-  public void sendClickOnMediaHeaderEvent(CardTouchEvent cardTouchEvent) {
+  public void sendClickOnPostHeaderEvent(CardTouchEvent cardTouchEvent) {
     final Post post = cardTouchEvent.getCard();
     final CardType postType = post.getType();
 
@@ -458,7 +458,7 @@ public class TimelineAnalytics {
     }
   }
 
-  public void sendClickOnMediaBodyEvent(CardTouchEvent cardTouchEvent) {
+  public void sendClickOnPostBodyEvent(CardTouchEvent cardTouchEvent) {
     final Post post = cardTouchEvent.getCard();
     final CardType postType = post.getType();
 
@@ -488,7 +488,7 @@ public class TimelineAnalytics {
                 .name(), media.getMediaTitle(), media.getPublisherName(),
             Analytics.AppsTimeline.OPEN_VIDEO, "(blank)");
       }
-    } else if (postType.equals(CardType.RECOMMENDATION)) {
+    } else if (postType.equals(CardType.RECOMMENDATION) || postType.equals(CardType.SIMILAR)) {
       Recommendation card = (Recommendation) post;
       Analytics.AppsTimeline.clickOnCard(card.getType()
               .name(), card.getPackageName(), Analytics.AppsTimeline.BLANK, card.getPublisherName(),
@@ -553,8 +553,10 @@ public class TimelineAnalytics {
       Analytics.AppsTimeline.clickOnCard(postType.name(), card.getPackageName(),
           Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
           Analytics.AppsTimeline.OPEN_APP_VIEW);
+      sendOpenAppEvent(card.getType()
+          .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
     } else if (postType.equals(CardType.SOCIAL_RECOMMENDATION) || postType.equals(
-        CardType.SOCIAL_INSTALL)) {
+        CardType.SOCIAL_INSTALL) || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)) {
       RatedRecommendation card = (RatedRecommendation) post;
       Analytics.AppsTimeline.clickOnCard(postType.name(), card.getPackageName(),
           Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
@@ -563,11 +565,15 @@ public class TimelineAnalytics {
               .name(), Analytics.AppsTimeline.OPEN_APP_VIEW, "(blank)", card.getPackageName(),
           card.getPoster()
               .getPrimaryName());
+      sendOpenAppEvent(card.getType()
+          .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
     } else if (postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
       AggregatedRecommendation card = (AggregatedRecommendation) post;
       Analytics.AppsTimeline.clickOnCard(postType.name(), card.getPackageName(),
           Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
           Analytics.AppsTimeline.OPEN_APP_VIEW);
+      sendOpenAppEvent(card.getType()
+          .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
     }
   }
 }

@@ -2,6 +2,8 @@ package cm.aptoide.pt.timeline.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
@@ -9,8 +11,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;

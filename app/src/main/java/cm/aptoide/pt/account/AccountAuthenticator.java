@@ -14,8 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 

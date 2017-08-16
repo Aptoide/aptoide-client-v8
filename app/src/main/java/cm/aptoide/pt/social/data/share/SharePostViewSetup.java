@@ -96,17 +96,19 @@ public class SharePostViewSetup {
     TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
     ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
     ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
+    TextView date = (TextView) view.findViewById(R.id.card_date);
 
-    final String accountStoreName = account.getStore()
-        .getName();
-    final String accountStoreAvatar = account.getStore()
-        .getAvatar();
+    final String accountUserName = account.getNickname();
+    final String accountUserAvatar = account.getAvatar();
 
-    storeName.setText(accountStoreName);
+    storeName.setText(accountUserName);
+    storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
+
+    date.setText(dateCalculator.getTimeSinceDate(context, new Date()));
 
     storeAvatar.setVisibility(View.VISIBLE);
     ImageLoader.with(context)
-        .loadWithShadowCircleTransform(accountStoreAvatar, storeAvatar);
+        .loadWithShadowCircleTransform(accountUserAvatar, storeAvatar);
 
     userAvatar.setVisibility(View.INVISIBLE);
 

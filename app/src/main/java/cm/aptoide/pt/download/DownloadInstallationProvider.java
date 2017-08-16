@@ -6,6 +6,7 @@
 package cm.aptoide.pt.download;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -13,7 +14,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.install.installer.InstallationProvider;

@@ -5,11 +5,11 @@
 
 package cm.aptoide.pt.view.downloads.scheduled;
 
-import cm.aptoide.pt.database.accessors.ScheduledAccessor;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.database.accessors.ScheduledAccessor;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.view.recycler.displayable.SelectableDisplayablePojo;
 import lombok.Getter;
 import rx.Observable;

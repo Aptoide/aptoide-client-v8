@@ -3,8 +3,8 @@ package cm.aptoide.pt.view.recycler.widget;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 
 /**

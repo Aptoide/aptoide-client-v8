@@ -1,9 +1,9 @@
 package cm.aptoide.pt.social.data;
 
+import cm.aptoide.pt.Install;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
-import cm.aptoide.pt.Install;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

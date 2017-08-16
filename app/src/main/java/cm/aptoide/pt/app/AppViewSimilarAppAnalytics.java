@@ -1,9 +1,9 @@
 package cm.aptoide.pt.app;
 
 import android.os.Bundle;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
+import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 
 /**

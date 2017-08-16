@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.view.recycler.displayable;
 
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.R;
 import lombok.Getter;
 
 /**

@@ -8,6 +8,9 @@ package cm.aptoide.pt.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.app.AppRepository;
+import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -18,9 +21,6 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.app.AppRepository;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
@@ -77,15 +77,13 @@ public final class RepositoryFactory {
             Installed.class));
   }
 
-  public static cm.aptoide.pt.repository.StoreRepository getStoreRepository(
-      Context context) {
+  public static cm.aptoide.pt.repository.StoreRepository getStoreRepository(Context context) {
     return new cm.aptoide.pt.repository.StoreRepository(
         AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
             Store.class));
   }
 
-  public static cm.aptoide.pt.repository.DownloadRepository getDownloadRepository(
-      Context context) {
+  public static cm.aptoide.pt.repository.DownloadRepository getDownloadRepository(Context context) {
     return new cm.aptoide.pt.repository.DownloadRepository(
         AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
             Download.class));

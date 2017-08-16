@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.InstallManager;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -25,6 +24,7 @@ import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.social.data.Media;
+import cm.aptoide.pt.social.data.MinimalPostTouchEvent;
 import cm.aptoide.pt.social.data.PopularApp;
 import cm.aptoide.pt.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.social.data.Post;
@@ -44,6 +44,8 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.post.PostFragment;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
@@ -325,7 +327,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
             .equals(CardTouchEvent.Type.HEADER))
-        .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnMediaHeaderEvent(cardTouchEvent))
+        .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnPostHeaderEvent(cardTouchEvent))
         .doOnNext(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()))
         .doOnNext(cardTouchEvent -> {
@@ -365,7 +367,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.BODY))
-            .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnMediaBodyEvent(cardTouchEvent))
+            .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnPostBodyEvent(cardTouchEvent))
             .doOnNext(cardTouchEvent -> timeline.knockWithSixpackCredentials(
                 cardTouchEvent.getCard()
                     .getAbUrl()))
@@ -659,6 +661,11 @@ public class TimelinePresenter implements Presenter {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE));
                 }
+                if (cardTouchEvent instanceof MinimalPostTouchEvent) {
+                  return Completable.fromAction(() -> view.showSharePreview(
+                      ((MinimalPostTouchEvent) cardTouchEvent).getOriginalPost(),
+                      (cardTouchEvent).getCard(), account));
+                }
                 return Completable.fromAction(
                     () -> view.showSharePreview(cardTouchEvent.getCard(), account));
               }
@@ -702,7 +709,8 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
             .flatMapSingle(shareEvent -> timeline.sharePost(shareEvent.getPost())
-                .doOnSuccess(cardId -> view.showShareSuccessMessage())))
+                .doOnSuccess(cardId -> view.showShareSuccessMessage()))
+            .retry())
         .doOnNext(cardid -> timelineAnalytics.sendSocialCardPreviewActionEvent(
             TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

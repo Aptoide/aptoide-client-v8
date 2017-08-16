@@ -7,21 +7,21 @@ package cm.aptoide.pt.install;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.RollbackInstaller;
 import cm.aptoide.pt.install.rollback.RollbackFactory;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.utils.FileUtils;
 
 /**
  * Created by marcelobenites on 9/29/16.

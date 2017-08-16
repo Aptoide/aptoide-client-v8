@@ -1,6 +1,8 @@
 package cm.aptoide.pt.social.data;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.Install;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
@@ -34,8 +36,6 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Video;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.VideoTimelineItem;
-import cm.aptoide.pt.Install;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.social.data.publisher.MediaPublisher;

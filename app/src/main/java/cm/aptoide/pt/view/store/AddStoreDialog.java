@@ -21,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -30,21 +34,20 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.search.websocket.StoreAutoCompleteWebSocket;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.search.StoreSearchActivity;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
@@ -81,6 +84,7 @@ public class AddStoreDialog extends BaseDialog {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private StoreAnalytics storeAnalytics;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -103,10 +107,12 @@ public class AddStoreDialog extends BaseDialog {
             .getApplicationContext()).getDatabase(), Store.class));
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
     }
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -118,6 +124,7 @@ public class AddStoreDialog extends BaseDialog {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(click -> {
           addStoreAction();
+          storeAnalytics.sendStoreTabInteractEvent("Add Store");
         });
     RxView.clicks(topStoresButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

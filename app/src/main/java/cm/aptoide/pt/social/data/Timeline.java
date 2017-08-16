@@ -1,12 +1,12 @@
 package cm.aptoide.pt.social.data;
 
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import java.io.IOException;
@@ -60,9 +60,9 @@ public class Timeline {
 
   public Observable<Install> updateApp(CardTouchEvent cardTouchEvent) {
     AppUpdate card = (AppUpdate) cardTouchEvent.getCard();
-    return installManager.install(downloadFactory.create(
-        (cm.aptoide.pt.social.data.AppUpdate) cardTouchEvent.getCard(),
-        Download.ACTION_UPDATE))
+    return installManager.install(
+        downloadFactory.create((cm.aptoide.pt.social.data.AppUpdate) cardTouchEvent.getCard(),
+            Download.ACTION_UPDATE))
         .andThen(installManager.getInstall(card.getFile()
             .getMd5sum(), card.getPackageName(), card.getFile()
             .getVercode()));

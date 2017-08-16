@@ -1,7 +1,7 @@
 package cm.aptoide.pt.timeline.view.displayable;
 
-import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 
 /**

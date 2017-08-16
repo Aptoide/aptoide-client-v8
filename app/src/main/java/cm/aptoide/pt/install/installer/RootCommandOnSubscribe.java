@@ -1,13 +1,13 @@
 package cm.aptoide.pt.install.installer;
 
+import cm.aptoide.pt.install.InstallerAnalytics;
+import cm.aptoide.pt.install.RootCommandTimeoutException;
+import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.root.exceptions.RootDeniedException;
 import cm.aptoide.pt.root.execution.Command;
 import cm.aptoide.pt.root.execution.Shell;
-import cm.aptoide.pt.install.InstallerAnalytics;
-import cm.aptoide.pt.install.RootCommandTimeoutException;
-import cm.aptoide.pt.install.exception.InstallationException;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import rx.Observable;

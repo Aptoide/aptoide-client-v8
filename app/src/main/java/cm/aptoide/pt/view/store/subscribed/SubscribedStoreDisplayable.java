@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.view.store.subscribed;
 
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

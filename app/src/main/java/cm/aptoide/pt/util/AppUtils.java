@@ -11,10 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.permissions.ApkPermission;
 import cm.aptoide.pt.permissions.ApkPermissionGroup;
-import cm.aptoide.pt.R;
 import java.util.ArrayList;
 import java.util.List;
 

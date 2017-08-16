@@ -10,8 +10,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.annotation.Partners;
 
 /**
  * Created by neuro on 06-05-2016.

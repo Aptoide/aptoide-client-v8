@@ -140,8 +140,7 @@ public class Billing {
         .toCompletable();
   }
 
-  public Completable selectPaymentMethod(int paymentMethodId, String sellerId,
-      String productId) {
+  public Completable selectPaymentMethod(int paymentMethodId, String sellerId, String productId) {
     return getPaymentMethod(paymentMethodId, sellerId, productId).flatMapCompletable(
         paymentMethod -> paymentMethodSelector.selectPaymentMethod(paymentMethod));
   }
