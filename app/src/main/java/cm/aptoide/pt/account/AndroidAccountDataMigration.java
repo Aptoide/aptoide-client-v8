@@ -3,7 +3,6 @@ package cm.aptoide.pt.account;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 import cm.aptoide.pt.V8Engine;
@@ -64,11 +63,10 @@ public class AndroidAccountDataMigration {
         return Completable.complete();
       }
       synchronized (MIGRATION_LOCK) {
+        generateOldVersion();
         if (isMigrated()) {
           return Completable.complete();
         }
-
-        generateOldVersion();
 
         Log.i(TAG, String.format("Migrating from version %d to %d", oldVersion, currentVersion));
 
@@ -123,7 +121,7 @@ public class AndroidAccountDataMigration {
   }
 
   private Completable migrateAccountFromVersion59To60() {
-    if (oldVersion >= 59) {
+    if (oldVersion <= 59) {
       return Completable.defer(() -> Completable.fromCallable(() -> {
         final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
         final Account oldAccount = accounts[0];
@@ -202,6 +200,9 @@ public class AndroidAccountDataMigration {
 
   //v8
   private Completable migrateAccountFrom43to59() {
+    if (oldVersion < 43 || oldVersion >= 59) {
+      return Completable.complete();
+    }
     return Completable.defer(() -> Completable.fromCallable(() -> {
 
       //
@@ -285,18 +286,6 @@ public class AndroidAccountDataMigration {
   }
 
   private void generateOldVersion() {
-    int oldVersion = SQLiteDatabaseHelper.DATABASE_VERSION;
-    try {
-      SQLiteDatabase db =
-          SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READONLY, null);
-      oldVersion = db.getVersion();
-      if (db.isOpen()) {
-        db.close();
-      }
-    } catch (Exception ex) {
-      // db does not exist. it's a fresh install
-    }
-    ;
-    this.oldVersion = oldVersion;
+    oldVersion = SQLiteDatabaseHelper.OLD_DATABASE_VERSION;
   }
 }
