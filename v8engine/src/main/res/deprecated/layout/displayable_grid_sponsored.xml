@@ -56,9 +56,37 @@
           />
 
       <TextView
+          android:id="@+id/downloads"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:maxLines="1"
+          android:paddingEnd="3dp"
+          android:paddingLeft="3dp"
+          android:paddingRight="3dp"
+          android:paddingStart="3dp"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="12sp"
+          />
+
+
+      <RatingBar
+          android:id="@+id/ratingbar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="5dp"
+          android:layout_marginStart="5dp"
+          android:layout_marginTop="5dp"
+          android:clickable="false"
+          android:isIndicator="true"
+          android:numStars="5"
+          style="?attr/gridItemRatingBar"
+          />
+
+      <TextView
           android:id="@+id/sponsored"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:gravity="end"
           android:maxLines="1"
           android:paddingEnd="3dp"
           android:paddingLeft="3dp"
