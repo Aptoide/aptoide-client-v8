@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ad_icon"
+    android:paddingBottom="3dp"
+    android:paddingEnd="6dp"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:paddingStart="6dp"
+    android:paddingTop="3dp"
+    android:text="@string/all_title_ad"
+    android:textColor="@color/white"
+    android:textStyle="bold"
+    tools:showIn="@layout/displayable_app_view_ad"
+    style="@style/Aptoide.TextView.Regular.XXS"
+    />
