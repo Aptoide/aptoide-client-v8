@@ -20,6 +20,7 @@ retrolambda {
 }
 
 ext {
+  packageName = ""
   searchSuggestionProviderAuthority = ""
   storeName = "apps"
 }
@@ -96,57 +97,30 @@ android {
 
     vanilla {
       dimension "product"
-      applicationId "${VANILLA_APPLICATION_ID}"
-
-      searchSuggestionProviderAuthority = applicationId + ".provider.SearchSuggestionProvider"
-
-      manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider",
-                              suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-                              storeSuggestionProviderAuthority: applicationId +
-                                  ".provider.StoreSearchSuggestionProvider",
-                              currentApplicationId            : applicationId,
-                              fabricApiKey                    : project.FABRIC_API_KEY]
-
-      resValue "string", "authenticator_account_type", applicationId
-      resValue "string", "content_authority", applicationId + ".StubProvider"
-      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
-      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + applicationId + ".StubProvider\""
-
+      packageName = "${VANILLA_APPLICATION_ID}"
     }
 
     partner {
       dimension "product"
-      applicationId "${PARTNER_APPLICATION_ID}" + "." + storeName
-
-      searchSuggestionProviderAuthority = applicationId + ".provider.SearchSuggestionProvider"
-
-      manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider",
-                              suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-                              storeSuggestionProviderAuthority: applicationId +
-                                  ".provider.StoreSearchSuggestionProvider",
-                              currentApplicationId            : applicationId,
-                              fabricApiKey                    : project.FABRIC_API_KEY]
-
-      resValue "string", "authenticator_account_type", applicationId
-      resValue "string", "content_authority", applicationId + ".StubProvider"
-      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
-      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + applicationId + ".StubProvider\""
-
+      packageName = "${PARTNER_APPLICATION_ID}" + "." + storeName
     }
 
     internal {
       dimension "mode"
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
+      applicationId packageName
       applicationIdSuffix ".internal"
-      searchSuggestionProviderAuthority =
-          applicationId + ".provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
 
       versionName "8.4.0." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
+      searchSuggestionProviderAuthority =
+          "cm.aptoide.pt.provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
+
       resValue "string", "authenticator_account_type", applicationId + ".internal"
       resValue "string", "content_authority", applicationId + ".StubProvider.internal"
-      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
+      resValue "string", "suggested_searchable_authority",
+          "${searchSuggestionProviderAuthority}"
       buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
@@ -165,37 +139,72 @@ android {
                               suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
                               storeSuggestionProviderAuthority: applicationId +
                                   ".provider.StoreSearchSuggestionProvider.internal",
-                              currentApplicationId            : applicationId + ".internal"]
+                              currentApplicationId            : applicationId + ".internal",
+                              fabricApiKey                    : project.FABRIC_API_KEY]
     }
 
     dev {
       dimension "mode"
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
+      applicationId packageName
       applicationIdSuffix ".dev"
-      searchSuggestionProviderAuthority =
-          applicationId + ".provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
 
       versionName "8.4.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
 
+      searchSuggestionProviderAuthority =
+          "cm.aptoide.pt.provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
+
       resValue "string", "authenticator_account_type", applicationId + ".dev"
       resValue "string", "content_authority", applicationId + ".StubProvider.dev"
-      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
+      resValue "string", "suggested_searchable_authority",
+          "${searchSuggestionProviderAuthority}"
       buildConfigField "String", "CONTENT_AUTHORITY", "\"" + applicationId + ".StubProvider.dev\""
 
       manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider.dev",
                               suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
                               storeSuggestionProviderAuthority: applicationId +
                                   ".provider.StoreSearchSuggestionProvider.dev",
-                              currentApplicationId            : applicationId + ".dev"]
+                              currentApplicationId            : applicationId + ".dev",
+                              fabricApiKey                    : project.FABRIC_API_KEY]
     }
 
     prod {
       dimension "mode"
+      applicationId packageName
+
+      searchSuggestionProviderAuthority = "cm.aptoide.pt.provider.SearchSuggestionProvider"
+
+      manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider",
+                              suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
+                              storeSuggestionProviderAuthority: applicationId +
+                                  ".provider.StoreSearchSuggestionProvider",
+                              currentApplicationId            : applicationId,
+                              fabricApiKey                    : project.FABRIC_API_KEY]
+
+      resValue "string", "authenticator_account_type", applicationId
+      resValue "string", "content_authority", applicationId + ".StubProvider"
+      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
+      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + applicationId + ".StubProvider\""
     }
 
     leak {
       dimension "mode"
+      applicationId packageName
+
+      searchSuggestionProviderAuthority = "cm.aptoide.pt.provider.SearchSuggestionProvider"
+
+      manifestPlaceholders = [toolboxProviderAuthority        : applicationId + ".StubProvider",
+                              suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
+                              storeSuggestionProviderAuthority: applicationId +
+                                  ".provider.StoreSearchSuggestionProvider",
+                              currentApplicationId            : applicationId,
+                              fabricApiKey                    : project.FABRIC_API_KEY]
+
+      resValue "string", "authenticator_account_type", applicationId
+      resValue "string", "content_authority", applicationId + ".StubProvider"
+      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
+      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + applicationId + ".StubProvider\""
     }
   }
 
