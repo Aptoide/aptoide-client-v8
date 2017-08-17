@@ -378,6 +378,10 @@ dependencies {
 
   compile "com.braintreepayments.api:braintree:${BRAINTREE_VERSION}"
   compile "com.braintreepayments:card-form:${BRAINTREE_CARD_FORM_VERSION}"
+
+  compile('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
+    transitive = true
+  }
 }
 
 String getDate() {

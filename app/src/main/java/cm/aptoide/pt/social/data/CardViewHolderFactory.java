@@ -18,6 +18,7 @@ import cm.aptoide.pt.social.view.viewholder.SocialPostRecommendationViewHolder;
 import cm.aptoide.pt.social.view.viewholder.SocialRecommendationViewHolder;
 import cm.aptoide.pt.social.view.viewholder.SocialStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.StoreLatestAppsViewHolder;
+import cm.aptoide.pt.social.view.viewholder.TimelineAdPostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineLoginPostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineStatsViewHolder;
 import cm.aptoide.pt.util.DateCalculator;
@@ -121,6 +122,10 @@ public class CardViewHolderFactory {
       case LOGIN:
         return new TimelineLoginPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
+      case AD:
+        return new TimelineAdPostViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_native_ad_item, parent, false), cardTouchEventPublishSubject,
+            new TimelineAdsRepository(parent.getContext()));
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }
