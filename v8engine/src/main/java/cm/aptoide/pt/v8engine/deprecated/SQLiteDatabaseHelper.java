@@ -41,9 +41,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     sharedPreferences = ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences();
     securePreferences = SecurePreferencesImplementation.getInstance(context.getApplicationContext(),
         sharedPreferences);
-
-    Logger.w(TAG,
-        "SQLiteDatabaseHelper() sharedPreferences is null: " + (sharedPreferences == null));
   }
 
   @Override public void onCreate(SQLiteDatabase db) {

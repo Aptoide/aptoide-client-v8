@@ -52,6 +52,7 @@ public class AndroidAccountDataMigration {
     this.currentVersion = currentVersion;
     this.databasePath = databasePath;
     this.accountType = accountType;
+    this.oldVersion = -1;
   }
 
   public Completable migrate() {
@@ -121,27 +122,7 @@ public class AndroidAccountDataMigration {
   }
 
   private boolean isMigrated() {
-    return oldVersion == currentVersion;
-  }
-
-  private Completable migrateAccountFromVersion59To60() {
-    if (oldVersion < 60) {
-      Log.w(TAG, "migrateAccountFromVersion59To60");
-      return Completable.defer(() -> Completable.fromCallable(() -> {
-        final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
-        final Account oldAccount = accounts[0];
-
-        for (String key : NEW_STORE_MIGRATION_KEYS) {
-          if (key.equals("account_store_download_count") || key.equals("account_store_id")) {
-            accountManager.setUserData(oldAccount, key, "0");
-          } else {
-            accountManager.setUserData(oldAccount, key, "");
-          }
-        }
-        return Completable.complete();
-      }));
-    }
-    return Completable.complete();
+    return oldVersion <= 0 || oldVersion == currentVersion;
   }
 
   //V7
@@ -257,6 +238,26 @@ public class AndroidAccountDataMigration {
         cleanKeysFromPreferences(MIGRATION_KEYS, secureSharedPreferences);
 
         Log.i(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 succeeded");
+        return Completable.complete();
+      }));
+    }
+    return Completable.complete();
+  }
+
+  private Completable migrateAccountFromVersion59To60() {
+    if (oldVersion < 60) {
+      Log.w(TAG, "migrateAccountFromVersion59To60");
+      return Completable.defer(() -> Completable.fromCallable(() -> {
+        final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
+        final Account oldAccount = accounts[0];
+
+        for (String key : NEW_STORE_MIGRATION_KEYS) {
+          if (key.equals("account_store_download_count") || key.equals("account_store_id")) {
+            accountManager.setUserData(oldAccount, key, "0");
+          } else {
+            accountManager.setUserData(oldAccount, key, "");
+          }
+        }
         return Completable.complete();
       }));
     }
