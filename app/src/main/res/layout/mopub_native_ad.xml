@@ -55,21 +55,13 @@
         style="@style/Aptoide.TextView.Regular.XS.Grey"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_alignEnd="@+id/card_custom_view_line_separator"
         android:layout_alignRight="@+id/card_custom_view_line_separator"
         android:layout_marginTop="@dimen/appstimeline_card_icon"
-        android:background="@drawable/ad_icon"
-        android:paddingBottom="3dp"
-        android:paddingEnd="6dp"
-        android:paddingStart="6dp"
-        android:paddingTop="3dp"
-        android:text="@string/all_title_ad"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_medium_small"
-        android:textStyle="bold"
+        android:src="@drawable/appstimeline_recommendation_compass_icon"
         />
 
     <View
