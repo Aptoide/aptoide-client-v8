@@ -21,7 +21,7 @@ public class TimelineAdsRepository {
 
   public void init(MoPubNative.MoPubNativeNetworkListener moPubNativeNetworkListener) {
     MoPubNative moPubNative =
-        new MoPubNative(context, "76a3fefaced247959582d2d2df6f4757", moPubNativeNetworkListener);
+        new MoPubNative(context, "348c3591e04b423a8ba73118e456ea35", moPubNativeNetworkListener);
 
     ViewBinder viewBinder =
         new ViewBinder.Builder(R.layout.mopub_native_ad).mainImageId(R.id.timeline_ad_image)

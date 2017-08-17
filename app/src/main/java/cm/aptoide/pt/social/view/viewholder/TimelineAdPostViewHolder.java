@@ -23,6 +23,7 @@ public class TimelineAdPostViewHolder extends PostViewHolder
   private final LinearLayout cardLayout;
   private final ProgressBar adLoading;
   private final TimelineAdsRepository timelineAdsRepository;
+  private NativeAdErrorEvent nativeAdErrorEvent;
 
   public TimelineAdPostViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
@@ -34,10 +35,11 @@ public class TimelineAdPostViewHolder extends PostViewHolder
     this.timelineAdsRepository = timelineAdsRepository;
   }
 
-  @Override public void setPost(Post card, int position) {
+  @Override public void setPost(Post post, int position) {
     this.cardLayout.setVisibility(View.VISIBLE);
     this.adLoading.setVisibility(View.VISIBLE);
     this.timelineAdsRepository.init(this);
+    this.nativeAdErrorEvent = new NativeAdErrorEvent(post, CardTouchEvent.Type.ERROR, position);
   }
 
   @Override public void onNativeLoad(NativeAd nativeAd) {
@@ -52,7 +54,8 @@ public class TimelineAdPostViewHolder extends PostViewHolder
 
   @Override public void onNativeFail(NativeErrorCode nativeErrorCode) {
     cardLayout.setVisibility(View.GONE);
+    cardTouchEventPublishSubject.onNext(nativeAdErrorEvent);
     Log.d(this.getClass()
-        .getCanonicalName(), "TimelineAdsRepository.onNativeFail");
+        .getCanonicalName(), "TimelineAdsRepository.onNativeFail: " + nativeErrorCode);
   }
 }
