@@ -22,20 +22,22 @@ public class TimelineAdPostViewHolder extends PostViewHolder
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final LinearLayout cardLayout;
   private final ProgressBar adLoading;
+  private final TimelineAdsRepository timelineAdsRepository;
 
   public TimelineAdPostViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       TimelineAdsRepository timelineAdsRepository) {
     super(view);
-    timelineAdsRepository.init(this);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.cardLayout = (LinearLayout) view.findViewById(R.id.card_layout);
     this.adLoading = (ProgressBar) view.findViewById(R.id.timeline_ad_loading);
+    this.timelineAdsRepository = timelineAdsRepository;
   }
 
   @Override public void setPost(Post card, int position) {
-    cardLayout.setVisibility(View.VISIBLE);
-    adLoading.setVisibility(View.VISIBLE);
+    this.cardLayout.setVisibility(View.VISIBLE);
+    this.adLoading.setVisibility(View.VISIBLE);
+    this.timelineAdsRepository.init(this);
   }
 
   @Override public void onNativeLoad(NativeAd nativeAd) {
