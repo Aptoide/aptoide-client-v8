@@ -59,6 +59,7 @@
           android:id="@+id/downloads"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:ellipsize="end"
           android:maxLines="1"
           android:paddingEnd="3dp"
           android:paddingLeft="3dp"
