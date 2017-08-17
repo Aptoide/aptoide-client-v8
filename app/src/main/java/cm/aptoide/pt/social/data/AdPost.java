@@ -6,7 +6,7 @@ package cm.aptoide.pt.social.data;
 
 public class AdPost extends DummyPost {
   @Override public String getCardId() {
-    return null;
+    return CardType.AD.name();
   }
 
   @Override public CardType getType() {
