@@ -11,6 +11,14 @@
       android:layout_height="96dp"
       android:layout_centerVertical="true"
       android:layout_margin="8dp"
+      android:src="@color/activity_payment_green"
+      />
+  <include
+      layout="@layout/ad_badge_layout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignBottom="@id/icon"
+      android:layout_alignStart="@+id/icon"
       />
 
   <LinearLayout
@@ -99,22 +107,6 @@
       android:layout_marginEnd="10dp"
       android:layout_marginRight="10dp"
       >
-
-    <TextView
-        android:id="@+id/sponsored_label"
-        android:layout_width="100dp"
-        android:layout_height="25dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/custom_sponsored_label"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:lines="1"
-        android:singleLine="true"
-        android:textColor="@color/white"
-        style="@style/Aptoide.TextView.Regular.XXS"
-        />
 
   </FrameLayout>
 
