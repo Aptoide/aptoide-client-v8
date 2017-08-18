@@ -20,7 +20,7 @@ import rx.functions.Action1;
 public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
 
   @Override protected V7<ListApps, ? extends Endless> buildRequest(boolean refresh, String url) {
-    return requestFactory.newListAppsRequest(url);
+    return requestFactoryCdnPool.newListAppsRequest(url);
   }
 
   @Override protected Action1<ListApps> buildAction() {

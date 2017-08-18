@@ -39,7 +39,7 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
             .getApplicationContext()).getDatabase(), Store.class));
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     final OkHttpClient httpClient =
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
@@ -51,7 +51,7 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
-    return requestFactory.newGetRecommendedStores(url);
+    return requestFactoryCdnPool.newGetRecommendedStores(url);
   }
 
   @Override protected Action1<ListStores> buildAction() {

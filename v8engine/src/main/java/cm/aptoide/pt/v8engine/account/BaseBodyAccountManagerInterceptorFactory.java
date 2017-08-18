@@ -13,6 +13,7 @@ import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.PackageRepository;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
+import cm.aptoide.pt.v8engine.networking.Cdn;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
@@ -57,7 +58,7 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   @Override public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV7(idsRepository, accountManager,
         new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
-        aptoidePackage, qManager, "pool", sharedPreferences, resources, packageName,
+        aptoidePackage, qManager, Cdn.POOL, sharedPreferences, resources, packageName,
         packageRepository);
   }
 
@@ -65,7 +66,7 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   public BodyInterceptor<BaseBody> createUserInfoV7(AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV7(idsRepository, accountManager,
         new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
-        aptoidePackage, qManager, "web", sharedPreferences, resources, packageName,
+        aptoidePackage, qManager, Cdn.WEB, sharedPreferences, resources, packageName,
         packageRepository);
   }
 
@@ -73,7 +74,7 @@ public class BaseBodyAccountManagerInterceptorFactory implements AccountManagerI
   public BodyInterceptor<BaseBody> createAdultContentV7(AptoideAccountManager accountManager,
       boolean adultContentEnabled) {
     return new BaseBodyInterceptorV7(aptoideMd5sum, aptoidePackage, idsRepository, accountManager,
-        new AdultContent(accountManager, preferences, securePreferences), qManager, "pool",
+        new AdultContent(accountManager, preferences, securePreferences), qManager, Cdn.POOL,
         adultContentEnabled, sharedPreferences, resources, packageName, packageRepository);
   }
 
