@@ -18,10 +18,10 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     Observable<GetStore> getStoreObservable;
     if (name == Event.Name.getUser) {
-      getStoreObservable = requestFactory.newGetUser(url)
+      getStoreObservable = requestFactoryCdnPool.newGetUser(url)
           .observe(refresh);
     } else {
-      getStoreObservable = requestFactory.newStore(url)
+      getStoreObservable = requestFactoryCdnPool.newStore(url)
           .observe(refresh);
     }
     return getStoreObservable.observeOn(Schedulers.io())

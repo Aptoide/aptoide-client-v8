@@ -68,7 +68,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();

@@ -205,7 +205,7 @@ public class PostFragment extends FragmentView implements PostView {
 
     final PostRemoteAccessor postRemoteAccessor =
         new PostRemoteAccessor(v8Engine.getDefaultSharedPreferences(),
-            v8Engine.getBaseBodyInterceptorV7(), v8Engine.getDefaultClient(),
+            v8Engine.getBaseBodyInterceptorV7Pool(), v8Engine.getDefaultClient(),
             WebService.getDefaultConverter(), v8Engine.getTokenInvalidator());
 
     setUpToolbar();
