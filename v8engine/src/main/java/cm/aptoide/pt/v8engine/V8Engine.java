@@ -880,8 +880,9 @@ public abstract class V8Engine extends Application {
 
   public Database getDatabase() {
     if (database == null) {
+      Realm.init(this);
       final RealmConfiguration realmConfiguration =
-          new RealmConfiguration.Builder(this).name(BuildConfig.REALM_FILE_NAME)
+          new RealmConfiguration.Builder().name(BuildConfig.REALM_FILE_NAME)
               .schemaVersion(BuildConfig.REALM_SCHEMA_VERSION)
               .migration(new RealmToRealmDatabaseMigration())
               .build();
