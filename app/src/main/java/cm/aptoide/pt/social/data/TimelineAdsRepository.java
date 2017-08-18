@@ -1,6 +1,7 @@
 package cm.aptoide.pt.social.data;
 
 import android.content.Context;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import com.mopub.nativeads.MoPubNative;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
@@ -21,7 +22,7 @@ public class TimelineAdsRepository {
 
   public void init(MoPubNative.MoPubNativeNetworkListener moPubNativeNetworkListener) {
     MoPubNative moPubNative =
-        new MoPubNative(context, "348c3591e04b423a8ba73118e456ea35", moPubNativeNetworkListener);
+        new MoPubNative(context, BuildConfig.MOPUB_NATIVE_AD_UNIT_ID, moPubNativeNetworkListener);
 
     ViewBinder viewBinder =
         new ViewBinder.Builder(R.layout.mopub_native_ad).mainImageId(R.id.timeline_ad_image)
