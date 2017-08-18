@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.view.account.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.v8engine.view.leak.LeakFragment;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.search.SearchPagerTabFragment;
 import cm.aptoide.pt.v8engine.view.store.GetStoreFragment;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
@@ -88,6 +89,7 @@ public abstract class FragmentView extends LeakFragment implements View {
           .equals(screen) && !WizardPageOneFragment.class.getSimpleName()
           .equals(screen) && !LoginSignUpCredentialsFragment.class.getSimpleName()
           .equals(screen) && !GetStoreFragment.class.getSimpleName()
+          .equals(screen) && !SearchPagerTabFragment.class.getSimpleName()
           .equals(screen)) {
         Appsee.startScreen(screen);
       }

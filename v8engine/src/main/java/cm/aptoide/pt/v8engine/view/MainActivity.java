@@ -100,17 +100,17 @@ public class MainActivity extends TabNavigatorActivity
       @Override
       public void onAppseeScreenDetected(AppseeScreenDetectedInfo appseeScreenDetectedInfo) {
 
-        if (appseeScreenDetectedInfo != null && !TextUtils.isEmpty(
-            appseeScreenDetectedInfo.getScreenName())) {
+        if (appseeScreenDetectedInfo != null) {
 
-          if ("MainActivity".equals(appseeScreenDetectedInfo.getScreenName())) {
+          String screen = appseeScreenDetectedInfo.getScreenName();
+
+          if (!TextUtils.isEmpty(screen) && MainActivity.class.getSimpleName()
+              .equals(screen)) {
+
             // To ignore a new screen
             appseeScreenDetectedInfo.setScreenName(null);
           }
         }
-
-        // You can also change the screen's name
-        //appseeScreenDetectedInfo.setScreenName("MyScreen"));
       }
     });
 
