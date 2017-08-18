@@ -122,7 +122,7 @@ public class AndroidAccountDataMigration {
   }
 
   private boolean isMigrated() {
-    return oldVersion <= 0 || oldVersion == currentVersion;
+    return oldVersion == currentVersion;
   }
 
   //V7
@@ -170,7 +170,9 @@ public class AndroidAccountDataMigration {
         String accountManagerLoginModeKeyOld = "loginType";
         String accountManagerLoginModeKeyNew = "aptoide_account_manager_login_mode";
         sharedPrefsData = defaultSharedPreferences.getString(accountManagerLoginModeKeyOld, "");
+        if (!sharedPrefsData.isEmpty()) {
         accountManager.setUserData(oldAccount, accountManagerLoginModeKeyNew, sharedPrefsData);
+        }
 
         cleanKeysFromPreferences(MIGRATION_KEYS, defaultSharedPreferences);
         cleanKeysFromPreferences(MIGRATION_KEYS, secureSharedPreferences);
@@ -232,6 +234,13 @@ public class AndroidAccountDataMigration {
 
         // account.name -> user email. we don't need to change this
         accountManager.setPassword(oldAccount, plainTextPassword);
+
+        String accountManagerLoginModeKeyOld = "loginType";
+        String accountManagerLoginModeKeyNew = "aptoide_account_manager_login_mode";
+        sharedPrefsData = defaultSharedPreferences.getString(accountManagerLoginModeKeyOld, "");
+        if (!sharedPrefsData.isEmpty()) {
+          accountManager.setUserData(oldAccount, accountManagerLoginModeKeyNew, sharedPrefsData);
+        }
 
         // remove all keys from shared preferences
         cleanKeysFromPreferences(MIGRATION_KEYS, defaultSharedPreferences);
