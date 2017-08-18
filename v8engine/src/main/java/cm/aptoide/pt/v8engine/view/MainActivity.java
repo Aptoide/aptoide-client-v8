@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -41,6 +42,12 @@ import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import com.appsee.Appsee;
+import com.appsee.AppseeListener;
+import com.appsee.AppseeScreenDetectedInfo;
+import com.appsee.AppseeSessionEndedInfo;
+import com.appsee.AppseeSessionEndingInfo;
+import com.appsee.AppseeSessionStartedInfo;
+import com.appsee.AppseeSessionStartingInfo;
 import com.jakewharton.rxrelay.PublishRelay;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -68,6 +75,44 @@ public class MainActivity extends TabNavigatorActivity
     Appsee.start(getString(R.string.APPSEE_API_KEY));
     Appsee.setUserId(((V8Engine) getApplicationContext()).getIdsRepository()
         .getUniqueIdentifier());
+
+    // Set your AppDelegate as the Appsee delegate
+    Appsee.addAppseeListener(new AppseeListener() {
+
+      @Override
+      public void onAppseeSessionStarting(AppseeSessionStartingInfo appseeSessionStartingInfo) {
+
+      }
+
+      @Override
+      public void onAppseeSessionStarted(AppseeSessionStartedInfo appseeSessionStartedInfo) {
+
+      }
+
+      @Override public void onAppseeSessionEnding(AppseeSessionEndingInfo appseeSessionEndingInfo) {
+
+      }
+
+      @Override public void onAppseeSessionEnded(AppseeSessionEndedInfo appseeSessionEndedInfo) {
+
+      }
+
+      @Override
+      public void onAppseeScreenDetected(AppseeScreenDetectedInfo appseeScreenDetectedInfo) {
+
+        if (appseeScreenDetectedInfo != null && !TextUtils.isEmpty(
+            appseeScreenDetectedInfo.getScreenName())) {
+
+          if ("MainActivity".equals(appseeScreenDetectedInfo.getScreenName())) {
+            // To ignore a new screen
+            appseeScreenDetectedInfo.setScreenName(null);
+          }
+        }
+
+        // You can also change the screen's name
+        //appseeScreenDetectedInfo.setScreenName("MyScreen"));
+      }
+    });
 
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
