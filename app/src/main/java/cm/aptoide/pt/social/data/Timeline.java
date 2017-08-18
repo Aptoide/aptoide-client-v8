@@ -34,7 +34,7 @@ public class Timeline {
   private final DownloadFactory downloadFactory;
   private final TimelineAnalytics timelineAnalytics;
   private final TimelinePostsRepository timelinePostsRepository;
-  private PostReadReporter postReadReporter;
+  private final PostReadReporter postReadReporter;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,

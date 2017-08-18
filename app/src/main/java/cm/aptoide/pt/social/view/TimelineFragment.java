@@ -63,10 +63,6 @@ import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.navigator.TabNavigator;
@@ -102,6 +98,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private final int visibleThreshold = 5;
+  private Converter.Factory defaultConverter;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
   private boolean bottomAlreadyReached;
   private PostAdapter adapter;
   private PublishSubject<CardTouchEvent> postTouchEventPublishSubject;
@@ -134,6 +132,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private boolean progressIndicator;
   private PostReadReporter postReadReporter;
   private LinearLayoutManager layoutManager;
+  private TimelineAnalytics timelineAnalytics;
+  private OkHttpClient defaultClient;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -167,6 +167,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
+    baseBodyInterceptorV7 =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    defaultConverter = WebService.getDefaultConverter();
+    defaultClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
+        defaultClient, defaultConverter, tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId(), sharedPreferences);
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     sharedPreferences =
@@ -185,10 +193,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelinePostsRepository =
         ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
             getArguments().getString(ACTION_KEY));
-
-    BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    Converter.Factory defaultConverter = WebService.getDefaultConverter();
 
     OkHttpClient okhttp = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     postReadReporter =
@@ -243,13 +247,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
                 postTouchEventPublishSubject)), new ProgressCard());
     list.setAdapter(adapter);
 
-    TimelineAnalytics timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()),
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
-        .getAppId(), sharedPreferences);
-
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
         ((V8Engine) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class);
@@ -265,12 +262,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            storeCredentialsProvider, storeAccessor,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            baseBodyInterceptorV7, storeCredentialsProvider, storeAccessor, defaultClient,
+            defaultConverter, tokenInvalidator, sharedPreferences);
 
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
@@ -516,6 +509,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     hideProgressIndicator();
   }
 
+  @Override public Observable<Post> getVisibleItems() {
+    return RxRecyclerView.scrollEvents(list)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstCompletelyVisibleItemPosition())
+        .filter(position -> position != RecyclerView.NO_POSITION)
+        .distinctUntilChanged()
+        .map(visibleItem -> adapter.getPost(visibleItem));
+  }
+
   private void handleSharePreviewAnswer() {
     shareDialog.cancels()
         .doOnNext(__ -> shareDialog.dismiss())
@@ -527,15 +529,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe();
     shareDialog.show();
-  }
-
-  @Override public Observable<Post> getVisibleItems() {
-    return RxRecyclerView.scrollEvents(list)
-        .subscribeOn(AndroidSchedulers.mainThread())
-        .map(recyclerViewScrollEvent -> layoutManager.findFirstCompletelyVisibleItemPosition())
-        .filter(position -> position != RecyclerView.NO_POSITION)
-        .distinctUntilChanged()
-        .map(visibleItem -> adapter.getItem(visibleItem));
   }
 
   private void hideProgressIndicator() {
