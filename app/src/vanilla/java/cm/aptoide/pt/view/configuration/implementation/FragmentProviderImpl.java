@@ -222,6 +222,12 @@ public class FragmentProviderImpl implements FragmentProvider {
     return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage);
   }
 
+  @Override
+  public Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage,
+      String storeName) {
+    return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage, storeName);
+  }
+
   @Override public Fragment newRollbackFragment() {
     return RollbackFragment.newInstance();
   }
