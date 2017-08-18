@@ -38,4 +38,8 @@ public enum CardType {
     return equals(ARTICLE) || equals(SOCIAL_ARTICLE) || equals(AGGREGATED_SOCIAL_ARTICLE) || equals(
         SOCIAL_POST_ARTICLE);
   }
+
+  public boolean isDummy() {
+    return equals(LOGIN) || equals(PROGRESS) || equals(TIMELINE_STATS);
+  }
 }
