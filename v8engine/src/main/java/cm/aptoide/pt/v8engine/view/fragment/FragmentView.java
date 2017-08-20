@@ -109,6 +109,7 @@ public abstract class FragmentView extends LeakFragment implements View {
       String screen = this.getClass()
           .getSimpleName();
       if (!TextUtils.isEmpty(screen) && !HomeFragment.class.getSimpleName()
+          .equals(screen) && !SearchPagerTabFragment.class.getSimpleName()
           .equals(screen)) {
         if (GetStoreFragment.class.getSimpleName()
             .equals(screen)) {
