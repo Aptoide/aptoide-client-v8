@@ -939,9 +939,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
                 .getList()), appViewSimilarAppAnalytics))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .doOnSubscribe(() -> suggestedShowing = true)
         .subscribe(appViewSuggestedAppsDisplayable -> {
           addDisplayableWithAnimation(1, appViewSuggestedAppsDisplayable);
-          suggestedShowing = true;
         }, Throwable::printStackTrace);
   }
 
