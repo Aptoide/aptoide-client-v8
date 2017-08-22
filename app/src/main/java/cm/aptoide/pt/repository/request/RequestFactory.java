@@ -6,6 +6,7 @@ import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetRecommendedStoresRequest;
@@ -31,6 +32,7 @@ public class RequestFactory {
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final GetUserRequestFactory getUserRequestFactory;
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
+  private final GetRecommendedRequestFactory getRecommendedRequestFactory;
 
   public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -58,6 +60,9 @@ public class RequestFactory {
 
     getStoreRecommendedRequestFactory =
         new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator, sharedPreferences);
+    getRecommendedRequestFactory =
+        new GetRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,
             tokenInvalidator, sharedPreferences);
   }
 
@@ -97,5 +102,9 @@ public class RequestFactory {
 
   public GetRecommendedStoresRequest newGetRecommendedStores(String url) {
     return this.getStoreRecommendedRequestFactory.newRecommendedStore(url);
+  }
+
+  public GetRecommendedRequest newGetRecommendedRequest(int limit, String packageName) {
+    return this.getRecommendedRequestFactory.newGetRecommendedRequest(limit, packageName);
   }
 }
