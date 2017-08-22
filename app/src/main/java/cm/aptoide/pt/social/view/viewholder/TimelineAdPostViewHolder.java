@@ -3,7 +3,6 @@ package cm.aptoide.pt.social.view.viewholder;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.social.data.AdPost;
@@ -35,9 +34,6 @@ public class TimelineAdPostViewHolder extends PostViewHolder<AdPost> {
     this.nativeAdErrorEvent = new NativeAdErrorEvent(post, CardTouchEvent.Type.ERROR, position);
     post.getAdView()
         .subscribe(adResponse -> {
-          Toast.makeText(itemView.getContext(), "Response code: " + adResponse.getStatus(),
-              Toast.LENGTH_SHORT)
-              .show();
           if (adResponse.getStatus()
               .equals(AdResponse.Status.ok)) {
             cardLayout.removeAllViews();
@@ -45,7 +41,6 @@ public class TimelineAdPostViewHolder extends PostViewHolder<AdPost> {
             adLoading.setVisibility(View.GONE);
           } else {
             cardLayout.setVisibility(View.GONE);
-            cardTouchEventPublishSubject.onNext(nativeAdErrorEvent);
           }
         }, throwable -> {
           cardLayout.setVisibility(View.GONE);
