@@ -153,6 +153,8 @@ public class TimelinePresenter implements Presenter {
     handlePostNavigation();
 
     handleNativeAdError();
+
+    onViewCreatedHandleVisibleItems();
   }
 
   @Override public void saveState(Bundle state) {
@@ -172,6 +174,19 @@ public class TimelinePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void onViewCreatedHandleVisibleItems() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(lifecycleEvent -> view.getVisibleItems()
+            .filter(post -> !post.getType()
+                .isDummy())
+            .flatMapCompletable(post -> timeline.setPostRead(post.getCardId(), post.getType()))
+            .doOnError(throwable -> Logger.e(this, throwable))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   private void handlePostNavigation() {
