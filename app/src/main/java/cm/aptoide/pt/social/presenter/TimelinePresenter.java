@@ -168,6 +168,8 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.ERROR))
             .doOnNext(cardTouchEvent -> view.removePost(
                 ((NativeAdErrorEvent) cardTouchEvent).getPostPosition()))
             .retry())
