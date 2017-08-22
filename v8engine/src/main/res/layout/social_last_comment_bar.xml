@@ -65,7 +65,6 @@
       android:id="@+id/partial_social_timeline_thumbnail_divider_last_comment"
       android:layout_width="match_parent"
       android:layout_height="0.7dp"
-      android:layout_marginBottom="5dp"
       android:layout_marginEnd="12dp"
       android:layout_marginLeft="12dp"
       android:layout_marginRight="15dp"

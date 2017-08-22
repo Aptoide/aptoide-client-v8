@@ -193,7 +193,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   @Override public Completable showGenericError() {
-    return ShowMessage.asLongObservableSnack(this, R.string.having_some_trouble);
+    return ShowMessage.asLongObservableSnack(this, R.string.all_message_general_error);
   }
 
   @Override public void showWaitProgressBar() {

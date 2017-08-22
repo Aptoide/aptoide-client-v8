@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified on 24/06/2016.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:paddingBottom="6dp"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      style="?attr/backgroundCard"
+      >
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/icon"
+        android:layout_alignStart="@id/icon"
+        android:layout_marginBottom="-3dp"
+        android:layout_marginStart="-3dp"
+        android:background="@drawable/ad_icon"
+        android:paddingBottom="3dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="6dp"
+        android:paddingTop="3dp"
+        android:text="@string/all_title_ad"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_medium_small"
+        android:textStyle="bold"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/icon"
+        android:orientation="vertical"
+        android:paddingEnd="3dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingStart="3dp"
+        android:paddingTop="3dp"
+        >
+
+      <TextView
+          android:id="@+id/name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:lines="2"
+          android:paddingEnd="3dp"
+          android:paddingLeft="3dp"
+          android:paddingRight="3dp"
+          android:paddingStart="3dp"
+          android:textAlignment="center"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="14sp"
+          />
+
+      <TextView
+          android:id="@+id/downloads"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:maxLines="1"
+          android:paddingEnd="3dp"
+          android:paddingLeft="3dp"
+          android:paddingRight="3dp"
+          android:paddingStart="3dp"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="12sp"
+          android:visibility="gone"
+          />
+
+      <RatingBar
+          android:id="@+id/ratingbar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginTop="10dp"
+          android:clickable="false"
+          android:isIndicator="true"
+          android:numStars="5"
+          style="?attr/gridItemRatingBar"
+          />
+
+    </LinearLayout>
+
+  </RelativeLayout>
+
+</FrameLayout>

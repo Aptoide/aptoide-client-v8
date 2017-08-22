@@ -17,7 +17,6 @@ import cm.aptoide.pt.v8engine.Install;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.concurrent.TimeUnit;
@@ -27,8 +26,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 7/18/16.
  */
-@Displayables({ CompletedDownloadDisplayable.class }) public class CompletedDownloadWidget
-    extends Widget<CompletedDownloadDisplayable> {
+public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable> {
 
   private TextView appName;
   private ImageView appIcon;

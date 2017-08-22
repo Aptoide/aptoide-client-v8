@@ -13,15 +13,13 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by neuro on 11-05-2016. //todo: código duplicado, se cair a reflexão, deixa de o ser.
  */
-@Displayables({ SubscribedStoreDisplayable.class }) public class SubscribedStoreWidget
-    extends Widget<SubscribedStoreDisplayable> {
+public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
   private ImageView storeAvatar;
   private TextView storeName;

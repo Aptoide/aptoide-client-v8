@@ -10,6 +10,7 @@ import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Sort;
 import java.util.List;
 import rx.Observable;
+import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
 /**
@@ -17,7 +18,7 @@ import rx.schedulers.Schedulers;
  */
 public class RollbackAccessor extends SimpleAccessor<Rollback> {
 
-  protected RollbackAccessor(Database db) {
+  public RollbackAccessor(Database db) {
     super(db, Rollback.class);
   }
 
@@ -26,7 +27,7 @@ public class RollbackAccessor extends SimpleAccessor<Rollback> {
   }
 
   //public Observable<List<Rollback>> getAllSorted(Sort sort) {
-  //  return Observable.fromCallable(() -> Database.get())
+  //  return Observable.fromCallable(() -> database.get())
   //      .flatMap(realm -> realm.where(Rollback.class)
   //          .findAllSorted(Rollback.TIMESTAMP, sort)
   //          .asObservable()
@@ -45,7 +46,7 @@ public class RollbackAccessor extends SimpleAccessor<Rollback> {
   }
 
   public Observable<Rollback> getNotConfirmedRollback(String packageName) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Rollback.class)
             .equalTo(Rollback.PACKAGE_NAME, packageName)
             .equalTo(Rollback.CONFIRMED, false)
@@ -65,7 +66,7 @@ public class RollbackAccessor extends SimpleAccessor<Rollback> {
   }
 
   public Observable<List<Rollback>> getConfirmedRollbacks() {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Rollback.class)
             .equalTo(Rollback.CONFIRMED, true)
             .findAllSorted(Rollback.TIMESTAMP, Sort.DESCENDING)

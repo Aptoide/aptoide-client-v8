@@ -86,8 +86,8 @@ public class FragmentNavigator {
     navigateToWithoutBackSave(home);
   }
 
-  public void popBackStack() {
-    fragmentManager.popBackStack();
+  public boolean popBackStack() {
+    return fragmentManager.popBackStackImmediate();
   }
 
   public void cleanBackStack() {

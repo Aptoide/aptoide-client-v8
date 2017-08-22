@@ -15,8 +15,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.FooterDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 
-@Displayables({ FooterDisplayable.class }) public class FooterWidget
-    extends Widget<FooterDisplayable> {
+public class FooterWidget extends Widget<FooterDisplayable> {
 
   private Button button;
 

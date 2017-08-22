@@ -6,14 +6,13 @@
 package cm.aptoide.pt.logger;
 
 import android.util.Log;
-import lombok.Setter;
 
 /**
  * Aptoide default logger.
  */
 public class Logger {
 
-  @Setter private static boolean DBG;
+  private static boolean DBG;
 
   public static void v(String tag, String msg) {
     if (DBG && msg != null) {
@@ -110,5 +109,9 @@ public class Logger {
     if (msg != null) {
       Log.e(TAG, msg, tr);
     }
+  }
+
+  public static void setDBG(boolean DBG) {
+    Logger.DBG = DBG;
   }
 }

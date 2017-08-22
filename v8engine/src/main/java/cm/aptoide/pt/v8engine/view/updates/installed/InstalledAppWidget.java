@@ -19,7 +19,6 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.DialogUtils;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.share.ShareAppHelper;
 import com.jakewharton.rxbinding.view.RxView;
@@ -31,8 +30,7 @@ import retrofit2.Converter;
 /**
  * Created by neuro on 17-05-2016.
  */
-@Displayables({ InstalledAppDisplayable.class }) public class InstalledAppWidget
-    extends Widget<InstalledAppDisplayable> {
+public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
   private static final Locale LOCALE = Locale.getDefault();
   private static final String TAG = InstalledAppWidget.class.getSimpleName();
@@ -75,16 +73,18 @@ import retrofit2.Converter;
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
 
     final AccountNavigator accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+        new AccountNavigator(getFragmentNavigator(), accountManager);
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(),
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
-    shareAppHelper = new ShareAppHelper(RepositoryFactory.getInstalledRepository(), accountManager,
-        accountNavigator, getContext(), new SpotAndShareAnalytics(Analytics.getInstance()),
-        displayable.getTimelineAnalytics(), PublishRelay.create(),
+    shareAppHelper = new ShareAppHelper(
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()),
+        accountManager, accountNavigator, getContext(),
+        new SpotAndShareAnalytics(Analytics.getInstance()), displayable.getTimelineAnalytics(),
+        PublishRelay.create(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     appName = pojo.getName();
     packageName = pojo.getPackageName();

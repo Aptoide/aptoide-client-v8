@@ -5,13 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.model.v7.store;
 
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDatalistResponse;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import lombok.EqualsAndHashCode;
 
 /**
  * Created by neuro on 27-04-2016.
  */
 @EqualsAndHashCode(callSuper = true) public class ListStores
-    extends BaseV7EndlessDatalistResponse<Store> {
+    extends BaseV7EndlessDataListResponse<Store> {
 
 }

@@ -4,35 +4,45 @@
   ~ Modified on 04/08/2016.
   -->
 
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/app_view_suggested"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    style="@style/AppViewWidget"
+    android:background="@color/grey_fog_light"
+    android:clipToPadding="false"
+    android:padding="6dp"
     >
-
-  <include layout="@layout/separator_horizontal"/>
-
-  <TextView
+  <LinearLayout
+      android:id="@+id/app_view_suggested"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
-      android:layout_marginTop="20dp"
-      android:text="@string/recommended_for_you"
-      android:textAppearance="?android:textAppearanceMedium"
-      android:textColor="@color/aptoide_orange"
-      android:textSize="18sp"
-      />
+      android:layout_height="match_parent"
+      android:background="@drawable/rounded_corners_white"
+      android:elevation="2dp"
+      android:orientation="vertical"
+      >
 
-  <android.support.v7.widget.RecyclerView
+    <TextView
+        android:id="@+id/similar_apps_to"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/appview_title_you_might_also_like"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/aptoide_orange"
+        android:textSize="18sp"
+        />
 
-      android:id="@+id/appview_suggested_recycler_view"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:clipToPadding="false"
-      />
+    <android.support.v7.widget.RecyclerView
 
-
-</LinearLayout>
+        android:id="@+id/appview_suggested_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:padding="6dp"
+        />
+  </LinearLayout>
+</FrameLayout>

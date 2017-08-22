@@ -27,7 +27,7 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
     return listApps -> {
 
       // Load sub nodes
-      List<App> list = listApps.getDatalist()
+      List<App> list = listApps.getDataList()
           .getList();
 
       List<Displayable> displayables = new LinkedList<>();

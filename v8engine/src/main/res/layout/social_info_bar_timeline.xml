@@ -9,7 +9,7 @@
 
   <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="45dp"
+      android:layout_height="50dp"
       android:clipChildren="false"
       >
 
@@ -43,7 +43,7 @@
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:gravity="center_vertical"
-          android:text="@string/x_liked_it"
+          android:text="@string/timeline_short_like_present_singular"
           tools:text="nzxt liked it"
           style="@style/Aptoide.TextView.Regular.XS.GreyFog"
           />

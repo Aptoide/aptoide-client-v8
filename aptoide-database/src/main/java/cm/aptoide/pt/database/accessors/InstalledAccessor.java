@@ -12,15 +12,15 @@ import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
-import rx.schedulers.Schedulers;
+import rx.Scheduler;
 
 /**
  * Created on 01/09/16.
  */
 public class InstalledAccessor extends SimpleAccessor<Installed> {
 
-  public InstalledAccessor(Database db) {
-    super(db, Installed.class);
+  public InstalledAccessor(Database db, Scheduler observingScheduler) {
+    super(db, observingScheduler, Installed.class);
   }
 
   public Observable<List<Installed>> getAllInstalled() {
@@ -37,14 +37,14 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAllInstalledSorted() {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .findAllSorted(Installed.NAME, Sort.ASCENDING)
             .asObservable()
             .unsubscribeOn(RealmSchedulers.getScheduler()))
         .flatMap(installed -> database.copyFromRealm(installed))
         .subscribeOn(RealmSchedulers.getScheduler())
-        .observeOn(Schedulers.io())
+        .observeOn(observingScheduler)
         .flatMap(installs -> filterCompleted(installs));
   }
 
@@ -60,7 +60,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .equalTo(Installed.VERSION_CODE, versionCode)
             .findFirst()))
-        .observeOn(Schedulers.io())
+        .observeOn(observingScheduler)
         .toCompletable();
   }
 
@@ -80,7 +80,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<Installed> get(String packageName, int versionCode) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .map(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .equalTo(Installed.VERSION_CODE, versionCode))
@@ -89,7 +89,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAsList(String packageName, int versionCode) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .equalTo(Installed.VERSION_CODE, versionCode)
@@ -101,7 +101,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getInstalledAsList(String packageName) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .findAll()
@@ -113,7 +113,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getInstalled(String[] apps) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .in(Installed.PACKAGE_NAME, apps)
             .findAll()
@@ -133,7 +133,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAllAsList(String packageName) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .findAll()

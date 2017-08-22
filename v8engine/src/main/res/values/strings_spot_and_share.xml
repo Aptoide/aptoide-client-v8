@@ -13,7 +13,7 @@
 
   <string name="ok">OK</string>
 
-  <string name="enablingWifi">Enabling the Wifi functionality</string>
+  <string name="enablingWifi">Enabling the Wi-Fi functionality</string>
   <string name="noHotspotYet">Please, you or your friend(s) should create a hotspot</string>
   <string name="couldNotCreateHotspot">Couldn\'t create the hotspot</string>
   <string name="unkownHotspotError">We are sorry, there was an error while trying to create the hotspot</string>
@@ -53,24 +53,24 @@
 
   <string name="alertDeleteApp">Are you sure you want to delete the %1$s application?</string>
 
-  <string name="createGroup">Create Group</string>
-  <string name="joinGroup">Join Group</string>
+  <string name="createGroup">Create group</string>
+  <string name="joinGroup">Join group</string>
   <string name="upperInstall">INSTALL</string>
   <string name="upperDelete">DELETE </string>
   <string name="upperResend">RESEND</string>
   <string name="deletedMessage">You deleted this file!</string>
-  <string name="noRecords">There\'s no Apps shared yet</string>
+  <string name="noRecords">There are no apps shared yet</string>
   <string name="clearHistory">CLEAR HISTORY</string>
   <string name="noRecordsDelete">No apps to delete</string>
 
   <string name="reSendError"><b>ERROR ON SENDING</b></string>
-  <string name="reSendError_no_friends_in_group">No friends in the group yet. Please ask them to join.</string>
+  <string name="reSendError_no_friends_in_group">No friends in the group yet. Invite them to join.</string>
 
 
   <string name="mobileDataTitle">Mobile data</string>
-  <string name="mobileDataMessage">In order to join a group you have to turn off your mobile data temporarily. \nPlease turn off your data.</string>
+  <string name="mobileDataMessage">To join a group, you have to turn off your mobile data temporarily.</string>
   <string name="turnOffButton">Turn off</string>
-  <string name="mDataJoinGroup">Please turn off your data in order to join a group</string>
+  <string name="mDataJoinGroup">Turn off your data to join a group</string>
 
   <string name="sendApps">Send APPS</string>
 
@@ -78,13 +78,11 @@
 
   <string name="unsupportedApp">App with this filename %1$s is not supported by this device</string>
 
-  <string name="recoveringWifiState">Recovering the Wifi state, from when you joined the app</string>
-
-  <string name="generalError">Having some trouble. Can you retry later?</string>
+  <string name="recoveringWifiState">Recovering the Wi-Fi status from when you joined the app</string>
 
   <string name="groupCreatorLeft">Your friend that created the group left</string>
 
-  <string name="spotandshare_message_create_group_error_for_nougat">Your phone doesn\'t allow you to create a group. Please, ask your friend to create one</string>
+  <string name="spotandshare_message_create_group_error_for_nougat">Your phone doesn\'t allow you to create a group. Ask a friend to create one</string>
 
   <string name="searching_groups">Searching for groups to join</string>
 
@@ -95,17 +93,17 @@
   <string name="share_instruction">Share apps or wait for someone in the group to share them.</string>
 
   <string name="spotandshare_title_warning_dialog">Warning</string>
-  <string name="clear_history_warning">If you didn’t install the apps shared they will be deleted.</string>
+  <string name="clear_history_warning">If you don\’t install the shared apps, they will be deleted.</string>
 
-  <string name="locationDialog">We will not be able to join groups if location is off</string>
+  <string name="locationDialog">You won\'t be able to join groups if location is off</string>
   <string name="turn_on">turn on</string>
 
-  <string name="spotandshare_message_share_aptoide_initial_message">Your friend doesn\'t use Aptoide and doesn\'t have Spot&amp;Share?</string>
+  <string name="spotandshare_message_share_aptoide_initial_message">Your friends don\'t use Aptoide yet?</string>
   <string name="spotandshare_message_share_aptoide_follow_steps_order">Follow these 3 steps:</string>
-  <string name="spotandshare_message_first_share_instruction">Ask your friend to connect via Wi-Fi to %1$s hotspot</string>
-  <string name="spotandshare_message_second_share_instruction">Ask him to scan this QR code</string>
+  <string name="spotandshare_message_first_share_instruction">Ask your friends to connect via Wi-Fi to %1$s hotspot</string>
+  <string name="spotandshare_message_second_share_instruction">Ask them to scan this QR code</string>
   <string name="spotandshare_message_second_share_instruction_alternative">or open this link \n%1$s</string>
-  <string name="spotandshare_message_third_share_instruction">Finally ask him to start the transfer on his phone</string>
+  <string name="spotandshare_message_third_share_instruction">Finally ask then to start the transfer on their phones</string>
 
   <string name="spotandshare_title_exit_share_aptoide_activity">Transfer in progress</string>
   <string name="spotandshare_message_warning_leaving_while_sharing_aptoide">By leaving this screen you will stop Aptoide\'s transfer. Make sure the transfer is finished before leaving the screen.</string>
@@ -118,8 +116,8 @@
   <!-- Share Apk HTML -->
   <string name="spotandshare_title_share_apk_welcome_page">Install Aptoide on your device</string>
   <string name="spotandshare_message_share_apk_welcome_download_aptoide">DOWNLOAD APTOIDE</string>
-  <string name="spotandshare_message_share_apk_welcome_install_when_completed">Install Aptoide as soon as the download is completed, and start using Spot&amp;Share with your friend.</string>
-  <string name="spotandshare_message_share_apk_welcome_ask_your_friend">Ask your friend to guide you\nduring installation :)</string>
+  <string name="spotandshare_message_share_apk_welcome_install_when_completed">Install Aptoide as soon as the download is complete and start using Spot&amp;Share with your friends.</string>
+  <string name="spotandshare_message_share_apk_welcome_ask_your_friend">Ask your friends to guide you\nduring installation :)</string>
 
   <string name="spotandshare_message_create_hotspot_error">Unable to create the hotspot</string>
   <string name="spotandshare_button_retry_enable_hotspot">Retry</string>

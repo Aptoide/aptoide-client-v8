@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.store;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
@@ -27,10 +26,9 @@ import rx.Observable;
  */
 
 public class StoreUtils {
-  public static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
-
-  public static final String PRIVATE_STORE_ERROR_CODE = "STORE-3";
-  public static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
+  private static final String PRIVATE_STORE_ERROR_CODE = "STORE-3";
+  private static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
+  private static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
 
   @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(long storeId,
       StoreCredentialsProvider storeCredentialsProvider) {
@@ -49,58 +47,30 @@ public class StoreUtils {
    */
   @Deprecated public static Observable<GetStoreMeta> subscribeStore(
       GetStoreMetaRequest getStoreMetaRequest, AptoideAccountManager accountManager,
-      String storeUserName, String storePassword) {
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+      String storeUserName, String storePassword, StoreAccessor storeAccessor) {
 
     return getStoreMetaRequest.observe()
-        .flatMap(getStoreMeta -> {
-          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo()
-              .getStatus())) {
-            // TODO: 18-05-2016 neuro private ainda na ta
-            if (accountManager.isLoggedIn()) {
-              return accountManager.subscribeStore(getStoreMeta.getData()
-                  .getName(), storeUserName, storePassword)
-                  .andThen(Observable.just(getStoreMeta));
-            } else {
-              return Observable.just(getStoreMeta);
-            }
-          } else {
-            return Observable.error(new Exception("Something went wrong while getting store meta"));
-          }
-        })
+        .flatMap(getStoreMeta -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .flatMapObservable(account -> {
+              if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo()
+                  .getStatus())) {
+                // TODO: 18-05-2016 neuro private ainda na ta
+                if (account.isLoggedIn()) {
+                  return accountManager.subscribeStore(getStoreMeta.getData()
+                      .getName(), storeUserName, storePassword)
+                      .andThen(Observable.just(getStoreMeta));
+                } else {
+                  return Observable.just(getStoreMeta);
+                }
+              } else {
+                return Observable.error(
+                    new Exception("Something went wrong while getting store meta"));
+              }
+            }))
         .doOnNext(
             getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor));
-  }
-
-  /**
-   * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
-   * instead, else, use this.
-   */
-  @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
-      String storeUserName, String storePassword) {
-
-    subscribeStore(getStoreMetaRequest, accountManager, storeUserName, storePassword).subscribe(
-        getStoreMeta -> {
-          if (successRequestListener != null) {
-            successRequestListener.call(getStoreMeta);
-          }
-        }, (e) -> {
-          if (errorRequestListener != null) {
-            errorRequestListener.onError(e);
-          }
-          CrashReport.getInstance()
-              .log(e);
-        });
-  }
-
-  /**
-   * @see StoreCredentialsProvider
-   */
-  @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(
-      String storeName, StoreCredentialsProvider storeCredentialsProvider) {
-    return storeCredentialsProvider.get(storeName);
   }
 
   private static void saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
@@ -125,6 +95,37 @@ public class StoreUtils {
     storeAccessor.save(store);
   }
 
+  /**
+   * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
+   * instead, else, use this.
+   */
+  @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
+      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
+      String storeUserName, String storePassword, StoreAccessor storeAccessor) {
+
+    subscribeStore(getStoreMetaRequest, accountManager, storeUserName, storePassword,
+        storeAccessor).subscribe(getStoreMeta -> {
+      if (successRequestListener != null) {
+        successRequestListener.call(getStoreMeta);
+      }
+    }, (e) -> {
+      if (errorRequestListener != null) {
+        errorRequestListener.onError(e);
+      }
+      CrashReport.getInstance()
+          .log(e);
+    });
+  }
+
+  /**
+   * @see StoreCredentialsProvider
+   */
+  @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(
+      String storeName, StoreCredentialsProvider storeCredentialsProvider) {
+    return storeCredentialsProvider.get(storeName);
+  }
+
   private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
     return getStoreMetaRequest.getBody()
         .getStoreUser() != null
@@ -132,8 +133,8 @@ public class StoreUtils {
         .getStorePassSha1() != null;
   }
 
-  public static Observable<Boolean> isSubscribedStore(String storeName) {
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+  public static Observable<Boolean> isSubscribedStore(String storeName,
+      StoreAccessor storeAccessor) {
     return storeAccessor.get(storeName)
         .map(store -> store != null);
   }
@@ -176,10 +177,9 @@ public class StoreUtils {
     return repoUri;
   }
 
-  public static List<Long> getSubscribedStoresIds() {
+  public static List<Long> getSubscribedStoresIds(StoreAccessor storeAccessor) {
 
     List<Long> storesNames = new LinkedList<>();
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     List<Store> stores = storeAccessor.getAll()
         .toBlocking()
         .first();
@@ -190,8 +190,8 @@ public class StoreUtils {
     return storesNames;
   }
 
-  public static HashMapNotNull<String, List<String>> getSubscribedStoresAuthMap() {
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+  public static HashMapNotNull<String, List<String>> getSubscribedStoresAuthMap(
+      StoreAccessor storeAccessor) {
     HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
     List<Store> stores = storeAccessor.getAll()
         .toBlocking()
@@ -206,7 +206,7 @@ public class StoreUtils {
   }
 
   public static void unSubscribeStore(String name, AptoideAccountManager accountManager,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      StoreCredentialsProvider storeCredentialsProvider, StoreAccessor storeAccessor) {
     accountManager.accountStatus()
         .map(account -> account.isLoggedIn())
         .first()
@@ -216,7 +216,6 @@ public class StoreUtils {
                 .getName(), storeCredentialsProvider.get(name)
                 .getPasswordSha1());
           }
-          StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
           storeAccessor.remove(name);
         });
   }

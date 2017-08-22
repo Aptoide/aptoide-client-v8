@@ -105,7 +105,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
         SharedPreferences sharedPreferences) {
       this(appId, sharedPreferences);
       this.refresh = refresh;
-      nodes = new Node(appId, packageName);
+      this.nodes = new Node(appId, packageName);
     }
 
     public Body(Long appId, String storeName, Boolean refresh, String packageName,
@@ -113,36 +113,41 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       this(appId, sharedPreferences);
       this.refresh = refresh;
       this.storeName = storeName;
-      nodes = new Node(appId, packageName);
+      this.nodes = new Node(appId, packageName);
     }
 
     public Body(String packageName, String storeName, boolean refresh,
         SharedPreferences sharedPreferences) {
       this(packageName, refresh, sharedPreferences);
       this.storeName = storeName;
+      this.nodes = new Node(appId, packageName);
     }
 
     public Body(String packageName, Boolean refresh, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.packageName = packageName;
       this.refresh = refresh;
+      this.nodes = new Node(packageName);
     }
 
     public Body(Boolean refresh, String md5, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.md5 = md5;
       this.refresh = refresh;
+      this.nodes = new Node();
     }
 
     public Body(String uname, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.uname = uname;
+      this.nodes = new Node();
     }
 
     public Body(long appId, SharedPreferences sharedPreferences) {
       // TODO: 27/12/2016 analara
       super(sharedPreferences);
       this.appId = appId;
+      this.nodes = new Node(appId);
     }
 
     public Long getAppId() {
@@ -177,12 +182,26 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
       private Meta meta;
       private Versions versions;
+      private Groups groups;
 
-      public Node(long appId, String packageName) {
+      public Node(Long appId, String packageName) {
         this.meta = new Meta();
         this.meta.setAppId(appId);
         this.versions = new Versions();
         this.versions.setPackageName(packageName);
+        this.groups = new Groups();
+      }
+
+      public Node(long appId) {
+        this(appId, null);
+      }
+
+      public Node(String packageName) {
+        this(null, packageName);
+      }
+
+      public Node() {
+        this(null, null);
       }
 
       public Meta getMeta() {
@@ -201,14 +220,22 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
         this.versions = versions;
       }
 
-      private static class Meta {
-        private long appId;
+      public Groups getGroups() {
+        return groups;
+      }
 
-        public long getAppId() {
+      public void setGroups(Groups groups) {
+        this.groups = groups;
+      }
+
+      private static class Meta {
+        private Long appId;
+
+        public Long getAppId() {
           return appId;
         }
 
-        public void setAppId(long appId) {
+        public void setAppId(Long appId) {
           this.appId = appId;
         }
       }
@@ -223,6 +250,9 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
         public void setPackageName(String packageName) {
           this.packageName = packageName;
         }
+      }
+
+      private static class Groups {
       }
     }
   }

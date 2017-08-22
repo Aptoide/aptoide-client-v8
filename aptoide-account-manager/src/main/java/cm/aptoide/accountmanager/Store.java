@@ -8,9 +8,10 @@ public class Store {
   private final String theme;
   private final String username;
   private final String password;
+  private final boolean publicAccess;
 
   public Store(long downloadCount, String avatar, long id, String name, String theme,
-      String username, String password) {
+      String username, String password, boolean publicAccess) {
     this.downloadCount = downloadCount;
     this.avatar = avatar;
     this.id = id;
@@ -18,6 +19,7 @@ public class Store {
     this.theme = theme;
     this.username = username;
     this.password = password;
+    this.publicAccess = publicAccess;
   }
 
   private Store() {
@@ -28,6 +30,7 @@ public class Store {
     this.theme = "DEFAULT";
     this.username = "";
     this.password = "";
+    this.publicAccess = true;
   }
 
   public static Store emptyStore() {
@@ -60,5 +63,9 @@ public class Store {
 
   public String getTheme() {
     return theme;
+  }
+
+  public boolean hasPublicAccess() {
+    return publicAccess;
   }
 }

@@ -19,7 +19,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.search.SearchAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxMenuItem;
@@ -31,8 +30,7 @@ import rx.functions.Action1;
 /**
  * Created by neuro on 01-06-2016.
  */
-@Displayables({ SearchDisplayable.class }) public class SearchWidget
-    extends Widget<SearchDisplayable> {
+public class SearchWidget extends Widget<SearchDisplayable> {
 
   private TextView nameTextView;
   private ImageView iconImageView;

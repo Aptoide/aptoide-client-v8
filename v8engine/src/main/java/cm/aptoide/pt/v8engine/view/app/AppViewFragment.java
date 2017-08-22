@@ -32,8 +32,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.database.AppAction;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -48,10 +46,13 @@ import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.Group;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -69,13 +70,17 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
-import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
+import cm.aptoide.pt.v8engine.app.AppViewSimilarAppAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
+import cm.aptoide.pt.v8engine.billing.exception.BillingException;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
-import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
+import cm.aptoide.pt.v8engine.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.AppAction;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
@@ -87,6 +92,7 @@ import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreEnum;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -108,6 +114,8 @@ import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
@@ -158,7 +166,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private Subscription subscription;
   private AdsRepository adsRepository;
   private boolean sponsored;
-  private List<MinimalAd> suggestedAds;
   // buy app vars
   private String storeName;
   private AppViewInstallDisplayable installDisplayable;
@@ -169,6 +176,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Partners @Getter private String appName;
   @Partners @Getter private String wUrl;
   private GetAppMeta.App app;
+  private Group group;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
   private AptoideAccountManager accountManager;
@@ -179,16 +187,20 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
-  private PaymentAnalytics paymentAnalytics;
+  private BillingAnalytics billingAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-  private PurchaseIntentMapper purchaseIntentMapper;
+  private PurchaseBundleMapper purchaseBundleMapper;
   private ShareAppHelper shareAppHelper;
   private QManager qManager;
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
+  @Getter private boolean suggestedShowing;
+  private List<String> keywords;
+  private BillingIdResolver billingIdResolver;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -262,18 +274,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    billingIdResolver = ((V8Engine) getContext().getApplicationContext()).getBillingIdResolver();
     adMapper = new MinimalAdMapper();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
-    purchaseIntentMapper =
-        ((V8Engine) getContext().getApplicationContext()).getPurchaseIntentMapper();
+    purchaseBundleMapper =
+        ((V8Engine) getContext().getApplicationContext()).getPurchaseBundleMapper();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     permissionManager = new PermissionManager();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     final TokenInvalidator tokenInvalidator =
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
@@ -290,12 +302,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
-    installedRepository = RepositoryFactory.getInstalledRepository();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
+    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
@@ -339,6 +357,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onDestroyView() {
     super.onDestroyView();
     header = null;
+    suggestedShowing = false;
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
           .getDefaultTheme()));
@@ -362,7 +381,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -372,7 +391,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -384,7 +403,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
@@ -432,18 +451,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
-        .getPrice(), app.getPay()
-        .getCurrency());
-    startActivityForResult(PaymentActivity.getIntent(getActivity(), app.getId(), app.getStore()
-        .getName(), sponsored), PAY_APP_REQUEST_CODE);
+    billingAnalytics.sendPaymentViewShowEvent();
+    startActivityForResult(
+        PaymentActivity.getIntent(getActivity(), billingIdResolver.resolveProductId(app.getId()),
+            billingIdResolver.resolveStoreSellerId(app.getStore()
+                .getName()), null), PAY_APP_REQUEST_CODE);
   }
 
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
     if (requestCode == PAY_APP_REQUEST_CODE) {
       try {
+        final Bundle data = (intent != null) ? intent.getExtras() : null;
         final PaidAppPurchase purchase =
-            (PaidAppPurchase) purchaseIntentMapper.map(data, resultCode);
+            (PaidAppPurchase) purchaseBundleMapper.map(resultCode, data);
 
         FragmentActivity fragmentActivity = getActivity();
         Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
@@ -451,17 +471,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
         fragmentActivity.sendBroadcast(installApp);
       } catch (Throwable throwable) {
-        if (throwable instanceof PaymentCancellationException) {
-          Logger.i(TAG, "The user canceled.");
+        if (throwable instanceof BillingException) {
           ShowMessage.asSnack(header.badge, R.string.user_cancelled);
         } else {
-          Logger.i(TAG,
-              "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
           ShowMessage.asSnack(header.badge, R.string.unknown_error);
         }
       }
     } else {
-      super.onActivityResult(requestCode, resultCode, data);
+      super.onActivityResult(requestCode, resultCode, intent);
     }
   }
 
@@ -500,7 +517,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       appViewAnalytics.sendScheduleDownloadEvent();
       scheduled = createScheduled(app, appAction);
 
-      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
+          ((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Scheduled.class);
       scheduledAccessor.insert(scheduled);
 
       String str = this.getString(R.string.added_to_scheduled);
@@ -597,28 +616,30 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
   }
 
-  @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
-    List<String> keywords = getApp1.getNodes()
+  @NonNull private Observable<GetApp> setKeywords(GetApp getApp) {
+    keywords = getApp.getNodes()
         .getMeta()
         .getData()
         .getMedia()
         .getKeywords();
-    String packageName = getApp1.getNodes()
-        .getMeta()
-        .getData()
-        .getPackageName();
 
-    return adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
-        .map(minimalAds -> {
-          suggestedAds = minimalAds;
-          return getApp1;
-        });
+    return Observable.just(getApp);
   }
 
   private void setupAppView(GetApp getApp) {
     app = getApp.getNodes()
         .getMeta()
         .getData();
+
+    List<Group> groupsList = getApp.getNodes()
+        .getGroups()
+        .getDataList()
+        .getList();
+
+    if (groupsList.size() > 0) {
+      group = groupsList.get(0);
+    }
+
     updateLocalVars(app);
     if (storeTheme == null) {
       storeTheme = getApp.getNodes()
@@ -755,7 +776,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
-            installAppRelay);
+            installAppRelay, this);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
@@ -769,9 +790,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     displayables.add(new AppViewDescriptionDisplayable(getApp, appViewAnalytics));
 
     displayables.add(new AppViewFlagThisDisplayable(getApp, appViewAnalytics));
-    if (suggestedAds != null) {
-      displayables.add(new AppViewSuggestedAppsDisplayable(suggestedAds, appViewAnalytics));
-    }
     displayables.add(new AppViewDeveloperDisplayable(getApp));
 
     return displayables;
@@ -797,7 +815,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     //      }
     //    });
 
-    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class);
     storeAccessor.getAll()
         .flatMapIterable(list -> list)
         .filter(store -> store != null && store.getStoreId() == storeId)
@@ -817,7 +837,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     //      adapter.notifyDataSetChanged();
     //    });
 
-    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Rollback.class);
     rollbackAccessor.getAll()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -894,6 +916,36 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void itemChanged(int pos) {
     getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
+  }
+
+  public void showSuggestedApps() {
+    appViewSimilarAppAnalytics.similarAppsIsShown();
+
+    adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
+        .onErrorReturn(throwable -> Collections.emptyList())
+        .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
+            group != null ? group.getId() : null, 6, ListAppsRequest.Sort.latest)
+            .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
+            removeCurrentAppFromSuggested(listApps.getDataList()
+                .getList()), appViewSimilarAppAnalytics))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(appViewSuggestedAppsDisplayable -> {
+          addDisplayableWithAnimation(1, appViewSuggestedAppsDisplayable);
+          suggestedShowing = true;
+        }, Throwable::printStackTrace);
+  }
+
+  private List<App> removeCurrentAppFromSuggested(List<App> list) {
+    Iterator<App> iterator = list.iterator();
+    while (iterator.hasNext()) {
+      App next = iterator.next();
+      if (next.getPackageName()
+          .equals(packageName)) {
+        iterator.remove();
+      }
+    }
+    return list;
   }
 
   @Partners protected enum BundleKeys {

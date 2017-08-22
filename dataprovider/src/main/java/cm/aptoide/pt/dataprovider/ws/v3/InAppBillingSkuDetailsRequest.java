@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -28,8 +27,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, NetworkOperatorManager operatorManager, String type,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      List<String> skuList, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     BaseBody args = new BaseBody();
@@ -37,7 +35,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabskudetails");
-    args.put("purchasetype", type);
+    args.put("purchasetype", "inapp");
 
     if (!skuList.isEmpty()) {
       final StringBuilder stringBuilder = new StringBuilder();
@@ -48,8 +46,6 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
       stringBuilder.deleteCharAt(stringBuilder.length() - 1);
       args.put("skulist", stringBuilder.toString());
     }
-
-    addNetworkInformation(operatorManager, args, sharedPreferences);
 
     return new InAppBillingSkuDetailsRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);

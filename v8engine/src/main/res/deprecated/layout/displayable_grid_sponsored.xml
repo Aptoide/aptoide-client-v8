@@ -64,7 +64,7 @@
           android:paddingLeft="3dp"
           android:paddingRight="3dp"
           android:paddingStart="3dp"
-          android:text="@string/sponsored"
+          android:text="@string/all_title_ad"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="12sp"
           />

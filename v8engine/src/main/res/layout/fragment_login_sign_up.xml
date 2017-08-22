@@ -53,13 +53,6 @@ android:fitsSystemWindows="true"
           />
 
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:text="@string/wizard_sub_title_viewpager_three"
-          style="@style/OnBoarding.SubTitle.TextView"
-          />
-
       <ImageView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -75,7 +68,7 @@ android:fitsSystemWindows="true"
           android:paddingLeft="10dp"
           android:paddingRight="10dp"
           android:paddingStart="10dp"
-          android:text="@string/wizard_sub_sub_title_viewpager_three"
+          android:text="@string/wizard_sub_title_viewpager_three"
           style="@style/OnBoarding.SubTitle.TextView"
           />
 

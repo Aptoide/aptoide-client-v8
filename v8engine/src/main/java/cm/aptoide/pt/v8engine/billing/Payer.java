@@ -5,9 +5,12 @@
 
 package cm.aptoide.pt.v8engine.billing;
 
+import rx.Observable;
 import rx.Single;
 
 public interface Payer {
 
-  public Single<String> getId();
+  Single<String> getId();
+
+  Observable<Boolean> isAuthenticated();
 }

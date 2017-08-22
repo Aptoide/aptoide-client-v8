@@ -15,14 +15,12 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.permission.DialogPermissions;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created on 04/05/16.
  */
-@Displayables({ AppViewDeveloperDisplayable.class }) public class AppViewDeveloperWidget
-    extends Widget<AppViewDeveloperDisplayable> {
+public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> {
 
   private static final String TAG = AppViewDeveloperWidget.class.getSimpleName();
 

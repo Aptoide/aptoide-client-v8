@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.view.store.recommended;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
@@ -12,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -34,14 +34,18 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class));
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     BodyInterceptor<BaseBody> bodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     final OkHttpClient httpClient =
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter(),
+        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class), httpClient,
+        WebService.getDefaultConverter(),
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
@@ -52,7 +56,7 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
 
   @Override protected Action1<ListStores> buildAction() {
     return listStores -> Observable.just(listStores)
-        .flatMapIterable(getStoreWidgets -> getStoreWidgets.getDatalist()
+        .flatMapIterable(getStoreWidgets -> getStoreWidgets.getDataList()
             .getList())
         .map(store -> new RecommendedStoreDisplayable(store, storeRepository, accountManager,
             storeUtilsProxy, storeCredentialsProvider))

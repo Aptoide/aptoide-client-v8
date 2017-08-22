@@ -16,7 +16,6 @@
       android:layout_marginLeft="10.7dp"
       android:layout_marginStart="10.7dp"
       android:layout_marginTop="14dp"
-      android:background="@drawable/grey_circular_placeholder_store"
       tools:ignore="contentDescription"
       />
 
@@ -27,7 +26,6 @@
       android:layout_marginLeft="35.7dp"
       android:layout_marginStart="35.7dp"
       android:layout_marginTop="36dp"
-      android:background="@drawable/grey_circular_placeholder"
       tools:ignore="contentDescription"
       />
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    style="?attr/backgroundCard"
+    >
+
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      >
+    <ImageView
+        android:id="@+id/app_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        tools:src="@drawable/icon_check"
+        />
+    <ImageView
+        android:id="@+id/check_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/app_image"
+        android:src="@drawable/icon_check"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+
+  </RelativeLayout>
+
+  <TextView
+      android:id="@+id/app_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/padding_tiny"
+      android:ellipsize="end"
+      android:lines="2"
+      tools:text="He as compliment unreserved projecting."
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      />
+
+</LinearLayout>

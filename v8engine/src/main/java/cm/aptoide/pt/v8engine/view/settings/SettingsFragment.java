@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
@@ -46,6 +45,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
@@ -162,7 +162,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (toolbar != null) {
       parentActivity.setSupportActionBar(toolbar);
 
-      toolbar.setTitle(R.string.settings);
+      toolbar.setTitle(R.string.settings_title_settings);
       toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
       ActionBar supportActionBar = parentActivity.getSupportActionBar();
@@ -190,7 +190,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
+          ((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Update.class);
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository(context,
           ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());

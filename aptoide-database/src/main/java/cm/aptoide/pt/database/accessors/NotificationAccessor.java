@@ -6,6 +6,7 @@ import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
@@ -14,13 +15,13 @@ import rx.schedulers.Schedulers;
  */
 
 public class NotificationAccessor extends SimpleAccessor<Notification> {
-  NotificationAccessor(Database db) {
+  public NotificationAccessor(Database db) {
     super(db, Notification.class);
   }
 
   public Observable<List<Notification>> getDismissed(Integer[] notificationType, long startingTime,
       long endTime) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Notification.class)
             .in("type", notificationType)
             .greaterThan("dismissed", startingTime)
@@ -34,7 +35,7 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
   }
 
   public Observable<List<Notification>> getAllSorted(Sort sortOrder, Integer[] notificationType) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Notification.class)
             .in("type", notificationType)
             .findAllSorted("timeStamp", sortOrder)
@@ -58,7 +59,7 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
   }
 
   public Observable<List<Notification>> getAllSorted(Sort sort) {
-    return Observable.fromCallable(() -> Database.getInternal())
+    return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Notification.class)
             .findAllSorted("timeStamp", sort)
             .asObservable())

@@ -10,10 +10,10 @@
   <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Invalid credentials!</string>
   <string name="ws_error_AUTH_7">@string/error_occured</string>
-  <string name="ws_error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address)</string>
-  <string name="ws_error_AUTH_101">Could not login with Google. Please try again.</string>
-  <string name="ws_error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address)</string>
-  <string name="ws_error_AUTH_103">Could not login with Facebook. Please try again.</string>
+  <string name="ws_error_AUTH_100">Couldn\'t login with Google. Check your Google account (you may need to validate your email address)</string>
+  <string name="ws_error_AUTH_101">Couldn\'t login with Google. Please try again.</string>
+  <string name="ws_error_AUTH_102">Couldn\'t login with Facebook. Check your Facebook account (you may need to validate your email address)</string>
+  <string name="ws_error_AUTH_103">Couldn\'t login with Facebook. Please try again.</string>
   <string name="ws_error_invalid_grant">Invalid username and password combination</string>
   <string name="ws_error_MARG_12">Missing hmac parameter</string>
   <string name="ws_error_MARG_109">Missing email parameter</string>
@@ -23,22 +23,24 @@
   <string name="ws_error_IARG_5">Invalid hmac format</string>
   <string name="ws_error_IARG_106">The e-mail address is not valid</string>
   <string name="ws_error_IARG_111">Invalid passhash format</string>
-  <string name="ws_error_REPO_4">That store name is invalid, you can only use letters, numbers or
-        dashes.</string>
+  <string name="ws_error_REPO_4">Invalid store name. You can only use letters, numbers and
+        hyphens. You can\'t use hyphens at the start nor at the end.</string>
   <string name="ws_error_REPO_7">This user already has a valid store.</string>
-  <string name="ws_error_REPO_5">That store name must be at least 3 characters long.</string>
-  <string name="ws_error_REPO_6">That store name is already taken, you need to choose another
+  <string name="ws_error_REPO_5">Store names must be at least 3 characters long.</string>
+  <string name="ws_error_REPO_6">Store name already taken. Choose another
         one.</string>
-  <string name="ws_eror_WOP_">Invalid name given for your store. The name of a store can only have alphanumeric characters (A to Z and 0 to 9) or hyphens (-), and it cannot start nor end with a hyphen.</string>
-  <string name="ws_eror_WOP_1">Your account has a store already. You cannot create another one under the same account</string>
-  <string name="ws_error_WOP_2">Invalid name given for your store. The name of a store can only have alphanumeric characters and it cannot start nor end with a hyphen.</string>
-  <string name="ws_error_WOP_3">A store already exists with the same name. Please give another name for your store.</string>
+  <string name="ws_eror_WOP_">Invalid store name. You can only use letters, numbers and
+        hyphens. You can\'t use hyphens at the start nor at the end.</string>
+  <string name="ws_eror_WOP_1">You already have a store. You can\'t create another store with the same account</string>
+  <string name="ws_error_WOP_2">Invalid store name. You can only use letters, numbers and
+        hyphens. You can\'t use hyphens at the start nor at the end.</string>
+  <string name="ws_error_WOP_3">Store name already taken. Choose a different name for your store.</string>
   <string name="ws_error_WOP_9">The email provided already exists</string>
   <string name="ws_error_WOP_10">The email provided is not registered yet</string>
-  <string name="ws_error_WOP_11">The store could not be created. Please try again.</string>
+  <string name="ws_error_WOP_11">The store couldn\'t be created. Please try again.</string>
   <string name="ws_error_API_1">The image is not valid.</string>
   <string name="ws_error_QUOTA_2">Daily limit of created users reached for today. If you need
-    this limit increased please contact support or create more users tomorrow</string>
+    this limit increased please contact support or create more users tomorrow.</string>
   <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
         update)</string>
 

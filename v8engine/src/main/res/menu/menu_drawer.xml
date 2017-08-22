@@ -11,28 +11,27 @@
       android:id="@+id/navigation_item_my_account"
       android:icon="?attr/icMyAccountDrawable"
       android:orderInCategory="1"
-      android:title="@string/my_account"/>
+      android:title="@string/drawer_title_my_account"/>
 
   <item
       android:id="@+id/shareapps"
       android:icon="?attr/icSpotShare"
       android:orderInCategory="2"
-      android:title="@string/spot_share"
+      android:title="@string/drawer_title_spot_share"
       />
 
   <item
       android:id="@+id/navigation_item_rollback"
       android:icon="?attr/icRollbackDrawable"
       android:orderInCategory="3"
-      android:title="@string/rollback"/>
+      android:title="@string/drawer_title_rollback"/>
   <item
       android:id="@+id/navigation_item_setting_scheduled_downloads"
       android:icon="?attr/icScheduledDrawable"
       android:orderInCategory="4"
-      android:title="@string/schdwntitle"/>
+      android:title="@string/drawer_title_schedule_download"/>
   <item
       android:id="@+id/navigation_item_excluded_updates"
-
       android:icon="?attr/icExcludedUpdatesDrawable"
       android:orderInCategory="5"
       android:title="@string/excluded_updates"/>
@@ -40,13 +39,13 @@
       android:id="@+id/navigation_item_settings"
       android:icon="?attr/icSettingsDrawable"
       android:orderInCategory="6"
-      android:title="@string/settings"/>
+      android:title="@string/drawer_title_settings"/>
 
   <item
       android:id="@+id/navigation_item_backup_apps"
       android:icon="@drawable/ic_action_backup_custom"
       android:orderInCategory="7"
-      android:title="@string/backup_apps"/>
+      android:title="@string/drawer_title_backup_apps"/>
 
 
   <group android:orderInCategory="8">
@@ -56,11 +55,11 @@
         <item
             android:id="@+id/navigation_item_facebook"
             android:icon="@drawable/ic_action_facebook"
-            android:title="@string/facebook"/>
+            android:title="@string/drawer_title_facebook"/>
         <item
             android:id="@+id/navigation_item_twitter"
             android:icon="@drawable/ic_action_twitter"
-            android:title="@string/twitter"/>
+            android:title="@string/drawer_title_twitter"/>
       </menu>
     </item>
   </group>
@@ -69,7 +68,7 @@
       android:id="@+id/send_feedback"
       android:icon="?attr/icSendFeedbackDrawable"
       android:orderInCategory="9"
-      android:title="@string/feedback_send_button"/>
+      android:title="@string/drawer_title_feedback_send_button"/>
 
 
 </menu>

@@ -73,6 +73,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private Converter.Factory converterFactory;
+  private CrashReport crashReport;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -103,8 +104,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           if (e instanceof RepositoryItemNotFoundException) {
             ShowMessage.asSnack(getView(), R.string.add_store);
           }
-          CrashReport.getInstance()
-              .log(e);
+          crashReport.log(e);
           finishLoading();
         });
   }
@@ -126,16 +126,15 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         //.flatMap(listOfUpdateList -> Observable.from(listOfUpdateList).takeLast(1))
         .sample(750, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .flatMap(updateList -> {
           clearDisplayables();
           setUpdates(updateList);
           showUpdateMessage(updateList);
           return fetchInstalled().doOnNext(apps -> setInstalled(apps));
         })
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
           finishLoading();
-          Logger.v(TAG, "listing updates and installed");
         }, err -> {
           Logger.e(TAG, "listing updates or installed threw an exception");
           CrashReport.getInstance()
@@ -151,6 +150,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    crashReport = CrashReport.getInstance();
     bodyInterceptorV7 =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -173,7 +173,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
@@ -235,7 +236,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installedDisplayablesList.clear();
     installedDisplayablesList.add(new StoreGridHeaderDisplayable(
         new GetStoreWidgets.WSWidget().setTitle(
-            AptoideUtils.StringU.getResString(R.string.installed_tab,
+            AptoideUtils.StringU.getResString(R.string.updatetab_title_installed,
                 getContext().getResources()))));
 
     for (Installed installedApp : installedApps) {

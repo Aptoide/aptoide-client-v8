@@ -15,15 +15,13 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created on 10/05/16.
  */
-@Displayables({ AppViewDescriptionDisplayable.class }) public class AppViewDescriptionWidget
-    extends Widget<AppViewDescriptionDisplayable> {
+public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayable> {
 
   private TextView descriptionTextView;
   private Button readMoreBtn;

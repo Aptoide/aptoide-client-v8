@@ -155,7 +155,8 @@ public class HomeFragment extends StoreFragment {
     super.onCreate(savedInstanceState);
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository =
+        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
   }
 
   @Nullable @Override
@@ -223,8 +224,7 @@ public class HomeFragment extends StoreFragment {
   @Override public void setupViews() {
     super.setupViews();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     setupNavigationView();
   }
 

@@ -25,7 +25,7 @@
 
   <!-- Share options -->
   <string name="share_options_share_external">Share via...</string>
-  <string name="share_options_share_in_timeline">Share in Apps Timeline</string>
-  <string name="share_options_share_spot_share">Share Apps via Spot&amp;Share (Offline)</string>
+  <string name="share_options_share_in_timeline">Share on timeline</string>
+  <string name="share_options_share_spot_share">Share apps via Spot&amp;Share (Offline)</string>
 
 </resources>

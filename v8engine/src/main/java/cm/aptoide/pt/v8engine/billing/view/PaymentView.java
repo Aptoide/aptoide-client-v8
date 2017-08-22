@@ -5,68 +5,41 @@
 
 package cm.aptoide.pt.v8engine.billing.view;
 
+import cm.aptoide.pt.v8engine.billing.PaymentMethod;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
 import rx.Observable;
 
 public interface PaymentView extends View {
 
-  Observable<PaymentMethodViewModel> paymentSelection();
+  Observable<PaymentMethod> selectPaymentEvent();
 
-  Observable<Void> cancellationSelection();
+  Observable<Void> cancelEvent();
 
-  Observable<Void> tapOutsideSelection();
+  Observable<Void> buyEvent();
 
-  Observable<Void> buySelection();
+  void selectPayment(PaymentMethod payment);
 
-  void selectPayment(PaymentMethodViewModel payment);
+  void showPaymentLoading();
 
-  void showLoading();
+  void showPurchaseLoading();
 
-  void showPayments(List<PaymentMethodViewModel> paymentList);
+  void showBuyLoading();
+
+  void showPayments(List<PaymentMethod> paymentList);
 
   void showProduct(Product product);
 
-  void hideLoading();
+  void hidePaymentLoading();
 
-  void dismiss(Purchase purchase);
+  void hidePurchaseLoading();
 
-  void dismiss(Throwable throwable);
-
-  void dismiss();
+  void hideBuyLoading();
 
   void showPaymentsNotFoundMessage();
 
   void showNetworkError();
 
   void showUnknownError();
-
-  void hideAllErrors();
-
-  class PaymentMethodViewModel {
-
-    private final int id;
-    private final String name;
-    private final String description;
-
-    public PaymentMethodViewModel(int id, String name, String description) {
-      this.id = id;
-      this.name = name;
-      this.description = description;
-    }
-
-    public int getId() {
-      return id;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public String getDescription() {
-      return description;
-    }
-  }
 }

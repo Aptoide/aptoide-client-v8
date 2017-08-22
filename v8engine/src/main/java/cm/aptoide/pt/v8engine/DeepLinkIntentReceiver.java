@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -26,6 +25,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.view.ActivityView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -47,10 +47,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-/**
- * Created by neuro on 10-08-2016.
- */
-public class DeepLinkIntentReceiver extends AppCompatActivity {
+public class DeepLinkIntentReceiver extends ActivityView {
 
   public static final String AUTHORITY = "cm.aptoide.pt";
   public static final int DEEPLINK_ID = 1;
@@ -76,7 +73,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
 
     adMapper = new MinimalAdMapper();
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
@@ -182,14 +179,26 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       startFromPackageName(uri.split("aptoidesearch://")[1]);
     } else if (uri.startsWith("aptoidevoicesearch://")) {
       aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
-    } else if (uri.startsWith("market")) {
-      String params = uri.split("&")[0];
-      String[] param = params.split("=");
-      String packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
-      if (packageName.contains("pname:")) {
-        packageName = packageName.substring(6);
-      } else if (packageName.contains("pub:")) {
-        packageName = packageName.substring(4);
+    } else if (u != null && "market".equalsIgnoreCase(u.getScheme())) {
+      /*
+       * market schema:
+       * could come from a search or a to open an app
+       */
+      String packageName = "";
+      if ("details".equalsIgnoreCase(u.getHost())) {
+        packageName = u.getQueryParameter("id");
+      } else if ("search".equalsIgnoreCase(u.getHost())) {
+        packageName = u.getQueryParameter("q");
+      } else {
+        //old code
+        String params = uri.split("&")[0];
+        String[] param = params.split("=");
+        packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
+        if (packageName.contains("pname:")) {
+          packageName = packageName.substring(6);
+        } else if (packageName.contains("pub:")) {
+          packageName = packageName.substring(4);
+        }
       }
       startFromPackageName(packageName);
     } else if (uri.startsWith("http://market.android.com/details?id=")) {

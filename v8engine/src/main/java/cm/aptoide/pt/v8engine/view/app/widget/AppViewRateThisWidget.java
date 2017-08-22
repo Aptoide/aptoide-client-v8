@@ -17,15 +17,13 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewRateThisDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
 
 /**
  * Created on 04/05/16.
  */
-@Deprecated @Displayables({ AppViewRateThisDisplayable.class }) public class AppViewRateThisWidget
-    extends Widget<AppViewRateThisDisplayable> {
+@Deprecated public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 
   private static final String TAG = AppViewRateThisWidget.class.getSimpleName();
 
