@@ -5,7 +5,6 @@ import cm.aptoide.pt.Install;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.AdMoPub;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AdTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
@@ -51,6 +50,11 @@ import java.util.List;
  */
 
 public class TimelineResponseCardMapper {
+  private final AdsRepositoryProvider adsRepositoryProvider;
+
+  public TimelineResponseCardMapper(AdsRepositoryProvider adsRepositoryProvider) {
+    this.adsRepositoryProvider = adsRepositoryProvider;
+  }
 
   public List<Post> map(List<TimelineItem<TimelineCard>> cardList,
       LinksHandlerFactory linksFactory) {
@@ -506,7 +510,10 @@ public class TimelineResponseCardMapper {
           aggregatedSocialStoreLatestApps.getUrls()
               .getRead()));
     } else if (item instanceof AdTimelineItem) {
-      cards.add(new AdPost());
+
+      AdPost adPost = new AdPost(adsRepositoryProvider.getAdsRepository());
+      adPost.init();
+      cards.add(adPost);
     }
   }
 
@@ -515,4 +522,9 @@ public class TimelineResponseCardMapper {
         .getFollowers(), timelineStats.getData()
         .getFollowing(), CardType.TIMELINE_STATS);
   }
+
+  public interface AdsRepositoryProvider {
+    TimelineAdsRepository getAdsRepository();
+  }
+
 }
