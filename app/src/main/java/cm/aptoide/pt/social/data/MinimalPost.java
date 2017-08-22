@@ -65,6 +65,10 @@ public class MinimalPost implements Post {
     return null;
   }
 
+  @Override public String getMarkAsReadUrl() {
+    return null;
+  }
+
   public boolean isLiked() {
     return liked;
   }

@@ -20,13 +20,14 @@ abstract class AppPost implements Post {
   protected final long appId;
   protected final float appAverageRating;
   private final Long storeId;
+  private final String markAsReadUrl;
   private List<SocialCard.CardComment> comments;
   private boolean isLiked;
   private boolean likedFromClick;
 
   AppPost(String cardId, String appIcon, String appName, long appId, String packageName,
       Date timestamp, String abUrl, CardType cardType, float appAverageRating, Long storeId,
-      boolean isLiked) {
+      boolean isLiked, String markAsReadUrl) {
     this.abUrl = abUrl;
     this.cardId = cardId;
     this.timestamp = timestamp;
@@ -38,6 +39,7 @@ abstract class AppPost implements Post {
     this.appAverageRating = appAverageRating;
     this.storeId = storeId;
     this.isLiked = isLiked;
+    this.markAsReadUrl = markAsReadUrl;
     comments = new ArrayList<>();
   }
 
@@ -83,6 +85,10 @@ abstract class AppPost implements Post {
 
   @Override public String getAbUrl() {
     return abUrl;
+  }
+
+  @Override public String getMarkAsReadUrl() {
+    return markAsReadUrl;
   }
 
   @Override public boolean isLiked() {
