@@ -25,9 +25,9 @@ public class RatedRecommendation extends AppPost {
       String appName, String appIcon, Long storeId, float ratingAverage, Date timestamp,
       String abUrl, boolean isLiked, long commentsNumber, long likesNumber,
       List<UserTimeline> likes, List<SocialCard.CardComment> comments, String sharedByName,
-      String content, CardType cardType) {
+      String content, CardType cardType, String markAsReadUrl) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage,
-        storeId, isLiked);
+        storeId, isLiked, markAsReadUrl);
     this.poster = poster;
     this.commentsNumber = commentsNumber;
     this.likesNumber = likesNumber;

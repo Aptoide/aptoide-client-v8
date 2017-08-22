@@ -420,8 +420,9 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body RelatedAppRequest.Body request);
 
-    @POST("user/timeline/markAsRead") Observable<BaseV7Response> setPostRead(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Body PostReadRequest.Body body);
+    @POST("{path}") Observable<BaseV7Response> setPostRead(
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Body PostReadRequest.Body body,
+        @Path(encoded = true, value = "path") String path);
   }
 }
 

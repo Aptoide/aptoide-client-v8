@@ -184,7 +184,9 @@ public class TimelinePresenter implements Presenter {
         .flatMap(lifecycleEvent -> view.getVisibleItems()
             .filter(post -> !post.getType()
                 .isDummy())
-            .flatMapCompletable(post -> timeline.setPostRead(post.getCardId(), post.getType()))
+            .flatMapCompletable(
+                post -> timeline.setPostRead(post.getMarkAsReadUrl(), post.getCardId(),
+                    post.getType()))
             .doOnError(throwable -> Logger.e(this, throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

@@ -17,8 +17,9 @@ import lombok.Getter;
       @JsonProperty("thumbnail") String thumbnailUrl,
       @JsonProperty("publisher") Publisher publisher, @JsonProperty("url") String url,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
-      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
-    super(cardId, title, thumbnailUrl, url, date, apps, ab);
+      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
+      @JsonProperty("urls") Urls urls) {
+    super(cardId, title, thumbnailUrl, url, date, apps, ab, urls);
     this.publisher = publisher;
   }
 }

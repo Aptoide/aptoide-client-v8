@@ -36,8 +36,8 @@ public class SocialStoreLatestApps extends SocialCard implements TimelineCard {
       @JsonProperty("comments") List<CardComment> comments, @JsonProperty("my") My my,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("apps") List<App> apps,
-      @JsonProperty("ab") Ab ab) {
-    super(likes, comments, my);
+      @JsonProperty("ab") Ab ab, @JsonProperty("urls") Urls urls) {
+    super(likes, comments, my, urls);
     this.user = user;
     this.date = date;
     this.ownerStore = stores.getUser();

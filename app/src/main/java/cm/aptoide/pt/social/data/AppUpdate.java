@@ -29,6 +29,7 @@ public class AppUpdate implements Post {
   private final CardType cardType;
   private final File file;
   private final Obb obb;
+  private final String markAsReadUrl;
   private boolean isLiked;
   private Install.InstallationStatus installationStatus;
   private boolean likedFromClick;
@@ -38,7 +39,7 @@ public class AppUpdate implements Post {
       Long storeId, String appUpdateIcon, String appUpdateName, long appUpdateId,
       String packageName, float appUpdateAverageRating, Date updateAddedDate, String abUrl,
       boolean isLiked, CardType cardType, File file, Obb obb,
-      Install.InstallationStatus installationStatus) {
+      Install.InstallationStatus installationStatus, String markAsReadUrl) {
     this.cardId = cardId;
     this.storeName = storeName;
     this.storeAvatar = storeAvatar;
@@ -56,6 +57,7 @@ public class AppUpdate implements Post {
     this.file = file;
     this.obb = obb;
     this.installationStatus = installationStatus;
+    this.markAsReadUrl = markAsReadUrl;
     this.comments = new ArrayList<>();
   }
 
@@ -121,6 +123,10 @@ public class AppUpdate implements Post {
 
   @Override public String getAbUrl() {
     return abUrl;
+  }
+
+  @Override public String getMarkAsReadUrl() {
+    return markAsReadUrl;
   }
 
   public boolean isLiked() {

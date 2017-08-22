@@ -24,6 +24,10 @@ public class AdMoPub implements TimelineCard {
     return cardId;
   }
 
+  @Override public Urls getUrls() {
+    return null;
+  }
+
   public Date getDate() {
     return date;
   }

@@ -21,13 +21,14 @@ public class AggregatedSocialStoreLatestApps implements TimelineCard {
   private final Ab ab;
   private final List<MinimalCard> minimalCardList;
   private final List<UserSharerTimeline> sharers;
+  private final Urls urls;
 
   public AggregatedSocialStoreLatestApps(@JsonProperty("uid") String cardId,
       @JsonProperty("stores") SocialStoreLatestApps.Stores stores,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonProperty("cards_shared") List<MinimalCard> minimalCardList,
-      @JsonProperty("sharers") List<UserSharerTimeline> sharers) {
+      @JsonProperty("sharers") List<UserSharerTimeline> sharers, @JsonProperty("urls") Urls urls) {
     this.cardId = cardId;
     this.ownerStore = stores.getUser();
     this.sharedStore = stores.getCard();
@@ -36,10 +37,15 @@ public class AggregatedSocialStoreLatestApps implements TimelineCard {
     this.ab = ab;
     this.minimalCardList = minimalCardList;
     this.sharers = sharers;
+    this.urls = urls;
   }
 
   @Override public String getCardId() {
     return this.cardId;
+  }
+
+  @Override public Urls getUrls() {
+    return urls;
   }
 
   public Store getOwnerStore() {

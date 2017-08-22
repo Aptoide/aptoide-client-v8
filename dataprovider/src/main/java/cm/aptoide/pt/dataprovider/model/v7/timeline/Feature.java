@@ -19,12 +19,14 @@ public class Feature implements TimelineCard {
   @Getter private final Date date;
   @Getter private final List<App> apps;
   @Getter private final Ab ab;
+  private final Urls urls;
 
   @JsonCreator
   public Feature(@JsonProperty("uid") String cardId, @JsonProperty("title") String title,
       @JsonProperty("thumbnail") String thumbnailUrl, @JsonProperty("url") String url,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
-      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
+      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
+      @JsonProperty("urls") Urls urls) {
     this.cardId = cardId;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
@@ -32,5 +34,10 @@ public class Feature implements TimelineCard {
     this.date = date;
     this.apps = apps;
     this.ab = ab;
+    this.urls = urls;
+  }
+
+  @Override public Urls getUrls() {
+    return urls;
   }
 }

@@ -53,7 +53,6 @@ import cm.aptoide.pt.social.data.share.ShareDialogFactory;
 import cm.aptoide.pt.social.data.share.ShareDialogInterface;
 import cm.aptoide.pt.social.data.share.ShareEvent;
 import cm.aptoide.pt.social.data.share.SharePostViewSetup;
-import cm.aptoide.pt.social.data.viewedposts.PostReadReporter;
 import cm.aptoide.pt.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -130,7 +129,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private DateCalculator dateCalculator;
   private boolean postIndicator;
   private boolean progressIndicator;
-  private PostReadReporter postReadReporter;
   private LinearLayoutManager layoutManager;
   private TimelineAnalytics timelineAnalytics;
   private OkHttpClient defaultClient;
@@ -196,9 +194,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .getAppId(), sharedPreferences);
 
     OkHttpClient okhttp = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    postReadReporter =
-        new PostReadReporter(baseBodyInterceptorV7, okhttp, defaultConverter, tokenInvalidator,
-            sharedPreferences);
+
     timelineService = new TimelineService(userId, baseBodyInterceptorV7, okhttp, defaultConverter,
         new TimelineResponseCardMapper(), tokenInvalidator, sharedPreferences);
   }
@@ -256,7 +252,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics,
-            timelinePostsRepository, postReadReporter);
+            timelinePostsRepository);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);

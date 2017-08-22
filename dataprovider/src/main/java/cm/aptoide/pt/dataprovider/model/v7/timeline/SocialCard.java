@@ -15,11 +15,18 @@ import lombok.Getter;
   @Getter private final List<UserTimeline> likes;
   @Getter private final List<CardComment> comments;
   @Getter private final My my;
+  private final Urls urls;
 
-  public SocialCard(List<UserTimeline> likes, List<CardComment> comments, My my) {
+  public SocialCard(List<UserTimeline> likes, List<CardComment> comments, My my,
+      @JsonProperty("urls") Urls urls) {
     this.likes = likes;
     this.comments = comments;
     this.my = my;
+    this.urls = urls;
+  }
+
+  @Override public Urls getUrls() {
+    return urls;
   }
 
   public static class CardComment {
