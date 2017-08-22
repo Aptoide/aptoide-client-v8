@@ -18,9 +18,16 @@ import lombok.Getter;
 
   @Getter private final String cardId;
   @Getter private final Ab ab;
+  private final Urls urls;
 
-  @JsonCreator public AppUpdate(@JsonProperty("uid") String cardId, @JsonProperty("ab") Ab ab) {
+  @JsonCreator public AppUpdate(@JsonProperty("uid") String cardId, @JsonProperty("ab") Ab ab,
+      @JsonProperty("urls") Urls urls) {
     this.cardId = cardId;
     this.ab = ab;
+    this.urls = urls;
+  }
+
+  @Override public Urls getUrls() {
+    return urls;
   }
 }

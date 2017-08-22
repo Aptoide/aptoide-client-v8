@@ -11,4 +11,6 @@ package cm.aptoide.pt.dataprovider.model.v7.timeline;
 public interface TimelineCard {
 
   String getCardId();
+
+  Urls getUrls();
 }

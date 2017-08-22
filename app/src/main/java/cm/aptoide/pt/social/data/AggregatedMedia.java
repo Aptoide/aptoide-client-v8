@@ -17,9 +17,10 @@ public class AggregatedMedia extends Media {
 
   public AggregatedMedia(String cardId, List<Poster> posters, String mediaTitle,
       String mediaThumbnailUrl, Date date, App app, String abTestURL, Publisher publisher,
-      Link publisherLink, Link mediaLink, List<Post> minimalPosts, CardType cardType) {
+      Link publisherLink, Link mediaLink, List<Post> minimalPosts, CardType cardType,
+      String markAsReadUrl) {
     super(cardId, mediaTitle, mediaThumbnailUrl, date, app, abTestURL, publisher, publisherLink,
-        mediaLink, false, cardType);
+        mediaLink, false, cardType, markAsReadUrl);
     this.posters = posters;
     this.minimalCards = minimalPosts;
   }

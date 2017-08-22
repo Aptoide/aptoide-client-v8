@@ -23,16 +23,23 @@ import lombok.Getter;
   @Getter private final String cardId;
   @Getter private final App recommendedApp;
   @Getter private final List<App> similarApps;
+  private final Urls urls;
   @Getter private final Ab ab;
   @Getter @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date timestamp;
 
   @JsonCreator public Recommendation(@JsonProperty("uid") String cardId,
       @JsonProperty("timestamp") Date timestamp, @JsonProperty("app") App recommendedApp,
-      @JsonProperty("apps") List<App> similarApps, @JsonProperty("ab") Ab ab) {
+      @JsonProperty("apps") List<App> similarApps, @JsonProperty("ab") Ab ab,
+      @JsonProperty("urls") Urls urls) {
     this.ab = ab;
     this.cardId = cardId;
     this.timestamp = timestamp;
     this.recommendedApp = recommendedApp;
     this.similarApps = similarApps;
+    this.urls = urls;
+  }
+
+  @Override public Urls getUrls() {
+    return urls;
   }
 }

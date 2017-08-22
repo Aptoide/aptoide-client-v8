@@ -19,17 +19,20 @@ public class AggregatedSocialInstall implements TimelineCard {
   @Getter private final App app;
   @Getter private final Ab ab;
   @Getter private final Date date;
+  private final Urls urls;
 
   public AggregatedSocialInstall(@JsonProperty("uid") String cardId,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("cards_shared") List<MinimalCard> minimalCardList,
-      @JsonProperty("sharers") List<UserSharerTimeline> sharers) {
+      @JsonProperty("sharers") List<UserSharerTimeline> sharers, @JsonProperty("urls") Urls urls) {
+
     this.minimalCardList = minimalCardList;
     this.sharers = sharers;
     this.cardId = cardId;
     this.ab = ab;
     this.date = date;
+    this.urls = urls;
     if (!apps.isEmpty()) {
       this.app = apps.get(0);
     } else {
@@ -43,5 +46,9 @@ public class AggregatedSocialInstall implements TimelineCard {
 
   public List<UserSharerTimeline> getSharers() {
     return sharers;
+  }
+
+  @Override public Urls getUrls() {
+    return urls;
   }
 }

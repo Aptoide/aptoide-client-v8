@@ -18,6 +18,10 @@ public abstract class DummyPost implements Post {
     return null;
   }
 
+  @Override public String getMarkAsReadUrl() {
+    return null;
+  }
+
   @Override public boolean isLiked() {
     return false;
   }
