@@ -21,6 +21,7 @@ public class StoreLatestApps implements Post {
   private final List<App> apps;
   private final String abUrl;
   private final CardType cardType;
+  private final String markAsReadUrl;
   private final Long storeId;
   private boolean isLiked;
   private boolean likedFromClick;
@@ -28,7 +29,7 @@ public class StoreLatestApps implements Post {
 
   public StoreLatestApps(String cardId, Long storeId, String storeName, String storeAvatar,
       String storeTheme, int subscribers, int appsNumber, Date latestUpdate, List<App> apps,
-      String abUrl, boolean isLiked, CardType cardType) {
+      String abUrl, boolean isLiked, CardType cardType, String markAsReadUrl) {
     this.cardId = cardId;
     this.storeId = storeId;
     this.storeName = storeName;
@@ -41,6 +42,7 @@ public class StoreLatestApps implements Post {
     this.abUrl = abUrl;
     this.isLiked = isLiked;
     this.cardType = cardType;
+    this.markAsReadUrl = markAsReadUrl;
     this.comments = new ArrayList<>();
   }
 
@@ -82,6 +84,10 @@ public class StoreLatestApps implements Post {
 
   @Override public String getAbUrl() {
     return abUrl;
+  }
+
+  @Override public String getMarkAsReadUrl() {
+    return markAsReadUrl;
   }
 
   public boolean isLiked() {

@@ -1,10 +1,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -15,25 +15,28 @@ import rx.Observable;
 
 public class PostReadRequest extends V7<BaseV7Response, PostReadRequest.Body> {
 
-  protected PostReadRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+  private static final String TAG = PostReadRequest.class.getSimpleName();
+  private final HttpUrl url;
+
+  protected PostReadRequest(HttpUrl url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+      TokenInvalidator tokenInvalidator) {
+    super(body, url.scheme() + "://" + url.host(), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
+    this.url = url;
   }
 
-  public static PostReadRequest of(String cardId, String cardType,
+  public static PostReadRequest of(String url, String cardId, String cardType,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     final Body body = new Body(new Post(cardId, cardType));
-    return new PostReadRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
+    return new PostReadRequest(HttpUrl.parse(url), body, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setPostRead(bypassCache, body);
+    return interfaces.setPostRead(bypassCache, body, url.encodedPath());
   }
 
   static class Body extends BaseBody {

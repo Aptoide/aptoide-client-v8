@@ -14,6 +14,8 @@ public interface Post {
 
   String getAbUrl();
 
+  String getMarkAsReadUrl();
+
   boolean isLiked();
 
   void setLiked(boolean liked);

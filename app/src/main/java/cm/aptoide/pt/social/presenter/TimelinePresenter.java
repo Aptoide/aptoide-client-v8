@@ -45,8 +45,6 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
@@ -169,7 +167,9 @@ public class TimelinePresenter implements Presenter {
         .flatMap(lifecycleEvent -> view.getVisibleItems()
             .filter(post -> !post.getType()
                 .isDummy())
-            .flatMapCompletable(post -> timeline.setPostRead(post.getCardId(), post.getType()))
+            .flatMapCompletable(
+                post -> timeline.setPostRead(post.getMarkAsReadUrl(), post.getCardId(),
+                    post.getType()))
             .doOnError(throwable -> Logger.e(this, throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
