@@ -152,6 +152,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
+import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
@@ -185,6 +186,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
@@ -1287,13 +1289,14 @@ public abstract class V8Engine extends Application {
     return syncStorage;
   }
 
-  public TimelinePostsRepository getTimelineRepository(String action) {
+  public TimelinePostsRepository getTimelineRepository(String action, Context context) {
     if (timelineRepositoryFactory == null) {
       timelineRepositoryFactory =
           new TimelineRepositoryFactory(new HashMap<>(), getBaseBodyInterceptorV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(), new TimelineResponseCardMapper());
+              WebService.getDefaultConverter(), new TimelineResponseCardMapper(
+              () -> new TimelineAdsRepository(context, BehaviorRelay.create())));
     }
     return timelineRepositoryFactory.create(action);
   }

@@ -46,6 +46,7 @@ import cm.aptoide.pt.social.data.PostComment;
 import cm.aptoide.pt.social.data.SocialAction;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.Timeline;
+import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.social.data.TimelineService;
@@ -71,6 +72,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;
 import java.util.List;
@@ -186,7 +188,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelinePostsRepository =
         ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
-            getArguments().getString(ACTION_KEY));
+            getArguments().getString(ACTION_KEY), getContext());
 
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
@@ -196,7 +198,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     OkHttpClient okhttp = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
 
     timelineService = new TimelineService(userId, baseBodyInterceptorV7, okhttp, defaultConverter,
-        new TimelineResponseCardMapper(), tokenInvalidator, sharedPreferences);
+        new TimelineResponseCardMapper(
+            () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create())),
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

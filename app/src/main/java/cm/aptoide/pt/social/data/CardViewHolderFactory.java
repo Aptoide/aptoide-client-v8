@@ -124,8 +124,8 @@ public class CardViewHolderFactory {
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
       case AD:
         return new TimelineAdPostViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_native_ad_item, parent, false), cardTouchEventPublishSubject,
-            new TimelineAdsRepository(parent.getContext()));
+            .inflate(R.layout.timeline_native_ad_item, parent, false),
+            cardTouchEventPublishSubject);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }
