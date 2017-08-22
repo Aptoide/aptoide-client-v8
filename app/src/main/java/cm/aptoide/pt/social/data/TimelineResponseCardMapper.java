@@ -5,6 +5,8 @@ import cm.aptoide.pt.Install;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AdMoPub;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AdTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstall;
@@ -503,6 +505,8 @@ public class TimelineResponseCardMapper {
           aggregatedSocialStoreLatestApps.getApps(), abUrl, CardType.AGGREGATED_SOCIAL_STORE,
           aggregatedSocialStoreLatestApps.getUrls()
               .getRead()));
+    } else if (item instanceof AdTimelineItem) {
+      cards.add(new AdPost());
     }
   }
 

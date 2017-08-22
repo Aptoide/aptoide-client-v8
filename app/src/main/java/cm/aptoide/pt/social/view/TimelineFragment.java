@@ -169,10 +169,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     defaultConverter = WebService.getDefaultConverter();
     defaultClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
-        defaultClient, defaultConverter, tokenInvalidator, V8Engine.getConfiguration()
-        .getAppId(), sharedPreferences);
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     sharedPreferences =
@@ -191,6 +187,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelinePostsRepository =
         ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
             getArguments().getString(ACTION_KEY));
+
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
+        defaultClient, defaultConverter, tokenInvalidator, V8Engine.getConfiguration()
+        .getAppId(), sharedPreferences);
 
     OkHttpClient okhttp = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
 
@@ -503,6 +504,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void hidePostProgressIndicator() {
     postIndicator = false;
     hideProgressIndicator();
+  }
+
+  @Override public void removePost(int postPosition) {
+    adapter.removePost(postPosition);
   }
 
   @Override public Observable<Post> getVisibleItems() {

@@ -40,6 +40,7 @@ import cm.aptoide.pt.social.data.Timeline;
 import cm.aptoide.pt.social.data.TimelineStatsPost;
 import cm.aptoide.pt.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.social.view.TimelineView;
+import cm.aptoide.pt.social.view.viewholder.NativeAdErrorEvent;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -151,6 +152,8 @@ public class TimelinePresenter implements Presenter {
 
     handlePostNavigation();
 
+    handleNativeAdError();
+
     onViewCreatedHandleVisibleItems();
   }
 
@@ -159,6 +162,20 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handleNativeAdError() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.ERROR))
+            .doOnNext(cardTouchEvent -> view.removePost(
+                ((NativeAdErrorEvent) cardTouchEvent).getPostPosition()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void onViewCreatedHandleVisibleItems() {
