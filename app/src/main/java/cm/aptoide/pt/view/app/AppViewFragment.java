@@ -71,7 +71,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -88,7 +87,6 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.SearchUtils;
-import cm.aptoide.pt.util.StoreEnum;
 import cm.aptoide.pt.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -932,8 +930,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
-        .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
-            group != null ? group.getId() : null, 6, ListAppsRequest.Sort.latest)
+        .zipWith(requestFactory.newGetRecommendedRequest(6)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()
                 .getList()), appViewSimilarAppAnalytics))
