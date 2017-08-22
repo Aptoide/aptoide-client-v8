@@ -1161,6 +1161,9 @@ public class Analytics {
     static final String ON_VIDEO_AD_START = "ON_VIDEO_AD_START";
     static final String ON_VIDEO_AD_UNAVAILABLE = "ON_VIDEO_AD_UNAVAILABLE";
     static final String ON_VIDEO_AD_PLAYABLE_CHANGED = "ON_VIDEO_AD_PLAYABLE_CHANGED";
+    static final String ON_VIDEO_AD_FAILED = "ON_VIDEO_AD_FAILED";
+    static final String ON_VIDEO_AD_LOADED = "ON_VIDEO_AD_LOADED";
+    static final String ON_VIDEO_AD_CLOSED = "ON_VIDEO_AD_CLOSED";
     static final String SDKNAME = "sdkName";
     static final String SDKVERSION = "sdkVersion";
     static final String WASSUCCESSFULVIEW = "wasSuccessfulView";
@@ -1204,6 +1207,30 @@ public class Analytics {
       map.put(ISADPLAYABLE, String.valueOf(isAdPlayable));
       logFacebookEvents(ON_VIDEO_AD_PLAYABLE_CHANGED, map);
       track(ON_VIDEO_AD_PLAYABLE_CHANGED, map, FLURRY);
+    }
+
+    public static void onVideoAdFailed(String sdkName, String sdkVersion) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      logFacebookEvents(ON_VIDEO_AD_FAILED, map);
+      track(ON_VIDEO_AD_FAILED, map, FLURRY);
+    }
+
+    public static void onVideoAdLoaded(String sdkName, String sdkVersion) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      logFacebookEvents(ON_VIDEO_AD_LOADED, map);
+      track(ON_VIDEO_AD_LOADED, map, FLURRY);
+    }
+
+    public static void onVideoAdClosed(String sdkName, String sdkVersion) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      logFacebookEvents(ON_VIDEO_AD_CLOSED, map);
+      track(ON_VIDEO_AD_CLOSED, map, FLURRY);
     }
   }
 
