@@ -33,11 +33,13 @@ public class GetRecommendedRequest extends V7<ListApps, GetRecommendedRequest.Bo
   public static class Body extends BaseBody implements Endless {
 
     private Integer limit;
+    private String packageName;
     private int offset;
 
-    public Body(int limit) {
+    public Body(int limit, String packageName) {
       super();
       this.limit = limit;
+      this.packageName = packageName;
     }
 
     @Override public int getOffset() {
@@ -50,6 +52,14 @@ public class GetRecommendedRequest extends V7<ListApps, GetRecommendedRequest.Bo
 
     @Override public Integer getLimit() {
       return limit;
+    }
+
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+      this.packageName = packageName;
     }
   }
 }

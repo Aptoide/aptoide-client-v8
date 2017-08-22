@@ -930,7 +930,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
-        .zipWith(requestFactory.newGetRecommendedRequest(6)
+        .zipWith(requestFactory.newGetRecommendedRequest(6, packageName)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()
                 .getList()), appViewSimilarAppAnalytics))

@@ -29,8 +29,8 @@ class GetRecommendedRequestFactory {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public GetRecommendedRequest newGetRecommendedRequest(int limit) {
-    return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+  public GetRecommendedRequest newGetRecommendedRequest(int limit, String packageName) {
+    return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 }

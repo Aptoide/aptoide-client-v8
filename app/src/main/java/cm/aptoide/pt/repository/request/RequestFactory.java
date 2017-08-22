@@ -104,7 +104,7 @@ public class RequestFactory {
     return this.getStoreRecommendedRequestFactory.newRecommendedStore(url);
   }
 
-  public GetRecommendedRequest newGetRecommendedRequest(int limit) {
-    return this.getRecommendedRequestFactory.newGetRecommendedRequest(limit);
+  public GetRecommendedRequest newGetRecommendedRequest(int limit, String packageName) {
+    return this.getRecommendedRequestFactory.newGetRecommendedRequest(limit, packageName);
   }
 }
