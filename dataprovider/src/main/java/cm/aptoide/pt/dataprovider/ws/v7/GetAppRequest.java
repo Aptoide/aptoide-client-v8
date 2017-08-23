@@ -50,6 +50,17 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
         httpClient, converterFactory, tokenInvalidator);
   }
 
+  public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
+
+    return new GetAppRequest(getHost(sharedPreferences),
+        new Body(packageName, forceServerRefresh, sharedPreferences), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator);
+  }
+
   public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
