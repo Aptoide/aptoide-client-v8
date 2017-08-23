@@ -175,7 +175,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             getArguments().getString(ACTION_KEY));
 
     timelineService = new TimelineService(userId,
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), new TimelineResponseCardMapper(), tokenInvalidator,
         sharedPreferences);
@@ -227,7 +227,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     TimelineAnalytics timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
         .getAppId(), sharedPreferences);
@@ -247,7 +247,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool(),
             storeCredentialsProvider, storeAccessor,
             ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),

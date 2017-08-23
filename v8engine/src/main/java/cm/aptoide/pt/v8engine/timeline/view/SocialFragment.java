@@ -84,13 +84,4 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_empty, menu);
   }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
 }

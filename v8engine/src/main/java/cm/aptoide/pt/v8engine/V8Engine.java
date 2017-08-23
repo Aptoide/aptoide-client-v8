@@ -136,6 +136,7 @@ import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
+import cm.aptoide.pt.v8engine.networking.Cdn;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.RefreshTokenInvalidator;
@@ -227,7 +228,8 @@ public abstract class V8Engine extends Application {
 
   @Getter @Setter private static ShareApps shareApps;
   private AptoideAccountManager accountManager;
-  private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV7Pool;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV7Web;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> baseBodyInterceptorV3;
   private Preferences preferences;
   private cm.aptoide.pt.v8engine.preferences.SecurePreferences securePreferences;
@@ -479,9 +481,9 @@ public abstract class V8Engine extends Application {
     if (storeManager == null) {
       storeManager =
           new StoreManager(accountManager, getDefaultClient(), WebService.getDefaultConverter(),
-              getMultipartBodyInterceptor(), getBaseBodyInterceptorV3(), getBaseBodyInterceptorV7(),
-              getDefaultSharedPreferences(), getTokenInvalidator(), getRequestBodyFactory(),
-              getNonNullObjectMapper());
+              getMultipartBodyInterceptor(), getBaseBodyInterceptorV3(),
+              getBaseBodyInterceptorV7Pool(), getDefaultSharedPreferences(), getTokenInvalidator(),
+              getRequestBodyFactory(), getNonNullObjectMapper());
     }
     return storeManager;
   }
@@ -969,7 +971,7 @@ public abstract class V8Engine extends Application {
 
   private Completable sendAppStartToAnalytics() {
     return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
-        getDefaultClient(), getBaseBodyInterceptorV7(),
+        getDefaultClient(), getBaseBodyInterceptorV7Pool(),
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
             getDefaultSharedPreferences()), getTokenInvalidator());
   }
@@ -1036,7 +1038,7 @@ public abstract class V8Engine extends Application {
               Store.class));
 
       StoreUtilsProxy proxy =
-          new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7(), storeCredentials,
+          new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7Pool(), storeCredentials,
               AccessorFactory.getAccessorFor(
                   ((V8Engine) this.getApplicationContext()).getDatabase(), Store.class),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
@@ -1046,7 +1048,7 @@ public abstract class V8Engine extends Application {
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
-          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
+          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7Pool(),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences()), getAccountManager(), defaultStoreCredentials)
           .andThen(refreshUpdates()))
@@ -1055,14 +1057,30 @@ public abstract class V8Engine extends Application {
     });
   }
 
-  public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
-    if (baseBodyInterceptorV7 == null) {
-      baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
+  /**
+   * BaseBodyInterceptor for v7 ws calls with CDN = pool configuration
+   */
+  public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7Pool() {
+    if (baseBodyInterceptorV7Pool == null) {
+      baseBodyInterceptorV7Pool = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
-          getQManager(), "pool", getDefaultSharedPreferences(), getResources(), getPackageName(),
+          getQManager(), Cdn.POOL, getDefaultSharedPreferences(), getResources(), getPackageName(),
           getPackageRepository());
     }
-    return baseBodyInterceptorV7;
+    return baseBodyInterceptorV7Pool;
+  }
+
+  /**
+   * BaseBodyInterceptor for v7 ws calls with CDN = web configuration
+   */
+  public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7Web() {
+    if (baseBodyInterceptorV7Web == null) {
+      baseBodyInterceptorV7Web = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
+          getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
+          getQManager(), Cdn.WEB, getDefaultSharedPreferences(), getResources(), getPackageName(),
+          getPackageRepository());
+    }
+    return baseBodyInterceptorV7Web;
   }
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
@@ -1290,7 +1308,7 @@ public abstract class V8Engine extends Application {
   public TimelinePostsRepository getTimelineRepository(String action) {
     if (timelineRepositoryFactory == null) {
       timelineRepositoryFactory =
-          new TimelineRepositoryFactory(new HashMap<>(), getBaseBodyInterceptorV7(),
+          new TimelineRepositoryFactory(new HashMap<>(), getBaseBodyInterceptorV7Pool(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
               WebService.getDefaultConverter(), new TimelineResponseCardMapper());

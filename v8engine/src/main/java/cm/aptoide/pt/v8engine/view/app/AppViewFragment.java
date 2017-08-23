@@ -284,7 +284,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     permissionManager = new PermissionManager();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
     final TokenInvalidator tokenInvalidator =
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
@@ -923,7 +924,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
-        .zipWith(requestFactory.newListAppsRequest(StoreEnum.Apps.getId(),
+        .zipWith(requestFactoryCdnWeb.newListAppsRequest(StoreEnum.Apps.getId(),
             group != null ? group.getId() : null, 6, ListAppsRequest.Sort.latest)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()

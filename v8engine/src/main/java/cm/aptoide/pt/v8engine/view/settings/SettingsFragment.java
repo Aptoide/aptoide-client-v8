@@ -191,11 +191,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-          ((V8Engine) getContext().getApplicationContext()
-              .getApplicationContext()).getDatabase(), Update.class);
+          ((V8Engine) getContext().getApplicationContext()).getDatabase(), Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context,
-          ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
+          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()

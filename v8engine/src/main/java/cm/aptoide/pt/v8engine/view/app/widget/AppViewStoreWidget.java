@@ -63,7 +63,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
 
     GetApp getApp = displayable.getPojo();
 

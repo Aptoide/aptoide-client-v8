@@ -158,7 +158,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             .getApplicationContext()).getDatabase(), Store.class));
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
@@ -172,7 +173,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       @Nullable Bundle savedInstanceState) {
     View v = super.onCreateView(inflater, container, savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyDecorator =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     return v;
   }

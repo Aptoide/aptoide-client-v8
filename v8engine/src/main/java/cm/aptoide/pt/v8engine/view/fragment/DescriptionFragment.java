@@ -86,7 +86,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         ((V8Engine) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
     baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
   }

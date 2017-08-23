@@ -265,7 +265,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((V8Engine) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));

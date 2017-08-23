@@ -55,7 +55,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         ((V8Engine) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
   }

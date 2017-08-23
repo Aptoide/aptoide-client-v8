@@ -123,7 +123,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager), bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(), tokenInvalidator,

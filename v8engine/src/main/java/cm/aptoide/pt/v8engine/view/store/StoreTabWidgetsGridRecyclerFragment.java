@@ -67,7 +67,8 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
