@@ -137,7 +137,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
         ((V8Engine) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),

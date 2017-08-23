@@ -70,7 +70,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     converterFactory = WebService.getDefaultConverter();
 
     this.bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
 
     final AccountNavigator accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager);

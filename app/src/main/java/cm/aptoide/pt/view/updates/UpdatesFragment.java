@@ -152,7 +152,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     super.onCreate(savedInstanceState);
     crashReport = CrashReport.getInstance();
     bodyInterceptorV7 =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(

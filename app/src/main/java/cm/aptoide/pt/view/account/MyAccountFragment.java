@@ -120,7 +120,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     crashReport = CrashReport.getInstance();

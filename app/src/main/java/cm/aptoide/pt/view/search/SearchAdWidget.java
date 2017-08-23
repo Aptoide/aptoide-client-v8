@@ -25,7 +25,6 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
   private TextView name;
   private ImageView icon;
-  private TextView sponsored;
   private TextView downloadsTextView;
   private RatingBar ratingBar;
   private TextView timeTextView;
@@ -37,7 +36,6 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
   @Override protected void assignViews(View itemView) {
     name = (TextView) itemView.findViewById(R.id.name);
     icon = (ImageView) itemView.findViewById(R.id.icon);
-    sponsored = (TextView) itemView.findViewById(R.id.sponsored_label);
     downloadsTextView = (TextView) itemView.findViewById(R.id.downloads);
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
     timeTextView = (TextView) itemView.findViewById(R.id.search_time);
@@ -48,8 +46,6 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
     name.setText(minimalAd.getName());
     final FragmentActivity context = getContext();
-    sponsored.setText((context.getResources()
-        .getText(R.string.all_title_ad) + ""));
     ImageLoader.with(context)
         .load(minimalAd.getIconPath(), icon);
 

@@ -84,7 +84,7 @@ public class MainActivity extends TabNavigatorActivity
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
 
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7Pool(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
             ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
             Store.class)), AccessorFactory.getAccessorFor(
