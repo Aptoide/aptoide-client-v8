@@ -517,7 +517,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public Observable<Post> getVisibleItems() {
     return RxRecyclerView.scrollEvents(list)
         .subscribeOn(AndroidSchedulers.mainThread())
-        .map(recyclerViewScrollEvent -> layoutManager.findFirstCompletelyVisibleItemPosition())
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
         .filter(position -> position != RecyclerView.NO_POSITION)
         .distinctUntilChanged()
         .map(visibleItem -> adapter.getPost(visibleItem));
