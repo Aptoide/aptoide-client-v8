@@ -35,12 +35,12 @@ najmanje jedno slovo i jedan broj ili specijalni znak (!@#$%*)
   <!--errors-->
   <string name="error_occured">Pojavila se greška. Molimo pokušajte ponovo</string>
   <string name="error_invalid_grant">Netočna kombinacija korisničkog imena i šifre</string>
-  <string name="ws_error_MARG_200">error_occured</string>
-  <string name="ws_error_MARG_203">error_occured</string>
-  <string name="ws_error_MARG_204">error_occured</string>
-  <string name="ws_error_IARG_200">error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">neispravni podaci</string>
-  <string name="ws_error_AUTH_7">error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Neuspješno povezivanje s Google uslugama. Molimo vas da provjerite vaš Google račun (možda je potrebno potvrditi e-mail adresu)</string>
   <string name="ws_error_AUTH_101">Nemoguća prijava preko Googla. Molimo pokušajte ponovno.</string>
   <string name="ws_error_AUTH_102">Neuspješno povezivanje s Facebook uslugama. Molimo vas da provjerite vaš Facebook račun (možda je potrebno potvrditi e-mail adresu)</string>

@@ -118,7 +118,7 @@
   <string name="download_pending">მოლოდინში</string>
   <!-- layouts -->
   <string name="download_retry">სცადეთ ხელახლა</string>
-  <string name="error503">უიი...ეს მხოლოდ მე ვარ, თუ ყველა იწერს აპლიკაციებს ერთდროულად?</string>
+  <string name="error503">უიი…ეს მხოლოდ მე ვარ, თუ ყველა იწერს აპლიკაციებს ერთდროულად?</string>
   <string name="having_some_trouble">რაღაც პრობლემაა. შეგიძლიათ, რომ მოგვიანებით სცადოთ?</string>
   <!-- Vote -->
   <string name="reply">პასუხი</string>
@@ -154,11 +154,11 @@
   <string name="feedback_send_button">გამოხმაურების გაგზავნა</string>
   <!-- NavDrawer List items -->
   <string name="my_account">My Account</string>
-  <string name="setting_schdwntitle">Scheduled Downloads</string>
-  <string name="settings">Settings</string>
+  <string name="setting_schdwntitle">გადადებული გადმოწერები</string>
+  <string name="settings">პარამეტრები</string>
   <string name="facebook">Facebook</string>
   <string name="twitter">Twitter</string>
-  <string name="backup_apps">Backup Apps</string>
+  <string name="backup_apps">Backup Apps (აპლიკაცია)</string>
   <string name="menu_context_reparse">გადატვირთვა</string>
   <string name="menu_context_remove">წაშლა</string>
   <!-- Stores -->
@@ -210,7 +210,7 @@
   <string name="more_versions">სხვა ვერსიები</string>
   <string name="facebook_friends_list_using_timeline_empty">სოციალური გვერდი საშუალებას გაძლევს გაუზიარო აპლიკაციები შენ Facebook მეგობრებს. გსურს შეუერთდე?</string>
   <string name="X_download_number">%s გადმ.</string>
-  <string name="timeline_not_compatible">უი...ეს ფუნქცია არ არის თავსებადი Aptoide-ის ამ ვერსიასთან</string>
+  <string name="timeline_not_compatible">უი…ეს ფუნქცია არ არის თავსებადი Aptoide-ის ამ ვერსიასთან</string>
   <string name="sponsored">დასპონსორებული</string>
   <string name="friends_installs">თქვენი მეგობრების აპლიკაციები</string>
   <string name="recommended_for_you">რეკომენდებული</string>

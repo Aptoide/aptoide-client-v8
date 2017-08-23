@@ -33,12 +33,7 @@
   <!--errors-->
   <string name="error_occured">Pojavila se greška. Molimo pokušaj ponovo</string>
   <string name="error_invalid_grant">Nevažeća kombinacija korisničkog imena i lozinke</string>
-  <string name="ws_error_MARG_200">greška_se dogodila</string>
-  <string name="ws_error_MARG_203">greška_se dogodila</string>
-  <string name="ws_error_MARG_204">greška_se dogodila</string>
-  <string name="ws_error_IARG_200">greška_se dogodila</string>
   <string name="ws_error_AUTH_2">Pogrešne kredencije!</string>
-  <string name="ws_error_AUTH_7">greška_se dogodila</string>
   <string name="ws_error_AUTH_100">Prijava sa Guglom nije bila moguća. Proverite svoj Gugl nalog (možda ćete morati da potvrdite svoju imejl adresu)</string>
   <string name="ws_error_AUTH_101">Ne može se prijaviti sa Gugla. Molimo pokušaj ponovo.</string>
   <string name="ws_error_AUTH_102">Prijava sa Fejsbukom nije bila moguća. Proverite svoj Fejsbuk nalog (možda ćete morati da potvrdite svoju imejl adresu)</string>

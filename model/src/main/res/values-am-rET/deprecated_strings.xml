@@ -85,7 +85,8 @@
   <string name="yes">አዎ</string>
   <string name="no">አይደለም</string>
   <string name="feedback_subject">ጉዳይ</string>
-  <string name="feedback_to_write2">አስተያየትዎን ለእኛ ለመላክ እዚህ ላይ ይጻፉ...\n\ n እባክዎ ሊያገኙዋቸው የሚችሉትን ሁሉንም ዝርዝሮች ይስጡን:\n\. ያዩአቸዉን \n\. ስህተቶች በደረጃ ያሳውቁን</string>
+  <string name="feedback_to_write2">አስተያየትዎን ለእኛ ለመላክ እዚህ ላይ ይጻፉ…\n\ n እባክዎ ሊያገኙዋቸው የሚችሉትን ሁሉንም
+    ዝርዝሮች ይስጡን:\n\. ያዩአቸዉን \n\. ስህተቶች በደረጃ ያሳውቁን</string>
   <string name="feedback_include_logs">እስክሪንሹቱን እና ሎግ ያካትቱ</string>
   <string name="feedback_no_email">ምንም የኢሜይል ደንበኛ የተጫነ የለም!</string>
   <string name="store_already_added">ማከማቻ አስቀድሞ ተጨምሮል!</string>
@@ -116,7 +117,7 @@
   <string name="download_pending">በመጠበቅ ላይ ነዉ</string>
   <!-- layouts -->
   <string name="download_retry">ደግመው ይሞክሩ</string>
-  <string name="error503">ኡፍፍፍ… እኔ ወይም ሁሉም ሰው ኤፒፒ በተመሳሳይ ጊዜ የሚጭነው?</string>
+  <string name="error503">ኡፍፍፍ… እኔ ብቻ ነኝ ወይስ ሁሉም ሰው በተመሳሳይ ጊዜ ኤፒፒ እየጫነ ነው?</string>
   <string name="having_some_trouble">የተወሰነ ችግር ተፈጥሮል. በኃላ ላይ ሊሞክሩት ይችላሉ?</string>
   <!-- Vote -->
   <string name="reply">ምላሽ ይስጡ</string>

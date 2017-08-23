@@ -23,6 +23,6 @@
   <string name="WidgetProvider_timestamp_year_ago">1 годину раније</string>
   <string name="WidgetProvider_timestamp_years_ago">%s godinu ranije</string>
   <!-- Share options -->
-  <string name="share_options_share_external">Podelite preko...</string>
+  <string name="share_options_share_external">Podelite preko…</string>
   <string name="share_options_share_in_timeline">Podelite na Rasporedu Aplikacija</string>
 </resources>

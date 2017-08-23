@@ -7,21 +7,14 @@
 <resources>
   <string name="dark">Escuro</string>
   <string name="light">Claro</string>
-  <string name="updates_filter_summary">Marcando isso, você não será notificado sobre versões
-    beta.
-  </string>
-  <string name="updates_filter_setting_title">Mostrar apenas atualizações de versões de aplicativos
-    estáveis
-  </string>
+  <string name="updates_filter_summary">Marcando isso, você não será notificado sobre versões beta.</string>
+  <string name="updates_filter_setting_title">Mostrar apenas atualizações de versões de aplicativos estáveis</string>
   <string name="include_system_apps_title">Incluir aplicativos do sistema</string>
-  <string name="include_system_apps_summary">Marcando isso, você será notificado das atualizações de
-    aplicativos do sistema (aplicativos que foram instalados pelo fabricante do dispositivo)
-  </string>
+  <string name="include_system_apps_summary">Marcando isso, você será notificado das atualizações de aplicativos do sistema (aplicativos que foram instalados pelo fabricante do dispositivo)</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
   <!-- Permission pop-ups messages -->
-  <string name="access_to_get_accounts_rationale">Você precisa permitir o acesso a Obter Contas
-  </string>
+  <string name="access_to_get_accounts_rationale">Você precisa permitir o acesso a Obter Contas</string>
   <string name="unsubscribe">Cancelar inscrição</string>
   <string name="developer_website">Página web: %s</string>
   <string name="not_available">N/A</string>
@@ -30,7 +23,7 @@
   <string name="open">Abrir</string>
   <string name="button_header_more">mais</string>
   <string name="search">Pesquisar</string>
-  <string name="update">Atualização</string>
+  <string name="update">Atualizar</string>
   <string name="uninstall">Desinstalar</string>
   <string name="downgrade">Voltar à versão anterior</string>
   <string name="appview_followers_count_text">%1$s Seguidores</string>
@@ -41,41 +34,29 @@
   <string name="clear">Limpar</string>
   <!-- Excluded Updates Fragment -->
   <string name="excluded_updates">Atualizações excluídas</string>
-  <string name="no_excluded_updates_msg">A nova versão de um aplicativo não funciona no seu
-    dispositivo ou está faltando algum
-    recurso? Bloqueie a atualização de aplicativos. Vá em Atualizações e pressione o aplicativo que
-    você deseja parar
-    de atualizar.
-  </string>
+  <string name="no_excluded_updates_msg">A nova versão de um aplicativo não funciona no seu dispositivo ou está faltando algum
+ recurso? Bloqueie a atualização de aplicativos. Vá em Atualizações e pressione o aplicativo que você deseja parar
+ de atualizar.</string>
   <!-- Excluded Updates Fragment (menu) -->
   <string name="restore_updates">Restaurar atualizações</string>
   <string name="open_apps_manager">Abrir gerenciador de aplicativos</string>
   <!-- Rollback Fragment -->
   <string name="rollback">Voltar</string>
-  <string name="no_rollbacks_msg">Faça rapidamente o downgrade de qualquer aplicativo para uma
-    versão anterior e resolva problemas de compatibilidade.
-    Mantenha um registro de todos os seus aplicativos instalados (via %s), incluindo a versão e data
-    de instalação.
-  </string>
+  <string name="no_rollbacks_msg">Faça rapidamente o downgrade de qualquer aplicativo para uma versão anterior e resolva problemas de compatibilidade.
+Mantenha um registro de todos os seus aplicativos instalados (via %s), incluindo a versão e data de instalação.</string>
   <!-- Timeline Fragment -->
   <string name="menu_card_timeline_clear">Limpar</string>
   <string name="fragment_social_timeline_aptoide_team">Equipe Aptoide</string>
   <string name="fragment_social_timeline_no_connection">Sem conexão de rede</string>
-  <string name="fragment_social_timeline_general_error">Estamos com problemas. Pode tentar novamente
-    mais tarde?
-  </string>
-  <string name="displayable_social_timeline_store_latest_apps_headline">Esta loja tem novos
-    aplicativos
-  </string>
+  <string name="fragment_social_timeline_general_error">Estamos com problemas. Pode tentar novamente mais tarde?</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">Esta loja tem novos aplicativos</string>
   <string name="displayable_social_timeline_app_update_name">Aplicativo %1$s</string>
   <string name="displayable_social_timeline_app_has_update">tem %1$s</string>
   <string name="displayable_social_timeline_article_get_app_button">Obter aplicativo %1$s</string>
   <string name="displayable_social_timeline_app_update">atualização</string>
   <string name="displayable_social_timeline_app_update_version">Versão: %1$s</string>
   <string name="displayable_social_timeline_app_update_button">Atualizar %1$s</string>
-  <string name="appview_other_versions">
-    <u>Outras versões</u>
-  </string>
+  <string name="appview_other_versions"><u>Outras versões</u></string>
   <string name="appview_latest_version_text">Última versão</string>
   <string name="appview_rate_this_app">avaliar este aplicativo</string>
   <string name="appview_read_all">leia todos os <![CDATA[>]]></string>
@@ -90,10 +71,8 @@
   <string name="displayable_social_timeline_app_update_error">Erro de atualização</string>
   <!-- need translation -->
   <string name="appview_good_app_guaranteed">Aplicativo garantido!</string>
-  <string name="appview_good_app_description">Estes aplicativos passaram no teste de segurança em
-    busca de vírus, malware e outros ataques maliciosos e não
-    contêm qualquer ameaça!
-  </string>
+  <string name="appview_good_app_description">Estes aplicativos passaram no teste de segurança em busca de vírus, malware e outros ataques maliciosos e não
+ contêm qualquer ameaça!</string>
   <!-- -->
   <!-- Preferences -->
   <!-- "Other <app name> versions on different Stores" -->
@@ -101,12 +80,11 @@
   <string name="other_versions_partial_title_2">versões em lojas diferentes</string>
   <string name="displayable_social_timeline_recommendation_similar_to">baseado em %1$s</string>
   <string name="displayable_social_timeline_recommendation_similar_and">e</string>
-  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s recomenda
-  </string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s recomenda</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Top comentários</string>
-  <string name="rate">Nota</string>
+  <string name="rate">Avalie</string>
   <string name="rate_app">Nota %s</string>
   <string name="title">Título</string>
   <string name="tap_a_star">Toque em uma estrela para avaliar</string>
@@ -125,27 +103,20 @@
   <string name="downgrading_msg">Fazendo downgrade</string>
   <string name="updating_msg">Atualizando</string>
   <string name="installing_msg">Instalando</string>
-  <string name="needs_permission_to_fs">Precisa de permissão para usar o sistema de arquivos
-    externo
-  </string>
+  <string name="needs_permission_to_fs">Precisa de permissão para usar o sistema de arquivos externo</string>
   <string name="added_to_scheduled">Adicionado ao Menu &gt; Downloads Agendados</string>
   <string name="pause_all_downloads">Pausar downloads</string>
   <string name="all_stores">Todas as Lojas</string>
   <string name="followed_stores">Lojas seguidas</string>
-  <string name="storage_access_permission_request_message">Por favor, permita o acesso à memória do
-    seu telefone, para que possamos baixar e instalar este aplicativo.
-  </string>
+  <string name="storage_access_permission_request_message">Por favor, permita o acesso à memória do seu telefone, para que possamos baixar e instalar este aplicativo.</string>
   <string name="remote_install_menu_title">Instalar na TV</string>
-  <string name="install_on_tv_mobile_error">Verifique se o dispositivo está conectado ao Wi-Fi para
-    usar esse recurso.
-  </string>
+  <string name="install_on_tv_mobile_error">Verifique se o dispositivo está conectado ao Wi-Fi para usar esse recurso.</string>
   <string name="remote_install_title">Escolher dispositivo de destino</string>
   <string name="remote_install_success">O aplicativo está sendo instalado</string>
   <string name="remote_install_fail">A instalação remota falhou</string>
   <string name="remote_install_nodevices">Não foram encontrados dispositivos</string>
   <string name="remote_install_notinstallated">Você tem Aptoide TV instalado no seu Android TV?
-    http://aptoi.de/tv
-  </string>
+ http://aptoi.de/tv</string>
   <string name="remote_install_nowifi">Sem conexão Wi-Fi</string>
   <string name="remote_install_nowifi_tip">Por favor, ative e se conecte a uma rede Wi-Fi</string>
   <string name="remote_install_empty_list">Procurando…</string>
@@ -153,52 +124,23 @@
   <string name="remote_install_retry">Tentar novamente</string>
   <string name="remote_install_help">Ajuda</string>
   <!-- WIZARD -->
-  <string name="wizard_skip">
-    <b>PULAR</b>
-  </string>
+  <string name="wizard_skip"><b>PULAR</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_welcome_message">
-    <b>Bem-vindo!</b>
-  </string>
-  <string name="wizard_sub_title_viewpager_one">Comece uma jornada <b>segura</b> e <b>agradável</b>.
-  </string>
-  <string name="wizard_description_part_one_viewpager_one">
-    <b>Procure</b>
-    aplicativos com o\nselo Trusted para \numa instalação segura.
-  </string>
-  <string name="wizard_description_part_two_viewpager_one">
-    <b>Descubra</b>
-    apps que\nvocê queria, mas\nnunca encontrou.
-  </string>
+  <string name="wizard_welcome_message"><b>Bem-vindo!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Comece uma jornada <b>segura</b> e <b>agradável</b>.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Procure</b> aplicativos com o\nselo Trusted para \numa instalação segura.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Descubra</b> apps que\nvocê queria, mas\nnunca encontrou.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">
-    <b>Linha do tempo de aplicativos</b>
-  </string>
-  <string name="wizard_sub_title_viewpager_two">Receba os <b>últimos apps</b>, encontre <b>lojas
-    temáticas</b>\ne acesse
-    <b>conteúdo personalizado.</b>
-  </string>
+  <string name="wizard_title_viewpager_two"><b>Linha do tempo de aplicativos</b></string>
+  <string name="wizard_sub_title_viewpager_two">Receba os <b>últimos apps</b>, encontre <b>lojas temáticas</b>\ne acesse <b>conteúdo personalizado.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">
-    <b>Faça parte da Comunidade</b>
-  </string>
-  <string name="wizard_description_part_one_viewpager_three">
-    <b>Siga</b>
-    seus amigos
-  </string>
-  <string name="wizard_description_part_two_viewpager_three">
-    <b>Avalie</b>
-    apps
-  </string>
-  <string name="wizard_description_part_three_viewpager_three">
-    <b>Crie</b>
-    sua loja
-  </string>
+  <string name="wizard_title_viewpager_three"><b>Faça parte da Comunidade</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Siga</b> seus amigos</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Avalie</b> apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Crie</b> sua loja</string>
   <string name="wizard_register_now_button">Cadastre-se agora</string>
   <string name="wizard_be_a_part_of_aptoide">Seja parte da Aptoide!</string>
-  <string name="wizard_or_login">
-    <u>ou Login</u>
-  </string>
+  <string name="wizard_or_login"><u>ou Login</u></string>
   <string name="you_need_to_be_logged_in">Você precisa estar logado(a)</string>
   <string name="follow">Seguir</string>
   <!--need translation-->
@@ -213,17 +155,12 @@
   <!---->
   <string name="be_the_first_to_rate_this_app">Seja o primeiro a avaliar este aplicativo</string>
   <string name="rate_this_app">Avaliar este aplicativo</string>
-  <string name="dialog_install_warning_proceed_button">Proceder</string>
+  <string name="dialog_install_warning_proceed_button">Continuar</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Procurar por</string>
   <string name="dialog_install_warning_trusted_app_button">Aplicativo Confiável</string>
-  <string name="dialog_install_warning_careful_text">Tenha cuidado se escolher instalar este app.
-    Ele pode ter sido adulterado, ter vírus ou malware.
-  </string>
-  <string name="dialog_install_warning_credibility_text">Antes de prosseguir, verifique a
-    credibilidade da Loja
-    e os comentários dos outros usuários. A Aptoide sempre recomenda que você só instale aplicativos
-    %1$s Confiáveis.
-  </string>
+  <string name="dialog_install_warning_careful_text">Tenha cuidado se escolher instalar este app. Ele pode ter sido adulterado, ter vírus ou malware.</string>
+  <string name="dialog_install_warning_credibility_text">Antes de prosseguir, verifique a credibilidade da Loja
+ e os comentários dos outros usuários. A Aptoide sempre recomenda que você só instale aplicativos %1$s Confiáveis.</string>
   <string name="dialog_install_warning_trusted_version_button">Versão Confiável</string>
   <string name="dialog_install_warning_get_trusted_version_button">Obter</string>
   <string name="flag_results">Resultados da sinalização</string>
@@ -238,9 +175,7 @@
   <string name="updates">Atualizações</string>
   <string name="social_timeline">Linha do Tempo</string>
   <string name="downloads">Downloads</string>
-  <string name="apps_timeline">
-    <b>Linha do tempo de aplicativos</b>
-  </string>
+  <string name="apps_timeline"><b>Linha do tempo de aplicativos</b></string>
   <string name="latest_reviews">Avaliações mais Recentes</string>
   <string name="latest_comments">Últimos Comentários</string>
   <string name="action">Ação</string>
@@ -320,42 +255,29 @@
   <string name="customtabs_open_native_app">Abrir no aplicativo</string>
   <!--Download fragment-->
   <string name="fragment_download_no_connection">Nenhum aplicativo baixado</string>
-  <string name="fragment_download_no_connection_subtitle">Novos aplicativos aparecerão aqui, assim
-    que você começar a baixá-los!
-  </string>
+  <string name="fragment_download_no_connection_subtitle">Novos aplicativos aparecerão aqui, assim que você começar a baixá-los!</string>
   <string name="newer_version_available">Nova versão disponível</string>
   <string name="add_store">Adicionar loja</string>
-  <string name="downgrade_warning_dialog">Ao fazer downgrade, você pode perder dados relacionados ao
-    aplicativo e sair da conta do aplicativo.
-  </string>
+  <string name="downgrade_warning_dialog">Ao fazer downgrade, você pode perder dados relacionados ao aplicativo e sair da conta do aplicativo.</string>
   <string name="displayable_social_timeline_similar_to">similar a %1$s</string>
   <string name="freed_space">%s livres</string>
   <string name="storage_dialog_title">Limpar Armazenamento Aptoide</string>
-  <string name="clear_cache_dialog_message">Tem certeza de que deseja excluir todos os ícones,
-    imagens, apk baixado, obb, dados do webservice, …
-  </string>
-  <string name="clear_cache_summary">Apagar ícones, imagens, apk baixado, obb, dados de webservice,
-    …
-  </string>
+  <string name="clear_cache_dialog_message">Tem certeza de que deseja excluir todos os ícones, imagens, apk baixado, obb, dados do webservice, …</string>
+  <string name="clear_cache_summary">Apagar ícones, imagens, apk baixado, obb, dados de webservice, …</string>
   <string name="clearcache_title">Limpar Amazenamento</string>
   <!-- Stores tab -->
   <string name="recommended_stores">Lojas Recomendadas</string>
-  <string name="create_store_displayable_message">Crie sua Loja agora e comece a compartilhar seus
-    aplicativos!
-  </string>
+  <string name="create_store_displayable_message">Crie sua Loja agora e comece a compartilhar seus aplicativos!</string>
   <string name="create_store_displayable_button">CRIAR LOJA</string>
   <string name="my_store_created_displayable_message">Sua Loja de Aplicativos Android</string>
-  <string name="create_store_displayable_created_store_message">Você acaba de criar sua Loja!
-  </string>
-  <string name="create_store_displayable_explore_message">Entre e explore todas as possibilidades
-  </string>
+  <string name="create_store_displayable_created_store_message">Você acaba de criar sua Loja!</string>
+  <string name="create_store_displayable_explore_message">Entre e explore todas as possibilidades</string>
   <string name="create_store_displayable_explore_button">Explorar</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">A sua loja ainda não tem aplicativos.</string>
-  <string name="install_app_outter_pt2">e carregue aplicativos para compartilhar com o mundo!
-  </string>
-  <string name="install_app_inner">Instalar %1$s</string>
-  <string name="open_app_inner">Abrir %1$s</string>
+  <string name="install_app_outter_pt2">e carregue aplicativos para compartilhar com o mundo!</string>
+  <string name="install_app_inner"> Instalar %1$s </string>
+  <string name="open_app_inner"> Abrir %1$s </string>
   <string name="downloads_count">Transferências: %1$s</string>
   <string name="version_number">Versão: %1$s</string>
   <string name="app_size">Tamanho: %1$s</string>
@@ -364,41 +286,22 @@
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">O que seus seguidores verão:</string>
   <string name="social_timeline_share_title">Compartilhar visualização do cartão</string>
-  <string name="social_timeline_share_title_checkbox">Tornar meu perfil de usuário privado na Linha
-    do Tempo de Aplicativos. Apenas mostrar / compartilhar informações da minha loja.
-  </string>
-  <string name="social_timeline_share_title_checkbox_fb">Permitir que meu perfil de usuário seja
-    público na Linha do Tempo de Aplicativos
-  </string>
+  <string name="social_timeline_share_title_checkbox">Tornar meu perfil de usuário privado na Linha do Tempo de Aplicativos. Apenas mostrar / compartilhar informações da minha loja.</string>
+  <string name="social_timeline_share_title_checkbox_fb">Permitir que meu perfil de usuário seja público na Linha do Tempo de Aplicativos</string>
   <string name="social_timeline_share_dialog_title">Obrigado por compartilhar</string>
-  <string name="social_timeline_share_dialog_opt_in_text_1">Seus amigos poderão encontrá-lo e
-    segui-lo.
-  </string>
-  <string name="social_timeline_share_dialog_opt_in_text_2">Caso deseje que seu perfil seja privado
-    na Linha do Tempo de Aplicativos, edite suas configurações de privacidade em <b>
-      www.aptoide.com</b>.
-  </string>
-  <string name="social_timeline_share_dialog_opt_out_text_1">Ao tornar o seu perfil oculto, os seus
-    amigos não poderão encontrá-lo e segui-lo na Linha do Tempo de Aplicativos.
-  </string>
-  <string name="social_timeline_share_dialog_opt_out_text_2">Acesse <b>www.aptoide.com</b>, faça o
-    login na sua conta e vá para <b>Configurações</b> para mudar as definições de privacidade.
-  </string>
-  <string name="social_timeline_share_dialog_installed_and_recommended">Instalado e Recomendado
-  </string>
+  <string name="social_timeline_share_dialog_opt_in_text_1">Seus amigos poderão encontrá-lo e segui-lo.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">Caso deseje que seu perfil seja privado na Linha do Tempo de Aplicativos, edite suas configurações de privacidade em <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">Ao tornar o seu perfil oculto, os seus amigos não poderão encontrá-lo e segui-lo na Linha do Tempo de Aplicativos.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2">Acesse <b>www.aptoide.com</b>, faça o login na sua conta e vá para <b>Configurações</b> para mudar as definições de privacidade.</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">Instalado e Recomendado</string>
   <string name="social_timeline_share_bar_login">O que seus amigos estão instalando?</string>
-  <string name="social_timeline_share_bar_following">Siga mais Lojas e conecte-se com os seus
-    amigos.
-  </string>
-  <string name="social_timeline_share_bar_followers">Melhore a sua loja para ter mais seguidores.
-  </string>
+  <string name="social_timeline_share_bar_following">Siga mais Lojas e conecte-se com os seus amigos.</string>
+  <string name="social_timeline_share_bar_followers">Melhore a sua loja para ter mais seguidores.</string>
   <string name="social_timeline_followers_fragment_title">%d seguidor (es)</string>
   <string name="social_timeline_following_fragment_title">Seguindo %d pessoa (s)</string>
   <string name="social_timeline_share_soon">O compartilhamento será publicado em breve</string>
   <string name="social_timeline_recommends">Recomenda</string>
-  <string name="private_profile_create_store">Para ter um perfil privado, você precisa criar uma
-    loja
-  </string>
+  <string name="private_profile_create_store">Para ter um perfil privado, você precisa criar uma loja</string>
   <string name="social_timeline_shared_by">compartilhado por %1$s</string>
   <string name="social_timeline_who_liked">Quem gostou</string>
   <string name="social_timeline_users_private">%d são privados</string>
@@ -407,12 +310,10 @@
   <!-- Comments on store -->
   <string name="comment_store">Comentar Loja</string>
   <string name="comment_store_title">Comentários nesta Loja</string>
-  <string name="be_the_first_to_send_feedback_about_this_store">Seja o(a) primeiro(a) a enviar
-    comentários sobre esta loja
-  </string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Seja o(a) primeiro(a) a enviar comentários sobre esta loja</string>
   <!-- Followers and following -->
-  <string name="timeline_followers">Seguidores %d</string>
-  <string name="timeline_followed">Seguindo %d</string>
+  <string name="timeline_followers">Seguidores %d</string>
+  <string name="timeline_followed">Seguindo %d</string>
   <string name="timeline_stats_followers">Seguidores</string>
   <string name="timeline_login_message">O que seus amigos estão instalando?</string>
   <string name="private_followers_message">Seguidores de %d são privados</string>
@@ -429,6 +330,5 @@
   <string name="languages">Idiomas</string>
   <string name="language_dialog">Selecione um idioma</string>
   <string name="topAppsNotification">Recomendações de Top Apps</string>
-  <string name="topAppsNotification_dialog">Escolha a frequência de notificações de Top Apps
-  </string>
+  <string name="topAppsNotification_dialog">Escolha a frequência de notificações de Top Apps</string>
 </resources>

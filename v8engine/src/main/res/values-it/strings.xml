@@ -319,7 +319,7 @@ dello Store e i commenti degli altri utenti. Aptoide consiglia sempre di install
   <!-- Payments -->
   <string name="item_payment_button_use">usare</string>
   <string name="item_payment_button_register">registrati</string>
-  <string name="item_payment_approving_text">In Approvazione...</string>
+  <string name="item_payment_approving_text">In Approvazione…</string>
   <string name="activity_payment_more_payments_button">Utilizzare un altro metodo di pagamento</string>
   <string name="reviews_expand_button">%d Risposte</string>
   <string name="out_of_space_dialog_title">Spazio esaurito</string>
@@ -327,6 +327,6 @@ dello Store e i commenti degli altri utenti. Aptoide consiglia sempre di install
   <!--new setting options-->
   <string name="languages">Lingue</string>
   <string name="language_dialog">Seleziona una lingua</string>
-  <string name="topAppsNotification">Top apps recommendations</string>
-  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
+  <string name="topAppsNotification">Applicazioni Top Consigliate</string>
+  <string name="topAppsNotification_dialog">Scegli la frequenza delle notifiche a proposito delle app più popolari</string>
 </resources>

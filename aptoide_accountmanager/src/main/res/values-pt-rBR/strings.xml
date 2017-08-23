@@ -13,26 +13,20 @@
   <string name="forgot_passwd">Esqueceu sua senha?</string>
   <string name="fields_cannot_empty">Por favor, verifique seu e-mail e senha.</string>
   <string name="unknown_error">Erro desconhecido</string>
-  <string name="accept_terms">Ao registrar-se, você estará concordando com os Termos de Serviço da
-    Aptoide e Política de Conteúdo para Desenvolvedores
-  </string>
-  <string name="no_email_and_pass_error_message">Por favor, insira um e-mail e senha para
-    registrar-se.
-  </string>
+  <string name="accept_terms">Ao registrar-se, você estará concordando com os Termos de Serviço da Aptoide e Política de Conteúdo para Desenvolvedores    </string>
+  <string name="no_email_and_pass_error_message">Por favor, insira um e-mail e senha para registrar-se.    </string>
   <string name="no_pass_error_message">Por favor, insira uma senha para registrar-se.</string>
   <string name="no_email_error_message">Por favor, insira um e-mail para registrar-se.</string>
   <string name="password_validation_text">\"A senha deve ter pelo menos 8 caracteres e conter
-    pelo menos uma letra ou um número ou caracteres especiais (!@#$%*)
-    \"
-  </string>
+ pelo menos uma letra ou um número ou caracteres especiais (!@#$%*)
+ \"    </string>
   <string name="logged_as">Você está logado como:</string>
   <string name="sign_out">Sair</string>
   <string name="default_account_type">cm.aptoide.pt</string>
   <string name="facebook_grant_permission_button">Dar permissão</string>
   <string name="facebook_email_permission_regected_message">\"A Aptoide precisa do seu e-mail para
-    criar uma conta
-    \"
-  </string>
+ criar uma conta
+ \"</string>
   <string name="user_cancelled">Cancelado pelo usuário</string>
   <!--errors-->
   <string name="error_occured">Ocorreu um erro. Por favor, tente novamente</string>
@@ -43,18 +37,10 @@
   <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Credenciais inválidas!</string>
   <string name="ws_error_AUTH_7">@string/error_occured</string>
-  <string name="ws_error_AUTH_100">Não foi possível iniciar sessão com o Google. Por favor,
-    verifique a sua conta Google (poderá ter que validar o seu endereço de e-mail)
-  </string>
-  <string name="ws_error_AUTH_101">Não foi possível iniciar sessão com o Google. Por favor, tente
-    novamente.
-  </string>
-  <string name="ws_error_AUTH_102">Não foi possível iniciar sessão com o Facebook. Por favor,
-    verifique a sua conta de Facebook (poderá ter que validar o seu endereço de e-mail)
-  </string>
-  <string name="ws_error_AUTH_103">Não foi possível iniciar sessão com o Facebook. Por favor, tente
-    novamente.
-  </string>
+  <string name="ws_error_AUTH_100">Não foi possível iniciar sessão com o Google. Por favor, verifique a sua conta Google (poderá ter que validar o seu endereço de e-mail)</string>
+  <string name="ws_error_AUTH_101">Não foi possível iniciar sessão com o Google. Por favor, tente novamente.</string>
+  <string name="ws_error_AUTH_102">Não foi possível iniciar sessão com o Facebook. Por favor, verifique a sua conta de Facebook (poderá ter que validar o seu endereço de e-mail)</string>
+  <string name="ws_error_AUTH_103">Não foi possível iniciar sessão com o Facebook. Por favor, tente novamente.</string>
   <string name="ws_error_invalid_grant">Combinação de nome de usuário e senha inválida</string>
   <string name="ws_error_MARG_12">Parâmetro hmac em falta</string>
   <string name="ws_error_MARG_109">Parâmetro e-mail em falta</string>
@@ -64,88 +50,55 @@
   <string name="ws_error_IARG_5">Formato de hmac inválido</string>
   <string name="ws_error_IARG_106">O e-mail não é válido</string>
   <string name="ws_error_IARG_111">Formato de passhash inválido</string>
-  <string name="ws_error_REPO_4">O nome da loja é inválido, você só pode usar letras, números ou
-    hífens.
-  </string>
+  <string name="ws_error_REPO_4">O nome da loja é inválido, você só pode usar letras, números ou hífens.</string>
   <string name="ws_error_REPO_7">Este utilizador já tem uma loja válida.</string>
   <string name="ws_error_REPO_5">Este nome de loja deve ter pelo menos 3 caracteres.</string>
   <string name="ws_error_REPO_6">Este nome para loja já existe, é preciso escolher
-    outro.
-  </string>
-  <string name="ws_eror_WOP_">Nome de loja inválido. O nome de uma loja só pode ter caracteres
-    alfanuméricos (A a Z e 0 a 9) ou hífenes (-), e não pode iniciar nem terminar com um hífen.
-  </string>
-  <string name="ws_eror_WOP_1">A sua conta já tem uma loja. Você não pode criar outra com a mesma
-    conta
-  </string>
-  <string name="ws_error_WOP_2">Nome de loja inválido. O nome de uma loja só pode ter caracteres
-    alfanuméricos e não pode iniciar nem terminar com um hífen.
-  </string>
-  <string name="ws_error_WOP_3">Já existe uma loja com o mesmo nome. Por favor, dê outro nome para a
-    sua loja.
-  </string>
+ outro.</string>
+  <string name="ws_eror_WOP_">Nome de loja inválido. O nome de uma loja só pode ter caracteres alfanuméricos (A a Z e 0 a 9) ou hífenes (-), e não pode iniciar nem terminar com um hífen.</string>
+  <string name="ws_eror_WOP_1">A sua conta já tem uma loja. Você não pode criar outra com a mesma conta</string>
+  <string name="ws_error_WOP_2">Nome de loja inválido. O nome de uma loja só pode ter caracteres alfanuméricos e não pode iniciar nem terminar com um hífen.</string>
+  <string name="ws_error_WOP_3">Já existe uma loja com o mesmo nome. Por favor, dê outro nome para a sua loja.</string>
   <string name="ws_error_WOP_9">O e-mail fornecido já existe na Aptoide</string>
   <string name="ws_error_WOP_10">O e-mail fornecido ainda não existe na Aptoide</string>
   <string name="ws_error_WOP_11">Não foi possível criar a loja. Por favor tente novamente.</string>
   <string name="ws_error_API_1">Esta imagem não é válida.</string>
   <string name="ws_error_QUOTA_2">Limite diário para criação de usuários atingido. Se precisar
-    aumentar este limite, contacte o suport@aptoide. com ou crie mais usuários amanhã
-  </string>
-  <string name="ws_error_AUTH_1">O e-mail ou senha não são válidos para iniciar sessão (após
-    atualização do
-    nome)
-  </string>
+ aumentar este limite, contacte o suport@aptoide. com ou crie mais usuários amanhã</string>
+  <string name="ws_error_AUTH_1">O e-mail ou senha não são válidos para iniciar sessão (após atualização do
+ nome)</string>
   <string name="user_upload_photo_failed">No momento, não foi possível criar um perfil.</string>
-  <string name="store_upload_photo_failed">No momento, não foi possível fazer o upload da foto, mas
-    sua loja foi criada.
-  </string>
+  <string name="store_upload_photo_failed">No momento, não foi possível fazer o upload da foto, mas sua loja foi criada.</string>
   <string name="user_created">Usuário criado</string>
   <!-- WIZARD -->
-  <string name="wizard_skip">
-    <b>PULAR</b>
-  </string>
-  <string name="please_wait_upload">Aguarde, se você está carregando, isto pode demorar um pouco…
-  </string>
+  <string name="wizard_skip"><b>PULAR</b></string>
+  <string name="please_wait_upload">Aguarde, se você está carregando, isto pode demorar um pouco…</string>
   <!--Create user fragment-->
   <string name="create_user_title">Criar um Perfil de Usuário</string>
-  <string name="create_user_header">
-    <b>Crie o seu Perfil de Usuário</b>
-    para poder avaliar, comentar e compartilhar aplicativos com os seus amigos
-  </string>
+  <string name="create_user_header"><b>Crie o seu Perfil de Usuário</b> para poder avaliar, comentar e compartilhar aplicativos com os seus amigos</string>
   <string name="create_user_take_picture">Tire uma foto para o seu perfil</string>
   <string name="create_user_random_photo">Ou use uma foto aleatória</string>
   <string name="create_user_choose_username">Escolha um nome de usuário</string>
   <string name="create_user_username">Nome de usuário</string>
-  <string name="create_user_hint">Aparece quando você avalia, comenta e compartilha aplicativos.
-  </string>
+  <string name="create_user_hint">Aparece quando você avalia, comenta e compartilha aplicativos.</string>
   <string name="create_user_create_button">Criar Perfil</string>
   <string name="create_user_dialog_camera">Tirar Foto</string>
   <string name="create_user_dialog_gallery">Escolher da Galeria</string>
   <string name="create_user_dialog_cancel">Cancelar</string>
   <string name="nothing_inserted_store">Insira um nome de loja para criar sua loja</string>
-  <string name="nothing_inserted_user">Insira um nome de usuário e uma foto (opcional) para criar
-    seu perfil
-  </string>
-  <string name="create_user_bad_photo">Escolha uma imagem com uma resolução mínima de 300x300
-  </string>
+  <string name="nothing_inserted_user">Insira um nome de usuário e uma foto (opcional) para criar seu perfil</string>
+  <string name="create_user_bad_photo">Escolha uma imagem com uma resolução mínima de 300x300</string>
   <string name="no_username_inserted">Insira um nome de usuário para criar o seu perfil</string>
   <string name="no_photo_inserted">Por favor, escolha uma foto para criar o seu perfil</string>
   <!--User interests fragment -->
   <string name="user_interests_title">Seus Interesses</string>
-  <string name="user_interests_header">
-    <b>Mostre seus interesses</b>
-    e nos ajude a encontrar os melhores aplicativos para você
-  </string>
+  <string name="user_interests_header"><b>Mostre seus interesses</b> e nos ajude a encontrar os melhores aplicativos para você</string>
   <string name="user_interests_adult_gambling">Adulto e Jogos de Azar</string>
   <string name="user_interests_photography_video">Fotografia e Vídeo</string>
   <string name="next">Próximo</string>
   <!--Create Store fragment-->
   <string name="create_store_title">Crie Sua Loja</string>
-  <string name="create_store_header">
-    <b>Crie sua loja</b>
-    e compartilhe sua seleção de aplicativos com a comunidade %s .
-    <b>Experimente</b>
-  </string>
+  <string name="create_store_header"><b>Crie sua loja</b> e compartilhe sua seleção de aplicativos com a comunidade %s .<b>Experimente</b></string>
   <string name="edit_store_header">Edite sua loja com uma linda imagem e uma bela descrição</string>
   <string name="create_store_name">Escolha um nome para a sua Loja %s</string>
   <string name="create_store_name_inserted">Nome da sua Loja</string>
@@ -163,31 +116,24 @@
   <string name="create_store_store_created">Loja criada</string>
   <!--Public/Private-->
   <string name="create_profile_pub_pri_suc_login">Você está logado(a)</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Agora seus amigos podem segui-lo e ver
-    seus compartilhamentos na Linha do Tempo dos Aplicativos!
-  </string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Agora seus amigos podem segui-lo e ver seus compartilhamentos na Linha do Tempo dos Aplicativos!</string>
   <string name="create_profile_pub_pri">Linha do Tempo de Aplicativos da Aptoide</string>
-  <string name="create_profile_pub_pri_sub_text_1">Permite que você siga seus amigos e familiares
-  </string>
-  <string name="create_profile_pub_pri_sub_text_2">Com a Linha do Tempo dos Aplicativos, você pode
-    compartilhar recomendações e artigos com seus seguidores, vendo o que você compartilha.
-  </string>
-  <string name="create_profile_pub_pri_sub_text_3">Você pode optar por tornar o seu perfil privado,
-    perdendo os recursos de compartilhamento.
-  </string>
+  <string name="create_profile_pub_pri_sub_text_1">Permite que você siga seus amigos e familiares</string>
+  <string name="create_profile_pub_pri_sub_text_2">Com a Linha do Tempo dos Aplicativos, você pode compartilhar recomendações e artigos com seus seguidores, vendo o que você compartilha.</string>
+  <string name="create_profile_pub_pri_sub_text_3">Você pode optar por tornar o seu perfil privado, perdendo os recursos de compartilhamento.</string>
   <string name="create_profile_pub_pri_make_priv">Torne o meu perfil privado</string>
   <string name="create_profile_logged_in_activity_title">Logado</string>
   <string name="image_requirements_popup_message">A imagem possui os seguintes problemas:
-  </string>
+</string>
   <string name="image_requirements_error_min_height">- Altura mínima é menor do que 600px
-  </string>
+</string>
   <string name="image_requirements_error_max_height">- Altura máxima é maior do que 10240px
-  </string>
+</string>
   <string name="image_requirements_error_min_width">- Largura mínima é menor do que 600px
-  </string>
+</string>
   <string name="image_requirements_error_max_width">- Largura máxima é maior do que 10240px
-  </string>
+</string>
   <string name="image_requirements_error_max_file_size">- Tamanho máximo é maior do que 5 MB
-  </string>
+</string>
   <string name="image_requirements_error_popup_title">Imagem</string>
 </resources>

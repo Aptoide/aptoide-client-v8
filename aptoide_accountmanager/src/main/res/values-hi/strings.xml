@@ -10,17 +10,14 @@
   <string name="login">लॉग इन करें</string>
   <string name="successful">सफल</string>
   <string name="login_successful">लॉग इन सफल</string>
-  <string name="forgot_passwd">Forgot password?</string>
+  <string name="forgot_passwd">क्या आपने पासवर्ड भूल गया?</string>
   <string name="fields_cannot_empty">कृपया अपने ईमेल और पासवर्ड की जांच करें।</string>
   <string name="unknown_error">अज्ञात त्रुटि</string>
-  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-        Content Policy for Developers
+  <string name="accept_terms">साइन अप करके आप Aptoide सेवा की शर्तों से सहमत हो रहे हैं और डेवलपर्स के लिए सामग्री नीति
     </string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password to
-        register.
-    </string>
-  <string name="no_pass_error_message">Please insert a password to register.</string>
-  <string name="no_email_error_message">Please insert an email to register.</string>
+  <string name="no_email_and_pass_error_message">रजिस्टर करने के लिए कृपया एक ईमेल और पासवर्ड सम्मिलित करें    </string>
+  <string name="no_pass_error_message">रजिस्टर करने के लिए कृपया एक पासवर्ड डालें</string>
+  <string name="no_email_error_message">रजिस्टर करने के लिए कृपया एक ईमेल डालें</string>
   <string name="password_validation_text">\"पासवर्ड न्यूनतम 8 वर्णों का होना चाहिए और उसमें न्यूनतम 
 एक अक्षर और एक संख्या या विशेष वर्ण (!@#$%*) होना चाहिए
  \"</string>

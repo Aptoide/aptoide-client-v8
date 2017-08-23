@@ -36,11 +36,8 @@
   <string name="error_IARG_4">Dados MD5 inválidos</string>
   <string name="error_IARG_5">Formato de hmac inválido</string>
   <string name="error_IARG_6">Lang inválido</string>
-  <string name="error_IARG_100">O número mínimo de caracteres permitidos em um comentário é 10
-  </string>
-  <string name="error_IARG_101">O número mínimo de caracteres permitidos em um comentário de
-    resposta é 10
-  </string>
+  <string name="error_IARG_100">O número mínimo de caracteres permitidos em um comentário é 10</string>
+  <string name="error_IARG_101">O número mínimo de caracteres permitidos em um comentário de resposta é 10</string>
   <string name="error_IARG_102">Argumento inválido</string>
   <string name="error_IARG_103">Categoria inválida</string>
   <string name="error_IARG_104">Avaliação inválida</string>
@@ -57,25 +54,13 @@
   <string name="error_IARG_302">O aplicativo fornecido já existe nesta categoria</string>
   <string name="error_AUTH_1">Credenciais de login inválidas!</string>
   <string name="error_AUTH_2">Credenciais inválidas!</string>
-  <string name="error_AUTH_3">Sua conta foi cancelada. Para qualquer dúvida, entre em contato com a
-    equipe de Suporte da Aptoide.
-  </string>
+  <string name="error_AUTH_3">Sua conta foi cancelada. Para qualquer dúvida, entre em contato com a equipe de Suporte da Aptoide.</string>
   <string name="error_AUTH_4">Falha na Autenticação HMAC</string>
-  <string name="error_AUTH_100">Não foi possível fazer login com o Google. Por favor, verifique sua
-    conta do Google (você pode precisar validar seu endereço de e-mail).
-  </string>
-  <string name="error_AUTH_101">Não foi possível iniciar sessão com o Google. Por favor, tente
-    novamente.
-  </string>
-  <string name="error_AUTH_102">Não foi possível fazer login com o Facebook. Por favor, verifique
-    sua conta do Facebook (você pode precisar validar seu endereço de e-mail).
-  </string>
-  <string name="error_AUTH_103">Não foi possível iniciar sessão com o Facebook. Por favor, tente
-    novamente.
-  </string>
-  <string name="error_WOP_6">Para adicionar um comentário você precisa inserir seu nome (que ficará
-    visível)
-  </string>
+  <string name="error_AUTH_100">Não foi possível fazer login com o Google. Por favor, verifique sua conta do Google (você pode precisar validar seu endereço de e-mail).</string>
+  <string name="error_AUTH_101">Não foi possível iniciar sessão com o Google. Por favor, tente novamente.</string>
+  <string name="error_AUTH_102">Não foi possível fazer login com o Facebook. Por favor, verifique sua conta do Facebook (você pode precisar validar seu endereço de e-mail).</string>
+  <string name="error_AUTH_103">Não foi possível iniciar sessão com o Facebook. Por favor, tente novamente.</string>
+  <string name="error_WOP_6">Para adicionar um comentário você precisa inserir seu nome (que ficará visível)</string>
   <string name="error_WOP_7">Erro de comentário</string>
   <string name="error_WOP_8">Erro de voto de comentário</string>
   <string name="error_WOP_9">O e-mail fornecido já existe no sistema</string>
@@ -84,38 +69,30 @@
   <string name="error_REPO_1">A loja não existe.</string>
   <string name="error_REPO_2">A loja foi cancelada.</string>
   <string name="error_REPO_3">A loja não pertence a este usuário.</string>
-  <string name="error_REPO_4_no_store">A sua conta não tem loja criada. Precisa criar uma para poder
-    fazer uma avaliação.
-  </string>
+  <string name="error_REPO_4_no_store">A sua conta não tem loja criada. Precisa criar uma para poder fazer uma avaliação.</string>
   <string name="error_REPO_7">Este usuário já tem uma loja válida.</string>
-  <string name="error_APK_1">Não foi possível abrir este app com as informações e versão dadas
-  </string>
+  <string name="error_APK_1">Não foi possível abrir este app com as informações e versão dadas</string>
   <string name="error_APK_4">Não foi possível abrir este app</string>
   <string name="error_APK_Description">Descrição não disponível</string>
   <string name="error_SYS_1">Ocorreu um erro desconhecido, por favor, tente novamente</string>
   <string name="error_SYS_2">Dados não encontrados, por favor, tente novamente mais tarde</string>
-  <string name="error_SYS_3">O sistema está em manutenção agora, por favor, tente novamente mais
-    tarde
-  </string>
+  <string name="error_SYS_3">O sistema está em manutenção agora, por favor, tente novamente mais tarde</string>
   <string name="error_SYS_4">Esta chamada não é suportada pela versão atual da API</string>
-  <string name="error_SYS_Billing">Pagamentos dentro do aplicativo não são suportados por este
-    equipamento.
-  </string>
+  <string name="error_SYS_Billing">Pagamentos dentro do aplicativo não são suportados por este equipamento.</string>
   <string name="error_410">Desculpe, o aplicativo pedido não foi encontrado neste servidor.</string>
   <string name="please_wait">Por favor, aguarde…</string>
-  <string name="simple_error_occured">Ocorreu um erro.</string>
+  <string name="simple_error_occured">Ocorreu um erro. </string>
   <string name="yes">Sim</string>
   <string name="no">Não</string>
   <string name="feedback_subject">Assunto</string>
   <string name="feedback_to_write2">Escreva aqui para enviar o seu feedback…
 
 
-    Por favor, inclua o máximo de detalhes que possa dar:
-
-    Passos que deu
-
-    Erros que está vendo
-  </string>
+ Por favor, inclua o máximo de detalhes que possa dar:
+ 
+ Passos que deu
+ 
+ Erros que está vendo</string>
   <string name="feedback_include_logs">Incluir capturas de tela e logs</string>
   <string name="feedback_no_email">Nenhum sistema de e-mail instalado!</string>
   <string name="store_already_added">Loja adicionada!</string>
@@ -134,9 +111,7 @@
   <string name="invalid_apk">Apk inválido</string>
   <string name="remote_in_nospace">não tem espaço suficiente no seu dispositivo.</string>
   <string name="server_error">Erro de servidor</string>
-  <string name="paidapp_not_found">Ocorreu um erro no download. Por favor tente novamente ou
-    contacte a equipe de suporte.
-  </string>
+  <string name="paidapp_not_found">Ocorreu um erro no download. Por favor tente novamente ou contacte a equipe de suporte.</string>
   <string name="sd_error">Não foi possível gravar no SDCard.</string>
   <string name="sd_error_jolla">Não foi possível transferir corretamente</string>
   <string name="starting_download">Iniciando download</string>
@@ -144,17 +119,12 @@
   <string name="finished_install">%s foi instalado.</string>
   <string name="aptoide_downloading">%s está sendo baixado</string>
   <string name="remaining_time">faltam</string>
-  <string name="data_usage_constraint">Download não está autorizado em Configurações &gt; Regras
-    Gerais de Download
-  </string>
+  <string name="data_usage_constraint">Download não está autorizado em Configurações &gt; Regras Gerais de Download</string>
   <string name="download_pending">Em espera</string>
   <!-- layouts -->
   <string name="download_retry">Tentar novamente</string>
-  <string name="error503">Ufff… É impressão minha ou todo mundo está instalando apps ao mesmo
-    tempo?
-  </string>
-  <string name="having_some_trouble">Estamos com problemas. Pode tentar novamente mais tarde?
-  </string>
+  <string name="error503">Ufff… É impressão minha ou todo mundo está instalando apps ao mesmo tempo?</string>
+  <string name="having_some_trouble">Estamos com problemas. Pode tentar novamente mais tarde?</string>
   <!-- Vote -->
   <string name="reply">Responder</string>
   <string name="vote_down">Votar Abaixo</string>
@@ -170,24 +140,16 @@
   <string name="are_you_adult">Tem mais de 21 anos?</string>
   <string name="facebook_logout_and_login">Terminar sessão e iniciar com o Facebook</string>
   <string name="schDown_nodownloadselect">Sem downloads selecionados</string>
-  <string name="no_sch_downloads">Quer navegar pelos apps usando os dados móveis e transferir mais
-    tarde com uma conexão wi-fi? Use as transferências agendadas e mude as suas preferências em
-    Configurações -&gt; Regras Gerais de Download - para Wi-Fi.
-  </string>
+  <string name="no_sch_downloads">Quer navegar pelos apps usando os dados móveis e transferir mais tarde com uma conexão wi-fi? Use as transferências agendadas e mude as suas preferências em Configurações -&gt; Regras Gerais de Download - para Wi-Fi.</string>
   <string name="schDown_installselected">Instalar selecionados</string>
   <string name="schDown_removeselected">Remover os selecionados</string>
   <string name="schDown_invertselection">Inverter selecção</string>
   <string name="schDwnBtn">Agendar download</string>
   <string name="schDown_install">Instalar todos os downloads agendados?</string>
-  <string name="hidden_adult">Alguns apps estão ocultos porque o filtro de conteúdo adulto está
-    ativo. Deseja mostrar estes apps?
-  </string>
+  <string name="hidden_adult">Alguns apps estão ocultos porque o filtro de conteúdo adulto está ativo. Deseja mostrar estes apps?</string>
   <string name="dont_show_again">Não mostrar este diálogo novamente</string>
   <!-- App View -->
-  <string name="rollback_empty">Volte rapidamente a uma versão anterior de um app e resolva os
-    problemas de incompatibilidades. Mantenha um registro de todos os seus apps instalados (via
-    Aptoide), incluindo a versão e data de instalação.
-  </string>
+  <string name="rollback_empty">Volte rapidamente a uma versão anterior de um app e resolva os problemas de incompatibilidades. Mantenha um registro de todos os seus apps instalados (via Aptoide), incluindo a versão e data de instalação.</string>
   <string name="see_more">Ver Mais</string>
   <string name="see_less">Ver Menos</string>
   <string name="get_latest">Obter a última versão</string>
@@ -221,17 +183,13 @@
   <string name="no_payments_available">Sem pagamentos disponíveis.</string>
   <string name="failed_auth_code">Falha de autorização da conta. Por favor tente novamente.</string>
   <string name="error_occured_paying">Ocorreu um erro. O pagamento não foi concluído.</string>
-  <string name="error_occured_retry_later">Ocorreu um erro. A Aptoide irá automaticamente tentar de
-    novo mais tarde.
-  </string>
+  <string name="error_occured_retry_later">Ocorreu um erro. A Aptoide irá automaticamente tentar de novo mais tarde.</string>
   <string name="account">Conta</string>
-  <string name="confirm_carrier_payment">\"Deseja comprar o \'{title}\' por {value}? Será cobrado
-    pela sua
-    operadora.
-    \"
-  </string>
+  <string name="confirm_carrier_payment">\"Deseja comprar o \'{title}\' por {value}? Será cobrado pela sua
+ operadora.
+ \"</string>
   <string name="buy">Comprar</string>
-  <string name="billing_result">O resultado da transação é:</string>
+  <string name="billing_result">O resultado da transação é: </string>
   <string name="change_payment">Voltar</string>
   <string name="rollback_installed">Instalado</string>
   <string name="rollback_uninstalled">Desinstalado</string>
@@ -241,9 +199,7 @@
   <string name="install">Instalar</string>
   <string name="cannot_uninstall_self">Não é possível desinstalar instalador.</string>
   <string name="at_time">às %s</string>
-  <string name="root_access_dialog">Parece que tem root no seu dispositivo. Deseja dar acesso para
-    auto-instalar o aplicativo depois da transferência?
-  </string>
+  <string name="root_access_dialog">Parece que tem root no seu dispositivo. Deseja dar acesso para auto-instalar o aplicativo depois da transferência?</string>
   <string name="downgrade_requires_uninstall">Requer a desinstalação do aplicativo</string>
   <string name="order_popup_title3">Conteúdo Adulto</string>
   <string name="friends_to_invite">Todos os amigos de Facebook na Aptoide</string>
@@ -251,20 +207,15 @@
   <string name="timeline_is_empty_send_email">Vamos enviar um email para quem escolher</string>
   <string name="facebook_timeline_friends_invited">Amigos convidados!</string>
   <string name="select_friends_to_invite">Por favor selecione os amigos para convidar!</string>
-  <string name="facebook_friends_list_using_timeline">já estão utilizando a Cronologia Social
-  </string>
+  <string name="facebook_friends_list_using_timeline">já estão utilizando a Cronologia Social</string>
   <string name="and">e</string>
   <string name="more_friends">mais</string>
   <string name="more_reviews">Avaliações</string>
   <string name="more_editors_choice">Mais Escolhas do Editor</string>
   <string name="more_versions">Mais versões</string>
-  <string name="facebook_friends_list_using_timeline_empty">A Cronologia Social permite compartilhar
-    aplicativos com os seus amigos do Facebook. Quer juntar-se à rede?
-  </string>
+  <string name="facebook_friends_list_using_timeline_empty">A Cronologia Social permite compartilhar aplicativos com os seus amigos do Facebook. Quer juntar-se à rede?</string>
   <string name="X_download_number">%s transf.</string>
-  <string name="timeline_not_compatible">Ooohhh… Esta funcionalidade não é compatível com a sua
-    versão de Android
-  </string>
+  <string name="timeline_not_compatible">Ooohhh… Esta funcionalidade não é compatível com a sua versão de Android</string>
   <string name="sponsored">Patrocinado</string>
   <string name="friends_installs">Instalações dos amigos</string>
   <string name="recommended_for_you">Recomendado para você</string>
@@ -273,28 +224,22 @@
   <string name="unhide_post">Permitir</string>
   <string name="hide_post">Ocultar</string>
   <string name="like">Gosto</string>
-  <string name="comment">Comentário</string>
+  <string name="comment">Comentar</string>
   <string name="hide_post_info">Os seus amigos não vão ver esta publicação</string>
   <string name="timeline_like">Gosto</string>
   <string name="likes">Curtidas</string>
   <string name="unlike">Descurtir</string>
-  <string name="timeline_empty_no_friends_send_email">Parece que os seus amigos não iniciaram sessão
-    na Aptoide com o Facebook. Envie-lhes um e-mail para iniciarem a sessão com a conta do Facebook
-  </string>
+  <string name="timeline_empty_no_friends_send_email">Parece que os seus amigos não iniciaram sessão na Aptoide com o Facebook. Envie-lhes um e-mail para iniciarem a sessão com a conta do Facebook</string>
   <string name="timeline_empty_send_email_to_friends">Enviar e-mail para amigos</string>
   <string name="aptoide_timeline">Linha do Tempo Aptoide</string>
-  <string name="timeline_email_invitation">Convidou-o para se juntar à sua Linha do Tempo Aptoide.
-    Conecte-se!
-  </string>
+  <string name="timeline_email_invitation">Convidou-o para se juntar à sua Linha do Tempo Aptoide. Conecte-se!</string>
   <string name="timeline_email_how_to_join">Como você pode juntar-se à Linha do Tempo?</string>
   <string name="timeline_email_step1">1- Transfira a última versão da Aptoide:</string>
   <string name="timeline_email_step2">2- Vá à aba \"Linha do Tempo\" e junte-se à rede</string>
   <string name="timeline_ad">App sugerido pelo Facebook</string>
   <string name="facebook_start_timeline">Junte-se à Linha do Tempo</string>
   <string name="facebook_join_friends">Quer juntar-se à Linha do Tempo?</string>
-  <string name="timeline_is_empty_no_friends">A sua Linha do Tempo está vazia. Provavelmente ainda
-    não tem amigos registrados na Aptoide ou ainda não fizeram nenhuma publicação.
-  </string>
+  <string name="timeline_is_empty_no_friends">A sua Linha do Tempo está vazia. Provavelmente ainda não tem amigos registrados na Aptoide ou ainda não fizeram nenhuma publicação.</string>
   <string name="timeline_is_empty_start_invite">Vamos começar por convidar alguns amigos:</string>
   <!-- Review Activity-->
   <string name="review_get_app">Obter Aplicativo</string>
@@ -321,47 +266,31 @@
   <string name="private_key">privada</string>
   <string name="store_username">Nome do usuário</string>
   <string name="store_password">Senha</string>
-  <string name="upload_app_backup_apps_installed">Tem que adicionar este app na sua loja primeiro.
-    Pode usar o Aptoide Backup Apps.
-  </string>
-  <string name="upload_app_backup_apps_not_installed">Tem que adicionar este app para a sua loja
-    primeiro. Por favor, instale e use o Aptoide Backup Apps.
-  </string>
+  <string name="upload_app_backup_apps_installed">Tem que adicionar este app na sua loja primeiro. Pode usar o Aptoide Backup Apps.</string>
+  <string name="upload_app_backup_apps_not_installed">Tem que adicionar este app para a sua loja primeiro. Por favor, instale e use o Aptoide Backup Apps.</string>
   <string name="upload_app">Carregar aplicativo</string>
   <string name="create_review">Escrever crítica</string>
   <!-- Settings-->
-  <string name="asksetadultpinmessage">Gostaria de definir um pin para desbloquear o Conteúdo
-    Adulto?
-  </string>
+  <string name="asksetadultpinmessage">Gostaria de definir um pin para desbloquear o Conteúdo Adulto?</string>
   <string name="setpin">Definir Pin</string>
   <string name="remove_mature_pin_title">Remover o pin para conteúdo adulto</string>
-  <string name="remove_mature_pin_summary">Remover o pin necessário para desbloquear Conteúdo
-    Adulto
-  </string>
+  <string name="remove_mature_pin_summary">Remover o pin necessário para desbloquear Conteúdo Adulto</string>
   <string name="set_mature_pin_title">Definir um pin para o conteúdo adulto</string>
-  <string name="set_mature_pin_summary">Definir um pin que será necessário para desbloquear o
-    conteúdo adulto
-  </string>
+  <string name="set_mature_pin_summary">Definir um pin que será necessário para desbloquear o conteúdo adulto</string>
   <string name="settings_title_bar">Configurações</string>
   <string name="settings_dwn_network_rules">Opções de Rede Móvel</string>
-  <string name="setting_sum_icon_download_rules">Permite a transferência de ícones em conexões
-    móveis
-  </string>
+  <string name="setting_sum_icon_download_rules">Permite a transferência de ícones em conexões móveis</string>
   <string name="setting_icon_download_rules">Regras de Transferência de Ícones</string>
   <string name="setting_wifi">WiFi</string>
   <string name="setting_mobile">Rede móvel 3G/4G</string>
   <string name="setting_3g">3G</string>
   <string name="setting_4g">4G</string>
   <string name="setting_ethernet">Por cabo</string>
-  <string name="setting_sum_general_download_rules">Transferência de Apps, Escolhas do Editor, Top
-    Apps e Lojas em conexões de dados móveis permitidas
-  </string>
+  <string name="setting_sum_general_download_rules">Transferência de Apps, Escolhas do Editor, Top Apps e Lojas em conexões de dados móveis permitidas</string>
   <string name="setting_general_download_rules">Regras gerais de download</string>
   <string name="setting_hwspecstitle">Especificações do Hardware</string>
   <string name="setting_hwspecssum">Especificações hardware do seu dispositivo</string>
-  <string name="setting_appfiltersum">Não mostrar aplicativos que não são compatíveis com este
-    dispositivo
-  </string>
+  <string name="setting_appfiltersum">Não mostrar aplicativos que não são compatíveis com este dispositivo</string>
   <string name="setting_appfiltertitle">Filtrar Aplicativos</string>
   <string name="setting_category_autoupdate">Atualização automática de %s</string>
   <string name="setting_category_autoupdate_title">Ativar a atualização automática de %s</string>
@@ -370,33 +299,25 @@
   <string name="setting_updates">Atualizações</string>
   <string name="update_all">Atualizar tudo</string>
   <string name="whats_new">O que há de novo?</string>
-  <string name="setting_updates_notification_sum">Mostrar notificações de novas atualizações
-  </string>
+  <string name="setting_updates_notification_sum">Mostrar notificações de novas atualizações</string>
   <string name="setting_updates_notification_title">Notificação de atualizações</string>
   <string name="setting_auto_update_sum">Ativar a atualização automática de aplicativos</string>
   <string name="setting_auto_update_title">Ativar o auto-update</string>
-  <string name="show_all_updates">Não mostrar atualizações para aplicativos com assinaturas
-    diferentes
-  </string>
+  <string name="show_all_updates">Não mostrar atualizações para aplicativos com assinaturas diferentes</string>
   <string name="setting_allUpdates_filtering">Filtrar atualizações</string>
-  <string name="setting_schdwninstallsum">Instalar downloads agendados automaticamente quando tiver
-    uma ligação WiFi
-  </string>
+  <string name="setting_schdwninstallsum">Instalar downloads agendados automaticamente quando tiver uma ligação WiFi</string>
   <string name="setting_schdwninstalltitle">Instalação automática</string>
   <string name="setting_clear_memory">Armazenamento</string>
   <string name="clearcontent_title">Remover dados e configurações</string>
-  <string name="settings_maxFileCache_sum">Define um tamanho máximo para manter seus arquivos apk
-  </string>
+  <string name="settings_maxFileCache_sum">Define um tamanho máximo para manter seus arquivos apk</string>
   <string name="settings_maxFileCache_title">Baixar o Cache de Arquivos (MB)</string>
   <string name="change_theme">Mudar o tema</string>
   <string name="change_theme_soon">Brevemente</string>
   <string name="theme">Temas</string>
-  <string name="root">Raíz</string>
+  <string name="root">Root</string>
   <string name="allow_root">Permitir instalação root</string>
   <string name="disable_social_timeline">Desativar Linha do Tempo</string>
-  <string name="social_timeline_notifications_sum2">Ativar as notificações da Linha do Tempo
-    Aptoide. Receberá as últimas novidades na barra de notificações.
-  </string>
+  <string name="social_timeline_notifications_sum2">Ativar as notificações da Linha do Tempo Aptoide. Receberá as últimas novidades na barra de notificações.</string>
   <string name="social_timeline_notifications">Notificações da Linha do Tempo</string>
   <string name="about_us">Sobre nós</string>
   <string name="restart_aptoide">Por favor, reinicie o aplicativo para mudar o tema</string>
@@ -434,18 +355,14 @@
   <string name="appview_rate_Success">Aplicativo avaliado</string>
   <string name="ignoreUpdateText">Ignorar Autalização</string>
   <string name="ignored">Ignorado</string>
-  <string name="noIgnoreUpdateText">A nova versão do app não funciona no seu dispositivo ou falta
-    alguma funcionalidade? Bloqueie a atualização de apps. Vá até a aba Atualizações e pressione
-    continuamente no app que deseja parar de atualizar.
-  </string>
-  <string name="createReviewButtonText">Escrever
-    Crítica
-  </string>
+  <string name="noIgnoreUpdateText">A nova versão do app não funciona no seu dispositivo ou falta alguma funcionalidade? Bloqueie a atualização de apps. Vá até a aba Atualizações e pressione continuamente no app que deseja parar de atualizar.</string>
+  <string name="createReviewButtonText">Escrever 
+Crítica</string>
   <string name="navigation_drawer_signup_login">Registrar ou Entrar</string>
   <string name="active">Ativo</string>
   <string name="completed">Concluído</string>
   <string name="stand_by">Em espera</string>
-  <string name="_downloads">downloads</string>
+  <string name="_downloads"> downloads</string>
   <string name="no_description">Sem descrição</string>
   <string name="description">Descrição</string>
   <string name="version">Versão</string>
@@ -463,8 +380,7 @@
   <string name="error_occured_uploading">Precisa fazer upload deste app primeiro.</string>
   <!-- Auto Update -->
   <string name="update_self_title">Atualização disponível</string>
-  <string name="update_self_msg">Há uma nova versão do %s disponível\nVocê deseja atualizar?
-  </string>
+  <string name="update_self_msg">Há uma nova versão do %s disponível\nVocê deseja atualizar?</string>
   <string name="retrieving_update">Recuperando atualização…</string>
   <string name="menu_search_item_go_to_store">Ir para a loja</string>
   <string name="srch_hint">Pesquisar por apps…</string>
@@ -473,51 +389,27 @@
   <string name="app_warning">Aviso: %s</string>
   <string name="scanned_with_av">Escaneado com Anti-Vírus:</string>
   <string name="compared_with_another_marketplace">Comparado com outro Marketplace Android:</string>
-  <string name="application_signature_analysis">Assinatura do aplicativo comparada com a assinatura
-    do developer:
-  </string>
-  <string name="application_signature_matched">A assinatura combina com as assinaturas relacionadas
-    ao desenvolvedor do aplicativo.
-  </string>
-  <string name="application_signature_not_matched">A assinatura do aplicativo não corresponde à
-    assinatura ligada ao seu desenvolvedor. O aplicativo pode ter sido adulterado.
-  </string>
-  <string name="application_signature_blacklisted">A assinatura do aplicativo não é uma assinatura
-    confiável na plataforma Anti-Malware da Aptoide porque foi usada para verificar outro aplicativo
-    que não corresponde à assinatura do developer legítimo.
-  </string>
-  <string name="scanned_manually_by_aptoide_team">Analisado manualmente pela equipe Aptoide:
-  </string>
-  <string name="scanned_verified_by_tester">Este aplicativo foi analisado manualmente por um
-    avaliador da equipe Aptoide que assegura a segurança do aplicativo.
-  </string>
+  <string name="application_signature_analysis">Assinatura do aplicativo comparada com a assinatura do developer:</string>
+  <string name="application_signature_matched">A assinatura combina com as assinaturas relacionadas ao desenvolvedor do aplicativo.</string>
+  <string name="application_signature_not_matched">A assinatura do aplicativo não corresponde à assinatura ligada ao seu desenvolvedor. O aplicativo pode ter sido adulterado.</string>
+  <string name="application_signature_blacklisted">A assinatura do aplicativo não é uma assinatura confiável na plataforma Anti-Malware da Aptoide porque foi usada para verificar outro aplicativo que não corresponde à assinatura do developer legítimo.</string>
+  <string name="scanned_manually_by_aptoide_team">Analisado manualmente pela equipe Aptoide:</string>
+  <string name="scanned_verified_by_tester">Este aplicativo foi analisado manualmente por um avaliador da equipe Aptoide que assegura a segurança do aplicativo.</string>
   <string name="warning">Aviso</string>
   <string name="trusted_app">App Confiável</string>
   <string name="unknown">Desconhecido</string>
   <string name="critical">Crítico</string>
   <!-- New Badges V7 -->
-  <string name="reason_third_party">Verificamos a assinatura do app e ela coincide com a loja Play
-    da Google, por isso descanse e aproveite o app.
-  </string>
-  <string name="reason_scanned">Escaneado com AptoideGuard mais 2 anti-vírus diferentes (Zoner 1.8 e
-    Sophos 3.0).
-  </string>
-  <string name="reason_signature">A assinatura criptográfica garante que o arquivo é seguro de
-    instalar e que não foi adulterado de modo algum.
-  </string>
-  <string name="reason_manual">Este app foi analisado manualmente pela equipe de peritos Aptoide, e
-    marcada como Bom.
-  </string>
-  <string name="reason_failed">A assinatura do aplicativo não coincide com a assinatura do
-    developer. O app poderá ter sido adulterado.
-  </string>
-  <string name="reason_unknown">Não existem informações suficientes sobre este app na plataforma
-    Anti-Malware da Aptoide.
-  </string>
+  <string name="reason_third_party">Verificamos a assinatura do app e ela coincide com a loja Play da Google, por isso descanse e aproveite o app.</string>
+  <string name="reason_scanned">Escaneado com AptoideGuard mais 2 anti-vírus diferentes (Zoner 1.8 e Sophos 3.0).</string>
+  <string name="reason_signature">A assinatura criptográfica garante que o arquivo é seguro de instalar e que não foi adulterado de modo algum.</string>
+  <string name="reason_manual">Este app foi analisado manualmente pela equipe de peritos Aptoide, e marcada como Bom.</string>
+  <string name="reason_failed">A assinatura do aplicativo não coincide com a assinatura do developer. O app poderá ter sido adulterado.</string>
+  <string name="reason_unknown">Não existem informações suficientes sobre este app na plataforma Anti-Malware da Aptoide.</string>
   <!-- Comments -->
   <string name="reply_to">Responder a %s</string>
   <string name="comment_submitted">O seu comentário foi enviado com sucesso</string>
-  <string name="write_your_comment">Escrever seu comentário</string>
+  <string name="write_your_comment">Escreva seu comentário</string>
   <string name="write_a_comment">Escreva um comentário</string>
   <string name="no_comment_be_the_first">Sem comentários ainda. Seja o primeiro!</string>
   <!-- Dialogs -->
@@ -528,14 +420,9 @@
   <string name="abTest1_label_2">Instalar</string>
   <string name="abTest1_label_3">Instalar</string>
   <!-- push notifications-->
-  <string name="notification_timeline_new_likes">Tem %s novas curtidas. Veja na Linha do Tempo!
-  </string>
-  <string name="notification_timeline_new_comments">Tem %s novos comentários. Veja na Linha do
-    Tempo!
-  </string>
-  <string name="notification_timeline_activity">Tem %1$s novos comentários e %2$s curitdas. Veja na
-    Linha do Tempo!
-  </string>
+  <string name="notification_timeline_new_likes">Tem %s novas curtidas. Veja na Linha do Tempo!</string>
+  <string name="notification_timeline_new_comments">Tem %s novos comentários. Veja na Linha do Tempo!</string>
+  <string name="notification_timeline_activity">Tem %1$s novos comentários e %2$s curitdas. Veja na Linha do Tempo!</string>
   <string name="notification_social_timeline">Linha do Tempo Aptoide. Veja agora!</string>
   <string name="notification_timeline_posts">Os seus amigos instalaram novos aplicativos!</string>
   <!-- Updates -->
@@ -555,22 +442,14 @@
   <string name="flag_added">Sinalização adicionada</string>
   <string name="skip">Pular</string>
   <string name="wizard_title_01">Bem-vindo à Aptoide</string>
-  <string name="wizard_description_01">Crie uma conta grátis e registre-se para começar a criar a
-    sua App Store personalizada.\n\nNavegue pelas lojas temáticas e descubra aplicativos novos e
-    empolgantes.
-  </string>
+  <string name="wizard_description_01">Crie uma conta grátis e registre-se para começar a criar a sua App Store personalizada.\n\nNavegue pelas lojas temáticas e descubra aplicativos novos e empolgantes.</string>
   <string name="wizard_title_02">Segurança aumentada</string>
-  <string name="wizard_description_02">Procure pelos selos de confiabilidade e transfira apps de
-    forma segura.\n\nProblemas de compatibilidade? Procure por versões anteriores dos aplicativos.
-  </string>
+  <string name="wizard_description_02">Procure pelos selos de confiabilidade e transfira apps de forma segura.\n\nProblemas de compatibilidade? Procure por versões anteriores dos aplicativos.</string>
   <string name="wizard_title_03">Novos membros da nossa família</string>
   <string name="wizard_subtitle_03_1">Aptoide Lite</string>
-  <string name="wizard_description_03_1">para dispositivos antigos e conexões de internet lentas
-  </string>
+  <string name="wizard_description_03_1">para dispositivos antigos e conexões de internet lentas</string>
   <string name="wizard_subtitle_03_2">Aptoide TV</string>
-  <string name="wizard_description_03_2">loja de aplicativos otimizada para Smart TVs e
-    set-top-boxes
-  </string>
+  <string name="wizard_description_03_2">loja de aplicativos otimizada para Smart TVs e set-top-boxes</string>
   <string name="wizard_reviews_title">Avaliações</string>
   <string name="wizard_reviews">Agora você pode avaliar apps com a Aptoide!</string>
   <string name="wizard_new_and_improved">Performance melhorada!</string>
@@ -588,13 +467,9 @@
   <!-- Search Widget-->
   <string name="search_for_apps">Pesquisar por apps…</string>
   <string name="empty_search">Limpe a pesquisa, escreva o nome de um aplicativo</string>
-  <string name="manually_reviewed">Garantia de bom app: este aplicativo passou por testes de
-    segurança que procuram vírus, malware e outros ataques malignos e não contém qualquer ameaça
-  </string>
+  <string name="manually_reviewed">Garantia de bom app: este aplicativo passou por testes de segurança que procuram vírus, malware e outros ataques malignos e não contém qualquer ameaça</string>
   <string name="no_apps_found">Nenhum app encontrado com o filtro atual</string>
-  <string name="no_search_results_message">Não existem resultados para a sua pesquisa.\nPor favor,
-    experimente outras palavras-chaves.
-  </string>
+  <string name="no_search_results_message">Não existem resultados para a sua pesquisa.\nPor favor, experimente outras palavras-chaves.</string>
   <!-- AppView developer area-->
   <string name="developer">Desenvolvedor</string>
   <string name="website">Site: %s</string>
@@ -602,9 +477,7 @@
   <string name="privacy_policy">Políticas de Privacidade: %s</string>
   <string name="dialog_version_size">Versão: %1$s | Tamanho: %2$s</string>
   <string name="na">N/A</string>
-  <string name="no_email_and_pass_error_message">Por favor, introduza um e-mail e senha para se
-    registrar.
-  </string>
+  <string name="no_email_and_pass_error_message">Por favor, introduza um e-mail e senha para se registrar.</string>
   <string name="no_pass_error_message">Por favor introduza a senha para se registrar.</string>
   <string name="no_email_error_message">Por favor, insira um e-mail para se registrar.</string>
   <string name="website_copied">Website copiado para a área de transferência</string>
@@ -614,6 +487,5 @@
   <!-- Search Fragment -->
   <string name="all_stores">Todas as Lojas</string>
   <string name="followed_stores">Lojas seguidas</string>
-  <string name="search_minimum_chars">O parâmetro de pesquisa tem de ter pelo menos 2 caracteres.
-  </string>
+  <string name="search_minimum_chars">O parâmetro de pesquisa tem de ter pelo menos 2 caracteres.</string>
 </resources>

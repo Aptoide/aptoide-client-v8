@@ -24,6 +24,5 @@
   <string name="WidgetProvider_timestamp_years_ago">%s anos atrás</string>
   <!-- Share options -->
   <string name="share_options_share_external">Compartilhar via…</string>
-  <string name="share_options_share_in_timeline">Compartilhar na Linha do Tempo de Aplicativos
-  </string>
+  <string name="share_options_share_in_timeline">Compartilhar na Linha do Tempo de Aplicativos</string>
 </resources>
