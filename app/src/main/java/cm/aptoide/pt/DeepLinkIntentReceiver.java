@@ -319,7 +319,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
   }
 
   public void startFromPackageName(String packageName) {
-    GetAppRequest.of(packageName, ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
+    GetAppRequest.of(packageName,
+        ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7Pool(),
         ((V8Engine) getApplicationContext()).getDefaultClient(), WebService.getDefaultConverter(),
         ((V8Engine) getApplicationContext()).getTokenInvalidator(),
         ((V8Engine) getApplicationContext()).getDefaultSharedPreferences())
