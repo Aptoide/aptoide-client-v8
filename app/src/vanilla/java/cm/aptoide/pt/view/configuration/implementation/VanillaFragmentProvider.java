@@ -54,7 +54,7 @@ import java.util.List;
 /**
  * Created by neuro on 10-10-2016.
  */
-public class FragmentProviderImpl implements FragmentProvider {
+public class VanillaFragmentProvider implements FragmentProvider {
 
   @Override public Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem) {
     return ScreenshotsViewerFragment.newInstance(uris, currentItem);

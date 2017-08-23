@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
@@ -69,6 +71,19 @@ public class PartnersLaunchView extends ActivityView {
     final SharedPreferences securePreferences =
         SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
     SecurePreferences.setWizardAvailable(false, securePreferences);
+  }
+
+  /**
+   * setup partner theme
+   */
+  @Override public View onCreateView(View parent, String name, Context context,
+      AttributeSet attrs) {
+    String storeTheme = ((AptoideApplication) getApplicationContext()).getDefaultTheme();
+    if (storeTheme != null) {
+      ThemeUtils.setStoreTheme(this, storeTheme);
+      ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(storeTheme));
+    }
+    return super.onCreateView(parent, name, context, attrs);
   }
 
   /**
