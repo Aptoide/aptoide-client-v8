@@ -321,7 +321,7 @@
   <!-- Payments -->
   <string name="item_payment_button_use">使用する</string>
   <string name="item_payment_button_register">登録</string>
-  <string name="item_payment_approving_text">承認中…</string>
+  <string name="item_payment_approving_text">承認中...</string>
   <string name="activity_payment_more_payments_button">別の支払い方法を使用する</string>
   <string name="reviews_expand_button">%d 件の返信</string>
   <string name="out_of_space_dialog_title">空き容量が不足</string>

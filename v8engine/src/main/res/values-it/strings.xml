@@ -319,7 +319,7 @@ dello Store e i commenti degli altri utenti. Aptoide consiglia sempre di install
   <!-- Payments -->
   <string name="item_payment_button_use">usare</string>
   <string name="item_payment_button_register">registrati</string>
-  <string name="item_payment_approving_text">In Approvazione…</string>
+  <string name="item_payment_approving_text">In Approvazione...</string>
   <string name="activity_payment_more_payments_button">Utilizzare un altro metodo di pagamento</string>
   <string name="reviews_expand_button">%d Risposte</string>
   <string name="out_of_space_dialog_title">Spazio esaurito</string>

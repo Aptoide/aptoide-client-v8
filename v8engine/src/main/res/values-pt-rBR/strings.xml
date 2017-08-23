@@ -321,7 +321,7 @@ Mantenha um registro de todos os seus aplicativos instalados (via %s), incluindo
   <!-- Payments -->
   <string name="item_payment_button_use">use</string>
   <string name="item_payment_button_register">register</string>
-  <string name="item_payment_approving_text">Aprovando…</string>
+  <string name="item_payment_approving_text">Aprovando...</string>
   <string name="activity_payment_more_payments_button">Usar outro método de pagamento</string>
   <string name="reviews_expand_button">%d Respostas</string>
   <string name="out_of_space_dialog_title">Sem espaço</string>

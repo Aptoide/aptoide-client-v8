@@ -111,7 +111,7 @@
   <string name="sd_error">एसडीकार्ड पर नहीं लिख सका।</string>
   <string name="sd_error_jolla">ठीक से डाउनलोड नहीं कर सका</string>
   <string name="starting_download">डाउनलोड शुरू कर रहा है</string>
-  <string name="installing">%s स्थापित हो रहा है…</string>
+  <string name="installing">%s स्थापित हो रहा है...</string>
   <string name="finished_install">%s इंस्टाल हो गया है।</string>
   <string name="aptoide_downloading">%s डाउनलोड हो रहा है</string>
   <string name="remaining_time">शेष</string>
@@ -164,7 +164,7 @@
   <string name="menu_context_reparse">रीलोड करें</string>
   <string name="menu_context_remove">हटाएं</string>
   <!-- Stores -->
-  <string name="search_other_stores">या अन्यों के लिए खोज करें…</string>
+  <string name="search_other_stores">या अन्यों के लिए खोज करें...</string>
   <string name="see_top_stores">शीर्ष स्टोर देखें</string>
   <string name="unsubscribe">अनसब्सक्राइब करें</string>
   <string name="store_name">स्टोर का नाम</string>
@@ -212,7 +212,7 @@
   <string name="more_versions">अधिक संस्करण</string>
   <string name="facebook_friends_list_using_timeline_empty">सोशल टाइमलाइन आपको अपनी एप्प अपने फेसबुक मित्रों से साझा करने की अनुमति देता है। क्या आप नेटवर्क में शामिल होना चाहते हैं?</string>
   <string name="X_download_number">%s नीचे।</string>
-  <string name="timeline_not_compatible">ओह… यह सुविधा आपके एंड्रॉयड संस्करण के साथ संगत नहीं है</string>
+  <string name="timeline_not_compatible">ओह... यह सुविधा आपके एंड्रॉयड संस्करण के साथ संगत नहीं है</string>
   <string name="sponsored">प्रायोजित</string>
   <string name="friends_installs">आपके मित्रों ने स्थापित किया</string>
   <string name="recommended_for_you">आपके लिए अनुशंसित</string>
@@ -379,7 +379,7 @@
   <string name="update_self_msg">%s का एक नया वर्शन उपलब्ध है\nक्या आप अपडेट करना चाहते हैं?</string>
   <string name="retrieving_update">अपडेट वापस ला रहा है…</string>
   <string name="menu_search_item_go_to_store">स्टोर पर जाएं</string>
-  <string name="srch_hint">ऐप्स के लिए खोजें…</string>
+  <string name="srch_hint">ऐप्स के लिए खोजें...</string>
   <!-- Badges -->
   <string name="app_trusted">%s विश्वसनीय है</string>
   <string name="app_warning">चेतावनी: %s</string>
@@ -461,7 +461,7 @@
   <string name="share">साझा करें</string>
   <string name="share_on_timeline">टाइमलाइन पर साझा करें</string>
   <!-- Search Widget-->
-  <string name="search_for_apps">ऐप्स के लिए खोजें…</string>
+  <string name="search_for_apps">ऐप्स के लिए खोजें...</string>
   <string name="empty_search">Empty search, write an application name</string>
   <string name="manually_reviewed">अच्छी एप्प की गारंटी: इस एप्लीकेशन ने वायरस, मैलवेयर और अन्य दुर्भावनापूर्ण हमलों के लिए सुरक्षा परीक्षा उत्तीर्ण कर ली और कोई भी खतरा शामिल नहीं है</string>
   <string name="no_apps_found">No apps found with current filter</string>

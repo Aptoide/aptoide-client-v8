@@ -123,7 +123,7 @@
   <string name="download_pending">Em espera</string>
   <!-- layouts -->
   <string name="download_retry">Tentar novamente</string>
-  <string name="error503">Ufff… É impressão minha ou todo mundo está instalando apps ao mesmo tempo?</string>
+  <string name="error503">Ufff... É impressão minha ou todo mundo está instalando apps ao mesmo tempo?</string>
   <string name="having_some_trouble">Estamos com problemas. Pode tentar novamente mais tarde?</string>
   <!-- Vote -->
   <string name="reply">Responder</string>

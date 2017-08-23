@@ -85,8 +85,7 @@
   <string name="yes">አዎ</string>
   <string name="no">አይደለም</string>
   <string name="feedback_subject">ጉዳይ</string>
-  <string name="feedback_to_write2">አስተያየትዎን ለእኛ ለመላክ እዚህ ላይ ይጻፉ…\n\ n እባክዎ ሊያገኙዋቸው የሚችሉትን ሁሉንም
-    ዝርዝሮች ይስጡን:\n\. ያዩአቸዉን \n\. ስህተቶች በደረጃ ያሳውቁን</string>
+  <string name="feedback_to_write2">አስተያየትዎን ለእኛ ለመላክ እዚህ ላይ ይጻፉ...\n\ n እባክዎ ሊያገኙዋቸው የሚችሉትን ሁሉንም ዝርዝሮች ይስጡን:\n\. ያዩአቸዉን \n\. ስህተቶች በደረጃ ያሳውቁን</string>
   <string name="feedback_include_logs">እስክሪንሹቱን እና ሎግ ያካትቱ</string>
   <string name="feedback_no_email">ምንም የኢሜይል ደንበኛ የተጫነ የለም!</string>
   <string name="store_already_added">ማከማቻ አስቀድሞ ተጨምሮል!</string>

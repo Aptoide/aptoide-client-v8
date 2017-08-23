@@ -131,7 +131,7 @@
   <string name="wizard_description_part_one_viewpager_one">تیک سبز کنار اپ نشانه سلامت و امنیت برنامه است</string>
   <string name="wizard_description_part_two_viewpager_one">اپ‌هایی را که همیشه به دنبالشان می‌گشتید در این‌جا به آسانی دانلود کنید</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">تایم‌لاین اپ‌ها</string>
+  <string name="wizard_title_viewpager_two"><b>تایم‌لاین اپ‌ها</b></string>
   <string name="wizard_sub_title_viewpager_two">جدیدترین برنامه‌ها را دانلود ‌کنید، فروشگاه‌های موضوعی را دنبال کنید و محتوای اختصاصی خود را دریافت کنید</string>
   <!-- WIZARD PAGE 3 -->
   <string name="wizard_title_viewpager_three">به جمع اَپ‌تویدی‌ها بپیوندید</string>
@@ -262,8 +262,7 @@
   <string name="displayable_social_timeline_similar_to">مشابه %1$s</string>
   <string name="freed_space">%s فضا آزاد شد</string>
   <string name="storage_dialog_title">پاک کردن حافظه اَپ‌توید</string>
-  <string name="clear_cache_dialog_message">آیا می‌خواهید همه اطلاعات مانند آیکون‌ها، تصاویر،
-    فایل‌ها و… را پاک کنید</string>
+  <string name="clear_cache_dialog_message">آیا می‌خواهید همه اطلاعات مانند آیکون‌ها، تصاویر، فایل‌ها و... را پاک کنید</string>
   <string name="clear_cache_summary">پاک کردن آیکون‌ها، تصاویر، فایل‌ها و …</string>
   <string name="clearcache_title">پاک کردن حافظه</string>
   <!-- Stores tab -->
@@ -322,7 +321,7 @@
   <!-- Payments -->
   <string name="item_payment_button_use">استفاده کردن</string>
   <string name="item_payment_button_register">ثبت نام</string>
-  <string name="item_payment_approving_text">در حال تایید …</string>
+  <string name="item_payment_approving_text">در حال تایید ...</string>
   <string name="activity_payment_more_payments_button">از روش پرداخت دیگری استفاده کنید</string>
   <string name="reviews_expand_button">%d پاسخ‌ها</string>
   <string name="out_of_space_dialog_title">حجم حافظه‌ی دستگاه شما کافی نیست</string>

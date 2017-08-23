@@ -315,7 +315,7 @@
   <!-- Payments -->
   <string name="item_payment_button_use">መጠቀም</string>
   <string name="item_payment_button_register">መመዝገብ</string>
-  <string name="item_payment_approving_text">ማፅደቅ…</string>
+  <string name="item_payment_approving_text">ማፅደቅ...</string>
   <string name="activity_payment_more_payments_button">ሌላ የክፍያ ዘዴ ተጠቀም</string>
   <string name="reviews_expand_button">%d ምላሾች</string>
   <string name="out_of_space_dialog_title">ቦታ የለዉም</string>
