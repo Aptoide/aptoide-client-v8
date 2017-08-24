@@ -634,6 +634,7 @@
 
 
   <string name="share">Share</string>
+  <string name="share_store">Share Store</string>
   <string name="share_on_timeline">Share on timeline</string>
 
   <!-- Search Widget-->
