@@ -24,6 +24,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.NotificationTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutionException;
@@ -501,6 +502,15 @@ public class ImageLoader {
               new RoundedCornersTransform(context, radius, margin,
                   RoundedCornersTransform.CornerType.LEFT))
           .into(previewImage);
+    }
+  }
+
+  public void loadIntoTarget(String imageUrl, SimpleTarget<GlideDrawable> simpleTarget) {
+    Context context = weakContext.get();
+    if (context != null) {
+      Glide.with(context)
+          .load(imageUrl)
+          .into(simpleTarget);
     }
   }
 }

@@ -8,6 +8,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item
+      android:id="@+id/menu_share"
+      android:icon="@drawable/ic_action_share"
+      android:orderInCategory="2"
+      android:title="@string/share"
+      app:showAsAction="ifRoom"/>
+
+  <item
       android:id="@+id/action_search"
       android:icon="@drawable/ic_search"
       android:orderInCategory="1"

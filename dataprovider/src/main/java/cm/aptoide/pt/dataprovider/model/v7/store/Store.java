@@ -9,14 +9,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
 
 /**
  * Created by neuro on 27-04-2016.
  */
 public class Store {
-
   public static final String PUBLIC_ACCESS = "PUBLIC";
-
   private long id;
   private String name;
   private String avatar;
@@ -27,6 +26,15 @@ public class Store {
   @JsonProperty("links") private List<SocialChannel> socialChannels;
   private String status;
   private String access;
+  private Urls urls;
+
+  public Urls getUrls() {
+    return urls;
+  }
+
+  public void setUrls(Urls urls) {
+    this.urls = urls;
+  }
 
   public long getId() {
     return id;
@@ -208,5 +216,10 @@ public class Store {
     public void setUrl(String url) {
       this.url = url;
     }
+  }
+
+  @Data public static class Urls {
+
+    private String mobile;
   }
 }

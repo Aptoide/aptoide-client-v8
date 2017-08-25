@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -53,6 +54,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
+import cm.aptoide.pt.view.share.ShareStoreHelper;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -88,6 +90,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
+  private ShareStoreHelper shareStoreHelper;
+  private String storeUrl;
+  private String iconPath;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -148,6 +153,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+    shareStoreHelper = new ShareStoreHelper(getActivity());
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -304,6 +310,18 @@ public class StoreFragment extends BasePagerToolbarFragment {
     setupSearch(menu);
   }
 
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+
+    if (i == R.id.menu_share) {
+      shareStoreHelper.shareStore(storeUrl, iconPath);
+
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
   protected void setupSearch(Menu menu) {
     SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName);
   }
@@ -328,9 +346,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
                   .getStore();
               String storeName = store != null ? store.getName() : null;
               Long storeId = store != null ? store.getId() : null;
+              String avatar = getHome.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getStore()
+                  .getAvatar();
               setupVariables(getHome.getNodes()
                   .getTabs()
-                  .getList(), storeId, storeName);
+                  .getList(), storeId, storeName, storeUrl, avatar);
               HomeUser user = getHome.getNodes()
                   .getMeta()
                   .getData()
@@ -355,7 +378,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
                   .getId(), getStore.getNodes()
                   .getMeta()
                   .getData()
-                  .getName());
+                  .getName(), getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getUrls()
+                  .getMobile(), getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getAvatar());
               return getStore.getNodes()
                   .getMeta()
                   .getData()
@@ -390,10 +420,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private void setupVariables(List<GetStoreTabs.Tab> tabs, Long storeId, String storeName) {
+  private void setupVariables(List<GetStoreTabs.Tab> tabs, Long storeId, String storeName,
+      String storeUrl, String iconPath) {
     this.tabs = tabs;
     this.storeId = storeId;
     this.storeName = storeName;
+    this.storeUrl = storeUrl;
+    this.iconPath = iconPath;
   }
 
   protected void changeToTab(Event.Name tabToChange) {

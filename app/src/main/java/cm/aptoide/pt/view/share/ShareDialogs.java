@@ -3,6 +3,10 @@ package cm.aptoide.pt.view.share;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.networking.image.ImageLoader;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
@@ -91,6 +95,36 @@ public class ShareDialogs {
     });
   }
 
+  public static Observable<ShareResponse> createStoreShareDialog(Context context, String title,
+      String storeIcon) {
+    return Observable.create((Subscriber<? super ShareResponse> subscriber) -> {
+      final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title)
+          .setItems(R.array.store_share_options_array, (dialogInterface, i) -> {
+            if (!subscriber.isUnsubscribed()) {
+              switch (i) {
+                case 0:
+                  subscriber.onNext(ShareResponse.USING);
+                  subscriber.onCompleted();
+                  break;
+              }
+            }
+          })
+          .create();
+
+      ImageLoader.with(context)
+          .loadIntoTarget(storeIcon, new SimpleTarget<GlideDrawable>() {
+            @Override public void onResourceReady(GlideDrawable resource,
+                GlideAnimation<? super GlideDrawable> glideAnimation) {
+              alertDialog.setIcon(resource);
+            }
+          });
+
+      // cleaning up
+      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
+      alertDialog.show();
+    });
+  }
+
   public enum ShareResponse {
 
     SHARE_APP,
@@ -99,6 +133,8 @@ public class ShareDialogs {
 
     SHARE_TIMELINE,
 
-    SHARE_SPOT_AND_SHARE
+    SHARE_SPOT_AND_SHARE,
+
+    USING
   }
 }

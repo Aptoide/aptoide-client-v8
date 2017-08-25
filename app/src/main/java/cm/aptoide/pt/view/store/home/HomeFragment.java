@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -215,6 +216,12 @@ public class HomeFragment extends StoreFragment {
 
   @Override public int getContentViewId() {
     return R.layout.activity_main;
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+
+    menu.removeItem(R.id.menu_share);
   }
 
   @Override protected void setupSearch(Menu menu) {
