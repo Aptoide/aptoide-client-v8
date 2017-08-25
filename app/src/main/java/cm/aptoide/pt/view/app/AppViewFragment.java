@@ -276,6 +276,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    handleSavedInstance(savedInstanceState);
+
     billingIdResolver = ((V8Engine) getContext().getApplicationContext()).getBillingIdResolver();
     adMapper = new MinimalAdMapper();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
@@ -330,6 +333,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
+  }
+
+  private void handleSavedInstance(Bundle savedInstanceState) {
+    if (savedInstanceState != null) {
+      suggestedShowing = savedInstanceState.getBoolean(Keys.SUGGESTED_SHOWING);
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    outState.putBoolean(Keys.SUGGESTED_SHOWING, suggestedShowing);
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -706,6 +721,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             }
           });
     }
+    if (isSuggestedShowing()) {
+      showSuggestedApps();
+    }
     finishLoading();
   }
 
@@ -928,6 +946,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   public void showSuggestedApps() {
     appViewSimilarAppAnalytics.similarAppsIsShown();
+    suggestedShowing = true;
 
     adsRepository.getAdsFromAppviewSuggested(packageName, keywords)
         .onErrorReturn(throwable -> Collections.emptyList())
@@ -937,7 +956,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
                 .getList()), appViewSimilarAppAnalytics))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .doOnSubscribe(() -> suggestedShowing = true)
         .subscribe(appViewSuggestedAppsDisplayable -> {
           addDisplayableWithAnimation(1, appViewSuggestedAppsDisplayable);
         }, Throwable::printStackTrace);
@@ -1137,5 +1155,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             .show(getFragmentManager(), BADGE_DIALOG_TAG);
       });
     }
+  }
+
+  private class Keys {
+    public static final String SUGGESTED_SHOWING = "SUGGESTED_SHOWING";
   }
 }
