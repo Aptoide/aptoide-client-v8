@@ -133,6 +133,8 @@ public class MinimalCardViewFactory {
     showLikesPreview(post, context);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
+    socialCommentBar.setOnClickListener(view -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(post, CardTouchEvent.Type.LAST_COMMENT)));
     like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
     commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
