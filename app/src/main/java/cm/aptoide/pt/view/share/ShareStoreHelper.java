@@ -33,7 +33,8 @@ public class ShareStoreHelper {
   private void caseDefaultShare(String storeUrl) {
     Intent sharingIntent = new Intent(Intent.ACTION_SEND);
     sharingIntent.setType("text/plain");
-    sharingIntent.putExtra(Intent.EXTRA_TEXT, storeUrl);
+    sharingIntent.putExtra(Intent.EXTRA_TEXT,
+        context.getString(R.string.hello_follow_me_on_aptoide) + " " + storeUrl);
     context.startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.share)));
   }
 }
