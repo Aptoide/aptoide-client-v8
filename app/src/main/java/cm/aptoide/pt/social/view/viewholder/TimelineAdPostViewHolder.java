@@ -29,12 +29,13 @@ public class TimelineAdPostViewHolder extends PostViewHolder<AdPost> {
 
   @Override public void setPost(AdPost post, int position) {
     this.cardLayout.setVisibility(View.VISIBLE);
+    this.cardLayout.removeAllViews();
+    this.cardLayout.addView(adLoading);
     this.adLoading.setVisibility(View.VISIBLE);
     post.getAdView()
         .subscribe(adResponse -> {
           if (adResponse.getStatus()
               .equals(AdResponse.Status.ok)) {
-            cardLayout.removeAllViews();
             cardLayout.addView(adResponse.getView());
             adLoading.setVisibility(View.GONE);
           } else {
