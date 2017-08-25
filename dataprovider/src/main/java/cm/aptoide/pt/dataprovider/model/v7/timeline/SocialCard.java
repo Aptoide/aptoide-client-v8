@@ -34,13 +34,16 @@ import lombok.Getter;
     @Getter private String body;
     @Getter private String name;
     @Getter private String avatar;
+    @Getter private long userId;
 
     @JsonCreator public CardComment(@JsonProperty("id") long id, @JsonProperty("body") String body,
-        @JsonProperty("name") String name, @JsonProperty("avatar") String avatar) {
+        @JsonProperty("name") String name, @JsonProperty("avatar") String avatar,
+        @JsonProperty("user_id") long userId) {
       this.id = id;
       this.body = body;
       this.name = name;
       this.avatar = avatar;
+      this.userId = userId;
     }
   }
 }

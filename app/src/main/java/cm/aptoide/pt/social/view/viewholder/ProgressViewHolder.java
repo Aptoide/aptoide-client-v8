@@ -9,7 +9,7 @@ import cm.aptoide.pt.social.data.Post;
 
 public class ProgressViewHolder extends PostViewHolder {
   public ProgressViewHolder(View view) {
-    super(view);
+    super(view, null);
   }
 
   @Override public void setPost(Post card, int position) {

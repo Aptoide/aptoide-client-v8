@@ -42,7 +42,7 @@ public class AggregatedRecommendationViewHolder extends PostViewHolder<Aggregate
   public AggregatedRecommendationViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, MinimalCardViewFactory minimalCardViewFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;

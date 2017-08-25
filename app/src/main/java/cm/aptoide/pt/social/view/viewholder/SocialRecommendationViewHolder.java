@@ -23,6 +23,7 @@ import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
+import cm.aptoide.pt.v8engine.social.view.viewholder.SocialPostViewHolder;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
@@ -30,7 +31,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 26/06/2017.
  */
 
-public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommendation> {
+public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRecommendation> {
   private final DateCalculator dateCalculator;
   private final ImageView headerPrimaryAvatar;
   private final ImageView headerSecondaryAvatar;
@@ -69,7 +70,7 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
   public SocialRecommendationViewHolder(View view, int titleStringResourceId,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.titleStringResourceId = titleStringResourceId;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -259,30 +260,6 @@ public class SocialRecommendationViewHolder extends PostViewHolder<RatedRecommen
     } else {
       numberLikes.setVisibility(View.INVISIBLE);
       numberLikesOneLike.setVisibility(View.INVISIBLE);
-    }
-  }
-
-  private void handleCommentsInformation(RatedRecommendation post) {
-    if (post.getCommentsNumber() > 0) {
-      numberComments.setVisibility(View.VISIBLE);
-      numberComments.setText(itemView.getContext()
-          .getResources()
-          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber(),
-              (int) post.getCommentsNumber()));
-      socialCommentBar.setVisibility(View.VISIBLE);
-      ImageLoader.with(itemView.getContext())
-          .loadWithShadowCircleTransform(post.getComments()
-              .get(0)
-              .getAvatar(), latestCommentMainAvatar);
-      socialCommentUsername.setText(post.getComments()
-          .get(0)
-          .getName());
-      socialCommentBody.setText(post.getComments()
-          .get(0)
-          .getBody());
-    } else {
-      numberComments.setVisibility(View.INVISIBLE);
-      socialCommentBar.setVisibility(View.GONE);
     }
   }
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */

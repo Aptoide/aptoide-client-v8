@@ -46,7 +46,7 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
 
   public AppUpdateViewHolder(View view, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;

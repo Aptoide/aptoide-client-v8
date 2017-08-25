@@ -22,7 +22,7 @@ public class TimelineAdPostViewHolder extends PostViewHolder<AdPost> {
 
   public TimelineAdPostViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.cardLayout = (LinearLayout) view.findViewById(R.id.card_layout);
     this.adLoading = (ProgressBar) view.findViewById(R.id.timeline_ad_loading);
