@@ -152,6 +152,8 @@ public class SocialPostMediaViewHolder extends SocialPostViewHolder<SocialMedia>
     }
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    this.mediaTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new SocialHeaderCardTouchEvent(card, card.getPoster()
             .getStore()

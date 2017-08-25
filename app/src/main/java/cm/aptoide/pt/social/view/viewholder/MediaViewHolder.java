@@ -91,6 +91,8 @@ public class MediaViewHolder extends PostViewHolder<Media> {
 
     articleThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
+    articleTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
     articleHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
 
