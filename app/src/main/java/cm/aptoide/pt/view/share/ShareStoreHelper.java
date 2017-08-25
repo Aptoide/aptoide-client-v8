@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.preferences.Application;
+import java.util.Locale;
 import rx.Observable;
 
 /**
@@ -31,10 +33,14 @@ public class ShareStoreHelper {
   }
 
   private void caseDefaultShare(String storeUrl) {
+    String msg = String.format(Locale.ENGLISH,
+        context.getString(R.string.hello_follow_me_on_aptoide) + " " + storeUrl,
+        Application.getConfiguration()
+            .getMarketName());
+
     Intent sharingIntent = new Intent(Intent.ACTION_SEND);
     sharingIntent.setType("text/plain");
-    sharingIntent.putExtra(Intent.EXTRA_TEXT,
-        context.getString(R.string.hello_follow_me_on_aptoide) + " " + storeUrl);
+    sharingIntent.putExtra(Intent.EXTRA_TEXT, msg);
     context.startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.share)));
   }
 }
