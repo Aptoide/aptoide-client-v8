@@ -498,6 +498,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .show();
   }
 
+  @Override public void showSetUserOrStorePublicMessage() {
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
+        Snackbar.LENGTH_LONG)
+        .show();
+  }
+
   @Override public void showPostProgressIndicator() {
     postIndicator = true;
     list.setVisibility(View.GONE);
