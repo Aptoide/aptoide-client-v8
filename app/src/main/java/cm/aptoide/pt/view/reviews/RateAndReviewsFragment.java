@@ -8,10 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -51,7 +48,6 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
@@ -83,8 +79,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
-  private Spinner commentsFilterLanguageSpinner;
-  private LinearLayout commentsFilterLanguageLayout;
+  private LanguageFilterSpinnerWrapper languageFilterSpinnerWrapper;
+  private LanguageFilterHelper languageFilterHelper;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -170,10 +166,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
     ratingTotalsLayout = new RatingTotalsLayout(view);
     ratingBarsLayout = new RatingBarsLayout(view);
-    commentsFilterLanguageSpinner =
-        (Spinner) view.findViewById(R.id.comments_filter_language_spinner);
-    commentsFilterLanguageLayout =
-        (LinearLayout) view.findViewById(R.id.comments_filter_language_layout);
+    languageFilterSpinnerWrapper = new LanguageFilterSpinnerWrapper(
+        (Spinner) view.findViewById(R.id.comments_filter_language_spinner), languageFilter -> {
+      clearDisplayables();
+      fetchReviews(languageFilter);
+    });
 
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
@@ -196,7 +193,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     Logger.d(TAG, "Other versions should refresh? " + create);
     fetchLanguageFilter();
     fetchRating(refresh);
-    fetchReviews();
+    fetchReviews(languageFilterHelper.getCurrentLanguageFirst());
   }
 
   @Override public void onViewCreated() {
@@ -209,30 +206,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   private void fetchLanguageFilter() {
-    commentsFilterLanguageSpinner.setAdapter(setupCommentsFilterLanguageSpinnerAdapter());
-    setupLanguageSpinnerClickListener(commentsFilterLanguageLayout);
-  }
-
-  private SpinnerAdapter setupCommentsFilterLanguageSpinnerAdapter() {
-    return new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item,
-        setupSpinnerAdapterRows());
-  }
-
-  private List<String> setupSpinnerAdapterRows() {
-    List<String> strings = new LinkedList<>();
-
-    strings.add(getContext().getResources()
-        .getString(R.string.comments_filter_comments_by_language_all));
-    strings.add(getContext().getResources()
-        .getString(R.string.comments_filter_comments_by_language_current_language_first));
-    strings.add(getContext().getResources()
-        .getString(R.string.comments_filter_comments_by_language_english));
-
-    return strings;
-  }
-
-  private void setupLanguageSpinnerClickListener(View itemView) {
-    itemView.setOnClickListener(v -> commentsFilterLanguageSpinner.performClick());
+    languageFilterSpinnerWrapper.setup();
   }
 
   private void fetchRating(boolean refresh) {
@@ -258,11 +232,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         });
   }
 
-  private void fetchReviews() {
+  void fetchReviews(LanguageFilterHelper.LanguageFilter languageFilter) {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
             baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            languageFilter.getValue());
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
@@ -291,11 +266,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ratingBarsLayout.setup(data);
   }
 
-  private void invalidateReviews() {
-    clearDisplayables();
-    fetchReviews();
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     tokenInvalidator =
@@ -314,6 +284,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    languageFilterHelper = new LanguageFilterHelper(getResources());
   }
 
   @NonNull @Override
