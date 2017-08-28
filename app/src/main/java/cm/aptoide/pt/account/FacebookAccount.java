@@ -93,4 +93,9 @@ public class FacebookAccount implements Account {
   @Override public boolean isPublicUser() {
     return account != null && account.getAccess() == Access.PUBLIC;
   }
+
+  @Override public boolean isPublicStore() {
+    return account != null && account.hasStore() && account.getStore()
+        .hasPublicAccess();
+  }
 }

@@ -132,6 +132,13 @@ public interface Account {
   boolean isPublicUser();
 
   /**
+   * True if the store is public.
+   *
+   * @return True if the store is public. False if store is private.
+   */
+  boolean isPublicStore();
+
+  /**
    * Account information access level.
    */
   enum Access {

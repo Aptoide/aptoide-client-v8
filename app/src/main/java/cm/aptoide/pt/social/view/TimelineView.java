@@ -80,6 +80,8 @@ public interface TimelineView extends View {
 
   void showCreateStoreMessage(SocialAction socialAction);
 
+  void showSetUserOrStorePublicMessage();
+
   void showPostProgressIndicator();
 
   void hidePostProgressIndicator();
