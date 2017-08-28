@@ -955,9 +955,9 @@ public abstract class V8Engine extends Application {
 
       final String cachePath = getConfiguration().getCachePath();
 
-      long month = DateUtils.DAY_IN_MILLIS * 30;
+      long month = DateUtils.DAY_IN_MILLIS;
       folders.add(new CacheHelper.FolderToManage(new File(cachePath), month));
-      folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), 1024 * 1024));
+      folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), month));
       folders.add(new CacheHelper.FolderToManage(
           new File(getApplicationContext().getCacheDir() + "image_manager_disk_cache/"), month));
       cacheHelper =
