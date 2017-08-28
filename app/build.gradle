@@ -96,16 +96,16 @@ android {
 
   flavorDimensions "product", "mode"
   productFlavors {
+    partner {
+      dimension "product"
+      packageName = "${PARTNER_APPLICATION_ID}" + "." + storeName
+    }
 
     vanilla {
       dimension "product"
       packageName = "${VANILLA_APPLICATION_ID}"
     }
 
-//    partner {
-//      dimension "product"
-//      packageName = "${PARTNER_APPLICATION_ID}" + "." + storeName
-//    }
 
     internal {
       dimension "mode"
