@@ -2,12 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <!--<item-->
-      <!--android:id="@+id/spotandshare_connected_friends"-->
-      <!--android:icon="@drawable/user_account_white"-->
-      <!--android:orderInCategory="1"-->
-      <!--android:title="@string/spotandshare_short_connected_friends"-->
-      <!--app:showAsAction="always|collapseActionView"-->
-      <!--/>-->
-
+  <item
+      android:id="@+id/spotandshare_connected_friends"
+      android:icon="@drawable/user_account_white"
+      android:orderInCategory="1"
+      android:title="@string/spotandshare_short_connected_friends"
+      app:showAsAction="always|collapseActionView"
+      />
 </menu>

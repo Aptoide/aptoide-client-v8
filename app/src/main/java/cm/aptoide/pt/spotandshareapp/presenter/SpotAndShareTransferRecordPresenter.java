@@ -72,14 +72,6 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.clickedConnectedFriends())
-        .doOnNext(r -> view.openConnectedFriendsFragment())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.backButtonEvent())
         .doOnNext(click -> view.showExitWarning())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -107,7 +99,6 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
   private void updateFriendsList(Collection<Friend> friendsList) {
     view.updateFriendsNumber(friendsList.size());
     view.updateFriendsList((new ArrayList<>(friendsList)));
-    //
     //if (friendsList.size() == 1) {
     //  view.updateFriendsAvatar(drawableBitmapMapper.convertBitmapToDrawable(
     //      ((Friend) friendsList.toArray()[0]).getAvatar()));

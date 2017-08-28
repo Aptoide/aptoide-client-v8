@@ -71,7 +71,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private SpotAndSharePickAppsAdapter pickAppsAdapter;
   private RecyclerView pickAppsRecyclerView;
   private View pickAppsProgressBarContainer;
-  private PublishSubject connectedFriends;
   private Menu toolbarMenu;
 
   public static Fragment newInstance() {
@@ -86,7 +85,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     installApp = PublishSubject.create();
 
     pickAppSubject = PublishSubject.create();
-    connectedFriends = PublishSubject.create();
   }
 
   @Nullable @Override
@@ -119,9 +117,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     this.toolbarMenu = menu;
-    //inflater.inflate(R.menu.menu_spotandshare_transfer, menu);
-    //this.friendsItem = menu.findItem(R.id.spotandshare_connected_friends);
-    //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.user_account_white).setBounds(0,0,36,36));
+    toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.user_account_white));
+    inflater.inflate(R.menu.menu_spotandshare_transfer, menu);
   }
 
   private CharSequence menuIconWithText(Drawable r, String title) {
@@ -252,7 +249,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     backRelay = null;
     acceptApp = null;
     installApp = null;
-    connectedFriends = null;
 
     pickAppSubject = null;
 
@@ -340,14 +336,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     transferRecordAdapter.notifyDataSetChanged();
   }
 
-  @Override public Observable<Void> clickedConnectedFriends() {
-    return connectedFriends;
-  }
-
-  @Override public void openConnectedFriendsFragment() {
-    getFragmentNavigator().navigateTo(SpotAndShareConnectedFriendsFragment.newInstance());
-  }
-
   @Override public void updateFriendsNumber(int friendsList) {
     // TODO: 11-08-2017 filipe put this number next to the overflow button - custom drawable
   }
@@ -366,9 +354,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     if (id == android.R.id.home) {
       backRelay.call(null);
     }
-    //else if (id == R.id.spotandshare_connected_friends) {
-    //  connectedFriends.onNext(null);
-    //}
     return false;
   }
 }

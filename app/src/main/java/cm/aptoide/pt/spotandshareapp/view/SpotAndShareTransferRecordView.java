@@ -1,10 +1,8 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import android.graphics.drawable.Drawable;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import rx.Observable;
 
@@ -35,10 +33,6 @@ public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView
   Observable<TransferAppModel> installApp();
 
   void updateTransferInstallStatus(TransferAppModel transferAppModel);
-
-  Observable<Void> clickedConnectedFriends();
-
-  void openConnectedFriendsFragment();
 
   void updateFriendsNumber(int friendsList);
 
