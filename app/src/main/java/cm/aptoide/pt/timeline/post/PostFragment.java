@@ -196,7 +196,7 @@ public class PostFragment extends FragmentView implements PostView {
     relatedApps.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     adapter = new RelatedAppsAdapter();
-    relatedApps.addItemDecoration(new SimpleDividerItemDecoration(getContext(), 10));
+    relatedApps.addItemDecoration(new SimpleDividerItemDecoration(getContext(), 5));
     relatedApps.setAdapter(adapter);
     relatedApps.setHorizontalScrollBarEnabled(false);
     userInput.requestFocus();
