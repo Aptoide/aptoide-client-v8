@@ -75,7 +75,7 @@ android {
 
     multiDexEnabled true
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.4.0.0"
+    versionName "8.4.1.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
@@ -102,10 +102,10 @@ android {
       packageName = "${VANILLA_APPLICATION_ID}"
     }
 
-    partner {
-      dimension "product"
-      packageName = "${PARTNER_APPLICATION_ID}" + "." + storeName
-    }
+//    partner {
+//      dimension "product"
+//      packageName = "${PARTNER_APPLICATION_ID}" + "." + storeName
+//    }
 
     internal {
       dimension "mode"
