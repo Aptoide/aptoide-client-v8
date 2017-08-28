@@ -27,8 +27,8 @@ public class BoaCompraPresenter implements Presenter {
   private final String payload;
 
   public BoaCompraPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      BillingNavigator navigator, String paymentMethodName, String sellerId, String productId,
-      String payload) {
+      BillingNavigator navigator, String sellerId, String productId,
+      String payload, String paymentMethodName) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
