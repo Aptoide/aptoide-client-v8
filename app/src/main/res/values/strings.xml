@@ -668,5 +668,10 @@
 
   <!--comments-->
 
+  <string name="comments_filter_comments_by_language">Filter comments by language</string>
+  <string name="comments_filter_comments_by_language_all">All</string>
+  <string name="comments_filter_comments_by_language_current_language_first">Current language first</string>
+  <string name="comments_filter_comments_by_language_english">English</string>
+
 </resources>
 
