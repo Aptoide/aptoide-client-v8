@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.V8Engine;
@@ -41,6 +43,7 @@ import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresent
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +67,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private SpotAndShareTransferRecordAdapter transferRecordAdapter;
   private PublishSubject<TransferAppModel> acceptApp;
   private PublishSubject<TransferAppModel> installApp;
+  private LinearLayout connectedFriendsLayout;
+  private TextView connectedFriendsNumber;
 
   private LinearLayout bottomSheet;
   private BottomSheetBehavior bottomSheetBehavior;
@@ -71,7 +76,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private SpotAndSharePickAppsAdapter pickAppsAdapter;
   private RecyclerView pickAppsRecyclerView;
   private View pickAppsProgressBarContainer;
-  private Menu toolbarMenu;
+  private PopupMenu toolbarMenu;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -101,6 +106,10 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     transferRecordRecyclerView =
         (RecyclerView) view.findViewById(R.id.transfer_record_recycler_view);
     setupTransferRecordRecyclerView();
+    connectedFriendsNumber =
+        (TextView) view.findViewById(R.id.spotandshare_toolbar_number_of_friends_connected);
+    connectedFriendsLayout =
+        (LinearLayout) view.findViewById(R.id.spotandshare_toolbar_friends_information_layout);
     setupBackClick();
 
     bottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
@@ -116,9 +125,12 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    this.toolbarMenu = menu;
-    toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.user_account_white));
-    inflater.inflate(R.menu.menu_spotandshare_transfer, menu);
+    //inflater.inflate(R.menu.menu_spotandshare_transfer, menu);
+    //this.toolbarMenu = menu;
+    PopupMenu popup = new PopupMenu(this.getContext(), connectedFriendsLayout);
+    MenuInflater inflate = popup.getMenuInflater();
+    inflate.inflate(R.menu.menu_spotandshare_transfer, menu);
+    this.toolbarMenu = popup;
   }
 
   private CharSequence menuIconWithText(Drawable r, String title) {
@@ -236,6 +248,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     transferRecordAdapter.removeAll();
     transferRecordAdapter = null;
     transferRecordRecyclerView = null;
+    connectedFriendsNumber = null;
+    connectedFriendsLayout = null;
 
     pickAppsAdapter.removeAll();
     pickAppsAdapter = null;
@@ -336,17 +350,33 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     transferRecordAdapter.notifyDataSetChanged();
   }
 
+  @Override public Observable<Void> clickedFriendsInformationButton() {
+    return RxView.clicks(connectedFriendsLayout);
+  }
+
   @Override public void updateFriendsNumber(int friendsList) {
-    // TODO: 11-08-2017 filipe put this number next to the overflow button - custom drawable
+    connectedFriendsNumber.setText("" + friendsList);
   }
 
   @Override public void updateFriendsList(ArrayList<Friend> friendsList) {
+    toolbarMenu.getMenu()
+        .clear();
     for (int i = 0; i < friendsList.size(); i++) {
-      toolbarMenu.add(0, i, i,
-          menuIconWithText(getResources().getDrawable(R.drawable.spotandshare_avatar_01),
-              friendsList.get(i)
-                  .getUsername()));
+      toolbarMenu.getMenu()
+          .add(R.id.spotandshare_toolbar_friends_menu_group, i, i,
+              menuIconWithText(getResources().getDrawable(R.drawable.spotandshare_avatar_01),
+                  friendsList.get(i)
+                      .getUsername()));
     }
+  }
+
+  @Override public void showConnectedFriendsMenu(boolean show) {
+    if (toolbarMenu == null) return;
+    toolbarMenu.getMenu()
+        .add(R.id.spotandshare_toolbar_friends_menu_group, 0, 0,
+            menuIconWithText(getResources().getDrawable(R.drawable.spotandshare_avatar_01),
+                " marcelo"));
+    toolbarMenu.show();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

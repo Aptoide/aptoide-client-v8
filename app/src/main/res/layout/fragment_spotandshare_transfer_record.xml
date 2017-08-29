@@ -16,7 +16,35 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        />
+        >
+
+      <LinearLayout
+          android:id="@+id/spotandshare_toolbar_friends_information_layout"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:orientation="horizontal"
+          >
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/user_account_white"
+            />
+
+        <TextView
+            android:id="@+id/spotandshare_toolbar_number_of_friends_connected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="12dp"
+            android:text="0"
+            style="@style/Aptoide.TextView.Medium.S"
+            />
+
+      </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/bottom_sheet_coordinator_layout"

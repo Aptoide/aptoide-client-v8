@@ -89,6 +89,14 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.clickedFriendsInformationButton())
+        .doOnNext(__ -> view.showConnectedFriendsMenu(true))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> spotAndShare.observeFriends())
         .doOnNext(friendsList -> updateFriendsList(friendsList))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

@@ -34,7 +34,11 @@ public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView
 
   void updateTransferInstallStatus(TransferAppModel transferAppModel);
 
+  Observable<Void> clickedFriendsInformationButton();
+
   void updateFriendsNumber(int friendsList);
 
   void updateFriendsList(ArrayList<Friend> friendsList);
+
+  void showConnectedFriendsMenu(boolean show);
 }
