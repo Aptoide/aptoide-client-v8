@@ -193,7 +193,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     Logger.d(TAG, "Other versions should refresh? " + create);
     fetchLanguageFilter();
     fetchRating(refresh);
-    fetchReviews(languageFilterHelper.getCurrentLanguageFirst());
   }
 
   @Override public void onViewCreated() {
