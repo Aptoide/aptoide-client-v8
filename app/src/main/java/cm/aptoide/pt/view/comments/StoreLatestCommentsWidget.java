@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentNode;
 import cm.aptoide.pt.comments.ComplexComment;
@@ -61,12 +61,14 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   }
 
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
@@ -86,16 +88,16 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
         getContext().getSupportFragmentManager(), recyclerView,
         Observable.fromCallable(() -> reloadComments()), accountManager, accountNavigator,
         getFragmentNavigator(),
-        ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
+        ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
   }
 
   private Void reloadComments() {
     ManagerPreferences.setForceServerRefreshFlag(true,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     compositeSubscription.add(
         ListCommentsRequest.of(storeId, 0, 3, false, baseBodyInterceptor, httpClient,
             converterFactory, tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
             .observe()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

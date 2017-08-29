@@ -5,8 +5,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -75,19 +75,19 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   public Void followersClick(FragmentNavigator navigator) {
     if (storeId > 0) {
-      navigator.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowersUsingStoreIdFragment(storeId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
                       .getFollowers())));
     } else if (userId != null && userId > 0) {
-      navigator.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowersUsingUserIdFragment(userId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
                       .getFollowers())));
     } else {
-      navigator.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowersFragment(storeTheme, AptoideUtils.StringU.getFormattedString(
               R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
                   .getFollowers())));
@@ -97,13 +97,13 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   public Void followingClick(FragmentNavigator navigator) {
     if (storeId > 0) {
-      navigator.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowingFragmentUsingStoreId(storeId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_following_fragment_title, resources, getPojo().getData()
                       .getFollowing())));
     } else {
-      navigator.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowingFragmentUsingUserId(userId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_following_fragment_title, resources, getPojo().getData()
@@ -114,7 +114,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   void followFriendsClick(FragmentNavigator navigator) {
     timelineAnalytics.sendFollowFriendsEvent();
-    navigator.navigateTo(V8Engine.getFragmentProvider()
+    navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newAddressBookFragment());
   }
 }

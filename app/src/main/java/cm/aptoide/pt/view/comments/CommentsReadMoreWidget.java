@@ -7,8 +7,8 @@ package cm.aptoide.pt.view.comments;
 
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -37,15 +37,15 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
 
   @Override public void bindView(CommentsReadMoreDisplayable displayable) {
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     Observable<ListComments> listCommentsObservable =
         ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
             displayable.isReview(), baseBodyInterceptor, httpClient, converterFactory,
-            ((cm.aptoide.pt.V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
             .observe();
 
     compositeSubscription.add(RxView.clicks(readMoreButton)

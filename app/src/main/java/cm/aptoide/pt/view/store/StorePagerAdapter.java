@@ -9,7 +9,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -119,10 +119,10 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
               .getUser()
               .getId();
         }
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newAppsTimelineFragment(event.getAction(), userId, storeId, storeContext);
       default:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext);
     }
   }
@@ -130,16 +130,16 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private Fragment caseClient(Event event, GetStoreTabs.Tab tab) {
     switch (event.getName()) {
       case myUpdates:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newUpdatesFragment();
       case myDownloads:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newDownloadsFragment();
       case mySpotShare:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newSpotShareFragment(false);
       case myStores:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newSubscribedStoresFragment(event, storeTheme, tab.getTag());
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
@@ -150,7 +150,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private Fragment caseV3(Event event) {
     switch (event.getName()) {
       case getReviews:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newLatestReviewsFragment(storeId);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.

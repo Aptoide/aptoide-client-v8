@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.utils.q.QManager;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -25,8 +25,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
   @Override public void onSurfaceCreated(GL10 gl, EGLConfig config) {
     qManager.setSupportedOpenGLExtensions(GLES20.glGetString(GLES20.GL_EXTENSIONS));
-    Intent intent =
-        new Intent(context, V8Engine.getActivityProvider().getMainActivityFragmentClass());
+    Intent intent = new Intent(context, AptoideApplication.getActivityProvider()
+        .getMainActivityFragmentClass());
     ((Activity) context).finish();
     context.startActivity(intent);
   }

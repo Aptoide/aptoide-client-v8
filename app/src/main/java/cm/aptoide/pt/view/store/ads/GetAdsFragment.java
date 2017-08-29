@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -31,11 +31,11 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    adsRepository = ((V8Engine) getContext().getApplicationContext()).getAdsRepository();
+    adsRepository = ((AptoideApplication) getContext().getApplicationContext()).getAdsRepository();
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {

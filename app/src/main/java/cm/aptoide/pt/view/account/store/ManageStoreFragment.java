@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
@@ -113,7 +113,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
     imagePickerErrorHandler = new ImagePickerErrorHandler(getContext());
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
-    storeManager = ((V8Engine) getActivity().getApplicationContext()).getStoreManager();
+    storeManager = ((AptoideApplication) getActivity().getApplicationContext()).getStoreManager();
     packageName = (getActivity().getApplicationContext()).getPackageName();
     fileProviderAuthority = Application.getConfiguration()
         .getAppId() + ".provider";

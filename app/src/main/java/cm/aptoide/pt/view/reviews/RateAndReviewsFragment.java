@@ -9,9 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -135,7 +134,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
       return true;
     }
     if (itemId == R.id.menu_install) {
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
@@ -193,14 +192,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager), baseBodyInterceptor,
         httpClient, converterFactory, installedRepository, tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
   }
 
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory,
         tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -224,18 +223,19 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
             baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(
-                AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
-                    .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
+                AccessorFactory.getAccessorFor(
+                    ((AptoideApplication) getContext().getApplicationContext()
+                        .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
                 httpClient, converterFactory, tokenInvalidator,
-                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
                 getFragmentNavigator(),
-                ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()),
+                ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()),
             (throwable) -> throwable.printStackTrace());
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
@@ -259,19 +259,21 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    idsRepository = ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
   }
 
@@ -291,7 +293,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
     for (final Comment comment : comments) {
       displayables.add(new CommentDisplayable(comment, getFragmentNavigator(),
-          ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
+          ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
     }
   }
 
@@ -308,7 +310,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   /**
    * Bundle of constants
    */
-  @Partners public static class BundleCons {
+  public static class BundleCons {
     public static final String APP_ID = "app_id";
     public static final String PACKAGE_NAME = "package_name";
     public static final String STORE_NAME = "store_name";

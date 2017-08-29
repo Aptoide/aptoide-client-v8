@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
@@ -28,7 +28,7 @@ public class ScheduleDownloadsNetworkReceiver extends BroadcastReceiver {
     }
 
     final boolean scheduledDownloadsEnabled = ManagerPreferences.scheduledDownloadsEnabled(
-        ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences());
 
     if (!scheduledDownloadsEnabled) {
       // scheduled downloads auto-start is not enabled

@@ -3,7 +3,7 @@
  * Modified by Neurophobic Animal on 07/06/2016.
  */
 
-package cm.aptoide.pt.provider;
+package cm.aptoide.pt.search;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.search.SearchRecentSuggestionsProviderWrapper;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social.view.viewholder;
+package cm.aptoide.pt.social.view.viewholder;
 
 import android.view.View;
 import android.widget.TextView;

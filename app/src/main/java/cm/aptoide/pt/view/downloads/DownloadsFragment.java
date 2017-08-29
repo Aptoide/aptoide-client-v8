@@ -11,10 +11,10 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -48,27 +48,27 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     final TokenInvalidator tokenInvalidator =
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     installConverter =
         new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, V8Engine.getConfiguration()
+            tokenInvalidator, AptoideApplication.getConfiguration()
             .getAppId(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     downloadConverter =
         new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, V8Engine.getConfiguration()
+            tokenInvalidator, AptoideApplication.getConfiguration()
             .getAppId(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
-    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
   }

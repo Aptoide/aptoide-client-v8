@@ -14,7 +14,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.text.TextUtils;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshare.DataHolder;
 import cm.aptoide.pt.spotandshare.NetworkHolder;
@@ -258,7 +258,7 @@ public class ConnectionManager implements NetworkHolder {
   public static ConnectionManager getInstance(Context context) {
     if (instance == null) {
       final SharedPreferences defaultSharedPreferences =
-          ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences();
+          ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences();
       HotspotSSIDCodeMapper hotspotSSIDCodeMapper = new HotspotSSIDCodeMapper();
 
       instance = new ConnectionManager(context, defaultSharedPreferences,

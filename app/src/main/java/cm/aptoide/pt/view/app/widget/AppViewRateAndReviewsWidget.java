@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -119,16 +119,18 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
         .getData();
     GetAppMeta.Stats stats = app.getStats();
 
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager), bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(), tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
     appName = app.getName();
     packageName = app.getPackageName();
@@ -171,7 +173,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
         }, handleError));
 
     Action1<Void> commentsOnClickListener = __ -> {
-      Fragment fragment = V8Engine.getFragmentProvider()
+      Fragment fragment = AptoideApplication.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore()
               .getName(), app.getPackageName(), app.getStore()
               .getAppearance()
@@ -206,7 +208,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
     Subscription subscription =
         ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {

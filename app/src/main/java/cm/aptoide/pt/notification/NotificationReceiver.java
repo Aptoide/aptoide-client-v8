@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import rx.Completable;
@@ -29,7 +29,8 @@ public class NotificationReceiver extends BroadcastReceiver {
   @Override public void onReceive(Context context, Intent intent) {
     crashReport = CrashReport.getInstance();
     notificationIdsMapper = new NotificationIdsMapper();
-    notificationCenter = ((V8Engine) context.getApplicationContext()).getNotificationCenter();
+    notificationCenter =
+        ((AptoideApplication) context.getApplicationContext()).getNotificationCenter();
     final String action = intent.getAction();
     if (action != null) {
       switch (action) {

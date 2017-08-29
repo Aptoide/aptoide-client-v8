@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -65,7 +65,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       updatesAnalytics.updates("Update All");
       ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-            ((V8Engine) getContext().getApplicationContext()
+            ((AptoideApplication) getContext().getApplicationContext()
                 .getApplicationContext()).getDatabase(), Update.class);
         compositeSubscription.add(updateAccessor.getAll(false)
             .first()

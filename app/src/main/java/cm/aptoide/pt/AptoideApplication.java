@@ -19,10 +19,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Build;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
@@ -50,7 +50,6 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.billing.AccountPayer;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -217,10 +216,10 @@ import rx.schedulers.Schedulers;
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
-public abstract class V8Engine extends Application {
+public abstract class AptoideApplication extends Application {
 
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
-  private static final String TAG = V8Engine.class.getName();
+  private static final String TAG = AptoideApplication.class.getName();
 
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
@@ -270,7 +269,6 @@ public abstract class V8Engine extends Application {
   private PackageRepository packageRepository;
   private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   private AdsRepository adsRepository;
-  private ABTestManager abTestManager;
   private Database database;
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
@@ -287,13 +285,6 @@ public abstract class V8Engine extends Application {
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private BillingIdResolver billingiIdResolver;
 
-  /**
-   * call after this instance onCreate()
-   */
-  protected void activateLogger(boolean enable) {
-    Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || enable);
-  }
-
   public LeakTool getLeakTool() {
     if (leakTool == null) {
       leakTool = new LeakTool();
@@ -301,10 +292,13 @@ public abstract class V8Engine extends Application {
     return leakTool;
   }
 
-  @Partners @Override public void onCreate() {
-    //
-    // apply security fixes
-    //
+  @Override public void onCreate() {
+
+    CrashReport.getInstance()
+        .addLogger(new CrashlyticsCrashLogger(this, BuildConfig.CRASH_REPORTS_DISABLED))
+        .addLogger(new ConsoleLogger());
+    Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
+
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
@@ -354,7 +348,7 @@ public abstract class V8Engine extends Application {
      */
     checkAppSecurity().andThen(generateAptoideUuid())
         .observeOn(Schedulers.computation())
-        .andThen(prepareApp(V8Engine.this.getAccountManager()).onErrorComplete(err -> {
+        .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
           CrashReport.getInstance()
               .log(err);
@@ -394,6 +388,11 @@ public abstract class V8Engine extends Application {
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
+  }
+
+  @Override protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MultiDex.install(this);
   }
 
   public TokenInvalidator getTokenInvalidator() {
@@ -455,9 +454,8 @@ public abstract class V8Engine extends Application {
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
           new NotificationIdsMapper());
 
-      final NotificationAccessor notificationAccessor =
-          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
-              Notification.class);
+      final NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(
+          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class);
 
       final NotificationProvider notificationProvider = getNotificationProvider();
 
@@ -471,9 +469,9 @@ public abstract class V8Engine extends Application {
 
   public NotificationProvider getNotificationProvider() {
     if (notificationProvider == null) {
-      notificationProvider = new NotificationProvider(
-          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
-              Notification.class), Schedulers.io());
+      notificationProvider = new NotificationProvider(AccessorFactory.getAccessorFor(
+          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class),
+          Schedulers.io());
     }
     return notificationProvider;
   }
@@ -608,10 +606,9 @@ public abstract class V8Engine extends Application {
       FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
-      downloadManager = new AptoideDownloadManager(
-          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
-              Download.class), getCacheHelper(),
-          new FileUtils(action -> Analytics.File.moveFile(action)),
+      downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(
+          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Download.class),
+          getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance(),
               new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                   AppEventsLogger.newLogger(this))), FileDownloader.getImpl(),
@@ -682,7 +679,7 @@ public abstract class V8Engine extends Application {
       final AccountDataPersist accountDataPersist =
           new AndroidAccountManagerDataPersist(AccountManager.get(this),
               new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(
-                  ((V8Engine) this.getApplicationContext()).getDatabase(), Store.class),
+                  ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class),
                   new DatabaseStoreDataPersist.DatabaseStoreMapper()), getAccountFactory(),
               accountDataMigration, getAndroidAccountProvider(), Schedulers.io());
 
@@ -995,15 +992,15 @@ public abstract class V8Engine extends Application {
     });
   }
 
-  @Partners protected FragmentProvider createFragmentProvider() {
+  protected FragmentProvider createFragmentProvider() {
     return new FragmentProviderImpl();
   }
 
-  @Partners protected ActivityProvider createActivityProvider() {
+  protected ActivityProvider createActivityProvider() {
     return new ActivityProviderImpl();
   }
 
-  @Partners protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
+  protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
     return DisplayableWidgetMapping.getInstance();
   }
 
@@ -1037,13 +1034,13 @@ public abstract class V8Engine extends Application {
     return Completable.defer(() -> {
 
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl(
-          AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
-              Store.class));
+          AccessorFactory.getAccessorFor(
+              ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class));
 
       StoreUtilsProxy proxy =
           new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7Pool(), storeCredentials,
               AccessorFactory.getAccessorFor(
-                  ((V8Engine) this.getApplicationContext()).getDatabase(), Store.class),
+                  ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences());
 
@@ -1162,9 +1159,8 @@ public abstract class V8Engine extends Application {
   }
 
   private Completable discoverAndSaveInstalledApps() {
-    InstalledAccessor installedAccessor =
-        AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
-            Installed.class);
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(
+        ((AptoideApplication) this.getApplicationContext()).getDatabase(), Installed.class);
     return Observable.fromCallable(() -> {
       // remove the current installed apps
       //AccessorFactory.getAccessorFor(Installed.class).removeAll();
@@ -1215,13 +1211,6 @@ public abstract class V8Engine extends Application {
         .sync(true);
   }
 
-  /**
-   * Do {@link #createShortcut()} using a {@link Completable}
-   */
-  @Deprecated @Partners public void createShortCut() {
-    createAppShortcut();
-  }
-
   private void createAppShortcut() {
     Intent shortcutIntent = new Intent(this, EntryActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
@@ -1232,32 +1221,6 @@ public abstract class V8Engine extends Application {
         Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
     intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
     getApplicationContext().sendBroadcast(intent);
-  }
-
-  @Partners protected void setupCrashReports(boolean isDisabled) {
-    CrashReport.getInstance()
-        .addLogger(new CrashlyticsCrashLogger(this, isDisabled))
-        .addLogger(new ConsoleLogger());
-  }
-
-  //
-  // Strict Mode
-  //
-
-  /**
-   * do not erase this method. it should be called in internal and dev Application class
-   * of Vanilla module
-   */
-  protected void setupStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
-        .penaltyLog()
-        .build());
-
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedClosableObjects()
-        .detectLeakedClosableObjects()
-        .penaltyLog()
-        .penaltyDeath()
-        .build());
   }
 
   public RootAvailabilityManager getRootAvailabilityManager() {
@@ -1295,7 +1258,7 @@ public abstract class V8Engine extends Application {
           (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
           getVersionCodeProvider(),
           (context) -> AdNetworkUtils.isGooglePlayServicesAvailable(context),
-          () -> V8Engine.getConfiguration()
+          () -> AptoideApplication.getConfiguration()
               .getPartnerId(), new MinimalAdMapper());
     }
     return adsRepository;

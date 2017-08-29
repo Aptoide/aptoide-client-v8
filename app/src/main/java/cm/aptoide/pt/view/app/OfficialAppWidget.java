@@ -16,8 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -142,7 +142,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
                 getContext());
           } else {
             // show app view to install app
-            Fragment appView = V8Engine.getFragmentProvider()
+            Fragment appView = AptoideApplication.getFragmentProvider()
                 .newAppViewFragment(appData.getPackageName(),
                     AppViewFragment.OpenType.OPEN_AND_INSTALL);
             getFragmentNavigator().navigateTo(appView);

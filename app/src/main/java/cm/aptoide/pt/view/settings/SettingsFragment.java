@@ -30,8 +30,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -108,8 +108,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onCreate(savedInstanceState);
     trackAnalytics = true;
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    fileManager = ((V8Engine) getContext().getApplicationContext()).getFileManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
     adultContentConfirmationDialog =
@@ -137,9 +137,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .setEditText(R.id.pininput)
         .build();
 
-    notificationCenter = ((V8Engine) getContext().getApplicationContext()).getNotificationCenter();
+    notificationCenter =
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
     notificationSyncScheduler =
-        ((V8Engine) getContext().getApplicationContext()).getNotificationSyncScheduler();
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -147,10 +148,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(getActivity());
     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    adultContent =
-        new AdultContent(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-            new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
+    adultContent = new AdultContent(
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
+        new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
+        new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -191,10 +192,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-          ((V8Engine) getContext().getApplicationContext()).getDatabase(), Update.class);
+          ((AptoideApplication) getContext().getApplicationContext()).getDatabase(), Update.class);
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
-          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()

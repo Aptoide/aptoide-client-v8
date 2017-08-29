@@ -19,7 +19,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -93,7 +93,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
       AptoideUtils.ThreadU.runOnIoThread(() -> {
         final IdsRepository idsRepository =
-            ((V8Engine) context.getApplicationContext()).getIdsRepository();
+            ((AptoideApplication) context.getApplicationContext()).getIdsRepository();
         internalClickUrl[0] = AdNetworkUtils.parseMacros(clickUrl, idsRepository.getAndroidId(),
             idsRepository.getUniqueIdentifier(), idsRepository.getAdvertisingId());
         clickUrlFuture.set(internalClickUrl[0]);
@@ -131,7 +131,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                 //        minimalAd.getAdId()), realm);
 
                 StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
-                    ((V8Engine) context.getApplicationContext()
+                    ((AptoideApplication) context.getApplicationContext()
                         .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
                 storedMinimalAdAccessor.insert(adMapper.map(minimalAd, referrer));
               }

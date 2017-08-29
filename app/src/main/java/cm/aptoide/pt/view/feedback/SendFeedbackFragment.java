@@ -19,8 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.preferences.Application;
@@ -129,7 +129,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       emailIntent.setType("message/rfc822");
 
       emailIntent.putExtra(Intent.EXTRA_EMAIL,
-          new String[] { V8Engine.getConfiguration().getFeedbackEmail() });
+          new String[] { AptoideApplication.getConfiguration().getFeedbackEmail() });
 
       //String versionName = "";
       //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
@@ -218,7 +218,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
-      photoURI = FileProvider.getUriForFile(getContext(), V8Engine.getConfiguration()
+      photoURI = FileProvider.getUriForFile(getContext(), AptoideApplication.getConfiguration()
           .getAppId() + ".provider", file);
     } else {
       //file://....apk for < nougat

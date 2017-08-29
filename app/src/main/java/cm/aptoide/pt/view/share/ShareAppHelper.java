@@ -12,7 +12,6 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.preferences.Application;
@@ -104,7 +103,7 @@ public class ShareAppHelper {
         }, CrashReport.getInstance()::log);
   }
 
-  @Partners private void caseDefaultShare(String appName, String wUrl) {
+  private void caseDefaultShare(String appName, String wUrl) {
     if (wUrl != null) {
       Intent sharingIntent = new Intent(Intent.ACTION_SEND);
       sharingIntent.setType("text/plain");

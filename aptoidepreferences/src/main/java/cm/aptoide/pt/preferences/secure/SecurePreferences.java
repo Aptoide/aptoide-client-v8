@@ -1,7 +1,6 @@
 package cm.aptoide.pt.preferences.secure;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.annotation.Partners;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -32,7 +31,6 @@ public class SecurePreferences {
     return securePreferences.getBoolean(SecureKeys.WIZARD_AVAILABLE, true);
   }
 
-  @Partners
   public static void setWizardAvailable(boolean available, SharedPreferences securePreferences) {
     securePreferences.edit()
         .putBoolean(SecureKeys.WIZARD_AVAILABLE, available)

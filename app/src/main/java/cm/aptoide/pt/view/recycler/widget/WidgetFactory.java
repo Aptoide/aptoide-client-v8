@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
@@ -36,7 +36,7 @@ public class WidgetFactory {
     //long nanoTime = System.nanoTime();
     View view = LayoutInflater.from(parent.getContext())
         .inflate(viewType, parent, false);
-    Widget w = V8Engine.getDisplayableWidgetMapping()
+    Widget w = AptoideApplication.getDisplayableWidgetMapping()
         .newWidget(view, viewType);
     //Logger.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
     return w;
@@ -60,7 +60,7 @@ public class WidgetFactory {
 
   private static int[] getDisplayablesSizes(WindowManager windowManager, Resources resources) {
 
-    List<Displayable> displayableList = V8Engine.getDisplayableWidgetMapping()
+    List<Displayable> displayableList = AptoideApplication.getDisplayableWidgetMapping()
         .getCachedDisplayables();
 
     int[] arr = new int[displayableList.size()];

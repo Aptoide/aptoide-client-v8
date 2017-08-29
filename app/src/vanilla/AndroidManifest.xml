@@ -5,17 +5,10 @@
     package="cm.aptoide.pt">
 
   <application
-      android:name=".PartnerApplication"
+      android:name=".VanillaApplication"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:supportsRtl="true"
       tools:replace="label"
-      >
-
-    <activity
-        android:name=".view.PartnersLaunchView"
-        android:theme="@style/Theme.AppCompat.Translucent">
-    </activity>
-  </application>
-
+      />
 </manifest>

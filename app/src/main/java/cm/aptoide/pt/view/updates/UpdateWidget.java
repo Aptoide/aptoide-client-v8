@@ -18,8 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -74,7 +74,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
     progressBar = (ProgressBar) itemView.findViewById(R.id.row_progress_bar);
 
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override public void unbindView() {
@@ -145,7 +145,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
     return RxView.clicks(updateRowLayout)
         .doOnNext(v -> {
           updatesAnalytics.updates("Open App View");
-          final Fragment fragment = V8Engine.getFragmentProvider()
+          final Fragment fragment = AptoideApplication.getFragmentProvider()
               .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
           getFragmentNavigator().navigateTo(fragment);
         });

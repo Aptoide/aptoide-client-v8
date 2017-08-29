@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.Product;
@@ -72,9 +72,11 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     cardBuilderRelay = PublishRelay.create();
-    billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
+    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    billingAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
   }
 
   @Nullable @Override

@@ -22,10 +22,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
@@ -136,27 +136,28 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     this.displayable.setInstallButton(actionButton);
 
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     final TokenInvalidator tokenInvalidator =
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            V8Engine.getConfiguration()
+            AptoideApplication.getConfiguration()
                 .getAppId(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            V8Engine.getConfiguration()
+            AptoideApplication.getConfiguration()
                 .getAppId(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     analytics = Analytics.getInstance();
@@ -166,11 +167,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
-                V8Engine.getConfiguration()
+                AptoideApplication.getConfiguration()
                     .getAppId(),
-                ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
             tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     GetApp getApp = this.displayable.getPojo();
     GetAppMeta.App currentApp = getApp.getNodes()
@@ -181,7 +182,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     otherVersions.setOnClickListener(v -> {
       displayable.getAppViewAnalytics()
           .sendOtherVersionsEvent();
-      Fragment fragment = V8Engine.getFragmentProvider()
+      Fragment fragment = AptoideApplication.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
       getFragmentNavigator().navigateTo(fragment);
@@ -521,14 +522,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn()
                       && ManagerPreferences.isShowPreviewDialog(
-                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+                      ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
                       && Application.getConfiguration()
                       .isCreateStoreAndSetUserPrivacyAvailable()) {
                     SharePreviewDialog sharePreviewDialog =
                         new SharePreviewDialog(displayable, accountManager, true,
                             SharePreviewDialog.SharePreviewOpenMode.SHARE,
                             displayable.getTimelineAnalytics(),
-                            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
                     AlertDialog.Builder alertDialog =
                         sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
@@ -565,11 +566,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       Fragment fragment;
       if (hasTrustedVersion) {
         // go to app view of the trusted version
-        fragment = V8Engine.getFragmentProvider()
+        fragment = AptoideApplication.getFragmentProvider()
             .newAppViewFragment(trustedVersion.getId(), trustedVersion.getPackageName());
       } else {
         // search for a trusted version
-        fragment = V8Engine.getFragmentProvider()
+        fragment = AptoideApplication.getFragmentProvider()
             .newSearchFragment(app.getName(), true);
       }
       getFragmentNavigator().navigateTo(fragment);

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.social.presenter;
 
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
@@ -42,24 +42,24 @@ public class TimelineNavigator implements TimelineNavigation {
   }
 
   @Override public void navigateToStoreHome(String storeName, String storeTheme) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newStoreFragment(storeName, storeTheme));
   }
 
   @Override public void navigateToStoreTimeline(long userId, String storeTheme) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline,
             StoreFragment.OpenType.GetHome));
   }
 
   @Override public void navigateToStoreTimeline(String storeName, String storeTheme) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline,
             StoreFragment.OpenType.GetHome));
   }
 
   @Override public void navigateToAddressBook() {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newAddressBookFragment());
   }
 
@@ -72,48 +72,48 @@ public class TimelineNavigator implements TimelineNavigation {
   }
 
   @Override public void navigateToCommentsWithCommentDialogOpen(String cardId) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId));
   }
 
   // FIXME what should happen if storeId <= 0 ?
   @Override public void navigateToFollowersViewStore(Long storeId, String title) {
     if (storeId > 0) {
-      fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+      fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title));
     }
   }
 
   @Override public void navigateToFollowersViewStore(String title) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newTimeLineFollowersFragment("DEFAULT", title));
   }
 
   @Override public void navigateToFollowersViewUser(Long userId, String title) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newTimeLineFollowersUsingUserIdFragment(userId, "DEFAULT", title));
   }
 
   // FIXME what should happen if storeId <= 0 ?
   @Override public void navigateToFollowingViewStore(Long storeId, String title) {
     if (storeId > 0) {
-      fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+      fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowingFragmentUsingStoreId(storeId, "DEFAULT", title));
     }
   }
 
   @Override public void navigateToFollowingViewUser(Long userId, String title) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newTimeLineFollowingFragmentUsingUserId(userId, "DEFAULT", title));
   }
 
   @Override public void navigateToLikesView(String cardId, long numberOfLikes) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newTimeLineLikesFragment(cardId, numberOfLikes, "default", likesTitle));
   }
 
   @Override public void navigateToComments(String cardId) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId));
   }
 

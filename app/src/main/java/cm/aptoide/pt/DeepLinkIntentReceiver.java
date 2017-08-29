@@ -67,7 +67,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private ArrayList<String> server;
   private HashMap<String, String> app;
   private String TMP_MYAPP_FILE;
-  private Class startClass = V8Engine.getActivityProvider()
+  private Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
   private InstalledRepository installedRepository;
@@ -320,10 +320,11 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   public void startFromPackageName(String packageName) {
     GetAppRequest.of(packageName,
-        ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7Pool(),
-        ((V8Engine) getApplicationContext()).getDefaultClient(), WebService.getDefaultConverter(),
-        ((V8Engine) getApplicationContext()).getTokenInvalidator(),
-        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences())
+        ((AptoideApplication) getApplicationContext()).getBaseBodyInterceptorV7Pool(),
+        ((AptoideApplication) getApplicationContext()).getDefaultClient(),
+        WebService.getDefaultConverter(),
+        ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
         .observe()
         .subscribe(app -> {
           if (app.isOk()) {

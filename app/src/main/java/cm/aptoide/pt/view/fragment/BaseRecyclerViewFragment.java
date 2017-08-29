@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.view.LifecycleSchim;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -72,8 +71,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     addDisplayable(displayable, true);
   }
 
-  @Partners @CallSuper @Deprecated
-  public void addDisplayables(List<? extends Displayable> displayables) {
+  @CallSuper @Deprecated public void addDisplayables(List<? extends Displayable> displayables) {
     addDisplayables(displayables, true);
   }
 
@@ -167,8 +165,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return this;
   }
 
-  @Partners @CallSuper @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     if (adapter == null) {
       adapter = createAdapter();
     }
@@ -178,7 +175,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     this.onViewCreated();
   }
 
-  @Partners @CallSuper @Override
+  @CallSuper @Override
   public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || refresh) {
       clearDisplayables();
@@ -258,7 +255,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return layoutManager;
   }
 
-  @Partners public RecyclerView getRecyclerView() {
+  public RecyclerView getRecyclerView() {
     return recyclerView;
   }
 }

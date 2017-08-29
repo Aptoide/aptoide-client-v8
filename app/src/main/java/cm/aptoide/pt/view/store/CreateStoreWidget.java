@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.account.AccountNavigator;
@@ -35,7 +35,8 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
   }
 
   @Override public void bindView(CreateStoreDisplayable displayable) {
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
 
     compositeSubscription.add(RxView.clicks(button)

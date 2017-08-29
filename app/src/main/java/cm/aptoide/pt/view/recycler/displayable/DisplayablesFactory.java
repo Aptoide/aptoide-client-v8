@@ -12,7 +12,7 @@ import android.util.Pair;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -36,7 +36,7 @@ import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.view.app.GridAppDisplayable;
 import cm.aptoide.pt.view.app.GridAppListDisplayable;
@@ -116,7 +116,7 @@ public class DisplayablesFactory {
         case HOME_META:
           return Observable.just(new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject(),
               new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-                  ((V8Engine) context.getApplicationContext()
+                  ((AptoideApplication) context.getApplicationContext()
                       .getApplicationContext()).getDatabase(),
                   cm.aptoide.pt.database.realm.Store.class)), storeAnalytics));
 
@@ -370,7 +370,7 @@ public class DisplayablesFactory {
         displayables.add(
             new RecommendedStoreDisplayable(store, storeRepository, accountManager, storeUtilsProxy,
                 new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-                    ((V8Engine) context.getApplicationContext()
+                    ((AptoideApplication) context.getApplicationContext()
                         .getApplicationContext()).getDatabase(),
                     cm.aptoide.pt.database.realm.Store.class))));
       } else {

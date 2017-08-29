@@ -5,7 +5,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -38,10 +38,10 @@ public class FragmentNavigator {
       String action = event.getAction();
       String url = action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
 
-      fragment = V8Engine.getFragmentProvider()
+      fragment = AptoideApplication.getFragmentProvider()
           .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url, "View Comments");
     } else {
-      fragment = V8Engine.getFragmentProvider()
+      fragment = AptoideApplication.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);
     }
 

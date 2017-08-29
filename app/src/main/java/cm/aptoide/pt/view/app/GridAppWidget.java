@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -77,7 +77,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
     return v -> {
       // FIXME
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
               .getAppearance()
               .getTheme(), tvStoreName.getText()

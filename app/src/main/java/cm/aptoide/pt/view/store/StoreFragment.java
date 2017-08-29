@@ -25,10 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -51,7 +50,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.view.share.ShareStoreHelper;
@@ -137,20 +136,22 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
-        tokenInvalidator, V8Engine.getConfiguration()
+        tokenInvalidator, AptoideApplication.getConfiguration()
         .getAppId(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
     shareStoreHelper = new ShareStoreHelper(getActivity());
@@ -209,8 +210,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
     // reset to default theme in the toolbar
     // TODO re-do this ThemeUtils methods and avoid loading resources using
     // execution-time generated ids for the desired resource
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
-        .getDefaultTheme()));
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
+        AptoideApplication.getConfiguration()
+            .getDefaultTheme()));
     ThemeUtils.setAptoideTheme(getActivity());
 
     if (pagerSlidingTabStrip != null) {
@@ -298,8 +300,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(V8Engine.getConfiguration()
-          .getDefaultTheme()));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
+          AptoideApplication.getConfiguration()
+              .getDefaultTheme()));
     }
   }
 
@@ -335,7 +338,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
             storeContext, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe(refresh)
@@ -365,7 +368,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe(refresh)
@@ -447,7 +450,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
           switch (eResponse) {
             case NO:
               StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider,
-                  AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+                  AccessorFactory.getAccessorFor(
+                      ((AptoideApplication) getContext().getApplicationContext()
                           .getApplicationContext()).getDatabase(),
                       cm.aptoide.pt.database.realm.Store.class));
             case YES:
@@ -463,7 +467,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     setHasOptionsMenu(true);
   }
 
-  @Partners @CallSuper @Override public void setupToolbar() {
+  @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
   }
 
@@ -484,7 +488,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     GetHome, GetStore
   }
 
-  @Partners public static class BundleCons {
+  public static class BundleCons {
 
     public static final String STORE_NAME = "storeName";
     public static final String STORE_CONTEXT = "storeContext";

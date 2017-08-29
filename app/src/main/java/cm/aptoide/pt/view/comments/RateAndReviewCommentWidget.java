@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentAdder;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -102,13 +102,15 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
     final String appName = displayable.getPojo()
         .getAppName();
 
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
@@ -145,7 +147,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
                 .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
                 .doOnNext(b -> {
                   ManagerPreferences.setForceServerRefreshFlag(true,
-                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                      ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
                   commentAdder.collapseComments();
                   loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
                 })
@@ -221,7 +223,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
         .execute(listComments -> {
           if (listComments.isOk()) {
             List<Comment> comments = listComments.getDataList()
@@ -243,7 +245,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
     if (accountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor, httpClient, converterFactory,
           tokenInvalidator,
-          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .execute(response -> {
             if (response == null) {
               Logger.e(TAG, "empty response");

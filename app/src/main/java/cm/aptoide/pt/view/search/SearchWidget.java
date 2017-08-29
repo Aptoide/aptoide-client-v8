@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -164,7 +164,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
             String icon = searchAppsApp.getIcon();
             String packageName = searchAppsApp.getPackageName();
 
-            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
                 .newOtherVersionsFragment(name, icon, packageName));
           }));
     }
@@ -176,7 +176,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
           if (clickCallback != null) {
             clickCallback.call();
           }
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newStoreFragment(searchAppsApp.getStore()
                   .getName(), searchAppsApp.getStore()
                   .getAppearance()
@@ -193,7 +193,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
     }
 
     searchAnalytics.searchAppClick(query, searchAppsApp.getPackageName());
-    getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+    getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
         .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
             searchAppsApp.getStore()
                 .getAppearance()

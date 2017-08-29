@@ -5,7 +5,7 @@ import android.accounts.AccountManager;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
@@ -87,7 +87,7 @@ public class AndroidAccountDataMigration {
    * @return
    */
   private Completable cleanShareDialogShowPref() {
-    String versionName = V8Engine.getConfiguration()
+    String versionName = AptoideApplication.getConfiguration()
         .getVersionName();
     String oldVersionName =
         ManagerPreferences.getPreviewDialogPrefVersionCleaned(defaultSharedPreferences);

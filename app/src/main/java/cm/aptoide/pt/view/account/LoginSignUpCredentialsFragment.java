@@ -22,7 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -100,9 +100,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
     presenter = new LoginSignUpCredentialsPresenter(this,
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
-        new LoginPreferences(getContext(), V8Engine.getConfiguration(),
+        new LoginPreferences(getContext(), AptoideApplication.getConfiguration(),
             GoogleApiAvailability.getInstance()), fragmentNavigator, CrashReport.getInstance(),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK));
@@ -425,7 +425,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   private String getCompanyName() {
-    return ((V8Engine) getActivity().getApplication()).createConfiguration()
+    return ((AptoideApplication) getActivity().getApplication()).createConfiguration()
         .getMarketName();
   }
 }

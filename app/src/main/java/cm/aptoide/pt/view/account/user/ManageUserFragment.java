@@ -22,7 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
@@ -120,7 +120,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
-    accountManager = ((V8Engine) getActivity().getApplication()).getAccountManager();
+    accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
     errorMapper =
         new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
 

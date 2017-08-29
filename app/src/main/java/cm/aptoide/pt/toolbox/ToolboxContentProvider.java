@@ -23,7 +23,7 @@ import android.widget.Toast;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.PullingContentService;
@@ -66,9 +66,10 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(authority, "passHash", PASSHASH);
     uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
     uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
-    aptoideAccountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    aptoideAccountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     return true;
   }
 

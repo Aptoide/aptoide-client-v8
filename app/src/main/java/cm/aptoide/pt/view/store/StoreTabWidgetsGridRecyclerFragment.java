@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -32,7 +32,7 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import com.facebook.appevents.AppEventsLogger;
@@ -62,23 +62,25 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    qManager = ((AptoideApplication) getContext().getApplicationContext()).getQManager();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
-    idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    idsRepository = ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), httpClient,
         WebService.getDefaultConverter(), tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     storeAnalytics =
@@ -95,14 +97,14 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
               idsRepository.getUniqueIdentifier(),
               AdNetworkUtils.isGooglePlayServicesAvailable(getContext().getApplicationContext()),
-              V8Engine.getConfiguration()
+              AptoideApplication.getConfiguration()
                   .getPartnerId(), accountManager.isAccountMature(), bodyInterceptor, httpClient,
               converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
-                  ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+                  ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
               tokenInvalidator, sharedPreferences, getContext().getResources(),
               ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)),
               (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-              ((V8Engine) getContext().getApplicationContext()).getVersionCodeProvider());
+              ((AptoideApplication) getContext().getApplicationContext()).getVersionCodeProvider());
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()

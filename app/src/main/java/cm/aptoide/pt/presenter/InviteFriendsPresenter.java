@@ -3,8 +3,8 @@ package cm.aptoide.pt.presenter;
 import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.preferences.Application;
 
@@ -39,13 +39,14 @@ public class InviteFriendsPresenter implements InviteFriendsContract.UserActions
   @Override public void shareClicked(Context context) {
     analytics.sendNewConnectionsShareEvent(screen);
     AptoideAccountManager accountManager =
-        ((V8Engine) context.getApplicationContext()).getAccountManager();
+        ((AptoideApplication) context.getApplicationContext()).getAccountManager();
 
     String url = context.getString(R.string.store_url, accountManager.getAccount()
         .getStore()
         .getName());
-    String shareText = context.getString(R.string.follow_my_store, V8Engine.getConfiguration()
-        .getMarketName(), url);
+    String shareText = context.getString(R.string.follow_my_store,
+        AptoideApplication.getConfiguration()
+            .getMarketName(), url);
 
     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
     sharingIntent.setType("text/plain");

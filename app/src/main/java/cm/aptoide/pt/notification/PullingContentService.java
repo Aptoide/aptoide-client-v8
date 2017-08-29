@@ -12,10 +12,10 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
@@ -58,10 +58,11 @@ public class PullingContentService extends Service {
   @Override public void onCreate() {
     super.onCreate();
 
-    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager =
-        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -151,8 +152,9 @@ public class PullingContentService extends Service {
   }
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
-    Intent resultIntent = new Intent(getApplicationContext(), V8Engine.getActivityProvider()
-        .getMainActivityFragmentClass());
+    Intent resultIntent = new Intent(getApplicationContext(),
+        AptoideApplication.getActivityProvider()
+            .getMainActivityFragmentClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
     PendingIntent resultPendingIntent =
         PendingIntent.getActivity(getApplicationContext(), 0, resultIntent,

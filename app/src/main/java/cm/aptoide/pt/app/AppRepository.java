@@ -7,7 +7,7 @@ package cm.aptoide.pt.app;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -55,7 +55,7 @@ public class AppRepository {
     //If vanilla, don't pass the store name.
     //store name is already in appId
     //[AN-1160] - [AppView] latest version bug
-    return GetAppRequest.of(appId, V8Engine.getConfiguration()
+    return GetAppRequest.of(appId, AptoideApplication.getConfiguration()
             .getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
         bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)

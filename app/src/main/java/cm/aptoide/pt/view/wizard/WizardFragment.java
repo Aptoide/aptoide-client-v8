@@ -12,8 +12,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.account.LoginBottomSheet;
@@ -86,7 +86,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
         });
 
     final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     WizardPresenter presenter =
         new WizardPresenter(this, accountManager, CrashReport.getInstance());
     attachPresenter(presenter, null);

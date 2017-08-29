@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.store;
+package cm.aptoide.pt.store;
 
 import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;

@@ -16,9 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
@@ -66,7 +65,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     return fragment;
   }
 
-  @Partners @NonNull
+  @NonNull
   protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,
       StoreContext storeContext) {
     Bundle args = new Bundle();
@@ -106,7 +105,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     super.onCreate(savedInstanceState);
   }
 
-  @Partners @Override public void loadExtras(Bundle args) {
+  @Override public void loadExtras(Bundle args) {
     if (args.containsKey(BundleCons.TYPE)) {
       type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
     }
@@ -132,8 +131,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     super.load(create, refresh, savedInstanceState);
     if (create || refresh || !hasDisplayables()) {
       String url = action != null ? action.replace(V7.getHost(
-          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), "")
-          : null;
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+          "") : null;
 
       if (!StoreTabFragmentChooser.validateAcceptedName(name)) {
         throw new RuntimeException(

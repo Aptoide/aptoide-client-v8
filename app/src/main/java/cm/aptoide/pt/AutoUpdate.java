@@ -123,7 +123,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
 
   private void requestUpdateSelf(final AutoUpdateInfo autoUpdateInfo) {
 
-    V8Engine.setAutoUpdateWasCalled(true);
+    AptoideApplication.setAutoUpdateWasCalled(true);
 
     ContextThemeWrapper wrapper = new ContextThemeWrapper(activity,
         activity.obtainStyledAttributes(new int[] { R.attr.alertDialog })

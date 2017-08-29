@@ -1,6 +1,5 @@
 package cm.aptoide.accountmanager;
 
-import cm.aptoide.pt.annotation.Partners;
 import java.util.List;
 import rx.Completable;
 
@@ -176,6 +175,6 @@ public interface Account {
     FACEBOOK, /**
      * Account created when user has logged in using ABAN services.
      */
-    @Partners ABAN
+    ABAN
   }
 }

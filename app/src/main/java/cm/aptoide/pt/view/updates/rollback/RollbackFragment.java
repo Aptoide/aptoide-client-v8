@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -73,7 +73,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       return true;
     } else if (itemId == R.id.menu_clear) {
       //DeprecatedDatabase.RollbackQ.deleteAll(realm);
-      AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+      AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
           .getApplicationContext()).getDatabase(), Rollback.class)
           .removeAll();
       clearDisplayables();
@@ -110,7 +110,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @UiThread private void fetchRollbacks() {
     RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Rollback.class);
     rollbackAccessor.getConfirmedRollbacks()
         .observeOn(Schedulers.computation())

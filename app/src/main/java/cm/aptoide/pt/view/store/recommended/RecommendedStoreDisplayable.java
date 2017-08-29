@@ -3,7 +3,7 @@ package cm.aptoide.pt.view.store.recommended;
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -74,12 +74,13 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
               .getPasswordSha1());
     }
     StoreUtils.unSubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
+        AccessorFactory.getAccessorFor(
+            ((AptoideApplication) context.getApplicationContext()).getDatabase(),
             cm.aptoide.pt.database.realm.Store.class));
   }
 
   void openStoreFragment(FragmentNavigator navigator) {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
+    navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newStoreFragment(getPojo().getName(), getPojo().getAppearance()
             .getTheme()));
   }

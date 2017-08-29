@@ -6,7 +6,6 @@
 package cm.aptoide.pt.preferences;
 
 import android.content.Context;
-import cm.aptoide.pt.annotation.Partners;
 
 /**
  * Created by neuro on 22-04-2016.
@@ -30,5 +29,5 @@ public abstract class Application extends android.app.Application {
     configuration = createConfiguration();
   }
 
-  @Partners public abstract AptoidePreferencesConfiguration createConfiguration();
+  public abstract AptoidePreferencesConfiguration createConfiguration();
 }

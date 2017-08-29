@@ -19,9 +19,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
@@ -168,13 +168,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
     baseBodyInterceptorV7 =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     defaultConverter = WebService.getDefaultConverter();
-    defaultClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    defaultClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    accountManager =
+        ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
     sharePostPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
@@ -183,19 +185,20 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getResources());
     shareDialogFactory =
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
-    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
 
     timelinePostsRepository =
-        ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
+        ((AptoideApplication) getContext().getApplicationContext()).getTimelineRepository(
             getArguments().getString(ACTION_KEY), getContext());
 
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
-        defaultClient, defaultConverter, tokenInvalidator, V8Engine.getConfiguration()
+        defaultClient, defaultConverter, tokenInvalidator, AptoideApplication.getConfiguration()
         .getAppId(), sharedPreferences);
 
-    OkHttpClient okhttp = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    OkHttpClient okhttp =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
 
     timelineService = new TimelineService(userId, baseBodyInterceptorV7, okhttp, defaultConverter,
         new TimelineResponseCardMapper(
@@ -249,7 +252,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class);
     StoreCredentialsProviderImpl storeCredentialsProvider =
         new StoreCredentialsProviderImpl(storeAccessor);
@@ -261,10 +264,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
 
-    StoreUtilsProxy storeUtilsProxy =
-        new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            baseBodyInterceptorV7, storeCredentialsProvider, storeAccessor, defaultClient,
-            defaultConverter, tokenInvalidator, sharedPreferences);
+    StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
+        baseBodyInterceptorV7, storeCredentialsProvider, storeAccessor, defaultClient,
+        defaultConverter, tokenInvalidator, sharedPreferences);
 
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
