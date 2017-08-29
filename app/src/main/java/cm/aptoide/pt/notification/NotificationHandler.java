@@ -102,7 +102,7 @@ public class NotificationHandler implements NotificationNetworkService {
       aptoideNotifications.add(
           new AptoideNotification(notification.getBody(), notification.getImg(),
               notification.getTitle(), notification.getUrl(), notification.getType(), appName,
-              graphic, -1, id));
+              graphic, -1, id, notification.getExpire()));
     }
     return aptoideNotifications;
   }
@@ -124,7 +124,7 @@ public class NotificationHandler implements NotificationNetworkService {
           new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
               notification.getCampaignId(), notification.getImg(), notification.getLang(),
               notification.getTitle(), notification.getUrl(), notification.getUrlTrack(), appName,
-              graphic, id));
+              graphic, id, notification.getExpire()));
     }
     return aptoideNotifications;
   }
