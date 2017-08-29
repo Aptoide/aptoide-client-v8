@@ -335,12 +335,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     transferRecordAdapter.updateTransferList(transferAppModelList);
   }
 
-  @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
-    getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(
-        SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
-  }
-
   @Override public Observable<TransferAppModel> installApp() {
     return installApp;
   }
