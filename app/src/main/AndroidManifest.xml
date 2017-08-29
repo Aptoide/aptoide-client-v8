@@ -9,7 +9,7 @@
     package="cm.aptoide.pt">
 
   <permission
-      android:name="${currentApplicationId}.permission.BILLING"
+      android:name="${applicationId}.permission.BILLING"
       android:label="Make internal payments"
       android:protectionLevel="normal"/>
 
@@ -123,10 +123,10 @@
     <service
         android:name="cm.aptoide.pt.iab.InAppBillingService"
         android:exported="true"
-        android:permission="${currentApplicationId}.permission.BILLING">
+        android:permission="${applicationId}.permission.BILLING">
 
       <intent-filter>
-        <action android:name="${currentApplicationId}.iab.action.BIND"/>
+        <action android:name="${applicationId}.iab.action.BIND"/>
       </intent-filter>
     </service>
 
