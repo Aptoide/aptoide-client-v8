@@ -46,6 +46,8 @@ class LanguageFilterSpinnerWrapper {
               languageFilter = filter;
             }
           }
+        } else {
+          return;
         }
 
         LanguageFilterSpinnerWrapper.this.onItemSelected.onItemSelected(languageFilter);
