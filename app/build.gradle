@@ -116,6 +116,19 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  variantFilter { variant ->
+    List<ProductFlavor> flavors = variant.getFlavors()
+
+    String applicationIdBase = flavors[0].applicationId
+    String applicationIdSuffix = flavors[1].applicationIdSuffix
+    boolean hasSuffix = applicationIdSuffix != null
+
+    if (applicationIdBase.contains('partner') && hasSuffix &&
+        (applicationIdSuffix.contains('dev') || applicationIdSuffix.contains('internal'))) {
+      setIgnore(true)
+    }
+  }
+
   packagingOptions {
     exclude 'META-INF/services/javax.annotation.processing.Processor'
     exclude 'META-INF/DEPENDENCIES.txt'

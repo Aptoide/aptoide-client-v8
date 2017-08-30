@@ -56,8 +56,7 @@ public class PartnerApplication extends AptoideApplication {
   }
 
   @Override public String getAccountType() {
-    return BuildConfig.APPLICATION_ID.replace(".dev", "")
-        .replace(".internal", "");
+    return BuildConfig.APPLICATION_ID;
   }
 
   @Override public String getAutoUpdateUrl() {
