@@ -328,6 +328,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void updateReceivedAppsList(List<TransferAppModel> transferAppModelList) {
     transferRecordAdapter.updateTransferList(transferAppModelList);
+    transferRecordRecyclerView.smoothScrollToPosition(transferAppModelList.size() - 1);
   }
 
   @Override public Observable<TransferAppModel> installApp() {
