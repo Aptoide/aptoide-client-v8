@@ -134,10 +134,10 @@ android {
 
   applicationVariants.all { variant ->
 
-    String applicationId = variant.mergedFlavor.applicationId
     List<ProductFlavor> flavors = variant.getProductFlavors()
     String applicationIdBase = flavors[0].applicationId
     String applicationIdSuffix = flavors[1].applicationIdSuffix
+    String applicationId = applicationIdBase
 
     def searchSuggestionProviderAuthority =
         "${applicationIdBase}.provider.SearchSuggestionProvider";
@@ -149,6 +149,7 @@ android {
       searchSuggestionProviderAuthority += ".${applicationIdSuffix}"
       storeSuggestionProviderAuthority += ".${applicationIdSuffix}"
       toolboxProviderAuthority += ".${applicationIdSuffix}"
+      applicationId += ".${applicationIdSuffix}"
     }
 
     variant.mergedFlavor.manifestPlaceholders =
