@@ -3,7 +3,6 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 import android.os.Bundle;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
@@ -11,8 +10,8 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -26,6 +25,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
   private SpotAndShareTransferRecordManager transferRecordManager;
   private SpotAndShareInstallManager spotAndShareInstallManager;
   private final DrawableBitmapMapper drawableBitmapMapper;
+  private Subscription friendsObserverSubscription;
 
   public SpotAndShareTransferRecordPresenter(SpotAndShareTransferRecordView view,
       SpotAndShare spotAndShare, SpotAndShareTransferRecordManager transferRecordManager,
@@ -89,38 +89,45 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.clickedFriendsInformationButton())
-        .doOnNext(__ -> view.showConnectedFriendsMenu(true))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> spotAndShare.observeAmountOfFriends())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(friendsNumber -> view.updateFriendsNumber(friendsNumber))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
-  }
 
-  private void startListeningToFriends() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> spotAndShare.observeFriends())
-        .doOnNext(friendsList -> updateFriendsList(friendsList))
+        .flatMap(created -> view.clickedFriendsInformationButton())
+        .doOnNext(__ -> startListeningToFriendsChanges())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
   }
 
-  private void updateFriendsList(Collection<Friend> friendsList) {
-    view.updateFriendsList((new ArrayList<>(friendsList)));
-    //if (friendsList.size() == 1) {
-    //  view.updateFriendsAvatar(drawableBitmapMapper.convertBitmapToDrawable(
-    //      ((Friend) friendsList.toArray()[0]).getAvatar()));
-    //} else {
-    //}
+  private void stopListeningToFriendsChanges() {
+    if (this.friendsObserverSubscription != null
+        && !this.friendsObserverSubscription.isUnsubscribed()) {
+      this.friendsObserverSubscription.unsubscribe();
+      view.clearMenu();
+    }
+  }
+
+  private void listenToFriendsMenuDismiss() {
+    view.friendsMenuDismiss()
+        .doOnNext(__ -> stopListeningToFriendsChanges())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
+  }
+
+  private void startListeningToFriendsChanges() {
+    this.friendsObserverSubscription = spotAndShare.observeFriends()
+        .doOnNext(friendsList -> view.showFriendsOnMenu((new ArrayList<>(friendsList))))
+        .doOnNext(__ -> listenToFriendsMenuDismiss())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
   }
 
   private void leaveGroup() {

@@ -48,7 +48,6 @@ public class FriendsManager {
   }
 
   public Observable<Integer> observeAmountOfFriends() {
-    //// TODO: 29-08-2017 filipe create relay to observe amount of friends changing from the list - new beheaviorrelay called on the same places.
     return numberOfFriendsRelay;
   }
 }

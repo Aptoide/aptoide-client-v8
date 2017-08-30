@@ -43,6 +43,7 @@ import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresent
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.jakewharton.rxbinding.support.v7.widget.RxPopupMenu;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private SpotAndSharePickAppsAdapter pickAppsAdapter;
   private RecyclerView pickAppsRecyclerView;
   private View pickAppsProgressBarContainer;
-  private PopupMenu toolbarMenu;
+  private PopupMenu friendsMenu;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -125,10 +126,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    PopupMenu popup = new PopupMenu(this.getContext(), connectedFriendsLayout);
-    MenuInflater inflate = popup.getMenuInflater();
-    inflate.inflate(R.menu.menu_spotandshare_transfer, popup.getMenu());
-    this.toolbarMenu = popup;
   }
 
   private CharSequence menuIconWithText(Drawable r, String title) {
@@ -248,6 +245,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     transferRecordRecyclerView = null;
     connectedFriendsNumber = null;
     connectedFriendsLayout = null;
+    friendsMenu = null;
 
     pickAppsAdapter.removeAll();
     pickAppsAdapter = null;
@@ -350,25 +348,28 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     connectedFriendsNumber.setText("" + numberOfFriends);
   }
 
-  @Override public void updateFriendsList(ArrayList<Friend> friendsList) {
-    toolbarMenu.getMenu()
-        .clear();
+  @Override public void showFriendsOnMenu(ArrayList<Friend> friendsList) {
+    this.friendsMenu = new PopupMenu(this.getContext(), connectedFriendsLayout);
+    //setDismissListener(popup);
+
+    MenuInflater inflate = friendsMenu.getMenuInflater();
+    inflate.inflate(R.menu.menu_spotandshare_transfer, friendsMenu.getMenu());
     for (int i = 0; i < friendsList.size(); i++) {
-      toolbarMenu.getMenu()
+      friendsMenu.getMenu()
           .add(R.id.spotandshare_toolbar_friends_menu_group, i, i,
               menuIconWithText(getResources().getDrawable(R.drawable.spotandshare_avatar_01),
                   friendsList.get(i)
                       .getUsername()));
     }
+    friendsMenu.show();
   }
 
-  @Override public void showConnectedFriendsMenu(boolean show) {
-    if (toolbarMenu == null) return;
-    toolbarMenu.getMenu()
-        .add(R.id.spotandshare_toolbar_friends_menu_group, 0, 0,
-            menuIconWithText(getResources().getDrawable(R.drawable.spotandshare_avatar_01),
-                " marcelo"));
-    toolbarMenu.show();
+  @Override public Observable<Void> friendsMenuDismiss() {
+    return RxPopupMenu.dismisses(friendsMenu);
+  }
+
+  @Override public void clearMenu() {
+    friendsMenu = null;
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
