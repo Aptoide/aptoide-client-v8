@@ -152,8 +152,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
-        tokenInvalidator, BuildConfig.APPLICATION_ID,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());

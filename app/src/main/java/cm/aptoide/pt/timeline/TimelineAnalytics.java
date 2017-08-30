@@ -261,6 +261,9 @@ public class TimelineAnalytics {
 
   public void sendTimelineTabOpened() {
     analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED));
+    analytics.sendEvent(
+        new AptoideEvent(null, "OPEN_TIMELINE", "CLICK", "TIMELINE", bodyInterceptor, httpClient,
+            converterFactory, tokenInvalidator, appId, sharedPreferences));
   }
 
   public void sendFollowFriendsEvent() {
