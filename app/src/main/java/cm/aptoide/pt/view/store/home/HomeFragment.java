@@ -125,8 +125,9 @@ public class HomeFragment extends StoreFragment {
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
-    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(),
-        StoreTheme.get(V8Engine.getConfiguration().getDefaultTheme()).getPrimaryColor()));
+    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(), StoreTheme.get(
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme())
+        .getPrimaryColor()));
 
     accountManager.accountStatus()
         .observeOn(AndroidSchedulers.mainThread())
