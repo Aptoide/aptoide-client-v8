@@ -173,15 +173,15 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                     .getName())) {
               description.setVisibility(View.VISIBLE);
               backgroundView.setVisibility(View.VISIBLE);
-              if (TextUtils.isEmpty(store.getAppearance()
-                  .getDescription())) {
-                description.setText("Add a description to your store by editing it.");
+              final String storeDescription = store.getAppearance()
+                  .getDescription();
+              if (!TextUtils.isEmpty(storeDescription)) {
+                description.setText(storeDescription);
               }
               editStoreButton.setVisibility(View.VISIBLE);
               compositeSubscription.add(RxView.clicks(editStoreButton)
                   .subscribe(click -> editStore(store.getId(), store.getAppearance()
-                      .getTheme(), store.getAppearance()
-                      .getDescription(), store.getName(), store.getAvatar())));
+                      .getTheme(), storeDescription, store.getName(), store.getAvatar())));
             } else {
               editStoreButton.setVisibility(View.GONE);
             }
