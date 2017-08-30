@@ -43,6 +43,8 @@ public class MainPresenter implements Presenter {
   private final SharedPreferences securePreferences;
   private final FragmentNavigator fragmentNavigator;
   private final DeepLinkManager deepLinkManager;
+  private final String defaultStore;
+  private final String defaultTheme;
   private NotificationSyncScheduler notificationSyncScheduler;
   private InstallCompletedNotifier installCompletedNotifier;
   private ApkFy apkFy;
@@ -55,7 +57,7 @@ public class MainPresenter implements Presenter {
       NotificationSyncScheduler notificationSyncScheduler,
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
-      DeepLinkManager deepLinkManager) {
+      DeepLinkManager deepLinkManager, String defaultStore, String defaultTheme) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -70,6 +72,8 @@ public class MainPresenter implements Presenter {
     this.firstCreated = true;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
+    this.defaultStore = defaultStore;
+    this.defaultTheme = defaultTheme;
   }
 
   @Override public void present() {
@@ -156,9 +160,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void showHome() {
-    Fragment home = HomeFragment.newInstance(AptoideApplication.getConfiguration()
-        .getDefaultStore(), StoreContext.home, AptoideApplication.getConfiguration()
-        .getDefaultTheme());
+    Fragment home = HomeFragment.newInstance(defaultStore, StoreContext.home, defaultTheme);
     fragmentNavigator.navigateToWithoutBackSave(home);
   }
 

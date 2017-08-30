@@ -7,11 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.presenter.InviteFriendsPresenter;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
@@ -33,6 +33,7 @@ public class InviteFriendsFragment extends UIComponentFragment
   private Button allowFind;
   private Button done;
   private TextView message;
+  private String marketName;
 
   public static Fragment newInstance(OpenMode openMode, String tag) {
     InviteFriendsFragment inviteFriendsFragment = new InviteFriendsFragment();
@@ -45,12 +46,13 @@ public class InviteFriendsFragment extends UIComponentFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
-            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration()
-                .getMarketName())), openMode, new AddressBookAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext())));
+            getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about, marketName)), openMode,
+        new AddressBookAnalytics(Analytics.getInstance(),
+            AppEventsLogger.newLogger(getContext().getApplicationContext())), marketName);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -75,9 +77,8 @@ public class InviteFriendsFragment extends UIComponentFragment
         message.setText(getString(R.string.addressbook_insuccess_connection));
         break;
       case NO_FRIENDS:
-        message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide,
-            Application.getConfiguration()
-                .getMarketName()));
+        message.setText(
+            getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide, marketName));
         break;
       case CONTACTS_PERMISSION_DENIAL:
         message.setText(R.string.addressbook_we_werent_able_to_connect_you);

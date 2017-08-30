@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -134,6 +135,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private LinearLayoutManager layoutManager;
   private TimelineAnalytics timelineAnalytics;
   private OkHttpClient defaultClient;
+  private String marketName;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -164,6 +166,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
@@ -194,15 +197,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
-        defaultClient, defaultConverter, tokenInvalidator, AptoideApplication.getConfiguration()
-        .getAppId(), sharedPreferences);
+        defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
+        sharedPreferences);
 
     OkHttpClient okhttp =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
 
     timelineService = new TimelineService(userId, baseBodyInterceptorV7, okhttp, defaultConverter,
         new TimelineResponseCardMapper(
-            () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create())),
+            () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
         tokenInvalidator, sharedPreferences);
   }
 
@@ -248,7 +251,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter = new PostAdapter(Collections.emptyList(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject)), new ProgressCard());
+                postTouchEventPublishSubject), marketName), new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
@@ -258,8 +261,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new StoreCredentialsProviderImpl(storeAccessor);
 
     Timeline timeline =
-        new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics,
-            timelinePostsRepository);
+        new Timeline(timelineService, installManager, new DownloadFactory(marketName),
+            timelineAnalytics, timelinePostsRepository, marketName);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);

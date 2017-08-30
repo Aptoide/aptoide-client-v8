@@ -31,7 +31,6 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import com.crashlytics.android.answers.Answers;
 import java.util.HashMap;
@@ -73,14 +72,17 @@ public class InstallService extends Service {
   private Map<String, Integer> installerTypeMap;
   private Analytics analytics;
   private InstalledRepository installedRepository;
+  private String marketName;
 
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
+    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
     downloadManager = ((AptoideApplication) getApplicationContext()).getDownloadManager();
     final MinimalAdMapper adMapper = new MinimalAdMapper();
     InstallerFactory installerFactory = new InstallerFactory(adMapper,
-        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()));
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
+        ((AptoideApplication) getApplicationContext()).getImageCachePath());
     defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);
     installManager =
@@ -307,8 +309,7 @@ public class InstallService extends Service {
     builder.setSmallIcon(android.R.drawable.stat_sys_download)
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
-            Application.getConfiguration()
-                .getMarketName()))
+            marketName))
         .setContentText(new StringBuilder().append(installation.getAppName())
             .append(" - ")
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))

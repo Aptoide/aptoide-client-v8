@@ -14,7 +14,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.spotandshare.view.RadarActivity;
@@ -40,11 +39,13 @@ public class ShareAppHelper {
   private final TimelineAnalytics timelineAnalytics;
   private final SharedPreferences sharedPreferences;
   private final PublishRelay installAppRelay;
+  private final boolean createStoreUserPrivacyEnabled;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
       SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics,
-      PublishRelay installAppRelay, SharedPreferences sharedPreferences) {
+      PublishRelay installAppRelay, SharedPreferences sharedPreferences,
+      boolean createStoreUserPrivacyEnabled) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
@@ -53,6 +54,7 @@ public class ShareAppHelper {
     this.timelineAnalytics = timelineAnalytics;
     this.sharedPreferences = sharedPreferences;
     this.installAppRelay = installAppRelay;
+    this.createStoreUserPrivacyEnabled = createStoreUserPrivacyEnabled;
   }
 
   private boolean isInstalled(String packageName) {
@@ -123,8 +125,7 @@ public class ShareAppHelper {
               Analytics.Account.AccountOrigins.APP_VIEW_SHARE), Snackbar.LENGTH_SHORT);
       return;
     }
-    if (Application.getConfiguration()
-        .isCreateStoreAndSetUserPrivacyAvailable()) {
+    if (createStoreUserPrivacyEnabled) {
       SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
           SharePreviewDialog.SharePreviewOpenMode.SHARE, timelineAnalytics, sharedPreferences);
       AlertDialog.Builder alertDialog =

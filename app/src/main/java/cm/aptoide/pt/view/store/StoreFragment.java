@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -43,6 +44,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.social.view.TimelineFragment;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
@@ -50,7 +52,6 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.view.share.ShareStoreHelper;
@@ -92,6 +93,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private ShareStoreHelper shareStoreHelper;
   private String storeUrl;
   private String iconPath;
+  private String marketName;
+  private String defaultTheme;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -136,6 +139,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -149,12 +153,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
-        tokenInvalidator, AptoideApplication.getConfiguration()
-        .getAppId(),
+        tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
-    shareStoreHelper = new ShareStoreHelper(getActivity());
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -210,10 +214,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     // reset to default theme in the toolbar
     // TODO re-do this ThemeUtils methods and avoid loading resources using
     // execution-time generated ids for the desired resource
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
-        AptoideApplication.getConfiguration()
-            .getDefaultTheme()));
-    ThemeUtils.setAptoideTheme(getActivity());
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
+    ThemeUtils.setAptoideTheme(getActivity(), defaultTheme);
 
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
@@ -278,7 +280,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected PagerAdapter createPagerAdapter() {
     return new StorePagerAdapter(getChildFragmentManager(), tabs, storeContext, storeId, storeTheme,
-        getContext().getApplicationContext());
+        getContext().getApplicationContext(), marketName);
   }
 
   @Override public int getContentViewId() {
@@ -300,9 +302,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
-          AptoideApplication.getConfiguration()
-              .getDefaultTheme()));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
     }
   }
 

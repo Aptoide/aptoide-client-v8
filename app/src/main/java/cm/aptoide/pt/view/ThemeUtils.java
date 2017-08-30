@@ -30,7 +30,7 @@ public class ThemeUtils {
   /**
    * Used to set Default themes
    */
-  public static void setAptoideTheme(Activity activity) {
+  public static void setAptoideTheme(Activity activity, String defaultTheme) {
 
     SharedPreferences sPref =
         ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences();
@@ -43,8 +43,7 @@ public class ThemeUtils {
       activity.setTheme(R.style.AptoideThemeDefaultDark);
     } else {
       sPref.edit()
-          .putString("theme", AptoideApplication.getConfiguration()
-              .getDefaultTheme())
+          .putString("theme", defaultTheme)
           .commit();
       activity.setTheme(R.style.AptoideThemeDefault);
     }

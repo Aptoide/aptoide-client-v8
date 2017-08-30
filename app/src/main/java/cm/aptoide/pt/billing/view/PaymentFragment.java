@@ -74,7 +74,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator =
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager);
+            getActivityNavigator(), getFragmentNavigator(), accountManager,
+            ((AptoideApplication) getContext().getApplicationContext()).getMarketName());
   }
 
   @Nullable @Override

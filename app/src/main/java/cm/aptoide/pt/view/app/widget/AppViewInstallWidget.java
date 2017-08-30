@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
@@ -49,7 +50,6 @@ import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -102,6 +102,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private DownloadFactory downloadFactory;
   private PermissionService permissionService;
   private PermissionManager permissionManager;
+  private String marketName;
+  private boolean createStoreUserPrivacyEnabled;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -135,6 +137,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
 
+    createStoreUserPrivacyEnabled =
+        ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
@@ -148,15 +153,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            AptoideApplication.getConfiguration()
-                .getAppId(),
+            BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            AptoideApplication.getConfiguration()
-                .getAppId(),
+            BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
@@ -167,8 +170,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
-                AptoideApplication.getConfiguration()
-                    .getAppId(),
+                BuildConfig.APPLICATION_ID,
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
             tokenInvalidator,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
@@ -425,7 +427,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
 
-                  DownloadFactory factory = new DownloadFactory();
+                  DownloadFactory factory = new DownloadFactory(marketName);
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
                   showRootInstallWarningPopup(context);
                   compositeSubscription.add(
@@ -506,7 +508,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
-          .map(success -> new DownloadFactory().create(displayable.getPojo()
+          .map(success -> new DownloadFactory(marketName).create(displayable.getPojo()
               .getNodes()
               .getMeta()
               .getData(), downloadAction))
@@ -523,8 +525,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   if (accountManager.isLoggedIn()
                       && ManagerPreferences.isShowPreviewDialog(
                       ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
-                      && Application.getConfiguration()
-                      .isCreateStoreAndSetUserPrivacyAvailable()) {
+                      && createStoreUserPrivacyEnabled) {
                     SharePreviewDialog sharePreviewDialog =
                         new SharePreviewDialog(displayable, accountManager, true,
                             SharePreviewDialog.SharePreviewOpenMode.SHARE,
@@ -585,8 +586,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         View alertView = LayoutInflater.from(context)
             .inflate(R.layout.dialog_install_warning, null);
         builder.setView(alertView);
-        new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler,
-            onSearchHandler).getDialog()
+        new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler, onSearchHandler,
+            marketName).getDialog()
             .show();
       } else {
         installHandler.onClick(v);

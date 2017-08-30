@@ -86,7 +86,8 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
         accountManager, accountNavigator, getContext(),
         new SpotAndShareAnalytics(Analytics.getInstance()), displayable.getTimelineAnalytics(),
         PublishRelay.create(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

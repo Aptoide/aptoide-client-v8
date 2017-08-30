@@ -25,7 +25,6 @@ import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.presenter.AddressBookContract;
 import cm.aptoide.pt.presenter.AddressBookPresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -74,6 +73,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   private ProgressDialog mGenericPleaseWaitDialog;
   private TwitterSession twitterSession;
   private AddressBookAnalytics analytics;
+  private String marketName;
 
   public static AddressBookFragment newInstance() {
     AddressBookFragment addressBookFragment = new AddressBookFragment();
@@ -84,6 +84,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     analytics = new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
@@ -100,9 +101,8 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
             ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
         analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
-        getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-        Application.getConfiguration()
-            .getMarketName())),
+        getString(R.string.addressbook_about),
+        getString(R.string.addressbook_data_about, marketName)),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
@@ -122,9 +122,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public void setupViews() {
-    addressbook_2nd_msg.setText(getString(R.string.addressbook_2nd_msg,
-        AptoideApplication.getConfiguration()
-            .getMarketName()));
+    addressbook_2nd_msg.setText(getString(R.string.addressbook_2nd_msg, marketName));
     mActionsListener.getButtonsState();
     //dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

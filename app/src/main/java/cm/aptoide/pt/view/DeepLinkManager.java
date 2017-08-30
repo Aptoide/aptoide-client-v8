@@ -47,11 +47,12 @@ public class DeepLinkManager {
   private final DeepLinkMessages deepLinkMessages;
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
+  private final String defaultTheme;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
-      StoreAccessor storeAccessor) {
+      StoreAccessor storeAccessor, String defaultTheme) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -59,6 +60,7 @@ public class DeepLinkManager {
     this.deepLinkMessages = deepLinkMessages;
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
+    this.defaultTheme = defaultTheme;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -216,8 +218,7 @@ public class DeepLinkManager {
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                AptoideApplication.getConfiguration()
-                    .getDefaultTheme(), StoreContext.home));
+                defaultTheme, StoreContext.home));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

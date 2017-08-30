@@ -26,7 +26,9 @@ public abstract class ActivityResultNavigator extends LeakActivity
     fragmentNavigator =
         new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
             android.R.anim.fade_in, android.R.anim.fade_out,
-            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences());
+            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getApplicationContext()).getDefaultStore(),
+            ((AptoideApplication) getApplicationContext()).getDefaultTheme());
     // super.onCreate handles fragment creation using FragmentManager.
     // Make sure navigator instances are already created when fragments are created,
     // else getFragmentNavigator and getActivityNavigator will return null.

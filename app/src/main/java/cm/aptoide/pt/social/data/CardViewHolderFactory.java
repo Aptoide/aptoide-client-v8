@@ -35,14 +35,16 @@ public class CardViewHolderFactory {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final MinimalCardViewFactory minimalCardViewFactory;
+  private final String marketName;
 
   public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      MinimalCardViewFactory minimalCardViewFactory) {
+      MinimalCardViewFactory minimalCardViewFactory, String marketName) {
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
+    this.marketName = marketName;
   }
 
   public PostViewHolder createViewHolder(int cardViewType, ViewGroup parent) {
@@ -60,7 +62,7 @@ public class CardViewHolderFactory {
       case RECOMMENDATION:
         return new RecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_recommendation_item, parent, false),
-            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory, marketName);
       case STORE:
         return new StoreLatestAppsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_store_item, parent, false), cardTouchEventPublishSubject,

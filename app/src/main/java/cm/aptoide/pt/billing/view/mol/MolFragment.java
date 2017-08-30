@@ -19,6 +19,7 @@ public class MolFragment extends WebViewFragment {
   private Billing billing;
   private BillingAnalytics billingAnalytics;
   private AptoideAccountManager accountManager;
+  private String marketName;
 
   public static Fragment create(Bundle bundle) {
     final MolFragment fragment = new MolFragment();
@@ -33,13 +34,14 @@ public class MolFragment extends WebViewFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
   }
 
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     attachPresenter(new MolPresenter(this, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager),
+            getActivityNavigator(), getFragmentNavigator(), accountManager, marketName),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID)), savedInstanceState);

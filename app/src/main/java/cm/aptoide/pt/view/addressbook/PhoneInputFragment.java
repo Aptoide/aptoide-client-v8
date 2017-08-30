@@ -24,7 +24,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.presenter.PhoneInputContract;
 import cm.aptoide.pt.presenter.PhoneInputPresenter;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -50,6 +49,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   private ProgressDialog mGenericPleaseWaitDialog;
   private ContactUtils contactUtils;
   private String entranceTag;
+  private String marketName;
 
   public static PhoneInputFragment newInstance(String tag) {
     PhoneInputFragment phoneInputFragment = new PhoneInputFragment();
@@ -66,6 +66,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     this.mActionsListener = new PhoneInputPresenter(this,
         new ContactsRepository(baseBodyInterceptor, httpClient, converterFactory,
             ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository(),
@@ -77,9 +78,8 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
-            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration()
-                .getMarketName())));
+            getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about, marketName)));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
@@ -93,8 +93,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
   @Override public void setupViews() {
     mNotNowV.setPaintFlags(mNotNowV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    mSharePhoneV.setText(getString(R.string.addressbook_share_phone, Application.getConfiguration()
-        .getMarketName()));
+    mSharePhoneV.setText(getString(R.string.addressbook_share_phone, marketName));
 
     String countryCodeE164 = contactUtils.getCountryCodeForRegion();
     if (!countryCodeE164.isEmpty()) {

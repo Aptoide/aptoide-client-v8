@@ -43,7 +43,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
@@ -99,6 +98,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private NotificationCenter notificationCenter;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
+  private String marketName;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -106,6 +106,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     trackAnalytics = true;
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
@@ -215,18 +216,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
     //set AppStore name
     findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
 
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
     autoUpdatepreference.setSummary(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
 
     subscriptions.add(RxPreference.checks(socialCampaignNotifications)
         .subscribe(isChecked -> handleSocialNotifications(isChecked)));

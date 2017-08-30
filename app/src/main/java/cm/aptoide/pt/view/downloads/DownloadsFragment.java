@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
@@ -56,15 +57,13 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     installConverter =
         new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, AptoideApplication.getConfiguration()
-            .getAppId(),
+            tokenInvalidator, BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     downloadConverter =
         new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, AptoideApplication.getConfiguration()
-            .getAppId(),
+            tokenInvalidator, BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));

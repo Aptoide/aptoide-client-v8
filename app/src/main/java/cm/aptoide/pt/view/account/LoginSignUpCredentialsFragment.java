@@ -21,9 +21,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
@@ -37,7 +36,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -81,6 +79,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private ThrowableToStringMapper errorMapper;
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
+  private String marketName;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -96,14 +95,15 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
-        new LoginPreferences(getContext(), AptoideApplication.getConfiguration(),
-            GoogleApiAvailability.getInstance()), fragmentNavigator, CrashReport.getInstance(),
+        ((AptoideApplication) getContext().getApplicationContext()).getLoginPreferences(),
+        fragmentNavigator, CrashReport.getInstance(),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK));
   }
@@ -375,7 +375,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
-    buttonSignUp.setText(String.format(getString(R.string.join_company), getCompanyName()));
+    buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
 
     aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
@@ -397,7 +397,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
     signUpSelectionButton.setText(
-        String.format(getString(R.string.join_company), getCompanyName()));
+        String.format(getString(R.string.join_company), marketName));
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
@@ -422,10 +422,5 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       // this happens because in landscape the R.id.login_signup_layout is not
       // a child of CoordinatorLayout
     }
-  }
-
-  private String getCompanyName() {
-    return ((AptoideApplication) getActivity().getApplication()).createConfiguration()
-        .getMarketName();
   }
 }

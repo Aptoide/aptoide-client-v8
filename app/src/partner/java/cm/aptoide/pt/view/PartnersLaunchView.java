@@ -7,15 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.VanillaConfiguration;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.BootConfigServices;
+import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
+import cm.aptoide.pt.store.StoreTheme;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,10 +31,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PartnersLaunchView extends ActivityView {
 
   private boolean usesSplashScreen;
+  private BootConfig bootConfig;
+  private String partnerId;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    partnerId = ((PartnerApplication) getApplicationContext()).getPartnerId();
+    bootConfig = ((PartnerApplication) getApplicationContext()).getBootConfig();
     if (getSupportActionBar() != null) {
       getSupportActionBar().hide();
     }
@@ -56,29 +60,33 @@ public class PartnersLaunchView extends ActivityView {
    * check if splash screen is enabled. If it is, loads it, according to the screen orientation
    */
   private void loadSplashScreen() {
-    usesSplashScreen = ((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
+    usesSplashScreen = ((PartnerApplication) getApplicationContext()).getBootConfig()
         .getPartner()
         .getAppearance()
         .getSplash()
         .isEnable();
     if (usesSplashScreen) {
       setContentView(R.layout.partners_launch);
-      setTheme(Application.getConfiguration().getDefaultThemeRes());
+      setTheme(StoreTheme.get(bootConfig.getPartner()
+          .getAppearance()
+          .getTheme())
+          .getThemeResource());
       String url;
       if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        url = ((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
+        url = ((PartnerApplication) getApplicationContext()).getBootConfig()
             .getPartner()
             .getAppearance()
             .getSplash()
             .getLandscape();
       } else {
-        url = ((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
+        url = ((PartnerApplication) getApplicationContext()).getBootConfig()
             .getPartner()
             .getAppearance()
             .getSplash()
             .getPortrait();
       }
-      ImageLoader.with(this).load(url, (ImageView) findViewById(R.id.splashscreen));
+      ImageLoader.with(this)
+          .load(url, (ImageView) findViewById(R.id.splashscreen));
     }
   }
 
@@ -94,17 +102,13 @@ public class PartnersLaunchView extends ActivityView {
         .client(((AptoideApplication) context.getApplicationContext()).getDefaultClient())
         .build();
     Call<RemoteBootConfig> call = retrofit.create(BootConfigServices.class)
-        .getRemoteBootConfig(Application.getConfiguration().getAppId(),
-            Application.getConfiguration().getVerticalDimension(),
-            Application.getConfiguration().getPartnerId(),
-            String.valueOf(BuildConfig.VERSION_CODE));
+        .getRemoteBootConfig(BuildConfig.APPLICATION_ID, bootConfig.getPartner()
+            .getType(), partnerId, String.valueOf(BuildConfig.VERSION_CODE));
     call.enqueue(new Callback<RemoteBootConfig>() {
       @Override
       public void onResponse(Call<RemoteBootConfig> call, Response<RemoteBootConfig> response) {
         if (response.body() != null) {
-          BootConfigJSONUtils.saveRemoteBootConfig(context, response.body());
-          ((VanillaConfiguration) Application.getConfiguration()).setBootConfig(
-              BootConfigJSONUtils.getSavedRemoteBootConfig(context).getData());
+          ((PartnerApplication) getApplicationContext()).setRemoteBootConfig(response.body());
         }
         handleSplashScreenTimer();
       }
@@ -126,7 +130,7 @@ public class PartnersLaunchView extends ActivityView {
         @Override public void run() {
           startActivity();
         }
-      }, ((VanillaConfiguration) Application.getConfiguration()).getBootConfig()
+      }, ((PartnerApplication) getApplicationContext()).getBootConfig()
           .getPartner()
           .getAppearance()
           .getSplash()

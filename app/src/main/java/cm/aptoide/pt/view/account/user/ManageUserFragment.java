@@ -21,11 +21,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -79,6 +79,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private ImagePickerNavigator imagePickerNavigator;
   private AptoideAccountManager accountManager;
   private CreateUserErrorMapper errorMapper;
+  private boolean createStoreUserPrivacyEnabled;
 
   public static ManageUserFragment newInstanceToEdit() {
     return newInstance(true);
@@ -111,8 +112,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
 
     navigator = new ManageUserNavigator(getFragmentNavigator());
-    fileProviderAuthority = Application.getConfiguration()
-        .getAppId() + ".provider";
+    fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
     crashReport = CrashReport.getInstance();
@@ -120,6 +120,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
+    createStoreUserPrivacyEnabled =
+        ((AptoideApplication) getActivity().getApplication()).isCreateStoreUserPrivacyEnabled();
     accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
     errorMapper =
         new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
@@ -179,7 +181,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     final ManageUserPresenter manageUserPresenter =
         new ManageUserPresenter(this, crashReport, accountManager, errorMapper, navigator,
-            currentModel, isEditProfile, uriToPathResolver);
+            currentModel, isEditProfile, uriToPathResolver, createStoreUserPrivacyEnabled);
 
     attachPresenter(
         new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)), null);

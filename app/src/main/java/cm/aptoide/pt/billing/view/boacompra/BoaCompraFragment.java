@@ -19,6 +19,7 @@ public class BoaCompraFragment extends WebViewFragment {
   private Billing billing;
   private BillingAnalytics billingAnalytics;
   private AptoideAccountManager accountManager;
+  private String marketName;
 
   public static Fragment create(Bundle bundle) {
     final BoaCompraFragment fragment = new BoaCompraFragment();
@@ -33,13 +34,14 @@ public class BoaCompraFragment extends WebViewFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     attachPresenter(new BoaCompraPresenter(this, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager),
+            getActivityNavigator(), getFragmentNavigator(), accountManager, marketName),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
         getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD),

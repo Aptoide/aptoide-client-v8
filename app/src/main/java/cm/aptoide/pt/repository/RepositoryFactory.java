@@ -88,10 +88,10 @@ public final class RepositoryFactory {
       SharedPreferences sharedPreferences) {
     return new AppRepository(getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((AptoideApplication) context.getApplicationContext()
-                .getApplicationContext()).getDatabase(), Store.class)), getHttpClient(context),
-        WebService.getDefaultConverter(), getTokenInvalidator(context), sharedPreferences,
-        context.getResources());
+            ((AptoideApplication) context.getApplicationContext()).getDatabase(), Store.class)),
+        getHttpClient(context), WebService.getDefaultConverter(), getTokenInvalidator(context),
+        sharedPreferences, context.getResources(),
+        ((AptoideApplication) context.getApplicationContext()).getPartnerId());
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {

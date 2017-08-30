@@ -39,12 +39,13 @@ public class AccountManagerService {
   private final ObjectMapper serializer;
   private final AccountManagerTokenInvalidatorFactory tokenInvalidatorFactory;
   private final SharedPreferences sharedPreferences;
+  private final String extraId;
 
   public AccountManagerService(AccountManagerInterceptorFactory interceptorFactory,
       AccountFactory accountFactory, OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient,
       Converter.Factory converterFactory, ObjectMapper serializer,
       AccountManagerTokenInvalidatorFactory tokenInvalidatorFactory,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, String extraId) {
     this.interceptorFactory = interceptorFactory;
     this.accountFactory = accountFactory;
     this.httpClient = httpClient;
@@ -53,13 +54,14 @@ public class AccountManagerService {
     this.serializer = serializer;
     this.tokenInvalidatorFactory = tokenInvalidatorFactory;
     this.sharedPreferences = sharedPreferences;
+    this.extraId = extraId;
   }
 
   public Completable createAccount(String email, String password,
       AptoideAccountManager accountManager) {
     return CreateUserRequest.of(email.toLowerCase(), password,
         interceptorFactory.createV3(accountManager), httpClient,
-        tokenInvalidatorFactory.getTokenInvalidator(accountManager), sharedPreferences)
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager), sharedPreferences, extraId)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -82,7 +84,7 @@ public class AccountManagerService {
       AptoideAccountManager accountManager) {
     return OAuth2AuthenticationRequest.of(email, password, type, name,
         interceptorFactory.createV3(accountManager), httpClient, converterFactory,
-        tokenInvalidatorFactory.getTokenInvalidator(accountManager), sharedPreferences)
+        tokenInvalidatorFactory.getTokenInvalidator(accountManager), sharedPreferences, extraId)
         .observe()
         .toSingle()
         .flatMap(oAuth -> {

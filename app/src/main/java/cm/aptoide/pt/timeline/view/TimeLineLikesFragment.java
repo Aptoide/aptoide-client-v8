@@ -30,6 +30,7 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private String defaultTheme;
 
   public static TimeLineLikesFragment newInstance(String storeTheme, String cardUid,
       long numberOfLikes, String title) {
@@ -45,6 +46,7 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
     baseBodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
@@ -65,7 +67,7 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
-    return new FollowUserDisplayable(user, true);
+    return new FollowUserDisplayable(user, true, defaultTheme);
   }
 
   @Override

@@ -8,12 +8,12 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
@@ -36,18 +36,25 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private final PermissionManager permissionManager;
   private final InstallManager installManager;
   private final Resources resources;
+  private final int updateDialogIcon;
+  private final boolean alwaysUpdate;
+  private final String marketName;
 
   private ProgressDialog dialog;
 
   public AutoUpdate(ActivityView activity, DownloadFactory downloadFactory,
       PermissionManager permissionManager, InstallManager installManager, Resources resources,
-      String autoUpdateUrl) {
+      String autoUpdateUrl, @DrawableRes int updateDialogIcon, boolean alwaysUpdate,
+      String marketName) {
     this.url = autoUpdateUrl;
     this.activity = activity;
     this.permissionManager = permissionManager;
     this.downloadFactory = downloadFactory;
     this.installManager = installManager;
     this.resources = resources;
+    this.updateDialogIcon = updateDialogIcon;
+    this.alwaysUpdate = alwaysUpdate;
+    this.marketName = marketName;
   }
 
   @Override protected AutoUpdateInfo doInBackground(Void... params) {
@@ -77,11 +84,9 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
         try {
           int localVersionCode = activity.getPackageManager()
               .getPackageInfo(packageName, 0).versionCode;
-          // FIXME: 7/15/16 trinkes check what is the isAlwaysUpdate()
           if (vercode > localVersionCode
               && localVersionCode > minvercode
-              && Build.VERSION.SDK_INT >= minsdk || Application.getConfiguration()
-              .isAlwaysUpdate()) {
+              && Build.VERSION.SDK_INT >= minsdk || alwaysUpdate) {
             return autoUpdateInfo;
           }
         } catch (PackageManager.NameNotFoundException e) {
@@ -131,12 +136,9 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper);
     final AlertDialog updateSelfDialog = dialogBuilder.create();
     updateSelfDialog.setTitle(activity.getText(R.string.update_self_title));
-    updateSelfDialog.setIcon(Application.getConfiguration()
-        .getIcon());
+    updateSelfDialog.setIcon(updateDialogIcon);
     updateSelfDialog.setMessage(
-        AptoideUtils.StringU.getFormattedString(R.string.update_self_msg, resources,
-            Application.getConfiguration()
-                .getMarketName()));
+        AptoideUtils.StringU.getFormattedString(R.string.update_self_msg, resources, marketName));
     updateSelfDialog.setCancelable(false);
     updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE,
         activity.getString(android.R.string.yes), (arg0, arg1) -> {

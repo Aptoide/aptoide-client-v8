@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
@@ -66,6 +67,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   private Analytics analytics;
   private InstallEventConverter installConverter;
   private BodyInterceptor<BaseBody> bodyInterceptor;
+  private String marketName;
 
   public ScheduledDownloadsFragment() {
   }
@@ -84,6 +86,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
@@ -95,15 +98,13 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     downloadConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            AptoideApplication.getConfiguration()
-                .getAppId(),
+            BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            AptoideApplication.getConfiguration()
-                .getAppId(),
+            BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
@@ -171,7 +172,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     Context context = getContext();
     PermissionManager permissionManager = new PermissionManager();
     PermissionService permissionRequest = ((PermissionService) context);
-    DownloadFactory downloadFactory = new DownloadFactory();
+    DownloadFactory downloadFactory = new DownloadFactory(marketName);
 
     permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))

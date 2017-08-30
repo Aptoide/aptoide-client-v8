@@ -19,11 +19,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -115,8 +115,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     storeManager = ((AptoideApplication) getActivity().getApplicationContext()).getStoreManager();
     packageName = (getActivity().getApplicationContext()).getPackageName();
-    fileProviderAuthority = Application.getConfiguration()
-        .getAppId() + ".provider";
+    fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
     crashReport = CrashReport.getInstance();

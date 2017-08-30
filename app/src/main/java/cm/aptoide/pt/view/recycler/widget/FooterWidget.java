@@ -28,10 +28,12 @@ public class FooterWidget extends Widget<FooterDisplayable> {
   }
 
   @Override public void bindView(FooterDisplayable displayable) {
+    final String marketName =
+        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     final String buttonText = Translator.translate(displayable.getPojo()
         .getActions()
         .get(0)
-        .getLabel(), getContext().getApplicationContext());
+        .getLabel(), getContext().getApplicationContext(), marketName);
     button.setText(buttonText);
 
     final Action1<Void> handleButtonClick = __ -> {
@@ -41,8 +43,8 @@ public class FooterWidget extends Widget<FooterDisplayable> {
           .getEvent();
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, Translator.translate(displayable.getPojo()
-                  .getTitle(), getContext().getApplicationContext()), null, displayable.getTag(),
-              displayable.getStoreContext()));
+                  .getTitle(), getContext().getApplicationContext(), marketName), null,
+              displayable.getTag(), displayable.getStoreContext()));
     };
     compositeSubscription.add(RxView.clicks(button)
         .subscribe(handleButtonClick));

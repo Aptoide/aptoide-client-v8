@@ -8,6 +8,7 @@ package cm.aptoide.pt;
 import android.accounts.AccountManager;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
+import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -34,13 +35,13 @@ import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountManagerService;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerDataPersist;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.BaseBodyAccountManagerInterceptorFactory;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.LogAccountAnalytics;
+import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.NoOpTokenInvalidator;
 import cm.aptoide.pt.account.NoTokenBodyInterceptor;
 import cm.aptoide.pt.account.RefreshTokenInvalidatorFactory;
@@ -140,7 +141,6 @@ import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -437,8 +437,8 @@ public abstract class AptoideApplication extends Application {
           new RootInstallationRetryHandler(notificationId, systemNotificationShower,
               getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, this,
               new RootInstallErrorNotificationFactory(notificationId,
-                  BitmapFactory.decodeResource(getResources(), getConfiguration().getIcon()),
-                  action, deleteAction));
+                  BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher), action,
+                  deleteAction));
     }
     return rootInstallationRetryHandler;
   }
@@ -516,12 +516,10 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationHandler getNotificationHandler() {
     if (notificationHandler == null) {
-      notificationHandler =
-          new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
-              WebService.getDefaultConverter(), getIdsRepository(),
-              getConfiguration().getVersionName(), getAccountManager(),
-              getConfiguration().getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(),
-              getResources());
+      notificationHandler = new NotificationHandler(BuildConfig.APPLICATION_ID, getDefaultClient(),
+          WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
+          getAccountManager(), getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(),
+          getResources());
     }
     return notificationHandler;
   }
@@ -569,9 +567,9 @@ public abstract class AptoideApplication extends Application {
   public Interceptor getUserAgentInterceptor() {
     if (userAgentInterceptor == null) {
       userAgentInterceptor =
-          new UserAgentInterceptor(getAndroidAccountProvider(), getIdsRepository(),
-              getConfiguration().getPartnerId(), new DisplayMetrics(),
-              AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername(this));
+          new UserAgentInterceptor(getAndroidAccountProvider(), getIdsRepository(), getPartnerId(),
+              new DisplayMetrics(), AptoideUtils.SystemU.TERMINAL_INFO,
+              AptoideUtils.Core.getDefaultVername(this));
     }
     return userAgentInterceptor;
   }
@@ -591,8 +589,8 @@ public abstract class AptoideApplication extends Application {
   public AptoideDownloadManager getDownloadManager() {
     if (downloadManager == null) {
 
-      final String apkPath = getConfiguration().getCachePath() + "apks/";
-      final String obbPath = getConfiguration().getCachePath() + "obb/";
+      final String apkPath = getCachePath() + "apks/";
+      final String obbPath = getCachePath() + "obb/";
       final OkHttpClient.Builder httpClientBuilder =
           new OkHttpClient.Builder().addInterceptor(getUserAgentInterceptor())
               .addInterceptor(new PaidAppsDownloadInterceptor(getAccountManager()))
@@ -611,11 +609,13 @@ public abstract class AptoideApplication extends Application {
           getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance(),
               new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                  AppEventsLogger.newLogger(this))), FileDownloader.getImpl(),
-          getConfiguration().getCachePath(), apkPath, obbPath);
+                  AppEventsLogger.newLogger(this))), FileDownloader.getImpl(), getCachePath(),
+          apkPath, obbPath);
     }
     return downloadManager;
   }
+
+  public abstract String getCachePath();
 
   public InstallManager getInstallManager(int installerType) {
 
@@ -627,8 +627,9 @@ public abstract class AptoideApplication extends Application {
     if (installManager == null) {
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
-              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance())).create(this,
-              installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
+              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
+              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
+          getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
@@ -666,15 +667,15 @@ public abstract class AptoideApplication extends Application {
               Build.VERSION.SDK_INT, getPackageRepository(), getNetworkOperatorManager()),
           getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
           WebService.getDefaultConverter(), getNonNullObjectMapper(),
-          new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences());
+          new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences(), getExtraId());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
           SecurePreferencesImplementation.getInstance(this, getDefaultSharedPreferences()),
           getDefaultSharedPreferences(), AccountManager.get(this),
           new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(),
           SQLiteDatabaseHelper.DATABASE_VERSION,
-          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
-          getConfiguration().getAccountType());
+          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), getAccountType(),
+          BuildConfig.VERSION_NAME);
 
       final AccountDataPersist accountDataPersist =
           new AndroidAccountManagerDataPersist(AccountManager.get(this),
@@ -696,7 +697,7 @@ public abstract class AptoideApplication extends Application {
       accountFactory = new AccountFactory(new SocialAccountFactory(this, getGoogleSignInClient()),
           new AccountService(new NoTokenBodyInterceptor(getIdsRepository(), getAptoideMd5sum(),
               getAptoidePackage()), getDefaultClient(), WebService.getDefaultConverter(),
-              new NoOpTokenInvalidator(), getDefaultSharedPreferences()));
+              new NoOpTokenInvalidator(), getDefaultSharedPreferences(), getExtraId()));
     }
     return accountFactory;
   }
@@ -704,8 +705,7 @@ public abstract class AptoideApplication extends Application {
   public AndroidAccountProvider getAndroidAccountProvider() {
     if (androidAccountProvider == null) {
       androidAccountProvider =
-          new AndroidAccountProvider(AccountManager.get(this), getConfiguration().getAccountType(),
-              Schedulers.io());
+          new AndroidAccountProvider(AccountManager.get(this), getAccountType(), Schedulers.io());
     }
     return androidAccountProvider;
   }
@@ -940,7 +940,7 @@ public abstract class AptoideApplication extends Application {
   public FileManager getFileManager() {
     if (fileManager == null) {
       fileManager = new FileManager(getCacheHelper(), new FileUtils(), new String[] {
-          getApplicationContext().getCacheDir().getPath(), getConfiguration().getCachePath()
+          getApplicationContext().getCacheDir().getPath(), getCachePath()
       }, getDownloadManager(), getHttpClientCache());
     }
     return fileManager;
@@ -950,7 +950,7 @@ public abstract class AptoideApplication extends Application {
     if (cacheHelper == null) {
       List<CacheHelper.FolderToManage> folders = new LinkedList<>();
 
-      final String cachePath = getConfiguration().getCachePath();
+      final String cachePath = getCachePath();
 
       long month = DateUtils.DAY_IN_MILLIS;
       folders.add(new CacheHelper.FolderToManage(new File(cachePath), month));
@@ -1045,7 +1045,7 @@ public abstract class AptoideApplication extends Application {
               getDefaultSharedPreferences());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-          storeCredentials.get(getConfiguration().getDefaultStore());
+          storeCredentials.get(getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7Pool(),
@@ -1056,6 +1056,10 @@ public abstract class AptoideApplication extends Application {
               .log(err));
     });
   }
+
+  public abstract String getDefaultStore();
+
+  public abstract String getMarketName();
 
   /**
    * BaseBodyInterceptor for v7 ws calls with CDN = pool configuration
@@ -1140,7 +1144,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private String getAptoidePackage() {
-    return getConfiguration().getAppId();
+    return BuildConfig.APPLICATION_ID;
   }
 
   public AdultContent getAdultContent(
@@ -1257,9 +1261,8 @@ public abstract class AptoideApplication extends Application {
           getApplicationContext(),
           (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
           getVersionCodeProvider(),
-          (context) -> AdNetworkUtils.isGooglePlayServicesAvailable(context),
-          () -> AptoideApplication.getConfiguration()
-              .getPartnerId(), new MinimalAdMapper());
+          (context) -> AdNetworkUtils.isGooglePlayServicesAvailable(context), () -> getPartnerId(),
+          new MinimalAdMapper());
     }
     return adsRepository;
   }
@@ -1278,9 +1281,27 @@ public abstract class AptoideApplication extends Application {
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
               WebService.getDefaultConverter(), new TimelineResponseCardMapper(
-              () -> new TimelineAdsRepository(context, BehaviorRelay.create())));
+              () -> new TimelineAdsRepository(context, BehaviorRelay.create()), getMarketName()));
     }
     return timelineRepositoryFactory.create(action);
   }
+
+  public abstract LoginPreferences getLoginPreferences();
+
+  public abstract String getFeedbackEmail();
+
+  public abstract String getImageCachePath();
+
+  public abstract String getAccountType();
+
+  public abstract String getAutoUpdateUrl();
+
+  public abstract String getPartnerId();
+
+  public abstract String getExtraId();
+
+  public abstract String getDefaultTheme();
+
+  public abstract boolean isCreateStoreUserPrivacyEnabled();
 }
 

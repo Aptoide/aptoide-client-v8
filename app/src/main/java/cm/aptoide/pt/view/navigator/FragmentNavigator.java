@@ -19,14 +19,19 @@ public class FragmentNavigator {
   private final int exitAnimation;
   private final int enterAnimation;
   private final SharedPreferences sharedPreferences;
+  private final String defaultStore;
+  private final String defaultTheme;
 
   public FragmentNavigator(FragmentManager fragmentManager, @IdRes int containerId,
-      int enterAnimation, int exitAnimation, SharedPreferences sharedPreferences) {
+      int enterAnimation, int exitAnimation, SharedPreferences sharedPreferences,
+      String defaultStore, String defaultTheme) {
     this.fragmentManager = fragmentManager;
     this.containerId = containerId;
     this.enterAnimation = enterAnimation;
     this.exitAnimation = exitAnimation;
     this.sharedPreferences = sharedPreferences;
+    this.defaultStore = defaultStore;
+    this.defaultTheme = defaultTheme;
   }
 
   public void navigateUsing(Event event, String storeTheme, String title, String tag,
@@ -81,7 +86,7 @@ public class FragmentNavigator {
   }
 
   public void navigateToHomeCleaningBackStack() {
-    Fragment home = HomeFragment.newInstance();
+    Fragment home = HomeFragment.newInstance(defaultStore, defaultTheme);
     cleanBackStack();
     navigateToWithoutBackSave(home);
   }

@@ -53,6 +53,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private TextView productPrice;
   private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
+  private String marketName;
 
   public static Fragment create(Bundle bundle) {
     final BraintreeCreditCardFragment fragment = new BraintreeCreditCardFragment();
@@ -77,6 +78,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
   }
 
   @Nullable @Override
@@ -124,7 +126,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     });
     attachPresenter(new BraintreePresenter(this, braintree, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager),
+            getActivityNavigator(), getFragmentNavigator(), accountManager, marketName),
         AndroidSchedulers.mainThread(),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),

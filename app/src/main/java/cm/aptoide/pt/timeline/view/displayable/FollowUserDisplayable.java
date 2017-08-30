@@ -19,13 +19,16 @@ import cm.aptoide.pt.view.store.StoreFragment;
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
   private boolean isLike;
+  private String defaultTheme;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike,
+      String defaultTheme) {
     super(pojo);
     this.isLike = isLike;
+    this.defaultTheme = defaultTheme;
   }
 
   @Override protected Configs getConfig() {
@@ -102,8 +105,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
           .getTheme())
           .getStoreHeaderColorResource(context.getResources(), context.getTheme());
     } else {
-      return StoreTheme.get(AptoideApplication.getConfiguration()
-          .getDefaultTheme())
+      return StoreTheme.get(defaultTheme)
           .getStoreHeaderColorResource(context.getResources(), context.getTheme());
     }
   }
@@ -136,12 +138,10 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     String theme;
     if (store != null && store.getAppearance() != null) {
       theme = store.getAppearance()
-          .getTheme() == null ? AptoideApplication.getConfiguration()
-          .getDefaultTheme() : store.getAppearance()
+          .getTheme() == null ? defaultTheme : store.getAppearance()
           .getTheme();
     } else {
-      theme = AptoideApplication.getConfiguration()
-          .getDefaultTheme();
+      theme = defaultTheme;
     }
     return theme;
   }

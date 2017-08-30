@@ -22,21 +22,24 @@ import rx.Completable;
 public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
   private Installer installManager;
+  private String marketName;
 
   public RollbackDisplayable() {
   }
 
-  public RollbackDisplayable(Installer installManager, Rollback pojo) {
-    this(installManager, pojo, false);
+  public RollbackDisplayable(Installer installManager, Rollback pojo, String marketName) {
+    this(installManager, pojo, false, marketName);
   }
 
-  private RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount) {
+  private RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount,
+      String marketName) {
     super(pojo);
     this.installManager = installManager;
+    this.marketName = marketName;
   }
 
   public Download getDownloadFromPojo() {
-    return new DownloadFactory().create(getPojo());
+    return new DownloadFactory(marketName).create(getPojo());
   }
 
   @Override protected Configs getConfig() {

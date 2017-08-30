@@ -56,6 +56,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private String partnerId;
 
   public static DescriptionFragment newInstance(String appName, String description,
       String storeTheme) {
@@ -89,6 +90,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    partnerId = ((AptoideApplication) getContext().getApplicationContext()).getPartnerId();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -138,8 +140,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       }
       finishLoading();
     } else if (hasAppId) {
-      GetAppRequest.of(appId, AptoideApplication.getConfiguration()
-              .getPartnerId() == null ? null : storeName,
+      GetAppRequest.of(appId, partnerId == null ? null : storeName,
           StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
           baseBodyBodyInterceptor, httpClient, converterFactory,
           ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),

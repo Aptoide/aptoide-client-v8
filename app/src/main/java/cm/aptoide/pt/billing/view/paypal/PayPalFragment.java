@@ -30,6 +30,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
   private Billing billing;
   private BillingAnalytics billingAnalytics;
   private AptoideAccountManager accountManager;
+  private String marketName;
 
   public static Fragment create(Bundle bundle) {
     final PayPalFragment fragment = new PayPalFragment();
@@ -44,6 +45,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
   }
 
   @Nullable @Override
@@ -67,7 +69,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
 
     attachPresenter(new PayPalPresenter(this, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager),
+            getActivityNavigator(), getFragmentNavigator(), accountManager, marketName),
         AndroidSchedulers.mainThread(),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),

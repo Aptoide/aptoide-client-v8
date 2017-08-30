@@ -26,7 +26,6 @@ import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
@@ -65,10 +64,12 @@ public class MainActivity extends TabNavigatorActivity
         ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
     final AptoideAccountManager accountManager =
         ((AptoideApplication) getApplicationContext()).getAccountManager();
+    final String marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
     final AutoUpdate autoUpdate =
-        new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager,
-            getResources(), Application.getConfiguration()
-            .getAutoUpdateUrl());
+        new AutoUpdate(this, new DownloadFactory(marketName), new PermissionManager(),
+            installManager, getResources(),
+            ((AptoideApplication) getApplicationContext()).getAutoUpdateUrl(), R.mipmap.ic_launcher,
+            false, marketName);
     final OkHttpClient httpClient =
         ((AptoideApplication) getApplicationContext()).getDefaultClient();
 
@@ -92,11 +93,13 @@ public class MainActivity extends TabNavigatorActivity
         Store.class), httpClient, converterFactory,
         ((AptoideApplication) getApplicationContext()).getTokenInvalidator(), sharedPreferences);
 
+    final String defaultTheme =
+        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDefaultTheme();
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
             sharedPreferences, AccessorFactory.getAccessorFor(
             ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class));
+            Store.class), defaultTheme);
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 
@@ -110,10 +113,12 @@ public class MainActivity extends TabNavigatorActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     attachPresenter(new MainPresenter(this, installManager,
-        ((AptoideApplication) getApplicationContext()).getRootInstallationRetryHandler(),
-        CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
-        notificationSyncScheduler, installCompletedNotifier, sharedPreferences, securePreferences,
-        fragmentNavigator, deepLinkManager), savedInstanceState);
+            ((AptoideApplication) getApplicationContext()).getRootInstallationRetryHandler(),
+            CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
+            notificationSyncScheduler, installCompletedNotifier, sharedPreferences, securePreferences,
+            fragmentNavigator, deepLinkManager,
+            ((AptoideApplication) getApplicationContext()).getDefaultStore(), defaultTheme),
+        savedInstanceState);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

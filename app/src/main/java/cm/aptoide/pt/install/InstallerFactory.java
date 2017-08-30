@@ -33,10 +33,13 @@ public class InstallerFactory {
   public static final int ROLLBACK = 1;
   private final MinimalAdMapper adMapper;
   private final InstallerAnalytics installerAnalytics;
+  private final String imagesCachePath;
 
-  public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics) {
+  public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics,
+      String imagesCachePath) {
     this.adMapper = adMapper;
     this.installerAnalytics = installerAnalytics;
+    this.imagesCachePath = imagesCachePath;
   }
 
   public Installer create(Context context, int type) {
@@ -66,7 +69,7 @@ public class InstallerFactory {
   @NonNull private RollbackInstaller getRollbackInstaller(Context context) {
     return new RollbackInstaller(getDefaultInstaller(context),
         RepositoryFactory.getRollbackRepository(context.getApplicationContext()),
-        new RollbackFactory(), getInstallationProvider(
+        new RollbackFactory(imagesCachePath), getInstallationProvider(
         ((AptoideApplication) context.getApplicationContext()).getDownloadManager(),
         context.getApplicationContext()));
   }

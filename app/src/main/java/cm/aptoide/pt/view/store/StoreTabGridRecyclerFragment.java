@@ -47,6 +47,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
   protected StoreContext storeContext;
+  private String marketName;
 
   public static Fragment newInstance(Event event, String storeTheme, String tag,
       StoreContext storeContext) {
@@ -100,6 +101,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);
@@ -122,7 +124,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       storeContext = ((StoreContext) args.getSerializable(BundleCons.STORE_CONTEXT));
     }
     title = args.getString(
-        Translator.translate(BundleCons.TITLE, getContext().getApplicationContext()));
+        Translator.translate(BundleCons.TITLE, getContext().getApplicationContext(), marketName));
     action = args.getString(BundleCons.ACTION);
     storeTheme = args.getString(BundleCons.STORE_THEME);
   }
@@ -179,7 +181,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext()));
+    toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext(), marketName));
     toolbar.setLogo(R.drawable.logo_toolbar);
   }
 

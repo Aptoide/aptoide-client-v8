@@ -94,8 +94,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       }
 
       final String storeName = displayable.getStoreName();
-      final String storeTheme = AptoideApplication.getConfiguration()
-          .getDefaultTheme();
+      final String storeTheme =
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
           new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(

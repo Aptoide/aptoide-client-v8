@@ -87,11 +87,11 @@ public class HomeFragment extends StoreFragment {
 
   /**
    * @return {@link HomeFragment} instance with default store, store context and theme
+   * @param defaultStore
+   * @param defaultTheme
    */
-  public static HomeFragment newInstance() {
-    return newInstance(AptoideApplication.getConfiguration()
-        .getDefaultStore(), StoreContext.home, AptoideApplication.getConfiguration()
-        .getDefaultTheme());
+  public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
+    return newInstance(defaultStore, StoreContext.home, defaultTheme);
   }
 
   @Override public void onAttach(Activity activity) {

@@ -28,7 +28,6 @@ import org.json.JSONObject;
 public class BootConfigJSONUtils {
 
   private static final String TAG = BootConfigJSONUtils.class.getSimpleName();
-  private static final String FEEDBACK_EMAIL = "support@aptoide.com";
 
   /**
    * get remote boot config that was saved
@@ -49,10 +48,13 @@ public class BootConfigJSONUtils {
    *
    * @param context context
    * @param remoteBootConfig remote boot config object to save as a shared preference
+   * @param feedbackEmail
    */
-  public static void saveRemoteBootConfig(Context context, RemoteBootConfig remoteBootConfig) {
+  public static void saveRemoteBootConfig(Context context, RemoteBootConfig remoteBootConfig,
+      String feedbackEmail) {
     if (isSavedRemoteBootConfigAvailable(getSharedPreferences(context))) {
-      if (isRemoteBootConfigValid(remoteBootConfig, getSavedRemoteBootConfig(context))) {
+      if (isRemoteBootConfigValid(remoteBootConfig, getSavedRemoteBootConfig(context),
+          feedbackEmail)) {
         saveBootConfigToSharedPreferences(remoteBootConfig, getSharedPreferences(context));
       } else {
         Logger.d(TAG, "can't save it, something is wrong with it");
@@ -105,10 +107,11 @@ public class BootConfigJSONUtils {
    * theme can't be empty/null
    *
    * if email is null or empty, will be replaced by the default value
+   * @param feedbackEmail
    * @return true if boot config is valid
    */
   private static boolean isRemoteBootConfigValid(RemoteBootConfig newRemoteBootConfig,
-      RemoteBootConfig oldRemoteBootConfig) {
+      RemoteBootConfig oldRemoteBootConfig, String feedbackEmail) {
     if (newRemoteBootConfig.getData().getPartner().getUid() == null
         || newRemoteBootConfig.getData().getPartner().getStore().getName() == null
         || newRemoteBootConfig.getData().getPartner().getStore().getLabel() == null
@@ -151,7 +154,7 @@ public class BootConfigJSONUtils {
     }
     if (newRemoteBootConfig.getData().getPartner().getFeedback().getEmail() == null
         || newRemoteBootConfig.getData().getPartner().getFeedback().getEmail().isEmpty()) {
-      newRemoteBootConfig.getData().getPartner().getFeedback().setEmail(FEEDBACK_EMAIL);
+      newRemoteBootConfig.getData().getPartner().getFeedback().setEmail(feedbackEmail);
     }
     return true;
   }
