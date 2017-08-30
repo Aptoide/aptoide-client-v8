@@ -198,8 +198,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         new SpotAndShareTransferRecordPresenter(this,
             ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
             new SpotAndShareTransferRecordManager(getContext()),
-            new SpotAndShareInstallManager(getActivity().getApplicationContext()),
-            new DrawableBitmapMapper(getActivity().getApplicationContext()));
+            new SpotAndShareInstallManager(getActivity().getApplicationContext()));
 
     SpotAndSharePickAppsPresenter appSelectionPresenter =
         new SpotAndSharePickAppsPresenter(this, false,
@@ -350,7 +349,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void showFriendsOnMenu(ArrayList<Friend> friendsList) {
     this.friendsMenu = new PopupMenu(this.getContext(), connectedFriendsLayout);
-    //setDismissListener(popup);
 
     MenuInflater inflate = friendsMenu.getMenuInflater();
     inflate.inflate(R.menu.menu_spotandshare_transfer, friendsMenu.getMenu());

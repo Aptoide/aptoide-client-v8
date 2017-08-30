@@ -4,7 +4,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
-import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
@@ -24,18 +23,15 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
   private SpotAndShare spotAndShare;
   private SpotAndShareTransferRecordManager transferRecordManager;
   private SpotAndShareInstallManager spotAndShareInstallManager;
-  private final DrawableBitmapMapper drawableBitmapMapper;
   private Subscription friendsObserverSubscription;
 
   public SpotAndShareTransferRecordPresenter(SpotAndShareTransferRecordView view,
       SpotAndShare spotAndShare, SpotAndShareTransferRecordManager transferRecordManager,
-      SpotAndShareInstallManager spotAndShareInstallManager,
-      DrawableBitmapMapper drawableBitmapMapper) {
+      SpotAndShareInstallManager spotAndShareInstallManager) {
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.transferRecordManager = transferRecordManager;
     this.spotAndShareInstallManager = spotAndShareInstallManager;
-    this.drawableBitmapMapper = drawableBitmapMapper;
   }
 
   @Override public void present() {
