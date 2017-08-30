@@ -61,6 +61,10 @@ class SpotAndShareV2 {
     return transferManager.observeFriends();
   }
 
+  public Observable<Integer> observeAmountOfFriends() {
+    return transferManager.observeAmountOfFriends();
+  }
+
   Completable send(Action1<SpotAndShareSender> onSuccess, OnError onError) {
 
     return isGroupCreated().flatMapCompletable(created -> {

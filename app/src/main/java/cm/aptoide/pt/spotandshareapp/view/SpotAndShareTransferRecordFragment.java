@@ -125,11 +125,9 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    //inflater.inflate(R.menu.menu_spotandshare_transfer, menu);
-    //this.toolbarMenu = menu;
     PopupMenu popup = new PopupMenu(this.getContext(), connectedFriendsLayout);
     MenuInflater inflate = popup.getMenuInflater();
-    inflate.inflate(R.menu.menu_spotandshare_transfer, menu);
+    inflate.inflate(R.menu.menu_spotandshare_transfer, popup.getMenu());
     this.toolbarMenu = popup;
   }
 
@@ -348,8 +346,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     return RxView.clicks(connectedFriendsLayout);
   }
 
-  @Override public void updateFriendsNumber(int friendsList) {
-    connectedFriendsNumber.setText("" + friendsList);
+  @Override public void updateFriendsNumber(int numberOfFriends) {
+    connectedFriendsNumber.setText("" + numberOfFriends);
   }
 
   @Override public void updateFriendsList(ArrayList<Friend> friendsList) {

@@ -40,6 +40,10 @@ public class SpotAndShareMessageServer {
     return aptoideMessageClientSocket.observeFriends();
   }
 
+  public Observable<Integer> observeAmountOfFriends() {
+    return aptoideMessageClientSocket.observeAmountOfFriends();
+  }
+
   public void startServer(HostsChangedCallback hostsCallbackManager, OnError onError) {
     if (aptoideMessageServerSocket != null && !aptoideMessageServerSocket.isShutdown()) {
       throw new IllegalStateException("Server Already started!");

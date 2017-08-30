@@ -16,18 +16,22 @@ import rx.Observable;
 public class FriendsManager {
 
   private final BehaviorRelay<Collection<Friend>> behaviorRelay;
+  private final BehaviorRelay<Integer> numberOfFriendsRelay;
   private final Map<Host, Friend> map;
 
   public FriendsManager() {
     this.map = new HashMap<>();
     this.behaviorRelay = BehaviorRelay.create();
+    this.numberOfFriendsRelay = BehaviorRelay.create();
 
     behaviorRelay.call(Collections.emptyList());
+    numberOfFriendsRelay.call(0);
   }
 
   public void addFriend(Friend friend, Host host) {
     map.put(host, friend);
     behaviorRelay.call(Collections.unmodifiableCollection(map.values()));
+    numberOfFriendsRelay.call(map.size());
   }
 
   public void removeFriend(Host host) {
@@ -41,5 +45,10 @@ public class FriendsManager {
 
   public Observable<Collection<Friend>> observe() {
     return behaviorRelay;
+  }
+
+  public Observable<Integer> observeAmountOfFriends() {
+    //// TODO: 29-08-2017 filipe create relay to observe amount of friends changing from the list - new beheaviorrelay called on the same places.
+    return numberOfFriendsRelay;
   }
 }

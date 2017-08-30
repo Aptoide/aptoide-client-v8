@@ -73,6 +73,10 @@ public class SpotAndShare {
     return spotAndShareV2.observeFriends();
   }
 
+  public Observable<Integer> observeAmountOfFriends() {
+    return spotAndShareV2.observeAmountOfFriends();
+  }
+
   public interface GroupCreated {
     void isCreated(boolean created);
   }

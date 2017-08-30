@@ -31,10 +31,15 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
     return friendsManager.observe();
   }
 
+  public Observable<Integer> observeAmountOfFriends() {
+    return friendsManager.observeAmountOfFriends();
+  }
+
   public AptoideMessageClientSocket(String host, int port, String rootDir,
-      StorageCapacity storageCapacity, TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
-      SocketBinder socketBinder, OnError<IOException> onError, int timeout,
-      AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
+      StorageCapacity storageCapacity,
+      TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
+      OnError<IOException> onError, int timeout, AndroidAppInfoAccepter androidAppInfoAccepter,
+      Friend friend) {
     super(host, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
@@ -44,9 +49,10 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
-      StorageCapacity storageCapacity, TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
-      SocketBinder socketBinder, OnError<IOException> onError, int timeout,
-      AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
+      StorageCapacity storageCapacity,
+      TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
+      OnError<IOException> onError, int timeout, AndroidAppInfoAccepter androidAppInfoAccepter,
+      Friend friend) {
     super(host, fallbackHostName, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
