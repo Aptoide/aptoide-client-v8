@@ -448,23 +448,23 @@
   <string name="wizard_description_03_2">सेट टॉप बॉक्स और स्मार्ट टीवी के लिए अनुकूलित ऐप स्टोर</string>
   <string name="wizard_reviews_title">समीक्षाएं</string>
   <string name="wizard_reviews">अब आप एपोटोइड के साथ अपनी ऐप्स समीक्षा बना सकते हैं!</string>
-  <string name="wizard_new_and_improved">Improved performance!</string>
-  <string name="wizard_new_and_improved_bullet_1">Save battery life</string>
-  <string name="wizard_new_and_improved_bullet_2">Reduce CPU and bandwidth usage</string>
-  <string name="wizard_new_and_improved_bullet_3">Load fewer resources</string>
-  <string name="wizard_new_and_improved_bullet_4">Clean User Interface</string>
-  <string name="wizard_new_homepage">New homepage layout</string>
-  <string name="wizard_new_top">New Top tab</string>
-  <string name="subscribe_apps_official_store">Subscribe \'apps\' Aptoide Official App Store</string>
+  <string name="wizard_new_and_improved">प्रदर्शन में सुधार!</string>
+  <string name="wizard_new_and_improved_bullet_1">बैटरी जीवन को बचाने</string>
+  <string name="wizard_new_and_improved_bullet_2">CPU और बैंडविड्थ उपयोग को कम करें</string>
+  <string name="wizard_new_and_improved_bullet_3">कम संसाधन लोड करें</string>
+  <string name="wizard_new_and_improved_bullet_4">क्लीन यूजर इंटरफेस</string>
+  <string name="wizard_new_homepage">नया होमपेज लेआउट</string>
+  <string name="wizard_new_top">नया शीर्ष टैब</string>
+  <string name="subscribe_apps_official_store">सदस्यता लें \'ऐप\' ऐपटोइड आधिकारिक ऐप स्टोर</string>
   <string name="wizard_next">अगला</string>
   <string name="wizard_prev">पीछे</string>
   <string name="share">साझा करें</string>
   <string name="share_on_timeline">टाइमलाइन पर साझा करें</string>
   <!-- Search Widget-->
   <string name="search_for_apps">ऐप्स के लिए खोजें...</string>
-  <string name="empty_search">Empty search, write an application name</string>
+  <string name="empty_search">खाली खोज, एक आवेदन नाम लिखें</string>
   <string name="manually_reviewed">अच्छी एप्प की गारंटी: इस एप्लीकेशन ने वायरस, मैलवेयर और अन्य दुर्भावनापूर्ण हमलों के लिए सुरक्षा परीक्षा उत्तीर्ण कर ली और कोई भी खतरा शामिल नहीं है</string>
-  <string name="no_apps_found">No apps found with current filter</string>
+  <string name="no_apps_found">वर्तमान फ़िल्टर के साथ कोई ऐप्स नहीं मिला</string>
   <string name="no_search_results_message">आपकी खोज के लिए कोई परिणाम नहीं हैं।\nकृपया अन्य खोजशब्दों से प्रयास करें।</string>
   <!-- AppView developer area-->
   <string name="developer">डिवेलपर</string>

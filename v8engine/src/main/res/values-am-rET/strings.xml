@@ -157,7 +157,7 @@
   <string name="dialog_install_warning_credibility_text">ከመቀጠልዎ በፊት ማከማቻዎ ታማኝ መሆኑንና ሌሎች አስተያየቶችን ይመልከቱ. አፕቶይድ ሁልጊዜ የሚታመን %1$s ኤፒፒ እንዲጭኑ ይመከራል.</string>
   <string name="dialog_install_warning_trusted_version_button">የሚታመን ስሪት</string>
   <string name="dialog_install_warning_get_trusted_version_button">ማግኘት</string>
-  <string name="flag_results">የሰንደቅ ዓላማ ውጤቶች</string>
+  <string name="flag_results">የፍላግ ውጤቶች</string>
   <string name="helpful">ጠቃሚ</string>
   <string name="not_helpful">የማይጠቅም</string>
   <string name="description_not_available">ለዚህ ኤፒፒ ምንም አይነት ገለፃ የለም</string>

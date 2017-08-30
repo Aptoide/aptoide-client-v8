@@ -17,7 +17,7 @@
   <string name="error_MARG_101">የጠፋ መግለጫ</string>
   <string name="error_MARG_102">የጠፋ ምድብ</string>
   <string name="error_MARG_103">የጠፋ ደረጃ</string>
-  <string name="error_MARG_104">የጠፋ ሰንደቅ አላማ</string>
+  <string name="error_MARG_104">የጠፋ ፍላግ</string>
   <string name="error_MARG_105">የጠፋ አስተያት</string>
   <string name="error_MARG_106">የጠፋ ምርጫ</string>
   <string name="error_MARG_107">የጠፋ ጽሑፍ</string>
@@ -43,7 +43,7 @@
   <string name="error_IARG_104">ልከ ያልሆነ ደረጃ</string>
   <string name="error_IARG_105">የድረ-ገፁ URl ትክክል አይደለም</string>
   <string name="error_IARG_106">የተሳሳተ የኢሜል አድራሻ</string>
-  <string name="error_IARG_107">ልክ ያልሆነ ሰንደቅ አላማ</string>
+  <string name="error_IARG_107">ልክ ያልሆነ ፍላግ</string>
   <string name="error_IARG_108">ልክ ያልሆነ አሰተያየት</string>
   <string name="error_IARG_109">ልክ ያልሆነ ምርጫ</string>
   <string name="error_IARG_110">ለአስተያየቱ ልክ ያልሆነ ምላሽ</string>

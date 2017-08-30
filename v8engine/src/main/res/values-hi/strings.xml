@@ -126,21 +126,21 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>छोड़ें</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_welcome_message"><b>Welcome!</b></string>
-  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
-  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
-  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
+  <string name="wizard_welcome_message"><b>आपका स्वागत है!</b></string>
+  <string name="wizard_sub_title_viewpager_one"><b>सुरक्षित</b> और <b>सुखद</b> यात्रा शुरू करें</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>सुरक्षित इंस्टॉल के लिए</b> \nकथित बैज के साथ \nढूंढें ऐप्स</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>डिस्कवर</b> ऐसे ऐप्स जो \nyou चाहते थे, लेकिन \nnone पाया गया।</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
-  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
+  <string name="wizard_title_viewpager_two"><b>ऐप्स समयरेखा</b></string>
+  <string name="wizard_sub_title_viewpager_two"><b>नवीनतम ऐप्स</b> प्राप्त करें, <b>विषयगत स्टोर</b> \nऔर ढूंढें <b>व्यक्तिगत सामग्री प्राप्त करें।</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
-  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
-  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
-  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
-  <string name="wizard_register_now_button">Register now</string>
-  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
-  <string name="wizard_or_login"><u>or Login</u></string>
+  <string name="wizard_title_viewpager_three"><b>समुदाय में शामिल हों</b></string>
+  <string name="wizard_description_part_one_viewpager_three">अपने दोस्तों <b>का पालन करें</b></string>
+  <string name="wizard_description_part_two_viewpager_three"><b>समीक्षा करें</b> और ऐप्स को रेट करें</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>बनाएं</b> अपने स्टोर</string>
+  <string name="wizard_register_now_button">रजिस्टर करें</string>
+  <string name="wizard_be_a_part_of_aptoide">Aptoide का एक हिस्सा बनो!</string>
+  <string name="wizard_or_login"><u>या लॉगिन</u></string>
   <string name="you_need_to_be_logged_in">आपको लॉग इन करने की जरूरत है</string>
   <string name="follow">फॉलो करें</string>
   <!--need translation-->
