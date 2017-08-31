@@ -65,7 +65,11 @@ import lombok.Getter;
     }
 
     public String getValue() {
-      return countryCodes.get(position);
+      if (countryCodes.size() > 0) {
+        return countryCodes.get(position);
+      } else {
+        return null;
+      }
     }
 
     public boolean hasMoreCountryCodes() {
