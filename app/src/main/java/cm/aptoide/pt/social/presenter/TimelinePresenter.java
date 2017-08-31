@@ -207,7 +207,8 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> view.getVisibleItems()
             .filter(post -> !post.getType()
-                .isDummy())
+                .isDummy() && !post.getType()
+                .isAggregated())
             .flatMapCompletable(
                 post -> timeline.setPostRead(post.getMarkAsReadUrl(), post.getCardId(),
                     post.getType()))
