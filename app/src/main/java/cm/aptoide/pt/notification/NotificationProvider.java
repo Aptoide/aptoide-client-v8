@@ -82,4 +82,11 @@ public class NotificationProvider {
     })
         .subscribeOn(scheduler);
   }
+
+  public Observable<List<AptoideNotification>> getUnreadNotifications() {
+    return notificationAccessor.getUnread()
+        .flatMap(notifications -> Observable.from(notifications)
+            .map(notification -> convertToAptoideNotification(notification))
+            .toList());
+  }
 }

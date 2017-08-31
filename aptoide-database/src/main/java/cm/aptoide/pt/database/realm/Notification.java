@@ -13,6 +13,8 @@ public class Notification extends RealmObject {
   public final static String OWNER_ID_KEY = "ownerId";
   public final static String EXPIRE_KEY = "expire";
   public final static String KEY = "key";
+  public static final int NOT_DISMISSED = -1;
+
   private Long expire;
   @PrimaryKey private String key;
   private String abTestingGroup;

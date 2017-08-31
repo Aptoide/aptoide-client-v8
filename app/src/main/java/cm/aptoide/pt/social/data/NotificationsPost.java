@@ -34,4 +34,8 @@ public class NotificationsPost extends DummyPost {
   public String getUrl() {
     return notification.getUrl();
   }
+
+  public @AptoideNotification.NotificationType Integer[] getNotificationId() {
+    return new Integer[] { notification.getType() };
+  }
 }

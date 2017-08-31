@@ -33,6 +33,18 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
         .observeOn(Schedulers.io());
   }
 
+  public Observable<List<Notification>> getUnread() {
+    return Observable.fromCallable(() -> database.get())
+        .flatMap(realm -> realm.where(Notification.class)
+            .equalTo("dismissed", Notification.NOT_DISMISSED)
+            .findAll()
+            .asObservable())
+        .unsubscribeOn(RealmSchedulers.getScheduler())
+        .flatMap((data) -> database.copyFromRealm(data))
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
+
   public Observable<List<Notification>> getAllSorted(Sort sortOrder, Integer[] notificationType) {
     return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Notification.class)

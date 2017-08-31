@@ -168,7 +168,7 @@ public class Timeline {
   }
 
   public Single<Post> getNotificationsCard() {
-    return notificationCenter.getInboxNotifications(1)
+    return notificationCenter.getUnreadNotifications()
         .first()
         .toSingle()
         .map(aptoideNotifications -> {

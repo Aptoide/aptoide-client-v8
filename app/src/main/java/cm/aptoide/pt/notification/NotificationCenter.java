@@ -84,6 +84,10 @@ public class NotificationCenter {
     return notificationProvider.getNotifications(entries);
   }
 
+  public Observable<List<AptoideNotification>> getUnreadNotifications() {
+    return notificationProvider.getUnreadNotifications();
+  }
+
   public Observable<Boolean> haveNotifications() {
     return notificationProvider.getNotifications(1)
         .map(list -> !list.isEmpty());
