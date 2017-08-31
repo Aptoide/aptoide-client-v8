@@ -70,6 +70,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private PublishSubject<TransferAppModel> installApp;
   private LinearLayout connectedFriendsLayout;
   private TextView connectedFriendsNumber;
+  private PopupMenu friendsMenu;
+  private PublishSubject<Void> clickedHeader;
 
   private LinearLayout bottomSheet;
   private BottomSheetBehavior bottomSheetBehavior;
@@ -77,7 +79,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private SpotAndSharePickAppsAdapter pickAppsAdapter;
   private RecyclerView pickAppsRecyclerView;
   private View pickAppsProgressBarContainer;
-  private PopupMenu friendsMenu;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareTransferRecordFragment();
@@ -89,6 +90,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     backRelay = PublishRelay.create();
     acceptApp = PublishSubject.create();
     installApp = PublishSubject.create();
+    clickedHeader = PublishSubject.create();
 
     pickAppSubject = PublishSubject.create();
   }
@@ -117,8 +119,9 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     configureBottomSheet();
     pickAppsProgressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
     pickAppsRecyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
-    pickAppsAdapter = new SpotAndSharePickAppsAdapter(pickAppSubject,
-        new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)));
+    pickAppsAdapter = new SpotAndSharePickAppsAdapter(
+        new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
+        clickedHeader, pickAppSubject);
     setupPickAppsRecyclerView();
 
     attachPresenters();
@@ -258,6 +261,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     backRelay = null;
     acceptApp = null;
     installApp = null;
+    clickedHeader = null;
 
     pickAppSubject = null;
 
@@ -373,6 +377,14 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void clearMenu() {
     friendsMenu = null;
+  }
+
+  @Override public Observable<Void> listenBottomSheetHeaderClicks() {
+    return pickAppsAdapter.onBottomSheetHeaderClick();
+  }
+
+  @Override public void pressedBottomSheetHeader() {
+    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

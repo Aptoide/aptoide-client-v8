@@ -86,8 +86,9 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
 
     pickAppsRecyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
     progressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
-    pickAppsAdapter = new SpotAndSharePickAppsAdapter(pickAppSubject,
-        new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)));
+    pickAppsAdapter = new SpotAndSharePickAppsAdapter(
+        new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
+        pickAppSubject);
     pickAppsRecyclerView.setAdapter(pickAppsAdapter);
     setupLayoutManager();
     pickAppsRecyclerView.setHasFixedSize(true);

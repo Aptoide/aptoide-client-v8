@@ -41,4 +41,8 @@ public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView
   Observable<Void> friendsMenuDismiss();
 
   void clearMenu();
+
+  Observable<Void> listenBottomSheetHeaderClicks();
+
+  void pressedBottomSheetHeader();
 }

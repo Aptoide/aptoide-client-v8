@@ -25,12 +25,20 @@ public class SpotAndSharePickAppsAdapter extends RecyclerView.Adapter<ViewHolder
   private static final int TYPE_ITEM = 1;
 
   private Header header;
+  private PublishSubject<Void> headerSubject;
   private List<AppModel> installedApps;
   private PublishSubject<AppModel> appSubject;
 
-  public SpotAndSharePickAppsAdapter(PublishSubject<AppModel> appSubject, Header header) {
-    this.appSubject = appSubject;
+  public SpotAndSharePickAppsAdapter(Header header, PublishSubject<AppModel> appSubject) {
     this.header = header;
+    this.appSubject = appSubject;
+  }
+
+  public SpotAndSharePickAppsAdapter(Header header, PublishSubject<Void> headerSubject,
+      PublishSubject<AppModel> appSubject) {
+    this.header = header;
+    this.headerSubject = headerSubject;
+    this.appSubject = appSubject;
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -88,6 +96,15 @@ public class SpotAndSharePickAppsAdapter extends RecyclerView.Adapter<ViewHolder
     notifyDataSetChanged();
     appSubject = null;
     installedApps = null;
+    headerSubject = null;
+  }
+
+  public Observable<Void> onBottomSheetHeaderClick() {
+    if (headerSubject == null) {
+      throw new IllegalStateException(
+          "Can only listen to header clicks when pickApps view is a bottomsheet");
+    }
+    return headerSubject;
   }
 
   class ViewHolderHeader extends ViewHolder {
@@ -101,6 +118,9 @@ public class SpotAndSharePickAppsAdapter extends RecyclerView.Adapter<ViewHolder
 
     public void setAppModelHeader(Header header) {
       headerTextView.setText(header.getTitle());
+      if (headerSubject != null) {
+        headerTextView.setOnClickListener(v -> headerSubject.onNext(null));
+      }
     }
   }
 
