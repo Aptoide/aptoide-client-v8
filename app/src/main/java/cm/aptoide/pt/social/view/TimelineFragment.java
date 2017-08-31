@@ -476,7 +476,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getCardId());
     commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
       PostComment postComment =
-          new PostComment(touchEvent.getCard(), inputText, touchEvent.getPostPosition());
+          new PostComment(touchEvent.getCard(), inputText, touchEvent.getPosition());
       commentPostResponseSubject.onNext(postComment);
     });
     commentDialogFragment.show(fm, "fragment_comment_dialog");

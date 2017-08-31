@@ -82,14 +82,14 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
       likeButton.setHeartState(false);
     }
 
-    handleCommentsInformation(card);
+    handleCommentsInformation(card, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
   }
 
   public Spannable getStyledTitle(Context context, String storeName) {
@@ -130,7 +130,7 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
     for (View app : apps.keySet()) {
       app.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new StoreAppCardTouchEvent(card, CardTouchEvent.Type.BODY,
-              appsPackages.get(apps.get(app)))));
+              appsPackages.get(apps.get(app)), getPosition())));
     }
   }
 }

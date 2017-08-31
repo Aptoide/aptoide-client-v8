@@ -128,9 +128,9 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
             .getName()), Typeface.BOLD, card.getRelatedApp()
         .getName()));
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     this.mediaTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new SocialHeaderCardTouchEvent(card, card.getPoster()
             .getStore()
@@ -138,7 +138,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
             .getStore()
             .getStoreTheme(), card.getPoster()
             .getUser()
-            .getId(), CardTouchEvent.Type.HEADER)));
+            .getId(), CardTouchEvent.Type.HEADER, getPosition())));
     if (card.isLiked()) {
       if (card.isLikeFromClick()) {
         likeButton.setHeartState(true);
@@ -160,7 +160,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
     }
 
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-    showSocialInformationBar(card);
+    showSocialInformationBar(card, position);
     showLikesPreview(card);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
@@ -169,10 +169,10 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW)));
+            CardTouchEvent.Type.LIKES_PREVIEW, getPosition())));
   }
 
   public Spannable getStyledTitle(Context context, String title) {
@@ -193,7 +193,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
   }
 
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-  private void showSocialInformationBar(SocialMedia card) {
+  private void showSocialInformationBar(SocialMedia card, int position) {
     if (card.getLikesNumber() > 0 || card.getCommentsNumber() > 0) {
       socialInfoBar.setVisibility(View.VISIBLE);
     } else {
@@ -201,7 +201,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
     }
 
     handleLikesInformation(card);
-    handleCommentsInformation(card);
+    handleCommentsInformation(card, position);
   }
 
   private void showLikesPreview(SocialMedia post) {

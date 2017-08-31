@@ -126,9 +126,9 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     this.postContent.setText(card.getContent());
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new SocialHeaderCardTouchEvent(card, card.getPoster()
             .getStore()
@@ -136,7 +136,7 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
             .getStore()
             .getStoreTheme(), card.getPoster()
             .getUser()
-            .getId(), CardTouchEvent.Type.HEADER)));
+            .getId(), CardTouchEvent.Type.HEADER, getPosition())));
     if (card.isLiked()) {
       if (card.isLikeFromClick()) {
         likeButton.setHeartState(true);
@@ -148,7 +148,7 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
       likeButton.setHeartState(false);
     }
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-    showSocialInformationBar(card);
+    showSocialInformationBar(card, position);
     showLikesPreview(card);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
@@ -157,11 +157,12 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW)));
+        new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW,
+            getPosition())));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
   public Spannable getStyledTitle(Context context, String title) {
@@ -182,7 +183,7 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
   }
 
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-  private void showSocialInformationBar(RatedRecommendation card) {
+  private void showSocialInformationBar(RatedRecommendation card, int position) {
     if (card.getLikesNumber() > 0 || card.getCommentsNumber() > 0) {
       socialInfoBar.setVisibility(View.VISIBLE);
     } else {
@@ -190,7 +191,7 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     }
 
     handleLikesInformation(card);
-    handleCommentsInformation(card);
+    handleCommentsInformation(card, position);
   }
 
   private void showLikesPreview(RatedRecommendation post) {

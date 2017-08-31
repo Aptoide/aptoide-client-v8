@@ -5,14 +5,8 @@ package cm.aptoide.pt.social.data;
  */
 
 public class AppUpdateCardTouchEvent extends CardTouchEvent {
-  private final int cardPosition;
 
   public AppUpdateCardTouchEvent(AppUpdate card, Type touchType, int cardPosition) {
-    super(card, touchType);
-    this.cardPosition = cardPosition;
-  }
-
-  public int getCardPosition() {
-    return cardPosition;
+    super(card, cardPosition, touchType);
   }
 }

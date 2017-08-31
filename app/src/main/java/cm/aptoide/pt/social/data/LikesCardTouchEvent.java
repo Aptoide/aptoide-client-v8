@@ -7,8 +7,8 @@ package cm.aptoide.pt.social.data;
 public class LikesCardTouchEvent extends CardTouchEvent {
   private final long likesNumber;
 
-  public LikesCardTouchEvent(Post post, long likesNumber, Type type) {
-    super(post, type);
+  public LikesCardTouchEvent(Post post, long likesNumber, Type type, int position) {
+    super(post, position, type);
     this.likesNumber = likesNumber;
   }
 

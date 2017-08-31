@@ -160,6 +160,8 @@ public class TimelinePresenter implements Presenter {
     handleNativeAdError();
 
     onViewCreatedHandleVisibleItems();
+
+    clickOnPost();
   }
 
   @Override public void saveState(Bundle state) {
@@ -176,7 +178,7 @@ public class TimelinePresenter implements Presenter {
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.ERROR))
             .doOnNext(cardTouchEvent -> view.removePost(
-                ((NativeAdErrorEvent) cardTouchEvent).getPostPosition()))
+                ((NativeAdErrorEvent) cardTouchEvent).getPosition()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
@@ -379,6 +381,17 @@ public class TimelinePresenter implements Presenter {
         .subscribe();
   }
 
+  private void clickOnPost() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .doOnNext(cardTouchEvent -> timelineAnalytics.sendPostPositionEvent(cardTouchEvent))
+            .doOnError(throwable -> crashReport.log(throwable))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
   private void clickOnPostHeader() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -475,7 +488,7 @@ public class TimelinePresenter implements Presenter {
                           // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
                           ((AppUpdate) post).setInstallationStatus(install.getState());
                           view.swapPost(post,
-                              ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
+                              ((AppUpdateCardTouchEvent) cardTouchEvent).getPosition());
                         })
                         .subscribe(downloadProgress -> {
                         }, throwable -> Logger.d(this.getClass()
@@ -537,7 +550,7 @@ public class TimelinePresenter implements Presenter {
                     } else {
                       cardTouchEvent.getCard()
                           .setLiked(true);
-                      view.updatePost(((SocialCardTouchEvent) cardTouchEvent).getPostPosition());
+                      view.updatePost(((SocialCardTouchEvent) cardTouchEvent).getPosition());
                     }
                   }
                 })
@@ -605,7 +618,7 @@ public class TimelinePresenter implements Presenter {
                     } else {
                       cardTouchEvent.getCard()
                           .setLiked(true);
-                      view.updatePost(((SocialCardTouchEvent) cardTouchEvent).getPostPosition());
+                      view.updatePost(((SocialCardTouchEvent) cardTouchEvent).getPosition());
                     }
                   }
                 })
