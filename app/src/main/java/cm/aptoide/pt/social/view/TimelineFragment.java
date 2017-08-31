@@ -37,6 +37,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.social.data.CardTouchEvent;
@@ -262,7 +263,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(marketName),
-            timelineAnalytics, timelinePostsRepository, marketName);
+            timelineAnalytics, timelinePostsRepository,
+            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+            marketName);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
@@ -277,7 +280,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             new PermissionManager(), (PermissionService) getContext(), installManager,
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
-            storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
+            storeContext, getContext().getResources(), getFragmentNavigator(),
+            new LinksHandlerFactory(getContext())), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

@@ -3,11 +3,13 @@ package cm.aptoide.pt.social.data;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AppUpdateViewHolder;
 import cm.aptoide.pt.social.view.viewholder.MediaViewHolder;
+import cm.aptoide.pt.social.view.viewholder.Notifications;
 import cm.aptoide.pt.social.view.viewholder.PopularAppViewHolder;
 import cm.aptoide.pt.social.view.viewholder.PostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.ProgressViewHolder;
@@ -128,6 +130,12 @@ public class CardViewHolderFactory {
         return new TimelineAdPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_native_ad_item, parent, false),
             cardTouchEventPublishSubject);
+      case NOTIFICATIONS:
+        return new Notifications(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_notification, parent, false), cardTouchEventPublishSubject,
+            ImageLoader.with(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.timeline_notification, parent, false)
+                .getContext()));
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }

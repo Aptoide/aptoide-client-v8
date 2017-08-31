@@ -6,6 +6,7 @@ import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import java.io.IOException;
@@ -31,16 +32,19 @@ public class Timeline {
   private final TimelineAnalytics timelineAnalytics;
   private final TimelinePostsRepository timelinePostsRepository;
   private final String marketName;
+  private final NotificationCenter notificationCenter;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      TimelinePostsRepository timelinePostsRepository, String marketName) {
+      TimelinePostsRepository timelinePostsRepository, NotificationCenter notificationCenter,
+      String marketName) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.timelinePostsRepository = timelinePostsRepository;
     this.marketName = marketName;
+    this.notificationCenter = notificationCenter;
   }
 
   public Single<List<Post>> getCards() {
@@ -161,6 +165,13 @@ public class Timeline {
       return service.setPostRead(markAsReadUrl, cardId, cardType.name());
     }
     return Completable.complete();
+  }
+
+  public Single<Post> getNotificationsCard() {
+    return notificationCenter.getInboxNotifications(1)
+        .first()
+        .toSingle()
+        .map(aptoideNotifications -> new NotificationsPost(aptoideNotifications.get(0)));
   }
 }
 
