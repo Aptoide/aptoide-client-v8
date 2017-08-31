@@ -171,7 +171,12 @@ public class Timeline {
     return notificationCenter.getInboxNotifications(1)
         .first()
         .toSingle()
-        .map(aptoideNotifications -> new NotificationsPost(aptoideNotifications.get(0)));
+        .map(aptoideNotifications -> {
+          if (aptoideNotifications.isEmpty()) {
+            return new TimelineNoNotificationHeader();
+          }
+          return new NotificationsPost(aptoideNotifications.get(0));
+        });
   }
 }
 

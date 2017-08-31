@@ -133,9 +133,11 @@ public class CardViewHolderFactory {
       case NOTIFICATIONS:
         return new Notifications(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_notification, parent, false), cardTouchEventPublishSubject,
-            ImageLoader.with(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.timeline_notification, parent, false)
-                .getContext()));
+            ImageLoader.with(parent.getContext()));
+      case NO_NOTIFICATIONS:
+        return new TimelineNoNotificationHeaderViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_no_notification, parent, false),
+            cardTouchEventPublishSubject);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }
