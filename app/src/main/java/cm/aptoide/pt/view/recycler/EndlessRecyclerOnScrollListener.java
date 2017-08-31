@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
+import lombok.Getter;
 import lombok.Setter;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -23,8 +24,10 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
   public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
 
+  private final MultiLangPatch multiLangPatch = new MultiLangPatch();
+
   protected final BaseAdapter adapter;
-  protected final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
+  protected V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   protected final Action1 successRequestListener;
   protected ErrorRequestListener errorRequestListener;
   protected int lastTotal;
@@ -44,6 +47,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private int visibleItemCount;
   private RecyclerViewPositionHelper mRecyclerViewHelper;
   private Subscription subscription;
+  @Setter private OnEndlessFinish onEndlessFinish;
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
@@ -115,6 +119,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
                 adapter.getItemCount() - 1) instanceof ProgressBarDisplayable)) {
               adapter.popDisplayable();
             }
+            multiLangPatch.updateTotal(response);
             if (response.hasData()) {
 
               stableData = response.hasStableTotal();
@@ -147,6 +152,12 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
             loading = false;
             if (mRecyclerViewHelper != null) {
               totalItemCount = mRecyclerViewHelper.getItemCount();
+            }
+
+            if (!hasMoreElements()) {
+              if (onEndlessFinish != null) {
+                onEndlessFinish.onEndlessFinish(this);
+              }
             }
 
             if (shouldLoadMore()) {
@@ -182,5 +193,31 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
   public interface BooleanAction<T extends BaseV7Response> {
     boolean call(T response);
+  }
+
+  public interface OnEndlessFinish {
+    void onEndlessFinish(EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener);
+  }
+
+  public void reset(V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request) {
+    this.v7request = v7request;
+
+    multiLangPatch.updateOffset();
+    offset = -1;
+    total = 0;
+  }
+
+  private class MultiLangPatch {
+
+    @Getter private int total;
+    private int totalWaiting;
+
+    public void updateTotal(BaseV7EndlessResponse response) {
+      this.totalWaiting += response.getTotal();
+    }
+
+    public void updateOffset() {
+      total = totalWaiting;
+    }
   }
 }

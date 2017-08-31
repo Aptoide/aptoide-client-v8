@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.support.annotation.StringRes;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
@@ -20,22 +22,54 @@ import lombok.Getter;
   private final String currentCountryCode;
 
   LanguageFilterHelper(Resources resources) {
-    all = new LanguageFilter(R.string.comments_filter_comments_by_language_all, null);
+    all = new LanguageFilter(R.string.comments_filter_comments_by_language_all,
+        Collections.emptyList());
     currentCountryCode = AptoideUtils.SystemU.getCountryCode(resources);
+
+    List<String> countryCodes;
+    if (currentCountryCode.startsWith("en")) {
+      countryCodes = Arrays.asList(currentCountryCode);
+    } else {
+      countryCodes = Arrays.asList(currentCountryCode, LanguageCode.en_GB.toString());
+    }
+
     currentLanguageFirst =
         new LanguageFilter(R.string.comments_filter_comments_by_language_current_language_first,
-            currentCountryCode + ",en_GB");
-    english = new LanguageFilter(R.string.comments_filter_comments_by_language_english, "en_GB");
+            countryCodes);
+    english = new LanguageFilter(R.string.comments_filter_comments_by_language_english,
+        LanguageCode.en_GB.toString());
   }
 
   @Getter static class LanguageFilter {
 
     @StringRes private final int stringId;
-    private final String value;
+    private final List<String> countryCodes;
+    private int position = 0;
 
-    LanguageFilter(@StringRes int stringId, String value) {
+    LanguageFilter(@StringRes int stringId, String countryCode) {
+      this(stringId, Collections.singletonList(countryCode));
+    }
+
+    LanguageFilter(@StringRes int stringId, List<String> countryCodes) {
       this.stringId = stringId;
-      this.value = value;
+      this.countryCodes = countryCodes;
+    }
+
+    public LanguageFilter inc() {
+      position++;
+      return this;
+    }
+
+    public void setPosition(int position) {
+      this.position = position;
+    }
+
+    public String getValue() {
+      return countryCodes.get(position);
+    }
+
+    public boolean hasMoreCountryCodes() {
+      return countryCodes.size() > position + 1;
     }
   }
 
@@ -50,5 +84,9 @@ import lombok.Getter;
     }
 
     return languageFilterList;
+  }
+
+  public enum LanguageCode {
+    en_GB,
   }
 }
