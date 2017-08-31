@@ -81,7 +81,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private TokenInvalidator tokenInvalidator;
   private LanguageFilterSpinnerWrapper languageFilterSpinnerWrapper;
   private LanguageFilterHelper languageFilterHelper;
-  private LanguageFilterHelper.LanguageFilter languageFilter;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -169,8 +168,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ratingBarsLayout = new RatingBarsLayout(view);
     languageFilterSpinnerWrapper = new LanguageFilterSpinnerWrapper(
         (Spinner) view.findViewById(R.id.comments_filter_language_spinner), languageFilter -> {
-      clearDisplayables();
       fetchReviews(languageFilter);
+      clearDisplayables();
     });
 
     RxView.clicks(floatingActionButton)
@@ -233,8 +232,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   void fetchReviews(LanguageFilterHelper.LanguageFilter languageFilter) {
-    this.languageFilter = languageFilter;
-    ListReviewsRequest reviewsRequest = createListReviewsRequest(this.languageFilter.getValue());
+    ListReviewsRequest reviewsRequest = createListReviewsRequest(languageFilter.getValue());
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
@@ -249,9 +247,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
                 ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()),
             (throwable) -> throwable.printStackTrace());
     endlessRecyclerOnScrollListener.setOnEndlessFinish(endlessRecyclerOnScrollListener1 -> {
-      if (RateAndReviewsFragment.this.languageFilter.hasMoreCountryCodes()) {
-        endlessRecyclerOnScrollListener.reset(createListReviewsRequest(
-            RateAndReviewsFragment.this.languageFilter.inc()
+      if (languageFilter.hasMoreCountryCodes()) {
+        endlessRecyclerOnScrollListener.reset(createListReviewsRequest(languageFilter.inc()
                 .getValue()));
       }
     });

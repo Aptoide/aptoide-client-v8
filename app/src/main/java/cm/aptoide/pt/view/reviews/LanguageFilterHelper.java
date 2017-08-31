@@ -55,6 +55,10 @@ import lombok.Getter;
       this.countryCodes = countryCodes;
     }
 
+    public LanguageFilter(LanguageFilter filter) {
+      this(filter.getStringId(), filter.getCountryCodes());
+    }
+
     public LanguageFilter inc() {
       position++;
       return this;
