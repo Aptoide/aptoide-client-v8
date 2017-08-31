@@ -384,7 +384,11 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public void pressedBottomSheetHeader() {
-    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    } else {
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
