@@ -281,8 +281,12 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     return backRelay;
   }
 
-  @Override public void showExitWarning() {
-    backDialog.show();
+  @Override public void back() {
+    if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    } else {
+      backDialog.show();
+    }
   }
 
   @Override public Observable<Void> exitEvent() {

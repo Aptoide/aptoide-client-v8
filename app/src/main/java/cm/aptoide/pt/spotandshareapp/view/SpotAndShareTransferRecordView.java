@@ -18,7 +18,7 @@ public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView
 
   Observable<Void> backButtonEvent();
 
-  void showExitWarning();
+  void back();
 
   Observable<Void> exitEvent();
 
