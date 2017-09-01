@@ -327,7 +327,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
+            timelineAnalytics, installAppRelay,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(marketName);
