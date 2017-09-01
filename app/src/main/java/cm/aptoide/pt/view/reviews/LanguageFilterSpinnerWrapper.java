@@ -43,7 +43,7 @@ class LanguageFilterSpinnerWrapper {
           CharSequence text = ((TextView) view).getText();
           for (LanguageFilterHelper.LanguageFilter filter : languageFilterHelper.getLanguageFilterList()) {
             if (text.equals(resources.getString(filter.getStringId()))) {
-              languageFilter = filter;
+              languageFilter = new LanguageFilterHelper.LanguageFilter(filter);
             }
           }
         } else {

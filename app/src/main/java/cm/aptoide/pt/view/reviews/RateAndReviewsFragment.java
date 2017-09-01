@@ -168,8 +168,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ratingBarsLayout = new RatingBarsLayout(view);
     languageFilterSpinnerWrapper = new LanguageFilterSpinnerWrapper(
         (Spinner) view.findViewById(R.id.comments_filter_language_spinner), languageFilter -> {
-      clearDisplayables();
       fetchReviews(languageFilter);
+      clearDisplayables();
     });
 
     RxView.clicks(floatingActionButton)
@@ -232,11 +232,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   void fetchReviews(LanguageFilterHelper.LanguageFilter languageFilter) {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
-            baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            languageFilter.getValue());
+    ListReviewsRequest reviewsRequest = createListReviewsRequest(languageFilter.getValue());
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
@@ -250,8 +246,21 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
                 getFragmentNavigator(),
                 ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()),
             (throwable) -> throwable.printStackTrace());
+    endlessRecyclerOnScrollListener.setOnEndlessFinish(endlessRecyclerOnScrollListener1 -> {
+      if (languageFilter.hasMoreCountryCodes()) {
+        endlessRecyclerOnScrollListener.reset(createListReviewsRequest(languageFilter.inc()
+                .getValue()));
+      }
+    });
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
+  private ListReviewsRequest createListReviewsRequest(String languagesFilterSort) {
+    return ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
+        baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        languagesFilterSort);
   }
 
   public void setupTitle(String title) {
