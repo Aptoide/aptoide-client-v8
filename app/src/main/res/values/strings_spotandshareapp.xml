@@ -1,5 +1,4 @@
 <resources>
-  <string name="app_name">Spot and Share v2</string>
   <string name="start_spotshare">Start Spot&amp;Share</string>
   <string name="spotandshare_title">Spot &amp; Share</string>
   <string name="spotandshare_message_spotandshareinstruction">Share apps with your friends without an internet connection</string>
