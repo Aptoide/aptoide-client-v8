@@ -141,8 +141,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void showHome() {
-    Fragment home =
-        HomeFragment.newInstance(defaultStore, StoreContext.home, defaultTheme);
+    Fragment home = HomeFragment.newInstance(defaultStore, StoreContext.home, defaultTheme);
     fragmentNavigator.navigateToWithoutBackSave(home);
   }
 

@@ -12,10 +12,8 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -42,9 +40,8 @@ public class ShareAppHelper {
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
-      TimelineAnalytics timelineAnalytics,
-      PublishRelay installAppRelay, SharedPreferences sharedPreferences,
-      boolean createStoreUserPrivacyEnabled) {
+      TimelineAnalytics timelineAnalytics, PublishRelay installAppRelay,
+      SharedPreferences sharedPreferences, boolean createStoreUserPrivacyEnabled) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;

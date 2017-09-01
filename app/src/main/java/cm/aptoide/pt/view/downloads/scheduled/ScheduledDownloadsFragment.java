@@ -23,7 +23,6 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -300,9 +299,9 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         ScheduledDownloadDisplayable displayable =
             (ScheduledDownloadDisplayable) adapter.getDisplayable(i);
         if (displayable.isSelected()) {
-          displayable.removeFromDatabase(((ScheduledAccessor) AccessorFactory.getAccessorFor(
+          displayable.removeFromDatabase(AccessorFactory.getAccessorFor(
               ((AptoideApplication) getContext().getApplicationContext()
-                  .getApplicationContext()).getDatabase(), Scheduled.class)));
+                  .getApplicationContext()).getDatabase(), Scheduled.class));
         }
       }
       return true;

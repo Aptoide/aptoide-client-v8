@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;

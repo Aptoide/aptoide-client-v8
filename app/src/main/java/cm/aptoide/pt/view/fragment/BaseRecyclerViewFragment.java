@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.view.LifecycleSchim;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

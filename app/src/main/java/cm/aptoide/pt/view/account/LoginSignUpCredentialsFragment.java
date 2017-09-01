@@ -396,8 +396,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
-    signUpSelectionButton.setText(
-        String.format(getString(R.string.join_company), marketName));
+    signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);

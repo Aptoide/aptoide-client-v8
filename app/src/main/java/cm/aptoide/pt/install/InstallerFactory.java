@@ -78,8 +78,8 @@ public class InstallerFactory {
       AptoideDownloadManager downloadManager, Context context) {
     return new DownloadInstallationProvider(downloadManager, AccessorFactory.getAccessorFor(
         ((AptoideApplication) context.getApplicationContext()).getDatabase(), Download.class),
-        RepositoryFactory.getInstalledRepository(context), adMapper, AccessorFactory.getAccessorFor(
-        ((AptoideApplication) context.getApplicationContext()
+        RepositoryFactory.getInstalledRepository(context), adMapper,
+        AccessorFactory.getAccessorFor(((AptoideApplication) context.getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class));
   }
 }

@@ -7,7 +7,6 @@ package cm.aptoide.pt.app;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;

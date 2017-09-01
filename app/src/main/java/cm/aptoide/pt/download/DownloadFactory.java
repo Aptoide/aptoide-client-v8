@@ -18,7 +18,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.install.AppAction;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.utils.IdUtils;
 import cm.aptoide.pt.view.updates.UpdateDisplayable;
