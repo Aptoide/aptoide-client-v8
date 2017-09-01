@@ -11,6 +11,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Scheduler;
 
@@ -60,8 +61,9 @@ public class PayPalPresenter implements Presenter {
 
   private void onViewCreatedShowPayPalPayment() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .first(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMapSingle(created -> billing.getProduct(sellerId, productId))
+        .delay(100, TimeUnit.MILLISECONDS)
         .observeOn(viewScheduler)
         .doOnNext(product -> billingNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
             product.getPrice()
