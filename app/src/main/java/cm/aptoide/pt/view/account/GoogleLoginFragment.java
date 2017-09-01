@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.presenter.GoogleLoginView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -81,7 +81,7 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     googleLoginSubject = PublishRelay.create();
-    client = ((V8Engine) getContext().getApplicationContext()).getGoogleSignInClient();
+    client = ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient();
   }
 
   @Override protected void connect() {

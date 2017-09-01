@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.pt.InstallManager;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 
 public class RootInstallNotificationEventReceiver extends BroadcastReceiver {
@@ -16,8 +16,8 @@ public class RootInstallNotificationEventReceiver extends BroadcastReceiver {
   private InstallManager installManager;
 
   @Override public void onReceive(Context context, Intent intent) {
-    installManager =
-        ((V8Engine) context.getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = ((AptoideApplication) context.getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
 
     crashReport = CrashReport.getInstance();
 

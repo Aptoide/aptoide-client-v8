@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
-import cm.aptoide.pt.annotation.Ignore;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.LifecycleSchim;
@@ -19,7 +17,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by neuro on 14-04-2016.
  */
-@Ignore @Accessors(chain = true) public abstract class Displayable implements LifecycleSchim {
+@Accessors(chain = true) public abstract class Displayable implements LifecycleSchim {
 
   @Getter CompositeSubscription subscriptions;
   @Getter private boolean fixedPerLineCount;
@@ -37,9 +35,9 @@ import rx.subscriptions.CompositeSubscription;
 
   //public abstract Type getType();
 
-  @Partners protected abstract Configs getConfig();
+  protected abstract Configs getConfig();
 
-  @Partners @LayoutRes public abstract int getViewLayout();
+  @LayoutRes public abstract int getViewLayout();
 
   public int getSpanSize(WindowManager windowManager, Resources resources) {
     return WidgetFactory.getColumnSize(resources, windowManager) / getPerLineCount(windowManager,

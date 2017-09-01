@@ -6,8 +6,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -19,9 +20,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -40,6 +43,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private StoreAnalytics storeAnalytics;
 
   public static LatestReviewsFragment newInstance(long storeId) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -52,12 +56,15 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -95,14 +102,14 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
               baseBodyInterceptor, httpClient, converterFactory,
-              ((cm.aptoide.pt.V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-              ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+              ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+              ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDataList()
             .getList();
         displayables = new LinkedList<>();
         for (final FullReview review : reviews) {
-          displayables.add(new RowReviewDisplayable(review));
+          displayables.add(new RowReviewDisplayable(review, storeAnalytics));
         }
         addDisplayables(displayables);
       };

@@ -2,7 +2,6 @@ package cm.aptoide.pt.view;
 
 import android.content.Context;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 
 /**
@@ -15,7 +14,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
  */
 @Deprecated public final class Translator {
 
-  public static String translate(String string, Context context) {
+  public static String translate(String string, Context context, String marketName) {
     if (string == null) {
       return string;
     }
@@ -252,8 +251,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
         break;
       case "Aptoide Publishers":
         translated = AptoideUtils.StringU.getFormattedString(R.string.aptoide_publishers,
-            context.getResources(), Application.getConfiguration()
-                .getMarketName());
+            context.getResources(), marketName);
         break;
       case "Music & Video":
         translated = context.getString(R.string.music_video);

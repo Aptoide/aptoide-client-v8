@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.store;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -27,8 +28,10 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
   @Override public void bindView(StoreGridHeaderDisplayable displayable) {
     final GetStoreWidgets.WSWidget wsWidget = displayable.getWsWidget();
     final boolean moreIsVisible = wsWidget.hasActions();
-
-    title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext()));
+    final String marketName =
+        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext(),
+        marketName));
 
     more.setVisibility(moreIsVisible && displayable.isMoreVisible() ? View.VISIBLE : View.GONE);
 

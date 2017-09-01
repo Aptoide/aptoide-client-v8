@@ -6,7 +6,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
@@ -98,7 +97,7 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
 
   protected abstract String getHeaderMessage();
 
-  @Partners public class BundleKeys {
+  public class BundleKeys {
     public static final String USER_ID = "user_id";
     public static final String CARD_UID = "CARDUID";
     public static final String NUMBER_LIKES = "NUMBER_LIKES";

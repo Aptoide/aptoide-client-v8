@@ -151,8 +151,8 @@ public class V3BillingService implements BillingService {
   }
 
   @Override public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
-    return getServerSKUs(apiVersion, idResolver.resolvePackageName(sellerId), productIds,
-        false).flatMap(
+    return getServerSKUs(apiVersion, idResolver.resolvePackageName(sellerId),
+        idResolver.resolveSkus(productIds), false).flatMap(
         response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId), response));
   }
 

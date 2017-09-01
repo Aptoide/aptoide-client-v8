@@ -4,10 +4,9 @@ import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
@@ -40,7 +39,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     super(itemView);
   }
 
-  @Partners @Override protected void assignViews(View itemView) {
+  @Override protected void assignViews(View itemView) {
     adultSwitch = (SwitchCompat) itemView.findViewById(R.id.adult_content);
     adultPinSwitch = (SwitchCompat) itemView.findViewById(R.id.pin_adult_content);
     adultContentConfirmationDialog =
@@ -62,10 +61,10 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     final ReloadInterface reloader = displayable;
     final SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(getContext());
-    adultContent =
-        new AdultContent(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-            new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
+    adultContent = new AdultContent(
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
+        new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
+        new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
 
     compositeSubscription.add(adultContent.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())

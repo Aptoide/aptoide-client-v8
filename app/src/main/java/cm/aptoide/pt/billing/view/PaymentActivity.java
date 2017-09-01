@@ -9,8 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.billing.sync.BillingSyncManager;
 import cm.aptoide.pt.billing.view.braintree.BraintreeActivity;
 
@@ -45,7 +45,7 @@ public class PaymentActivity extends BraintreeActivity {
           PaymentFragment.create(getIntent().getExtras()));
     }
 
-    syncManager = ((V8Engine) getApplication()).getBillingSyncManager();
+    syncManager = ((AptoideApplication) getApplication()).getBillingSyncManager();
   }
 
   @Override protected void onDestroy() {

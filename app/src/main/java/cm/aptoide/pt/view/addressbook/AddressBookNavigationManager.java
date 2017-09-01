@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.addressbook;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.AddressBookNavigation;
@@ -36,7 +36,7 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void navigateToPhoneInputView() {
-    this.navigator.navigateTo(V8Engine.getFragmentProvider()
+    this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newPhoneInputFragment(exitNavigationFragmentTag));
   }
 
@@ -44,17 +44,17 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   public void navigateToInviteFriendsView(@NonNull InviteFriendsContract.View.OpenMode openMode) {
     switch (openMode) {
       case ERROR:
-        this.navigator.navigateTo(V8Engine.getFragmentProvider()
+        this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newInviteFriendsFragment(InviteFriendsContract.View.OpenMode.ERROR,
                 exitNavigationFragmentTag));
         break;
       case NO_FRIENDS:
-        this.navigator.navigateTo(V8Engine.getFragmentProvider()
+        this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newInviteFriendsFragment(InviteFriendsContract.View.OpenMode.NO_FRIENDS,
                 exitNavigationFragmentTag));
         break;
       case CONTACTS_PERMISSION_DENIAL:
-        this.navigator.navigateTo(V8Engine.getFragmentProvider()
+        this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newInviteFriendsFragment(
                 InviteFriendsContract.View.OpenMode.CONTACTS_PERMISSION_DENIAL,
                 exitNavigationFragmentTag));
@@ -66,17 +66,17 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void showAboutFragment() {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
+    navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newDescriptionFragment(aboutFragmentActionBarTitle, aboutFragmentBodyMessage, "default"));
   }
 
   @Override public void showSuccessFragment(List<Contact> contacts) {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
+    navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newSyncSuccessFragment(contacts, exitNavigationFragmentTag));
   }
 
   @Override public void navigateToThankYouConnectingFragment() {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
+    navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newThankYouConnectingFragment(exitNavigationFragmentTag));
   }
 }

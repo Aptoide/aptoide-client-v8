@@ -12,7 +12,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import okhttp3.MediaType;
@@ -49,10 +48,10 @@ public class CreateUserRequest extends V3<BaseV3Response> {
 
   public static CreateUserRequest of(String email, String password,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId) {
     final BaseBody body = new BaseBody();
     final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
-    addBaseParameters(email, body, passhash);
+    addBaseParameters(email, body, passhash, extraId);
 
     body.put("hmac", AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash, "bazaar_hmac"));
 
@@ -60,31 +59,28 @@ public class CreateUserRequest extends V3<BaseV3Response> {
         sharedPreferences);
   }
 
-  private static void addBaseParameters(String email, BaseBody parameters, String passhash) {
+  private static void addBaseParameters(String email, BaseBody parameters, String passhash,
+      String extraId) {
     parameters.put("mode", "json");
     parameters.put("email", email);
     parameters.put("passhash", passhash);
 
-    if (!TextUtils.isEmpty(Application.getConfiguration()
-        .getExtraId())) {
-      parameters.put("oem_id", Application.getConfiguration()
-          .getExtraId());
+    if (!TextUtils.isEmpty(extraId)) {
+      parameters.put("oem_id", extraId);
     }
   }
 
   public static CreateUserRequest of(String email, String name, String password,
       String userAvatarPath, String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId) {
 
     final BaseBody body = new BaseBody();
     final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
     if (!TextUtils.isEmpty(userAvatarPath)) {
 
-      if (!TextUtils.isEmpty(Application.getConfiguration()
-          .getExtraId())) {
-        body.put("oem_id", createBodyPartFromString(Application.getConfiguration()
-            .getExtraId()));
+      if (!TextUtils.isEmpty(extraId)) {
+        body.put("oem_id", createBodyPartFromString(extraId));
       }
       HashMapNotNull<String, RequestBody> multipartBody = new HashMapNotNull<>();
       multipartBody.put("mode", createBodyPartFromString("json"));
@@ -106,7 +102,7 @@ public class CreateUserRequest extends V3<BaseV3Response> {
       body.put("name", name);
     }
 
-    addBaseParameters(email, body, passhash);
+    addBaseParameters(email, body, passhash, extraId);
 
     body.put("hmac",
         AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + "true", "bazaar_hmac"));

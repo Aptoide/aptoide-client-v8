@@ -1,0 +1,58 @@
+{
+  "data": {
+    "partner": {
+      "config_id": 1447,
+      "uid": null,
+      "type": "mobile",
+      "feedback": {
+        "email": "support@aptoide.com"
+      },
+      "store": {
+        "id": 1180850,
+        "name": "apps",
+        "label": "Aptoide",
+        "credentials": {
+          "username": null,
+          "password": null
+        }
+      },
+      "appearance": {
+        "theme": "default",
+        "splash": {
+          "enable": null,
+          "portrait": null,
+          "landscape": null,
+          "timeout": 3
+        },
+        "toolbar": {
+          "icon": {
+            "enable": true
+          }
+        }
+      },
+      "switches": {
+        "mature": {
+          "enable": true,
+          "value": false
+        },
+        "options": {
+          "shortcut": true,
+          "multistore": {
+            "enable": true,
+            "search": true
+          },
+          "first_install": {
+            "enable": false,
+            "offline": false
+          }
+        }
+      },
+      "social": {
+        "login": {
+          "google": true,
+          "facebook": true
+        }
+      }
+    }
+  }
+}

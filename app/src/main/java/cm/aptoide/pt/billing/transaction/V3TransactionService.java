@@ -71,35 +71,6 @@ public class V3TransactionService implements TransactionService {
 
   @Override
   public Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
-      Product product, String metadata, String payload) {
-    return Single.just(product instanceof InAppProduct)
-        .flatMap(isInAppBilling -> {
-          if (isInAppBilling) {
-            return CreateTransactionRequest.ofInApp(((InAppProduct) product).getInternalId(),
-                paymentMethodId, payload, metadata, bodyInterceptorV3, httpClient, converterFactory,
-                tokenInvalidator, sharedPreferences,
-                ((InAppProduct) product).getPackageVersionCode(), product.getTitle())
-                .observe(true)
-                .toSingle();
-          }
-          return CreateTransactionRequest.ofPaidApp(((PaidAppProduct) product).getInternalId(),
-              paymentMethodId, idResolver.resolveStoreName(sellerId), metadata, bodyInterceptorV3,
-              httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-              ((PaidAppProduct) product).getPackageVersionCode(), product.getTitle())
-              .observe(true)
-              .toSingle();
-        })
-        .map(response -> {
-          if (response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId, payload, sellerId);
-          }
-          return getErrorTransaction(sellerId, response.getErrors(), payerId, product,
-              paymentMethodId, metadata, payload);
-        });
-  }
-
-  @Override
-  public Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
       Product product, String payload) {
 
     if (paymentMethodId == PaymentMethodMapper.PAYPAL) {
@@ -131,6 +102,35 @@ public class V3TransactionService implements TransactionService {
           }
           return getErrorTransaction(sellerId, response.getErrors(), payerId, product,
               paymentMethodId, null, payload);
+        });
+  }
+
+  @Override
+  public Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
+      Product product, String metadata, String payload) {
+    return Single.just(product instanceof InAppProduct)
+        .flatMap(isInAppBilling -> {
+          if (isInAppBilling) {
+            return CreateTransactionRequest.ofInApp(((InAppProduct) product).getInternalId(),
+                paymentMethodId, payload, metadata, bodyInterceptorV3, httpClient, converterFactory,
+                tokenInvalidator, sharedPreferences,
+                ((InAppProduct) product).getPackageVersionCode(), product.getTitle())
+                .observe(true)
+                .toSingle();
+          }
+          return CreateTransactionRequest.ofPaidApp(((PaidAppProduct) product).getInternalId(),
+              paymentMethodId, idResolver.resolveStoreName(sellerId), metadata, bodyInterceptorV3,
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+              ((PaidAppProduct) product).getPackageVersionCode(), product.getTitle())
+              .observe(true)
+              .toSingle();
+        })
+        .map(response -> {
+          if (response.isOk()) {
+            return transactionMapper.map(product.getId(), response, payerId, payload, sellerId);
+          }
+          return getErrorTransaction(sellerId, response.getErrors(), payerId, product,
+              paymentMethodId, metadata, payload);
         });
   }
 

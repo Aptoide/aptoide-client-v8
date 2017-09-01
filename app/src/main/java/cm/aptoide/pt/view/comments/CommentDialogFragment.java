@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentBeforeSubmissionCallback;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -28,6 +29,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.store.StoreAnalytics;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
@@ -61,6 +64,7 @@ public class CommentDialogFragment
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private StoreAnalytics storeAnalytics;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -131,11 +135,12 @@ public class CommentDialogFragment
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
         AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
@@ -172,6 +177,9 @@ public class CommentDialogFragment
     commentButton = (Button) view.findViewById(R.id.comment_button);
 
     setupLogic();
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
 
     return view;
   }
@@ -281,11 +289,12 @@ public class CommentDialogFragment
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
+          storeAnalytics.sendStoreInteractEvent("Write a Comment", "Home", appOrStoreName);
           return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)
               .observe();
         }
-
+        storeAnalytics.sendStoreInteractEvent("Reply to Comment", "Home", appOrStoreName);
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
             baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences)

@@ -82,10 +82,6 @@ public class ManagerPreferences {
         .apply();
   }
 
-  public static boolean isAllwaysUpdate(SharedPreferences defaultSharedPreferences) {
-    return defaultSharedPreferences.getBoolean(ManagedKeys.PREF_ALWAYS_UPDATE, false);
-  }
-
   public static int getLastUpdates(SharedPreferences defaultSharedPreferences) {
     return defaultSharedPreferences.getInt(ManagedKeys.LAST_UPDATES_KEY, 0);
   }

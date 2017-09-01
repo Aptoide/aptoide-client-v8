@@ -129,13 +129,14 @@
   <!--post-->
   <string name="timeline_title_new_post">New Post</string>
   <string name="timeline_button_post">Post</string>
-  <string name="timeline_message_share_on_timeline">Write something or share a link related to an app</string>
+  <string name="timeline_message_share_on_timeline">Share your thoughts or a link related to an app</string>
   <string name="timeline_title_related_app">Related app</string>
   <string name="timeline_message_write_something">Write something</string>
   <string name="timeline_message_pick_an_app">Pick an app related to your post</string>
   <string name="timeline_button_open_uploader">Open</string>
   <string name="timeline_message_upload_app">Upload this app to Aptoide</string>
   <string name="timeline_message_share_on_timeline_external">Write something (optional)</string>
+  <string name="timeline_title_sponsored">Sponsored</string>
 
 
 </resources>

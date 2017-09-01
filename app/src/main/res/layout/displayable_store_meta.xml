@@ -215,12 +215,12 @@
       android:layout_marginStart="16dp"
       android:layout_marginTop="8dp"
       android:textColor="@color/white"
+      android:text="@string/create_store_displayable_empty_description_message"
       app:layout_constraintBottom_toTopOf="@+id/social_channels"
       app:layout_constraintEnd_toStartOf="@id/edit_store_btn"
       app:layout_constraintStart_toStartOf="@+id/background_view"
       app:layout_constraintTop_toTopOf="@+id/background_view"
       tools:layout_editor_absoluteX="16dp"
-      tools:text="this is a description"
       />
 
   <LinearLayout

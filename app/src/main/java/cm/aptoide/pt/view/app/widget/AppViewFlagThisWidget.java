@@ -8,8 +8,8 @@ package cm.aptoide.pt.view.app.widget;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -81,10 +81,11 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
   }
 
   @Override public void bindView(AppViewFlagThisDisplayable displayable) {
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     baseBodyInterceptorV3 =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV3();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV3();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes()
@@ -176,8 +177,8 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
           .sendFlagAppEvent(type.toString());
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name()
               .toLowerCase(), baseBodyInterceptorV3, httpClient,
-          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+          ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {

@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.FirstLaunchAnalytics;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.events.FabricEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
@@ -263,7 +263,7 @@ public class Analytics {
         FirstLaunchAnalytics firstLaunchAnalytics =
             new FirstLaunchAnalytics(facebookLogger, Analytics.getInstance());
         return Observable.fromCallable(() -> {
-          AppEventsLogger.setUserID(((V8Engine) application).getIdsRepository()
+          AppEventsLogger.setUserID(((AptoideApplication) application).getIdsRepository()
               .getUniqueIdentifier());
           return null;
         })
@@ -385,7 +385,7 @@ public class Analytics {
       public static void onResume(android.app.Activity activity) {
 
         final AptoideAccountManager accountManager =
-            ((V8Engine) activity.getApplicationContext()).getAccountManager();
+            ((AptoideApplication) activity.getApplicationContext()).getAccountManager();
         //This needs to be cleaned when localytics is killed
         Bundle bundle = new Bundle();
         if (!accountManager.isLoggedIn()) {

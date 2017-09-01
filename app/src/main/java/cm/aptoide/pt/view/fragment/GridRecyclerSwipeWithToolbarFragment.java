@@ -1,10 +1,12 @@
 package cm.aptoide.pt.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.Translator;
 
@@ -15,13 +17,19 @@ import cm.aptoide.pt.view.Translator;
 public class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragment {
   public static final String TITLE_KEY = "TITLE_KEY";
   private String title;
+  private String marketName;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication)getContext().getApplicationContext()).getMarketName();
+  }
 
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext()));
+    toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext(), marketName));
     toolbar.setLogo(R.drawable.logo_toolbar);
   }
 

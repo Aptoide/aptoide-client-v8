@@ -15,6 +15,7 @@ import java.util.List;
 public class AggregatedSocialVideo implements TimelineCard {
   private final List<MinimalCard> minimalCards;
   private final List<UserSharerTimeline> sharers;
+  private final Urls urls;
   private final String title;
   private final String thumbnailUrl;
   private final Publisher publisher;
@@ -32,7 +33,7 @@ public class AggregatedSocialVideo implements TimelineCard {
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonProperty("cards_shared") List<MinimalCard> minimalCardList,
-      @JsonProperty("sharers") List<UserSharerTimeline> sharers) {
+      @JsonProperty("sharers") List<UserSharerTimeline> sharers, @JsonProperty("urls") Urls urls) {
     this.cardId = cardId;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
@@ -44,6 +45,7 @@ public class AggregatedSocialVideo implements TimelineCard {
     this.ab = ab;
     this.minimalCards = minimalCardList;
     this.sharers = sharers;
+    this.urls = urls;
   }
 
   public List<MinimalCard> getMinimalCards() {
@@ -88,5 +90,9 @@ public class AggregatedSocialVideo implements TimelineCard {
 
   @Override public String getCardId() {
     return this.cardId;
+  }
+
+  @Override public Urls getUrls() {
+    return urls;
   }
 }

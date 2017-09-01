@@ -41,7 +41,7 @@ public class MediaViewHolder extends PostViewHolder<Media> {
 
   public MediaViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
-    super(itemView);
+    super(itemView, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
@@ -90,6 +90,8 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     handleCommentsInformation(media);
 
     articleThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
+    articleTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
     articleHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));

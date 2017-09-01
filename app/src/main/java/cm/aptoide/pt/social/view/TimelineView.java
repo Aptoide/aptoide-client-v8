@@ -66,6 +66,8 @@ public interface TimelineView extends View {
 
   void showSharePreview(Post post, Account account);
 
+  void showSharePreview(Post originalPost, Post card, Account account);
+
   void showShareSuccessMessage();
 
   void showCommentDialog(SocialCardTouchEvent touchEvent);
@@ -78,7 +80,13 @@ public interface TimelineView extends View {
 
   void showCreateStoreMessage(SocialAction socialAction);
 
+  void showSetUserOrStorePublicMessage();
+
   void showPostProgressIndicator();
 
   void hidePostProgressIndicator();
+
+  void removePost(int postPosition);
+
+  Observable<Post> getVisibleItems();
 }

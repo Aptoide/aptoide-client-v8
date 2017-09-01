@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -24,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.NotificationTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +45,7 @@ public class ImageLoader {
     this.windowManager = ((WindowManager) context.getSystemService(Service.WINDOW_SERVICE));
   }
 
-  @Partners public static ImageLoader with(Context context) {
+  public static ImageLoader with(Context context) {
     return new ImageLoader(context);
   }
 
@@ -501,6 +501,15 @@ public class ImageLoader {
               new RoundedCornersTransform(context, radius, margin,
                   RoundedCornersTransform.CornerType.LEFT))
           .into(previewImage);
+    }
+  }
+
+  public void loadIntoTarget(String imageUrl, SimpleTarget<GlideDrawable> simpleTarget) {
+    Context context = weakContext.get();
+    if (context != null) {
+      Glide.with(context)
+          .load(imageUrl)
+          .into(simpleTarget);
     }
   }
 }

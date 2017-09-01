@@ -4,8 +4,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.model.v7.FullReview;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -68,7 +68,15 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
     final FragmentNavigator navigator = getFragmentNavigator();
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(aVoid -> {
-          navigator.navigateTo(V8Engine.getFragmentProvider()
+          if (displayable.getStoreAnalytics() != null) {
+            displayable.getStoreAnalytics()
+                .sendStoreInteractEvent("View Review", "Latest Reviews", displayable.getPojo()
+                    .getData()
+                    .getApp()
+                    .getStore()
+                    .getName());
+          }
+          navigator.navigateTo(AptoideApplication.getFragmentProvider()
               .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore()
                   .getName(), app.getPackageName(), review.getId()));
         }));

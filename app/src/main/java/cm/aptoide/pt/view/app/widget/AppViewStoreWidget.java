@@ -8,8 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -60,10 +60,11 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
   @Override public void bindView(AppViewStoreDisplayable displayable) {
 
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
 
     GetApp getApp = displayable.getPojo();
 
@@ -104,18 +105,20 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, baseBodyInterceptor,
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((V8Engine) getContext().getApplicationContext()
+            ((AptoideApplication) getContext().getApplicationContext()
                 .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class)),
-        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class),
         httpClient, WebService.getDefaultConverter(),
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<Void> openStore = __ -> {
       displayable.getAppViewAnalytics()
           .sendOpenStoreEvent();
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+      displayable.getStoreAnalytics()
+          .sendStoreOpenEvent("App View", storeName);
+      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(storeName, storeTheme));
     };
 

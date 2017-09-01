@@ -17,4 +17,8 @@
     <item name="share_spot_and_share_option">@string/share_options_share_spot_share</item>
   </string-array>
 
+  <string-array name="store_share_options_array">
+    <item name="share_external_option">@string/share_options_store_using</item>
+  </string-array>
+
 </resources>

@@ -18,7 +18,9 @@ import android.util.Base64;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -65,7 +67,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private ArrayList<String> server;
   private HashMap<String, String> app;
   private String TMP_MYAPP_FILE;
-  private Class startClass = V8Engine.getActivityProvider()
+  private Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
   private InstalledRepository installedRepository;
@@ -317,18 +319,21 @@ public class DeepLinkIntentReceiver extends ActivityView {
   }
 
   public void startFromPackageName(String packageName) {
-    installedRepository.getInstalled(packageName)
-        .first()
-        .subscribe(installed -> {
-          if (installed != null) {
+    GetAppRequest.of(packageName,
+        ((AptoideApplication) getApplicationContext()).getBaseBodyInterceptorV7Pool(),
+        ((AptoideApplication) getApplicationContext()).getDefaultClient(),
+        WebService.getDefaultConverter(),
+        ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
+        .observe()
+        .subscribe(app -> {
+          if (app.isOk()) {
             startFromAppView(packageName);
           } else {
             startFromSearch(packageName);
           }
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   public void aptoidevoiceSearch(String param) {

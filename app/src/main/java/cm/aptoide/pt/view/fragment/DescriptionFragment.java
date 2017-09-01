@@ -11,8 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -56,6 +56,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private String partnerId;
 
   public static DescriptionFragment newInstance(String appName, String description,
       String storeTheme) {
@@ -83,12 +84,13 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
     baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    partnerId = ((AptoideApplication) getContext().getApplicationContext()).getPartnerId();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -138,12 +140,11 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       }
       finishLoading();
     } else if (hasAppId) {
-      GetAppRequest.of(appId, V8Engine.getConfiguration()
-              .getPartnerId() == null ? null : storeName,
+      GetAppRequest.of(appId, partnerId == null ? null : storeName,
           StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
           baseBodyBodyInterceptor, httpClient, converterFactory,
-          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
+          ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .execute(getApp -> {
             setupAppDescription(getApp);
             setupTitle(getApp);

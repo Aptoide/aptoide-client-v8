@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
@@ -44,7 +44,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
     storeLayout.setBackgroundColor(Color.WHITE);
     compositeSubscription.add(RxView.clicks(storeLayout)
         .subscribe(__ -> {
-          final Fragment fragment = V8Engine.getFragmentProvider()
+          final Fragment fragment = AptoideApplication.getFragmentProvider()
               .newStoreFragment(displayable.getPojo()
                   .getStoreName(), displayable.getPojo()
                   .getTheme());

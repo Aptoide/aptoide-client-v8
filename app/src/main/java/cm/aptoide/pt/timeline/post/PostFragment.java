@@ -32,7 +32,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -196,22 +196,24 @@ public class PostFragment extends FragmentView implements PostView {
     relatedApps.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     adapter = new RelatedAppsAdapter();
-    relatedApps.addItemDecoration(new SimpleDividerItemDecoration(getContext(), 10));
+    relatedApps.addItemDecoration(new SimpleDividerItemDecoration(getContext(), 5));
     relatedApps.setAdapter(adapter);
     relatedApps.setHorizontalScrollBarEnabled(false);
     userInput.requestFocus();
 
-    V8Engine v8Engine = (V8Engine) getContext().getApplicationContext();
+    AptoideApplication aptoideApplication =
+        (AptoideApplication) getContext().getApplicationContext();
 
     final PostRemoteAccessor postRemoteAccessor =
-        new PostRemoteAccessor(v8Engine.getDefaultSharedPreferences(),
-            v8Engine.getBaseBodyInterceptorV7(), v8Engine.getDefaultClient(),
-            WebService.getDefaultConverter(), v8Engine.getTokenInvalidator());
+        new PostRemoteAccessor(aptoideApplication.getDefaultSharedPreferences(),
+            aptoideApplication.getBaseBodyInterceptorV7Pool(),
+            aptoideApplication.getDefaultClient(), WebService.getDefaultConverter(),
+            aptoideApplication.getTokenInvalidator());
 
     setUpToolbar();
     showKeyboard();
     final PostLocalAccessor postLocalAccessor = new PostLocalAccessor(installedRepository);
-    AptoideAccountManager accountManager = v8Engine.getAccountManager();
+    AptoideAccountManager accountManager = aptoideApplication.getAccountManager();
     PostUrlProvider urlProvider;
     if (getActivity() instanceof PostUrlProvider) {
       urlProvider = (PostUrlProvider) getActivity();

@@ -11,12 +11,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.store.MetaStoresBaseWidget;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -32,9 +35,12 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   private Button exploreButton;
   private TextView suggestionMessage;
   private TextView createStoreText;
+  private StoreAnalytics storeAnalytics;
 
   public MyStoreWidget(View itemView) {
     super(itemView);
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -77,9 +83,12 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
-        .subscribe(click -> getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-            .newStoreFragment(store.getName(), storeTheme))));
-
+        .subscribe(click -> {
+          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+              .newStoreFragment(store.getName(), storeTheme));
+          storeAnalytics.sendStoreTabInteractEvent("View Store");
+          storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
+        }));
     setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
   }
 

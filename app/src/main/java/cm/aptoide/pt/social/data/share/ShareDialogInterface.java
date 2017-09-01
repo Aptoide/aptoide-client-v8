@@ -11,4 +11,6 @@ public interface ShareDialogInterface<T> extends DialogInterface {
   void show();
 
   void setup(T post);
+
+  void setupMinimalPost(T originalPost, T minimalPost);
 }

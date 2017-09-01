@@ -3,8 +3,8 @@ package cm.aptoide.pt.util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -50,8 +50,7 @@ public class ApkFy {
     String appId = null;
     try {
       final String sourceDir = context.getPackageManager()
-          .getPackageInfo(V8Engine.getConfiguration()
-              .getAppId(), 0).applicationInfo.sourceDir;
+          .getPackageInfo(BuildConfig.APPLICATION_ID, 0).applicationInfo.sourceDir;
       final ZipFile myZipFile = new ZipFile(sourceDir);
       final ZipEntry entry = myZipFile.getEntry("META-INF/aob");
       if (entry != null) {

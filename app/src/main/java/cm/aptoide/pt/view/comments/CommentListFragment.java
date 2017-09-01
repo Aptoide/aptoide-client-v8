@@ -22,8 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.comments.CommentNode;
@@ -50,6 +51,7 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.util.CommentOperations;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
@@ -84,6 +86,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
   private static final String SHOW_INPUT_DIALOG_FIRST_RUN = "show_input_dialog_first_run";
+  private static final String STORE_ANALYTICS_ACTION = "store_analytics_action";
+  private static final String STORE_ANALYTICS = "store_analytics";
   // control setComment retry
   protected long lastTotal;
   //
@@ -114,6 +118,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private String storeAnalyticsAction;
+  private StoreAnalytics storeAnalytics;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -126,12 +132,13 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     return fragment;
   }
 
-  public static Fragment newInstanceUrl(CommentType commentType, String url) {
+  public static Fragment newInstanceUrl(CommentType commentType, String url,
+      String storeAnalyticsAction) {
     Bundle args = new Bundle();
     args.putString(URL_VAL, url);
     args.putString(COMMENT_TYPE, commentType.name());
     args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
-
+    args.putString(STORE_ANALYTICS_ACTION, storeAnalyticsAction);
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
     return fragment;
@@ -151,19 +158,20 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptor =
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, V8Engine.getConfiguration()
-        .getAppId(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     super.onCreate(savedInstanceState);
   }
 
@@ -171,9 +179,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View v = super.onCreateView(inflater, container, savedInstanceState);
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    bodyDecorator =
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
     return v;
   }
 
@@ -215,6 +228,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     url = args.getString(URL_VAL);
     commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
     showCommentInputDialogOnFirstRun = args.getBoolean(SHOW_INPUT_DIALOG_FIRST_RUN);
+    storeAnalyticsAction = args.getString(STORE_ANALYTICS_ACTION);
 
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
@@ -257,6 +271,15 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     }
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    //sending view comment event in case this fragment is opened from a store
+    if (commentType == CommentType.STORE) {
+      storeAnalytics.sendStoreInteractEvent(storeAnalyticsAction, "Home",
+          storeName == null ? "unknown" : storeName);
+    }
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh) {
@@ -279,7 +302,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
             converterFactory, tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -295,7 +318,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
           displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
               createNewCommentFragment(elementIdAsString, commentNode.getComment()
                   .getId())), getFragmentNavigator(),
-              ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
+              ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
         }
 
         this.displayables = new ArrayList<>(displayables.size());
@@ -321,7 +344,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator, httpClient,
             converterFactory, tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
@@ -348,7 +371,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
           displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
               createNewCommentFragment(storeId, commentNode.getComment()
                   .getId(), storeName)), getFragmentNavigator(),
-              ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
+              ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
         }
 
         this.displayables = new ArrayList<>(displayables.size());
@@ -531,7 +554,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
       CommentDisplayable commentDisplayable =
           new CommentDisplayable(complexComment, getFragmentNavigator(),
-              ((V8Engine) getContext().getApplicationContext()).getFragmentProvider());
+              ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider());
 
       if (complexComment.getParent() != null) {
         insertChildCommentInsideParent(complexComment);
@@ -551,12 +574,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
           createNewCommentFragment(elementIdAsString, commentNode.getComment()
               .getId())), getFragmentNavigator(),
-          ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
+          ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
       if (commentNode.getComment()
           .getId() == complexComment.getParent()
           .getId() && !added) {
         displayables.add(new CommentDisplayable(complexComment, getFragmentNavigator(),
-            ((V8Engine) getContext().getApplicationContext()).getFragmentProvider()));
+            ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
         added = true;
       }
     }

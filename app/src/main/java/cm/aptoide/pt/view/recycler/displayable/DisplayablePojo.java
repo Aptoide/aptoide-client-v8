@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.view.recycler.displayable;
 
-import cm.aptoide.pt.annotation.Ignore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -13,7 +12,7 @@ import lombok.experimental.Accessors;
 /**
  * Created by neuro on 14-04-2016.
  */
-@Ignore @Accessors(chain = true) public abstract class DisplayablePojo<T> extends Displayable {
+@Accessors(chain = true) public abstract class DisplayablePojo<T> extends Displayable {
 
   //private static final float REFERENCE_WIDTH_DPI = 360;
   @Getter @Setter private T pojo;

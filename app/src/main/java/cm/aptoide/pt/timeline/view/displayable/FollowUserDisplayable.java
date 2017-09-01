@@ -3,8 +3,8 @@ package cm.aptoide.pt.timeline.view.displayable;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.store.StoreTheme;
@@ -19,13 +19,16 @@ import cm.aptoide.pt.view.store.StoreFragment;
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
   private boolean isLike;
+  private String defaultTheme;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike,
+      String defaultTheme) {
     super(pojo);
     this.isLike = isLike;
+    this.defaultTheme = defaultTheme;
   }
 
   @Override protected Configs getConfig() {
@@ -102,8 +105,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
           .getTheme())
           .getStoreHeaderColorResource(context.getResources(), context.getTheme());
     } else {
-      return StoreTheme.get(V8Engine.getConfiguration()
-          .getDefaultTheme())
+      return StoreTheme.get(defaultTheme)
           .getStoreHeaderColorResource(context.getResources(), context.getTheme());
     }
   }
@@ -124,10 +126,10 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     String theme = getStoreTheme(store);
 
     if (store != null) {
-      navigator.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(store.getName(), theme, StoreFragment.OpenType.GetHome));
     } else {
-      navigator.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome));
     }
   }
@@ -136,12 +138,10 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     String theme;
     if (store != null && store.getAppearance() != null) {
       theme = store.getAppearance()
-          .getTheme() == null ? V8Engine.getConfiguration()
-          .getDefaultTheme() : store.getAppearance()
+          .getTheme() == null ? defaultTheme : store.getAppearance()
           .getTheme();
     } else {
-      theme = V8Engine.getConfiguration()
-          .getDefaultTheme();
+      theme = defaultTheme;
     }
     return theme;
   }

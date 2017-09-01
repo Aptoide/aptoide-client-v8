@@ -30,7 +30,7 @@
           android:layout_marginStart="12dp"
           android:layout_marginTop="12dp"
           android:lines="1"
-          android:text="Popular app among friends"
+          android:text="@string/timeline_title_popular_app_among_friends"
           style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
           />
 

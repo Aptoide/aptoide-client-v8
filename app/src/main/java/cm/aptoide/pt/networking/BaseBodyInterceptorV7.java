@@ -23,7 +23,7 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
   private final String aptoideMd5sum;
   private final String aptoidePackage;
   private final QManager qManager;
-  private final String cdn;
+  private final Cdn cdn;
   private final Boolean adultContentDefaultValue;
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
@@ -32,7 +32,7 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
 
   public BaseBodyInterceptorV7(IdsRepository idsRepository, AptoideAccountManager accountManager,
       AdultContent adultContent, String aptoideMd5sum, String aptoidePackage, QManager qManager,
-      String cdn, SharedPreferences sharedPreferences, Resources resources, String packageName,
+      Cdn cdn, SharedPreferences sharedPreferences, Resources resources, String packageName,
       PackageRepository packageRepository) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
@@ -50,7 +50,7 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
 
   public BaseBodyInterceptorV7(String aptoideMd5sum, String aptoidePackage,
       IdsRepository idsRepository, AptoideAccountManager accountManager, AdultContent adultContent,
-      QManager qManager, String cdn, boolean mature, SharedPreferences sharedPreferences,
+      QManager qManager, Cdn cdn, boolean mature, SharedPreferences sharedPreferences,
       Resources resources, String packageName, PackageRepository packageRepository) {
     this.cdn = cdn;
     this.accountManager = accountManager;
@@ -79,7 +79,8 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
 
           body.setAptoideId(idsRepository.getUniqueIdentifier());
           body.setAptoideVercode(aptoideVersionCode);
-          body.setCdn(cdn);
+          body.setCdn(cdn.name()
+              .toLowerCase());
           body.setLang(AptoideUtils.SystemU.getCountryCode(resources));
           if (adultContentDefaultValue == null) {
             body.setMature(adultContentEnabled);

@@ -2,13 +2,9 @@ package cm.aptoide.pt.view.leak;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.leak.LeakTool;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-
-/**
- * Created by trinkes on 28/03/2017.
- */
 
 public class LeakActivity extends RxAppCompatActivity {
 
@@ -16,7 +12,7 @@ public class LeakActivity extends RxAppCompatActivity {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    leakTool = ((V8Engine) getApplicationContext()).getLeakTool();
+    leakTool = ((AptoideApplication) getApplicationContext()).getLeakTool();
   }
 
   @Override protected void onDestroy() {

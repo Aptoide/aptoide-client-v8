@@ -24,13 +24,14 @@ public class Media implements Post {
   private final Link publisherLink;
   private final Link mediaLink;
   private final CardType cardType;
+  private final String markAsReadUrl;
   private List<SocialCard.CardComment> comments;
   private boolean isLiked;
   private boolean likeFromClick;
 
   public Media(String cardId, String mediaTitle, String mediaThumbnailUrl, Date date, App app,
       String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink, boolean isLiked,
-      CardType cardType) {
+      CardType cardType, String markAsReadUrl) {
     this.cardId = cardId;
     this.mediaTitle = mediaTitle;
     this.mediaThumbnailUrl = mediaThumbnailUrl;
@@ -44,6 +45,7 @@ public class Media implements Post {
     this.mediaLink = mediaLink;
     this.isLiked = isLiked;
     this.cardType = cardType;
+    this.markAsReadUrl = markAsReadUrl;
     this.comments = new ArrayList<>();
   }
 
@@ -57,6 +59,10 @@ public class Media implements Post {
 
   public String getAbUrl() {
     return abTestURL;
+  }
+
+  @Override public String getMarkAsReadUrl() {
+    return markAsReadUrl;
   }
 
   @Override public boolean isLiked() {

@@ -9,7 +9,7 @@
     package="cm.aptoide.pt">
 
   <permission
-      android:name="${currentApplicationId}.permission.BILLING"
+      android:name="${applicationId}.permission.BILLING"
       android:label="Make internal payments"
       android:protectionLevel="normal"/>
 
@@ -43,21 +43,19 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
-
   <uses-sdk
       android:minSdkVersion="15"
       tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.braintreepayments.api.core, com.braintreepayments.api, com.braintreepayments.cardform"
       />
 
   <application
-      android:name=".Vanilla"
       android:allowBackup="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:networkSecurityConfig="@xml/network_security_config"
       android:supportsRtl="true"
       android:theme="@style/AptoideThemeDefault"
-      tools:replace="theme,android:allowBackup"
+      tools:replace="theme"
       >
 
     <activity
@@ -100,7 +98,7 @@
         />
 
     <provider
-        android:name="cm.aptoide.pt.provider.SearchSuggestionProvider"
+        android:name="cm.aptoide.pt.search.SearchSuggestionProvider"
         android:authorities="${suggestionProviderAuthority}"
         android:exported="false"
         />
@@ -121,14 +119,13 @@
           android:resource="@xml/provider_paths"/>
     </provider>
 
-
     <service
         android:name="cm.aptoide.pt.iab.InAppBillingService"
         android:exported="true"
-        android:permission="${currentApplicationId}.permission.BILLING">
+        android:permission="${applicationId}.permission.BILLING">
 
       <intent-filter>
-        <action android:name="${currentApplicationId}.iab.action.BIND"/>
+        <action android:name="${applicationId}.iab.action.BIND"/>
       </intent-filter>
     </service>
 
@@ -353,6 +350,10 @@
     <service android:name=".InstallService"/>
 
     <service android:name=".install.InstalledIntentService"/>
+
+    <activity
+        android:name="com.mopub.common.MoPubBrowser"
+        android:configChanges="keyboardHidden|orientation|screenSize"/>
 
   </application>
 

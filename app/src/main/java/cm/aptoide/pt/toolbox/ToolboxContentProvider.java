@@ -22,12 +22,11 @@ import android.util.Log;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.PullingContentService;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.toolbox.ToolboxKeys;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -56,19 +55,18 @@ public class ToolboxContentProvider extends ContentProvider {
 
   @Override public boolean onCreate() {
     securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
-    final String authority = Application.getConfiguration()
-        .getContentAuthority();
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    uriMatcher.addURI(authority, "token", TOKEN);
-    uriMatcher.addURI(authority, "refreshToken", REFRESH_TOKEN);
-    uriMatcher.addURI(authority, "repo", REPO);
-    uriMatcher.addURI(authority, "loginType", LOGIN_TYPE);
-    uriMatcher.addURI(authority, "passHash", PASSHASH);
-    uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
-    uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
-    aptoideAccountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "token", TOKEN);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "refreshToken", REFRESH_TOKEN);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "repo", REPO);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginType", LOGIN_TYPE);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "passHash", PASSHASH);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginName", LOGIN_NAME);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "changePreference", CHANGE_PREFERENCE);
+    aptoideAccountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     return true;
   }
 

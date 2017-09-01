@@ -40,7 +40,7 @@
 
   <string name="setting_notifications">Notifications</string>
   <string name="setting_notifications_sub_section_1">App updates</string>
-  <string name="setting_notifications_sub_sub_section_1">Show notifications for spp updates</string>
+  <string name="setting_notifications_sub_sub_section_1">Show notifications for app updates</string>
   <string name="setting_notifications_sub_section_2">Social notifications</string>
   <string name="setting_notifications_sub_sub_section_2">Social notifications regarding campaigns and timeline</string>
 

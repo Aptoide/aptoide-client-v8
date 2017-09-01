@@ -30,7 +30,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 27/06/2017.
  */
 
-public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
+public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final ImageView headerPrimaryAvatar;
@@ -51,7 +51,6 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   private final LinearLayout socialInfoBar;
   private final TextView numberLikes;
-  private final TextView numberComments;
   private final TextView numberLikesOneLike;
   private final RelativeLayout likePreviewContainer;
   private final LayoutInflater inflater;
@@ -67,7 +66,7 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
   public SocialMediaViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
@@ -89,7 +88,6 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.socialInfoBar = (LinearLayout) itemView.findViewById(R.id.social_info_bar);
     this.numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
-    this.numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
     this.numberLikesOneLike = (TextView) itemView.findViewById(R.id.social_one_like);
     this.likePreviewContainer = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_likes_preview_container);
@@ -130,6 +128,8 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
             .getName()), Typeface.BOLD, card.getRelatedApp()
         .getName()));
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    this.mediaTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new SocialHeaderCardTouchEvent(card, card.getPoster()
@@ -173,8 +173,6 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW)));
-    this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
   public Spannable getStyledTitle(Context context, String title) {
@@ -263,30 +261,6 @@ public class SocialMediaViewHolder extends PostViewHolder<SocialMedia> {
     } else {
       numberLikes.setVisibility(View.INVISIBLE);
       numberLikesOneLike.setVisibility(View.INVISIBLE);
-    }
-  }
-
-  private void handleCommentsInformation(SocialMedia post) {
-    if (post.getCommentsNumber() > 0) {
-      numberComments.setVisibility(View.VISIBLE);
-      numberComments.setText(itemView.getContext()
-          .getResources()
-          .getQuantityString(R.plurals.timeline_short_comment, (int) post.getCommentsNumber(),
-              (int) post.getCommentsNumber()));
-      socialCommentBar.setVisibility(View.VISIBLE);
-      ImageLoader.with(itemView.getContext())
-          .loadWithShadowCircleTransform(post.getComments()
-              .get(0)
-              .getAvatar(), latestCommentMainAvatar);
-      socialCommentUsername.setText(post.getComments()
-          .get(0)
-          .getName());
-      socialCommentBody.setText(post.getComments()
-          .get(0)
-          .getBody());
-    } else {
-      numberComments.setVisibility(View.INVISIBLE);
-      socialCommentBar.setVisibility(View.GONE);
     }
   }
 

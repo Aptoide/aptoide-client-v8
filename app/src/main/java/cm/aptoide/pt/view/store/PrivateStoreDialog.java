@@ -18,8 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -79,19 +79,22 @@ public class PrivateStoreDialog extends BaseDialog {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptor =
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((V8Engine) getContext().getApplicationContext()
+            ((AptoideApplication) getContext().getApplicationContext()
                 .getApplicationContext()).getDatabase(), Store.class)),
-        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), httpClient,
         WebService.getDefaultConverter(), tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
@@ -171,7 +174,7 @@ public class PrivateStoreDialog extends BaseDialog {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   private void dismissLoadingDialog() {

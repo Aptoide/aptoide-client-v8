@@ -13,9 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -76,10 +75,10 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
   }
 
@@ -112,7 +111,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onViewCreated(view, savedInstanceState);
   }
 
-  @Partners @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     //super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
 
@@ -124,7 +123,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onResume();
   }
 
-  @Partners protected void fetchOtherVersions(List<String> storeNames) {
+  protected void fetchOtherVersions(List<String> storeNames) {
 
     final SuccessRequestListener<ListAppVersions> otherVersionsSuccessRequestListener =
         listAppVersions -> {
@@ -139,11 +138,12 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(
-            AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
-                .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
+            AccessorFactory.getAccessorFor(
+                ((AptoideApplication) getContext().getApplicationContext()
+                    .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
             httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources()), otherVersionsSuccessRequestListener,
         err -> err.printStackTrace());
 
@@ -151,7 +151,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
-  @Partners protected void setHeader() {
+  protected void setHeader() {
     if (header != null) {
       header.setImage(appImgUrl);
       setTitle(appName);
@@ -250,7 +250,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   /**
    * Bundle of Constants
    */
-  @Partners public class BundleCons {
+  public class BundleCons {
     public static final String APP_NAME = "app_name";
     public static final String APP_IMG_URL = "app_img_url";
     public static final String APP_PACKAGE = "app_package";

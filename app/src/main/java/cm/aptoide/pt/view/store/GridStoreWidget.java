@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
@@ -45,11 +45,20 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 
     storeLayout.setBackgroundColor(Color.WHITE);
 
-    final Action1<Void> handleStoreClick = v -> getFragmentNavigator().navigateTo(
-        V8Engine.getFragmentProvider()
-            .newStoreFragment(gridStoreDisplayable.getPojo()
-                .getName(), store.getAppearance()
-                .getTheme()));
+    final Action1<Void> handleStoreClick = v -> {
+      String origin = gridStoreDisplayable.getOrigin();
+      if (!origin.isEmpty()) {
+        gridStoreDisplayable.getStoreAnalytics()
+            .sendStoreTabInteractEvent(origin);
+        gridStoreDisplayable.getStoreAnalytics()
+            .sendStoreOpenEvent(origin, gridStoreDisplayable.getPojo()
+                .getName());
+      }
+      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+          .newStoreFragment(gridStoreDisplayable.getPojo()
+              .getName(), store.getAppearance()
+              .getTheme()));
+    };
     compositeSubscription.add(RxView.clicks(storeLayout)
         .subscribe(handleStoreClick));
 

@@ -10,19 +10,18 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.install.installer.RollbackInstallation;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by trinkes on 9/8/16.
- */
 public class RollbackFactory {
 
-  public RollbackFactory() {
+  private final String imagesCachePath;
+
+  public RollbackFactory(String imagesCachePath) {
+    this.imagesCachePath = imagesCachePath;
   }
 
   /**
@@ -50,8 +49,6 @@ public class RollbackFactory {
         String apkIconPath = AptoideUtils.SystemU.getApkIconPath(info);
         Bitmap theBitmap = ImageLoader.with(context)
             .loadBitmap(apkIconPath);
-        String imagesCachePath = Application.getConfiguration()
-            .getImagesCachePath();
         FileUtils.saveBitmapToFile(new File(imagesCachePath), packageName, theBitmap,
             Bitmap.CompressFormat.PNG, 100);
         rollback.setIcon(imagesCachePath + packageName);

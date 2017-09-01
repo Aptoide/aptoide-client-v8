@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.Contact;
@@ -40,6 +41,7 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
   private Button done;
   private TextView successMessage;
   private String entranceTag;
+  private String marketName;
 
   public static Fragment newInstance(List<Contact> contacts, String tag) {
     SyncResultFragment syncSuccessFragment = new SyncResultFragment();
@@ -65,13 +67,13 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     mActionsListener = new SyncResultPresenter(this,
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
-            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration()
-                .getMarketName())));
+            getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about, marketName)));
     mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, getContext());
   }
 
@@ -91,8 +93,7 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
 
     successMessage.setText(
         getString(R.string.addressbook_success_connected_friends, Integer.toString(contacts.size()),
-            Application.getConfiguration()
-                .getMarketName()));
+            marketName));
 
     RxView.clicks(allowFind)
         .subscribe(click -> mActionsListener.allowFindClicked());

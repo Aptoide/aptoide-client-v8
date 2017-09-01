@@ -16,20 +16,22 @@ public class AccountService {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private final String extraId;
 
   public AccountService(BodyInterceptor<BaseBody> baseBodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, String extraId) {
     this.baseBodyInterceptorV3 = baseBodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.extraId = extraId;
   }
 
   public Single<String> refreshToken(String refreshToken) {
     return OAuth2AuthenticationRequest.of(refreshToken, baseBodyInterceptorV3, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences, extraId)
         .observe()
         .toSingle()
         .flatMap(oAuth -> {

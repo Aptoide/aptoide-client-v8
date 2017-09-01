@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,9 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -86,11 +87,11 @@ public class HomeFragment extends StoreFragment {
 
   /**
    * @return {@link HomeFragment} instance with default store, store context and theme
+   * @param defaultStore
+   * @param defaultTheme
    */
-  public static HomeFragment newInstance() {
-    return newInstance(V8Engine.getConfiguration()
-        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
-        .getDefaultTheme());
+  public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
+    return newInstance(defaultStore, StoreContext.home, defaultTheme);
   }
 
   @Override public void onAttach(Activity activity) {
@@ -217,13 +218,20 @@ public class HomeFragment extends StoreFragment {
     return R.layout.activity_main;
   }
 
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+
+    menu.removeItem(R.id.menu_share);
+  }
+
   @Override protected void setupSearch(Menu menu) {
     SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
   }
 
   @Override public void setupViews() {
     super.setupViews();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     setupNavigationView();
   }
@@ -283,19 +291,19 @@ public class HomeFragment extends StoreFragment {
             // FIXME: 10-08-2017 NAVIGATE TO SPOTANDSHARE NEW VERSION
           } else if (itemId == R.id.navigation_item_rollback) {
             drawerAnalytics.drawerInteract("Rollback");
-            navigator.navigateTo(V8Engine.getFragmentProvider()
+            navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
             drawerAnalytics.drawerInteract("Scheduled Downloads");
-            navigator.navigateTo(V8Engine.getFragmentProvider()
+            navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newScheduledDownloadsFragment());
           } else if (itemId == R.id.navigation_item_excluded_updates) {
             drawerAnalytics.drawerInteract("Excluded Updates");
-            navigator.navigateTo(V8Engine.getFragmentProvider()
+            navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newExcludedUpdatesFragment());
           } else if (itemId == R.id.navigation_item_settings) {
             drawerAnalytics.drawerInteract("Settings");
-            navigator.navigateTo(V8Engine.getFragmentProvider()
+            navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newSettingsFragment());
           } else if (itemId == R.id.navigation_item_facebook) {
             drawerAnalytics.drawerInteract("Facebook");
@@ -351,7 +359,7 @@ public class HomeFragment extends StoreFragment {
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(installed -> {
           if (installed == null) {
-            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
                 .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY));
           } else {
             Intent i = getContext().getPackageManager()
@@ -371,7 +379,7 @@ public class HomeFragment extends StoreFragment {
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+    getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
         .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
   }
 
@@ -384,7 +392,7 @@ public class HomeFragment extends StoreFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
-            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
                 .newSocialFragment(socialUrl, pageTitle));
           } else {
             Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
@@ -444,7 +452,7 @@ public class HomeFragment extends StoreFragment {
     super.bindViews(view);
 
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     navigationView = (NavigationView) view.findViewById(R.id.nav_view);
     drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);

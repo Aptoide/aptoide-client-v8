@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
@@ -25,7 +25,6 @@ import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.presenter.AddressBookContract;
 import cm.aptoide.pt.presenter.AddressBookPresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -74,6 +73,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   private ProgressDialog mGenericPleaseWaitDialog;
   private TwitterSession twitterSession;
   private AddressBookAnalytics analytics;
+  private String marketName;
 
   public static AddressBookFragment newInstance() {
     AddressBookFragment addressBookFragment = new AddressBookFragment();
@@ -84,25 +84,26 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     analytics = new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     mActionsListener = new AddressBookPresenter(this,
         new ContactsRepository(baseBodyBodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getIdsRepository(), new ContactUtils(
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            getContext().getContentResolver()),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository(),
+            new ContactUtils(
+                (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+                getContext().getContentResolver()),
+            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
         analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
-        getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-        Application.getConfiguration()
-            .getMarketName())),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        getString(R.string.addressbook_about),
+        getString(R.string.addressbook_data_about, marketName)),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
@@ -121,8 +122,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public void setupViews() {
-    addressbook_2nd_msg.setText(getString(R.string.addressbook_2nd_msg, V8Engine.getConfiguration()
-        .getMarketName()));
+    addressbook_2nd_msg.setText(getString(R.string.addressbook_2nd_msg, marketName));
     mActionsListener.getButtonsState();
     //dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

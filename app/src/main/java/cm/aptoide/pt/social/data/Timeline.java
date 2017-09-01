@@ -6,7 +6,6 @@ import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import java.io.IOException;
@@ -31,15 +30,17 @@ public class Timeline {
   private final DownloadFactory downloadFactory;
   private final TimelineAnalytics timelineAnalytics;
   private final TimelinePostsRepository timelinePostsRepository;
+  private final String marketName;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      TimelinePostsRepository timelinePostsRepository) {
+      TimelinePostsRepository timelinePostsRepository, String marketName) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.timelinePostsRepository = timelinePostsRepository;
+    this.marketName = marketName;
   }
 
   public Single<List<Post>> getCards() {
@@ -82,8 +83,7 @@ public class Timeline {
     } else if (post instanceof AppPost) {
       if (post instanceof Recommendation) {
         timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
-            .name(), blank, like, ((AppPost) post).packageName, Application.getConfiguration()
-            .getMarketName(), blank));
+            .name(), blank, like, ((AppPost) post).packageName, marketName, blank));
       } else if (post instanceof RatedRecommendation) {
         timelineAnalytics.sendSocialActionEvent(new TimelineSocialActionData(post.getType()
             .name(), blank, like, ((AppPost) post).packageName,
@@ -156,8 +156,11 @@ public class Timeline {
         });
   }
 
-  public void clearLoading() {
-    timelinePostsRepository.clearLoading();
+  public Completable setPostRead(String markAsReadUrl, String cardId, CardType cardType) {
+    if (markAsReadUrl != null && !markAsReadUrl.isEmpty()) {
+      return service.setPostRead(markAsReadUrl, cardId, cardType.name());
+    }
+    return Completable.complete();
   }
 }
 

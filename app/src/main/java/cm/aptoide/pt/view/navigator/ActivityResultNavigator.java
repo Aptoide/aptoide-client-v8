@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.NavigationProvider;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -26,7 +26,9 @@ public abstract class ActivityResultNavigator extends LeakActivity
     fragmentNavigator =
         new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
             android.R.anim.fade_in, android.R.anim.fade_out,
-            ((V8Engine) getApplicationContext()).getDefaultSharedPreferences());
+            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getApplicationContext()).getDefaultStore(),
+            ((AptoideApplication) getApplicationContext()).getDefaultTheme());
     // super.onCreate handles fragment creation using FragmentManager.
     // Make sure navigator instances are already created when fragments are created,
     // else getFragmentNavigator and getActivityNavigator will return null.

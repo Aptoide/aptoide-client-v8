@@ -1,3 +1,5 @@
+import com.android.builder.model.ProductFlavor
+
 buildscript {
 
   repositories {
@@ -19,10 +21,6 @@ retrolambda {
   jvmArgs '-noverify'
 }
 
-ext {
-  searchSuggestionProviderAuthority = ""
-}
-
 android {
 
   // Websockets
@@ -33,58 +31,11 @@ android {
 
   // keep the "applicationId" var in third place for the jenkins build script hack
   defaultConfig {
-    applicationId "${APPLICATION_ID}"
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-
-    buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
-    buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
-    buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
-    buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
-    buildConfigField "String", "APTOIDE_WEB_SERVICES_SIXPACK_HOST",
-        "\"" + project.APTOIDE_WEB_SERVICES_SIXPACK_HOST + "\""
-    buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
-
-    buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
-    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
-    buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
-    buildConfigField "int", "DEFAULT_PAYMENT_ID", project.DEFAULT_PAYMENT_ID
-    buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
-    buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
-        "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
-    buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
-        "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
-    buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
-    buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
-    buildConfigField "int", "DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS",
-        project.DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS
-    buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
-        project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
-    buildConfigField "int", "PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS",
-        project.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS
-    buildConfigField "int", "PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS",
-        project.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS
-    buildConfigField "int", "REALM_SCHEMA_VERSION",
-        project.REALM_SCHEMA_VERSION
-    buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
-    buildConfigField "int", "IN_BILLING_SUPPORTED_API_VERSION",
-        project.IN_BILLING_SUPPORTED_API_VERSION
-
-    searchSuggestionProviderAuthority = "cm.aptoide.pt.provider.SearchSuggestionProvider"
-
-    manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
-                            suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-                            storeSuggestionProviderAuthority: "cm.aptoide.pt.provider.StoreSearchSuggestionProvider",
-                            currentApplicationId            : "cm.aptoide.pt",
-                            fabricApiKey                    : project.FABRIC_API_KEY]
-
     multiDexEnabled true
-    resValue "string", "authenticator_account_type", APPLICATION_ID
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.4.0.0"
-    resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
-    resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
-    buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
+    versionName "8.4.1.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
@@ -103,62 +54,39 @@ android {
     }
   }
 
+  flavorDimensions "product", "mode"
   productFlavors {
+    partner {
+      dimension "product"
+      applicationId "com.aptoide.partners.apps"
+    }
+
+    vanilla {
+      dimension "product"
+      applicationId "cm.aptoide.pt"
+    }
 
     internal {
-      // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
-      applicationIdSuffix ".internal"
-      searchSuggestionProviderAuthority =
-          "cm.aptoide.pt.provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
-
+      dimension "mode"
+      applicationIdSuffix "internal"
       versionName "8.4.0." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
-
-      resValue "string", "authenticator_account_type", APPLICATION_ID + ".internal"
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.internal"
-      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
-      buildConfigField "String", "PAYPAL_ENVIRONMENT",
-          "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
-      buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
-          "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
-          "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
-      buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
-      buildConfigField "String", "TWITTER_SECRET",
-          "\"" + project.TWITTER_SECRET_INTERNAL + "\""
-      buildConfigField "String", "CONTENT_AUTHORITY",
-          "\"" + APPLICATION_ID + ".StubProvider.internal\""
-
-      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.internal",
-                              suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-                              storeSuggestionProviderAuthority: "cm.aptoide.pt.provider.StoreSearchSuggestionProvider.internal",
-                              currentApplicationId            : "cm.aptoide.pt.internal"]
     }
 
     dev {
-      // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
-      applicationIdSuffix ".dev"
-      searchSuggestionProviderAuthority =
-          "cm.aptoide.pt.provider.SearchSuggestionProvider" + "${applicationIdSuffix}"
-
+      dimension "mode"
+      applicationIdSuffix "dev"
       versionName "8.4.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
-
-      resValue "string", "authenticator_account_type", APPLICATION_ID + ".dev"
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.dev"
-      resValue "string", "suggested_searchable_authority", "${searchSuggestionProviderAuthority}"
-      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider.dev\""
-
-      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.dev",
-                              suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-                              storeSuggestionProviderAuthority: "cm.aptoide.pt.provider.StoreSearchSuggestionProvider.dev",
-                              currentApplicationId            : "cm.aptoide.pt.dev"]
     }
 
-    prod {}
+    prod {
+      dimension "mode"
+    }
 
-    leak {}
+    leak {
+      dimension "mode"
+    }
   }
 
   buildTypes {
@@ -188,6 +116,19 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  variantFilter { variant ->
+    List<ProductFlavor> flavors = variant.getFlavors()
+
+    String applicationIdBase = flavors[0].applicationId
+    String applicationIdSuffix = flavors[1].applicationIdSuffix
+    boolean hasSuffix = applicationIdSuffix != null
+
+    if (applicationIdBase.contains('partner') && hasSuffix &&
+        (applicationIdSuffix.contains('dev') || applicationIdSuffix.contains('internal'))) {
+      setIgnore(true)
+    }
+  }
+
   packagingOptions {
     exclude 'META-INF/services/javax.annotation.processing.Processor'
     exclude 'META-INF/DEPENDENCIES.txt'
@@ -205,15 +146,98 @@ android {
   }
 
   applicationVariants.all { variant ->
+
+    List<ProductFlavor> flavors = variant.getProductFlavors()
+    String applicationIdBase = flavors[0].applicationId
+    String applicationIdSuffix = flavors[1].applicationIdSuffix
+    String applicationId = applicationIdBase
+
+    def searchSuggestionProviderAuthority =
+        "${applicationIdBase}.provider.SearchSuggestionProvider";
+    def storeSuggestionProviderAuthority =
+        "${applicationIdBase}.provider.StoreSearchSuggestionProvider";
+    def toolboxProviderAuthority = "${applicationIdBase}.StubProvider"
+
+    if (applicationIdSuffix != null) {
+      searchSuggestionProviderAuthority += ".${applicationIdSuffix}"
+      storeSuggestionProviderAuthority += ".${applicationIdSuffix}"
+      toolboxProviderAuthority += ".${applicationIdSuffix}"
+      applicationId += ".${applicationIdSuffix}"
+    }
+
+    variant.mergedFlavor.manifestPlaceholders =
+        [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
+         suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
+         storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
+         fabricApiKey                    : "${project.FABRIC_API_KEY}"]
+
+    variant.resValue "string", "authenticator_account_type", applicationId
+    variant.resValue "string", "search_suggestion_provider_authority",
+        searchSuggestionProviderAuthority
+    variant.resValue "string", "store_suggestion_provider_authority",
+        storeSuggestionProviderAuthority
+
+    variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
+
+    variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
+        "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+    variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
+        "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
+    variant.buildConfigField "String", "CONTENT_AUTHORITY", "\"" + toolboxProviderAuthority + "\""
+    variant.buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
+    variant.buildConfigField "String", "UPLOADER_SIGNATURE",
+        "\"" + project.UPLOADER_SIGNATURE + "\""
+    variant.buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
+    variant.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
+    variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_SIXPACK_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_SIXPACK_HOST + "\""
+    variant.buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
+    variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
+    variant.buildConfigField "int", "DEFAULT_PAYMENT_ID", project.DEFAULT_PAYMENT_ID
+    variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
+        "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+    variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
+        "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
+    variant.buildConfigField "int", "DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS",
+        project.DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS
+    variant.buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
+        project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
+    variant.buildConfigField "int", "PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS",
+        project.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS
+    variant.buildConfigField "int", "PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS",
+        project.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS
+    variant.buildConfigField "int", "REALM_SCHEMA_VERSION",
+        project.REALM_SCHEMA_VERSION
+    variant.buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
+    variant.buildConfigField "int", "IN_BILLING_SUPPORTED_API_VERSION",
+        project.IN_BILLING_SUPPORTED_API_VERSION
+    variant.buildConfigField "String", "MOPUB_NATIVE_AD_UNIT_ID",
+        "\"" + project.MOPUB_NATIVE_AD_UNIT_ID + "\""
+
+    if (flavors[1].name.contains('internal')) {
+      variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
+          "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
+      variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
+      variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
+      variant.buildConfigField "String", "TWITTER_SECRET",
+          "\"" + project.TWITTER_SECRET_INTERNAL + "\""
+    } else {
+      variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
+          "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
+      variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
+      variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
+      variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
+    }
+
     variant.outputs.each { output ->
-      def project = "vanilla"
       def SEP = "_"
-      def flavor = variant.productFlavors[0].name
+      def dimension = variant.productFlavors[0].name
+      def flavor = variant.productFlavors[1].name
       def buildType = variant.variantData.variantConfiguration.buildType.name
       def versionName = variant.versionName
       def versionCode = variant.versionCode
 
-      def newApkName = project + SEP +
+      def newApkName = dimension + SEP +
           flavor +
           SEP +
           buildType +
@@ -378,6 +402,10 @@ dependencies {
 
   compile "com.braintreepayments.api:braintree:${BRAINTREE_VERSION}"
   compile "com.braintreepayments:card-form:${BRAINTREE_CARD_FORM_VERSION}"
+
+  compile('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
+    transitive = true
+  }
   compile project(path: ':spotandshareandroid')
 }
 

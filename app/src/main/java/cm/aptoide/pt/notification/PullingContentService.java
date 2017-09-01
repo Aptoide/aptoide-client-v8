@@ -12,16 +12,15 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallerFactory;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdateRepository;
@@ -46,6 +45,7 @@ public class PullingContentService extends Service {
   private InstallManager installManager;
   private UpdateRepository updateRepository;
   private SharedPreferences sharedPreferences;
+  private String marketName;
 
   public void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -57,11 +57,12 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-
-    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
+    sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager =
-        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -139,7 +140,7 @@ public class PullingContentService extends Service {
                 .map(updates -> {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
-                    downloadList.add(new DownloadFactory().create(update));
+                    downloadList.add(new DownloadFactory(marketName).create(update));
                   }
                   return downloadList;
                 })
@@ -151,8 +152,9 @@ public class PullingContentService extends Service {
   }
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
-    Intent resultIntent = new Intent(getApplicationContext(), V8Engine.getActivityProvider()
-        .getMainActivityFragmentClass());
+    Intent resultIntent = new Intent(getApplicationContext(),
+        AptoideApplication.getActivityProvider()
+            .getMainActivityFragmentClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
     PendingIntent resultPendingIntent =
         PendingIntent.getActivity(getApplicationContext(), 0, resultIntent,
@@ -163,11 +165,8 @@ public class PullingContentService extends Service {
         && numberUpdates != ManagerPreferences.getLastUpdates(sharedPreferences)
         && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)) {
       CharSequence tickerText =
-          AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(),
-              Application.getConfiguration()
-                  .getMarketName());
-      CharSequence contentTitle = Application.getConfiguration()
-          .getMarketName();
+          AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(), marketName);
+      CharSequence contentTitle = marketName;
       CharSequence contentText =
           AptoideUtils.StringU.getFormattedString(R.string.new_updates, getResources(),
               numberUpdates);
@@ -183,8 +182,7 @@ public class PullingContentService extends Service {
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
               .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                  Application.getConfiguration()
-                      .getIcon()))
+                  R.mipmap.ic_launcher))
               .setContentTitle(contentTitle)
               .setContentText(contentText)
               .setTicker(tickerText)

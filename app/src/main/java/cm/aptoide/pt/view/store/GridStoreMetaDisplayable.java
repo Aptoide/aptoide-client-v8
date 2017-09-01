@@ -4,6 +4,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import java.util.Collections;
 import java.util.List;
@@ -14,14 +15,16 @@ import java.util.List;
 public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
   private StoreCredentialsProvider storeCredentialsProvider;
+  private StoreAnalytics storeAnalytics;
 
   public GridStoreMetaDisplayable() {
   }
 
   public GridStoreMetaDisplayable(GetHomeMeta pojo,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      StoreCredentialsProvider storeCredentialsProvider, StoreAnalytics storeAnalytics) {
     super(pojo);
     this.storeCredentialsProvider = storeCredentialsProvider;
+    this.storeAnalytics = storeAnalytics;
   }
 
   @Override protected Configs getConfig() {
@@ -58,5 +61,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   public String getStorePassword() {
     return storeCredentialsProvider.get(getStoreName())
         .getPasswordSha1();
+  }
+
+  public StoreAnalytics getStoreAnalytics() {
+    return storeAnalytics;
   }
 }

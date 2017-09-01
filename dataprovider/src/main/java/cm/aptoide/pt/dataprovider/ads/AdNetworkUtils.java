@@ -3,7 +3,6 @@ package cm.aptoide.pt.dataprovider.ads;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.model.MinimalAdInterface;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import com.google.android.gms.common.ConnectionResult;
@@ -57,7 +56,7 @@ public class AdNetworkUtils {
     return clickUrl;
   }
 
-  @Partners public static boolean isGooglePlayServicesAvailable(Context context) {
+  public static boolean isGooglePlayServicesAvailable(Context context) {
     return GoogleApiAvailability.getInstance()
         .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
   }

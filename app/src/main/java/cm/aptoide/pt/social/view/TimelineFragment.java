@@ -19,9 +19,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
@@ -31,6 +32,8 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallerFactory;
@@ -44,6 +47,7 @@ import cm.aptoide.pt.social.data.PostComment;
 import cm.aptoide.pt.social.data.SocialAction;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.Timeline;
+import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.social.data.TimelineService;
@@ -69,11 +73,15 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -92,6 +100,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private final int visibleThreshold = 5;
+  private Converter.Factory defaultConverter;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
   private boolean bottomAlreadyReached;
   private PostAdapter adapter;
   private PublishSubject<CardTouchEvent> postTouchEventPublishSubject;
@@ -122,6 +132,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private DateCalculator dateCalculator;
   private boolean postIndicator;
   private boolean progressIndicator;
+  private LinearLayoutManager layoutManager;
+  private TimelineAnalytics timelineAnalytics;
+  private OkHttpClient defaultClient;
+  private String marketName;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -152,13 +166,20 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
-    accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    baseBodyInterceptorV7 =
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    defaultConverter = WebService.getDefaultConverter();
+    defaultClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    accountManager =
+        ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
     sharePostPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
@@ -167,18 +188,25 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getResources());
     shareDialogFactory =
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
-    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
 
     timelinePostsRepository =
-        ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
-            getArguments().getString(ACTION_KEY));
+        ((AptoideApplication) getContext().getApplicationContext()).getTimelineRepository(
+            getArguments().getString(ACTION_KEY), getContext());
 
-    timelineService = new TimelineService(userId,
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(), new TimelineResponseCardMapper(), tokenInvalidator,
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
+        defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
         sharedPreferences);
+
+    OkHttpClient okhttp =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+
+    timelineService = new TimelineService(userId, baseBodyInterceptorV7, okhttp, defaultConverter,
+        new TimelineResponseCardMapper(
+            () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -208,7 +236,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     retryButton = genericError.findViewById(R.id.retry);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
-    list.setLayoutManager(new LinearLayoutManager(getContext()));
+    layoutManager = new LinearLayoutManager(getContext());
+    list.setLayoutManager(layoutManager);
     loginPrompt = PublishRelay.create();
     helper = RecyclerViewPositionHelper.createHelper(list);
     // Pull-to-refresh
@@ -222,37 +251,26 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter = new PostAdapter(Collections.emptyList(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject)), new ProgressCard());
+                postTouchEventPublishSubject), marketName), new ProgressCard());
     list.setAdapter(adapter);
 
-    TimelineAnalytics timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()),
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
-        .getAppId(), sharedPreferences);
-
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class);
     StoreCredentialsProviderImpl storeCredentialsProvider =
         new StoreCredentialsProviderImpl(storeAccessor);
 
     Timeline timeline =
-        new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics,
-            timelinePostsRepository);
+        new Timeline(timelineService, installManager, new DownloadFactory(marketName),
+            timelineAnalytics, timelinePostsRepository, marketName);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
 
-    StoreUtilsProxy storeUtilsProxy =
-        new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-            storeCredentialsProvider, storeAccessor,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
+        baseBodyInterceptorV7, storeCredentialsProvider, storeAccessor, defaultClient,
+        defaultConverter, tokenInvalidator, sharedPreferences);
 
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
@@ -437,16 +455,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     shareDialog = shareDialogFactory.createDialogFor(post, account);
     shareDialog.setup(post);
 
-    shareDialog.cancels()
-        .doOnNext(__ -> shareDialog.dismiss())
-        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe();
+    handleSharePreviewAnswer();
+  }
 
-    shareDialog.shares()
-        .doOnNext(event -> sharePostPublishSubject.onNext(event))
-        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe();
-    shareDialog.show();
+  @Override public void showSharePreview(Post originalPost, Post card, Account account) {
+    shareDialog = shareDialogFactory.createDialogFor(originalPost, account);
+    shareDialog.setupMinimalPost(originalPost, card);
+
+    handleSharePreviewAnswer();
   }
 
   @Override public void showShareSuccessMessage() {
@@ -488,6 +504,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .show();
   }
 
+  @Override public void showSetUserOrStorePublicMessage() {
+    Snackbar.make(getView(),
+        R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
+        Snackbar.LENGTH_LONG)
+        .show();
+  }
+
   @Override public void showPostProgressIndicator() {
     postIndicator = true;
     list.setVisibility(View.GONE);
@@ -498,6 +521,32 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void hidePostProgressIndicator() {
     postIndicator = false;
     hideProgressIndicator();
+  }
+
+  @Override public void removePost(int postPosition) {
+    adapter.removePost(postPosition);
+  }
+
+  @Override public Observable<Post> getVisibleItems() {
+    return RxRecyclerView.scrollEvents(list)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
+        .filter(position -> position != RecyclerView.NO_POSITION)
+        .distinctUntilChanged()
+        .map(visibleItem -> adapter.getPost(visibleItem));
+  }
+
+  private void handleSharePreviewAnswer() {
+    shareDialog.cancels()
+        .doOnNext(__ -> shareDialog.dismiss())
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe();
+
+    shareDialog.shares()
+        .doOnNext(event -> sharePostPublishSubject.onNext(event))
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe();
+    shareDialog.show();
   }
 
   private void hideProgressIndicator() {

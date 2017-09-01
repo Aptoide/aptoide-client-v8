@@ -23,9 +23,9 @@ public class SocialStore extends StoreLatestApps {
       String storeAvatar, String socialStore, int subscribers, int appsNumber, Date latestUpdate,
       List<App> apps, String abUrl, boolean isLiked, long commentsNumber, long likesNumber,
       List<UserTimeline> likes, List<SocialCard.CardComment> comments, String sharedByName,
-      CardType cardType) {
+      CardType cardType, String markAsReadUrl) {
     super(cardId, storeId, storeName, storeAvatar, socialStore, subscribers, appsNumber,
-        latestUpdate, apps, abUrl, isLiked, cardType);
+        latestUpdate, apps, abUrl, isLiked, cardType, markAsReadUrl);
     this.poster = poster;
     this.commentsNumber = commentsNumber;
     this.likesNumber = likesNumber;

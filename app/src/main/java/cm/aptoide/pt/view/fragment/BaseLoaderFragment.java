@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.LoadInterface;
 import cm.aptoide.pt.view.swipe.LoaderLayoutHandler;
@@ -32,7 +31,7 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
     load(create, false, savedInstanceState);
   }
 
-  @Partners @CallSuper @Nullable @Override
+  @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     loaderLayoutHandler = createLoaderLayoutHandler();
@@ -84,7 +83,7 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
     }
   }
 
-  @Partners @CallSuper protected void finishLoading() {
+  @CallSuper protected void finishLoading() {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading();
     }
@@ -103,7 +102,7 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
     }
   }
 
-  @Partners @CallSuper protected void finishLoading(Throwable throwable) {
+  @CallSuper protected void finishLoading(Throwable throwable) {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }

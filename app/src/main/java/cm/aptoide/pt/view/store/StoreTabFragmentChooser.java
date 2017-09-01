@@ -1,8 +1,7 @@
 package cm.aptoide.pt.view.store;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 
@@ -12,9 +11,9 @@ import cm.aptoide.pt.view.configuration.FragmentProvider;
 
 public class StoreTabFragmentChooser {
 
-  private static FragmentProvider fragmentProvider = V8Engine.getFragmentProvider();
+  private static FragmentProvider fragmentProvider = AptoideApplication.getFragmentProvider();
 
-  @Partners public static Fragment choose(Event.Name name) {
+  public static Fragment choose(Event.Name name) {
     switch (name) {
       case listApps:
         return fragmentProvider.newListAppsFragment();

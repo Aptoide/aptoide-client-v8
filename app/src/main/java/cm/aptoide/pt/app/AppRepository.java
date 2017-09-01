@@ -33,12 +33,13 @@ public class AppRepository {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
+  private final String partnerId;
 
   public AppRepository(BodyInterceptor<BaseBody> bodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       StoreCredentialsProviderImpl storeCredentialsProvider, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Resources resources) {
+      SharedPreferences sharedPreferences, Resources resources, String partnerId) {
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.storeCredentialsProvider = storeCredentialsProvider;
@@ -47,6 +48,7 @@ public class AppRepository {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
+    this.partnerId = partnerId;
   }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
@@ -55,8 +57,7 @@ public class AppRepository {
     //If vanilla, don't pass the store name.
     //store name is already in appId
     //[AN-1160] - [AppView] latest version bug
-    return GetAppRequest.of(appId, V8Engine.getConfiguration()
-            .getPartnerId() == null ? null : storeName,
+    return GetAppRequest.of(appId, partnerId == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
         bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(refresh)

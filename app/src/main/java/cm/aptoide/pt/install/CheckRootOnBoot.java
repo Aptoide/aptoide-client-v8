@@ -3,7 +3,7 @@ package cm.aptoide.pt.install;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import rx.schedulers.Schedulers;
 
@@ -22,7 +22,7 @@ public class CheckRootOnBoot extends BroadcastReceiver {
         .equals(Intent.ACTION_BOOT_COMPLETED) || intent.getAction()
         .equals(Intent.ACTION_REBOOT) || intent.getAction()
         .equals(HTC_BOOT_COMPLETED))) {
-      ((V8Engine) context.getApplicationContext()).getRootAvailabilityManager()
+      ((AptoideApplication) context.getApplicationContext()).getRootAvailabilityManager()
           .updateRootAvailability()
           .subscribeOn(Schedulers.computation())
           .subscribe(() -> {

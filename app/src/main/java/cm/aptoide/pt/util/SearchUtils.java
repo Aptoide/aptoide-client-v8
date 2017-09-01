@@ -13,8 +13,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.search.websocket.SearchAppsWebSocket;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -32,14 +32,14 @@ public class SearchUtils {
   public static void setupGlobalSearchView(Menu menu, Context context,
       FragmentNavigator fragmentNavigator) {
     setupSearchView(menu.findItem(R.id.action_search), context, fragmentNavigator,
-        s -> V8Engine.getFragmentProvider()
+        s -> AptoideApplication.getFragmentProvider()
             .newSearchFragment(s));
   }
 
   public static void setupInsideStoreSearchView(Menu menu, Context context,
       FragmentNavigator fragmentNavigator, String storeName) {
     setupSearchView(menu.findItem(R.id.action_search), context, fragmentNavigator,
-        s -> V8Engine.getFragmentProvider()
+        s -> AptoideApplication.getFragmentProvider()
             .newSearchFragment(s, storeName));
   }
 

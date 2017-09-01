@@ -31,6 +31,15 @@ public class RecyclerViewPositionHelper {
   }
 
   /**
+   * Returns the adapter item count.
+   *
+   * @return The total number on items in a layout manager
+   */
+  public int getChildCount() {
+    return layoutManager == null ? 0 : layoutManager.getChildCount();
+  }
+
+  /**
    * Returns the adapter position of the first visible view. This position does not include
    * adapter changes that were dispatched after the last layout pass.
    *

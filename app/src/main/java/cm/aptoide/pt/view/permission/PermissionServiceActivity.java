@@ -18,7 +18,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -53,7 +53,8 @@ import rx.functions.Action0;
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+    sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
     if (!FacebookSdk.isInitialized()) {
       FacebookSdk.sdkInitialize(getApplicationContext());
     }
@@ -178,7 +179,7 @@ import rx.functions.Action0;
         @Override public void onNext(GenericDialogs.EResponse eResponse) {
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
-            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
                 .newSettingsFragment());
           } else {
             if (toRunWhenAccessIsDenied != null) {

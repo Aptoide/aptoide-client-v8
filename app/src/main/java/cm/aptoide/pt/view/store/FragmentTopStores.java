@@ -2,19 +2,23 @@ package cm.aptoide.pt.view.store;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
   public static final int STORES_LIMIT_PER_REQUEST = 10;
   public static String TAG = FragmentTopStores.class.getSimpleName();
   private int offset = 0;
+  private StoreAnalytics storeAnalytics;
   private SuccessRequestListener<ListStores> listener =
       listStores -> Observable.fromCallable(() -> createDisplayables(listStores))
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -40,11 +45,18 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     return new FragmentTopStores();
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+  }
+
   @NonNull private List<Displayable> createDisplayables(ListStores listStores) {
     List<Displayable> displayables = new ArrayList<>();
     for (final Store store : listStores.getDataList()
         .getList()) {
-      displayables.add(new GridStoreDisplayable(store));
+      displayables.add(
+          new GridStoreDisplayable(store, "Add Store Dialog Top Stores", storeAnalytics));
     }
     return displayables;
   }
@@ -66,7 +78,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
 
   private void fetchStores() {
     final ListStoresRequest listStoresRequest =
-        requestFactory.newListStoresRequest(offset, STORES_LIMIT_PER_REQUEST);
+        requestFactoryCdnPool.newListStoresRequest(offset, STORES_LIMIT_PER_REQUEST);
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
             err -> err.printStackTrace());

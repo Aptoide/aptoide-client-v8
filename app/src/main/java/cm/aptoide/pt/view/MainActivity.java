@@ -12,12 +12,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.AutoUpdate;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -27,7 +26,6 @@ import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
@@ -59,22 +57,25 @@ public class MainActivity extends TabNavigatorActivity
   private PublishRelay<Void> installErrorsDismissEvent;
   private Snackbar snackbar;
 
-  @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
     installManager =
-        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
+        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
     final AptoideAccountManager accountManager =
-        ((V8Engine) getApplicationContext()).getAccountManager();
+        ((AptoideApplication) getApplicationContext()).getAccountManager();
+    final String marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
     final AutoUpdate autoUpdate =
-        new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager,
-            getResources(), Application.getConfiguration()
-            .getAutoUpdateUrl());
-    final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+        new AutoUpdate(this, new DownloadFactory(marketName), new PermissionManager(),
+            installManager, getResources(),
+            ((AptoideApplication) getApplicationContext()).getAutoUpdateUrl(), R.mipmap.ic_launcher,
+            false, marketName);
+    final OkHttpClient httpClient =
+        ((AptoideApplication) getApplicationContext()).getDefaultClient();
 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     final SharedPreferences sharedPreferences =
-        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
     final SharedPreferences securePreferences =
         SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
 
@@ -84,24 +85,26 @@ public class MainActivity extends TabNavigatorActivity
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
 
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
+        ((AptoideApplication) getApplicationContext()).getBaseBodyInterceptorV7Pool(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
             Store.class)), AccessorFactory.getAccessorFor(
-        ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(), Store.class),
-        httpClient, converterFactory, ((V8Engine) getApplicationContext()).getTokenInvalidator(),
-        sharedPreferences);
+        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+        Store.class), httpClient, converterFactory,
+        ((AptoideApplication) getApplicationContext()).getTokenInvalidator(), sharedPreferences);
 
+    final String defaultTheme =
+        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDefaultTheme();
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
             sharedPreferences, AccessorFactory.getAccessorFor(
-            ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class));
+            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class), defaultTheme);
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 
     final NotificationSyncScheduler notificationSyncScheduler =
-        ((V8Engine) getApplicationContext()).getNotificationSyncScheduler();
+        ((AptoideApplication) getApplicationContext()).getNotificationSyncScheduler();
 
     InstallCompletedNotifier installCompletedNotifier =
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
@@ -110,10 +113,12 @@ public class MainActivity extends TabNavigatorActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     attachPresenter(new MainPresenter(this, installManager,
-        ((V8Engine) getApplicationContext()).getRootInstallationRetryHandler(),
-        CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
-        notificationSyncScheduler, installCompletedNotifier, sharedPreferences, securePreferences,
-        fragmentNavigator, deepLinkManager), savedInstanceState);
+            ((AptoideApplication) getApplicationContext()).getRootInstallationRetryHandler(),
+            CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
+            notificationSyncScheduler, installCompletedNotifier, sharedPreferences, securePreferences,
+            fragmentNavigator, deepLinkManager,
+            ((AptoideApplication) getApplicationContext()).getDefaultStore(), defaultTheme),
+        savedInstanceState);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

@@ -10,8 +10,8 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
@@ -50,7 +50,7 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
       Event event = pojo.getEvent();
       Event.Name name = event.getName();
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
-        getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
                 displayable.getTag(), displayable.getStoreContext()));
       } else {

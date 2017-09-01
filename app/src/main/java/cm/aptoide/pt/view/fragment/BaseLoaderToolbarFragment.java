@@ -20,7 +20,7 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
 
   private Toolbar toolbar;
 
-  @Partners protected Toolbar getToolbar() {
+  protected Toolbar getToolbar() {
     return toolbar;
   }
 
@@ -31,7 +31,7 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
   /**
    * Setup the toolbar, if present.
    */
-  @Partners @CallSuper @Override public void setupToolbar() {
+  @CallSuper @Override public void setupToolbar() {
     if (hasToolbar()) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
       boolean showUp = displayHomeUpAsEnabled();
@@ -43,7 +43,7 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
     }
   }
 
-  @Partners protected boolean hasToolbar() {
+  protected boolean hasToolbar() {
     return toolbar != null;
   }
 

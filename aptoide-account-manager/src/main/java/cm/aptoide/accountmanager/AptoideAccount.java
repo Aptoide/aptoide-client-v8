@@ -124,6 +124,10 @@ public final class AptoideAccount implements Account {
     return access == Access.PUBLIC;
   }
 
+  @Override public boolean isPublicStore() {
+    return store != null && store.hasPublicAccess();
+  }
+
   private void refreshToken(String accessToken) {
     this.token = accessToken;
   }

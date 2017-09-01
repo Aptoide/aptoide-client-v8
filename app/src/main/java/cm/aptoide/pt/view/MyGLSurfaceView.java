@@ -5,7 +5,7 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 
 /**
  * Created by jdandrade on 14/11/2016.
@@ -27,8 +27,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
   private void setTransparent(Context context) {
     setEGLContextClientVersion(2);
 
-    myGLRenderer =
-        new MyGLRenderer(context, ((V8Engine) context.getApplicationContext()).getQManager());
+    myGLRenderer = new MyGLRenderer(context,
+        ((AptoideApplication) context.getApplicationContext()).getQManager());
     setRenderer(myGLRenderer);
 
     setZOrderOnTop(true);

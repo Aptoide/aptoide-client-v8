@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.view.app.displayable;
 
-import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
@@ -15,7 +14,7 @@ import rx.functions.Action0;
 /**
  * Created on 04/05/16.
  */
-@Ignore abstract class AppViewDisplayable extends DisplayablePojo<GetApp> {
+abstract class AppViewDisplayable extends DisplayablePojo<GetApp> {
 
   @Setter private Action0 onResumeAction;
   @Setter private Action0 onPauseAction;

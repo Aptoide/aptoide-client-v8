@@ -4,7 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 
 public class SyncService extends Service {
@@ -15,8 +15,8 @@ public class SyncService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    scheduler = ((V8Engine) getApplicationContext()).getSyncScheduler();
-    storage = ((V8Engine) getApplicationContext()).getSyncStorage();
+    scheduler = ((AptoideApplication) getApplicationContext()).getSyncScheduler();
+    storage = ((AptoideApplication) getApplicationContext()).getSyncStorage();
     crashReport = CrashReport.getInstance();
   }
 

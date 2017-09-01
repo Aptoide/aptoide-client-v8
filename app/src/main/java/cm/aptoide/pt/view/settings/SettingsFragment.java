@@ -30,8 +30,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -43,7 +43,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
@@ -99,6 +98,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private NotificationCenter notificationCenter;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
+  private String marketName;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -106,10 +106,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     trackAnalytics = true;
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    fileManager = ((V8Engine) getContext().getApplicationContext()).getFileManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
     adultContentConfirmationDialog =
@@ -137,9 +138,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .setEditText(R.id.pininput)
         .build();
 
-    notificationCenter = ((V8Engine) getContext().getApplicationContext()).getNotificationCenter();
+    notificationCenter =
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
     notificationSyncScheduler =
-        ((V8Engine) getContext().getApplicationContext()).getNotificationSyncScheduler();
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -147,10 +149,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(getActivity());
     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    adultContent =
-        new AdultContent(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-            new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
+    adultContent = new AdultContent(
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
+        new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
+        new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -191,11 +193,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-          ((V8Engine) getContext().getApplicationContext()
-              .getApplicationContext()).getDatabase(), Update.class);
+          ((AptoideApplication) getContext().getApplicationContext()).getDatabase(), Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context,
-          ((V8Engine) context.getApplicationContext()).getDefaultSharedPreferences());
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
@@ -215,18 +216,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
     //set AppStore name
     findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
 
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
     autoUpdatepreference.setSummary(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
 
     subscriptions.add(RxPreference.checks(socialCampaignNotifications)
         .subscribe(isChecked -> handleSocialNotifications(isChecked)));

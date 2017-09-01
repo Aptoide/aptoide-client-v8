@@ -32,6 +32,11 @@ public class DownloadFactory {
   private static final String UPDATE_ACTION = "?action=update";
   private static final String INSTALL_ACTION = "?action=install";
   private static final String DOWNGRADE_ACTION = "?action=downgrade";
+  private final String marketName;
+
+  public DownloadFactory(String marketName) {
+    this.marketName = marketName;
+  }
 
   public Download create(GetAppMeta.App appToDownload, int downloadAction)
       throws IllegalArgumentException {
@@ -305,8 +310,7 @@ public class DownloadFactory {
 
   public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
     Download download = new Download();
-    download.setAppName(Application.getConfiguration()
-        .getMarketName());
+    download.setAppName(marketName);
     download.setMd5(autoUpdateInfo.md5);
     download.setVersionCode(autoUpdateInfo.vercode);
     //download.setVersionName(null); // no info available

@@ -77,4 +77,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     posts.clear();
     notifyDataSetChanged();
   }
+
+  public void removePost(int postPosition) {
+    posts.remove(postPosition);
+    notifyItemRemoved(postPosition);
+  }
+
+  public Post getPost(int position) {
+    return posts.get(position);
+  }
 }

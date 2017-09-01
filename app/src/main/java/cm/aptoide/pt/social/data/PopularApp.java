@@ -13,9 +13,9 @@ public class PopularApp extends AppPost {
 
   public PopularApp(String cardId, long appId, String packageName, String appName, String appIcon,
       Long storeId, float ratingAverage, List<UserSharerTimeline.User> users, Date timestamp,
-      String abUrl, boolean isLiked, CardType cardType) {
+      String abUrl, boolean isLiked, CardType cardType, String markAsReadUrl) {
     super(cardId, appIcon, appName, appId, packageName, timestamp, abUrl, cardType, ratingAverage,
-        storeId, isLiked);
+        storeId, isLiked, markAsReadUrl);
     this.users = users;
   }
 

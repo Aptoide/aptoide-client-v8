@@ -22,7 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -41,10 +42,12 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.search.StoreSearchActivity;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
@@ -81,6 +84,7 @@ public class AddStoreDialog extends BaseDialog {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private StoreAnalytics storeAnalytics;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -94,19 +98,24 @@ public class AddStoreDialog extends BaseDialog {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     converterFactory = WebService.getDefaultConverter();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
     baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
 
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
     }
+    storeAnalytics =
+        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance());
   }
 
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -118,6 +127,7 @@ public class AddStoreDialog extends BaseDialog {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(click -> {
           addStoreAction();
+          storeAnalytics.sendStoreTabInteractEvent("Add Store");
         });
     RxView.clicks(topStoresButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -283,7 +293,7 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void topStoresAction() {
-    navigator.navigateTo(V8Engine.getFragmentProvider()
+    navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newFragmentTopStores());
     if (isAdded()) {
       dismiss();
@@ -294,15 +304,15 @@ public class AddStoreDialog extends BaseDialog {
     return GetStoreMetaRequest.of(
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
         baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
     new StoreUtilsProxy(accountManager, baseBodyBodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), httpClient,
         WebService.getDefaultConverter(), tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()).subscribeStore(
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()).subscribeStore(
         getHomeMetaRequest, getStoreMeta1 -> {
           ShowMessage.asSnack(getView(),
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,

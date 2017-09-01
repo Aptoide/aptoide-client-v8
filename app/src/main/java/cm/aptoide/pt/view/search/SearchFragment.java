@@ -12,16 +12,14 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -97,10 +95,12 @@ public class SearchFragment extends BasePagerToolbarFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    bodyInterceptor =
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
@@ -155,7 +155,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
             .toString();
 
         if (s.length() > 1) {
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newSearchFragment(s, storeName));
         }
       });
@@ -179,7 +179,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @Partners protected void subscribedButtonListener() {
+  protected void subscribedButtonListener() {
     selectedButton = 0;
     viewPager.setCurrentItem(0);
     subscribedButton.setBackgroundResource(R.drawable.search_button_background);
@@ -188,7 +188,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     everywhereButton.setBackgroundResource(0);
   }
 
-  @Partners protected Void everywhereButtonListener(boolean smoothScroll) {
+  protected Void everywhereButtonListener(boolean smoothScroll) {
     selectedButton = 1;
     viewPager.setCurrentItem(1, smoothScroll);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);
@@ -229,14 +229,14 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @Partners protected void executeSearchRequests(String storeName, boolean create) {
+  protected void executeSearchRequests(String storeName, boolean create) {
     //TODO (pedro): Don't have search source (which tab)
     searchAnalytics.search(query);
     if (storeName != null) {
       shouldFinishLoading = true;
       ListSearchAppsRequest of = ListSearchAppsRequest.of(query, storeName,
           StoreUtils.getSubscribedStoresAuthMap(AccessorFactory.getAccessorFor(
-              ((V8Engine) getContext().getApplicationContext()
+              ((AptoideApplication) getContext().getApplicationContext()
                   .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor,
           httpClient, converterFactory, tokenInvalidator, sharedPreferences);
       of.execute(listSearchApps -> {
@@ -253,7 +253,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
-          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+          AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
               .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
           converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
@@ -271,7 +271,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
-          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+          AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
               .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
           converterFactory, tokenInvalidator, sharedPreferences)
           .execute(listSearchApps -> {
@@ -338,16 +338,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-
-    if (i == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (savedInstanceState != null) {
@@ -365,7 +355,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return R.id.search_results_layout;
   }
 
-  @Partners @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
       executeSearchRequests(storeName, create);
     } else {
@@ -373,7 +363,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @Partners protected static class BundleCons {
+  protected static class BundleCons {
 
     public static final String QUERY = "query";
     public static final String STORE_NAME = "storeName";

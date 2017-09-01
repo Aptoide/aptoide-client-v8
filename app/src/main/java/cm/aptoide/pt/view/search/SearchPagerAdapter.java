@@ -8,7 +8,7 @@ package cm.aptoide.pt.view.search;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 
 /**
  * Created by neuro on 28-04-2016.
@@ -35,25 +35,25 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
   @Override public Fragment getItem(int position) {
     if (storeName != null) {
-      return V8Engine.getFragmentProvider()
+      return AptoideApplication.getFragmentProvider()
           .newSearchPagerTabFragment(query, storeName);
     } else {
       if (getCount() > 1) {
         if (position == 0) {
-          return V8Engine.getFragmentProvider()
+          return AptoideApplication.getFragmentProvider()
               .newSearchPagerTabFragment(query, true, getCount() > 1);
         } else if (position == 1) {
-          return V8Engine.getFragmentProvider()
+          return AptoideApplication.getFragmentProvider()
               .newSearchPagerTabFragment(query, false, getCount() > 1);
         } else {
           throw new IllegalArgumentException("SearchPagerAdapter should have 2 and only 2 pages!");
         }
       } else {
         if (hasSubscribedResults) {
-          return V8Engine.getFragmentProvider()
+          return AptoideApplication.getFragmentProvider()
               .newSearchPagerTabFragment(query, true, getCount() > 1);
         } else {
-          return V8Engine.getFragmentProvider()
+          return AptoideApplication.getFragmentProvider()
               .newSearchPagerTabFragment(query, false, getCount() > 1);
         }
       }

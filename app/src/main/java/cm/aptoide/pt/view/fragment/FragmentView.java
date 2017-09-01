@@ -12,8 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.NavigationProvider;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -37,6 +37,8 @@ public abstract class FragmentView extends LeakFragment implements View {
   private Presenter presenter;
   private NavigationProvider navigationProvider;
   private SharedPreferences sharedPreferences;
+  private String defaultStore;
+  private String defaultTheme;
 
   public FragmentNavigator getFragmentNavigator() {
     return navigationProvider.getFragmentNavigator();
@@ -48,7 +50,7 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
     return new FragmentNavigator(getChildFragmentManager(), containerId, android.R.anim.fade_in,
-        android.R.anim.fade_out, sharedPreferences);
+        android.R.anim.fade_out, sharedPreferences, defaultStore, defaultTheme);
   }
 
   @Override public void onAttach(Activity activity) {
@@ -63,8 +65,10 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    defaultStore = ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
   }

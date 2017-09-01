@@ -26,7 +26,7 @@ public class TimelineStatsViewHolder extends PostViewHolder<TimelineStatsPost> {
 
   public TimelineStatsViewHolder(View view, SpannableFactory spannableFactory,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
-    super(view);
+    super(view, cardTouchEventPublishSubject);
     this.spannableFactory = spannableFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.followers = (Button) itemView.findViewById(R.id.followers);

@@ -10,8 +10,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.displayable.AppViewDescriptionDisplayable;
@@ -57,7 +57,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
           .subscribe(click -> {
             displayable.getAppViewAnalytics()
                 .sendReadMoreEvent();
-            Fragment fragment = V8Engine.getFragmentProvider()
+            Fragment fragment = AptoideApplication.getFragmentProvider()
                 .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
             getFragmentNavigator().navigateTo(fragment);
           }));

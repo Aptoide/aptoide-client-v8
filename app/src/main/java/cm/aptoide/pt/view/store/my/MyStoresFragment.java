@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -74,7 +74,7 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
 
   private void registerForViewChanges() {
     AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
 
     Observable<Account> loginObservable = accountManager.accountStatus()
         .doOnNext(__ -> reloadData());

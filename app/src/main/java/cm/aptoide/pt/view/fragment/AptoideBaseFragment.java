@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -22,19 +22,31 @@ import retrofit2.Converter;
 
 public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRecyclerFragment<T> {
 
-  protected RequestFactory requestFactory;
+  protected RequestFactory requestFactoryCdnPool;
+  protected RequestFactory requestFactoryCdnWeb;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final BodyInterceptor<BaseBody> baseBodyInterceptorV7Pool =
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    final BodyInterceptor<BaseBody> baseBodyInterceptorV7Web =
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Web();
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    requestFactory = new RequestFactory(new StoreCredentialsProviderImpl(
-        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor, httpClient,
-        converterFactory, ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+    requestFactoryCdnPool = new RequestFactory(new StoreCredentialsProviderImpl(
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptorV7Pool,
+        httpClient, converterFactory,
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        getContext().getResources(),
+        (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE));
+    requestFactoryCdnWeb = new RequestFactory(new StoreCredentialsProviderImpl(
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptorV7Web,
+        httpClient, converterFactory,
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE));
     super.onCreate(savedInstanceState);

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.Purchase;
@@ -29,13 +28,15 @@ public class BillingNavigator {
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
   private final AptoideAccountManager accountManager;
+  private final String marketName;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager) {
+      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager, String marketName) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
+    this.marketName = marketName;
   }
 
   public void navigateToPayerAuthenticationForResult(int requestCode) {
@@ -88,8 +89,7 @@ public class BillingNavigator {
     bundle.putParcelable(PayPalService.EXTRA_PAYPAL_CONFIGURATION,
         new PayPalConfiguration().environment(BuildConfig.PAYPAL_ENVIRONMENT)
             .clientId(BuildConfig.PAYPAL_KEY)
-            .merchantName(V8Engine.getConfiguration()
-                .getMarketName()));
+            .merchantName(marketName));
     bundle.putParcelable(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT,
         new PayPalPayment(new BigDecimal(amount), currency, description,
             PayPalPayment.PAYMENT_INTENT_SALE));

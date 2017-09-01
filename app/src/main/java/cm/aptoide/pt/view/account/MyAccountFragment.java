@@ -24,8 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -117,11 +117,13 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-    accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    bodyInterceptor =
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     crashReport = CrashReport.getInstance();
   }
@@ -155,9 +157,9 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
             new MyAccountNavigator(getFragmentNavigator()),
-            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
+            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
             new LinksHandlerFactory(getContext()),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
         savedInstanceState);
   }
 
@@ -215,8 +217,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
                 account.getStore()
                     .getName(), null, null), StoreContext.meta, bodyInterceptor, httpClient,
             converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe());

@@ -26,11 +26,12 @@ public class ManageUserPresenter implements Presenter {
   private final ManageUserFragment.ViewModel userData;
   private final boolean isEditProfile;
   private final UriToPathResolver uriToPathResolver;
+  private final boolean showPrivacyConfigs;
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
       AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
       ManageUserNavigator navigator, ManageUserFragment.ViewModel userData, boolean isEditProfile,
-      UriToPathResolver uriToPathResolver) {
+      UriToPathResolver uriToPathResolver, boolean showPrivacyConfigs) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
@@ -39,6 +40,7 @@ public class ManageUserPresenter implements Presenter {
     this.userData = userData;
     this.isEditProfile = isEditProfile;
     this.uriToPathResolver = uriToPathResolver;
+    this.showPrivacyConfigs = showPrivacyConfigs;
   }
 
   @Override public void present() {
@@ -87,8 +89,6 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void navigateAway() {
-    final boolean showPrivacyConfigs = Application.getConfiguration()
-        .isCreateStoreAndSetUserPrivacyAvailable();
     if (isEditProfile) {
       navigator.goBack();
     } else if (showPrivacyConfigs) {

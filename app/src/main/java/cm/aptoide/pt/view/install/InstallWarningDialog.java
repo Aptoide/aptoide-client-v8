@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
-import cm.aptoide.pt.preferences.Application;
 import lombok.Getter;
 
 // FIXME: 27/2/2017 convert this into a class that extends "BaseDialog"
@@ -28,13 +27,15 @@ public class InstallWarningDialog {
 
   private final boolean trustedVersionAvailable;
   private final Malware.Rank rank;
+  private final String marketName;
   @Getter private AlertDialog dialog;
   private Button trustedAppButton;
   private Button proceedButton;
 
   @SuppressLint("InflateParams")
   public InstallWarningDialog(Malware.Rank rank, boolean trustedVersionAvailable, Context ctx,
-      View.OnClickListener installHandler, View.OnClickListener searchTrustedHandler) {
+      View.OnClickListener installHandler, View.OnClickListener searchTrustedHandler,
+      String marketName) {
 
     this.trustedVersionAvailable = trustedVersionAvailable;
     this.rank = rank;
@@ -44,6 +45,7 @@ public class InstallWarningDialog {
     AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
     builder.setView(contentView);
 
+    this.marketName = marketName;
     proceedButton = (Button) contentView.findViewById(R.id.dialog_install_warning_proceed_button);
     proceedButton.setOnClickListener(new ViewOnClickListenerComposite(installHandler, onDestroy()));
 
@@ -90,8 +92,7 @@ public class InstallWarningDialog {
     final String placeholder = "[placeholder]";
     final String stringTextTemp = contentView.getContext()
         .getString(R.string.dialog_install_warning_credibility_text, placeholder);
-    final String stringText = stringTextTemp.replaceFirst("Aptoide", Application.getConfiguration()
-        .getMarketName());
+    final String stringText = stringTextTemp.replaceFirst("Aptoide", marketName);
     final SpannableString text = new SpannableString(stringText);
 
     final int placeholderIndex = stringText.indexOf(placeholder);

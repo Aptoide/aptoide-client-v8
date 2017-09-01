@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -25,7 +25,6 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
   private TextView name;
   private ImageView icon;
-  private TextView sponsored;
   private TextView downloadsTextView;
   private RatingBar ratingBar;
   private TextView timeTextView;
@@ -37,7 +36,6 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
   @Override protected void assignViews(View itemView) {
     name = (TextView) itemView.findViewById(R.id.name);
     icon = (ImageView) itemView.findViewById(R.id.icon);
-    sponsored = (TextView) itemView.findViewById(R.id.sponsored_label);
     downloadsTextView = (TextView) itemView.findViewById(R.id.downloads);
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
     timeTextView = (TextView) itemView.findViewById(R.id.search_time);
@@ -48,14 +46,12 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
     name.setText(minimalAd.getName());
     final FragmentActivity context = getContext();
-    sponsored.setText((context.getResources()
-        .getText(R.string.all_title_ad) + ""));
     ImageLoader.with(context)
         .load(minimalAd.getIconPath(), icon);
 
     itemView.setOnClickListener(view -> {
       //	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newAppViewFragment(minimalAd));
     });
 

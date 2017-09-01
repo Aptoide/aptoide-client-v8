@@ -3,7 +3,6 @@ package cm.aptoide.pt.view.recycler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
@@ -84,14 +83,10 @@ import cm.aptoide.pt.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.view.search.SearchAdWidget;
 import cm.aptoide.pt.view.search.SearchDisplayable;
 import cm.aptoide.pt.view.search.SearchWidget;
-import cm.aptoide.pt.view.store.AddMoreStoresDisplayable;
-import cm.aptoide.pt.view.store.AddMoreStoresWidget;
 import cm.aptoide.pt.view.store.CreateStoreWidget;
 import cm.aptoide.pt.view.store.GridDisplayDisplayable;
-import cm.aptoide.pt.view.store.GridStoreDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaWidget;
-import cm.aptoide.pt.view.store.GridStoreWidget;
 import cm.aptoide.pt.view.store.StoreAddCommentDisplayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderWidget;
@@ -106,8 +101,6 @@ import cm.aptoide.pt.view.store.my.MyStoreDisplayable;
 import cm.aptoide.pt.view.store.my.MyStoreWidget;
 import cm.aptoide.pt.view.store.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.view.store.recommended.RecommendedStoreWidget;
-import cm.aptoide.pt.view.store.subscribed.SubscribedStoreDisplayable;
-import cm.aptoide.pt.view.store.subscribed.SubscribedStoreWidget;
 import cm.aptoide.pt.view.updates.UpdateDisplayable;
 import cm.aptoide.pt.view.updates.UpdateWidget;
 import cm.aptoide.pt.view.updates.UpdatesHeaderDisplayable;
@@ -137,11 +130,11 @@ public class DisplayableWidgetMapping {
   private Class<? extends Widget> widgetClass;
   private Map<Integer, DisplayableWidgetMapping> viewTypeMapping = new HashMap<>();
 
-  @Partners protected DisplayableWidgetMapping() {
+  protected DisplayableWidgetMapping() {
     parseMappings(createMapping());
   }
 
-  @Partners public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
+  public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
       Class<? extends Displayable> displayableClass) {
     this.displayableClass = displayableClass;
     this.widgetClass = widgetClass;
@@ -151,14 +144,14 @@ public class DisplayableWidgetMapping {
     return instance;
   }
 
-  @Partners protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
+  protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
       viewTypeMapping.put(displayableWidgetMapping.newDisplayable()
           .getViewLayout(), displayableWidgetMapping);
     }
   }
 
-  @Partners protected List<DisplayableWidgetMapping> createMapping() {
+  protected List<DisplayableWidgetMapping> createMapping() {
 
     LinkedList<DisplayableWidgetMapping> displayableWidgetMappings = new LinkedList<>();
 
@@ -168,13 +161,9 @@ public class DisplayableWidgetMapping {
 
     // common widgets / displayables
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AddMoreStoresWidget.class, AddMoreStoresDisplayable.class));
-    displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AppBrickWidget.class, AppBrickDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(FooterWidget.class, FooterDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(SubscribedStoreWidget.class,
-        SubscribedStoreDisplayable.class));
 
     // grid widgets / displayables
     displayableWidgetMappings.add(
@@ -186,7 +175,8 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(FooterRowWidget.class, FooterRowDisplayable.class));
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(GridStoreWidget.class, GridStoreDisplayable.class));
+        new DisplayableWidgetMapping(cm.aptoide.pt.view.store.GridStoreWidget.class,
+            cm.aptoide.pt.view.store.GridStoreDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(GridStoreMetaWidget.class, GridStoreMetaDisplayable.class));
     displayableWidgetMappings.add(
@@ -322,7 +312,7 @@ public class DisplayableWidgetMapping {
     return displayableWidgetMappings;
   }
 
-  @Partners @Nullable public Displayable newDisplayable() {
+  @Nullable public Displayable newDisplayable() {
     try {
       return displayableClass.newInstance();
     } catch (Exception e) {
@@ -377,7 +367,7 @@ public class DisplayableWidgetMapping {
    *
    * @return displayableClass
    */
-  @Partners public Class<? extends Displayable> getDisplayableClass() {
+  public Class<? extends Displayable> getDisplayableClass() {
     return displayableClass;
   }
 
@@ -386,7 +376,7 @@ public class DisplayableWidgetMapping {
    *
    * @return widgetClass
    */
-  @Partners public Class<? extends Widget> getWidgetClass() {
+  public Class<? extends Widget> getWidgetClass() {
     return widgetClass;
   }
 
@@ -395,7 +385,7 @@ public class DisplayableWidgetMapping {
    *
    * @return Map of widgets and displayables
    */
-  @Partners protected Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
+  protected Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
     return viewTypeMapping;
   }
 }
