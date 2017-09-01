@@ -18,8 +18,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
@@ -124,7 +124,7 @@ public class SpotAndShareMainFragment extends FragmentView
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
     presenter = new SpotAndShareMainFragmentPresenter(this,
-        ((V8Engine) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
+        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
         spotAndSharePermissionProvider);
     attachPresenter(presenter, savedInstanceState);
   }

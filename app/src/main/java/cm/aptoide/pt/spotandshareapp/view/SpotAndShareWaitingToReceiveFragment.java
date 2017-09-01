@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.spotandshareapp.JoinGroupView;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToReceivePresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -77,7 +77,8 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
         onSuccess -> openSpotandShareTransferRecordFragment());
 
     attachPresenter(new SpotAndShareWaitingToReceivePresenter(this,
-        ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare()), savedInstanceState);
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare()),
+        savedInstanceState);
   }
 
   @Override public void onDestroyView() {

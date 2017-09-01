@@ -13,8 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
@@ -99,13 +99,13 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private void attachPresenters() {
     SpotAndShareAppSelectionPresenter spotAndShareAppSelectionPresenter =
         new SpotAndShareAppSelectionPresenter(this,
-            ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare());
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare());
 
     SpotAndSharePickAppsPresenter spotAndSharePickAppsPresenter =
         new SpotAndSharePickAppsPresenter(this, shouldCreateGroup,
             new InstalledRepositoryDummy(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
-            ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
             new DrawableBitmapMapper(getActivity().getApplicationContext()),
             new AppModelToAndroidAppInfoMapper(new ObbsProvider()));
 

@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatarsProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
@@ -96,7 +96,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     avatarsRecyclerView.setHasFixedSize(true);
 
     attachPresenter(new SpotAndShareEditProfilePresenter(this,
-        ((V8Engine) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
+        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
         new SpotAndShareUserAvatarsProvider()), savedInstanceState);
   }
 

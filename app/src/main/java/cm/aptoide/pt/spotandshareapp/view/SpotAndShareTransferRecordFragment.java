@@ -25,8 +25,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.AppModel;
@@ -199,7 +199,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
     SpotAndShareTransferRecordPresenter transferRecordPresenter =
         new SpotAndShareTransferRecordPresenter(this,
-            ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
             new SpotAndShareTransferRecordManager(getContext()),
             new SpotAndShareInstallManager(getActivity().getApplicationContext()));
 
@@ -207,7 +207,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         new SpotAndSharePickAppsPresenter(this, false,
             new InstalledRepositoryDummy(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
-            ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
             new DrawableBitmapMapper(getActivity().getApplicationContext()),
             new AppModelToAndroidAppInfoMapper(new ObbsProvider()));
 

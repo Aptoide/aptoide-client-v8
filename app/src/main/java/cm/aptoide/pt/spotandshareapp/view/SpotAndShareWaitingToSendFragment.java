@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
@@ -96,7 +96,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     refreshButton = (ImageView) view.findViewById(R.id.sync_image);
 
     attachPresenter(new SpotAndShareWaitingToSendPresenter(this,
-        ((V8Engine) getActivity().getApplicationContext()).getSpotAndShare(),
+        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
         new AppModelToAndroidAppInfoMapper(new ObbsProvider())), savedInstanceState);
   }
 
