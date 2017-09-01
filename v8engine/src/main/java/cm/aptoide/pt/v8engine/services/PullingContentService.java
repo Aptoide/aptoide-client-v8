@@ -31,6 +31,7 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import com.bumptech.glide.request.target.NotificationTarget;
 import java.util.List;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -102,7 +103,8 @@ public class PullingContentService extends Service {
   private void setUpdatesAction(int startId) {
     UpdateRepository repository = RepositoryFactory.getUpdateRepository();
     subscriptions.add(
-        repository.sync(true).andThen(repository.getAll(false)).first().subscribe(updates -> {
+        repository.sync(true).andThen(repository.getAll(false)).first()
+            .observeOn(Schedulers.computation()).subscribe(updates -> {
           Logger.d(TAG, "updates refreshed");
           setUpdatesNotification(updates, startId);
         }, throwable -> {
