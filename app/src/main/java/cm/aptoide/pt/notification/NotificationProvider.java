@@ -72,6 +72,10 @@ public class NotificationProvider {
             .toList());
   }
 
+  public Observable<List<Notification>> getNotifications() {
+    return notificationAccessor.getAll();
+  }
+
   public Single<Notification> getLastShowed(Integer[] notificationType) {
     return notificationAccessor.getLastShowed(notificationType);
   }

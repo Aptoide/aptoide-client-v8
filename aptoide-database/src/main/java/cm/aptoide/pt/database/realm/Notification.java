@@ -73,10 +73,6 @@ public class Notification extends RealmObject {
     return dismissed;
   }
 
-  public void setDismissed(long dismissed) {
-    this.dismissed = dismissed;
-  }
-
   public int getType() {
     return type;
   }
@@ -123,6 +119,14 @@ public class Notification extends RealmObject {
 
   public String getKey() {
     return key;
+  }
+
+  public boolean isDismissed() {
+    return dismissed != NOT_DISMISSED;
+  }
+
+  public void setDismissed(long dismissed) {
+    this.dismissed = dismissed;
   }
 
   public boolean isExpired() {
