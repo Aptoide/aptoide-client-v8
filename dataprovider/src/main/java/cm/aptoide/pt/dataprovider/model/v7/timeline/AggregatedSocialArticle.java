@@ -24,6 +24,7 @@ public class AggregatedSocialArticle implements TimelineCard {
   @Getter private final Date date;
   @Getter private final List<App> apps;
   @Getter private final Ab ab;
+  @Getter private final Urls urls;
 
   public AggregatedSocialArticle(@JsonProperty("uid") String cardId,
       @JsonProperty("title") String title, @JsonProperty("thumbnail") String thumbnailUrl,
@@ -32,7 +33,7 @@ public class AggregatedSocialArticle implements TimelineCard {
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonProperty("cards_shared") List<MinimalCard> minimalCardList,
-      @JsonProperty("sharers") List<UserSharerTimeline> sharers) {
+      @JsonProperty("sharers") List<UserSharerTimeline> sharers, @JsonProperty("urls") Urls urls) {
     this.minimalCardList = minimalCardList;
     this.sharers = sharers;
     this.publisher = publisher;
@@ -43,6 +44,7 @@ public class AggregatedSocialArticle implements TimelineCard {
     this.date = date;
     this.apps = apps;
     this.ab = ab;
+    this.urls = urls;
   }
 
   public List<MinimalCard> getMinimalCardList() {

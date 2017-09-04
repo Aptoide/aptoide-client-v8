@@ -16,16 +16,23 @@ import lombok.Getter;
   @Getter private final Store store;
   @Getter private final List<App> apps;
   @Getter private final Ab ab;
+  private final Urls urls;
 
   private Date latestUpdate;
 
   @JsonCreator
   public StoreLatestApps(@JsonProperty("uid") String cardId, @JsonProperty("store") Store store,
-      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
+      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
+      @JsonProperty("urls") Urls urls) {
     this.cardId = cardId;
     this.store = store;
     this.apps = apps;
     this.ab = ab;
+    this.urls = urls;
+  }
+
+  @Override public Urls getUrls() {
+    return urls;
   }
 
   public Date getLatestUpdate() {

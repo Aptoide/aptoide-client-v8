@@ -84,4 +84,8 @@ public class LocalAccount implements Account {
   @Override public boolean isPublicUser() {
     return getAccess() == Access.PUBLIC;
   }
+
+  @Override public boolean isPublicStore() {
+    return store != null && store.hasPublicAccess();
+  }
 }

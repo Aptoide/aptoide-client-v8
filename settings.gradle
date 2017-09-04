@@ -3,8 +3,7 @@
  * Modified by Neurophobic Animal on 24/05/2016.
  */
 
-include 'vanilla',
-    ':v8engine',
+include 'app',
     ':dataprovider',
     ':aptoidepreferences',
     ':crashreports',
