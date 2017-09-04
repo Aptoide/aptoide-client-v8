@@ -91,7 +91,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
     attachPresenter(new SpotAndShareEditProfilePresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
-        new SpotAndShareUserAvatarsProvider()), savedInstanceState);
+        new SpotAndShareUserAvatarsProvider(getContext().getPackageName())), savedInstanceState);
   }
 
   private void setupAvatarsListLayoutManager() {
