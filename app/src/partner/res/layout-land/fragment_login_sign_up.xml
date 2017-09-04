@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_color"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/bottom_skip_bar_height"
+    >
+  <ScrollView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/white"
+      >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <android.support.design.widget.AppBarLayout
+          android:id="@+id/appbar"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:visibility="gone"
+          >
+        <include layout="@layout/toolbar"/>
+      </android.support.design.widget.AppBarLayout>
+
+      <ImageView
+          android:id="@+id/aptoide_logo"
+          android:layout_width="200dp"
+          android:layout_height="50dp"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="14dp"
+          android:src="@drawable/app_logo_colourful"
+          />
+
+    </LinearLayout>
+
+  </ScrollView>
+
+  <FrameLayout
+      android:id="@+id/login_signup_layout"
+      android:layout_width="match_parent"
+      android:layout_height="360dp"
+      android:elevation="16dp"
+      android:visibility="visible"
+      app:behavior_hideable="false"
+      app:behavior_peekHeight="270dp"
+      app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+      />
+
+</android.support.design.widget.CoordinatorLayout>
