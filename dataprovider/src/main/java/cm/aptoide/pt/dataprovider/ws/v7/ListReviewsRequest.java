@@ -75,9 +75,9 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       int maxReviews, BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, String languagesFilterSort) {
     return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences);
+        converterFactory, tokenInvalidator, sharedPreferences, languagesFilterSort);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,

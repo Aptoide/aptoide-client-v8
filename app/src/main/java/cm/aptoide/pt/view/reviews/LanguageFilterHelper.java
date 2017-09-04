@@ -13,7 +13,7 @@ import lombok.Getter;
 /**
  * Created by neuro on 28-08-2017.
  */
-@Getter class LanguageFilterHelper {
+@Getter public class LanguageFilterHelper {
 
   private final LanguageFilter all;
   private final LanguageFilter currentLanguageFirst;
@@ -21,7 +21,7 @@ import lombok.Getter;
 
   private final String currentCountryCode;
 
-  LanguageFilterHelper(Resources resources) {
+  public LanguageFilterHelper(Resources resources) {
     all = new LanguageFilter(R.string.comments_filter_comments_by_language_all,
         Collections.emptyList());
     currentCountryCode = AptoideUtils.SystemU.getCountryCode(resources);
@@ -40,7 +40,7 @@ import lombok.Getter;
         LanguageCode.en_GB.toString());
   }
 
-  @Getter static class LanguageFilter {
+  @Getter public static class LanguageFilter {
 
     @StringRes private final int stringId;
     private final List<String> countryCodes;
