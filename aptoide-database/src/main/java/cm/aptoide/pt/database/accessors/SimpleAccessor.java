@@ -12,7 +12,6 @@ import rx.Scheduler;
 
   public SimpleAccessor(Database db, Class<T> clazz) {
     this.database = db;
-    this.observingScheduler = observingScheduler;
     this.clazz = clazz;
   }
 

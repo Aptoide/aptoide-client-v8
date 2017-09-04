@@ -25,8 +25,8 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
 import rx.Observable;
-import rx.Scheduler;
 import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 5/13/16.
@@ -55,11 +55,10 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private String obbPath;
   private String genericPath;
   private FileDownloader fileDownloader;
-  private final Scheduler ioScheduler;
 
   DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils,
       Analytics analytics, AptoideDownloadManager downloadManager, String apkPath, String obbPath,
-      String genericPath, FileDownloader fileDownloader, Scheduler ioScheduler) {
+      String genericPath, FileDownloader fileDownloader) {
     this.analytics = analytics;
     this.download = download;
     this.md5 = download.getMd5();
@@ -70,9 +69,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
     this.obbPath = obbPath;
     this.genericPath = genericPath;
     this.fileDownloader = fileDownloader;
-    this.ioScheduler = ioScheduler;
     this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
-        .subscribeOn(ioScheduler)
+        .subscribeOn(Schedulers.io())
         .takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.PROGRESS
             && download.getOverallDownloadStatus() != Download.IN_QUEUE
             && download.getOverallDownloadStatus() != Download.PENDING)
@@ -127,7 +125,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
       downloadAccessor.save(download);
       return null;
     })
-        .subscribeOn(ioScheduler)
+        .subscribeOn(Schedulers.io())
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
@@ -220,7 +218,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
           });
         })
         .doOnUnsubscribe(() -> downloadManager.setDownloading(false))
-        .subscribeOn(ioScheduler)
+        .subscribeOn(Schedulers.io())
         .subscribe(success -> saveDownloadInDb(download),
             throwable -> setDownloadStatus(Download.ERROR, download));
     download.setDownloadSpeed(task.getSpeed() * 1024);

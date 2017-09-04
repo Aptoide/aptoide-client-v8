@@ -12,15 +12,15 @@ import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
-import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 /**
  * Created on 01/09/16.
  */
 public class InstalledAccessor extends SimpleAccessor<Installed> {
 
-  public InstalledAccessor(Database db, Scheduler observingScheduler) {
-    super(db, observingScheduler, Installed.class);
+  public InstalledAccessor(Database db) {
+    super(db, Installed.class);
   }
 
   public Observable<List<Installed>> getAllInstalled() {
@@ -44,7 +44,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
             .unsubscribeOn(RealmSchedulers.getScheduler()))
         .flatMap(installed -> database.copyFromRealm(installed))
         .subscribeOn(RealmSchedulers.getScheduler())
-        .observeOn(observingScheduler)
+        .observeOn(Schedulers.io())
         .flatMap(installs -> filterCompleted(installs));
   }
 
@@ -60,7 +60,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .equalTo(Installed.VERSION_CODE, versionCode)
             .findFirst()))
-        .observeOn(observingScheduler)
+        .observeOn(Schedulers.io())
         .toCompletable();
   }
 

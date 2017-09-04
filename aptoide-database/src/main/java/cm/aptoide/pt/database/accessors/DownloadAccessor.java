@@ -10,13 +10,12 @@ import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Sort;
 import java.util.List;
 import rx.Observable;
-import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
 public class DownloadAccessor extends SimpleAccessor<Download> {
 
-  public DownloadAccessor(Database db, Scheduler observingScheduler) {
-    super(db, observingScheduler, Download.class);
+  public DownloadAccessor(Database db) {
+    super(db, Download.class);
   }
 
   public Observable<List<Download>> getAll() {
