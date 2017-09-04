@@ -34,6 +34,18 @@ public class FragmentNavigator {
     this.defaultTheme = defaultTheme;
   }
 
+  public void navigateWithoutReplace(Fragment fragment) {
+    String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
+    prepareFragmentAdd(fragment, tag).commit();
+  }
+
+  private FragmentTransaction prepareFragmentAdd(Fragment fragment, String tag) {
+    return fragmentManager.beginTransaction()
+        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
+        .addToBackStack(tag)
+        .add(containerId, fragment);
+  }
+
   public void navigateUsing(Event event, String storeTheme, String title, String tag,
       StoreContext storeContext) {
     Fragment fragment;
