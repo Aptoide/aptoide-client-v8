@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">%s lagi diundhuh</string>
-  <string name="pause_download">Jeda</string>
-  <string name="resume_download">Mulai meneh</string>
-  <string name="general_downloads_dialog_only_mobile_message">Panjenengan milih ngundhuh ing Seluler 3G/4G. Arep ngowahi pengaturan?</string>
-  <string name="general_downloads_dialog_only_wifi_message">Panjenengan milih ngundhuh ing WiFi. Arep ngowahi pengaturan?</string>
-  <string name="general_downloads_dialog_no_download_rule_message">Ora ana aturan undhuhan. Panjenengan arep ngowahi pengaturan?</string>
-</resources>

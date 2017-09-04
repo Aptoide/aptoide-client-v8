@@ -147,7 +147,7 @@
   <string name="followed">फॉलो कर रहे हैं</string>
   <string name="unfollow_yes_no">क्या आप वाकई अनफॉलो करना चाहते हैं?</string>
   <string name="unfollow">अनफॉलो करें</string>
-  <string name="appview_follow_store_button_text">Follow?</string>
+  <string name="appview_follow_store_button_text">फॉलो करें</string>
   <string name="unfollowing_store_message">%s अनफॉलो कर रहे हैं</string>
   <string name="store_followed">स्टोर %s फॉलो किया गया</string>
   <string name="subscribers">सदस्य</string>
@@ -270,7 +270,7 @@
   <string name="create_store_displayable_message">अभी अपना स्टोर बनाएँ और अपनी एप्स साझा करना शुरू करें!</string>
   <string name="create_store_displayable_button">स्टोर बनाएँ</string>
   <string name="my_store_created_displayable_message">आपका एंड्रॉयड एप्प स्टोर</string>
-  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">आपने अभी अपना स्टोर बनाया है!</string>
   <string name="create_store_displayable_explore_message">प्रवेश करें और सभी संभावनाओं का पता लगाएँ</string>
   <string name="create_store_displayable_explore_button">पता लगाएँ</string>
   <!-- stores tab > my store with no apps -->
@@ -319,16 +319,16 @@
   <string name="private_followers_message">%d फॉलोअर निजी हैं</string>
   <string name="private_following_message">आप %d निजी प्रयोक्ता/स्टोर को फॉलो कर रहे हैं</string>
   <!-- Payments -->
-  <string name="item_payment_button_use">use</string>
-  <string name="item_payment_button_register">register</string>
-  <string name="item_payment_approving_text">Approving...</string>
-  <string name="activity_payment_more_payments_button">Use another payment method</string>
+  <string name="item_payment_button_use">इसका इस्तेमाल करें</string>
+  <string name="item_payment_button_register">रजिस्टर</string>
+  <string name="item_payment_approving_text">अनुमोदन करना</string>
+  <string name="activity_payment_more_payments_button">किसी अन्य भुगतान विधि का उपयोग करें</string>
   <string name="reviews_expand_button">%d उत्तर</string>
   <string name="out_of_space_dialog_title">जगह कम है</string>
   <string name="out_of_space_dialog_message">कृपया, आगे बढ़ने के लिए जगह खाली करें।</string>
   <!--new setting options-->
-  <string name="languages">Languages</string>
-  <string name="language_dialog">Select a language</string>
-  <string name="topAppsNotification">Top apps recommendations</string>
-  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
+  <string name="languages">भाषा</string>
+  <string name="language_dialog">भाषा चुनें</string>
+  <string name="topAppsNotification">शीर्ष ऐप्स अनुशंसाएँ</string>
+  <string name="topAppsNotification_dialog">शीर्ष ऐप्स नोटिफिकेशन आवृत्ति चुनें</string>
 </resources>

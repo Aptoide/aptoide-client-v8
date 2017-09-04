@@ -473,13 +473,13 @@
   <string name="privacy_policy">गोपनीयता नीति: %s</string>
   <string name="dialog_version_size">संस्करण: %1$s | आकार: %2$s</string>
   <string name="na">एन / ए</string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password to register.</string>
-  <string name="no_pass_error_message">Please insert a password to register.</string>
-  <string name="no_email_error_message">Please insert an email to register.</string>
-  <string name="website_copied">Website copied to clipboard</string>
-  <string name="email_copied">E-mail copied to clipboard</string>
-  <string name="privacy_copied">Privacy link copied to clipboard</string>
-  <string name="unsubscribing_store_message">Unsubscribing %s</string>
+  <string name="no_email_and_pass_error_message">रजिस्टर करने के लिए कृपया एक ईमेल और पासवर्ड सम्मिलित करें</string>
+  <string name="no_pass_error_message">कृपया रजिस्टर करने के लिए एक पासवर्ड डालें</string>
+  <string name="no_email_error_message">रजिस्टर करने के लिए कृपया एक ईमेल डालें</string>
+  <string name="website_copied">वेबसाइट क्लिपबोर्ड पर कॉपी की गई</string>
+  <string name="email_copied">ई-मेल क्लिपबोर्ड पर प्रतिलिपि बनाई गई</string>
+  <string name="privacy_copied">क्लिपबोर्ड पर गोपनीयता लिंक की प्रतिलिपि बनाई गई</string>
+  <string name="unsubscribing_store_message">अनसब्सक्राइब %s</string>
   <!-- Search Fragment -->
   <string name="all_stores">सभी स्टोर</string>
   <string name="followed_stores">फॉलो किये गए स्टोर</string>
