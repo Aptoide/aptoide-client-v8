@@ -1,16 +1,12 @@
 package cm.aptoide.accountmanager;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
-
-import java.util.Locale;
-
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.LanguageUtils;
@@ -32,10 +28,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     DisplayMetrics dm = res.getDisplayMetrics();
     android.content.res.Configuration conf = res.getConfiguration();
     conf.locale = LanguageUtils.getLocaleFromString(lang);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      conf.setLayoutDirection(LanguageUtils.getLocaleFromString(lang));
+    }
     res.updateConfiguration(conf, dm);
 
     setTitle(getActivityTitle());
-    getTheme().applyStyle(Application.getConfiguration().getDefaultThemeRes(), true);
+    getTheme().applyStyle(Application.getConfiguration()
+        .getDefaultThemeRes(), true);
   }
 
   protected abstract String getActivityTitle();
@@ -51,8 +51,6 @@ public abstract class BaseActivity extends AppCompatActivity {
   }
 
   public enum UserAccessState {
-    PUBLIC,
-    PRIVATE,
-    UNLISTED
+    PUBLIC, PRIVATE, UNLISTED
   }
 }
