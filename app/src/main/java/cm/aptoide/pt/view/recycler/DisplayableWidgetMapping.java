@@ -78,6 +78,8 @@ import cm.aptoide.pt.view.recycler.widget.MessageWhiteBgWidget;
 import cm.aptoide.pt.view.recycler.widget.ProgressBarWidget;
 import cm.aptoide.pt.view.recycler.widget.RowReviewWidget;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import cm.aptoide.pt.view.reviews.ReviewsLanguageFilterDisplayable;
+import cm.aptoide.pt.view.reviews.ReviewsLanguageFilterWidget;
 import cm.aptoide.pt.view.reviews.RowReviewDisplayable;
 import cm.aptoide.pt.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.view.search.SearchAdWidget;
@@ -309,6 +311,10 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((FollowStoreWidget.class), FollowStoreDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((ReviewsLanguageFilterWidget.class),
+        ReviewsLanguageFilterDisplayable.class));
+
     return displayableWidgetMappings;
   }
 

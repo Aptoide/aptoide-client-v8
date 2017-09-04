@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comments_filter_language_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/ordering_buttons_layout"
+    android:gravity="right"
+    android:orientation="vertical"
+    android:background="@color/comment_gray"
+    >
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="64dp"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/comments_filter_comments_by_language"
+        android:layout_gravity="center_vertical"
+        style="@style/Aptoide.TextView.Regular.S"
+        />
+
+    <Spinner
+        android:id="@+id/comments_filter_language_spinner"
+        android:layout_width="16dp"
+        android:layout_height="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="center"
+        android:background="@drawable/arrow_down"
+        />
+
+  </LinearLayout>
+
+  <include layout="@layout/separator_horizontal"/>
+
+
+</LinearLayout>
