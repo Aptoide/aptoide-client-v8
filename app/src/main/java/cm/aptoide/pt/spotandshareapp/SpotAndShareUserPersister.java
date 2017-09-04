@@ -42,6 +42,7 @@ public class SpotAndShareUserPersister {
     int avatarId = sharedPreferences.getInt(SPOTANDSHARE_ACCOUNT_AVATAR_ID, DEFAULT_AVATAR_ID);
     String avatarPath =
         sharedPreferences.getString(SPOTANDSHARE_ACCOUNT_AVATAR_PATH, DEFAULT_AVATAR_PATH);
-    return new SpotAndShareUser(username, new SpotAndShareUserAvatar(avatarId, avatarPath, false));
+    return new SpotAndShareUser(username,
+        new SpotAndShareUserAvatar(avatarId, avatarPath, true));//true to be highlighted by default
   }
 }

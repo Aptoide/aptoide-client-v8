@@ -110,6 +110,7 @@ public class SpotAndShareMainFragment extends FragmentView
   }
 
   private void setAvatar(SpotAndShareAvatar avatar) {
+    userAvatar.setSelected(true);
     ImageLoader.with(getContext())
         .load(avatar.getString(), userAvatar);
   }

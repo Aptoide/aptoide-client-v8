@@ -44,6 +44,7 @@
       android:layout_height="wrap_content"
       android:layout_marginBottom="38dp"
       android:layout_marginTop="38dp"
+      android:clipChildren="false"
       android:gravity="center_horizontal"
       android:orientation="horizontal"
       >
@@ -52,8 +53,10 @@
         android:id="@+id/user_avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginRight="16dp"
-        android:src="@drawable/unknown_avatar"
+        android:background="@drawable/spotandshare_avatar_highlighter"
         />
 
     <TextView
