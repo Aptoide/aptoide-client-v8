@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     >
 
@@ -10,30 +12,34 @@
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
       android:background="?attr/colorPrimary"
+      app:theme="@style/ThemeOverlay.AppCompat.Dark"
+      app:titleMarginStart="30dp"
+      app:titleTextColor="@color/white"
       />
 
   <TextView
       android:id="@+id/waiting_for_friends"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_above="@+id/sync_image"
+      android:layout_below="@id/spotandshare_toolbar"
       android:layout_centerInParent="true"
-      android:layout_marginBottom="30dp"
-      android:layout_marginLeft="35dp"
-      android:layout_marginRight="35dp"
+      android:layout_marginBottom="40dp"
+      android:layout_marginLeft="40dp"
+      android:layout_marginRight="40dp"
+      android:layout_marginTop="128dp"
       android:text="@string/spotandshare_message_waiting_for_friends_to_send"
       android:textAlignment="center"
-      style="@style/Aptoide.TextView.Regular.L.Grey"
+      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
 
-  <ImageView
-      android:id="@+id/sync_image"
-      android:layout_width="36dp"
-      android:layout_height="36dp"
+  <ProgressBar
+      android:id="@+id/sync_progress_bar"
+      android:layout_width="56dp"
+      android:layout_height="56dp"
+      android:layout_below="@id/waiting_for_friends"
       android:layout_centerInParent="true"
-      android:layout_marginTop="20dp"
-      android:background="@color/grey_fog_normal"
-      android:src="@android:drawable/stat_notify_sync"
+      android:layout_marginBottom="168dp"
+      android:background="@drawable/progress_bar_background"
       />
 
   <TextView
@@ -42,13 +48,12 @@
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:layout_centerInParent="true"
-      android:layout_marginBottom="20dp"
-      android:layout_marginLeft="35dp"
-      android:layout_marginRight="35dp"
-      android:layout_marginTop="20dp"
+      android:layout_marginBottom="50dp"
+      android:layout_marginLeft="40dp"
+      android:layout_marginRight="40dp"
       android:text="@string/spotandshare_message_instruction_for_friend_to_send"
       android:textAlignment="center"
-      style="@style/Aptoide.TextView.Regular.L.Grey"
+      style="@style/Aptoide.TextView.Regular.M.Grey"
       />
 
 

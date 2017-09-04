@@ -82,6 +82,10 @@
     <item name="android:textColor">@color/grey</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.L.BlackAlpha">
+    <item name="android:textColor">@color/black_87_alpha</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.M.Grey">
     <item name="android:textColor">@color/grey</item>
   </style>
