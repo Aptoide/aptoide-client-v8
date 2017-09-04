@@ -213,4 +213,15 @@ public class ManagerPreferences {
         .putBoolean(ManagedKeys.FACEBOOK_SYNC, value)
         .apply();
   }
+
+  public static boolean isShowLoginAndShareDialog(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getBoolean(ManagedKeys.LOGIN_AND_SHARE_DONT_SHOW_ME_AGAIN, true);
+  }
+
+  public static void setLoginAndShareDialogDontShowAgain(boolean value,
+      SharedPreferences sharedPreferences) {
+    sharedPreferences.edit()
+        .putBoolean(ManagedKeys.LOGIN_AND_SHARE_DONT_SHOW_ME_AGAIN, value)
+        .apply();
+  }
 }

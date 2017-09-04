@@ -62,6 +62,7 @@ import cm.aptoide.pt.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.view.install.InstallWarningDialog;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import cm.aptoide.pt.view.share.NotLoggedInShareFragment;
 import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -545,6 +546,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                             .getStore()
                             .getId(), "install", context, sharePreviewDialog, alertDialog,
                         socialRepository);
+                  } else if (!accountManager.isLoggedIn()
+                      && ManagerPreferences.isShowLoginAndShareDialog(
+                      ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
+                    Fragment fragment = new NotLoggedInShareFragment();
+                    getFragmentNavigator().navigateWithoutReplace(fragment);
                   }
                   ShowMessage.asSnack(v, installOrUpgradeMsg);
                 });
