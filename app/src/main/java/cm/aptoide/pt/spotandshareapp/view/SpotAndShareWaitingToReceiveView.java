@@ -11,8 +11,6 @@ public interface SpotAndShareWaitingToReceiveView extends View {
 
   void finish();
 
-  Observable<Void> startSearch();
-
   void openSpotandShareTransferRecordFragment();
 
   Observable<Void> backButtonEvent();

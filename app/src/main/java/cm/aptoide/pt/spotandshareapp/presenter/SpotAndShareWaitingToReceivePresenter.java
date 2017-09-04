@@ -30,14 +30,6 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
         }, err -> err.printStackTrace());
 
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(created -> view.startSearch())
-        .doOnNext(resumed -> joinGroup())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> err.printStackTrace());
-
-    view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.backButtonEvent())
         .doOnNext(click -> view.showExitWarning())

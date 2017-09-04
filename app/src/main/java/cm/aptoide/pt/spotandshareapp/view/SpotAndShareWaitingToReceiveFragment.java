@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -19,7 +18,6 @@ import cm.aptoide.pt.spotandshareapp.JoinGroupView;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToReceivePresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
-import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
@@ -30,7 +28,6 @@ import rx.Observable;
 public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
     implements SpotAndShareWaitingToReceiveView {
 
-  private ImageView refreshButton;
   private Toolbar toolbar;
   private PublishRelay<Void> backRelay;
   private ClickHandler clickHandler;
@@ -59,7 +56,6 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    refreshButton = (ImageView) view.findViewById(R.id.sync_image);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
     clickHandler = () -> {
@@ -82,7 +78,6 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
   }
 
   @Override public void onDestroyView() {
-    refreshButton = null;
     toolbar = null;
     unregisterClickHandler(clickHandler);
     clickHandler = null;
@@ -113,10 +108,6 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
 
   @Override public void finish() {
     getActivity().finish();
-  }
-
-  @Override public Observable<Void> startSearch() {
-    return RxView.clicks(refreshButton);
   }
 
   @Override public void openSpotandShareTransferRecordFragment() {
