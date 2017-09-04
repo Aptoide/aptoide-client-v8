@@ -32,8 +32,6 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
 
   @Override public void present() {
 
-    createLifeCycleSubscription(cancelChanges());
-
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(
@@ -74,12 +72,6 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> err.printStackTrace());
-  }
-
-  private Observable<Void> cancelChanges() {
-    return view.cancelProfileChanges()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cancel -> view.goBack());
   }
 
   private Observable<SpotAndShareUser> saveProfileChanges() {

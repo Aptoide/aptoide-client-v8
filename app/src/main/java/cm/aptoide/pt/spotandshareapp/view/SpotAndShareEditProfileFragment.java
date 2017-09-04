@@ -34,7 +34,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
   private EditText usernameEditText;
   private Button saveProfile;
-  private Button cancel;
   private Toolbar toolbar;
   private RecyclerView avatarsRecyclerView;
   private SpotAndShareEditProfileAdapter pickAvatarAdapter;
@@ -52,10 +51,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
   @Override public void finish() {
     getActivity().finish();
-  }
-
-  @Override public Observable<Void> cancelProfileChanges() {
-    return RxView.clicks(cancel);
   }
 
   @Override public Observable<SpotAndShareUser> saveProfileChanges() {
@@ -83,7 +78,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     usernameEditText = (EditText) view.findViewById(R.id.username_edit_text);
-    cancel = (Button) view.findViewById(R.id.cancel_profile_edition_button);
     saveProfile = (Button) view.findViewById(R.id.save_profile_edition_button);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
 
@@ -107,7 +101,6 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
   @Override public void onDestroyView() {
     usernameEditText = null;
-    cancel = null;
     saveProfile = null;
     toolbar = null;
 

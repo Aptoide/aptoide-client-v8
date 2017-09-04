@@ -13,8 +13,6 @@ public interface SpotAndShareEditProfileView extends View {
 
   void finish();
 
-  Observable<Void> cancelProfileChanges();
-
   Observable<SpotAndShareUser> saveProfileChanges();
 
   Observable<SpotAndShareAvatar> onSelectedAvatar();
