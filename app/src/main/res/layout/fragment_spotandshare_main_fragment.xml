@@ -53,9 +53,9 @@
         android:id="@+id/user_avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/spotandshare_avatar_highlighter"
         />
 
