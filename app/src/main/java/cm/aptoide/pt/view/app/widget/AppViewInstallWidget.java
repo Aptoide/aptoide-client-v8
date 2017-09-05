@@ -549,7 +549,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   } else if (!accountManager.isLoggedIn()
                       && ManagerPreferences.isShowLoginAndShareDialog(
                       ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
-                    Fragment fragment = new NotLoggedInShareFragment();
+                    Fragment fragment = new NotLoggedInShareFragment().newInstance(app);
                     getFragmentNavigator().navigateWithoutReplace(fragment);
                   }
                   ShowMessage.asSnack(v, installOrUpgradeMsg);

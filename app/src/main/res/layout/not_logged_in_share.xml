@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="@color/semi_transparent_black"
     android:orientation="vertical"
     android:padding="24dp"
     >
@@ -109,6 +109,7 @@
           >
 
         <Button
+            android:id="@+id/not_logged_in_share_facebook_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -124,6 +125,7 @@
             />
 
         <Button
+            android:id="@+id/not_logged_in_share_google_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -167,7 +169,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/overlay_black"
+            android:background="@color/background_window"
             >
 
           <RelativeLayout
@@ -184,8 +186,8 @@
 
             <ImageView
                 android:id="@+id/not_logged_in_app_icon"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
                 android:layout_marginBottom="12dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
@@ -267,9 +269,11 @@
       </LinearLayout>
 
       <TextView
+          android:id="@+id/not_logged_in_close"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="20dp"
+          android:clickable="true"
           android:text="@string/close"
           android:textAllCaps="true"
           android:textSize="14sp"
