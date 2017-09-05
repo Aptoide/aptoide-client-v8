@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import cm.aptoide.pt.R;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,14 +17,14 @@ import java.util.List;
  * Created by neuro on 28-08-2017.
  */
 
-class LanguageFilterSpinnerWrapper {
+class LanguageFilterSpinnerHelper {
 
   private final Spinner spinner;
   private final LanguageFilterHelper languageFilterHelper;
   private final Resources resources;
   private final Context context;
 
-  LanguageFilterSpinnerWrapper(Spinner spinner) {
+  LanguageFilterSpinnerHelper(Spinner spinner) {
     this.spinner = spinner;
     this.resources = spinner.getResources();
     this.context = spinner.getContext();
@@ -84,8 +85,11 @@ class LanguageFilterSpinnerWrapper {
   }
 
   private SpinnerAdapter setupCommentsFilterLanguageSpinnerAdapter() {
-    return new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
+    ArrayAdapter<String> adapter =
+        new ArrayAdapter<>(context, R.layout.simple_language_spinner_item,
         createSpinnerAdapterRowsList());
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    return adapter;
   }
 
   private List<String> createSpinnerAdapterRowsList() {

@@ -9,33 +9,16 @@
     android:background="@color/comment_gray"
     >
 
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:paddingTop="12dp"
-      android:paddingBottom="12dp"
-      android:orientation="horizontal"
-      >
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/comments_filter_comments_by_language"
-        android:layout_gravity="center_vertical"
-        style="@style/Aptoide.TextView.Regular.S"
-        />
-
     <Spinner
         android:id="@+id/comments_filter_language_spinner"
-        android:layout_width="16dp"
-        android:layout_height="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_gravity="center"
-        android:background="@drawable/arrow_down"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:layout_gravity="right"
         />
-
-  </LinearLayout>
 
   <include layout="@layout/separator_horizontal"/>
 

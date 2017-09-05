@@ -11,13 +11,13 @@ import lombok.Getter;
 
 public class ReviewsLanguageFilterDisplayable extends Displayable {
 
-  @Getter private LanguageFilterSpinnerWrapper.OnItemSelected onItemSelected;
+  @Getter private LanguageFilterSpinnerHelper.OnItemSelected onItemSelected;
 
   public ReviewsLanguageFilterDisplayable() {
   }
 
   public ReviewsLanguageFilterDisplayable(
-      LanguageFilterSpinnerWrapper.OnItemSelected onItemSelected) {
+      LanguageFilterSpinnerHelper.OnItemSelected onItemSelected) {
     this.onItemSelected = onItemSelected;
   }
 
@@ -29,12 +29,12 @@ public class ReviewsLanguageFilterDisplayable extends Displayable {
     return R.layout.reviews_language_filter;
   }
 
-  private LanguageFilterSpinnerWrapper languageFilterSpinnerWrapper;
+  private LanguageFilterSpinnerHelper languageFilterSpinnerHelper;
 
   public void setup(Spinner spinner) {
-    if (languageFilterSpinnerWrapper == null) {
-      languageFilterSpinnerWrapper = new LanguageFilterSpinnerWrapper(spinner);
-      languageFilterSpinnerWrapper.setup(
+    if (languageFilterSpinnerHelper == null) {
+      languageFilterSpinnerHelper = new LanguageFilterSpinnerHelper(spinner);
+      languageFilterSpinnerHelper.setup(
           languageFilter -> onItemSelected.onItemSelected(languageFilter));
     }
   }
