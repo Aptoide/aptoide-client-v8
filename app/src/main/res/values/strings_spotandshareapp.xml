@@ -2,12 +2,12 @@
   <string name="start_spotshare">Start Spot&amp;Share</string>
   <string name="spotandshare_title">Spot &amp; Share</string>
   <string name="spotandshare_message_spotandshareinstruction">Share apps with your friends without an internet connection</string>
-  <string name="spotandshare_button_username">userwithnoname</string>
+  <string name="spotandshare_button_username" translatable="false">userwithnoname</string>
   <string name="spotandshare_button_receive">receive</string>
   <string name="spotandshare_button_send">send</string>
   <string name="spotandshare_message_waiting_for_friends_to_send">Waiting for friends to send app</string>
   <string name="spotandshare_message_instruction_for_friend_to_send">Your friend should go to Spot&amp;Share and press Send</string>
-  <string name="spotandshare_title_pick_apps_to_send">Pick apps to send</string>
+  <string name="spotandshare_title_share_an_app">Share an app</string>
   <string name="spotandshare_button_cancel_profile_edition">cancel</string>
   <string name="spotandshare_button_save_profile_edition">save</string>
   <string name="spotandshare_message_error_create_group">There was an error while creating the hotspot</string>

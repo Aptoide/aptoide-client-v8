@@ -120,7 +120,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     pickAppsProgressBarContainer = view.findViewById(R.id.app_selection_progress_bar);
     pickAppsRecyclerView = (RecyclerView) view.findViewById(R.id.app_selection_recycler_view);
     pickAppsAdapter = new SpotAndSharePickAppsAdapter(
-        new Header(getResources().getString(R.string.spotandshare_title_pick_apps_to_send)),
+        new Header(getResources().getString(R.string.spotandshare_title_share_an_app)),
         clickedHeader, pickAppSubject);
     setupPickAppsRecyclerView();
 
@@ -144,7 +144,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     bottomSheetBehavior.setPeekHeight(
-        AptoideUtils.ScreenU.getPixelsForDip(75, getContext().getResources()));
+        AptoideUtils.ScreenU.getPixelsForDip(65, getContext().getResources()));
     bottomSheetBehavior.setHideable(true);
     bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 

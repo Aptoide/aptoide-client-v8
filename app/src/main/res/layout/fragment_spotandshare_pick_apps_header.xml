@@ -9,12 +9,11 @@
       android:id="@+id/app_item_text_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="25dp"
-      android:layout_marginTop="25dp"
-      android:gravity="center"
+      android:paddingBottom="16dp"
+      android:paddingLeft="24dp"
+      android:paddingTop="16dp"
       android:text="@string/spotandshare_title_share_an_app"
-      android:textAlignment="center"
-      style="@style/Aptoide.TextView.Regular.L.Grey"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
 </LinearLayout>
