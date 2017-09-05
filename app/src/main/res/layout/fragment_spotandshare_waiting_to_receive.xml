@@ -39,7 +39,7 @@
       android:layout_below="@id/waiting_for_friends"
       android:layout_centerInParent="true"
       android:layout_marginBottom="168dp"
-      android:background="@drawable/progress_bar_background"
+      android:background="@drawable/progress_bar"
       />
 
   <TextView
