@@ -12,7 +12,7 @@
       android:layout_marginBottom="25dp"
       android:layout_marginTop="25dp"
       android:gravity="center"
-      android:text="@string/spotandshare_title_pick_apps_to_send"
+      android:text="@string/spotandshare_title_share_an_app"
       android:textAlignment="center"
       style="@style/Aptoide.TextView.Regular.L.Grey"
       />
