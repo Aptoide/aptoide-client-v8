@@ -188,7 +188,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
     addDisplayable(
         reviewsLanguageFilterDisplayable = new ReviewsLanguageFilterDisplayable(languageFilter -> {
-          clearDisplayables();
+          removeDisplayables(0, getDisplayablesSize() - 1);
           fetchReviews(languageFilter);
         }));
   }
