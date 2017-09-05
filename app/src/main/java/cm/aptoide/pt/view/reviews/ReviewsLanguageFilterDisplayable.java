@@ -12,6 +12,7 @@ import lombok.Getter;
 public class ReviewsLanguageFilterDisplayable extends Displayable {
 
   @Getter private LanguageFilterSpinnerHelper.OnItemSelected onItemSelected;
+  private LanguageFilterSpinnerHelper languageFilterSpinnerHelper;
 
   public ReviewsLanguageFilterDisplayable() {
   }
@@ -28,8 +29,6 @@ public class ReviewsLanguageFilterDisplayable extends Displayable {
   @Override public int getViewLayout() {
     return R.layout.reviews_language_filter;
   }
-
-  private LanguageFilterSpinnerHelper languageFilterSpinnerHelper;
 
   public void setup(Spinner spinner) {
     if (languageFilterSpinnerHelper == null) {
