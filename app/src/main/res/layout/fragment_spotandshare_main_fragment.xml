@@ -35,7 +35,7 @@
       android:gravity="center_vertical"
       android:text="@string/spotandshare_message_spotandshareinstruction"
       android:textAlignment="center"
-      style="@style/Aptoide.TextView.Regular.L.Grey"
+      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
 
 
@@ -66,7 +66,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginRight="14dp"
         android:text="@string/spotandshare_button_username"
-        style="@style/Aptoide.TextView.Regular.L.Grey"
+        style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         />
 
     <ImageView
