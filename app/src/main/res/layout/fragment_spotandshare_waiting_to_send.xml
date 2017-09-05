@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
 
   <android.support.v7.widget.Toolbar
@@ -9,26 +11,31 @@
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
       android:background="?attr/colorPrimary"
+      app:theme="@style/ThemeOverlay.AppCompat.Dark"
+      app:titleMarginStart="30dp"
+      app:titleTextColor="@color/white"
       />
 
   <TextView
       android:id="@+id/sending_app_introduction"
-      android:layout_below="@id/spotandshare_toolbar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_below="@id/spotandshare_toolbar"
       android:layout_centerHorizontal="true"
-      android:layout_margin="20dp"
+      android:layout_marginBottom="16dp"
+      android:layout_marginTop="40dp"
       android:text="@string/spotandshare_mesage_sending_app"
-      style="@style/Aptoide.TextView.Regular.L.Grey"
+      style="@style/Aptoide.TextView.Regular.M.Grey"
       />
 
   <ImageView
       android:id="@+id/sending_app_avatar"
-      android:layout_width="72dp"
-      android:layout_height="72dp"
+      android:layout_width="96dp"
+      android:layout_height="96dp"
       android:layout_below="@id/sending_app_introduction"
       android:layout_centerHorizontal="true"
-      android:layout_marginBottom="20dp"
+      android:layout_marginBottom="8dp"
+      android:background="@color/white"
       />
 
   <TextView
@@ -37,32 +44,33 @@
       android:layout_height="wrap_content"
       android:layout_below="@id/sending_app_avatar"
       android:layout_centerHorizontal="true"
-      android:layout_marginBottom="20dp"
-      style="@style/Aptoide.TextView.Regular.S.Grey"
+      android:layout_marginBottom="48dp"
+      android:layout_marginLeft="40dp"
+      android:layout_marginRight="40dp"
+      style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
       />
 
   <TextView
       android:id="@+id/looking_for_friends_message"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="50dp"
-      android:layout_marginRight="50dp"
+      android:layout_marginBottom="40dp"
+      android:layout_marginLeft="40dp"
+      android:layout_marginRight="40dp"
       android:gravity="center"
       android:text="@string/spotandshare_message_looking_for_a_friend_to_receive_app"
-      style="@style/Aptoide.TextView.Regular.L.Grey"
+      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
 
-  <ImageView
-      android:id="@+id/sync_image"
-      android:layout_width="36dp"
-      android:layout_height="36dp"
+  <ProgressBar
+      android:id="@+id/looking_for_friends_progress_bar"
+      android:layout_width="56dp"
+      android:layout_height="56dp"
       android:layout_below="@id/looking_for_friends_message"
       android:layout_centerInParent="true"
-      android:layout_marginBottom="20dp"
-      android:layout_marginTop="20dp"
-      android:background="@color/grey_fog_normal"
-      android:src="@android:drawable/stat_notify_sync"
+      android:background="@drawable/progress_bar"
       />
 
   <TextView
@@ -77,7 +85,7 @@
       android:layout_marginTop="20dp"
       android:text="@string/spotandshare_message_instruction_for_friend_to_receive"
       android:textAlignment="center"
-      style="@style/Aptoide.TextView.Regular.L.Grey"
+      style="@style/Aptoide.TextView.Regular.M.Grey"
       />
 
 
