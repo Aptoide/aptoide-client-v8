@@ -80,6 +80,8 @@ import cm.aptoide.pt.view.recycler.widget.RowReviewWidget;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.reviews.ReviewsLanguageFilterDisplayable;
 import cm.aptoide.pt.view.reviews.ReviewsLanguageFilterWidget;
+import cm.aptoide.pt.view.reviews.ReviewsRatingDisplayable;
+import cm.aptoide.pt.view.reviews.ReviewsRatingWidget;
 import cm.aptoide.pt.view.reviews.RowReviewDisplayable;
 import cm.aptoide.pt.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.view.search.SearchAdWidget;
@@ -314,6 +316,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((ReviewsLanguageFilterWidget.class),
         ReviewsLanguageFilterDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((ReviewsRatingWidget.class), ReviewsRatingDisplayable.class));
 
     return displayableWidgetMappings;
   }

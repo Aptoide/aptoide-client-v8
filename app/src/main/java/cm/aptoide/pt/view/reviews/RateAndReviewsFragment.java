@@ -68,8 +68,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private String storeTheme;
   @Getter private String appName;
   private MenuItem installMenuItem;
-  private RatingTotalsLayout ratingTotalsLayout;
-  private RatingBarsLayout ratingBarsLayout;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
@@ -162,9 +160,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         (FloatingActionButton) view.findViewById(R.id.fab);
     setHasOptionsMenu(true);
 
-    ratingTotalsLayout = new RatingTotalsLayout(view);
-    ratingBarsLayout = new RatingBarsLayout(view);
-
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -185,12 +180,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
     fetchRating(refresh);
-
-    addDisplayable(
-        reviewsLanguageFilterDisplayable = new ReviewsLanguageFilterDisplayable(languageFilter -> {
-          removeDisplayables(0, getDisplayablesSize() - 1);
-          fetchReviews(languageFilter);
-        }));
   }
 
   @Override public void onViewCreated() {
@@ -216,7 +205,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
                 .getMeta()
                 .getData();
             setupTitle(data.getName());
-            setupRating(data);
+            addDisplayable(0, new ReviewsRatingDisplayable(data), true);
+            addDisplayable(reviewsLanguageFilterDisplayable =
+                new ReviewsLanguageFilterDisplayable(languageFilter -> {
+                  removeDisplayables(1, getDisplayablesSize() - 1);
+                  fetchReviews(languageFilter);
+                }));
           }
           finishLoading();
         }, err -> {
@@ -262,11 +256,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     if (hasToolbar()) {
       getToolbar().setTitle(title);
     }
-  }
-
-  private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
