@@ -22,7 +22,6 @@ import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToSendPresente
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
-import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
@@ -42,7 +41,6 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   private PublishRelay<Void> backRelay;
   private BackButton.ClickHandler clickHandler;
   private RxAlertDialog backDialog;
-  private ImageView refreshButton;
   private ImageView appIcon;
   private TextView appName;
   private AppModel selectedApp;
@@ -93,7 +91,6 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
       return true;
     };
     registerClickHandler(clickHandler);
-    refreshButton = (ImageView) view.findViewById(R.id.sync_image);
 
     attachPresenter(new SpotAndShareWaitingToSendPresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
@@ -118,7 +115,6 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     unregisterClickHandler(clickHandler);
     clickHandler = null;
     backDialog = null;
-    refreshButton = null;
     super.onDestroyView();
   }
 
@@ -163,10 +159,6 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     Toast.makeText(getContext(), "There was an error while trying to leave the group",
         Toast.LENGTH_SHORT)
         .show();
-  }
-
-  @Override public Observable<Void> clickedRefresh() {
-    return RxView.clicks(refreshButton);
   }
 
   @Override public void openTransferRecord() {

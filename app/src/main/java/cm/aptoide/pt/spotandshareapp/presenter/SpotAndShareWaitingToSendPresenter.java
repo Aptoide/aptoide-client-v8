@@ -47,14 +47,6 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.clickedRefresh())
-        .doOnNext(appModel -> canSend())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> spotAndShare.observeFriends())
         .filter(friendsList -> friendsList.size() > 0)
         .doOnNext(friendsList -> sendApp())
