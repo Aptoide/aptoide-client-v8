@@ -22,7 +22,7 @@ public class DrawableBitmapMapper {
   public byte[] convertDrawableToBitmap(Drawable drawable) {
     Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
     byte[] bitmapdata = stream.toByteArray();
     return bitmapdata;
   }
