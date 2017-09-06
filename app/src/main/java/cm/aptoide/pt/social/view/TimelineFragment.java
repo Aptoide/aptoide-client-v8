@@ -560,6 +560,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter.showUser(new ProgressCard());
   }
 
+  @Override public void hideUser() {
+    adapter.hideUser();
+  }
+
   private void handleSharePreviewAnswer() {
     shareDialog.cancels()
         .doOnNext(__ -> shareDialog.dismiss())

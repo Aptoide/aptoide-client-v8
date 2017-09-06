@@ -192,7 +192,10 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(user -> view.showUser(convertUser(user))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
-        }, throwable -> crashReport.log(throwable));
+        }, throwable -> {
+          crashReport.log(throwable);
+          view.hideUser();
+        });
   }
 
   @NonNull private TimelineUser convertUser(User user) {

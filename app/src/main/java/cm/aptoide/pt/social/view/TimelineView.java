@@ -93,4 +93,6 @@ public interface TimelineView extends View {
   void showUser(TimelineUser user);
 
   void showUserLoading();
+
+  void hideUser();
 }

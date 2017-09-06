@@ -118,6 +118,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
   }
 
+  public void hideUser() {
+    if (hasUser()) {
+      posts.remove(0);
+      notifyItemRemoved(0);
+    }
+  }
+
   private boolean hasUser() {
     return !posts.isEmpty() && (posts.get(0) instanceof TimelineUser || posts.get(
         0) instanceof ProgressCard);
