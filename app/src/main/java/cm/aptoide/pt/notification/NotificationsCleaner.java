@@ -1,6 +1,7 @@
 package cm.aptoide.pt.notification;
 
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
+import cm.aptoide.pt.database.realm.Notification;
 import io.realm.Sort;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,19 +29,44 @@ public class NotificationsCleaner {
   }
 
   public Completable cleanLimitExceededNotifications(int limit) {
-    return notificationAccessor.getAllSorted(Sort.DESCENDING)
+    return removeExpiredNotifications().andThen(removeExceededLimitNotifications(limit));
+  }
+
+  private Completable removeExpiredNotifications() {
+    return Observable.defer(() -> notificationAccessor.getAllSorted(Sort.DESCENDING))
         .first()
-        .flatMap(notifications -> {
-          if (notifications.size() > limit) {
-            return Observable.from(notifications.subList(limit, notifications.size()))
-                .map(notification -> notification.getKey())
-                .toList()
-                .flatMapCompletable(
-                    keys -> notificationAccessor.delete(keys.toArray(new String[keys.size()])));
+        .flatMapIterable(notifications -> notifications)
+        .flatMap(notification -> {
+          if (notification.isExpired()) {
+            return Observable.just(notification);
           } else {
             return Observable.empty();
           }
         })
+        .toList()
+        .flatMapCompletable(notifications -> removeNotifications(notifications))
+        .toCompletable();
+  }
+
+  private Completable removeExceededLimitNotifications(int limit) {
+    return Observable.defer(() -> notificationAccessor.getAllSorted(Sort.DESCENDING))
+        .first()
+        .flatMapCompletable(notifications -> {
+          if (notifications.size() > limit) {
+            return removeNotifications(notifications.subList(limit, notifications.size()));
+          } else {
+            return Completable.complete();
+          }
+        })
+        .toCompletable();
+  }
+
+  private Completable removeNotifications(List<Notification> notifications) {
+    return Observable.from(notifications)
+        .map(notification -> notification.getKey())
+        .toList()
+        .flatMapCompletable(
+            keys -> notificationAccessor.delete(keys.toArray(new String[keys.size()])))
         .toCompletable();
   }
 }
