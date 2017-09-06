@@ -2,6 +2,7 @@
 <!--
 android:fitsSystemWindows="true"
 -->
+
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -36,41 +37,40 @@ android:fitsSystemWindows="true"
         <include layout="@layout/toolbar"/>
       </android.support.design.widget.AppBarLayout>
 
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical">
+
       <ImageView
           android:id="@+id/aptoide_logo"
           android:layout_width="200dp"
-          android:layout_height="50dp"
+          android:layout_height="100dp"
           android:layout_gravity="center_horizontal"
           android:layout_margin="20dp"
-          android:src="@drawable/logo"
+          android:src="@mipmap/aptoideicon"
           />
 
       <TextView
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:text="@string/login_sign_up_title"
+          android:textSize="30dp"
           style="@style/OnBoarding.Title.TextView"
           />
 
 
       <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
+          android:layout_width="150dp"
+          android:layout_height="150dp"
           android:layout_gravity="center"
           android:layout_margin="10dp"
           android:src="@drawable/wizard_community"
           />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:paddingEnd="10dp"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
-          android:paddingStart="10dp"
-          android:text="@string/wizard_sub_title_viewpager_three"
-          style="@style/OnBoarding.SubTitle.TextView"
-          />
+      </LinearLayout>
+
+
 
     </LinearLayout>
 
