@@ -6,7 +6,9 @@ import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationCenter;
+import cm.aptoide.pt.social.TimelineAccountManager;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import java.io.IOException;
@@ -33,11 +35,12 @@ public class Timeline {
   private final TimelinePostsRepository timelinePostsRepository;
   private final String marketName;
   private final NotificationCenter notificationCenter;
+  private final TimelineAccountManager accountManager;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       TimelinePostsRepository timelinePostsRepository, NotificationCenter notificationCenter,
-      String marketName) {
+      String marketName, TimelineAccountManager accountManager) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -45,6 +48,7 @@ public class Timeline {
     this.timelinePostsRepository = timelinePostsRepository;
     this.marketName = marketName;
     this.notificationCenter = notificationCenter;
+    this.accountManager = accountManager;
   }
 
   public Single<List<Post>> getCards() {
@@ -107,14 +111,6 @@ public class Timeline {
     }
   }
 
-  public Single<Post> getTimelineStats() {
-    return service.getTimelineStats();
-  }
-
-  public Single<Post> getTimelineLoginPost() {
-    return Single.just(new TimelineLoginPost());
-  }
-
   public Single<String> sharePost(Post post) {
     sendSocialAnalyticsEvent(post, "Share");
     if (post instanceof AppPost) {
@@ -167,16 +163,28 @@ public class Timeline {
     return Completable.complete();
   }
 
-  public Single<Post> getNotificationsCard() {
-    return notificationCenter.getUnreadNotifications()
-        .first()
-        .toSingle()
-        .map(aptoideNotifications -> {
-          if (aptoideNotifications.isEmpty()) {
-            return new TimelineNoNotificationHeader();
-          }
-          return new NotificationsPost(aptoideNotifications.get(0));
-        });
+  public Observable<User> getUser(Long userId) {
+    if (userId == null) {
+      return Observable.combineLatest(accountManager.isLoggedIn(),
+          notificationCenter.getUnreadNotifications(), (isLoggedIn, aptoideNotifications) -> {
+            if (isLoggedIn) {
+              if (aptoideNotifications.isEmpty()) {
+                return new User(CardType.NO_NOTIFICATIONS);
+              } else {
+                AptoideNotification notification = aptoideNotifications.get(0);
+                return new User(notification.getBody(), notification.getImg(),
+                    notification.getUrl(), notification.getType(), CardType.NOTIFICATIONS);
+              }
+            }
+            return new User(CardType.LOGIN);
+          });
+    } else {
+      return service.getTimelineStats()
+          .toObservable()
+          .map(
+              timelineStats -> new User(timelineStats.getFollowers(), timelineStats.getFollowings(),
+                  CardType.TIMELINE_STATS));
+    }
   }
 }
 

@@ -43,7 +43,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   }
 
   public void updatePosts(List<Post> cards) {
-    this.posts = cards;
+    if (hasUser()) {
+      if (posts.size() > 1) {
+        posts.subList(1, posts.size() - 1)
+            .clear();
+      }
+      posts.addAll(cards);
+    } else {
+      this.posts = cards;
+    }
     notifyDataSetChanged();
   }
 
@@ -85,5 +93,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
   public Post getPost(int position) {
     return posts.get(position);
+  }
+
+  public void showUser(Post post) {
+    if (hasUser()) {
+      posts.set(0, post);
+      notifyItemChanged(0);
+    } else {
+      posts.add(0, post);
+      notifyItemInserted(0);
+    }
+  }
+
+  private boolean hasUser() {
+    return !posts.isEmpty() && (posts.get(0) instanceof TimelineUser || posts.get(
+        0) instanceof ProgressCard);
   }
 }

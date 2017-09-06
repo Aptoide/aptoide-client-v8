@@ -6,14 +6,14 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
-import cm.aptoide.pt.social.data.NotificationsPost;
+import cm.aptoide.pt.social.view.TimelineUser;
 import rx.subjects.PublishSubject;
 
 /**
  * Created by trinkes on 30/08/2017.
  */
 
-public class Notifications extends PostViewHolder<NotificationsPost> {
+public class Notifications extends PostViewHolder<TimelineUser> {
 
   private final ImageView notificationImage;
   private final TextView notificationBody;
@@ -33,9 +33,9 @@ public class Notifications extends PostViewHolder<NotificationsPost> {
     addFriendsButton = itemView.findViewById(R.id.add_friends);
   }
 
-  @Override public void setPost(NotificationsPost card, int position) {
-    imageLoader.loadUsingCircleTransform(card.getNotificationImage(), notificationImage);
-    notificationBody.setText(card.getNotificationBody());
+  @Override public void setPost(TimelineUser card, int position) {
+    imageLoader.loadUsingCircleTransform(card.getImage(), notificationImage);
+    notificationBody.setText(card.getBodyMessage());
     goToNotificationsButton.setOnClickListener(view -> publishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.NOTIFICATION_CENTER)));
     addFriendsButton.setOnClickListener(

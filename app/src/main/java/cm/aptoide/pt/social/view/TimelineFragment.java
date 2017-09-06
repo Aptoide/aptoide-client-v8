@@ -76,7 +76,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -249,7 +249,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
     SpannableFactory spannableFactory = new SpannableFactory();
-    adapter = new PostAdapter(Collections.emptyList(),
+    adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
                 postTouchEventPublishSubject), marketName), new ProgressCard());
@@ -265,7 +265,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new Timeline(timelineService, installManager, new DownloadFactory(marketName),
             timelineAnalytics, timelinePostsRepository,
             ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-            marketName);
+            marketName, () -> accountManager.accountStatus()
+            .map(account -> account.isLoggedIn()));
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
@@ -540,6 +541,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .filter(position -> position != RecyclerView.NO_POSITION)
         .distinctUntilChanged()
         .map(visibleItem -> adapter.getPost(visibleItem));
+  }
+
+  @Override public void showUser(TimelineUser user) {
+    adapter.showUser(user);
+  }
+
+  @Override public void showUserLoading() {
+    adapter.showUser(new ProgressCard());
   }
 
   private void handleSharePreviewAnswer() {

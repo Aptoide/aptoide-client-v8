@@ -89,4 +89,8 @@ public interface TimelineView extends View {
   void removePost(int postPosition);
 
   Observable<Post> getVisibleItems();
+
+  void showUser(TimelineUser user);
+
+  void showUserLoading();
 }

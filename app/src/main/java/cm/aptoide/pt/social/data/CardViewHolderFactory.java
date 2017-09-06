@@ -22,6 +22,7 @@ import cm.aptoide.pt.social.view.viewholder.SocialStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.StoreLatestAppsViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineAdPostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineLoginPostViewHolder;
+import cm.aptoide.pt.social.view.viewholder.TimelineNoNotificationHeaderViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineStatsViewHolder;
 import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
