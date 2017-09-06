@@ -7,14 +7,15 @@ package cm.aptoide.pt.presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.view.account.AptoideAccountViewModel;
+import cm.aptoide.pt.view.account.AptoideResult;
+import com.facebook.login.LoginResult;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 07/02/17.
  */
 
-public interface LoginSignUpCredentialsView extends SocialLoginView {
+public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   Observable<Void> showAptoideLoginAreaClick();
 
@@ -24,7 +25,15 @@ public interface LoginSignUpCredentialsView extends SocialLoginView {
 
   void showAptoideLoginArea();
 
+  void showLoading();
+
+  void hideLoading();
+
+  void showError(Throwable throwable);
+
   void showFacebookLogin();
+
+  void showPermissionsRequiredMessage();
 
   void hideFacebookLogin();
 
@@ -42,13 +51,25 @@ public interface LoginSignUpCredentialsView extends SocialLoginView {
 
   void hideKeyboard();
 
-  Observable<AptoideAccountViewModel> aptoideLoginClick();
+  void showGoogleLogin();
 
-  Observable<AptoideAccountViewModel> aptoideSignUpClick();
+  void hideGoogleLogin();
+
+  void showFacebookLoginError();
+
+  void showFacebookCancelledError();
+
+  void showGoogleLoginError();
+
+  Observable<LoginResult> facebookLoginClick();
+
+  Observable<AptoideResult> aptoideLoginClick();
+
+  Observable<AptoideResult> aptoideSignUpClick();
 
   boolean tryCloseLoginBottomSheet();
 
-  @NonNull AptoideAccountViewModel getCredentials();
+  @NonNull AptoideResult getCredentials();
 
   boolean isPasswordVisible();
 

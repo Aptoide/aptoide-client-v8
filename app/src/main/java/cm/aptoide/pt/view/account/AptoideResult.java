@@ -1,11 +1,11 @@
 package cm.aptoide.pt.view.account;
 
-public class AptoideAccountViewModel {
+public class AptoideResult {
 
   private final String username;
   private final String password;
 
-  public AptoideAccountViewModel(String username, String password) {
+  public AptoideResult(String username, String password) {
     this.username = username;
     this.password = password;
   }
@@ -18,4 +18,3 @@ public class AptoideAccountViewModel {
     return password;
   }
 }
-

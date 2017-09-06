@@ -5,20 +5,25 @@
 
 package cm.aptoide.pt.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.FacebookAccountException;
+import cm.aptoide.pt.account.FacebookLoginManager;
+import cm.aptoide.pt.account.GoogleLoginManager;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.BackButton;
+import cm.aptoide.pt.view.account.user.ManageUserFragment;
+import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-
-/**
- * Created by marcelobenites on 06/02/17.
- */
 
 public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.ClickHandler {
 
@@ -27,15 +32,27 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
   private final LoginPreferences loginAvailability;
+  private final FragmentNavigator fragmentNavigator;
   private final CrashReport crashReport;
+  private final boolean navigateToHome;
+  private final FacebookLoginManager facebookLoginManager;
+  private final GoogleLoginManager googleLoginManager;
+  private final boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, LoginPreferences loginAvailability,
-      CrashReport crashReport) {
+      FragmentNavigator fragmentNavigator, CrashReport crashReport,
+      boolean dismissToNavigateToMainView, boolean navigateToHome,
+      FacebookLoginManager facebookLoginManager, GoogleLoginManager googleLoginManager) {
     this.view = view;
     this.accountManager = accountManager;
+    this.facebookLoginManager = facebookLoginManager;
+    this.googleLoginManager = googleLoginManager;
     this.loginAvailability = loginAvailability;
+    this.fragmentNavigator = fragmentNavigator;
     this.crashReport = crashReport;
+    this.dismissToNavigateToMainView = dismissToNavigateToMainView;
+    this.navigateToHome = navigateToHome;
   }
 
   @Override public void present() {
@@ -122,7 +139,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideGoogleLogin())
-        .flatMap(__ -> view.googleLoginClick())
+        .flatMap(__ -> googleLoginClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
@@ -135,8 +152,12 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private void handleClickOnFacebookLogin() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> {
+          Context appContext = view.getApplicationContext();
+          FacebookSdk.sdkInitialize(appContext);
+        })
         .doOnNext(__ -> showOrHideFacebookLogin())
-        .flatMap(__ -> view.facebookLoginClick())
+        .flatMap(__ -> facebookLoginClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
@@ -154,13 +175,68 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
             .toSingle())
         .doOnNext(account -> {
           if (account.isLoggedIn()) {
-            view.navigateBack();
+            navigateBack();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
+  }
+
+  private Observable<GoogleSignInResult> googleLoginClick() {
+    return view.googleLoginClick()
+        .doOnNext(selected -> view.showLoading()).<Void>flatMapCompletable(
+            result -> googleLoginManager.login(result)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  Logger.d(TAG, "google login successful");
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                      Analytics.Account.SignUpLoginStatus.SUCCESS,
+                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  navigateToMainView();
+                })
+                .doOnTerminate(() -> view.hideLoading())
+                .doOnError(throwable -> {
+                  view.showError(throwable);
+                  crashReport.log(throwable);
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                      Analytics.Account.SignUpLoginStatus.FAILED,
+                      Analytics.Account.LoginStatusDetail.SDK_ERROR);
+                })).retry();
+  }
+
+  private Observable<LoginResult> facebookLoginClick() {
+    return view.facebookLoginClick()
+        .doOnNext(selected -> view.showLoading()).<Void>flatMapCompletable(result -> {
+          return facebookLoginManager.login(result)
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> {
+                Logger.d(TAG, "facebook login successful");
+                Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+                    Analytics.Account.SignUpLoginStatus.SUCCESS,
+                    Analytics.Account.LoginStatusDetail.SUCCESS);
+                navigateToMainView();
+              })
+              .doOnTerminate(() -> view.hideLoading())
+              .doOnError(throwable -> {
+
+                if (throwable instanceof FacebookAccountException) {
+                  switch (((FacebookAccountException) throwable).getCode()) {
+                    case FacebookAccountException.FACEBOOK_DENIED_CREDENTIALS:
+                      view.showPermissionsRequiredMessage();
+                      break;
+                    case FacebookAccountException.FACEBOOK_API_INVALID_RESPONSE:
+                      view.showFacebookLoginError();
+                      break;
+                    default:
+                  }
+                } else {
+                  crashReport.log(throwable);
+                  view.showError(throwable);
+                }
+              });
+        }).retry();
   }
 
   private Observable<Void> aptoideLoginClick() {
@@ -179,7 +255,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                   Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
                       Analytics.Account.SignUpLoginStatus.SUCCESS,
                       Analytics.Account.LoginStatusDetail.SUCCESS);
-                  view.navigateToMainView();
+                  navigateToMainView();
                   view.hideLoading();
                 })
                 .doOnError(throwable -> {
@@ -206,7 +282,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
-              view.navigateToCreateProfile();
+              navigateToCreateProfile();
               unlockScreenRotation();
               view.hideLoading();
             })
@@ -263,6 +339,16 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     }
   }
 
+  private void navigateToMainView() {
+    if (dismissToNavigateToMainView) {
+      view.dismiss();
+    } else if (navigateToHome) {
+      navigateToMainViewCleaningBackStack();
+    } else {
+      navigateBack();
+    }
+  }
+
   @Override public boolean handle() {
     return view.tryCloseLoginBottomSheet();
   }
@@ -273,5 +359,18 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private void unlockScreenRotation() {
     view.unlockScreenRotation();
+  }
+
+  private void navigateToCreateProfile() {
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToCreate());
+  }
+
+  private void navigateToMainViewCleaningBackStack() {
+    fragmentNavigator.navigateToHomeCleaningBackStack();
+  }
+
+  private void navigateBack() {
+    fragmentNavigator.popBackStack();
   }
 }

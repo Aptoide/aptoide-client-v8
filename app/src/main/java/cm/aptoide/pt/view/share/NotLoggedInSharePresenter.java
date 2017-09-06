@@ -1,48 +1,46 @@
 package cm.aptoide.pt.view.share;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import cm.aptoide.pt.account.FacebookAccountException;
+import cm.aptoide.pt.account.FacebookLoginManager;
+import cm.aptoide.pt.account.GoogleLoginManager;
+import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-
-/**
- * Created by pedroribeiro on 30/08/17.
- */
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class NotLoggedInSharePresenter implements Presenter {
 
   private final NotLoggedInShareView view;
   private final SharedPreferences sharedPreferences;
-  private CrashReport crashReport;
+  private final CrashReport crashReport;
+  private final LoginPreferences loginAvailability;
+  private final GoogleLoginManager googleLoginManager;
+  private final FacebookLoginManager facebookLoginManager;
 
   public NotLoggedInSharePresenter(NotLoggedInShareView view, SharedPreferences sharedPreferences,
-      CrashReport crashReport) {
+      CrashReport crashReport, LoginPreferences loginAvailability,
+      FacebookLoginManager facebookLoginManager, GoogleLoginManager googleLoginManager) {
     this.view = view;
     this.sharedPreferences = sharedPreferences;
     this.crashReport = crashReport;
+    this.loginAvailability = loginAvailability;
+    this.googleLoginManager = googleLoginManager;
+    this.facebookLoginManager = facebookLoginManager;
   }
 
   @Override public void present() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> view.initializeFacebookCallback())
-        .flatMap(__ -> view.facebookLoginClick())
-        .doOnCompleted(() -> view.closeFragment())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.hideLoading();
-          view.showError(throwable);
-          crashReport.log(throwable);
-        });
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> view.showGoogleLogin())
-        .flatMap(__ -> view.googleLoginClick())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
+    handleClickOnFacebookLogin();
+    handleClickOnGoogleLogin();
+
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.closeClick())
@@ -50,6 +48,39 @@ public class NotLoggedInSharePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+
+  }
+
+  private void handleClickOnFacebookLogin() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> {
+          Context appContext = view.getApplicationContext();
+          FacebookSdk.sdkInitialize(appContext);
+        })
+        .doOnNext(__ -> showOrHideFacebookLogin())
+        .flatMap(__ -> facebookLoginClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.hideLoading();
+          view.showError(err);
+          crashReport.log(err);
+        });
+  }
+
+  private void handleClickOnGoogleLogin() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> showOrHideGoogleLogin())
+        .flatMap(__ -> googleLoginClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.hideLoading();
+          view.showError(err);
+          crashReport.log(err);
+        });
   }
 
   @Override public void saveState(Bundle state) {
@@ -58,5 +89,74 @@ public class NotLoggedInSharePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private Observable<GoogleSignInResult> googleLoginClick() {
+    return view.googleLoginClick()
+        .doOnNext(selected -> view.showLoading()).<Void>flatMapCompletable(
+            result -> googleLoginManager.login(result)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                      Analytics.Account.SignUpLoginStatus.SUCCESS,
+                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  view.navigateToMainView();
+                })
+                .doOnTerminate(() -> view.hideLoading())
+                .doOnError(throwable -> {
+                  view.showError(throwable);
+                  crashReport.log(throwable);
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                      Analytics.Account.SignUpLoginStatus.FAILED,
+                      Analytics.Account.LoginStatusDetail.SDK_ERROR);
+                })).retry();
+  }
+
+  private Observable<LoginResult> facebookLoginClick() {
+    return view.facebookLoginClick()
+        .doOnNext(selected -> view.showLoading()).<Void>flatMapCompletable(result -> {
+          return facebookLoginManager.login(result)
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> {
+                Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+                    Analytics.Account.SignUpLoginStatus.SUCCESS,
+                    Analytics.Account.LoginStatusDetail.SUCCESS);
+                view.navigateToMainView();
+              })
+              .doOnTerminate(() -> view.hideLoading())
+              .doOnError(throwable -> {
+
+                if (throwable instanceof FacebookAccountException) {
+                  switch (((FacebookAccountException) throwable).getCode()) {
+                    case FacebookAccountException.FACEBOOK_DENIED_CREDENTIALS:
+                      view.showPermissionsRequiredMessage();
+                      break;
+                    case FacebookAccountException.FACEBOOK_API_INVALID_RESPONSE:
+                      view.showFacebookLoginError();
+                      break;
+                    default:
+                  }
+                } else {
+                  crashReport.log(throwable);
+                  view.showError(throwable);
+                }
+              });
+        }).retry();
+  }
+
+  private void showOrHideFacebookLogin() {
+    if (loginAvailability.isFacebookLoginEnabled()) {
+      view.showFacebookLogin();
+    } else {
+      view.hideFacebookLogin();
+    }
+  }
+
+  private void showOrHideGoogleLogin() {
+    if (loginAvailability.isGoogleLoginEnabled()) {
+      view.showGoogleLogin();
+    } else {
+      view.hideGoogleLogin();
+    }
   }
 }

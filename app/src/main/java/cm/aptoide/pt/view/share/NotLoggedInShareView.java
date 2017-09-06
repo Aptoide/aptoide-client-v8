@@ -1,17 +1,36 @@
 package cm.aptoide.pt.view.share;
 
-import cm.aptoide.pt.presenter.SocialLoginView;
+import android.content.Context;
+import cm.aptoide.pt.presenter.GoogleLoginView;
+import com.facebook.login.LoginResult;
 import rx.Observable;
 
-/**
- * Created by pedroribeiro on 30/08/17.
- */
-
-public interface NotLoggedInShareView extends SocialLoginView {
-
-  void initializeFacebookCallback();
+public interface NotLoggedInShareView extends GoogleLoginView {
 
   Observable<Void> closeClick();
 
   void closeFragment();
+
+  void navigateToMainView();
+
+  void showError(Throwable throwable);
+
+  void showFacebookLogin();
+
+  void showFacebookLoginError();
+
+  void showFacebookCancelledError();
+
+  Observable<LoginResult> facebookLoginClick();
+
+  void showPermissionsRequiredMessage();
+
+  void showLoading();
+
+  void hideLoading();
+
+  void hideFacebookLogin();
+
+  Context getApplicationContext();
+
 }
