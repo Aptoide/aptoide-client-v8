@@ -9,13 +9,15 @@ import rx.Observable;
 
 public interface NotLoggedInShareView extends View {
 
-  Observable<Void> facebookButtonPress();
+  Observable<Void> facebookButtonClick();
 
   void facebookLogin();
 
   void facebookInit();
 
-  Observable<Void> closePress();
+  Observable<Void> closeClick();
 
   void closeFragment();
+
+  Observable<Void> dontShowAgainClick();
 }

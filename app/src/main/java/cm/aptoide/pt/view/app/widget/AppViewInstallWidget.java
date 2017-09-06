@@ -7,6 +7,7 @@ package cm.aptoide.pt.view.app.widget;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -105,6 +106,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private PermissionManager permissionManager;
   private String marketName;
   private boolean createStoreUserPrivacyEnabled;
+  private SharedPreferences sharedPreferences;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -141,6 +143,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     createStoreUserPrivacyEnabled =
         ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled();
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    sharedPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
@@ -154,14 +158,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
     analytics = Analytics.getInstance();
@@ -171,10 +173,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
-                BuildConfig.APPLICATION_ID,
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-            tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                BuildConfig.APPLICATION_ID, sharedPreferences), tokenInvalidator,
+            sharedPreferences);
 
     GetApp getApp = this.displayable.getPojo();
     GetAppMeta.App currentApp = getApp.getNodes()
@@ -501,6 +501,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
     int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
     final View.OnClickListener installHandler = v -> {
+      ManagerPreferences.setNotLoggedInInstallClicks(
+          ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) + 1, sharedPreferences);
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         displayable.installAppClicked();
@@ -523,15 +525,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .doOnSubscribe(subcription -> setupEvents(download))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
-                  if (accountManager.isLoggedIn()
-                      && ManagerPreferences.isShowPreviewDialog(
-                      ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
-                      && createStoreUserPrivacyEnabled) {
+                  if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
+                      sharedPreferences) && createStoreUserPrivacyEnabled) {
                     SharePreviewDialog sharePreviewDialog =
                         new SharePreviewDialog(displayable, accountManager, true,
                             SharePreviewDialog.SharePreviewOpenMode.SHARE,
-                            displayable.getTimelineAnalytics(),
-                            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+                            displayable.getTimelineAnalytics(), sharedPreferences);
                     AlertDialog.Builder alertDialog =
                         sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
@@ -547,8 +546,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                             .getId(), "install", context, sharePreviewDialog, alertDialog,
                         socialRepository);
                   } else if (!accountManager.isLoggedIn()
-                      && ManagerPreferences.isShowLoginAndShareDialog(
-                      ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
+                      && ManagerPreferences.isShowNotLoggedAndShareDialog(sharedPreferences)
+                      && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
+                      || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
                     Fragment fragment = new NotLoggedInShareFragment().newInstance(app);
                     getFragmentNavigator().navigateWithoutReplace(fragment);
                   }

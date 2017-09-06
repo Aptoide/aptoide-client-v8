@@ -53,6 +53,7 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
   private TextView appTitle;
   private ImageView appIcon;
   private TextView closeText;
+  private TextView dontShowAgain;
 
   public Fragment newInstance(GetAppMeta.App app) {
     Fragment fragment = new NotLoggedInShareFragment();
@@ -85,8 +86,9 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
     googleButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
     appIcon = (ImageView) view.findViewById(R.id.not_logged_in_app_icon);
     appTitle = (TextView) view.findViewById(R.id.not_logged_int_app_title);
-    appRating = (RatingBar) view.findViewById(R.id.not_logged_in_app_rating);
     closeText = (TextView) view.findViewById(R.id.not_logged_in_close);
+    dontShowAgain = (TextView) view.findViewById(R.id.not_logged_in_dont_show_again);
+    appRating = (RatingBar) view.findViewById(R.id.not_logged_in_app_rating);
 
     appTitle.setText(getArguments().getString(APP_NAME));
     appRating.setRating(getArguments().getFloat(APP_RATING));
@@ -115,7 +117,7 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
         .show();
   }
 
-  @Override public Observable<Void> facebookButtonPress() {
+  @Override public Observable<Void> facebookButtonClick() {
     return RxView.clicks(facebookButton);
   }
 
@@ -143,11 +145,15 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
         });
   }
 
-  @Override public Observable<Void> closePress() {
+  @Override public Observable<Void> closeClick() {
     return RxView.clicks(closeText);
   }
 
   @Override public void closeFragment() {
     getFragmentNavigator().popBackStack();
+  }
+
+  @Override public Observable<Void> dontShowAgainClick() {
+    return RxView.clicks(dontShowAgain);
   }
 }

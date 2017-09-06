@@ -214,14 +214,25 @@ public class ManagerPreferences {
         .apply();
   }
 
-  public static boolean isShowLoginAndShareDialog(SharedPreferences sharedPreferences) {
-    return sharedPreferences.getBoolean(ManagedKeys.LOGIN_AND_SHARE_DONT_SHOW_ME_AGAIN, true);
+  public static boolean isShowNotLoggedAndShareDialog(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getBoolean(ManagedKeys.NOT_LOGGED_IN_AND_SHARE_DONT_SHOW_ME_AGAIN,
+        true);
   }
 
-  public static void setLoginAndShareDialogDontShowAgain(boolean value,
+  public static void setNotLoggedAndShareDialogDontShowAgain(boolean value,
       SharedPreferences sharedPreferences) {
     sharedPreferences.edit()
-        .putBoolean(ManagedKeys.LOGIN_AND_SHARE_DONT_SHOW_ME_AGAIN, value)
+        .putBoolean(ManagedKeys.NOT_LOGGED_IN_AND_SHARE_DONT_SHOW_ME_AGAIN, value)
+        .apply();
+  }
+
+  public static int getNotLoggedInInstallClicks(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getInt(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, 0);
+  }
+
+  public static void setNotLoggedInInstallClicks(int value, SharedPreferences sharedPreferences) {
+    sharedPreferences.edit()
+        .putInt(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, value)
         .apply();
   }
 }
