@@ -2,6 +2,7 @@ package cm.aptoide.pt.social.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.view.viewholder.PostViewHolder;
@@ -33,8 +34,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   }
 
   @Override public int getItemViewType(int position) {
-    return posts.get(position)
-        .getType()
+    Post post = posts.get(position);
+    if (post instanceof TimelineUser) {
+      TimelineUser user = (TimelineUser) post;
+      if (user.hasUserStats()) {
+        user.setCardType(CardType.TIMELINE_STATS);
+      } else if (!user.isLoggedIn()) {
+        user.setCardType(CardType.LOGIN);
+      } else if (user.hasNotification()) {
+        user.setCardType(CardType.NOTIFICATIONS);
+      } else {
+        user.setCardType(CardType.NO_NOTIFICATIONS);
+      }
+    }
+    return post.getType()
         .ordinal();
   }
 

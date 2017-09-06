@@ -39,7 +39,9 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.social.AccountNotificationManagerUserProvider;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
@@ -261,12 +263,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     StoreCredentialsProviderImpl storeCredentialsProvider =
         new StoreCredentialsProviderImpl(storeAccessor);
 
+    NotificationCenter notificationCenter =
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(marketName),
-            timelineAnalytics, timelinePostsRepository,
-            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-            marketName, () -> accountManager.accountStatus()
-            .map(account -> account.isLoggedIn()));
+            timelineAnalytics, timelinePostsRepository, marketName,
+            new AccountNotificationManagerUserProvider(notificationCenter, accountManager,
+                timelineService));
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
@@ -282,9 +285,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
             storeContext, getContext().getResources(), getFragmentNavigator(),
-            new LinksHandlerFactory(getContext()),
-            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter()),
-        savedInstanceState);
+            new LinksHandlerFactory(getContext()), notificationCenter), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

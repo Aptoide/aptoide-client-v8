@@ -1,5 +1,7 @@
 package cm.aptoide.pt.social.data;
 
+import cm.aptoide.pt.social.TimelineUserProvider;
+
 /**
  * Created by trinkes on 05/09/2017.
  */
@@ -7,43 +9,43 @@ package cm.aptoide.pt.social.data;
 public class User {
   public static final int NO_FOLLOWERS = -1;
   public static final int NO_FOLLOWINGS = -1;
-  public static final int NO_TYPE = -1;
   private final String bodyMessage;
   private final String image;
   private final String urlAction;
-  private final int type;
+  private final TimelineUserProvider.NotificationType type;
   private final long followers;
   private final long following;
-  private final CardType cardType;
+  private boolean isLogged;
 
-  public User(String bodyMessage, String image, String urlAction, int type, CardType cardType) {
+  public User(String bodyMessage, String image, String urlAction,
+      TimelineUserProvider.NotificationType type, boolean isLogged) {
     this.bodyMessage = bodyMessage;
     this.image = image;
     this.urlAction = urlAction;
     this.type = type;
-    this.cardType = cardType;
+    this.isLogged = isLogged;
     followers = NO_FOLLOWERS;
     following = NO_FOLLOWINGS;
   }
 
-  public User(CardType cardType) {
-    this.cardType = cardType;
+  public User(boolean isLogged) {
+    this.isLogged = isLogged;
     bodyMessage = null;
     image = null;
     urlAction = null;
-    type = NO_TYPE;
+    type = null;
     followers = NO_FOLLOWERS;
     following = NO_FOLLOWINGS;
   }
 
-  public User(long followers, long following, CardType cardType) {
+  public User(long followers, long following, boolean isLogged) {
     this.followers = followers;
     this.following = following;
-    this.cardType = cardType;
+    this.isLogged = isLogged;
     bodyMessage = null;
     image = null;
     urlAction = null;
-    type = NO_TYPE;
+    type = null;
   }
 
   public long getFollowers() {
@@ -66,15 +68,11 @@ public class User {
     return urlAction;
   }
 
-  public CardType getCardType() {
-    return cardType;
-  }
-
-  public int getType() {
+  public TimelineUserProvider.NotificationType getType() {
     return type;
   }
 
-  public boolean hasNotification() {
-    return bodyMessage != null && image != null && urlAction != null;
+  public boolean isLogged() {
+    return isLogged;
   }
 }
