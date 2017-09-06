@@ -9,13 +9,10 @@ import rx.Observable;
  */
 
 public interface TimelineUserProvider {
-  Observable<Boolean> isLoggedIn();
-
-  Observable<TimelineNotification> getNotification();
 
   Completable notificationRead(NotificationType notificationType);
 
-  Observable<User> getUser(Long userId);
+  Observable<User> getUser();
 
   enum NotificationType {
     CAMPAIGN, COMMENT, LIKE, POPULAR

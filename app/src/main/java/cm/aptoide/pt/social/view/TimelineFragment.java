@@ -42,6 +42,8 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.social.AccountNotificationManagerUserProvider;
+import cm.aptoide.pt.social.StatsUserProvider;
+import cm.aptoide.pt.social.TimelineUserProvider;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
@@ -265,11 +267,17 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     NotificationCenter notificationCenter =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
+    TimelineUserProvider timelineUserProvider;
+    if (userId == null) {
+      timelineUserProvider =
+          new AccountNotificationManagerUserProvider(notificationCenter, accountManager);
+    } else {
+      timelineUserProvider = new StatsUserProvider(accountManager, timelineService);
+    }
+
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(marketName),
-            timelineAnalytics, timelinePostsRepository, marketName,
-            new AccountNotificationManagerUserProvider(notificationCenter, accountManager,
-                timelineService));
+            timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);

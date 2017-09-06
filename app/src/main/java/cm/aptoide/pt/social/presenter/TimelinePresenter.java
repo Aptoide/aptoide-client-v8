@@ -186,7 +186,7 @@ public class TimelinePresenter implements Presenter {
   private void onViewCreatedShowUser() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> timeline.getUser(userId)
+        .flatMap(created -> timeline.getUser()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe(() -> view.showUserLoading())
             .doOnNext(user -> view.showUser(convertUser(user))))

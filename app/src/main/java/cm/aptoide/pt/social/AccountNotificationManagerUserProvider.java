@@ -3,7 +3,6 @@ package cm.aptoide.pt.social;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationCenter;
-import cm.aptoide.pt.social.data.TimelineService;
 import cm.aptoide.pt.social.data.User;
 import rx.Completable;
 import rx.Observable;
@@ -15,21 +14,19 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
 
   private final NotificationCenter notificationCenter;
   private final AptoideAccountManager accountManager;
-  private final TimelineService service;
 
   public AccountNotificationManagerUserProvider(NotificationCenter notificationCenter,
-      AptoideAccountManager accountManager, TimelineService service) {
+      AptoideAccountManager accountManager) {
     this.notificationCenter = notificationCenter;
     this.accountManager = accountManager;
-    this.service = service;
   }
 
-  @Override public Observable<Boolean> isLoggedIn() {
+  private Observable<Boolean> isLoggedIn() {
     return accountManager.accountStatus()
         .map(account -> account.isLoggedIn());
   }
 
-  @Override public Observable<TimelineNotification> getNotification() {
+  private Observable<TimelineNotification> getNotification() {
     return notificationCenter.getUnreadNotifications()
         .map(aptoideNotifications -> {
           if (aptoideNotifications.isEmpty()) {
@@ -45,28 +42,19 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
     return notificationCenter.notificationDismissed(mapToAptoideNotificationType(notificationType));
   }
 
-  @Override public Observable<User> getUser(Long userId) {
-    if (userId == null) {
-      return Observable.combineLatest(isLoggedIn(), getNotification(),
-          (isLoggedIn, timelineNotification) -> {
-            if (isLoggedIn) {
-              if (timelineNotification == null) {
-                return new User(isLoggedIn);
-              } else {
-                return new User(timelineNotification.getBody(), timelineNotification.getImg(),
-                    timelineNotification.getUrl(), timelineNotification.getType(), isLoggedIn);
-              }
+  @Override public Observable<User> getUser() {
+    return Observable.combineLatest(isLoggedIn(), getNotification(),
+        (isLoggedIn, timelineNotification) -> {
+          if (isLoggedIn) {
+            if (timelineNotification == null) {
+              return new User(isLoggedIn);
+            } else {
+              return new User(timelineNotification.getBody(), timelineNotification.getImg(),
+                  timelineNotification.getUrl(), timelineNotification.getType(), isLoggedIn);
             }
-            return new User(isLoggedIn);
-          });
-    } else {
-      return accountManager.accountStatus()
-          .map(account -> account.isLoggedIn())
-          .flatMap(isLogged -> service.getTimelineStats()
-              .toObservable()
-              .map(timelineStats -> new User(timelineStats.getFollowers(),
-                  timelineStats.getFollowings(), isLogged)));
-    }
+          }
+          return new User(isLoggedIn);
+        });
   }
 
   private @AptoideNotification.NotificationType Integer[] mapToAptoideNotificationType(

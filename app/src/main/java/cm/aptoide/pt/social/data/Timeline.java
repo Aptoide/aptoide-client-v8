@@ -159,8 +159,8 @@ public class Timeline {
     return Completable.complete();
   }
 
-  public Observable<User> getUser(Long userId) {
-    return timelineUserProvider.getUser(userId);
+  public Observable<User> getUser() {
+    return timelineUserProvider.getUser();
   }
 
   public Completable notificationDismissed(TimelineUserProvider.NotificationType notificationType) {
