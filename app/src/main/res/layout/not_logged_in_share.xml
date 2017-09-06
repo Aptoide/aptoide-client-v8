@@ -238,6 +238,14 @@
                 style="@style/Widget.AppCompat.RatingBar.Small"
                 />
 
+            <ImageView
+                android:id="@+id/not_logged_in_preview_social_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/not_logged_in_app_rating"
+                android:src="@drawable/not_logged_in_preview_social_content"
+                />
+
             <View
                 android:id="@+id/not_logged_in_separator"
                 android:layout_width="match_parent"
@@ -253,12 +261,13 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/not_logged_in_app_icon"
+                android:layout_below="@+id/not_logged_in_preview_social_content"
                 android:clickable="false"
+                android:padding="4dp"
                 >
 
               <include
-                  layout="@layout/social_bar_timeline"/>
+                  layout="@layout/not_logged_in_preview_social_shortcuts"/>
 
             </FrameLayout>
 
@@ -268,17 +277,37 @@
 
       </LinearLayout>
 
-      <TextView
-          android:id="@+id/not_logged_in_close"
-          android:layout_width="wrap_content"
+      <RelativeLayout
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="20dp"
-          android:clickable="true"
-          android:text="@string/close"
-          android:textAllCaps="true"
-          android:textSize="14sp"
-          style="@style/Aptoide.TextView.Regular.M.Black"
-          />
+          android:orientation="horizontal"
+          >
+        <TextView
+            android:id="@+id/not_logged_in_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:text="@string/close"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            style="@style/Aptoide.TextView.Regular.M.Black"
+            />
+
+        <TextView
+            android:id="@+id/not_logged_in_dont_show_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:text="@string/dont_show_this_again"
+            style="@style/Aptoide.TextView.Regular.M.Black"
+            />
+      </RelativeLayout>
 
     </LinearLayout>
   </ScrollView>
