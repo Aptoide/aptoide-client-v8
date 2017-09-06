@@ -42,7 +42,7 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
     return notificationCenter.notificationDismissed(mapToAptoideNotificationType(notificationId));
   }
 
-  @Override public Observable<User> getUser() {
+  @Override public Observable<User> getUser(boolean refresh) {
     return Observable.combineLatest(isLoggedIn(), getNotification(),
         (isLoggedIn, timelineNotification) -> {
           if (isLoggedIn) {

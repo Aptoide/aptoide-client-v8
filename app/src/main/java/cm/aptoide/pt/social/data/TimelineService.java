@@ -55,10 +55,10 @@ public class TimelineService {
         .toCompletable();
   }
 
-  public Single<User> getTimelineStats() {
+  public Single<User> getTimelineStats(boolean refresh) {
     return GetTimelineStatsRequest.of(bodyInterceptor, userId, okhttp, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe()
+        .observe(refresh)
         .toSingle()
         .flatMap(timelineResponse -> {
           if (timelineResponse.isOk()) {

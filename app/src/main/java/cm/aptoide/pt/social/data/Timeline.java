@@ -159,8 +159,8 @@ public class Timeline {
     return Completable.complete();
   }
 
-  public Observable<User> getUser() {
-    return timelineUserProvider.getUser();
+  public Observable<User> getUser(boolean refresh) {
+    return timelineUserProvider.getUser(refresh);
   }
 
   public Completable notificationDismissed(int notificationType) {

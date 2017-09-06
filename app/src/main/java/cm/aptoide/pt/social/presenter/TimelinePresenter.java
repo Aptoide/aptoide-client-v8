@@ -186,11 +186,12 @@ public class TimelinePresenter implements Presenter {
   private void onViewCreatedShowUser() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> timeline.getUser()
+        .flatMap(created -> timeline.getUser(false)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe(() -> view.showUserLoading())
             .doOnNext(user -> view.showUser(convertUser(user))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
           crashReport.log(throwable);
@@ -382,6 +383,9 @@ public class TimelinePresenter implements Presenter {
             .flatMapSingle(account -> timeline.getFreshCards())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cards -> showCardsAndHideRefresh(cards))
+            .flatMap(posts -> timeline.getUser(true))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(user -> view.showUser(convertUser(user)))
             .doOnError(throwable -> {
               crashReport.log(throwable);
               view.showGenericViewError();
