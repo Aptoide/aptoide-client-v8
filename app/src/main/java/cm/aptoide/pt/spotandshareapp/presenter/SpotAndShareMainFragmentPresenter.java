@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareMainFragmentView;
 import cm.aptoide.pt.view.permission.PermissionProvider;
 import rx.Observable;
@@ -24,12 +24,12 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   public static final int WRITE_SETTINGS_REQUEST_CODE_SEND = 2;
   public static final int WRITE_SETTINGS_REQUEST_CODE_RECEIVE = 3;
 
-  private SpotAndShareUserManager spotAndShareUserManager;
+  private SpotAndShareLocalUserManager spotAndShareUserManager;
   private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
   private SpotAndShareMainFragmentView view;
 
   public SpotAndShareMainFragmentPresenter(SpotAndShareMainFragmentView view,
-      SpotAndShareUserManager spotAndShareUserManager,
+      SpotAndShareLocalUserManager spotAndShareUserManager,
       SpotAndSharePermissionProvider spotAndSharePermissionProvider) {
     this.view = view;
     this.spotAndShareUserManager = spotAndShareUserManager;
@@ -104,7 +104,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         });
   }
 
-  private SpotAndShareUser getSpotAndShareProfileInformation() {
+  private SpotAndShareLocalUser getSpotAndShareProfileInformation() {
     return spotAndShareUserManager.getUser();
   }
 

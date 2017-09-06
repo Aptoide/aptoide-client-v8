@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatar;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalAvatar;
 import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -66,11 +66,11 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
     return pickAvatarSubject;
   }
 
-  public SpotAndShareUserAvatar getSelectedAvatar() {
+  public SpotAndShareLocalAvatar getSelectedAvatar() {
     if (selectedAvatar == null) {
-      return (SpotAndShareUserAvatar) avatarList.get(0);
+      return (SpotAndShareLocalAvatar) avatarList.get(0);
     }
-    return (SpotAndShareUserAvatar) selectedAvatar;
+    return (SpotAndShareLocalAvatar) selectedAvatar;
   }
 
   /**
@@ -83,7 +83,7 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
       unselectAvatar(selectedAvatar);
     }
     selectAvatar =
-        new SpotAndShareUserAvatar(selectAvatar.getAvatarId(), selectAvatar.getString(), true);
+        new SpotAndShareLocalAvatar(selectAvatar.getAvatarId(), selectAvatar.getString(), true);
     avatarList.set(selectAvatar.getAvatarId(), selectAvatar);
     selectedAvatar = selectAvatar;
 
@@ -92,7 +92,7 @@ public class SpotAndShareEditProfileAdapter extends RecyclerView.Adapter {
 
   private void unselectAvatar(SpotAndShareAvatar avatar) {
     avatarList.set(avatar.getAvatarId(),
-        new SpotAndShareUserAvatar(avatar.getAvatarId(), avatar.getString(), false));
+        new SpotAndShareLocalAvatar(avatar.getAvatarId(), avatar.getString(), false));
   }
 
   class AvatarViewHolder extends ViewHolder {

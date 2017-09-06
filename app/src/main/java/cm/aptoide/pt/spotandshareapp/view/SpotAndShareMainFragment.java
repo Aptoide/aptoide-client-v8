@@ -23,8 +23,8 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.WriteSettingsPermissionProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareMainFragmentPresenter;
 import cm.aptoide.pt.view.fragment.FragmentView;
@@ -104,7 +104,7 @@ public class SpotAndShareMainFragment extends FragmentView
     getFragmentNavigator().navigateTo(SpotAndShareEditProfileFragment.newInstance());
   }
 
-  @Override public void loadProfileInformation(SpotAndShareUser user) {
+  @Override public void loadProfileInformation(SpotAndShareLocalUser user) {
     username.setText(user.getUsername());
     setAvatar(user.getAvatar());
   }

@@ -6,27 +6,27 @@ import cm.aptoide.pt.AptoideApplication;
  * Created by filipe on 23-06-2017.
  */
 
-public class SpotAndShareUserManager {
+public class SpotAndShareLocalUserManager {
 
   private AptoideApplication aptoideApplication;
-  private SpotAndShareUserPersister persister;
+  private SpotAndShareLocalUserPersister persister;
 
-  public SpotAndShareUserManager(AptoideApplication aptoideApplication,
-      SpotAndShareUserPersister persister) {
+  public SpotAndShareLocalUserManager(AptoideApplication aptoideApplication,
+      SpotAndShareLocalUserPersister persister) {
     this.aptoideApplication = aptoideApplication;
     this.persister = persister;
   }
 
-  public void createUser(SpotAndShareUser user) {
+  public void createUser(SpotAndShareLocalUser user) {
     persister.save(user);
     updateFriendOnSpotAndShare();
   }
 
-  public SpotAndShareUser getUser() {
+  public SpotAndShareLocalUser getUser() {
     return persister.get();
   }
 
-  public void updateUser(SpotAndShareUser user) {
+  public void updateUser(SpotAndShareLocalUser user) {
     persister.save(user);
     updateFriendOnSpotAndShare();
   }

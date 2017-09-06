@@ -159,8 +159,8 @@ import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUserManager;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUserPersister;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -286,7 +286,7 @@ public abstract class AptoideApplication extends Application {
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private BillingIdResolver billingiIdResolver;
   private SpotAndShare spotAndShare;
-  private SpotAndShareUserManager spotAndShareUserManager;
+  private SpotAndShareLocalUserManager spotAndShareUserManager;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -1301,11 +1301,12 @@ public abstract class AptoideApplication extends Application {
 
   public abstract boolean isCreateStoreUserPrivacyEnabled();
 
-  public SpotAndShareUserManager getSpotAndShareUserManager() {
+  public SpotAndShareLocalUserManager getSpotAndShareUserManager() {
     if (spotAndShareUserManager == null) {
-      spotAndShareUserManager = new SpotAndShareUserManager(this, new SpotAndShareUserPersister(
-          getSharedPreferences(SpotAndShareUserPersister.SHARED_PREFERENCES_NAME,
-              Context.MODE_PRIVATE)));
+      spotAndShareUserManager = new SpotAndShareLocalUserManager(this,
+          new SpotAndShareLocalUserPersister(
+              getSharedPreferences(SpotAndShareLocalUserPersister.SHARED_PREFERENCES_NAME,
+                  Context.MODE_PRIVATE)));
     }
     return spotAndShareUserManager;
   }

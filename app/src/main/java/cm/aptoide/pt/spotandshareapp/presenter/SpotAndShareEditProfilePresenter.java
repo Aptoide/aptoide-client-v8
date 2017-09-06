@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatarsProvider;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalAvatarsProvider;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUserManager;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareEditProfileView;
 import rx.Observable;
 import rx.Subscription;
@@ -19,12 +19,12 @@ import rx.android.schedulers.AndroidSchedulers;
 public class SpotAndShareEditProfilePresenter implements Presenter {
 
   private SpotAndShareEditProfileView view;
-  private final SpotAndShareUserManager spotAndShareUserManager;
-  private final SpotAndShareUserAvatarsProvider avatarsProvider;
+  private final SpotAndShareLocalUserManager spotAndShareUserManager;
+  private final SpotAndShareLocalAvatarsProvider avatarsProvider;
 
   public SpotAndShareEditProfilePresenter(SpotAndShareEditProfileView view,
-      SpotAndShareUserManager spotAndShareUserManager,
-      SpotAndShareUserAvatarsProvider spotAndShareUserAvatarsProvider) {
+      SpotAndShareLocalUserManager spotAndShareUserManager,
+      SpotAndShareLocalAvatarsProvider spotAndShareUserAvatarsProvider) {
     this.view = view;
     this.spotAndShareUserManager = spotAndShareUserManager;
     this.avatarsProvider = spotAndShareUserAvatarsProvider;
@@ -74,7 +74,7 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         }, err -> err.printStackTrace());
   }
 
-  private Observable<SpotAndShareUser> saveProfileChanges() {
+  private Observable<SpotAndShareLocalUser> saveProfileChanges() {
     return view.saveProfileChanges()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(user -> saveUser(user));
@@ -86,7 +86,7 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         .getAvatarId();
   }
 
-  private void saveUser(SpotAndShareUser user) {
+  private void saveUser(SpotAndShareLocalUser user) {
     Log.d("saving user", user.getUsername() + " -  " + user.getAvatar()
         .getAvatarId());
     if (spotAndShareUserManager.getUser() == null) {

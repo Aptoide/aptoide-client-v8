@@ -3,7 +3,7 @@ package cm.aptoide.pt.spotandshareapp.view;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
 import rx.Observable;
 
 /**
@@ -30,5 +30,5 @@ public interface SpotAndShareMainFragmentView extends View {
 
   void openEditProfile();
 
-  void loadProfileInformation(SpotAndShareUser user);
+  void loadProfileInformation(SpotAndShareLocalUser user);
 }

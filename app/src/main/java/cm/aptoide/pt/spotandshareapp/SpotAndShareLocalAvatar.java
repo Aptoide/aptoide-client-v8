@@ -6,13 +6,13 @@ import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAvatar;
  * Created by filipe on 23-06-2017.
  */
 
-public class SpotAndShareUserAvatar implements SpotAndShareAvatar {
+public class SpotAndShareLocalAvatar implements SpotAndShareAvatar {
 
   private String avatarString;
   private int avatarId;
   private boolean selected;
 
-  public SpotAndShareUserAvatar(int avatarId, String avatarString, boolean selected) {
+  public SpotAndShareLocalAvatar(int avatarId, String avatarString, boolean selected) {
     this.avatarId = avatarId;
     this.avatarString = avatarString;
     this.selected = selected;

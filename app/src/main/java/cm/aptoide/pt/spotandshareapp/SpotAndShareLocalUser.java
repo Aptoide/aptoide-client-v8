@@ -6,12 +6,12 @@ import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAvatar;
  * Created by filipe on 23-06-2017.
  */
 
-public class SpotAndShareUser {
+public class SpotAndShareLocalUser {
 
   private String username;
   private SpotAndShareAvatar avatar;
 
-  public SpotAndShareUser(String username, SpotAndShareAvatar avatar) {
+  public SpotAndShareLocalUser(String username, SpotAndShareAvatar avatar) {
     this.username = username;
     this.avatar = avatar;
   }

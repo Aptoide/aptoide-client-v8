@@ -16,8 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUserAvatarsProvider;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalAvatarsProvider;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -53,9 +53,10 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     getActivity().finish();
   }
 
-  @Override public Observable<SpotAndShareUser> saveProfileChanges() {
+  @Override public Observable<SpotAndShareLocalUser> saveProfileChanges() {
     return RxView.clicks(saveProfile)
-        .map(aVoid -> new SpotAndShareUser(getUsername(), pickAvatarAdapter.getSelectedAvatar()));
+        .map(aVoid -> new SpotAndShareLocalUser(getUsername(),
+            pickAvatarAdapter.getSelectedAvatar()));
   }
 
   @Override public Observable<SpotAndShareAvatar> onSelectedAvatar() {
@@ -91,7 +92,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
     attachPresenter(new SpotAndShareEditProfilePresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
-        new SpotAndShareUserAvatarsProvider(getContext().getPackageName())), savedInstanceState);
+        new SpotAndShareLocalAvatarsProvider(getContext().getPackageName())), savedInstanceState);
   }
 
   private void setupAvatarsListLayoutManager() {

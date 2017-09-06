@@ -1,7 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
 import java.util.List;
 import rx.Observable;
 
@@ -13,7 +13,7 @@ public interface SpotAndShareEditProfileView extends View {
 
   void finish();
 
-  Observable<SpotAndShareUser> saveProfileChanges();
+  Observable<SpotAndShareLocalUser> saveProfileChanges();
 
   Observable<SpotAndShareAvatar> onSelectedAvatar();
 
