@@ -48,4 +48,9 @@ public class DrawableBitmapMapper {
     }
     return convertBitmapToByteArray(bitmap);
   }
+
+  public Drawable convertUriToDrawable(Uri uri) {
+    byte[] array = convertUriToByteArray(uri);
+    return convertBitmapToDrawable(array);
+  }
 }
