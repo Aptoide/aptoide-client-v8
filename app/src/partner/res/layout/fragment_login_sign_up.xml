@@ -44,8 +44,8 @@ android:fitsSystemWindows="true"
 
       <ImageView
           android:id="@+id/aptoide_logo"
-          android:layout_width="200dp"
-          android:layout_height="100dp"
+          android:layout_width="180dp"
+          android:layout_height="180dp"
           android:layout_gravity="center_horizontal"
           android:layout_margin="20dp"
           android:src="@mipmap/aptoideicon"
