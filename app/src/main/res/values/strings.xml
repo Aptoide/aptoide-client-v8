@@ -182,6 +182,11 @@
   <string name="rate_this_app">Rate this app</string>
   <string name="reviewappview_button_open">Open</string>
 
+  <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
+  <string name="reviewappview_highlighted_reviews_explanation_3">Write about an app you have installed</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">Be an Aptoide user for over 3 months</string>
+
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
   <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
