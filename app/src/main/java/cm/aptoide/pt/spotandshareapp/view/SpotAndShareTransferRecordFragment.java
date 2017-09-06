@@ -27,8 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.CompositePresenter;
-import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
@@ -37,6 +37,8 @@ import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserMapper;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndSharePickAppsPresenter;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareTransferRecordPresenter;
@@ -46,7 +48,6 @@ import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.support.v7.widget.RxPopupMenu;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
@@ -134,8 +135,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private CharSequence menuIconWithText(Drawable r, String title) {
 
     r.setBounds(0, 0, r.getIntrinsicWidth() / 2, r.getIntrinsicHeight() / 2);
-    SpannableString sb = new SpannableString(" " + title);
-    ImageSpan imageSpan = new ImageSpan(r, ImageSpan.ALIGN_BOTTOM);
+    SpannableString sb = new SpannableString("  " + title);
+    ImageSpan imageSpan = new ImageSpan(r, ImageSpan.ALIGN_BASELINE);
     sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     return sb;
   }
@@ -201,7 +202,9 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
         new SpotAndShareTransferRecordPresenter(this,
             ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
             new SpotAndShareTransferRecordManager(getContext()),
-            new SpotAndShareInstallManager(getActivity().getApplicationContext()));
+            new SpotAndShareInstallManager(getActivity().getApplicationContext()),
+            CrashReport.getInstance(),
+            new SpotAndShareUserMapper(new DrawableBitmapMapper(getContext())));
 
     SpotAndSharePickAppsPresenter appSelectionPresenter =
         new SpotAndSharePickAppsPresenter(this, false,
@@ -336,7 +339,9 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void updateReceivedAppsList(List<TransferAppModel> transferAppModelList) {
     transferRecordAdapter.updateTransferList(transferAppModelList);
-    transferRecordRecyclerView.smoothScrollToPosition(transferAppModelList.size() - 1);
+    if (transferAppModelList.size() > 0) {
+      transferRecordRecyclerView.smoothScrollToPosition(transferAppModelList.size() - 1);
+    }
   }
 
   @Override public Observable<TransferAppModel> installApp() {
@@ -356,17 +361,17 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     connectedFriendsNumber.setText("" + numberOfFriends);
   }
 
-  @Override public void showFriendsOnMenu(ArrayList<Friend> friendsList) {
+  @Override public void showFriendsOnMenu(List<SpotAndShareUser> friendsList) {
     this.friendsMenu = new PopupMenu(this.getContext(), connectedFriendsLayout);
 
     MenuInflater inflate = friendsMenu.getMenuInflater();
     inflate.inflate(R.menu.menu_spotandshare_transfer, friendsMenu.getMenu());
     for (int i = 0; i < friendsList.size(); i++) {
       friendsMenu.getMenu()
-          .add(R.id.spotandshare_toolbar_friends_menu_group, i, i,
-              menuIconWithText(getResources().getDrawable(R.drawable.spotandshare_avatar_01),
-                  friendsList.get(i)
-                      .getUsername()));
+          .add(R.id.spotandshare_toolbar_friends_menu_group, i, i, menuIconWithText(
+              friendsList.get(i)
+                  .getAvatar(), friendsList.get(i)
+                  .getUsername()));
     }
     friendsMenu.show();
   }

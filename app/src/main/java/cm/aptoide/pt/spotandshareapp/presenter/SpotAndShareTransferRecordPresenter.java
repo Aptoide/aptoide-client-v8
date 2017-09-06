@@ -1,15 +1,17 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUserMapper;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareTransferRecordView;
-import java.util.ArrayList;
 import java.util.LinkedList;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -20,18 +22,23 @@ import rx.android.schedulers.AndroidSchedulers;
 public class SpotAndShareTransferRecordPresenter implements Presenter {
 
   private final SpotAndShareTransferRecordView view;
+  private final CrashReport crashReport;
   private SpotAndShare spotAndShare;
   private SpotAndShareTransferRecordManager transferRecordManager;
   private SpotAndShareInstallManager spotAndShareInstallManager;
   private Subscription friendsObserverSubscription;
+  private SpotAndShareUserMapper spotAndShareUserMapper;
 
   public SpotAndShareTransferRecordPresenter(SpotAndShareTransferRecordView view,
       SpotAndShare spotAndShare, SpotAndShareTransferRecordManager transferRecordManager,
-      SpotAndShareInstallManager spotAndShareInstallManager) {
+      SpotAndShareInstallManager spotAndShareInstallManager, CrashReport crashReport,
+      SpotAndShareUserMapper spotAndShareUserMapper) {
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.transferRecordManager = transferRecordManager;
     this.spotAndShareInstallManager = spotAndShareInstallManager;
+    this.crashReport = crashReport;
+    this.spotAndShareUserMapper = spotAndShareUserMapper;
   }
 
   @Override public void present() {
@@ -126,12 +133,16 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
   }
 
   private void startListeningToFriendsChanges() {
+
     this.friendsObserverSubscription = spotAndShare.observeFriends()
-        .doOnNext(friendsList -> view.showFriendsOnMenu((new ArrayList<>(friendsList))))
-        .doOnNext(__ -> listenToFriendsMenuDismiss())
+        .flatMap(friendsList -> Observable.from(friendsList)
+            .map(friend -> spotAndShareUserMapper.getSpotAndShareUser(friend))
+            .toList()
+            .doOnNext(list -> view.showFriendsOnMenu(list))
+            .doOnNext(__ -> listenToFriendsMenuDismiss()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   private void leaveGroup() {

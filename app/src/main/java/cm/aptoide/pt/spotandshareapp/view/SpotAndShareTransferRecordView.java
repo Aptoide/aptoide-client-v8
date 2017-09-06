@@ -1,8 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
-import cm.aptoide.pt.spotandshare.socket.entities.Friend;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
-import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
 
@@ -36,7 +35,7 @@ public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView
 
   void updateFriendsNumber(int friendsList);
 
-  void showFriendsOnMenu(ArrayList<Friend> friendsList);
+  void showFriendsOnMenu(List<SpotAndShareUser> friendsList);
 
   Observable<Void> friendsMenuDismiss();
 
