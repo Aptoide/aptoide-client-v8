@@ -42,6 +42,7 @@ import cm.aptoide.pt.view.app.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import cm.aptoide.pt.view.reviews.LanguageFilterHelper;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding.view.RxView;
@@ -205,11 +206,22 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
   private void loadTopReviews(String storeName, String packageName,
       BaseRequestWithStore.StoreCredentials storeCredentials) {
+    List<String> countryCodes =
+        new LanguageFilterHelper(getContext().getResources()).getCurrentLanguageFirst()
+            .getCountryCodes();
     Subscription subscription =
-        ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
-            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
+        createReviewsRequest(storeName, packageName, storeCredentials, countryCodes.get(0))
             .observe(true)
+            .flatMap(listReviews -> {
+              if (listReviews.getDataList()
+                  .getList()
+                  .size() == 0 && countryCodes.size() > 0) {
+                return createReviewsRequest(storeName, packageName, storeCredentials,
+                    countryCodes.get(1)).observe();
+              } else {
+                return Observable.just(listReviews);
+              }
+            })
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {
               List<Review> reviews = listReviews.getDataList()
@@ -235,6 +247,14 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
                   .log(err);
             });
     compositeSubscription.add(subscription);
+  }
+
+  private ListReviewsRequest createReviewsRequest(String storeName, String packageName,
+      BaseRequestWithStore.StoreCredentials storeCredentials, String languagesFilterSort) {
+    return ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        languagesFilterSort);
   }
 
   private void loadedData(boolean hasReviews) {

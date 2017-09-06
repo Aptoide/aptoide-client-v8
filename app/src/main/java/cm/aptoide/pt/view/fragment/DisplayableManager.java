@@ -24,4 +24,8 @@ public interface DisplayableManager {
   DisplayableManager clearDisplayables();
 
   boolean hasDisplayables();
+
+  int getDisplayablesSize();
+
+  void removeDisplayables(int fromIndex, int toIndex);
 }

@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Spinner;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -69,8 +68,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private String storeTheme;
   @Getter private String appName;
   private MenuItem installMenuItem;
-  private RatingTotalsLayout ratingTotalsLayout;
-  private RatingBarsLayout ratingBarsLayout;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
@@ -79,8 +76,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
-  private LanguageFilterSpinnerWrapper languageFilterSpinnerWrapper;
-  private LanguageFilterHelper languageFilterHelper;
+  private ReviewsLanguageFilterDisplayable reviewsLanguageFilterDisplayable;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -164,14 +160,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         (FloatingActionButton) view.findViewById(R.id.fab);
     setHasOptionsMenu(true);
 
-    ratingTotalsLayout = new RatingTotalsLayout(view);
-    ratingBarsLayout = new RatingBarsLayout(view);
-    languageFilterSpinnerWrapper = new LanguageFilterSpinnerWrapper(
-        (Spinner) view.findViewById(R.id.comments_filter_language_spinner), languageFilter -> {
-      fetchReviews(languageFilter);
-      clearDisplayables();
-    });
-
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -191,7 +179,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchLanguageFilter();
     fetchRating(refresh);
   }
 
@@ -202,10 +189,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         httpClient, converterFactory, installedRepository, tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
-  }
-
-  private void fetchLanguageFilter() {
-    languageFilterSpinnerWrapper.setup();
   }
 
   private void fetchRating(boolean refresh) {
@@ -222,7 +205,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
                 .getMeta()
                 .getData();
             setupTitle(data.getName());
-            setupRating(data);
+            addDisplayable(0, new ReviewsRatingDisplayable(data), true);
+            addDisplayable(reviewsLanguageFilterDisplayable =
+                new ReviewsLanguageFilterDisplayable(languageFilter -> {
+                  removeDisplayables(1, getDisplayablesSize() - 1);
+                  fetchReviews(languageFilter);
+                }));
           }
           finishLoading();
         }, err -> {
@@ -232,6 +220,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   void fetchReviews(LanguageFilterHelper.LanguageFilter languageFilter) {
+    addDisplayable(reviewsLanguageFilterDisplayable);
     ListReviewsRequest reviewsRequest = createListReviewsRequest(languageFilter.getValue());
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
@@ -269,11 +258,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     }
   }
 
-  private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     tokenInvalidator =
@@ -292,7 +276,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    languageFilterHelper = new LanguageFilterHelper(getResources());
   }
 
   @NonNull @Override
