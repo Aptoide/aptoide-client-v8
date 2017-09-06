@@ -20,7 +20,7 @@ public class StatsUserProvider implements TimelineUserProvider {
     this.service = service;
   }
 
-  @Override public Completable notificationRead(NotificationType notificationType) {
+  @Override public Completable notificationRead(int notificationType) {
     return Completable.complete();
   }
 

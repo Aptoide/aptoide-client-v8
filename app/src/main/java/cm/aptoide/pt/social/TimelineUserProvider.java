@@ -10,25 +10,21 @@ import rx.Observable;
 
 public interface TimelineUserProvider {
 
-  Completable notificationRead(NotificationType notificationType);
+  Completable notificationRead(int notificationId);
 
   Observable<User> getUser();
-
-  enum NotificationType {
-    CAMPAIGN, COMMENT, LIKE, POPULAR
-  }
 
   class TimelineNotification {
     private String body;
     private String img;
     private String url;
-    private NotificationType type;
+    private int notificationId;
 
-    public TimelineNotification(String body, String img, String url, NotificationType type) {
+    public TimelineNotification(String body, String img, String url, int notificationId) {
       this.body = body;
       this.img = img;
       this.url = url;
-      this.type = type;
+      this.notificationId = notificationId;
     }
 
     public String getBody() {
@@ -43,8 +39,8 @@ public interface TimelineUserProvider {
       return url;
     }
 
-    public NotificationType getType() {
-      return type;
+    public int getNotificationId() {
+      return notificationId;
     }
   }
 }

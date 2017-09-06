@@ -34,8 +34,8 @@ public class Notifications extends PostViewHolder<TimelineUser> {
   }
 
   @Override public void setPost(TimelineUser card, int position) {
-    imageLoader.loadUsingCircleTransform(card.getImage(), notificationImage);
-    notificationBody.setText(card.getBodyMessage());
+    imageLoader.loadUsingCircleTransform(card.getNotificationImage(), notificationImage);
+    notificationBody.setText(card.getNotificationBody());
     goToNotificationsButton.setOnClickListener(view -> publishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.NOTIFICATION_CENTER)));
     addFriendsButton.setOnClickListener(

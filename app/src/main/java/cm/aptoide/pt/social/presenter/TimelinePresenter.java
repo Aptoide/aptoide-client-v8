@@ -196,9 +196,9 @@ public class TimelinePresenter implements Presenter {
   }
 
   @NonNull private TimelineUser convertUser(User user) {
-    return new TimelineUser(user.isLogged(), user.getBodyMessage(), user.getImage(),
-        user.getUrlAction(), user.getType(), user.getFollowers(), user.getFollowing(),
-        user.getFollowers() != User.NO_FOLLOWERS && user.getFollowing() != User.NO_FOLLOWINGS);
+    return new TimelineUser(user.isLogged(), user.hasNotification(), user.getBodyMessage(),
+        user.getImage(), user.getUrlAction(), user.getNotificationId(), user.hasStats(),
+        user.getFollowers(), user.getFollowing());
   }
 
   private void onViewCreatedClickOnAddressBook() {
@@ -232,10 +232,10 @@ public class TimelinePresenter implements Presenter {
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.NOTIFICATION))
             .doOnNext(cardTouchEvent -> linksNavigator.get(LinksHandlerFactory.NOTIFICATION_LINK,
-                ((TimelineUser) cardTouchEvent.getCard()).getUrlAction())
+                ((TimelineUser) cardTouchEvent.getCard()).getNotificationUrlAction())
                 .launch())
             .flatMapCompletable(cardTouchEvent -> timeline.notificationDismissed(
-                ((TimelineUser) cardTouchEvent.getCard()).getNotificationType())))
+                ((TimelineUser) cardTouchEvent.getCard()).getNotificationId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> crashReport.log(throwable));

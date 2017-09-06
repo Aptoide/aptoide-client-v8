@@ -163,7 +163,7 @@ public class Timeline {
     return timelineUserProvider.getUser();
   }
 
-  public Completable notificationDismissed(TimelineUserProvider.NotificationType notificationType) {
+  public Completable notificationDismissed(int notificationType) {
     return timelineUserProvider.notificationRead(notificationType);
   }
 }

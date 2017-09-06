@@ -34,12 +34,12 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
           }
           AptoideNotification notification = aptoideNotifications.get(0);
           return new TimelineNotification(notification.getBody(), notification.getImg(),
-              notification.getUrl(), mapNotificationType(notification.getType()));
+              notification.getUrl(), notification.getType());
         });
   }
 
-  @Override public Completable notificationRead(NotificationType notificationType) {
-    return notificationCenter.notificationDismissed(mapToAptoideNotificationType(notificationType));
+  @Override public Completable notificationRead(int notificationId) {
+    return notificationCenter.notificationDismissed(mapToAptoideNotificationType(notificationId));
   }
 
   @Override public Observable<User> getUser() {
@@ -50,7 +50,8 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
               return new User(isLoggedIn);
             } else {
               return new User(timelineNotification.getBody(), timelineNotification.getImg(),
-                  timelineNotification.getUrl(), timelineNotification.getType(), isLoggedIn);
+                  timelineNotification.getUrl(), timelineNotification.getNotificationId(),
+                  isLoggedIn);
             }
           }
           return new User(isLoggedIn);
@@ -58,32 +59,17 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
   }
 
   private @AptoideNotification.NotificationType Integer[] mapToAptoideNotificationType(
-      NotificationType notificationType) {
-
+      int notificationType) {
     switch (notificationType) {
-      case CAMPAIGN:
+      case AptoideNotification.CAMPAIGN:
         return new Integer[] { AptoideNotification.CAMPAIGN };
-      case COMMENT:
+      case AptoideNotification.COMMENT:
         return new Integer[] { AptoideNotification.COMMENT };
-      case LIKE:
+      case AptoideNotification.LIKE:
         return new Integer[] { AptoideNotification.LIKE };
-      case POPULAR:
+      case AptoideNotification.POPULAR:
         return new Integer[] { AptoideNotification.POPULAR };
     }
     return null;
-  }
-
-  private NotificationType mapNotificationType(@AptoideNotification.NotificationType int type) {
-    switch (type) {
-      case AptoideNotification.CAMPAIGN:
-        return NotificationType.CAMPAIGN;
-      case AptoideNotification.COMMENT:
-        return NotificationType.COMMENT;
-      case AptoideNotification.LIKE:
-        return NotificationType.LIKE;
-      case AptoideNotification.POPULAR:
-        return NotificationType.POPULAR;
-    }
-    throw new IllegalStateException(type + " notification type is unsuported");
   }
 }

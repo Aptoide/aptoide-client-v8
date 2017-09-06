@@ -1,6 +1,5 @@
 package cm.aptoide.pt.social.view;
 
-import cm.aptoide.pt.social.TimelineUserProvider;
 import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.DummyPost;
 
@@ -9,39 +8,41 @@ import cm.aptoide.pt.social.data.DummyPost;
  */
 
 public class TimelineUser extends DummyPost {
-  private final String bodyMessage;
-  private final String image;
-  private final String urlAction;
-  private final TimelineUserProvider.NotificationType notificationType;
+  private final String notificationBody;
+  private final String notificationImage;
+  private final String notificationUrlAction;
+  private final int notificationId;
   private final long followers;
   private final long following;
   private final boolean hasStats;
+  private final boolean isLogged;
+  private final boolean hasNotification;
   private CardType cardType;
-  private boolean isLogged;
 
-  public TimelineUser(boolean isLogged, String bodyMessage, String image, String urlAction,
-      TimelineUserProvider.NotificationType notificationType, long followers, long following,
-      boolean hasStats) {
+  public TimelineUser(boolean isLogged, boolean hasNotification, String notificationBody,
+      String notificationImage, String notificationUrlAction, int notificationId, boolean hasStats,
+      long followers, long following) {
     this.isLogged = isLogged;
-    this.bodyMessage = bodyMessage;
-    this.image = image;
-    this.urlAction = urlAction;
-    this.notificationType = notificationType;
+    this.notificationBody = notificationBody;
+    this.notificationImage = notificationImage;
+    this.notificationUrlAction = notificationUrlAction;
+    this.notificationId = notificationId;
     this.followers = followers;
     this.following = following;
     this.hasStats = hasStats;
+    this.hasNotification = hasNotification;
   }
 
-  public TimelineUserProvider.NotificationType getNotificationType() {
-    return notificationType;
+  public int getNotificationId() {
+    return notificationId;
   }
 
-  public String getBodyMessage() {
-    return bodyMessage;
+  public String getNotificationBody() {
+    return notificationBody;
   }
 
-  public String getImage() {
-    return image;
+  public String getNotificationImage() {
+    return notificationImage;
   }
 
   public long getFollowers() {
@@ -69,8 +70,8 @@ public class TimelineUser extends DummyPost {
     return cardType;
   }
 
-  public String getUrlAction() {
-    return urlAction;
+  public String getNotificationUrlAction() {
+    return notificationUrlAction;
   }
 
   public boolean hasUserStats() {
@@ -82,6 +83,6 @@ public class TimelineUser extends DummyPost {
   }
 
   public boolean hasNotification() {
-    return bodyMessage != null && urlAction != null && image != null;
+    return hasNotification;
   }
 }
