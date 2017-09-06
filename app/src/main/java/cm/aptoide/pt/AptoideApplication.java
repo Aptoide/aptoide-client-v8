@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -157,6 +158,7 @@ import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
+import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserPersister;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -1311,7 +1313,10 @@ public abstract class AptoideApplication extends Application {
   public cm.aptoide.pt.spotandshareandroid.SpotAndShare getSpotAndShare() {
     if (spotAndShare == null) {
       Friend friend = new Friend(getSpotAndShareUserManager().getUser()
-          .getUsername());
+          .getUsername(), new DrawableBitmapMapper(this).convertUriToByteArray(Uri.parse(
+          getSpotAndShareUserManager().getUser()
+              .getAvatar()
+              .getString())));
       spotAndShare = new cm.aptoide.pt.spotandshareandroid.SpotAndShare(this, friend);
     }
     return spotAndShare;
