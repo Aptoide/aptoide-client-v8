@@ -40,6 +40,7 @@ public abstract class FragmentView extends LeakFragment implements View {
   private SharedPreferences sharedPreferences;
   private String defaultStore;
   private String defaultTheme;
+  private NavigationTracker navigationTracker;
 
   public FragmentNavigator getFragmentNavigator() {
     return navigationProvider.getFragmentNavigator();
@@ -72,7 +73,7 @@ public abstract class FragmentView extends LeakFragment implements View {
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
-    NavigationTracker navigationTracker =
+    navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
   }
 
