@@ -22,7 +22,7 @@ import lombok.Getter;
   private final String currentCountryCode;
 
   public LanguageFilterHelper(Resources resources) {
-    all = new LanguageFilter(R.string.comments_filter_comments_by_language_all,
+    all = new LanguageFilter(R.string.reviewappview_short_comments_by_language_all,
         Collections.emptyList());
     currentCountryCode = AptoideUtils.SystemU.getCountryCode(resources);
 
@@ -34,10 +34,27 @@ import lombok.Getter;
     }
 
     currentLanguageFirst =
-        new LanguageFilter(R.string.comments_filter_comments_by_language_current_language_first,
+        new LanguageFilter(R.string.reviewappview_short_comments_by_language_current_language_first,
             countryCodes);
-    english = new LanguageFilter(R.string.comments_filter_comments_by_language_english,
+    english = new LanguageFilter(R.string.reviewappview_short_comments_by_language_english,
         LanguageCode.en_GB.toString());
+  }
+
+  List<LanguageFilter> getLanguageFilterList() {
+    List<LanguageFilter> languageFilterList = new LinkedList<>();
+
+    languageFilterList.add(all);
+    languageFilterList.add(currentLanguageFirst);
+
+    if (!currentCountryCode.startsWith("en")) {
+      languageFilterList.add(english);
+    }
+
+    return languageFilterList;
+  }
+
+  public enum LanguageCode {
+    en_GB,
   }
 
   @Getter public static class LanguageFilter {
@@ -79,22 +96,5 @@ import lombok.Getter;
     public boolean hasMoreCountryCodes() {
       return countryCodes.size() > position + 1;
     }
-  }
-
-  List<LanguageFilter> getLanguageFilterList() {
-    List<LanguageFilter> languageFilterList = new LinkedList<>();
-
-    languageFilterList.add(all);
-    languageFilterList.add(currentLanguageFirst);
-
-    if (!currentCountryCode.startsWith("en")) {
-      languageFilterList.add(english);
-    }
-
-    return languageFilterList;
-  }
-
-  public enum LanguageCode {
-    en_GB,
   }
 }
