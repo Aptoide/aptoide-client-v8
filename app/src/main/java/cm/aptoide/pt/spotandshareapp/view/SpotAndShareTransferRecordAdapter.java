@@ -114,12 +114,13 @@ public class SpotAndShareTransferRecordAdapter
             .getResources()
             .getString(R.string.spotandshare_message_app_sender_info_sent, transferItem.getFriend()
                 .getUsername()));
-        appSize.setText("Download Completed");
         acceptButton.setVisibility(View.GONE);
         if (!transferItem.isInstalled()) {
           installButton.setVisibility(View.VISIBLE);
+          appSize.setText(R.string.spotandshare_short_download_completed);
         } else {
           installButton.setVisibility(View.GONE);
+          appSize.setText(R.string.spotandshare_short_installed);
         }
         transferProgressBar.setVisibility(View.INVISIBLE);
       } else if (transferItem.getTransferState() == Transfer.State.SERVING) {
