@@ -106,7 +106,7 @@ public class SpotAndShareTransferRecordAdapter
       if (transferItem.getTransferState() == Transfer.State.PENDING_ACCEPTION) {
         acceptButton.setVisibility(View.VISIBLE);
       } else if (transferItem.getTransferState() == Transfer.State.RECEIVING) {
-        acceptButton.setVisibility(View.VISIBLE);
+        acceptButton.setVisibility(View.GONE);
         transferProgressBar.setVisibility(View.VISIBLE);
         transferProgressBar.setIndeterminate(true);
       } else if (transferItem.getTransferState() == Transfer.State.RECEIVED) {
