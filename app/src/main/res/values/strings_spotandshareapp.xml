@@ -27,4 +27,5 @@
   <string name="spotandshare_button_install">install</string>
   <string name="spotandshare_short_download_completed">Download completed</string>
   <string name="spotandshare_short_installed">Installed</string>
+  <string name="spotandshare_short_megabytes">%1$s mb</string>
 </resources>
