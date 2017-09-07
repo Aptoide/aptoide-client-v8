@@ -2,4 +2,5 @@
 <resources>
   <string name="app_name" translatable="false">Partner</string>
   <string name="create_account" translatable="true">Create Account</string>
+  <string name="create_user_profile" translatable="true">Create a user profile</string>
 </resources>
