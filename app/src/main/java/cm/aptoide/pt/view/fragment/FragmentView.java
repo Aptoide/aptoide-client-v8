@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.NavigationProvider;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -71,6 +72,8 @@ public abstract class FragmentView extends LeakFragment implements View {
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
+    NavigationTracker navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
   }
 
   @Override public void onDestroy() {
