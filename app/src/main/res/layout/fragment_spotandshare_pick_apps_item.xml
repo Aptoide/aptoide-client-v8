@@ -30,7 +30,7 @@
         android:ellipsize="end"
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
-        style="@style/Aptoide.TextView.Regular.S.Grey"
+        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
 
         />
 
