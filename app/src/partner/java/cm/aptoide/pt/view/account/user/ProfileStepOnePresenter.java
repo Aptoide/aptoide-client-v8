@@ -42,11 +42,6 @@ public class ProfileStepOnePresenter implements Presenter {
                                         Analytics.Account.ProfileAction.CONTINUE))
                                 .doOnCompleted(() -> view.dismissWaitDialog())
                                 .doOnCompleted(() -> { navigateToHome();
-                                    //if (isExternalLogin) {
-                                    //    navigateToHome();
-                                    //} else {
-                                    //    navigateToCreateStore();
-                                    //}
                                 })
                                 .toObservable())
                 .retry()
