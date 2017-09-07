@@ -21,7 +21,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.Presenter;
-import cm.aptoide.pt.view.account.GoogleLoginFragment;
+import cm.aptoide.pt.view.account.SocialLoginFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -36,7 +36,7 @@ import rx.Observable;
  * Created by pedroribeiro on 29/08/17.
  */
 
-public class NotLoggedInShareFragment extends GoogleLoginFragment implements NotLoggedInShareView {
+public class NotLoggedInShareFragment extends SocialLoginFragment implements NotLoggedInShareView {
 
   private static final String TAG = NotLoggedInShareFragment.class.getSimpleName();
   private static final String APP_NAME = "app_name";
@@ -75,29 +75,12 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
         CrashReport.getInstance());
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.not_logged_in_share, null, false);
-  }
-
-  private void bindViews(View view) {
-    facebookButton = (Button) view.findViewById(R.id.not_logged_in_share_facebook_button);
-    googleButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
-    appIcon = (ImageView) view.findViewById(R.id.not_logged_in_app_icon);
-    appTitle = (TextView) view.findViewById(R.id.not_logged_int_app_title);
-    closeText = (TextView) view.findViewById(R.id.not_logged_in_close);
-    dontShowAgain = (TextView) view.findViewById(R.id.not_logged_in_dont_show_again);
-    appRating = (RatingBar) view.findViewById(R.id.not_logged_in_app_rating);
-
-    appTitle.setText(getArguments().getString(APP_NAME));
-    appRating.setRating(getArguments().getFloat(APP_RATING));
-    ImageLoader.with(getContext())
-        .load(getArguments().getString(APP_ICON), appIcon);
-  }
-
   @Override protected Button getGoogleButton() {
     return googleButton;
+  }
+
+  @Override protected Button getFacebookButton() {
+    return facebookButton;
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -111,10 +94,32 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
     presenter.present();
   }
 
+  @Override protected void bindViews(View view) {
+    facebookButton = (Button) view.findViewById(R.id.not_logged_in_share_facebook_button);
+    googleButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
+    appIcon = (ImageView) view.findViewById(R.id.not_logged_in_app_icon);
+    appTitle = (TextView) view.findViewById(R.id.not_logged_int_app_title);
+    closeText = (TextView) view.findViewById(R.id.not_logged_in_close);
+    dontShowAgain = (TextView) view.findViewById(R.id.not_logged_in_dont_show_again);
+    appRating = (RatingBar) view.findViewById(R.id.not_logged_in_app_rating);
+
+    appTitle.setText(getArguments().getString(APP_NAME));
+    appRating.setRating(getArguments().getFloat(APP_RATING));
+    ImageLoader.with(getContext())
+        .load(getArguments().getString(APP_ICON), appIcon);
+    super.bindViews(view);
+  }
+
   @Override protected void showGoogleLoginError() {
     Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.google_login_cancelled,
         Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.not_logged_in_share, null, false);
   }
 
   @Override public Observable<Void> facebookButtonClick() {

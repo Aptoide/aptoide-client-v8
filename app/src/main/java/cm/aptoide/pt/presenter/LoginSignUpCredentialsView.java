@@ -15,7 +15,7 @@ import rx.Observable;
  * Created by marcelobenites on 07/02/17.
  */
 
-public interface LoginSignUpCredentialsView extends GoogleLoginView {
+public interface LoginSignUpCredentialsView extends SocialLoginView {
 
   Observable<Void> showAptoideLoginAreaClick();
 
@@ -28,8 +28,6 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
   void showLoading();
 
   void hideLoading();
-
-  void showError(Throwable throwable);
 
   void showFacebookLogin();
 

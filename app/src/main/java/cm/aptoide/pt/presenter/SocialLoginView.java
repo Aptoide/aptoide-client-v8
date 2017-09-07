@@ -11,11 +11,13 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 08/02/17.
  */
-public interface GoogleLoginView extends View {
+public interface SocialLoginView extends View {
 
   void showGoogleLogin();
 
   void hideGoogleLogin();
+
+  void showError(Throwable throwable);
 
   Observable<GoogleAccountViewModel> googleLoginClick();
 }
