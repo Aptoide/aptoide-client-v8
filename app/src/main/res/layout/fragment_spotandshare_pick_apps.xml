@@ -30,7 +30,6 @@
       android:layout_height="match_parent"
       android:layout_marginLeft="20dp"
       android:layout_marginRight="20dp"
-      android:scrollbars="vertical"
       >
   </android.support.v7.widget.RecyclerView>
 
