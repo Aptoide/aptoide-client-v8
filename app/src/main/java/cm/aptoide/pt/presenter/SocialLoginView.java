@@ -5,8 +5,9 @@
 
 package cm.aptoide.pt.presenter;
 
-import cm.aptoide.pt.view.account.GoogleAccountViewModel;
+import com.facebook.AccessToken;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 08/02/17.
@@ -19,5 +20,23 @@ public interface SocialLoginView extends View {
 
   void showError(Throwable throwable);
 
-  Observable<GoogleAccountViewModel> googleLoginClick();
+  Observable<Void> googleLoginClick();
+
+  Observable<Void> facebookLoginClick();
+
+  void showPermissionsRequiredMessage();
+
+  void showLoading();
+
+  void hideLoading();
+
+  Single<String> getFacebookUsername(AccessToken accessToken);
+
+  void navigateToMainView();
+
+  void navigateToCreateProfile();
+
+  void navigateToMainViewCleaningBackStack();
+
+  void navigateBack();
 }

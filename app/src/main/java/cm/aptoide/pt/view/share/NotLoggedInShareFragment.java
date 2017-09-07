@@ -1,7 +1,5 @@
 package cm.aptoide.pt.view.share;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -13,23 +11,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.view.account.SocialLoginFragment;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.Arrays;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
 /**
@@ -38,15 +29,10 @@ import rx.Observable;
 
 public class NotLoggedInShareFragment extends SocialLoginFragment implements NotLoggedInShareView {
 
-  private static final String TAG = NotLoggedInShareFragment.class.getSimpleName();
   private static final String APP_NAME = "app_name";
   private static final String APP_ICON = "app_title";
   private static final String APP_RATING = "app_rating";
-  private AptoideAccountManager accountManager;
-  private SharedPreferences defaultSharedPreferences;
   private Presenter presenter;
-  private LoginManager facebookLoginManager;
-  private CallbackManager callbackManager;
   private Button facebookButton;
   private Button googleButton;
   private RatingBar appRating;
@@ -70,9 +56,18 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     presenter = new NotLoggedInSharePresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         CrashReport.getInstance());
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    attachPresenter(presenter, null);
+  }
+
+  @Override public Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
+    return Analytics.Account.StartupClickOrigin.NOT_LOGGED_IN_DIALOG;
   }
 
   @Override protected Button getGoogleButton() {
@@ -83,17 +78,6 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
     return facebookButton;
   }
 
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    callbackManager.onActivityResult(requestCode, resultCode, data);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    presenter.present();
-  }
-
   @Override protected void bindViews(View view) {
     facebookButton = (Button) view.findViewById(R.id.not_logged_in_share_facebook_button);
     googleButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
@@ -102,6 +86,7 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
     closeText = (TextView) view.findViewById(R.id.not_logged_in_close);
     dontShowAgain = (TextView) view.findViewById(R.id.not_logged_in_dont_show_again);
     appRating = (RatingBar) view.findViewById(R.id.not_logged_in_app_rating);
+    facebookLoginSubject = PublishRelay.create();
 
     appTitle.setText(getArguments().getString(APP_NAME));
     appRating.setRating(getArguments().getFloat(APP_RATING));
@@ -122,32 +107,8 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
     return inflater.inflate(R.layout.not_logged_in_share, null, false);
   }
 
-  @Override public Observable<Void> facebookButtonClick() {
-    return RxView.clicks(facebookButton);
-  }
-
-  @Override public void facebookLogin() {
-    LoginManager.getInstance()
-        .logInWithReadPermissions(getActivity(), Arrays.asList("public_profile", "user_friends"));
-  }
-
-  @Override public void facebookInit() {
-    FacebookSdk.sdkInitialize(getContext().getApplicationContext());
-    callbackManager = CallbackManager.Factory.create();
-    LoginManager.getInstance()
-        .registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-          @Override public void onSuccess(LoginResult loginResult) {
-            Logger.d(TAG, "Facebook login Successful");
-          }
-
-          @Override public void onCancel() {
-            Logger.d(TAG, "Facebook login Canceled");
-          }
-
-          @Override public void onError(FacebookException error) {
-            Logger.d(TAG, "Facebook login Failed");
-          }
-        });
+  @Override public void initializeFacebookCallback() {
+    registerFacebookCallback();
   }
 
   @Override public Observable<Void> closeClick() {

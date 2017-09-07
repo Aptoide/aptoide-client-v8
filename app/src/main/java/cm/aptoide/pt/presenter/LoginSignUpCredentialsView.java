@@ -8,7 +8,6 @@ package cm.aptoide.pt.presenter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.view.account.AptoideAccountViewModel;
-import cm.aptoide.pt.view.account.FacebookAccountViewModel;
 import rx.Observable;
 
 /**
@@ -25,13 +24,7 @@ public interface LoginSignUpCredentialsView extends SocialLoginView {
 
   void showAptoideLoginArea();
 
-  void showLoading();
-
-  void hideLoading();
-
   void showFacebookLogin();
-
-  void showPermissionsRequiredMessage();
 
   void hideFacebookLogin();
 
@@ -48,8 +41,6 @@ public interface LoginSignUpCredentialsView extends SocialLoginView {
   void dismiss();
 
   void hideKeyboard();
-
-  Observable<FacebookAccountViewModel> facebookLoginClick();
 
   Observable<AptoideAccountViewModel> aptoideLoginClick();
 

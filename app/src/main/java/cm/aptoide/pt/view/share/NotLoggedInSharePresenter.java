@@ -2,7 +2,6 @@ package cm.aptoide.pt.view.share;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.presenter.Presenter;
@@ -15,14 +14,12 @@ import cm.aptoide.pt.presenter.View;
 public class NotLoggedInSharePresenter implements Presenter {
 
   private final NotLoggedInShareView view;
-  private final AptoideAccountManager accountManager;
   private final SharedPreferences sharedPreferences;
   private CrashReport crashReport;
 
-  public NotLoggedInSharePresenter(NotLoggedInShareView view, AptoideAccountManager accountManager,
-      SharedPreferences sharedPreferences, CrashReport crashReport) {
+  public NotLoggedInSharePresenter(NotLoggedInShareView view, SharedPreferences sharedPreferences,
+      CrashReport crashReport) {
     this.view = view;
-    this.accountManager = accountManager;
     this.sharedPreferences = sharedPreferences;
     this.crashReport = crashReport;
   }
@@ -30,9 +27,19 @@ public class NotLoggedInSharePresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> view.facebookInit())
-        .flatMap(viewCreated -> view.facebookButtonClick())
-        .doOnNext(__ -> view.facebookLogin())
+        .doOnNext(__ -> view.initializeFacebookCallback())
+        .flatMap(__ -> view.facebookLoginClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.hideLoading();
+          view.showError(throwable);
+          crashReport.log(throwable);
+        });
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> view.showGoogleLogin())
+        .flatMap(__ -> view.googleLoginClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));

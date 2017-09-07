@@ -675,6 +675,9 @@
 
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
   <string name="hello_follow_me_on_aptoide">Hello! Follow me on %s</string>
+
+  <!-- Not Logged in Fragment -->
+
   <string name="not_logged_in_share_fragment_title">You are one step away from sharing this App in Aptoide timeline with your friends:</string>
   <string name="not_logged_in_share_title_connect_with">Connect with</string>
   <string name="not_logged_in_share_message_posts_warning">No posts on your behalf will be done</string>

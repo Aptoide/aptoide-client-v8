@@ -1,19 +1,15 @@
 package cm.aptoide.pt.view.share;
 
-import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.presenter.SocialLoginView;
 import rx.Observable;
 
 /**
  * Created by pedroribeiro on 30/08/17.
  */
 
-public interface NotLoggedInShareView extends View {
+public interface NotLoggedInShareView extends SocialLoginView {
 
-  Observable<Void> facebookButtonClick();
-
-  void facebookLogin();
-
-  void facebookInit();
+  void initializeFacebookCallback();
 
   Observable<Void> closeClick();
 

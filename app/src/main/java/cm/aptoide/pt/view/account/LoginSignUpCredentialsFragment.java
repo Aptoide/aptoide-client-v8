@@ -1,6 +1,5 @@
 package cm.aptoide.pt.view.account;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -26,11 +24,8 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Arrays;
 import rx.Observable;
 
 public class LoginSignUpCredentialsFragment extends SocialLoginFragment
@@ -42,8 +37,6 @@ public class LoginSignUpCredentialsFragment extends SocialLoginFragment
   private static final String USERNAME_KEY = "username_key";
   private static final String PASSWORD_KEY = "password_key";
 
-  private ProgressDialog progressDialog;
-  private AlertDialog facebookEmailRequiredDialog;
   private Button googleLoginButton;
   private Button facebookLoginButton;
   private Button hideShowAptoidePasswordButton;
@@ -81,14 +74,29 @@ public class LoginSignUpCredentialsFragment extends SocialLoginFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
-    final FragmentNavigator fragmentNavigator = getFragmentNavigator();
+    navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
+    dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
-        facebookRequestedPermissions,
         ((AptoideApplication) getContext().getApplicationContext()).getLoginPreferences(),
-        fragmentNavigator, CrashReport.getInstance(),
-        getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
-        getArguments().getBoolean(CLEAN_BACK_STACK));
+        CrashReport.getInstance());
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    attachPresenter(presenter, null);
+    registerClickHandler(presenter);
+  }
+
+  @Override public Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
+    if (loginArea.getVisibility() == View.VISIBLE) {
+      return Analytics.Account.StartupClickOrigin.LOGIN_UP;
+    } else if (signUpArea.getVisibility() == View.VISIBLE) {
+      return Analytics.Account.StartupClickOrigin.JOIN_UP;
+    } else {
+      return Analytics.Account.StartupClickOrigin.MAIN;
+    }
   }
 
   @Override public void googleLoginClicked() {
@@ -102,13 +110,6 @@ public class LoginSignUpCredentialsFragment extends SocialLoginFragment
 
   @Override protected Button getFacebookButton() {
     return facebookLoginButton;
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    attachPresenter(presenter, null);
-    registerClickHandler(presenter);
   }
 
   @Override protected void bindViews(View view) {
@@ -138,16 +139,6 @@ public class LoginSignUpCredentialsFragment extends SocialLoginFragment
     separator = view.findViewById(R.id.separator);
 
     final Context context = getContext();
-
-    facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
-        R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(R.string.facebook_grant_permission_button, (dialog, which) -> {
-          facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
-        })
-        .setNegativeButton(android.R.string.cancel, null)
-        .create();
-
-    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 
     try {
       bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
@@ -217,21 +208,9 @@ public class LoginSignUpCredentialsFragment extends SocialLoginFragment
     termsAndConditions.setVisibility(View.GONE);
   }
 
-  @Override public void showLoading() {
-    progressDialog.show();
-  }
-
-  @Override public void hideLoading() {
-    progressDialog.dismiss();
-  }
-
   @Override public void showFacebookLogin() {
     facebookLoginButton.setVisibility(View.VISIBLE);
     registerFacebookCallback();
-  }
-
-  @Override public void showPermissionsRequiredMessage() {
-    facebookEmailRequiredDialog.show();
   }
 
   @Override public void hideFacebookLogin() {
@@ -266,12 +245,6 @@ public class LoginSignUpCredentialsFragment extends SocialLoginFragment
 
   @Override public void dismiss() {
     getActivity().finish();
-  }
-
-  @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
-    return facebookLoginSubject.doOnNext(
-        __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
-            getStartupClickOrigin()));
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideLoginClick() {
@@ -341,16 +314,6 @@ public class LoginSignUpCredentialsFragment extends SocialLoginFragment
 
   @Override public void unlockScreenRotation() {
     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-  }
-
-  private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
-    if (loginArea.getVisibility() == View.VISIBLE) {
-      return Analytics.Account.StartupClickOrigin.LOGIN_UP;
-    } else if (signUpArea.getVisibility() == View.VISIBLE) {
-      return Analytics.Account.StartupClickOrigin.JOIN_UP;
-    } else {
-      return Analytics.Account.StartupClickOrigin.MAIN;
-    }
   }
 
   private void setAptoideSignUpLoginAreaVisible() {

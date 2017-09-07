@@ -25,7 +25,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/not_logged_in_fragment_title"
+          android:text="@string/not_logged_in_share_fragment_title"
           style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
 
@@ -95,7 +95,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="24dp"
           android:gravity="start"
-          android:text="@string/no_login_share_title_connect_with"
+          android:text="@string/not_logged_in_share_title_connect_with"
           style="@style/Aptoide.TextView.Medium.S.Black"
           />
 
@@ -142,7 +142,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="end"
           android:layout_marginTop="8dp"
-          android:text="@string/no_login_share_message_posts_warning"
+          android:text="@string/not_logged_in_share_message_posts_warning"
           />
 
       <TextView
@@ -150,7 +150,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="start"
           android:layout_marginTop="16dp"
-          android:text="@string/no_login_share_short_start_interacting"
+          android:text="@string/not_logged_in_share_short_start_interacting"
           style="@style/Aptoide.TextView.Medium.S.Black"
           />
 
@@ -287,7 +287,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:text="@string/close"
+            android:text="@string/not_logged_in_share_fragment_close_text"
             android:textAllCaps="true"
             android:textSize="14sp"
             style="@style/Aptoide.TextView.Regular.M.Black"
