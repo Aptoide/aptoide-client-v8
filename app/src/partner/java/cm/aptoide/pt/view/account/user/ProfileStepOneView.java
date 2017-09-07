@@ -12,8 +12,6 @@ import rx.Observable;
 interface ProfileStepOneView extends View {
     @NonNull Observable<Boolean> continueButtonClick();
 
-    @NonNull Observable<Void> moreInfoButtonClick();
-
     void showWaitDialog();
 
     void dismissWaitDialog();

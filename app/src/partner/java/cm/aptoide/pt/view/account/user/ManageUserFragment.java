@@ -22,7 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
@@ -65,8 +65,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     private EditText userName;
     private Button createUserButton;
     private ProgressDialog uploadWaitDialog;
-    private Button cancelUserProfile;
-    private TextView header;
     private ViewModel currentModel;
     private boolean isEditProfile;
     private Toolbar toolbar;
@@ -82,7 +80,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     private ImagePickerNavigator imagePickerNavigator;
     private AptoideAccountManager accountManager;
     private CreateUserErrorMapper errorMapper;
-    private boolean createStoreUserPrivacyEnabled;
 
     public static ManageUserFragment newInstanceToEdit() {
         return newInstance(true);
@@ -124,8 +121,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
         imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
         imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
 
-        createStoreUserPrivacyEnabled =
-                ((AptoideApplication) getActivity().getApplication()).isCreateStoreUserPrivacyEnabled();
+
         accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
         errorMapper =
                 new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
@@ -160,11 +156,11 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
         userPictureLayout = (RelativeLayout) view.findViewById(R.id.create_user_image_action);
         userName = (EditText) view.findViewById(R.id.create_user_username_inserted);
         createUserButton = (Button) view.findViewById(R.id.create_user_create_profile);
-        cancelUserProfile = (Button) view.findViewById(R.id.create_user_cancel_button);
-        cancelUserProfile.setVisibility(View.GONE);
+       //cancelUserProfile = (Button) view.findViewById(R.id.create_user_cancel_button);
+        //cancelUserProfile.setVisibility(View.GONE);
         userPicture = (ImageView) view.findViewById(R.id.create_user_image);
-        header = (TextView) view.findViewById(R.id.create_user_header_textview);
-        header.setVisibility(View.GONE);
+        //header = (TextView) view.findViewById(R.id.create_user_header_textview);
+        //header.setVisibility(View.GONE);
     }
 
     private void setupToolbar() {
@@ -188,7 +184,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
         final ManageUserPresenter manageUserPresenter =
                 new ManageUserPresenter(this, crashReport, accountManager, errorMapper, navigator,
-                        currentModel, isEditProfile, uriToPathResolver, createStoreUserPrivacyEnabled);
+                        currentModel, isEditProfile, uriToPathResolver);
 
         attachPresenter(
                 new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)), null);
@@ -200,9 +196,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
         setupToolbar();
         if (isEditProfile) {
             createUserButton.setText(getString(R.string.edit_profile_save_button));
-            cancelUserProfile.setVisibility(View.VISIBLE);
-            header.setText(getString(R.string.edit_profile_header_message));
-
+            //cancelUserProfile.setVisibility(View.VISIBLE);
+            //header.setText(getString(R.string.edit_profile_header_message));
         }
         attachPresenters();
     }
@@ -224,9 +219,9 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
                 .map(__ -> updateModelAndGet());
     }
 
-    @Override public Observable<Void> cancelButtonClick() {
-        return RxView.clicks(cancelUserProfile);
-    }
+    //@Override public Observable<Void> cancelButtonClick() {
+    //    return RxView.clicks(cancelUserProfile);
+    //}
 
     @Override public void showProgressDialog() {
         hideKeyboard();

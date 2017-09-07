@@ -56,19 +56,6 @@
                 >
 
                 <Button
-                    android:id="@+id/create_user_cancel_button"
-                    android:layout_width="0dp"
-                    android:layout_marginEnd="@dimen/padding_smaller"
-                    android:layout_marginRight="@dimen/padding_smaller"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/cancel"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    style="@style/Aptoide.Button.Ghost"
-                    />
-
-                <Button
                     android:id="@+id/create_user_create_profile"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/button_height"
@@ -97,19 +84,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-
-                <TextView
-                    android:id="@+id/create_user_header_textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/create_user_dark_orange"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/padding_medium_default"
-                    android:text="@string/create_user_header"
-                    android:textColor="@color/white"
-                    style="@style/Aptoide.TextView.Medium"
-                    />
-
 
                 <RelativeLayout
                     android:id="@+id/create_user_image_action"
@@ -195,7 +169,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding_very_small"
-                        android:text="@string/create_user_hint"
+                        android:text="@string/create_user_hint_partners"
                         style="@style/Aptoide.TextView.Regular.XS"
                         />
 

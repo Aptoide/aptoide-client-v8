@@ -29,12 +29,11 @@ public class ManageUserPresenter implements Presenter {
     private final ManageUserFragment.ViewModel userData;
     private final boolean isEditProfile;
     private final UriToPathResolver uriToPathResolver;
-    private final boolean showPrivacyConfigs;
 
     public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
                                AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
                                ManageUserNavigator navigator, ManageUserFragment.ViewModel userData, boolean isEditProfile,
-                               UriToPathResolver uriToPathResolver, boolean showPrivacyConfigs) {
+                               UriToPathResolver uriToPathResolver) {
         this.view = view;
         this.crashReport = crashReport;
         this.accountManager = accountManager;
@@ -43,12 +42,10 @@ public class ManageUserPresenter implements Presenter {
         this.userData = userData;
         this.isEditProfile = isEditProfile;
         this.uriToPathResolver = uriToPathResolver;
-        this.showPrivacyConfigs = showPrivacyConfigs;
     }
 
     @Override public void present() {
         handleSaveDataClick();
-        handleCancelClick();
         onViewCreatedLoadUserData();
     }
 
@@ -116,16 +113,6 @@ public class ManageUserPresenter implements Presenter {
                 .doOnCompleted(() -> sendAnalytics(userData))
                 .doOnCompleted(() -> navigateAway())
                 .onErrorResumeNext(err -> handleSaveUserDataError(err));
-    }
-
-    private void handleCancelClick() {
-        view.getLifecycle()
-                .filter(event -> event == View.LifecycleEvent.CREATE)
-                .flatMap(__ -> view.cancelButtonClick()
-                        .doOnNext(__2 -> navigator.goBack()))
-                .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-                .subscribe(__ -> {
-                }, err -> crashReport.log(err));
     }
 
     private Completable handleSaveUserDataError(Throwable throwable) {

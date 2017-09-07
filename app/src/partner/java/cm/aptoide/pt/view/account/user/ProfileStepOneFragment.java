@@ -29,7 +29,6 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     @LayoutRes private static final int LAYOUT = R.layout.fragment_profile_step_one;
 
     private Button continueBtn;
-    private Button moreInfoBtn;
     private ProgressDialog waitDialog;
     private boolean externalLogin;
 
@@ -77,10 +76,6 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
                 .map(__ -> externalLogin);
     }
 
-    @Override @NonNull public Observable<Void> moreInfoButtonClick() {
-        return RxView.clicks(moreInfoBtn);
-    }
-
     @Override public void showWaitDialog() {
         if (waitDialog != null && !waitDialog.isShowing()) {
             waitDialog.show();
@@ -114,7 +109,5 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     @Override public void bindViews(View view) {
         super.bindViews(view);
         continueBtn = (Button) view.findViewById(R.id.logged_in_continue);
-        moreInfoBtn = (Button) view.findViewById(R.id.logged_in_more_info_button);
-        moreInfoBtn.setVisibility(View.GONE);
     }
 }

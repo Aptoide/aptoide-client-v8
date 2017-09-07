@@ -3,4 +3,5 @@
   <string name="app_name" translatable="false">Partner</string>
   <string name="create_account" translatable="true">Create Account</string>
   <string name="create_user_profile" translatable="true">Create a user profile</string>
+  <string name="create_user_hint_partners" translatable="true">Appears when you rate and comment apps</string>
 </resources>
