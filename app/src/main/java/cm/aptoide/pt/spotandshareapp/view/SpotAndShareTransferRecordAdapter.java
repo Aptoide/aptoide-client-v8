@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -63,17 +64,23 @@ public class SpotAndShareTransferRecordAdapter
 
   class TransferViewHolder extends ViewHolder {
 
+    private ImageView senderAvatar;
     private TextView senderName;
+    private TextView appName;
+    private TextView appSize;
     private ImageView appIcon;
-    private Button acceptButton;
+    private ImageButton acceptButton;
     private Button installButton;
     private ProgressBar transferProgressBar;
 
     public TransferViewHolder(View itemView) {
       super(itemView);
-      senderName = (TextView) itemView.findViewById(R.id.sender_info);
+      appName = (TextView) itemView.findViewById(R.id.transfer_record_app_name);
+      appSize = (TextView) itemView.findViewById(R.id.transfer_record_app_size);
+      senderAvatar = (ImageView) itemView.findViewById(R.id.transfer_record_header_sender_avatar);
+      senderName = (TextView) itemView.findViewById(R.id.transfer_record_header_sender_info);
       appIcon = (ImageView) itemView.findViewById(R.id.transfer_app_icon);
-      acceptButton = (Button) itemView.findViewById(R.id.transfer_record_accept_app_button);
+      acceptButton = (ImageButton) itemView.findViewById(R.id.transfer_record_accept_app_button);
       installButton = (Button) itemView.findViewById(R.id.transfer_record_install_app_button);
       transferProgressBar = (ProgressBar) itemView.findViewById(R.id.transfer_record_progress_bar);
     }
@@ -83,11 +90,15 @@ public class SpotAndShareTransferRecordAdapter
           + transferItem.getAppName()
           + " transfer state: "
           + transferItem.getTransferState());
+      senderAvatar.setImageDrawable(transferItem.getFriend()
+          .getAvatar());
       senderName.setText(itemView.getContext()
           .getResources()
           .getString(R.string.spotandshare_message_app_sender_info_sending, transferItem.getFriend()
               .getUsername()));
 
+      appName.setText(transferItem.getAppName());
+      appSize.setText(String.valueOf(transferItem.getApkSize()));
       appIcon.setImageDrawable(transferItem.getAppIcon());
       acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
       installButton.setOnClickListener(accept -> installSubject.onNext(transferItem));
@@ -103,6 +114,7 @@ public class SpotAndShareTransferRecordAdapter
             .getResources()
             .getString(R.string.spotandshare_message_app_sender_info_sent, transferItem.getFriend()
                 .getUsername()));
+        appSize.setText("Download Completed");
         acceptButton.setVisibility(View.GONE);
         if (!transferItem.isInstalled()) {
           installButton.setVisibility(View.VISIBLE);

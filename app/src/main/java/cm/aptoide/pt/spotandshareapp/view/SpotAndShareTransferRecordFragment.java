@@ -32,6 +32,7 @@ import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
+import cm.aptoide.pt.spotandshareapp.FileSizeConverter;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
@@ -201,7 +202,9 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     SpotAndShareTransferRecordPresenter transferRecordPresenter =
         new SpotAndShareTransferRecordPresenter(this,
             ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            new SpotAndShareTransferRecordManager(getContext()),
+            new SpotAndShareTransferRecordManager(getContext(),
+                new SpotAndShareUserMapper(new DrawableBitmapMapper(getContext())),
+                new FileSizeConverter()),
             new SpotAndShareInstallManager(getActivity().getApplicationContext()),
             CrashReport.getInstance(),
             new SpotAndShareUserMapper(new DrawableBitmapMapper(getContext())));

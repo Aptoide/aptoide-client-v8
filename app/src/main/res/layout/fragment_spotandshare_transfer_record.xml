@@ -65,6 +65,7 @@
           android:layout_marginBottom="80dp"
           android:layout_marginLeft="20dp"
           android:layout_marginRight="20dp"
+          android:layout_marginTop="16dp"
           android:scrollbars="vertical"
           >
       </android.support.v7.widget.RecyclerView>

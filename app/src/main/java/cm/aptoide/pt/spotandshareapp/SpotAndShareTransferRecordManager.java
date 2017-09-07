@@ -21,9 +21,14 @@ public class SpotAndShareTransferRecordManager {
           .toString();
   private Context context;
   private List<Transfer> transferList;
+  private SpotAndShareUserMapper userMapper;
+  private FileSizeConverter fileSizeConverter;
 
-  public SpotAndShareTransferRecordManager(Context context) {
+  public SpotAndShareTransferRecordManager(Context context, SpotAndShareUserMapper userMapper,
+      FileSizeConverter fileSizeConverter) {
     this.context = context;
+    this.userMapper = userMapper;
+    this.fileSizeConverter = fileSizeConverter;
   }
 
   public List<TransferAppModel> getTransferAppModelList(List<Transfer> transferList) {
@@ -32,10 +37,12 @@ public class SpotAndShareTransferRecordManager {
     for (Transfer transfer : transferList) {
       appModelList.add(new TransferAppModel(transfer.getAndroidAppInfo()
           .getAppName(), transfer.getAndroidAppInfo()
-          .getPackageName(), downloadsPath + "/" + transfer.getAndroidAppInfo()
+          .getPackageName(), fileSizeConverter.convertToMB((double) transfer.getAndroidAppInfo()
+          .getFilesSize()), downloadsPath + "/" + transfer.getAndroidAppInfo()
           .getPackageName(), convertByteToDrawable(transfer.getAndroidAppInfo()
-          .getIcon()), transfer.getState(), transfer.getAndroidAppInfo()
-          .getFriend(), transfer.hashCode()));
+          .getIcon()), transfer.getState(), userMapper.getSpotAndShareUser(
+          transfer.getAndroidAppInfo()
+              .getFriend()), transfer.hashCode()));
     }
     return appModelList;
   }

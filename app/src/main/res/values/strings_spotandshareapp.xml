@@ -24,4 +24,5 @@
   <string name="spotandshare_short_connected_friends">Friends</string>
   <string name="spotandshare_message_choose_name_avatar">Choose a name and an avatar</string>
   <string name="spotandshare_short_your_name_edit_profile">Your name here</string>
+  <string name="spotandshare_button_install">install</string>
 </resources>
