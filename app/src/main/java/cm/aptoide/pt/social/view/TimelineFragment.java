@@ -37,8 +37,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.social.AccountNotificationManagerUserProvider;
+import cm.aptoide.pt.social.StatsUserProvider;
+import cm.aptoide.pt.social.TimelineUserProvider;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
@@ -75,7 +80,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -248,7 +253,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
     SpannableFactory spannableFactory = new SpannableFactory();
-    adapter = new PostAdapter(Collections.emptyList(),
+    adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
                 postTouchEventPublishSubject), marketName), new ProgressCard());
@@ -260,9 +265,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     StoreCredentialsProviderImpl storeCredentialsProvider =
         new StoreCredentialsProviderImpl(storeAccessor);
 
+    NotificationCenter notificationCenter =
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
+    TimelineUserProvider timelineUserProvider;
+    if (userId == null) {
+      timelineUserProvider =
+          new AccountNotificationManagerUserProvider(notificationCenter, accountManager);
+    } else {
+      timelineUserProvider = new StatsUserProvider(accountManager, timelineService);
+    }
+
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(marketName),
-            timelineAnalytics, timelinePostsRepository, marketName);
+            timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
@@ -277,7 +292,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             new PermissionManager(), (PermissionService) getContext(), installManager,
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
-            storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
+            storeContext, getContext().getResources(), getFragmentNavigator(),
+            new LinksHandlerFactory(getContext()), notificationCenter), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -534,6 +550,18 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .filter(position -> position != RecyclerView.NO_POSITION)
         .distinctUntilChanged()
         .map(visibleItem -> adapter.getPost(visibleItem));
+  }
+
+  @Override public void showUser(TimelineUser user) {
+    adapter.showUser(user);
+  }
+
+  @Override public void showUserLoading() {
+    adapter.showUser(new ProgressCard());
+  }
+
+  @Override public void hideUser() {
+    adapter.hideUser();
   }
 
   private void handleSharePreviewAnswer() {

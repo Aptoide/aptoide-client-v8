@@ -41,4 +41,6 @@ public interface TimelineNavigation {
   void navigateToComments(String cardId);
 
   rx.Observable<String> postNavigation();
+
+  void navigateToNotificationCenter();
 }

@@ -3,11 +3,13 @@ package cm.aptoide.pt.social.data;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AppUpdateViewHolder;
 import cm.aptoide.pt.social.view.viewholder.MediaViewHolder;
+import cm.aptoide.pt.social.view.viewholder.Notifications;
 import cm.aptoide.pt.social.view.viewholder.PopularAppViewHolder;
 import cm.aptoide.pt.social.view.viewholder.PostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.ProgressViewHolder;
@@ -20,6 +22,7 @@ import cm.aptoide.pt.social.view.viewholder.SocialStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.StoreLatestAppsViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineAdPostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineLoginPostViewHolder;
+import cm.aptoide.pt.social.view.viewholder.TimelineNoNotificationHeaderViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineStatsViewHolder;
 import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
@@ -127,6 +130,14 @@ public class CardViewHolderFactory {
       case AD:
         return new TimelineAdPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_native_ad_item, parent, false),
+            cardTouchEventPublishSubject);
+      case NOTIFICATIONS:
+        return new Notifications(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_notification, parent, false), cardTouchEventPublishSubject,
+            ImageLoader.with(parent.getContext()));
+      case NO_NOTIFICATIONS:
+        return new TimelineNoNotificationHeaderViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_no_notification, parent, false),
             cardTouchEventPublishSubject);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
