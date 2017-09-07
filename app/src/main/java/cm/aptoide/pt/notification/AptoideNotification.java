@@ -1,6 +1,7 @@
 package cm.aptoide.pt.notification;
 
 import android.support.annotation.IntDef;
+import cm.aptoide.pt.database.realm.Notification;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import lombok.ToString;
@@ -14,6 +15,8 @@ import lombok.ToString;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
   public static final int POPULAR = 3;
+  public static final int NOT_DISMISSED = Notification.NOT_DISMISSED;
+  private final Long expire;
   private String appName;
   private String graphic;
   private long dismissed;
@@ -30,7 +33,8 @@ import lombok.ToString;
   private long timeStamp;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      long timeStamp, String appName, String graphic, long dismissed, String ownerId) {
+      long timeStamp, String appName, String graphic, long dismissed, String ownerId,
+      long expireSecsUtc) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -41,37 +45,31 @@ import lombok.ToString;
     this.graphic = graphic;
     this.dismissed = dismissed;
     this.ownerId = ownerId;
+    this.expire = expireSecsUtc * 1000;
   }
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      String appName, String graphic, long dismissed, String ownerId) {
+      String appName, String graphic, long dismissed, String ownerId, Long expireSecsUtc) {
     this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed,
-        ownerId);
+        ownerId, expireSecsUtc);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, String appName, String graphic,
-      String ownerId) {
+      String ownerId, Long expireSecsUtc) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN, -1, appName, graphic, ownerId);
+        System.currentTimeMillis(), CAMPAIGN, NOT_DISMISSED, appName, graphic, ownerId, expireSecsUtc);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, long timeStamp, int type,
-      long dismissed, String appName, String graphic, String ownerId) {
-    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId);
+      long dismissed, String appName, String graphic, String ownerId, Long expireSecsUtc) {
+    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId,
+        expireSecsUtc);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
     this.urlTrack = urlTrack;
-  }
-
-  public AptoideNotification(String body, String img, String title, String url, String appName) {
-    this.body = body;
-    this.img = img;
-    this.title = title;
-    this.url = url;
-    this.appName = appName;
   }
 
   public long getDismissed() {
@@ -128,6 +126,10 @@ import lombok.ToString;
 
   public String getOwnerId() {
     return ownerId;
+  }
+
+  public Long getExpire() {
+    return expire;
   }
 
   @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR })

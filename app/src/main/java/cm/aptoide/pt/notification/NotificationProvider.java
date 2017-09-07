@@ -25,7 +25,9 @@ public class NotificationProvider {
   }
 
   @NonNull private Notification convertToNotification(AptoideNotification aptoideNotification) {
-    return new Notification(aptoideNotification.getAbTestingGroup(), aptoideNotification.getBody(),
+
+    return new Notification(aptoideNotification.getExpire(),
+        aptoideNotification.getAbTestingGroup(), aptoideNotification.getBody(),
         aptoideNotification.getCampaignId(), aptoideNotification.getImg(),
         aptoideNotification.getLang(), aptoideNotification.getTitle(), aptoideNotification.getUrl(),
         aptoideNotification.getUrlTrack(), aptoideNotification.getTimeStamp(),
@@ -50,7 +52,8 @@ public class NotificationProvider {
         notification.getCampaignId(), notification.getImg(), notification.getLang(),
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
         notification.getTimeStamp(), notification.getType(), notification.getDismissed(),
-        notification.getAppName(), notification.getGraphic(), notification.getOwnerId());
+        notification.getAppName(), notification.getGraphic(), notification.getOwnerId(),
+        notification.getExpire());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {
@@ -69,6 +72,10 @@ public class NotificationProvider {
             .toList());
   }
 
+  public Observable<List<Notification>> getNotifications() {
+    return notificationAccessor.getAll();
+  }
+
   public Single<Notification> getLastShowed(Integer[] notificationType) {
     return notificationAccessor.getLastShowed(notificationType);
   }
@@ -78,5 +85,12 @@ public class NotificationProvider {
       notificationAccessor.insert(notification);
     })
         .subscribeOn(scheduler);
+  }
+
+  public Observable<List<AptoideNotification>> getUnreadNotifications() {
+    return notificationAccessor.getUnread()
+        .flatMap(notifications -> Observable.from(notifications)
+            .map(notification -> convertToAptoideNotification(notification))
+            .toList());
   }
 }

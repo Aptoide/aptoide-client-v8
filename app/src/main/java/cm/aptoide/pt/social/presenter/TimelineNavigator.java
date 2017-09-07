@@ -3,6 +3,7 @@ package cm.aptoide.pt.social.presenter;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.view.account.LoginSignUpFragment;
 import cm.aptoide.pt.view.account.MyAccountFragment;
@@ -64,7 +65,7 @@ public class TimelineNavigator implements TimelineNavigation {
   }
 
   @Override public void navigateToLoginView() {
-    fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, true));
+    fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false));
   }
 
   @Override public void navigateToMyAccountView() {
@@ -123,5 +124,9 @@ public class TimelineNavigator implements TimelineNavigation {
         .doOnNext(tabNavigation -> tabNavigator.clearNavigation())
         .map(tabNavigation -> tabNavigation.getBundle()
             .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
+  }
+
+  @Override public void navigateToNotificationCenter() {
+    fragmentNavigator.navigateTo(new InboxFragment());
   }
 }

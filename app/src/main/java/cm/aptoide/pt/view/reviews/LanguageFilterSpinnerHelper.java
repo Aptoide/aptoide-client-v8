@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import cm.aptoide.pt.R;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,23 +17,21 @@ import java.util.List;
  * Created by neuro on 28-08-2017.
  */
 
-class LanguageFilterSpinnerWrapper {
+class LanguageFilterSpinnerHelper {
 
   private final Spinner spinner;
   private final LanguageFilterHelper languageFilterHelper;
-  private final LanguageFilterSpinnerWrapper.onItemSelected onItemSelected;
   private final Resources resources;
   private final Context context;
 
-  LanguageFilterSpinnerWrapper(Spinner spinner, onItemSelected onItemSelected) {
+  LanguageFilterSpinnerHelper(Spinner spinner) {
     this.spinner = spinner;
     this.resources = spinner.getResources();
     this.context = spinner.getContext();
     languageFilterHelper = new LanguageFilterHelper(resources);
-    this.onItemSelected = onItemSelected;
   }
 
-  private void setupOnItemSelectedListener() {
+  private void setupOnItemSelectedListener(OnItemSelected onItemSelected) {
     spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -50,7 +49,7 @@ class LanguageFilterSpinnerWrapper {
           return;
         }
 
-        LanguageFilterSpinnerWrapper.this.onItemSelected.onItemSelected(languageFilter);
+        onItemSelected.onItemSelected(languageFilter);
       }
 
       @Override public void onNothingSelected(AdapterView<?> parent) {
@@ -69,9 +68,9 @@ class LanguageFilterSpinnerWrapper {
     }
   }
 
-  private void setAdapter(SpinnerAdapter adapter) {
+  private void setAdapter(SpinnerAdapter adapter, OnItemSelected onItemSelected) {
     spinner.setAdapter(adapter);
-    setupOnItemSelectedListener();
+    setupOnItemSelectedListener(onItemSelected);
     setSelection(resources.getString(getDefaultSelectionId()));
   }
 
@@ -80,14 +79,17 @@ class LanguageFilterSpinnerWrapper {
         .getStringId();
   }
 
-  void setup() {
-    setAdapter(setupCommentsFilterLanguageSpinnerAdapter());
+  void setup(OnItemSelected onItemSelected) {
+    setAdapter(setupCommentsFilterLanguageSpinnerAdapter(), onItemSelected);
     setupLanguageSpinnerClickListener((View) spinner.getParent());
   }
 
   private SpinnerAdapter setupCommentsFilterLanguageSpinnerAdapter() {
-    return new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
+    ArrayAdapter<String> adapter =
+        new ArrayAdapter<>(context, R.layout.simple_language_spinner_item,
         createSpinnerAdapterRowsList());
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    return adapter;
   }
 
   private List<String> createSpinnerAdapterRowsList() {
@@ -107,7 +109,7 @@ class LanguageFilterSpinnerWrapper {
     itemView.setOnClickListener(v -> spinner.performClick());
   }
 
-  interface onItemSelected {
+  interface OnItemSelected {
     void onItemSelected(LanguageFilterHelper.LanguageFilter languageFilter);
   }
 }

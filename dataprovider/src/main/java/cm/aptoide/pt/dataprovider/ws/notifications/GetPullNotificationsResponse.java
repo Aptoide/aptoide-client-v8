@@ -15,6 +15,15 @@ public class GetPullNotificationsResponse {
   private String url;
   private String urlTrack;
   private Attr attr;
+  private Long expire;
+
+  public Long getExpire() {
+    return expire;
+  }
+
+  public void setExpire(long expire) {
+    this.expire = expire;
+  }
 
   public String getAbTestingGroup() {
     return abTestingGroup;

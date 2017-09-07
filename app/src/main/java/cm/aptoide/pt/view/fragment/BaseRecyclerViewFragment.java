@@ -10,6 +10,7 @@ import cm.aptoide.pt.view.LifecycleSchim;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -155,6 +156,26 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
 
   @Override public boolean hasDisplayables() {
     return displayables != null && displayables.size() > 0;
+  }
+
+  @Override public int getDisplayablesSize() {
+    return displayables.size();
+  }
+
+  @Override public void removeDisplayables(int fromIndex, int toIndex) {
+    Iterator<Displayable> iterator = displayables.iterator();
+    while (fromIndex-- > 0 && iterator.hasNext()) {
+      toIndex--;
+      iterator.next();
+    }
+
+    while (toIndex-- >= 0 && iterator.hasNext()) {
+      iterator.next();
+      iterator.remove();
+    }
+
+    adapter.clearDisplayables();
+    adapter.addDisplayables(displayables);
   }
 
   @CallSuper public BaseRecyclerViewFragment addDisplayableWithAnimation(int position,
