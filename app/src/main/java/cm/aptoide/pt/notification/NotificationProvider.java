@@ -72,6 +72,10 @@ public class NotificationProvider {
             .toList());
   }
 
+  public Observable<List<Notification>> getNotifications() {
+    return notificationAccessor.getAll();
+  }
+
   public Single<Notification> getLastShowed(Integer[] notificationType) {
     return notificationAccessor.getLastShowed(notificationType);
   }
@@ -81,5 +85,12 @@ public class NotificationProvider {
       notificationAccessor.insert(notification);
     })
         .subscribeOn(scheduler);
+  }
+
+  public Observable<List<AptoideNotification>> getUnreadNotifications() {
+    return notificationAccessor.getUnread()
+        .flatMap(notifications -> Observable.from(notifications)
+            .map(notification -> convertToAptoideNotification(notification))
+            .toList());
   }
 }

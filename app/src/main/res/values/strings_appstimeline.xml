@@ -137,6 +137,8 @@
   <string name="timeline_message_upload_app">Upload this app to Aptoide</string>
   <string name="timeline_message_share_on_timeline_external">Write something (optional)</string>
   <string name="timeline_title_sponsored">Sponsored</string>
+  <string name="timeline_title_header_notifications">Notifications</string>
+  <string name="timeline_title_header_add_friend">Follow Friend</string>
 
 
 </resources>

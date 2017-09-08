@@ -39,6 +39,17 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
 
+    compositeSubscription.add(accountManager.accountStatus()
+        .map(account -> account.isLoggedIn())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isLogged -> {
+          if (isLogged) {
+            button.setText(R.string.create_store_displayable_button);
+          } else {
+            button.setText(R.string.login);
+          }
+        }, throwable -> crashReport.log(throwable)));
+
     compositeSubscription.add(RxView.clicks(button)
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
@@ -46,11 +57,9 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(account -> {
           if (account.isLoggedIn()) {
-            button.setText(R.string.create_store_displayable_button);
             getFragmentNavigator().navigateTo(
                 ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
           } else {
-            button.setText(R.string.login);
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
           }
         })

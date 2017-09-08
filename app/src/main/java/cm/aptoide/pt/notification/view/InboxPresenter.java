@@ -46,6 +46,14 @@ public class InboxPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .first()
+        .flatMapCompletable(create -> notificationCenter.setAllNotificationsRead())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(notificationUrl -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @Override public void saveState(Bundle state) {

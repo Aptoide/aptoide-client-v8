@@ -33,7 +33,6 @@
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
       android:gravity="center"
-      android:text="@string/create_store_displayable_button"
       android:textAllCaps="true"
       android:textSize="12sp"
       style="?attr/customButtonWhite"

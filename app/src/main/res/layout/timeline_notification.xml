@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="6dp"
+    >
+  <ImageView
+      android:id="@+id/image"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_margin="10dp"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:src="@color/activity_payment_green"
+      />
+
+  <TextView
+      android:id="@+id/notification_text"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_margin="8dp"
+      android:background="?attr/selectableItemBackground"
+      android:ellipsize="end"
+      android:gravity="center_vertical"
+      android:maxLines="2"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/separator"
+      app:layout_constraintLeft_toRightOf="@id/image"
+      app:layout_constraintRight_toLeftOf="@+id/separator"
+      app:layout_constraintStart_toEndOf="@id/image"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="bestappstore commented on your post"
+      style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
+      />
+
+  <View
+      android:id="@+id/separator"
+      android:layout_width="1dp"
+      android:layout_height="0dp"
+      android:layout_marginBottom="7dp"
+      android:layout_marginTop="7dp"
+      android:background="@color/grey_fog_light"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.68"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <ImageButton
+      android:id="@+id/notification_button"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:src="@drawable/ic_bell_ring"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/add_friends"
+      app:layout_constraintLeft_toRightOf="@id/separator"
+      app:layout_constraintRight_toLeftOf="@id/add_friends"
+      app:layout_constraintStart_toEndOf="@id/separator"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <ImageButton
+      android:id="@+id/add_friends"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:src="@drawable/ic_account_plus"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintLeft_toRightOf="@+id/notification_button"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintStart_toEndOf="@id/notification_button"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+</android.support.constraint.ConstraintLayout>

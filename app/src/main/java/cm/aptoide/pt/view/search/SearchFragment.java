@@ -328,7 +328,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
+    inflater.inflate(R.menu.menu_search_results, menu);
 
     if (storeName != null) {
       SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(),

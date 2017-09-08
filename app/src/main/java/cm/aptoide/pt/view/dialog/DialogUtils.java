@@ -15,7 +15,9 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.BulletSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -107,6 +109,15 @@ import rx.subscriptions.Subscriptions;
       final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
       final Button rateBtn = (Button) view.findViewById(R.id.rate_button);
 
+      final TextView highlightedReviewsExplained_1 =
+          (TextView) view.findViewById(R.id.highlighted_reviews_explanation_1);
+      final TextView highlightedReviewsExplained_2 =
+          (TextView) view.findViewById(R.id.highlighted_reviews_explanation_2);
+      final TextView highlightedReviewsExplained_3 =
+          (TextView) view.findViewById(R.id.highlighted_reviews_explanation_3);
+      final TextView highlightedReviewsExplained_4 =
+          (TextView) view.findViewById(R.id.highlighted_reviews_explanation_4);
+
       titleTextView.setText(String.format(LOCALE, activity.getString(R.string.rate_app), appName));
 
       final AlertDialog.Builder builder = new AlertDialog.Builder(activity).setView(view);
@@ -183,9 +194,26 @@ import rx.subscriptions.Subscriptions;
         }
       });
 
+      highlightedReviewsExplained_1.setText(activity.getResources()
+          .getString(R.string.reviewappview_highlighted_reviews_explanation_1));
+
+      setBulletText(highlightedReviewsExplained_2, activity.getResources()
+          .getString(R.string.reviewappview_highlighted_reviews_explanation_2));
+      setBulletText(highlightedReviewsExplained_3, activity.getResources()
+          .getString(R.string.reviewappview_highlighted_reviews_explanation_3));
+      setBulletText(highlightedReviewsExplained_4, activity.getResources()
+          .getString(R.string.reviewappview_highlighted_reviews_explanation_4));
+
       // create and show rating dialog
       dialog.show();
     });
+  }
+
+  public void setBulletText(TextView textView, String text) {
+    SpannableString spannable = new SpannableString(text);
+    spannable.setSpan(new BulletSpan(16), 0, text.length(), 0);
+
+    textView.setText(spannable);
   }
 
   private boolean isAppInstalled(@NonNull String packageName) {
