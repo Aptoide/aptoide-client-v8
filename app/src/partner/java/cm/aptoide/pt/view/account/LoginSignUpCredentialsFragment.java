@@ -31,16 +31,14 @@ import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import com.facebook.CallbackManager;
 import com.jakewharton.rxbinding.view.RxView;
-
-import java.util.Arrays;
-import java.util.List;
 import rx.Observable;
 
-public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
+public class LoginSignUpCredentialsFragment extends BackButtonFragment
         implements LoginSignUpCredentialsView {
 
     private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
@@ -51,11 +49,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     private ProgressDialog progressDialog;
     private CallbackManager callbackManager;
-    //private PublishRelay<FacebookAccountViewModel> facebookLoginSubject;
-    //private LoginManager facebookLoginManager;
-    //private AlertDialog facebookEmailRequiredDialog;
-    //private Button googleLoginButton;
-    //private View facebookLoginButton;
     private Button hideShowAptoidePasswordButton;
     private View loginArea;
     private View signUpArea;
@@ -75,8 +68,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private ThrowableToStringMapper errorMapper;
     private LoginSignUpCredentialsPresenter presenter;
-    private List<String> facebookRequestedPermissions;
-    private String marketName;
 
     public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
                                                              boolean cleanBackStack) {
@@ -92,13 +83,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
         errorMapper = new AccountErrorMapper(getContext());
-        facebookRequestedPermissions = Arrays.asList("email", "user_friends");
         final FragmentNavigator fragmentNavigator = getFragmentNavigator();
         presenter = new LoginSignUpCredentialsPresenter(this,
                 ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
-                facebookRequestedPermissions,
                 ((AptoideApplication) getContext().getApplicationContext()).getLoginPreferences(),
                 fragmentNavigator, CrashReport.getInstance(),
                 getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
@@ -176,37 +164,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
                 .show();
     }
 
-    //@Override public void showFacebookLogin() {
-    //    facebookLoginButton.setVisibility(View.VISIBLE);
-    //    facebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-    //        @Override public void onSuccess(LoginResult loginResult) {
-    //            facebookLoginSubject.call(new FacebookAccountViewModel(loginResult.getAccessToken(),
-    //                    loginResult.getRecentlyDeniedPermissions()));
-    //        }
-//
-    //        @Override public void onCancel() {
-    //            showFacebookLoginError(R.string.facebook_login_cancelled);
-    //            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-    //                    Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.CANCEL);
-    //        }
-//
-    //        @Override public void onError(FacebookException error) {
-    //            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-    //                    Analytics.Account.SignUpLoginStatus.FAILED,
-    //                    Analytics.Account.LoginStatusDetail.SDK_ERROR);
-    //            showFacebookLoginError(R.string.error_occured);
-    //        }
-    //    });
-    //}
-
-    //@Override public void showPermissionsRequiredMessage() {
-    //    facebookEmailRequiredDialog.show();
-    //}
-
-    //@Override public void hideFacebookLogin() {
-    //    facebookLoginButton.setVisibility(View.GONE);
-    //}
-
     @Override public void showForgotPasswordView() {
         // FIXME remove hardcoded links
         Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
@@ -237,11 +194,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         getActivity().finish();
     }
 
-    //@Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
-    //    return facebookLoginSubject.doOnNext(
-    //            __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
-    //                    getStartupClickOrigin()));
-    //}
 
     @Override public Observable<AptoideAccountViewModel> aptoideLoginClick() {
         return RxView.clicks(buttonLogin)
@@ -322,11 +274,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         }
     }
 
-    //private void showFacebookLoginError(@StringRes int errorRes) {
-    //    Snackbar.make(getRootView(), errorRes, Snackbar.LENGTH_LONG)
-    //            .show();
-    //}
-
     private void setAptoideSignUpLoginAreaVisible() {
         credentialsEditTextsArea.setVisibility(View.VISIBLE);
         loginSignupSelectionArea.setVisibility(View.GONE);
@@ -334,15 +281,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     }
-
-    @Override public void googleLoginClicked() {
-        Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
-                getStartupClickOrigin());
-    }
-
-    //@Override protected Button getGoogleButton() {
-    //    return googleLoginButton;
-    //}
 
     @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -356,19 +294,12 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         registerClickHandler(presenter);
     }
 
-    @Override protected void showGoogleLoginError() {
-        Snackbar.make(getRootView(), R.string.google_login_cancelled, Snackbar.LENGTH_LONG)
-                .show();
-    }
-
     private View getRootView() {
         return getActivity().findViewById(android.R.id.content);
     }
 
     private void bindViews(View view) {
         forgotPasswordButton = (TextView) view.findViewById(R.id.forgot_password);
-
-        //googleLoginButton = (Button) view.findViewById(R.id.google_login_button);
 
         buttonLogin = (Button) view.findViewById(R.id.button_login);
         buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
@@ -378,16 +309,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
         hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
 
-        //facebookLoginButton = view.findViewById(R.id.fb_login_button);
-        //RxView.clicks(facebookLoginButton)
-        //        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        //        .subscribe(
-        //                __ -> facebookLoginManager.logInWithReadPermissions(LoginSignUpCredentialsFragment.this,
-        //                        facebookRequestedPermissions));
-
         callbackManager = CallbackManager.Factory.create();
-        //facebookLoginManager = LoginManager.getInstance();
-        //facebookLoginSubject = PublishRelay.create();
 
         loginSignupSelectionArea = view.findViewById(R.id.login_signup_selection_layout);
         credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
@@ -401,14 +323,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         separator.setVisibility(View.GONE);
 
         final Context context = getContext();
-
-        //facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
-        //        R.string.facebook_email_permission_regected_message)
-        //        .setPositiveButton(R.string.facebook_grant_permission_button, (dialog, which) -> {
-        //            facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
-        //        })
-        //        .setNegativeButton(android.R.string.cancel, null)
-        //        .create();
 
         progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 

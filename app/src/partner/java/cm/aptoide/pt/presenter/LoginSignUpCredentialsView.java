@@ -14,7 +14,9 @@ import rx.Observable;
  * Created by marcelobenites on 07/02/17.
  */
 
-public interface LoginSignUpCredentialsView extends GoogleLoginView {
+public interface LoginSignUpCredentialsView
+        extends View
+{
 
     Observable<Void> showAptoideLoginAreaClick();
 
@@ -30,11 +32,11 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
     void showError(Throwable throwable);
 
-    void showFacebookLogin();
-
-    void showPermissionsRequiredMessage();
-
-    void hideFacebookLogin();
+    //void showFacebookLogin();
+//
+    //void showPermissionsRequiredMessage();
+//
+    //void hideFacebookLogin();
 
     void showForgotPasswordView();
 
@@ -50,7 +52,7 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
     void hideKeyboard();
 
-    Observable<FacebookAccountViewModel> facebookLoginClick();
+    //Observable<FacebookAccountViewModel> facebookLoginClick();
 
     Observable<AptoideAccountViewModel> aptoideLoginClick();
 
