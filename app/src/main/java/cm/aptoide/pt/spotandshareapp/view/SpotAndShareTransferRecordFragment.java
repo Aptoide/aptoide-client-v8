@@ -320,6 +320,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public void openTransferRecord() {
+    pickAppsRecyclerView.scrollToPosition(0);
     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
   }
 
