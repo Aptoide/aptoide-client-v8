@@ -21,7 +21,7 @@
       android:layout_marginTop="16dp"
       android:text="@string/spotandshare_message_app_sender_info_sending"
       tools:text="xxx is sending"
-      style="@style/Aptoide.TextView.Regular.M.Grey"
+      style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
       />
 
 </LinearLayout>
