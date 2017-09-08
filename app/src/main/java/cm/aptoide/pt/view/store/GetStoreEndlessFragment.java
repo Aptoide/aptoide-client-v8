@@ -19,6 +19,7 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
     extends StoreTabWidgetsGridRecyclerFragment {
 
   protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private V7<T, ? extends Endless> v7request;
 
   @Override public void onDestroyView() {
     if (endlessRecyclerOnScrollListener != null) {
@@ -36,11 +37,13 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
       if (endlessRecyclerOnScrollListener != null) {
         getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       }
+      setupEndless(v7request, buildAction(), refresh);
     }
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    setupEndless(buildRequest(refresh, url), buildAction(), refresh);
+    v7request = buildRequest(refresh, url);
+    setupEndless(v7request, buildAction(), refresh);
 
     return null;
   }
