@@ -24,6 +24,9 @@ import rx.subjects.PublishSubject;
 public class SpotAndShareTransferRecordAdapter
     extends RecyclerView.Adapter<SpotAndShareTransferRecordAdapter.TransferViewHolder> {
 
+  private static final int RECEIVED_APP = 0;
+  private static final int SENT_APP = 1;
+
   private List<TransferAppModel> appsTransfered;
   private PublishSubject<TransferAppModel> acceptSubject;
   private PublishSubject<TransferAppModel> installSubject;
@@ -36,9 +39,17 @@ public class SpotAndShareTransferRecordAdapter
   }
 
   @Override public TransferViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.fragment_spotandshare_transfer_record_item, parent, false);
-    return new TransferViewHolder(view);
+    if (viewType == SENT_APP) {
+      View view = LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.fragment_spotandshare_transfer_record_item_sent, parent, false);
+      return new TransferViewHolder(view);
+    } else if (viewType == RECEIVED_APP) {
+      View view = LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.fragment_spotandshare_transfer_record_item_received, parent, false);
+      return new TransferViewHolder(view);
+    }
+    throw new IllegalArgumentException(
+        "ViewType argument must be either " + RECEIVED_APP + " or " + SENT_APP);
   }
 
   @Override public void onBindViewHolder(TransferViewHolder holder, int position) {
@@ -47,6 +58,15 @@ public class SpotAndShareTransferRecordAdapter
 
   @Override public int getItemCount() {
     return appsTransfered.size();
+  }
+
+  @Override public int getItemViewType(int position) {
+    if (appsTransfered.get(position)
+        .getTransferState() == Transfer.State.SERVING) {
+      return SENT_APP;
+    } else {
+      return RECEIVED_APP;
+    }
   }
 
   public void updateTransferList(List<TransferAppModel> transferAppModelList) {
