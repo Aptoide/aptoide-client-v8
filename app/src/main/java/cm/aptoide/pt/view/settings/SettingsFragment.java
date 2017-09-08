@@ -40,7 +40,6 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.filemanager.FileManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -94,12 +93,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private CheckBoxPreference adultContentWithPinPreferenceView;
   private CheckBoxPreference socialCampaignNotifications;
   private boolean trackAnalytics;
-  private NotificationCenter notificationCenter;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
   private String marketName;
   private Database database;
-  private UpdateRepository repository;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -112,7 +109,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
-    repository = RepositoryFactory.getUpdateRepository(getContext(), sharedPreferences);
     fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     adultContentConfirmationDialog =
@@ -140,8 +136,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .setEditText(R.id.pininput)
         .build();
 
-    notificationCenter =
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
