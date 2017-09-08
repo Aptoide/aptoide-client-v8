@@ -7,12 +7,10 @@ package cm.aptoide.pt.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.FacebookAccountException;
-import cm.aptoide.pt.account.FacebookLoginManager;
-import cm.aptoide.pt.account.GoogleLoginManager;
-import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.account.FacebookSignUpAdapter;
+import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
@@ -31,24 +29,16 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
-  private final LoginPreferences loginAvailability;
   private final FragmentNavigator fragmentNavigator;
   private final CrashReport crashReport;
   private final boolean navigateToHome;
-  private final FacebookLoginManager facebookLoginManager;
-  private final GoogleLoginManager googleLoginManager;
-  private final boolean dismissToNavigateToMainView;
+  private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
-      AptoideAccountManager accountManager, LoginPreferences loginAvailability,
-      FragmentNavigator fragmentNavigator, CrashReport crashReport,
-      boolean dismissToNavigateToMainView, boolean navigateToHome,
-      FacebookLoginManager facebookLoginManager, GoogleLoginManager googleLoginManager) {
+      AptoideAccountManager accountManager, FragmentNavigator fragmentNavigator,
+      CrashReport crashReport, boolean dismissToNavigateToMainView, boolean navigateToHome) {
     this.view = view;
     this.accountManager = accountManager;
-    this.facebookLoginManager = facebookLoginManager;
-    this.googleLoginManager = googleLoginManager;
-    this.loginAvailability = loginAvailability;
     this.fragmentNavigator = fragmentNavigator;
     this.crashReport = crashReport;
     this.dismissToNavigateToMainView = dismissToNavigateToMainView;
@@ -187,7 +177,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private Observable<GoogleSignInResult> googleLoginClick() {
     return view.googleLoginClick()
         .doOnNext(selected -> view.showLoading()).<Void>flatMapCompletable(
-            result -> googleLoginManager.login(result)
+            result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   Logger.d(TAG, "google login successful");
@@ -209,7 +199,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private Observable<LoginResult> facebookLoginClick() {
     return view.facebookLoginClick()
         .doOnNext(selected -> view.showLoading()).<Void>flatMapCompletable(result -> {
-          return facebookLoginManager.login(result)
+          return accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
               .observeOn(AndroidSchedulers.mainThread())
               .doOnCompleted(() -> {
                 Logger.d(TAG, "facebook login successful");
@@ -245,28 +235,26 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
           view.hideKeyboard();
           view.showLoading();
           lockScreenRotation();
-        }).<Void>flatMapCompletable(
-            credentials -> accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
-                credentials.getPassword(), null)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  Logger.d(TAG, "aptoide login successful");
-                  unlockScreenRotation();
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
-                  navigateToMainView();
-                  view.hideLoading();
-                })
-                .doOnError(throwable -> {
-                  view.showError(throwable);
-                  view.hideLoading();
-                  crashReport.log(throwable);
-                  unlockScreenRotation();
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-                      Analytics.Account.SignUpLoginStatus.FAILED,
-                      Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
-                })).retry()
+        }).<Void>flatMapCompletable(credentials -> accountManager.login(credentials)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> {
+              Logger.d(TAG, "aptoide login successful");
+              unlockScreenRotation();
+              Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                  Analytics.Account.SignUpLoginStatus.SUCCESS,
+                  Analytics.Account.LoginStatusDetail.SUCCESS);
+              navigateToMainView();
+              view.hideLoading();
+            })
+            .doOnError(throwable -> {
+              view.showError(throwable);
+              view.hideLoading();
+              crashReport.log(throwable);
+              unlockScreenRotation();
+              Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                  Analytics.Account.SignUpLoginStatus.FAILED,
+                  Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
+            })).retry()
         .map(__ -> null);
   }
 
@@ -277,8 +265,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
           view.showLoading();
           lockScreenRotation();
         })
-        .flatMapCompletable(credentials -> accountManager.signUp(credentials.getUsername(),
-            credentials.getPassword())
+        .flatMapCompletable(credentials -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, credentials)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
@@ -324,7 +311,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void showOrHideFacebookLogin() {
-    if (loginAvailability.isFacebookLoginEnabled()) {
+    if (accountManager.isSignUpEnabled(FacebookSignUpAdapter.TYPE)) {
       view.showFacebookLogin();
     } else {
       view.hideFacebookLogin();
@@ -332,7 +319,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void showOrHideGoogleLogin() {
-    if (loginAvailability.isGoogleLoginEnabled()) {
+    if (accountManager.isSignUpEnabled(GoogleSignUpAdapter.TYPE)) {
       view.showGoogleLogin();
     } else {
       view.hideGoogleLogin();

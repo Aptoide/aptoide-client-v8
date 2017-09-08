@@ -148,8 +148,8 @@ public class ManageUserPresenter implements Presenter {
     if (userData.hasNewPicture()) {
       final String mediaStoragePath =
           uriToPathResolver.getMediaStoragePath(Uri.parse(userData.getPictureUri()));
-      return accountManager.syncCurrentAccount(userData.getName(), mediaStoragePath);
+      return accountManager.updateAccount(userData.getName(), mediaStoragePath);
     }
-    return accountManager.syncCurrentAccount(userData.getName());
+    return accountManager.updateAccount(userData.getName());
   }
 }

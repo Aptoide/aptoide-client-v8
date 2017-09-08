@@ -85,7 +85,7 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     baseBodyInterceptorV3 =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV3();
+        ((AptoideApplication) getContext().getApplicationContext()).getBodyInterceptorV3();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes()

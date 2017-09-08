@@ -20,10 +20,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.FacebookLoginManager;
-import cm.aptoide.pt.account.GoogleLoginManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
@@ -102,13 +101,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
-        ((AptoideApplication) getContext().getApplicationContext()).getLoginPreferences(),
         fragmentNavigator, CrashReport.getInstance(),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
-        getArguments().getBoolean(CLEAN_BACK_STACK), new FacebookLoginManager(
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
-        facebookRequestedPermissions), new GoogleLoginManager(
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager()));
+        getArguments().getBoolean(CLEAN_BACK_STACK));
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -248,14 +243,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
             getStartupClickOrigin()));
   }
 
-  @Override public Observable<AptoideResult> aptoideLoginClick() {
+  @Override public Observable<AptoideCredentials> aptoideLoginClick() {
     return RxView.clicks(buttonLogin)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
             getStartupClickOrigin()))
         .map(click -> getCredentials());
   }
 
-  @Override public Observable<AptoideResult> aptoideSignUpClick() {
+  @Override public Observable<AptoideCredentials> aptoideSignUpClick() {
     return RxView.clicks(buttonSignUp)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
             getStartupClickOrigin()))
@@ -275,8 +270,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     return false;
   }
 
-  @Override @NonNull public AptoideResult getCredentials() {
-    return new AptoideResult(aptoideEmailEditText.getText()
+  @Override @NonNull public AptoideCredentials getCredentials() {
+    return new AptoideCredentials(aptoideEmailEditText.getText()
         .toString(), aptoidePasswordEditText.getText()
         .toString());
   }

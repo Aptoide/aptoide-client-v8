@@ -156,7 +156,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     crashReport = CrashReport.getInstance();
     bodyInterceptorV7 =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(

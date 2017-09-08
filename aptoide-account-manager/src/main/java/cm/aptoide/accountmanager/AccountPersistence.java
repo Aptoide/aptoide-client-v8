@@ -3,7 +3,7 @@ package cm.aptoide.accountmanager;
 import rx.Completable;
 import rx.Single;
 
-public interface AccountDataPersist {
+public interface AccountPersistence {
 
   Completable saveAccount(Account account);
 

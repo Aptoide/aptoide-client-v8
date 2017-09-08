@@ -71,7 +71,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     converterFactory = WebService.getDefaultConverter();
 
     this.bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
 
     final AccountNavigator accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager);

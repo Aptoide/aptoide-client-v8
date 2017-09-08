@@ -16,10 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.FacebookLoginManager;
-import cm.aptoide.pt.account.GoogleLoginManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -62,6 +61,7 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
   private ImageView previewSocialContent;
   private ImageView fakeToolbar;
   private ImageView loginProgressIndicator;
+  private AptoideAccountManager accountManager;
 
   public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
@@ -81,6 +81,8 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
     callbackManager = CallbackManager.Factory.create();
     facebookLoginSubject = PublishRelay.create();
     errorMapper = new AccountErrorMapper(getContext());
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Nullable @Override
@@ -132,12 +134,7 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
 
     attachPresenter(new NotLoggedInSharePresenter(this,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        CrashReport.getInstance(),
-        ((AptoideApplication) getContext().getApplicationContext()).getLoginPreferences(),
-        new FacebookLoginManager(
-            ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
-            facebookRequestedPermissions), new GoogleLoginManager(
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager())), null);
+        CrashReport.getInstance(), accountManager), null);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {

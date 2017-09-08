@@ -7,7 +7,7 @@ package cm.aptoide.pt.presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.view.account.AptoideResult;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import com.facebook.login.LoginResult;
 import rx.Observable;
 
@@ -63,13 +63,13 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   Observable<LoginResult> facebookLoginClick();
 
-  Observable<AptoideResult> aptoideLoginClick();
+  Observable<AptoideCredentials> aptoideLoginClick();
 
-  Observable<AptoideResult> aptoideSignUpClick();
+  Observable<AptoideCredentials> aptoideSignUpClick();
 
   boolean tryCloseLoginBottomSheet();
 
-  @NonNull AptoideResult getCredentials();
+  @NonNull AptoideCredentials getCredentials();
 
   boolean isPasswordVisible();
 

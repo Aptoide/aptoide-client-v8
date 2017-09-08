@@ -110,7 +110,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)

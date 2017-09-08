@@ -66,7 +66,7 @@ public class ProfileStepTwoPresenter implements Presenter {
   }
 
   private Completable makeAccountPublic() {
-    return accountManager.syncCurrentAccount(Account.Access.PUBLIC)
+    return accountManager.updateAccount(Account.Access.PUBLIC)
         .onErrorResumeNext(err -> {
           crashReport.log(err);
           return view.showGenericErrorMessage();
@@ -74,7 +74,7 @@ public class ProfileStepTwoPresenter implements Presenter {
   }
 
   private Completable makeAccountPrivate() {
-    return accountManager.syncCurrentAccount(Account.Access.UNLISTED)
+    return accountManager.updateAccount(Account.Access.UNLISTED)
         .onErrorResumeNext(err -> {
           crashReport.log(err);
           return view.showGenericErrorMessage();

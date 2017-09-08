@@ -41,7 +41,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     if (args != null) {
-      externalLogin = args.getBoolean(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false);
+      externalLogin = args.getBoolean(ProfileStepOneFragment.IS_EXTERNAL_LOGIN, false);
     }
   }
 
@@ -54,7 +54,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putBoolean(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, externalLogin);
+    outState.putBoolean(ProfileStepOneFragment.IS_EXTERNAL_LOGIN, externalLogin);
   }
 
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {

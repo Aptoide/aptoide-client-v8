@@ -206,7 +206,7 @@ public class PostFragment extends FragmentView implements PostView {
 
     final PostRemoteAccessor postRemoteAccessor =
         new PostRemoteAccessor(aptoideApplication.getDefaultSharedPreferences(),
-            aptoideApplication.getBaseBodyInterceptorV7Pool(),
+            aptoideApplication.getAccountSettingsBodyInterceptorPoolV7(),
             aptoideApplication.getDefaultClient(), WebService.getDefaultConverter(),
             aptoideApplication.getTokenInvalidator());
 

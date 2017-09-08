@@ -2,10 +2,11 @@ package cm.aptoide.pt.account;
 
 import android.accounts.AccountManager;
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AccountDataPersist;
 import cm.aptoide.accountmanager.AccountFactory;
+import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
 import rx.Completable;
 import rx.Scheduler;
 import rx.Single;
@@ -13,15 +14,12 @@ import rx.Single;
 /**
  * Persists {@link Account} data in using {@link AccountManager}.
  */
-public class AndroidAccountManagerDataPersist implements AccountDataPersist {
+public class AndroidAccountManagerPersistence implements AccountPersistence {
 
   public static final String ACCOUNT_ACCESS_LEVEL = "access";
   public static final String ACCOUNT_ACCESS_CONFIRMED = "access_confirmed";
   public static final String ACCOUNT_ADULT_CONTENT_ENABLED =
       "aptoide_account_manager_mature_switch";
-  public static final String ACCOUNT_TYPE = "aptoide_account_manager_login_mode";
-  public static final String ACCOUNT_ACCESS_TOKEN = "access_token";
-  public static final String ACCOUNT_REFRESH_TOKEN = "refresh_token";
   public static final String ACCOUNT_NICKNAME = "username";
   public static final String ACCOUNT_AVATAR_URL = "useravatar";
   public static final String ACCOUNT_STORE_NAME = "userRepo";
@@ -38,27 +36,27 @@ public class AndroidAccountManagerDataPersist implements AccountDataPersist {
   private final AccountFactory accountFactory;
   private final AndroidAccountDataMigration accountDataMigration;
   private final AndroidAccountProvider androidAccountProvider;
+  private final AuthenticationPersistence authenticationPersistence;
   private final Scheduler scheduler;
 
   private Account accountCache;
 
-  public AndroidAccountManagerDataPersist(AccountManager androidAccountManager,
+  public AndroidAccountManagerPersistence(AccountManager androidAccountManager,
       DatabaseStoreDataPersist storePersist, AccountFactory accountFactory,
       AndroidAccountDataMigration accountDataMigration,
-      AndroidAccountProvider androidAccountProvider, Scheduler scheduler) {
+      AndroidAccountProvider androidAccountProvider,
+      AuthenticationPersistence authenticationPersistence, Scheduler scheduler) {
     this.androidAccountManager = androidAccountManager;
     this.storePersist = storePersist;
     this.accountFactory = accountFactory;
     this.accountDataMigration = accountDataMigration;
     this.androidAccountProvider = androidAccountProvider;
+    this.authenticationPersistence = authenticationPersistence;
     this.scheduler = scheduler;
   }
 
   @Override public Completable saveAccount(Account account) {
     return androidAccountProvider.getAndroidAccount()
-        .onErrorResumeNext(
-            throwable -> androidAccountProvider.createAndroidAccount(account.getEmail(),
-                account.getPassword()))
         .flatMapCompletable(androidAccount -> {
 
           androidAccountManager.setUserData(androidAccount, ACCOUNT_ID, account.getId());
@@ -66,12 +64,6 @@ public class AndroidAccountManagerDataPersist implements AccountDataPersist {
               account.getNickname());
           androidAccountManager.setUserData(androidAccount, ACCOUNT_AVATAR_URL,
               account.getAvatar());
-          androidAccountManager.setUserData(androidAccount, ACCOUNT_REFRESH_TOKEN,
-              account.getRefreshToken());
-          androidAccountManager.setUserData(androidAccount, ACCOUNT_ACCESS_TOKEN,
-              account.getAccessToken());
-          androidAccountManager.setUserData(androidAccount, ACCOUNT_TYPE, account.getType()
-              .name());
           androidAccountManager.setUserData(androidAccount, ACCOUNT_ADULT_CONTENT_ENABLED,
               String.valueOf(account.isAdultContentEnabled()));
           androidAccountManager.setUserData(androidAccount, ACCOUNT_ACCESS_LEVEL,
@@ -122,20 +114,29 @@ public class AndroidAccountManagerDataPersist implements AccountDataPersist {
               return storePersist.get()
                   .doOnError(err -> CrashReport.getInstance()
                       .log(err))
-                  .map(stores -> accountFactory.createAccount(access, stores,
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_ID),
-                      androidAccount.name,
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_NICKNAME),
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_AVATAR_URL),
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_REFRESH_TOKEN),
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_ACCESS_TOKEN),
-                      androidAccountManager.getPassword(androidAccount), Account.Type.valueOf(
-                          androidAccountManager.getUserData(androidAccount, ACCOUNT_TYPE)),
-                      createStore(androidAccountManager, androidAccount), Boolean.valueOf(
-                          androidAccountManager.getUserData(androidAccount,
-                              ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
-                          androidAccountManager.getUserData(androidAccount,
-                              ACCOUNT_ACCESS_CONFIRMED))));
+                  .flatMap(stores -> {
+
+                    return authenticationPersistence.getAuthentication()
+                        .flatMap(authentication -> {
+
+                          if (authentication.isAuthenticated()) {
+
+                            return Single.just(accountFactory.createAccount(access, stores,
+                                androidAccountManager.getUserData(androidAccount, ACCOUNT_ID),
+                                androidAccount.name,
+                                androidAccountManager.getUserData(androidAccount, ACCOUNT_NICKNAME),
+                                androidAccountManager.getUserData(androidAccount,
+                                    ACCOUNT_AVATAR_URL), createStore(androidAccount),
+                                Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
+                                    ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
+                                    androidAccountManager.getUserData(androidAccount,
+                                        ACCOUNT_ACCESS_CONFIRMED))));
+                          }
+
+                          return Single.error(
+                              new IllegalStateException("Account not authenticated"));
+                        });
+                  });
             }));
   }
 
@@ -144,8 +145,7 @@ public class AndroidAccountManagerDataPersist implements AccountDataPersist {
         .doOnCompleted(() -> accountCache = null);
   }
 
-  private Store createStore(AccountManager androidAccountManager,
-      android.accounts.Account account) {
+  private Store createStore(android.accounts.Account account) {
     return new Store(
         Long.valueOf(androidAccountManager.getUserData(account, ACCOUNT_STORE_DOWNLOAD_COUNT)),
         androidAccountManager.getUserData(account, ACCOUNT_STORE_AVATAR_URL),

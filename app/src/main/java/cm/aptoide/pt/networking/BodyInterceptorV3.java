@@ -2,10 +2,6 @@ package cm.aptoide.pt.networking;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.account.FacebookAccount;
-import cm.aptoide.pt.account.GoogleAccount;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -15,28 +11,28 @@ import cm.aptoide.pt.utils.q.QManager;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
+public class BodyInterceptorV3 implements BodyInterceptor<BaseBody> {
 
   public static final String RESPONSE_MODE_JSON = "json";
 
   private final String aptoideMd5sum;
   private final String aptoidePackage;
   private final IdsRepository idsRepository;
-  private final AptoideAccountManager accountManager;
+  private final AuthenticationPersistence authenticationPersistence;
   private final QManager qManager;
   private final SharedPreferences sharedPreferences;
   private final String responseMode;
   private final int androidVersion;
   private final NetworkOperatorManager operatorManager;
 
-  public BaseBodyInterceptorV3(IdsRepository idsRepository, String aptoideMd5sum,
-      String aptoidePackage, AptoideAccountManager accountManager, QManager qManager,
-      SharedPreferences sharedPreferences, String responseMode, int androidVersion,
-      NetworkOperatorManager operatorManager) {
+  public BodyInterceptorV3(IdsRepository idsRepository, String aptoideMd5sum, String aptoidePackage,
+      QManager qManager, SharedPreferences sharedPreferences, String responseMode,
+      int androidVersion, NetworkOperatorManager operatorManager,
+      AuthenticationPersistence authenticationPersistence) {
     this.idsRepository = idsRepository;
     this.aptoideMd5sum = aptoideMd5sum;
     this.aptoidePackage = aptoidePackage;
-    this.accountManager = accountManager;
+    this.authenticationPersistence = authenticationPersistence;
     this.qManager = qManager;
     this.sharedPreferences = sharedPreferences;
     this.responseMode = responseMode;
@@ -45,10 +41,8 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .map(account -> {
+    return authenticationPersistence.getAuthentication()
+        .map(authentication -> {
           body.setAndroidVersion(androidVersion);
           body.setAptoideMd5sum(aptoideMd5sum);
           body.setAptoidePackage(aptoidePackage);
@@ -56,9 +50,8 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
           body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
           body.setResponseMode(responseMode);
 
-          if (account.isLoggedIn()) {
-            body.setAccessToken(account.getAccessToken());
-            body.setAuthMode(getAuthModeFromAccount(account));
+          if (authentication.isAuthenticated()) {
+            body.setAccessToken(authentication.getAccessToken());
           }
 
           final String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
@@ -76,14 +69,5 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
           return body;
         })
         .subscribeOn(Schedulers.computation());
-  }
-
-  private String getAuthModeFromAccount(Account account) {
-    if (account instanceof GoogleAccount) {
-      return "google";
-    } else if (account instanceof FacebookAccount) {
-      return "facebook";
-    }
-    return "aptoide";
   }
 }

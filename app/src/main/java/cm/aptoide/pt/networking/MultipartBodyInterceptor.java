@@ -1,6 +1,5 @@
 package cm.aptoide.pt.networking;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
@@ -12,25 +11,23 @@ public class MultipartBodyInterceptor
     implements BodyInterceptor<HashMapNotNull<String, RequestBody>> {
 
   private final IdsRepository idsRepository;
-  private final AptoideAccountManager accountManager;
+  private final AuthenticationPersistence authenticationPersistence;
   private final RequestBodyFactory requestBodyFactory;
 
-  public MultipartBodyInterceptor(IdsRepository idsRepository, AptoideAccountManager accountManager,
-      RequestBodyFactory requestBodyFactory) {
+  public MultipartBodyInterceptor(IdsRepository idsRepository,
+      RequestBodyFactory requestBodyFactory, AuthenticationPersistence authenticationPersistence) {
     this.idsRepository = idsRepository;
-    this.accountManager = accountManager;
+    this.authenticationPersistence = authenticationPersistence;
     this.requestBodyFactory = requestBodyFactory;
   }
 
   @Override public Single<HashMapNotNull<String, RequestBody>> intercept(
       HashMapNotNull<String, RequestBody> body) {
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .flatMap(account -> {
-          if (account.isLoggedIn()) {
+    return authenticationPersistence.getAuthentication()
+        .flatMap(authentication -> {
+          if (authentication.isAuthenticated()) {
             body.put("access_token",
-                requestBodyFactory.createBodyPartFromString(account.getAccessToken()));
+                requestBodyFactory.createBodyPartFromString(authentication.getAccessToken()));
           }
 
           body.put("aptoide_uid",

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.account;
+package cm.aptoide.pt.networking;
 
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import rx.Completable;

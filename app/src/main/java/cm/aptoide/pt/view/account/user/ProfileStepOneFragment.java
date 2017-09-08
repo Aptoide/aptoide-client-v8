@@ -22,6 +22,7 @@ import rx.Observable;
 
 public class ProfileStepOneFragment extends BaseToolbarFragment implements ProfileStepOneView {
 
+  public static final String IS_EXTERNAL_LOGIN = "facebook_google";
   @LayoutRes private static final int LAYOUT = R.layout.fragment_profile_step_one;
 
   private Button continueBtn;
@@ -43,7 +44,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     if (args != null) {
-      externalLogin = args.getBoolean(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false);
+      externalLogin = args.getBoolean(IS_EXTERNAL_LOGIN, false);
     }
   }
 
@@ -56,7 +57,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putBoolean(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, externalLogin);
+    outState.putBoolean(IS_EXTERNAL_LOGIN, externalLogin);
   }
 
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {

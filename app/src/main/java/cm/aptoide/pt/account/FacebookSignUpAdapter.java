@@ -1,10 +1,12 @@
 package cm.aptoide.pt.account;
 
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AccountService;
+import cm.aptoide.accountmanager.SignUpAdapter;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import java.util.List;
 import java.util.Set;
@@ -14,33 +16,51 @@ import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public class FacebookLoginManager {
+public class FacebookSignUpAdapter implements SignUpAdapter<LoginResult> {
 
-  private final AptoideAccountManager accountManager;
+  public static final String TYPE = "FACEBOOK";
   private final List<String> facebookRequiredPermissions;
+  private final LoginManager loginManager;
+  private final LoginPreferences loginPreferences;
 
-  public FacebookLoginManager(AptoideAccountManager accountManager,
-      List<String> facebookRequiredPermissions) {
-    this.accountManager = accountManager;
+  public FacebookSignUpAdapter(List<String> facebookRequiredPermissions, LoginManager loginManager,
+      LoginPreferences loginPreferences) {
     this.facebookRequiredPermissions = facebookRequiredPermissions;
+    this.loginManager = loginManager;
+    this.loginPreferences = loginPreferences;
   }
 
-  public Completable login(LoginResult result) {
+  @Override public Single<Account> signUp(LoginResult result, AccountService service) {
+
+    if (!isEnabled()) {
+      return Single.error(new IllegalStateException("Facebook sign up is not enabled"));
+    }
+
     if (declinedRequiredPermissions(result.getRecentlyDeniedPermissions())) {
-      return Completable.error(
+      return Single.error(
           new FacebookAccountException(FacebookAccountException.FACEBOOK_DENIED_CREDENTIALS));
     }
 
-    return getFacebookUsername(result.getAccessToken()).flatMapCompletable(
-        username -> accountManager.login(Account.Type.FACEBOOK, username, result.getAccessToken()
-            .getToken(), null));
+    return getFacebookEmail(result.getAccessToken()).flatMap(email -> service.createAccount(email,
+        result.getAccessToken()
+            .getToken(), null, TYPE));
+  }
+
+  @Override public Completable logout() {
+    return Completable.fromAction(() -> {
+      loginManager.logOut();
+    });
+  }
+
+  @Override public boolean isEnabled() {
+    return loginPreferences.isFacebookLoginEnabled();
   }
 
   private boolean declinedRequiredPermissions(Set<String> declinedPermissions) {
     return declinedPermissions.containsAll(facebookRequiredPermissions);
   }
 
-  private Single<String> getFacebookUsername(AccessToken accessToken) {
+  private Single<String> getFacebookEmail(AccessToken accessToken) {
     return Single.defer(() -> {
       final GraphResponse response = GraphRequest.newMeRequest(accessToken, null)
           .executeAndWait();
@@ -57,6 +77,7 @@ public class FacebookLoginManager {
         return Single.error(
             new FacebookAccountException(FacebookAccountException.FACEBOOK_API_INVALID_RESPONSE));
       }
-    }).subscribeOn(Schedulers.io());
+    })
+        .subscribeOn(Schedulers.io());
   }
 }

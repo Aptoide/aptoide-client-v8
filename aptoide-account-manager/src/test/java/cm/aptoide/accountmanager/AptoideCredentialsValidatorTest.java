@@ -5,7 +5,7 @@ import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertEquals;
 
-public class CredentialsValidatorTest {
+public class AptoideCredentialsValidatorTest {
 
   @Test public void shouldValidateEmailAndPassword() throws Exception {
 
@@ -13,7 +13,7 @@ public class CredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate("marcelo.benites@aptoide.com", "1aMarcelo", true)
+    validator.validate(new AptoideCredentials("marcelo.benites@aptoide.com", "1aMarcelo"), true)
         .subscribe(testSubscriber);
 
     testSubscriber.assertNoErrors();
@@ -26,7 +26,7 @@ public class CredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate("", "1aMarcelo", true)
+    validator.validate(new AptoideCredentials("", "1aMarcelo"), true)
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
@@ -41,7 +41,7 @@ public class CredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate("paul.mccartney@beatles.com", "", true)
+    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", ""), true)
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
@@ -56,7 +56,7 @@ public class CredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate("", "", true)
+    validator.validate(new AptoideCredentials("", ""), true)
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
@@ -71,7 +71,7 @@ public class CredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate("paul.mccartney@beatles.com", "1234567", true)
+    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", "1234567"), true)
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
@@ -86,7 +86,7 @@ public class CredentialsValidatorTest {
 
     final TestSubscriber test1 = TestSubscriber.create();
 
-    validator.validate("paul.mccartney@beatles.com", "beatleswerethebest", true)
+    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", "beatleswerethebest"), true)
         .subscribe(test1);
 
     test1.assertError(AccountValidationException.class);
@@ -96,7 +96,7 @@ public class CredentialsValidatorTest {
 
     final TestSubscriber test2 = TestSubscriber.create();
 
-    validator.validate("paul.mccartney@beatles.com", "123321432413241", true)
+    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", "123321432413241"), true)
         .subscribe(test2);
 
     test2.assertError(AccountValidationException.class);

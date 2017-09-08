@@ -1,41 +1,20 @@
 package cm.aptoide.accountmanager;
 
-import android.text.TextUtils;
 import java.util.List;
+
+import static android.text.TextUtils.isEmpty;
 
 public class AccountFactory {
 
-  private final ExternalAccountFactory externalAccountFactory;
-  private final AccountService accountService;
-
-  public AccountFactory(ExternalAccountFactory externalAccountFactory,
-      AccountService accountService) {
-    this.externalAccountFactory = externalAccountFactory;
-    this.accountService = accountService;
-  }
-
-  public Account createAccount(String access, List<Store> stores, String id, String name,
-      String nickname, String avatar, String refreshToken, String token, String password,
-      Account.Type type, Store store, boolean adultContentEnabled, boolean accessConfirmed) {
-    final Account aptoideAccount =
-        new AptoideAccount(id, name, nickname, avatar, refreshToken, token, password, type, store,
-            adultContentEnabled, getAccessFrom(access), accessConfirmed, stores, accountService);
-    switch (type) {
-      case APTOIDE:
-        return aptoideAccount;
-      case FACEBOOK:
-        return externalAccountFactory.createFacebookAccount(aptoideAccount);
-      case GOOGLE:
-        return externalAccountFactory.createGoogleAccount(aptoideAccount);
-      case ABAN:
-        return externalAccountFactory.createABANAccount(aptoideAccount);
-      default:
-        throw new IllegalArgumentException("Illegal account type " + type);
-    }
+  public Account createAccount(String access, List<Store> stores, String id, String email,
+      String nickname, String avatar, Store store, boolean adultContentEnabled,
+      boolean accessConfirmed) {
+    return new AptoideAccount(id, email, nickname, avatar, store, adultContentEnabled,
+        getAccessFrom(access), accessConfirmed, stores);
   }
 
   private Account.Access getAccessFrom(String serverAccess) {
-    return TextUtils.isEmpty(serverAccess) ? Account.Access.UNLISTED
+    return isEmpty(serverAccess) ? Account.Access.UNLISTED
         : Account.Access.valueOf(serverAccess.toUpperCase());
   }
 }

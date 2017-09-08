@@ -208,7 +208,7 @@ public class MyAccountPresenter implements Presenter {
                 .getMeta()
                 .getData())
             .doOnNext(store -> view.refreshUI(store)))
-        .flatMap(__ -> accountManager.syncCurrentAccount()
+        .flatMap(__ -> accountManager.updateAccount()
             .toObservable())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {

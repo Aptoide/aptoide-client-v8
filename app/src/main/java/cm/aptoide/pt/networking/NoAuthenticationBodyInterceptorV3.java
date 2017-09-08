@@ -1,4 +1,4 @@
-package cm.aptoide.pt.account;
+package cm.aptoide.pt.networking;
 
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -6,13 +6,13 @@ import cm.aptoide.pt.networking.IdsRepository;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public class NoTokenBodyInterceptor implements BodyInterceptor<BaseBody> {
+public class NoAuthenticationBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
 
   private final String aptoideMd5sum;
   private final String aptoidePackage;
   private final IdsRepository idsRepository;
 
-  public NoTokenBodyInterceptor(IdsRepository idsRepository, String aptoideMd5sum,
+  public NoAuthenticationBodyInterceptorV3(IdsRepository idsRepository, String aptoideMd5sum,
       String aptoidePackage) {
     this.aptoideMd5sum = aptoideMd5sum;
     this.aptoidePackage = aptoidePackage;
