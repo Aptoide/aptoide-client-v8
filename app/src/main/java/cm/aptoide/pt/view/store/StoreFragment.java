@@ -349,11 +349,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
                   .getStore();
               String storeName = store != null ? store.getName() : null;
               Long storeId = store != null ? store.getId() : null;
-              String avatar = getHome.getNodes()
-                  .getMeta()
-                  .getData()
-                  .getStore()
-                  .getAvatar();
+              String avatar = store != null ? store.getAvatar() : null;
               setupVariables(getHome.getNodes()
                   .getTabs()
                   .getList(), storeId, storeName, storeUrl, avatar);
