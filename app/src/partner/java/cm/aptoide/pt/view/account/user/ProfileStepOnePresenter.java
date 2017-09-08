@@ -47,15 +47,9 @@ public class ProfileStepOnePresenter implements Presenter {
                 .retry()
                 .map(__ -> null);
 
-        //Observable<Void> handleMoreInfoClick = view.moreInfoButtonClick()
-        //        .doOnNext(__ -> Analytics.Account.accountProfileAction(1,
-        //                Analytics.Account.ProfileAction.MORE_INFO))
-        //        .doOnNext(__ -> navigateToProfileStepTwoView());
-
         view.getLifecycle()
                 .filter(event -> event == View.LifecycleEvent.CREATE)
-                //.flatMap(__ -> Observable.merge(handleContinueClick, handleMoreInfoClick))
-                .flatMap(__ -> Observable.just(handleContinueClick))
+                .flatMap(__ -> handleContinueClick)
                 .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
                 .subscribe(__ -> {
                 }, err -> crashReport.log(err));
@@ -69,20 +63,10 @@ public class ProfileStepOnePresenter implements Presenter {
         // does nothing
     }
 
-    //private void navigateToProfileStepTwoView() {
-    //    fragmentNavigator.cleanBackStack();
-    //    fragmentNavigator.navigateTo(ProfileStepTwoFragment.newInstance());
-    //}
-
     private void navigateToHome() {
         fragmentNavigator.navigateToHomeCleaningBackStack();
     }
 
-    //private void navigateToCreateStore() {
-    //    fragmentNavigator.cleanBackStack();
-    //    fragmentNavigator.navigateTo(
-    //            ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), true));
-    //}
 
     private Completable makeUserProfilePublic() {
         return accountManager.syncCurrentAccount(Account.Access.PUBLIC)

@@ -88,6 +88,8 @@
                     style="@style/Aptoide.TextView.Medium.L"
                     />
 
+
+
             </LinearLayout>
 
         </ScrollView>
