@@ -179,6 +179,6 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   public void onNewFriend(Friend friend, Host host) {
     friendsManager.addFriend(friend, host);
-    sendToOthers(host, new NewFriendMessage(getHost(), friend));
+    sendToOthers(host, new NewFriendMessage(host, friend));
   }
 }
