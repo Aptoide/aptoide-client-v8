@@ -62,8 +62,9 @@
           android:id="@+id/transfer_record_recycler_view"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_marginBottom="80dp"
+          android:paddingBottom="68dp"
           android:scrollbars="vertical"
+          android:clipToPadding="false"
           >
       </android.support.v7.widget.RecyclerView>
 
