@@ -125,6 +125,8 @@ public class SpotAndShareTransferRecordAdapter
       acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
       installButton.setOnClickListener(accept -> installSubject.onNext(transferItem));
 
+      resetState();
+
       if (transferItem.getTransferState() == Transfer.State.PENDING_ACCEPTION) {
         acceptButton.setVisibility(View.VISIBLE);
       } else if (transferItem.getTransferState() == Transfer.State.RECEIVING) {
@@ -153,6 +155,12 @@ public class SpotAndShareTransferRecordAdapter
         transferProgressBar.setVisibility(View.GONE);
         installButton.setVisibility(View.GONE);
       }
+    }
+
+    private void resetState() {
+      acceptButton.setVisibility(View.GONE);
+      transferProgressBar.setVisibility(View.GONE);
+      installButton.setVisibility(View.GONE);
     }
   }
 }
