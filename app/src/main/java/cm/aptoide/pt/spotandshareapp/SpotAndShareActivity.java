@@ -40,6 +40,7 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
   private void onJoinGroupError() {
     runOnUiThread(new Runnable() {
       @Override public void run() {
+        spotAndShare.leaveGroup(err -> showLeaveGroupErrorMessage());
         Toast.makeText(getApplicationContext(), "There was an error inside the group",
             Toast.LENGTH_SHORT)
             .show();
@@ -54,5 +55,11 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
 
   public void unregisterJoinGroupSuccessCallback() {
     this.onSuccess = null;
+  }
+
+  private void showLeaveGroupErrorMessage() {
+    Toast.makeText(getApplicationContext(), R.string.spotandshare_message_leave_group_error,
+        Toast.LENGTH_SHORT)
+        .show();
   }
 }
