@@ -8,8 +8,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.social.data.AdPost;
 import cm.aptoide.pt.social.data.AdResponse;
 import cm.aptoide.pt.social.data.CardTouchEvent;
-import cm.aptoide.pt.spotandshare.socket.Log;
-import java.util.ArrayList;
 import rx.subjects.PublishSubject;
 
 /**

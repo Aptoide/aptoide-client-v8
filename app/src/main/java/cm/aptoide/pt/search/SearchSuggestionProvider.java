@@ -6,7 +6,6 @@
 package cm.aptoide.pt.search;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.search.SearchRecentSuggestionsProviderWrapper;
 import cm.aptoide.pt.search.websocket.SearchAppsWebSocket;
 import cm.aptoide.pt.search.websocket.WebSocketManager;
 

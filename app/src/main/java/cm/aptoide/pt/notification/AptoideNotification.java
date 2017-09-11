@@ -58,7 +58,8 @@ import lombok.ToString;
       String lang, String title, String url, String urlTrack, String appName, String graphic,
       String ownerId, Long expireSecsUtc) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN, NOT_DISMISSED, appName, graphic, ownerId, expireSecsUtc);
+        System.currentTimeMillis(), CAMPAIGN, NOT_DISMISSED, appName, graphic, ownerId,
+        expireSecsUtc);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,

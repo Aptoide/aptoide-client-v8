@@ -21,7 +21,7 @@ public class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragm
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication)getContext().getApplicationContext()).getMarketName();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

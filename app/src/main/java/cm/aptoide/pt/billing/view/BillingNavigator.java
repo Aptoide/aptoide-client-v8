@@ -31,7 +31,8 @@ public class BillingNavigator {
   private final String marketName;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager, String marketName) {
+      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
+      String marketName) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;

@@ -92,7 +92,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     installManager = new InstallerFactory(new MinimalAdMapper(),
         new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
         ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getImageCachePath()).create(getContext(), InstallerFactory.ROLLBACK);
+            .getApplicationContext()).getImageCachePath()).create(getContext(),
+        InstallerFactory.ROLLBACK);
   }
 
   @Override public int getContentViewId() {

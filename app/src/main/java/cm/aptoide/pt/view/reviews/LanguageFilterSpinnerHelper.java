@@ -87,7 +87,7 @@ class LanguageFilterSpinnerHelper {
   private SpinnerAdapter setupCommentsFilterLanguageSpinnerAdapter() {
     ArrayAdapter<String> adapter =
         new ArrayAdapter<>(context, R.layout.simple_language_spinner_item,
-        createSpinnerAdapterRowsList());
+            createSpinnerAdapterRowsList());
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     return adapter;
   }

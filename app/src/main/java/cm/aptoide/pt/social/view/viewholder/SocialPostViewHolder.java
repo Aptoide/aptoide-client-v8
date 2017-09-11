@@ -5,7 +5,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.Post;
-import cm.aptoide.pt.social.view.viewholder.PostViewHolder;
 import rx.subjects.PublishSubject;
 
 /**

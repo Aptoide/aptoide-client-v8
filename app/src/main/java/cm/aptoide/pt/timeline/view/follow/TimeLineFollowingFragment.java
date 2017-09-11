@@ -74,6 +74,16 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
   }
 
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    if (args.containsKey(BundleKeys.USER_ID)) {
+      userId = args.getLong(BundleKeys.USER_ID);
+    }
+    if (args.containsKey(BundleKeys.STORE_ID)) {
+      storeId = args.getLong(BundleKeys.STORE_ID);
+    }
+  }
+
   @Override protected V7 buildRequest() {
     return GetFollowingRequest.of(baseBodyInterceptor, userId, storeId, httpClient,
         converterFactory, tokenInvalidator,
@@ -99,15 +109,5 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
 
   public String getHeaderMessage() {
     return getString(R.string.social_timeline_share_bar_following);
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    if (args.containsKey(BundleKeys.USER_ID)) {
-      userId = args.getLong(BundleKeys.USER_ID);
-    }
-    if (args.containsKey(BundleKeys.STORE_ID)) {
-      storeId = args.getLong(BundleKeys.STORE_ID);
-    }
   }
 }

@@ -25,8 +25,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
   @Override public void onSurfaceCreated(GL10 gl, EGLConfig config) {
     qManager.setSupportedOpenGLExtensions(GLES20.glGetString(GLES20.GL_EXTENSIONS));
-    Intent intent =
-        new Intent(context, AptoideApplication.getActivityProvider().getMainActivityFragmentClass());
+    Intent intent = new Intent(context, AptoideApplication.getActivityProvider()
+        .getMainActivityFragmentClass());
     ((Activity) context).finish();
     context.startActivity(intent);
   }
