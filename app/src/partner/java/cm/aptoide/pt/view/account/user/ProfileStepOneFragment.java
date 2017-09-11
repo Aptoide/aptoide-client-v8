@@ -6,6 +6,7 @@ package cm.aptoide.pt.view.account.user;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -37,6 +38,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     }
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         final Context context = getContext();
         waitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,

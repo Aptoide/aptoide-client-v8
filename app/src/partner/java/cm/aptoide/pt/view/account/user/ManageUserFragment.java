@@ -6,6 +6,7 @@ package cm.aptoide.pt.view.account.user;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.DrawableRes;
@@ -101,6 +102,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Context context = getContext();
         if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
             currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));

@@ -83,6 +83,7 @@ public class LoginSignUpCredentialsFragment extends BackButtonFragment
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         errorMapper = new AccountErrorMapper(getContext());
         final FragmentNavigator fragmentNavigator = getFragmentNavigator();
         presenter = new LoginSignUpCredentialsPresenter(this,

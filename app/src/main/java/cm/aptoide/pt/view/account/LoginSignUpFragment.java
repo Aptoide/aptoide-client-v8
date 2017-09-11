@@ -1,11 +1,13 @@
 package cm.aptoide.pt.view.account;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.presenter.LoginSignUpView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 
@@ -109,6 +111,8 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
       // this happens because in landscape the R.id.login_signup_layout is not
       // a child of CoordinatorLayout
     }
+
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
     if (bottomSheetBehavior != null) {
       mainContent = view.findViewById(R.id.main_content);
