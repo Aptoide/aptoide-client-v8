@@ -21,6 +21,8 @@ import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.share.ShareAppHelper;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Locale;
@@ -74,7 +76,10 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
 
     final AccountNavigator accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager);
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
+            LoginManager.getInstance(), CallbackManager.Factory.create(),
+            ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+            PublishRelay.create());
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(),

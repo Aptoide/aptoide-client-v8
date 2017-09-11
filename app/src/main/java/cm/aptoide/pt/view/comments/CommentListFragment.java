@@ -59,8 +59,11 @@ import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
+import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.Date;
@@ -186,7 +189,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyDecorator =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator =
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
+            LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+            PublishRelay.create());
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());

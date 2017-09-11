@@ -75,8 +75,16 @@ public abstract class ActivityResultNavigator extends LeakActivity
     startActivityForResult(intent, requestCode);
   }
 
+  @Override public void navigateForResult(Intent intent, int requestCode) {
+    startActivityForResult(intent, requestCode);
+  }
+
   @Override public Observable<Result> results(int requestCode) {
     return resultRelay.filter(result -> result.getRequestCode() == requestCode);
+  }
+
+  @Override public Observable<Result> results() {
+    return resultRelay;
   }
 
   @Override public Observable<Result> navigateForResult(String action, Uri uri, int requestCode) {
@@ -121,6 +129,10 @@ public abstract class ActivityResultNavigator extends LeakActivity
     final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
+  }
+
+  @Override public Activity getActivity() {
+    return this;
   }
 
   @Override public ActivityNavigator getActivityNavigator() {

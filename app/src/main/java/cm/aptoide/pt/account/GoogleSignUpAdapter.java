@@ -1,7 +1,6 @@
 package cm.aptoide.pt.account;
 
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.SignUpAdapter;
 import com.google.android.gms.auth.api.Auth;
@@ -34,8 +33,7 @@ public class GoogleSignUpAdapter implements SignUpAdapter<GoogleSignInResult> {
       return service.createAccount(account.getEmail(), account.getServerAuthCode(),
           account.getDisplayName(), "GOOGLE");
     } else {
-      return Single.error(
-          new IllegalStateException("Google login invalid result " + result.getStatus()));
+      return Single.error(new GoogleSignUpException());
     }
   }
 
@@ -44,12 +42,16 @@ public class GoogleSignUpAdapter implements SignUpAdapter<GoogleSignInResult> {
   }
 
   @Override public Completable logout() {
-    return Completable.fromAction(() -> {
-      client.blockingConnect();
-      if (client.isConnected()) {
+    return Completable.defer(() -> {
+      if (client.blockingConnect()
+          .isSuccess()) {
         Auth.GoogleSignInApi.signOut(client);
+        return Completable.complete();
+      } else {
+        return Completable.error(
+            new IllegalStateException("Could not connect to Google Play Services to sign out."));
       }
     })
-        .subscribeOn(Schedulers.computation());
+        .subscribeOn(Schedulers.io());
   }
 }

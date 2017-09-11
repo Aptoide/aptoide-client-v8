@@ -1,11 +1,9 @@
 package cm.aptoide.pt.view.share;
 
-import android.content.Context;
-import cm.aptoide.pt.presenter.GoogleLoginView;
-import com.facebook.login.LoginResult;
+import cm.aptoide.pt.view.account.GooglePlayServicesView;
 import rx.Observable;
 
-public interface NotLoggedInShareView extends GoogleLoginView {
+public interface NotLoggedInShareView extends GooglePlayServicesView {
 
   Observable<Void> closeClick();
 
@@ -15,22 +13,23 @@ public interface NotLoggedInShareView extends GoogleLoginView {
 
   void showError(Throwable throwable);
 
-  void showFacebookLogin();
+  Observable<Void> facebookSignInEvent();
 
-  void showFacebookLoginError();
+  Observable<Void> googleSignInEvent();
 
-  void showFacebookCancelledError();
+  void showFacebookPermissionsRequiredError(Throwable throwable);
 
-  Observable<LoginResult> facebookLoginClick();
-
-  void showPermissionsRequiredMessage();
+  Observable<Void> facebookSignInWithRequiredPermissionsInEvent();
 
   void showLoading();
 
   void hideLoading();
 
+  void showFacebookLogin();
+
   void hideFacebookLogin();
 
-  Context getApplicationContext();
+  void showGoogleLogin();
 
+  void hideGoogleLogin();
 }

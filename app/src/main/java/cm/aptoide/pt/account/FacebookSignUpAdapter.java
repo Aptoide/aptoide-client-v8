@@ -7,7 +7,6 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import java.util.List;
 import java.util.Set;
 import org.json.JSONException;
@@ -16,7 +15,7 @@ import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public class FacebookSignUpAdapter implements SignUpAdapter<LoginResult> {
+public class FacebookSignUpAdapter implements SignUpAdapter<FacebookLoginResult> {
 
   public static final String TYPE = "FACEBOOK";
   private final List<String> facebookRequiredPermissions;
@@ -30,20 +29,31 @@ public class FacebookSignUpAdapter implements SignUpAdapter<LoginResult> {
     this.loginPreferences = loginPreferences;
   }
 
-  @Override public Single<Account> signUp(LoginResult result, AccountService service) {
+  @Override public Single<Account> signUp(FacebookLoginResult result, AccountService service) {
 
     if (!isEnabled()) {
       return Single.error(new IllegalStateException("Facebook sign up is not enabled"));
     }
 
-    if (declinedRequiredPermissions(result.getRecentlyDeniedPermissions())) {
+    if (result.getState() == FacebookLoginResult.STATE_CANCELLED) {
       return Single.error(
-          new FacebookAccountException(FacebookAccountException.FACEBOOK_DENIED_CREDENTIALS));
+          new FacebookSignUpException(FacebookSignUpException.USER_CANCELLED));
     }
 
-    return getFacebookEmail(result.getAccessToken()).flatMap(email -> service.createAccount(email,
-        result.getAccessToken()
-            .getToken(), null, TYPE));
+    if (result.getState() == FacebookLoginResult.STATE_ERROR) {
+      return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR));
+    }
+
+    if (declinedRequiredPermissions(result.getResult()
+        .getRecentlyDeniedPermissions())) {
+      return Single.error(new FacebookSignUpException(FacebookSignUpException.
+          MISSING_REQUIRED_PERMISSIONS));
+    }
+
+    return getFacebookEmail(result.getResult()
+        .getAccessToken()).flatMap(email -> service.createAccount(email, result.getResult()
+        .getAccessToken()
+        .getToken(), null, TYPE));
   }
 
   @Override public Completable logout() {
@@ -71,11 +81,10 @@ public class FacebookSignUpAdapter implements SignUpAdapter<LoginResult> {
               object.has("email") ? object.getString("email") : object.getString("id"));
         } catch (JSONException ignored) {
           return Single.error(
-              new FacebookAccountException(FacebookAccountException.FACEBOOK_API_INVALID_RESPONSE));
+              new FacebookSignUpException(FacebookSignUpException.ERROR));
         }
       } else {
-        return Single.error(
-            new FacebookAccountException(FacebookAccountException.FACEBOOK_API_INVALID_RESPONSE));
+        return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR));
       }
     })
         .subscribeOn(Schedulers.io());

@@ -19,7 +19,10 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.store.StoreAddCommentDisplayable;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.Completable;
 import rx.Observable;
@@ -46,7 +49,9 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager,
+        getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+        PublishRelay.create());
     @ColorInt int color = getColorOrDefault(displayable.getStoreTheme(), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);

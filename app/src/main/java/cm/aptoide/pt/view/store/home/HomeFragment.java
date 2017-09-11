@@ -44,7 +44,10 @@ import cm.aptoide.pt.view.navigator.TabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigator;
 import cm.aptoide.pt.view.store.StoreFragment;
 import cm.aptoide.pt.view.store.StorePagerAdapter;
+import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
 import rx.android.schedulers.AndroidSchedulers;
@@ -253,7 +256,11 @@ public class HomeFragment extends StoreFragment {
     super.setupViews();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator =
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
+            LoginManager.getInstance(), CallbackManager.Factory.create(),
+            ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+            PublishRelay.create());
     setupNavigationView();
   }
 

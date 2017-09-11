@@ -8,7 +8,6 @@ import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,38 +25,32 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.account.AccountErrorMapper;
-import cm.aptoide.pt.view.account.GoogleLoginFragment;
+import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.view.account.GooglePlayServicesFragment;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
-import java.util.List;
 import rx.Observable;
 
-public class NotLoggedInShareFragment extends GoogleLoginFragment implements NotLoggedInShareView {
+public class NotLoggedInShareFragment extends GooglePlayServicesFragment
+    implements NotLoggedInShareView {
 
   private static final String APP_NAME = "app_name";
   private static final String APP_ICON = "app_title";
   private static final String APP_RATING = "app_rating";
 
   private ProgressDialog progressDialog;
-  private LoginManager facebookLoginManager;
-  private CallbackManager callbackManager;
   private Button facebookLoginButton;
-  private Button googleButton;
+  private Button googleLoginButton;
   private RatingBar appRating;
   private TextView appTitle;
   private ImageView appIcon;
   private View closeButton;
-  private PublishRelay<LoginResult> facebookLoginSubject;
-  private List<String> facebookRequestedPermissions;
   private ThrowableToStringMapper errorMapper;
-  private AlertDialog facebookEmailRequiredDialog;
+  private RxAlertDialog facebookEmailRequiredDialog;
   private ImageView previewSocialContent;
   private ImageView fakeToolbar;
   private ImageView loginProgressIndicator;
@@ -77,9 +70,6 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    facebookLoginManager = LoginManager.getInstance();
-    callbackManager = CallbackManager.Factory.create();
-    facebookLoginSubject = PublishRelay.create();
     errorMapper = new AccountErrorMapper(getContext());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
@@ -94,7 +84,7 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     facebookLoginButton = (Button) view.findViewById(R.id.not_logged_in_share_facebook_button);
-    googleButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
+    googleLoginButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
     appIcon = (ImageView) view.findViewById(R.id.not_logged_in_app_icon);
     appTitle = (TextView) view.findViewById(R.id.not_logged_int_app_title);
     closeButton = view.findViewById(R.id.not_logged_in_close);
@@ -105,21 +95,12 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
     previewSocialContent = (ImageView) view.findViewById(R.id.not_logged_in_preview_social_content);
     fakeToolbar = (ImageView) view.findViewById(R.id.fake_toolbar);
     loginProgressIndicator = (ImageView) view.findViewById(R.id.login_progress_indicator);
-    facebookRequestedPermissions = Arrays.asList("email", "user_friends");
 
-    RxView.clicks(facebookLoginButton)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(
-            __ -> facebookLoginManager.logInWithReadPermissions(NotLoggedInShareFragment.this,
-                facebookRequestedPermissions));
-
-    facebookEmailRequiredDialog = new AlertDialog.Builder(getContext()).setMessage(
+    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(R.string.facebook_grant_permission_button, (dialog, which) -> {
-          facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
-        })
-        .setNegativeButton(android.R.string.cancel, null)
-        .create();
+        .setPositiveButton(R.string.facebook_grant_permission_button)
+        .setNegativeButton(android.R.string.cancel)
+        .build();
 
     final ColorMatrixColorFilter zeroSaturationFilter = getColorMatrixColorFilter(0);
     appIcon.setColorFilter(zeroSaturationFilter);
@@ -133,57 +114,56 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
         .load(getArguments().getString(APP_ICON), appIcon);
 
     attachPresenter(new NotLoggedInSharePresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        CrashReport.getInstance(), accountManager), null);
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            CrashReport.getInstance(), accountManager,
+            new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
+                LoginManager.getInstance(), CallbackManager.Factory.create(),
+                ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+                PublishRelay.create()), Arrays.asList("email", "user_friends"), Arrays.asList("email")),
+        null);
   }
 
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    callbackManager.onActivityResult(requestCode, resultCode, data);
+  private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
+    return Analytics.Account.StartupClickOrigin.NOT_LOGGED_IN_DIALOG;
   }
 
   @Override public void showFacebookLogin() {
     facebookLoginButton.setVisibility(View.VISIBLE);
-    facebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-      @Override public void onSuccess(LoginResult loginResult) {
-        facebookLoginSubject.call(loginResult);
-      }
-
-      @Override public void onCancel() {
-        showFacebookCancelledError();
-        Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-            Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.CANCEL);
-      }
-
-      @Override public void onError(FacebookException error) {
-        Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-            Analytics.Account.SignUpLoginStatus.FAILED,
-            Analytics.Account.LoginStatusDetail.SDK_ERROR);
-        showFacebookLoginError();
-      }
-    });
   }
 
   @Override public void hideFacebookLogin() {
     facebookLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public void showFacebookLoginError() {
-    Snackbar.make(getRootView(), R.string.error_occured, Snackbar.LENGTH_LONG)
-        .show();
+  @Override public void showGoogleLogin() {
+    googleLoginButton.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showFacebookCancelledError() {
-    Snackbar.make(getRootView(), R.string.facebook_login_cancelled, Snackbar.LENGTH_LONG)
-        .show();
+  @Override public void hideGoogleLogin() {
+    googleLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public Observable<LoginResult> facebookLoginClick() {
-    return facebookLoginSubject;
+  @Override public Observable<Void> facebookSignInEvent() {
+    return RxView.clicks(facebookLoginButton)
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
+            getStartupClickOrigin()));
   }
 
-  @Override public void showPermissionsRequiredMessage() {
-    facebookEmailRequiredDialog.show();
+  @Override public Observable<Void> googleSignInEvent() {
+    return RxView.clicks(googleLoginButton)
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
+            getStartupClickOrigin()));
+  }
+
+  @Override public void showFacebookPermissionsRequiredError(Throwable throwable) {
+    if (!facebookEmailRequiredDialog.isShowing()) {
+      facebookEmailRequiredDialog.show();
+    }
+  }
+
+  @Override public Observable<Void> facebookSignInWithRequiredPermissionsInEvent() {
+    return facebookEmailRequiredDialog.positiveClicks()
+        .map(dialog -> null);
   }
 
   @Override public void showLoading() {
@@ -199,10 +179,6 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
         .show();
   }
 
-  @Override protected Button getGoogleButton() {
-    return googleButton;
-  }
-
   @Override public Observable<Void> closeClick() {
     return RxView.clicks(closeButton);
   }
@@ -213,10 +189,6 @@ public class NotLoggedInShareFragment extends GoogleLoginFragment implements Not
 
   @Override public void navigateToMainView() {
     finishWithResult(RESULT_OK);
-  }
-
-  @Override public Context getApplicationContext() {
-    return getActivity().getApplicationContext();
   }
 
   private View getRootView() {

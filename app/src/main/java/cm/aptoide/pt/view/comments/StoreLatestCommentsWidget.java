@@ -29,6 +29,9 @@ import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.store.StoreLatestCommentsDisplayable;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +70,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager,
+        getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+        PublishRelay.create());
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 

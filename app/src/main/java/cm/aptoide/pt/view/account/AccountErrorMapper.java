@@ -6,6 +6,8 @@ import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.ErrorsMapper;
+import cm.aptoide.pt.account.FacebookSignUpException;
+import cm.aptoide.pt.account.GoogleSignUpException;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 
@@ -20,7 +22,21 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
   @Override public String map(Throwable throwable) {
     String message = context.getString(R.string.unknown_error);
 
-    if (throwable instanceof AccountException) {
+    if (throwable instanceof GoogleSignUpException) {
+      message = context.getString(R.string.google_login_cancelled);
+    } else if (throwable instanceof FacebookSignUpException) {
+      switch (((FacebookSignUpException) throwable).getCode()) {
+        case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
+          message = context.getString(R.string.facebook_email_permission_regected_message);
+          break;
+        case FacebookSignUpException.USER_CANCELLED:
+          message = context.getString(R.string.facebook_login_cancelled);
+          break;
+        case FacebookSignUpException.ERROR:
+          message = context.getString(R.string.error_occured);
+          break;
+      }
+    } else if (throwable instanceof AccountException) {
 
       if (((AccountException) throwable).hasCode()) {
         message = context.getString(

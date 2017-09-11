@@ -113,7 +113,9 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.ShareAppHelper;
 import cm.aptoide.pt.view.store.StoreFragment;
 import com.crashlytics.android.answers.Answers;
+import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
@@ -306,7 +308,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getPurchaseBundleMapper();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager,
+        getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+        PublishRelay.create());
     permissionManager = new PermissionManager();
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);

@@ -6,20 +6,29 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideCredentials;
-import com.facebook.login.LoginResult;
+import cm.aptoide.pt.view.account.GooglePlayServicesView;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 07/02/17.
- */
-
-public interface LoginSignUpCredentialsView extends GoogleLoginView {
+public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   Observable<Void> showAptoideLoginAreaClick();
 
   Observable<Void> showAptoideSignUpAreaClick();
+
+  Observable<Void> googleLoginEvent();
+
+  Observable<Void> showHidePasswordClick();
+
+  Observable<Void> forgotPasswordClick();
+
+  Observable<Void> facebookSignInWithRequiredPermissionsInEvent();
+
+  Observable<Void> facebookSignInEvent();
+
+  Observable<AptoideCredentials> aptoideLoginEvent();
+
+  Observable<AptoideCredentials> aptoideSignUpEvent();
 
   void showAptoideSignUpArea();
 
@@ -33,7 +42,7 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   void showFacebookLogin();
 
-  void showPermissionsRequiredMessage();
+  void showFacebookPermissionsRequiredError(Throwable throwable);
 
   void hideFacebookLogin();
 
@@ -43,10 +52,6 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   void hidePassword();
 
-  Observable<Void> showHidePasswordClick();
-
-  Observable<Void> forgotPasswordClick();
-
   void dismiss();
 
   void hideKeyboard();
@@ -55,21 +60,7 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   void hideGoogleLogin();
 
-  void showFacebookLoginError();
-
-  void showFacebookCancelledError();
-
-  void showGoogleLoginError();
-
-  Observable<LoginResult> facebookLoginClick();
-
-  Observable<AptoideCredentials> aptoideLoginClick();
-
-  Observable<AptoideCredentials> aptoideSignUpClick();
-
   boolean tryCloseLoginBottomSheet();
-
-  @NonNull AptoideCredentials getCredentials();
 
   boolean isPasswordVisible();
 

@@ -8,64 +8,34 @@ package cm.aptoide.pt.view.account;
 import android.app.Dialog;
 import android.content.IntentSender;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.permission.PermissionServiceFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
 
-/**
- * Created by marcelobenites on 08/02/17.
- */
 public abstract class GooglePlayServicesFragment extends PermissionServiceFragment
-    implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    implements GooglePlayServicesView {
 
   private static final int RESOLVE_CONNECTION_ERROR_REQUEST_CODE = 1;
   private Dialog errorDialog;
   private GoogleApiAvailability apiAvailability;
-  private GoogleApiClient.Builder clientBuilder;
-  private boolean resolvingError;
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     apiAvailability = GoogleApiAvailability.getInstance();
-
-    clientBuilder = new GoogleApiClient.Builder(getActivity());
-    clientBuilder.addConnectionCallbacks(this);
-    clientBuilder.addOnConnectionFailedListener(this);
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-    dismissErrorDialog();
-  }
-
-  private void dismissErrorDialog() {
+  @Override public void onDestroyView() {
+    super.onDestroyView();
     if (errorDialog != null) {
       errorDialog.dismiss();
+      errorDialog = null;
     }
   }
 
-  protected GoogleApiClient.Builder getClientBuilder() {
-    return clientBuilder;
-  }
-
-  @Override public void onConnected(@Nullable Bundle bundle) {
-    // does nothing
-  }
-
-  @Override public void onConnectionSuspended(int i) {
-    // does nothing
-  }
-
-  @Override public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    if (resolvingError) {
-      return;
-    }
+  @Override public void showConnectionError(ConnectionResult connectionResult) {
     if (connectionResult.hasResolution()) {
       showResolution(connectionResult);
     } else {
@@ -76,11 +46,9 @@ public abstract class GooglePlayServicesFragment extends PermissionServiceFragme
   private void showResolution(ConnectionResult result) {
     try {
       result.startResolutionForResult(getActivity(), RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
-      resolvingError = true;
     } catch (IntentSender.SendIntentException e) {
       CrashReport.getInstance()
           .log(e);
-      connect();
     }
   }
 
@@ -89,15 +57,8 @@ public abstract class GooglePlayServicesFragment extends PermissionServiceFragme
       return;
     }
 
-    dismissErrorDialog();
-
     errorDialog = apiAvailability.getErrorDialog(getActivity(), errorCode,
         RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
-    errorDialog.setOnDismissListener(dialog -> resolvingError = false);
-
     errorDialog.show();
-    resolvingError = true;
   }
-
-  protected abstract void connect();
 }

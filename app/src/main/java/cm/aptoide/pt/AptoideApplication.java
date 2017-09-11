@@ -710,8 +710,8 @@ public abstract class AptoideApplication extends Application {
           .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
               new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
           .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
-              new FacebookSignUpAdapter(Arrays.asList("email", "user_friends"),
-                  LoginManager.getInstance(), getLoginPreferences()))
+              new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
+                  getLoginPreferences()))
           .build();
     }
     return accountManager;

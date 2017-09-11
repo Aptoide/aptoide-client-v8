@@ -45,7 +45,10 @@ import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.reviews.LanguageFilterHelper;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -129,7 +132,9 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
     bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getFragmentNavigator(), accountManager), bodyInterceptor, httpClient,
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
+            LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+            PublishRelay.create()), bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(), tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());

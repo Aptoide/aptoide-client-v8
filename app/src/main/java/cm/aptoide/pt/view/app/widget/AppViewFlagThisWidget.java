@@ -24,6 +24,9 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Map;
@@ -86,7 +89,10 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     baseBodyInterceptorV3 =
         ((AptoideApplication) getContext().getApplicationContext()).getBodyInterceptorV3();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator =
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
+            LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
+            PublishRelay.create());
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes()
         .getMeta()
