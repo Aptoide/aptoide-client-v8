@@ -80,8 +80,11 @@ public class Billing {
                 product, payload)))
         .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
-            return Completable.error(
-                new PaymentMethodNotAuthorizedException("Pending payment method authorization."));
+            return authorizationRepository.createAuthorization(transaction.getPaymentMethodId(),
+                Authorization.Status.INACTIVE)
+                .flatMapCompletable(authorization -> Completable.error(
+                    new PaymentMethodNotAuthorizedException(
+                        "Pending payment method authorization.")));
           }
 
           if (transaction.isFailed()) {

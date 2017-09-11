@@ -11,14 +11,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 public class VanillaApplication extends AptoideApplication {
 
-  @Override public LoginPreferences getLoginPreferences() {
-    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
-  }
-
-  @Override public String getFeedbackEmail() {
-    return "support@aptoide.com";
-  }
-
   @Override public String getCachePath() {
     return Environment.getExternalStorageDirectory()
         .getAbsolutePath() + "/.aptoide/";
@@ -30,6 +22,14 @@ public class VanillaApplication extends AptoideApplication {
 
   @Override public String getMarketName() {
     return "Aptoide";
+  }
+
+  @Override public LoginPreferences getLoginPreferences() {
+    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
+  }
+
+  @Override public String getFeedbackEmail() {
+    return "support@aptoide.com";
   }
 
   @Override public String getImageCachePath() {

@@ -23,12 +23,10 @@ import rx.schedulers.Schedulers;
 public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
   public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
-
-  private final MultiLangPatch multiLangPatch = new MultiLangPatch();
-
   protected final BaseAdapter adapter;
-  protected V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   protected final Action1 successRequestListener;
+  private final MultiLangPatch multiLangPatch = new MultiLangPatch();
+  protected V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   protected ErrorRequestListener errorRequestListener;
   protected int lastTotal;
   protected int total;
@@ -191,20 +189,20 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     }
   }
 
-  public interface BooleanAction<T extends BaseV7Response> {
-    boolean call(T response);
-  }
-
-  public interface OnEndlessFinish {
-    void onEndlessFinish(EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener);
-  }
-
   public void reset(V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request) {
     this.v7request = v7request;
 
     multiLangPatch.updateOffset();
     offset = -1;
     total = 0;
+  }
+
+  public interface BooleanAction<T extends BaseV7Response> {
+    boolean call(T response);
+  }
+
+  public interface OnEndlessFinish {
+    void onEndlessFinish(EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener);
   }
 
   private class MultiLangPatch {

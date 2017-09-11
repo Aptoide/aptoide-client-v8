@@ -32,15 +32,14 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.filemanager.FileManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -81,7 +80,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
-  private PermissionManager permissionManager;
   private AdultContent adultContent;
 
   private RxAlertDialog adultContentConfirmationDialog;
@@ -95,10 +93,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private CheckBoxPreference adultContentWithPinPreferenceView;
   private CheckBoxPreference socialCampaignNotifications;
   private boolean trackAnalytics;
-  private NotificationCenter notificationCenter;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
   private String marketName;
+  private Database database;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -110,9 +108,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     trackAnalytics = true;
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
     fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
-    permissionManager = new PermissionManager();
     adultContentConfirmationDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
             .setPositiveButton(R.string.yes)
@@ -138,8 +136,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .setEditText(R.id.pininput)
         .build();
 
-    notificationCenter =
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
@@ -192,18 +188,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-          ((AptoideApplication) getContext().getApplicationContext()).getDatabase(), Update.class);
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(database, Update.class);
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
           ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
-          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
-            CrashReport.getInstance()
-                .log(throwable);
-          });
+          .subscribe(updates -> Logger.d(TAG, "updates refreshed"),
+              throwable -> CrashReport.getInstance()
+                  .log(throwable));
     }
   }
 

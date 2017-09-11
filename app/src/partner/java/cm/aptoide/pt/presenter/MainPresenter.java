@@ -36,13 +36,13 @@ public class MainPresenter implements Presenter {
   private final SharedPreferences securePreferences;
   private final FragmentNavigator fragmentNavigator;
   private final DeepLinkManager deepLinkManager;
+  private final String defaultStore;
+  private final String defaultTheme;
   private NotificationSyncScheduler notificationSyncScheduler;
   private InstallCompletedNotifier installCompletedNotifier;
   private ApkFy apkFy;
   private AutoUpdate autoUpdate;
   private boolean firstCreated;
-  private final String defaultStore;
-  private final String defaultTheme;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,

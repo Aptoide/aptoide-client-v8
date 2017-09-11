@@ -1,5 +1,7 @@
 package cm.aptoide.pt.social.data;
 
+import android.os.Handler;
+import android.os.Looper;
 import rx.Single;
 
 /**
@@ -26,6 +28,7 @@ public class AdPost extends DummyPost {
   }
 
   public void init() {
-    adsRepository.fetchAd();
+    Handler handler = new Handler(Looper.getMainLooper());
+    handler.post(() -> adsRepository.fetchAd());
   }
 }

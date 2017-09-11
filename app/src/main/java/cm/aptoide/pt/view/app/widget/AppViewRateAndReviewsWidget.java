@@ -210,8 +210,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
         new LanguageFilterHelper(getContext().getResources()).getCurrentLanguageFirst()
             .getCountryCodes();
     Subscription subscription =
-        createReviewsRequest(storeName, packageName, storeCredentials, countryCodes.get(0))
-            .observe(true)
+        createReviewsRequest(storeName, packageName, storeCredentials, countryCodes.get(0)).observe(
+            true)
             .flatMap(listReviews -> {
               if (listReviews.getDataList()
                   .getList()
