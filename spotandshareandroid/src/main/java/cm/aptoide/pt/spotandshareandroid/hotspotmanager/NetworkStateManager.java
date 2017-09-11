@@ -28,8 +28,8 @@ class NetworkStateManager {
   }
 
   public Single<Boolean> restoreNetworkState() {
-    wifimanager.disconnect();
-    return setWifiEnabled(wifiEnabledOnStart);
+    return Single.fromCallable(() -> wifimanager.disconnect())
+        .doOnSuccess(aBoolean -> setWifiEnabled(wifiEnabledOnStart));
   }
 
   public Single<Boolean> isWifiEnabled() {
