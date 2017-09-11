@@ -1,148 +1,41 @@
 package cm.aptoide.pt.view.navigator;
 
-import android.content.SharedPreferences;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.view.store.home.HomeFragment;
+import rx.Observable;
 
-public class FragmentNavigator {
+/**
+ * Created by trinkes on 08/09/2017.
+ */
 
-  private final FragmentManager fragmentManager;
-  private final int containerId;
-  private final int exitAnimation;
-  private final int enterAnimation;
-  private final SharedPreferences sharedPreferences;
-  private final String defaultStore;
-  private final String defaultTheme;
+public interface FragmentNavigator {
+  void navigateWithoutReplace(Fragment fragment);
 
-  public FragmentNavigator(FragmentManager fragmentManager, @IdRes int containerId,
-      int enterAnimation, int exitAnimation, SharedPreferences sharedPreferences,
-      String defaultStore, String defaultTheme) {
-    this.fragmentManager = fragmentManager;
-    this.containerId = containerId;
-    this.enterAnimation = enterAnimation;
-    this.exitAnimation = exitAnimation;
-    this.sharedPreferences = sharedPreferences;
-    this.defaultStore = defaultStore;
-    this.defaultTheme = defaultTheme;
-  }
+  void navigateForResult(NavigateFragment fragment, int requestCode);
 
-  public void navigateWithoutReplace(Fragment fragment) {
-    String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
-    prepareFragmentAdd(fragment, tag).commit();
-  }
+  Observable<Result> results(int requestCode);
 
-  private FragmentTransaction prepareFragmentAdd(Fragment fragment, String tag) {
-    return fragmentManager.beginTransaction()
-        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
-        .addToBackStack(tag)
-        .add(containerId, fragment);
-  }
+  void popWithResult(Result result);
 
-  public void navigateUsing(Event event, String storeTheme, String title, String tag,
-      StoreContext storeContext) {
-    Fragment fragment;
+  void navigateUsing(Event event, String storeTheme, String title, String tag,
+      StoreContext storeContext);
 
-    // TODO: 22/12/2016 refactor this using the rules present in "StoreTabGridRecyclerFragment.java"
-    if (event.getName() == Event.Name.listComments) {
-      String action = event.getAction();
-      String url = action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
+  String navigateTo(Fragment fragment);
 
-      fragment = AptoideApplication.getFragmentProvider()
-          .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url, "View Comments");
-    } else {
-      fragment = AptoideApplication.getFragmentProvider()
-          .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);
-    }
+  String navigateToAllowingStateLoss(Fragment fragment);
 
-    navigateTo(fragment);
-  }
+  void navigateToWithoutBackSave(Fragment fragment);
 
-  public String navigateTo(Fragment fragment) {
-    String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
-    prepareFragmentReplace(fragment, tag).commit();
+  void navigateToHomeCleaningBackStack();
 
-    return tag;
-  }
+  boolean popBackStack();
 
-  public String navigateToAllowingStateLoss(Fragment fragment) {
-    // add current fragment
-    String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
-    prepareFragmentReplace(fragment, tag).commitAllowingStateLoss();
+  void cleanBackStack();
 
-    return tag;
-  }
+  boolean cleanBackStackUntil(String fragmentTag);
 
-  private FragmentTransaction prepareFragmentReplace(Fragment fragment, String tag) {
-    return fragmentManager.beginTransaction()
-        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
-        .addToBackStack(tag)
-        .replace(containerId, fragment, tag);
-  }
+  Fragment peekLast();
 
-  /**
-   * Only use this method when it is navigating to the first fragment in the activity.
-   */
-  public void navigateToWithoutBackSave(Fragment fragment) {
-    fragmentManager.beginTransaction()
-        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
-        .replace(containerId, fragment)
-        .commit();
-  }
-
-  public void navigateToHomeCleaningBackStack() {
-    Fragment home = HomeFragment.newInstance(defaultStore, defaultTheme);
-    cleanBackStack();
-    navigateToWithoutBackSave(home);
-  }
-
-  public boolean popBackStack() {
-    return fragmentManager.popBackStackImmediate();
-  }
-
-  public void cleanBackStack() {
-    for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
-      fragmentManager.popBackStack();
-    }
-    fragmentManager.executePendingTransactions();
-  }
-
-  public boolean cleanBackStackUntil(String fragmentTag) {
-    if (fragmentManager.getBackStackEntryCount() == 0) {
-      return false;
-    }
-
-    boolean popped = false;
-
-    while (fragmentManager.getBackStackEntryCount() > 0 && !popped) {
-      if (fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1)
-          .getName()
-          .equals(fragmentTag)) {
-        popped = true;
-      }
-      fragmentManager.popBackStackImmediate();
-    }
-    return popped;
-  }
-
-  public Fragment peekLast() {
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      FragmentManager.BackStackEntry backStackEntry =
-          fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
-      return fragmentManager.findFragmentByTag(backStackEntry.getName());
-    }
-
-    return null;
-  }
-
-  public Fragment getFragment() {
-    return fragmentManager.findFragmentById(containerId);
-  }
+  Fragment getFragment();
 }

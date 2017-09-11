@@ -3,7 +3,6 @@ package cm.aptoide.pt.view.share;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +40,8 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
   private TextView closeText;
   private TextView dontShowAgain;
 
-  public Fragment newInstance(GetAppMeta.App app) {
-    Fragment fragment = new NotLoggedInShareFragment();
+  public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
+    NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
     Bundle bundle = new Bundle();
     bundle.putString(APP_NAME, app.getName());
     bundle.putString(APP_ICON, app.getIcon());
@@ -116,10 +115,14 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
   }
 
   @Override public void closeFragment() {
-    getFragmentNavigator().popBackStack();
+    finishWithResult(RESULT_CANCELED);
   }
 
   @Override public Observable<Void> dontShowAgainClick() {
     return RxView.clicks(dontShowAgain);
+  }
+
+  @Override public void navigateToMainView() {
+    finishWithResult(RESULT_OK);
   }
 }

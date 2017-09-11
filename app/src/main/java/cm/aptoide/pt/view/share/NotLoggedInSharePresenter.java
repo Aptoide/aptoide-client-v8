@@ -29,6 +29,7 @@ public class NotLoggedInSharePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.initializeFacebookCallback())
         .flatMap(__ -> view.facebookLoginClick())
+        .doOnCompleted(() -> view.closeFragment())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {

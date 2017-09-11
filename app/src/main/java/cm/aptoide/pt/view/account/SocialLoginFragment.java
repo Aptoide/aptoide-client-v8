@@ -215,16 +215,6 @@ public abstract class SocialLoginFragment extends GooglePlayServicesFragment
     });
   }
 
-  @Override public void navigateToMainView() {
-    if (dismissToNavigateToMainView) {
-      getActivity().finish();
-    } else if (navigateToHome) {
-      navigateToMainViewCleaningBackStack();
-    } else {
-      navigateBack();
-    }
-  }
-
   @Override public void navigateToCreateProfile() {
     fragmentNavigator.cleanBackStack();
     fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToCreate());

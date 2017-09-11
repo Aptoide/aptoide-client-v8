@@ -150,6 +150,16 @@ public class LoginSignUpCredentialsFragment extends SocialLoginFragment
     super.bindViews(view);
   }
 
+  @Override public void navigateToMainView() {
+    if (dismissToNavigateToMainView) {
+      getActivity().finish();
+    } else if (navigateToHome) {
+      navigateToMainViewCleaningBackStack();
+    } else {
+      navigateBack();
+    }
+  }
+
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
