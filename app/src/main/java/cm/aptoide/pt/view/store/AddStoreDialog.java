@@ -46,6 +46,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.view.search.StoreSearchActivity;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
@@ -151,14 +152,14 @@ public class AddStoreDialog extends BaseDialog {
 
   @Override public void show(FragmentManager manager, String tag) {
     if (navigator == null) {
-      Logger.w(TAG, FragmentNavigator.class.getName() + " is null.");
+      Logger.w(TAG, FragmentResultNavigator.class.getName() + " is null.");
     }
     super.show(manager, tag);
   }
 
   @Override public int show(FragmentTransaction transaction, String tag) {
     if (navigator == null) {
-      Logger.w(TAG, FragmentNavigator.class.getName() + " is null.");
+      Logger.w(TAG, FragmentResultNavigator.class.getName() + " is null.");
     }
     return super.show(transaction, tag);
   }

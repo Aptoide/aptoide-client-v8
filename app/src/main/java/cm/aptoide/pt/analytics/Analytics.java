@@ -515,7 +515,8 @@ public class Analytics {
     }
 
     public enum StartupClickOrigin {
-      MAIN("Main"), JOIN_UP("Join Aptoide Slide Up"), LOGIN_UP("Login Slide Up");
+      MAIN("Main"), JOIN_UP("Join Aptoide Slide Up"), LOGIN_UP(
+          "Login Slide Up"), NOT_LOGGED_IN_DIALOG("Not logged in Dialog");
 
       private String clickOrigin;
 

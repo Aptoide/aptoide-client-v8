@@ -1,7 +1,6 @@
 package cm.aptoide.pt.view.navigator;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import rx.Observable;
@@ -27,29 +26,4 @@ public interface ActivityNavigator {
   void navigateBack();
 
   void navigateTo(Uri uri);
-
-  class Result {
-
-    private final int requestCode;
-    private final int resultCode;
-    private final Intent data;
-
-    public Result(int requestCode, int resultCode, Intent data) {
-      this.requestCode = requestCode;
-      this.resultCode = resultCode;
-      this.data = data;
-    }
-
-    public int getRequestCode() {
-      return requestCode;
-    }
-
-    public int getResultCode() {
-      return resultCode;
-    }
-
-    public Intent getData() {
-      return data;
-    }
-  }
 }
