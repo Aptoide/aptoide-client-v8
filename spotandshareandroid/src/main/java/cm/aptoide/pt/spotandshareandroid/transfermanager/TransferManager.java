@@ -61,8 +61,6 @@ public class TransferManager {
       }
 
       @Override public void onFinishTransfer(AndroidAppInfo androidAppInfo) {
-        // TODO: 14-07-2017 neuro martelado
-        transferSending.state = Transfer.State.ERROR;
         transferSending.behaviorRelay.call(transferSending);
       }
 
