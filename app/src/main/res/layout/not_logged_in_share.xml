@@ -7,12 +7,12 @@
     android:background="@color/semi_transparent_black"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp"
     >
 
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:padding="24dp"
       >
 
     <LinearLayout
@@ -89,6 +89,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="8dp"
+          android:scaleType='fitXY'
           android:src="@drawable/ic_no_login_share_progress_bar"
           />
 
@@ -105,6 +106,7 @@
           android:layout_width="250dp"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
+          android:layout_marginTop="10dp"
           >
         <ImageView
             android:id="@+id/fake_toolbar"
@@ -280,9 +282,13 @@
   </ScrollView>
   <ImageView
       android:id="@+id/not_logged_in_close"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:padding="5dp"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:background="@drawable/circle"
+      android:padding="8dp"
       android:src="@drawable/ic_close_black_24dp"
       />
 </RelativeLayout>
