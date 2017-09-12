@@ -4,15 +4,18 @@
  */
 
 include ':Partners-v8',
-    ':v8engine',
-    ':dataprovider',
-    ':model',
-    ':networkclient',
-    ':aptoidepreferences',
-    ':utilsdesign',
-    ':crashreports',
-    ':utils',
-    ':aptoide_accountmanager',
-    ':database',
-    ':imageloader',
-    ':downloadmanager'
+        ':v8engine',
+        ':dataprovider',
+        ':model',
+        ':networkclient',
+        ':aptoidepreferences',
+        ':utilsdesign',
+        ':crashreports',
+        ':utils',
+        ':aptoide_accountmanager',
+        ':database',
+        ':imageloader',
+        ':downloadmanager',
+        ':postrsdkcore',
+        /*':baidu',*/
+        ':appnexus'

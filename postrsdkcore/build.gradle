@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('postrsdkcore-v2.2.1.aar'))
