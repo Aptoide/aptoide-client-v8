@@ -16,4 +16,8 @@ public interface ShareAptoideView extends View {
   Observable<Void> exitEvent();
 
   void navigateBack();
+
+  void onLeaveGroupError();
+
+  void onCreateGroupError(Throwable throwable);
 }
