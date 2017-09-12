@@ -5,11 +5,19 @@
 
 package cm.aptoide.pt.view.account;
 
+import android.app.Activity;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.view.account.store.ManageStoreFragment;
+import cm.aptoide.pt.view.account.user.ManageUserFragment;
+import cm.aptoide.pt.view.account.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.navigator.Result;
+import cm.aptoide.pt.view.share.NotLoggedInShareFragment;
+import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -33,12 +41,15 @@ public class AccountNavigator {
   private final LoginManager facebookLoginManager;
   private final CallbackManager callbackManager;
   private final GoogleApiClient client;
-  private PublishRelay<FacebookLoginResult> facebookLoginSubject;
+  private final PublishRelay<FacebookLoginResult> facebookLoginSubject;
+  private final String defaultStore;
+  private final String defaultTheme;
 
   public AccountNavigator(FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       ActivityNavigator activityNavigator, LoginManager facebookLoginManager,
       CallbackManager callbackManager, GoogleApiClient client,
-      PublishRelay<FacebookLoginResult> facebookLoginSubject) {
+      PublishRelay<FacebookLoginResult> facebookLoginSubject, String defaultStore,
+      String defaultTheme) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
     this.activityNavigator = activityNavigator;
@@ -46,6 +57,8 @@ public class AccountNavigator {
     this.callbackManager = callbackManager;
     this.client = client;
     this.facebookLoginSubject = facebookLoginSubject;
+    this.defaultStore = defaultStore;
+    this.defaultTheme = defaultTheme;
   }
 
   public void navigateToAccountView(Analytics.Account.AccountOrigins accountOrigins) {
@@ -57,7 +70,7 @@ public class AccountNavigator {
     }
   }
 
-  public Single<ConnectionResult> navigateToGoogleSignInForResult(int requestCode) {
+  public Single<ConnectionResult> navigateToGoogleSignUpForResult(int requestCode) {
     return Single.fromCallable(() -> {
       final ConnectionResult connectionResult = client.blockingConnect();
       if (connectionResult.isSuccess()) {
@@ -69,13 +82,13 @@ public class AccountNavigator {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<GoogleSignInResult> googleSignInResults(int requestCode) {
+  public Observable<GoogleSignInResult> googleSignUpResults(int requestCode) {
     return activityNavigator.results(requestCode)
         .map(result -> Auth.GoogleSignInApi.getSignInResultFromIntent(result.getData()))
         .doOnNext(result -> client.disconnect());
   }
 
-  public void navigateToFacebookSignInForResult(Collection<String> permissions) {
+  public void navigateToFacebookSignUpForResult(Collection<String> permissions) {
     facebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
       @Override public void onSuccess(LoginResult loginResult) {
         facebookLoginSubject.call(
@@ -95,10 +108,46 @@ public class AccountNavigator {
     facebookLoginManager.logInWithReadPermissions(activityNavigator.getActivity(), permissions);
   }
 
-  public Observable<FacebookLoginResult> facebookSignInResults() {
+  public Observable<FacebookLoginResult> facebookSignUpResults() {
     return Observable.combineLatest(activityNavigator.results()
             .filter(result -> callbackManager.onActivityResult(result.getRequestCode(),
                 result.getResultCode(), result.getData())), facebookLoginSubject,
         (result, loginResult) -> loginResult);
+  }
+
+  public void popNotLoggedInViewWithResult(int requestCode, boolean success) {
+    fragmentNavigator.popWithResult(
+        new Result(requestCode, (success ? Activity.RESULT_OK : Activity.RESULT_CANCELED), null));
+  }
+
+  public void navigateToNotLoggedInViewForResult(int requestCode, GetAppMeta.App app) {
+    fragmentNavigator.navigateForResult(NotLoggedInShareFragment.newInstance(app), requestCode);
+  }
+
+  public Observable<Boolean> notLoggedInViewResults(int requestCode) {
+    return fragmentNavigator.results(requestCode)
+        .map(result -> result.getResultCode() == Activity.RESULT_OK);
+  }
+
+  public void navigateToHomeView() {
+    fragmentNavigator.navigateToCleaningBackStack(
+        HomeFragment.newInstance(defaultStore, defaultTheme));
+  }
+
+  public void popView() {
+    fragmentNavigator.popBackStack();
+  }
+
+  public void navigateToCreateProfileView() {
+    fragmentNavigator.navigateToCleaningBackStack(ManageUserFragment.newInstanceToCreate());
+  }
+
+  public void navigateToProfileStepTwoView() {
+    fragmentNavigator.navigateToCleaningBackStack(ProfileStepTwoFragment.newInstance());
+  }
+
+  public void navigateToCreateStoreView() {
+    fragmentNavigator.navigateToCleaningBackStack(
+        ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), true));
   }
 }

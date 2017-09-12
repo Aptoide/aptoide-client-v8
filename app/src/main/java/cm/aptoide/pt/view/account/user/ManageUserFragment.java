@@ -111,7 +111,9 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     Bundle args = getArguments();
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
 
-    navigator = new ManageUserNavigator(getFragmentNavigator());
+    navigator = new ManageUserNavigator(getFragmentNavigator(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
     fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);

@@ -55,7 +55,7 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
   }
 
   public void openAppview(FragmentNavigator navigator) {
-    navigator.navigateToAllowingStateLoss(AptoideApplication.getFragmentProvider()
+    navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newAppViewFragment(getPojo().getMd5()));
   }
 

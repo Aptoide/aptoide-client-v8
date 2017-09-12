@@ -14,7 +14,9 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
 import rx.Observable;
@@ -27,6 +29,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
   private Button privateProfileBtn;
   private ProgressDialog waitDialog;
   private boolean externalLogin;
+  private AccountNavigator accountNavigator;
 
   public static ProfileStepTwoFragment newInstance() {
     return new ProfileStepTwoFragment();
@@ -34,6 +37,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
         getContext().getString(R.string.please_wait));
   }
@@ -100,7 +104,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
         ((AptoideApplication) applicationContext).getAccountManager();
     ProfileStepTwoPresenter presenter =
         new ProfileStepTwoPresenter(this, accountManager, CrashReport.getInstance(),
-            getFragmentNavigator());
+            getFragmentNavigator(), accountNavigator);
     attachPresenter(presenter, null);
   }
 

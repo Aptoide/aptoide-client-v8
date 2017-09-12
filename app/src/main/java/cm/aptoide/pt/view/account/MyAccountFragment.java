@@ -42,6 +42,8 @@ import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
@@ -79,6 +81,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
+  private AccountNavigator accountNavigator;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
@@ -119,6 +122,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
     notificationSubject = PublishSubject.create();
@@ -231,7 +235,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   }
 
   @Override public void navigateToHome() {
-    getFragmentNavigator().navigateToHomeCleaningBackStack();
+    accountNavigator.navigateToHomeView();
   }
 
   @Override public void showHeader() {

@@ -14,8 +14,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.account.AccountNavigator;
-import cm.aptoide.pt.view.account.user.ManageUserFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import java.util.Collection;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,7 +23,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private static final int RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE = 2;
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
-  private final FragmentNavigator fragmentNavigator;
   private final CrashReport crashReport;
   private final boolean navigateToHome;
   private final AccountNavigator accountNavigator;
@@ -35,13 +32,12 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
-      AptoideAccountManager accountManager, FragmentNavigator fragmentNavigator,
-      CrashReport crashReport, boolean dismissToNavigateToMainView, boolean navigateToHome,
+      AptoideAccountManager accountManager, CrashReport crashReport,
+      boolean dismissToNavigateToMainView, boolean navigateToHome,
       AccountNavigator accountNavigator, Collection<String> permissions,
       Collection<String> requiredPermissions) {
     this.view = view;
     this.accountManager = accountManager;
-    this.fragmentNavigator = fragmentNavigator;
     this.crashReport = crashReport;
     this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
@@ -54,15 +50,15 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
     handleAptoideLoginEvent();
 
-    handleGoogleSignInEvent();
-    handleGoogleSignInResult();
+    handleGoogleSignUpEvent();
+    handleGoogleSignUpResult();
 
-    handleFacebookSignInEvent();
-    handleFacebookSignInResult();
-    handleFacebookSignInWithRequiredPermissionsEvent();
+    handleFacebookSignUpEvent();
+    handleFacebookSignUpResult();
+    handleFacebookSignUpWithRequiredPermissionsEvent();
 
-    handleAptoideShowLoginClick();
-    handleAptoideShowSignUpClick();
+    handleAptoideShowLoginEvent();
+    handleAptoideShowSignUpEvent();
     handleAptoideSignUpEvent();
     handleAccountStatusChangeWhileShowingView();
     handleForgotPasswordClick();
@@ -159,7 +155,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe();
   }
 
-  private void handleAptoideShowLoginClick() {
+  private void handleAptoideShowLoginEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> aptoideShowLoginClick())
@@ -172,10 +168,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         });
   }
 
-  private void handleAptoideShowSignUpClick() {
+  private void handleAptoideShowSignUpEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> aptoideShowSignUpClick())
+        .flatMap(__ -> showAptoideSignUpEvent())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
@@ -202,15 +198,15 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
             .log(err));
   }
 
-  private void handleGoogleSignInEvent() {
+  private void handleGoogleSignUpEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> showOrHideGoogleLogin())
-        .flatMap(__ -> view.googleLoginEvent())
+        .doOnNext(__ -> showOrHideGoogleSignUp())
+        .flatMap(__ -> view.googleSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
         })
-        .flatMapSingle(event -> accountNavigator.navigateToGoogleSignInForResult(
+        .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
             RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
         .doOnNext(connectionResult -> {
           if (!connectionResult.isSuccess()) {
@@ -227,10 +223,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         });
   }
 
-  private void handleGoogleSignInResult() {
+  private void handleGoogleSignUpResult() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> accountNavigator.googleSignInResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
+        .flatMap(__ -> accountNavigator.googleSignUpResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
@@ -253,14 +249,14 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe();
   }
 
-  private void handleFacebookSignInEvent() {
+  private void handleFacebookSignUpEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> showOrHideFacebookLogin())
-        .flatMap(__ -> view.facebookSignInEvent())
+        .doOnNext(__ -> showOrHideFacebookSignUp())
+        .flatMap(__ -> view.facebookSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
-          accountNavigator.navigateToFacebookSignInForResult(permissions);
+          accountNavigator.navigateToFacebookSignUpForResult(permissions);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -271,13 +267,13 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         });
   }
 
-  private void handleFacebookSignInWithRequiredPermissionsEvent() {
+  private void handleFacebookSignUpWithRequiredPermissionsEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.facebookSignInWithRequiredPermissionsInEvent())
+        .flatMap(__ -> view.facebookSignUpWithRequiredPermissionsInEvent())
         .doOnNext(event -> {
           view.showLoading();
-          accountNavigator.navigateToFacebookSignInForResult(requiredPermissions);
+          accountNavigator.navigateToFacebookSignUpForResult(requiredPermissions);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -288,10 +284,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         });
   }
 
-  private void handleFacebookSignInResult() {
+  private void handleFacebookSignUpResult() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> accountNavigator.facebookSignInResults()
+        .flatMap(__ -> accountNavigator.facebookSignUpResults()
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
@@ -345,7 +341,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .doOnNext(__ -> view.showAptoideLoginArea());
   }
 
-  private Observable<Void> aptoideShowSignUpClick() {
+  private Observable<Void> showAptoideSignUpEvent() {
     return view.showAptoideSignUpAreaClick()
         .doOnNext(__ -> view.showAptoideSignUpArea());
   }
@@ -366,7 +362,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         });
   }
 
-  private void showOrHideFacebookLogin() {
+  private void showOrHideFacebookSignUp() {
     if (accountManager.isSignUpEnabled(FacebookSignUpAdapter.TYPE)) {
       view.showFacebookLogin();
     } else {
@@ -374,7 +370,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     }
   }
 
-  private void showOrHideGoogleLogin() {
+  private void showOrHideGoogleSignUp() {
     if (accountManager.isSignUpEnabled(GoogleSignUpAdapter.TYPE)) {
       view.showGoogleLogin();
     } else {
@@ -405,15 +401,14 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void navigateToCreateProfile() {
-    fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToCreate());
+    accountNavigator.navigateToCreateProfileView();
   }
 
   private void navigateToMainViewCleaningBackStack() {
-    fragmentNavigator.navigateToHomeCleaningBackStack();
+    accountNavigator.navigateToHomeView();
   }
 
   private void navigateBack() {
-    fragmentNavigator.popBackStack();
+    accountNavigator.popView();
   }
 }

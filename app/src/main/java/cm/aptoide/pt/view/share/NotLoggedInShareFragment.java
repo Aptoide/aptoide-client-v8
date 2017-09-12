@@ -25,13 +25,11 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.account.AccountErrorMapper;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.account.GooglePlayServicesFragment;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
-import com.facebook.CallbackManager;
-import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Arrays;
 import rx.Observable;
 
@@ -55,6 +53,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private ImageView fakeToolbar;
   private ImageView loginProgressIndicator;
   private AptoideAccountManager accountManager;
+  private int requestCode;
 
   public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
@@ -73,6 +72,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     errorMapper = new AccountErrorMapper(getContext());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
   }
 
   @Nullable @Override
@@ -114,13 +114,10 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
         .load(getArguments().getString(APP_ICON), appIcon);
 
     attachPresenter(new NotLoggedInSharePresenter(this,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            CrashReport.getInstance(), accountManager,
-            new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
-                LoginManager.getInstance(), CallbackManager.Factory.create(),
-                ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
-                PublishRelay.create()), Arrays.asList("email", "user_friends"), Arrays.asList("email")),
-        null);
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        CrashReport.getInstance(), accountManager,
+        ((ActivityResultNavigator) getContext()).getAccountNavigator(),
+        Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode), null);
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
@@ -143,13 +140,13 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     googleLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Void> facebookSignInEvent() {
+  @Override public Observable<Void> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
             getStartupClickOrigin()));
   }
 
-  @Override public Observable<Void> googleSignInEvent() {
+  @Override public Observable<Void> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
             getStartupClickOrigin()));
@@ -161,7 +158,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     }
   }
 
-  @Override public Observable<Void> facebookSignInWithRequiredPermissionsInEvent() {
+  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
     return facebookEmailRequiredDialog.positiveClicks()
         .map(dialog -> null);
   }
@@ -179,20 +176,12 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
         .show();
   }
 
-  @Override public Observable<Void> closeClick() {
-    return RxView.clicks(closeButton);
-  }
-
-  @Override public void closeFragment() {
-    finishWithResult(RESULT_CANCELED);
-  }
-
-  @Override public void navigateToMainView() {
-    finishWithResult(RESULT_OK);
-  }
-
   private View getRootView() {
     return getActivity().findViewById(android.R.id.content);
+  }
+
+  @Override public Observable<Void> closeEvent() {
+    return RxView.clicks(closeButton);
   }
 
   private ColorMatrixColorFilter getColorMatrixColorFilter(float saturation) {

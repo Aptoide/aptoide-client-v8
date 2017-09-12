@@ -5,21 +5,17 @@ import rx.Observable;
 
 public interface NotLoggedInShareView extends GooglePlayServicesView {
 
-  Observable<Void> closeClick();
+  Observable<Void> closeEvent();
 
-  void closeFragment();
+  Observable<Void> facebookSignUpEvent();
 
-  void navigateToMainView();
+  Observable<Void> googleSignUpEvent();
+
+  Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
 
   void showError(Throwable throwable);
 
-  Observable<Void> facebookSignInEvent();
-
-  Observable<Void> googleSignInEvent();
-
   void showFacebookPermissionsRequiredError(Throwable throwable);
-
-  Observable<Void> facebookSignInWithRequiredPermissionsInEvent();
 
   void showLoading();
 

@@ -32,7 +32,6 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.comments.CommentDisplayable;
 import cm.aptoide.pt.view.comments.CommentsAdapter;
@@ -42,13 +41,11 @@ import cm.aptoide.pt.view.comments.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.view.comments.SimpleReviewCommentAdder;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
-import com.facebook.CallbackManager;
-import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import lombok.Getter;
@@ -188,9 +185,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onViewCreated() {
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
-            LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
-            PublishRelay.create()), baseBodyInterceptor,
+        ((ActivityResultNavigator) getContext()).getAccountNavigator(), baseBodyInterceptor,
         httpClient, converterFactory, installedRepository, tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());

@@ -7,8 +7,7 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.account.AccountNavigator;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -18,14 +17,14 @@ public class ProfileStepOnePresenter implements Presenter {
   private final ProfileStepOneView view;
   private final CrashReport crashReport;
   private final AptoideAccountManager accountManager;
-  private final FragmentNavigator fragmentNavigator;
+  private final AccountNavigator accountNavigator;
 
   public ProfileStepOnePresenter(ProfileStepOneView view, CrashReport crashReport,
-      AptoideAccountManager accountManager, FragmentNavigator fragmentNavigator) {
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
-    this.fragmentNavigator = fragmentNavigator;
+    this.accountNavigator = accountNavigator;
   }
 
   @Override public void present() {
@@ -39,9 +38,9 @@ public class ProfileStepOnePresenter implements Presenter {
                 .doOnCompleted(() -> view.dismissWaitDialog())
                 .doOnCompleted(() -> {
                   if (isExternalLogin) {
-                    navigateToHome();
+                    accountNavigator.navigateToHomeView();
                   } else {
-                    navigateToCreateStore();
+                    accountNavigator.navigateToCreateStoreView();
                   }
                 })
                 .toObservable())
@@ -51,7 +50,7 @@ public class ProfileStepOnePresenter implements Presenter {
     Observable<Void> handleMoreInfoClick = view.moreInfoButtonClick()
         .doOnNext(__ -> Analytics.Account.accountProfileAction(1,
             Analytics.Account.ProfileAction.MORE_INFO))
-        .doOnNext(__ -> navigateToProfileStepTwoView());
+        .doOnNext(__ -> accountNavigator.navigateToProfileStepTwoView());
 
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
@@ -67,21 +66,6 @@ public class ProfileStepOnePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
-  }
-
-  private void navigateToProfileStepTwoView() {
-    fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(ProfileStepTwoFragment.newInstance());
-  }
-
-  private void navigateToHome() {
-    fragmentNavigator.navigateToHomeCleaningBackStack();
-  }
-
-  private void navigateToCreateStore() {
-    fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(
-        ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), true));
   }
 
   private Completable makeUserProfilePublic() {

@@ -59,12 +59,13 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.view.install.InstallWarningDialog;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import cm.aptoide.pt.view.share.NotLoggedInShareFragment;
 import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -108,6 +109,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private String marketName;
   private boolean createStoreUserPrivacyEnabled;
   private SharedPreferences sharedPreferences;
+  private AccountNavigator accountNavigator;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -141,6 +143,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
 
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     createStoreUserPrivacyEnabled =
         ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled();
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
@@ -550,9 +553,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   } else if (!accountManager.isLoggedIn()
                       && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
                       || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
-                    NotLoggedInShareFragment fragment = NotLoggedInShareFragment.newInstance(app);
-                    getFragmentNavigator().navigateForResultWithoutReplace(fragment,
-                        AppViewFragment.LOGIN_REQUEST_CODE);
+                    accountNavigator.navigateToNotLoggedInViewForResult(
+                        AppViewFragment.LOGIN_REQUEST_CODE, app);
                   }
                   ShowMessage.asSnack(v, installOrUpgradeMsg);
                 });

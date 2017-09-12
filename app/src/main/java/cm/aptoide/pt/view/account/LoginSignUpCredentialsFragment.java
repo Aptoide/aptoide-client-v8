@@ -29,12 +29,10 @@ import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
-import com.facebook.CallbackManager;
-import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Arrays;
 import rx.Observable;
 
@@ -88,16 +86,13 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     super.onCreate(savedInstanceState);
     marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
     errorMapper = new AccountErrorMapper(getContext());
-    final FragmentNavigator fragmentNavigator = getFragmentNavigator();
     final AptoideAccountManager accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    presenter = new LoginSignUpCredentialsPresenter(this, accountManager, fragmentNavigator,
-        CrashReport.getInstance(), getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
+    presenter = new LoginSignUpCredentialsPresenter(this, accountManager, CrashReport.getInstance(),
+        getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK),
-        new AccountNavigator(fragmentNavigator, accountManager, getActivityNavigator(),
-            LoginManager.getInstance(), CallbackManager.Factory.create(),
-            ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
-            PublishRelay.create()), Arrays.asList("email", "user_friends"), Arrays.asList("email"));
+        ((ActivityResultNavigator) getContext()).getAccountNavigator(),
+        Arrays.asList("email", "user_friends"), Arrays.asList("email"));
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -175,7 +170,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     facebookLoginButton.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<Void> googleLoginEvent() {
+  @Override public Observable<Void> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
             getStartupClickOrigin()));
@@ -195,7 +190,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
   }
 
-  @Override public Observable<Void> facebookSignInWithRequiredPermissionsInEvent() {
+  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
     return facebookEmailRequiredDialog.positiveClicks()
         .map(dialog -> null);
   }
@@ -234,7 +229,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     getActivity().finish();
   }
 
-  @Override public Observable<Void> facebookSignInEvent() {
+  @Override public Observable<Void> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
             getStartupClickOrigin()));

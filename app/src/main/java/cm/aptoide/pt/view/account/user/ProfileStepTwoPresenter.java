@@ -3,12 +3,15 @@ package cm.aptoide.pt.view.account.user;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.account.store.ManageStoreFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.store.home.HomeFragment;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -19,13 +22,16 @@ public class ProfileStepTwoPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
   private final FragmentNavigator fragmentNavigator;
+  private final AccountNavigator accountNavigator;
 
   public ProfileStepTwoPresenter(ProfileStepTwoView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, FragmentNavigator fragmentNavigator) {
+      CrashReport crashReport, FragmentNavigator fragmentNavigator,
+      AccountNavigator accountNavigator) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.fragmentNavigator = fragmentNavigator;
+    this.accountNavigator = accountNavigator;
   }
 
   @Override public void present() {
@@ -87,11 +93,9 @@ public class ProfileStepTwoPresenter implements Presenter {
 
   private void navigate(boolean externalLogin) {
     if (externalLogin) {
-      fragmentNavigator.navigateToHomeCleaningBackStack();
+      accountNavigator.navigateToHomeView();
     } else {
-      fragmentNavigator.cleanBackStack();
-      fragmentNavigator.navigateTo(
-          ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), true));
+      accountNavigator.navigateToCreateStoreView();
     }
   }
 }

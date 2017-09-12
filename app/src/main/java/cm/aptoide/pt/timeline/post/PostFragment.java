@@ -41,13 +41,11 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonActivity;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.TabNavigator;
-import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
@@ -229,9 +227,7 @@ public class PostFragment extends FragmentView implements PostView {
     presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator(),
-            LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
-            PublishRelay.create()), urlProvider, tabNavigator,
+        ((ActivityResultNavigator) getContext()).getAccountNavigator(), urlProvider, tabNavigator,
         analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
     attachPresenter(presenter, null);

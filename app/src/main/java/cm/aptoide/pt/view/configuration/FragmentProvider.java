@@ -15,8 +15,11 @@ import java.util.List;
 
 /**
  * Interface from which all fragments should be requested.
+ *
+ * @deprecated use specific navigator for each presenter/lifecycle manager instead. Inside those
+ * navigators instantiate the proper fragment or activity.
  */
-public interface FragmentProvider {
+@Deprecated public interface FragmentProvider {
 
   @Deprecated Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem);
 

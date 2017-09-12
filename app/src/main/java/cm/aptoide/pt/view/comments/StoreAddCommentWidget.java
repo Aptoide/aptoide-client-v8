@@ -17,6 +17,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.store.StoreAddCommentDisplayable;
 import com.facebook.CallbackManager;
@@ -49,9 +50,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager,
-        getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
-        PublishRelay.create());
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     @ColorInt int color = getColorOrDefault(displayable.getStoreTheme(), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);

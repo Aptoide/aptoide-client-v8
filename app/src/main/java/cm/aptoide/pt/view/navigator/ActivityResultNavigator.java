@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.navigator;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -9,35 +10,37 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.NavigationProvider;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.HashMap;
 import java.util.Map;
 import rx.Observable;
 
-public abstract class ActivityResultNavigator extends LeakActivity
-    implements ActivityNavigator, NavigationProvider {
+public abstract class ActivityResultNavigator extends LeakActivity implements ActivityNavigator {
 
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
-  private HashMap<Integer, Result> fragmentResultMap;
+  private Map<Integer, Result> fragmentResultMap;
+  private AccountNavigator accountNavigator;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
   }
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @SuppressLint("UseSparseArrays") @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
     fragmentResultRelay = BehaviorRelay.create();
     fragmentResultMap = new HashMap<>();
     fragmentNavigator =
         new FragmentResultNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
             android.R.anim.fade_in, android.R.anim.fade_out,
-            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
             ((AptoideApplication) getApplicationContext()).getDefaultStore(),
             ((AptoideApplication) getApplicationContext()).getDefaultTheme(), fragmentResultMap,
             fragmentResultRelay);
@@ -135,15 +138,27 @@ public abstract class ActivityResultNavigator extends LeakActivity
     return this;
   }
 
-  @Override public ActivityNavigator getActivityNavigator() {
+  public ActivityNavigator getActivityNavigator() {
     return this;
   }
 
-  @Override public FragmentNavigator getFragmentNavigator() {
+  public FragmentNavigator getFragmentNavigator() {
     return fragmentNavigator;
   }
 
   public Map<Integer, Result> getFragmentResultMap() {
     return fragmentResultMap;
+  }
+
+  public AccountNavigator getAccountNavigator() {
+    if (accountNavigator == null) {
+      accountNavigator = new AccountNavigator(getFragmentNavigator(),
+          ((AptoideApplication) getApplicationContext()).getAccountManager(),
+          getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(),
+          ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
+          PublishRelay.create(), ((AptoideApplication) getApplicationContext()).getDefaultStore(),
+          ((AptoideApplication) getApplicationContext()).getDefaultTheme());
+    }
+    return accountNavigator;
   }
 }

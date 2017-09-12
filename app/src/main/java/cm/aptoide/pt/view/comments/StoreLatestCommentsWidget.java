@@ -24,6 +24,7 @@ import cm.aptoide.pt.util.CommentOperations;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -70,9 +71,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager,
-        getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
-        PublishRelay.create());
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 

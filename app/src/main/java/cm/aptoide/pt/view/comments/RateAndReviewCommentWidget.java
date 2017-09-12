@@ -36,11 +36,9 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import com.facebook.CallbackManager;
-import com.facebook.login.LoginManager;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import java.util.Locale;
@@ -114,9 +112,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager,
-        getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(), ((AptoideApplication) getContext().getApplicationContext()).getGoogleSignInClient(),
-        PublishRelay.create());
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser()

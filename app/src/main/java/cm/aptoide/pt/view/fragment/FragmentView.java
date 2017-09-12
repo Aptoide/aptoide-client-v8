@@ -3,7 +3,6 @@ package cm.aptoide.pt.view.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -13,55 +12,55 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.NavigationProvider;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ScreenTrackingUtils;
 import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.leak.LeakFragment;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
-import cm.aptoide.pt.view.navigator.NavigateFragment;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import lombok.Getter;
 import rx.Observable;
 
-public abstract class FragmentView extends NavigateFragment implements View {
+public abstract class FragmentView extends LeakFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
   @Getter private boolean startActivityForResultCalled;
 
   private Presenter presenter;
-  private NavigationProvider navigationProvider;
-  private SharedPreferences sharedPreferences;
   private String defaultStore;
   private String defaultTheme;
+  private ActivityResultNavigator activityResultNavigator;
 
   public FragmentNavigator getFragmentNavigator() {
-    return navigationProvider.getFragmentNavigator();
+    return activityResultNavigator.getFragmentNavigator();
   }
 
   public ActivityNavigator getActivityNavigator() {
-    return navigationProvider.getActivityNavigator();
+    return activityResultNavigator.getActivityNavigator();
   }
 
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
     return new FragmentResultNavigator(getChildFragmentManager(), containerId,
-        android.R.anim.fade_in, android.R.anim.fade_out, sharedPreferences, defaultStore,
-        defaultTheme, getFragmentResultMap(), getFragmentResultRelay());
+        android.R.anim.fade_in, android.R.anim.fade_out, defaultStore, defaultTheme,
+        activityResultNavigator.getFragmentResultMap(),
+        activityResultNavigator.getFragmentResultRelay());
   }
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
     try {
-      navigationProvider = (NavigationProvider) activity;
-    } catch (ClassCastException ex) {
+      activityResultNavigator = (ActivityResultNavigator) activity;
+    } catch (ClassCastException ignored) {
       Logger.e(TAG, String.format("Parent activity must implement %s interface",
-          NavigationProvider.class.getName()));
+          ActivityResultNavigator.class.getName()));
     }
   }
 
@@ -69,8 +68,6 @@ public abstract class FragmentView extends NavigateFragment implements View {
     super.onCreate(savedInstanceState);
     defaultStore = ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
     defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
   }

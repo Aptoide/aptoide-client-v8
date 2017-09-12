@@ -30,7 +30,7 @@ public interface ActivityNavigator {
 
   void navigateTo(Uri uri);
 
-  Activity getActivity();
-
   Observable<Result> results();
+
+  Activity getActivity();
 }
