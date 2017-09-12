@@ -49,6 +49,14 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
     handleLocationAndExternalStoragePermissionsResult();
 
     handleWriteSettingsPermissionResult();
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.shareAptoideApk())
+        .doOnNext(__ -> view.openShareAptoideFragment())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> err.printStackTrace());
   }
 
   @Override public void saveState(Bundle state) {

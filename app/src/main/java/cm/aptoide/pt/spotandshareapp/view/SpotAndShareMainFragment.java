@@ -46,6 +46,7 @@ public class SpotAndShareMainFragment extends FragmentView
   private ImageView userAvatar;
   private TextView username;
   private Toolbar toolbar;
+  private TextView shareAptoideTextView;
   private SpotAndShareMainFragmentPresenter presenter;
   private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
   private PublishRelay<Integer> writeSettingsPermissionRelay;
@@ -109,6 +110,14 @@ public class SpotAndShareMainFragment extends FragmentView
     setAvatar(user.getAvatar());
   }
 
+  @Override public Observable<Void> shareAptoideApk() {
+    return RxView.clicks(shareAptoideTextView);
+  }
+
+  @Override public void openShareAptoideFragment() {
+    getFragmentNavigator().navigateTo(ShareAptoideFragment.newInstance());
+  }
+
   private void setAvatar(SpotAndShareAvatar avatar) {
     userAvatar.setSelected(true);
     ImageLoader.with(getContext())
@@ -124,6 +133,7 @@ public class SpotAndShareMainFragment extends FragmentView
     username = (TextView) view.findViewById(R.id.username);
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     setupToolbar();
+    shareAptoideTextView = (TextView) view.findViewById(R.id.share_aptoide_apk_button);
     presenter = new SpotAndShareMainFragmentPresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
         spotAndSharePermissionProvider);
@@ -142,6 +152,7 @@ public class SpotAndShareMainFragment extends FragmentView
     receiveButton = null;
     sendButton = null;
     toolbar = null;
+    shareAptoideTextView = null;
     super.onDestroyView();
   }
 
