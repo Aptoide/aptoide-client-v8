@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import cm.aptoide.pt.presenter.View;
+import rx.Observable;
 
 /**
  * Created by filipe on 12-09-2017.
@@ -8,4 +9,11 @@ import cm.aptoide.pt.presenter.View;
 
 public interface ShareAptoideView extends View {
 
+  Observable<Void> backButtonEvent();
+
+  void showExitWarning();
+
+  Observable<Void> exitEvent();
+
+  void navigateBack();
 }

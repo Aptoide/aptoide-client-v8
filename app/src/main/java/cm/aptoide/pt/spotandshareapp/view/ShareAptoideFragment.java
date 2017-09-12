@@ -11,24 +11,33 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.spotandshareapp.presenter.ShareAptoidePresenter;
+import cm.aptoide.pt.view.BackButtonFragment;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.jakewharton.rxrelay.PublishRelay;
+import rx.Observable;
 
 /**
  * Created by filipe on 12-09-2017.
  */
 
-public class ShareAptoideFragment extends FragmentView implements ShareAptoideView {
+public class ShareAptoideFragment extends BackButtonFragment implements ShareAptoideView {
 
   private static final String SHARE_APTOIDE_LINK = "http://192.168.43.1:38080";
   private Toolbar toolbar;
   private LinearLayout shareAptoideLinearLayout;
   private TextView shareAptoideFirstInstruction;
   private TextView shareAptoideLink;
+
+  private PublishRelay<Void> backRelay;
+  private RxAlertDialog backDialog;
+  private ClickHandler clickHandler;
 
   public static Fragment newInstance() {
     Fragment fragment = new ShareAptoideFragment();
@@ -37,6 +46,7 @@ public class ShareAptoideFragment extends FragmentView implements ShareAptoideVi
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    backRelay = PublishRelay.create();
   }
 
   @Nullable @Override
@@ -54,8 +64,23 @@ public class ShareAptoideFragment extends FragmentView implements ShareAptoideVi
     shareAptoideFirstInstruction =
         (TextView) view.findViewById(R.id.share_aptoide_first_instruction);
     shareAptoideLink = (TextView) view.findViewById(R.id.share_aptoide_link);
-
     setupShareTextViews();
+    setupBackClick();
+
+    attachPresenter(new ShareAptoidePresenter(this), savedInstanceState);
+  }
+
+  private void setupBackClick() {
+    clickHandler = () -> {
+      backRelay.call(null);
+      return true;
+    };
+    registerClickHandler(clickHandler);
+    backDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+        R.string.spotandshare_message_leave_group_warning)
+        .setPositiveButton(R.string.spotandshare_button_leave_group)
+        .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
+        .build();
   }
 
   private void setupShareTextViews() {//// TODO: 12-09-2017 filipe create the ssid
@@ -98,10 +123,44 @@ public class ShareAptoideFragment extends FragmentView implements ShareAptoideVi
   }
 
   @Override public void onDestroyView() {
+    toolbar = null;
+    unregisterClickHandler(clickHandler);
+    clickHandler = null;
+    backDialog = null;
+
+    shareAptoideLinearLayout = null;
+    shareAptoideFirstInstruction = null;
+    shareAptoideLink = null;
+
     super.onDestroyView();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      backRelay.call(null);
+    }
+    return false;
+  }
+
+  @Override public Observable<Void> backButtonEvent() {
+    return backRelay;
+  }
+
+  @Override public void showExitWarning() {
+    backDialog.show();
+  }
+
+  @Override public Observable<Void> exitEvent() {
+    return backDialog.positiveClicks()
+        .map(dialogInterface -> null);
+  }
+
+  @Override public void navigateBack() {
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance());
   }
 }
