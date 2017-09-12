@@ -298,7 +298,7 @@
   <string name="newer_version_available">Newer version available</string>
 
   <string name="add_store">Add store</string>
-  <string name="downgrade_warning_dialog">If you downgrade, you may lose app related data and may be logged out of the app\'s awcount.</string>
+  <string name="downgrade_warning_dialog">If you downgrade, you may lose app related data and may be logged out of the app\'s account.</string>
 
 
   <!-- Stores tab -->
