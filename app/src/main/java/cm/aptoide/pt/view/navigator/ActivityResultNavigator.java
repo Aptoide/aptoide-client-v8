@@ -13,7 +13,10 @@ import cm.aptoide.pt.NavigationProvider;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.HashMap;
+import java.util.Map;
 import rx.Observable;
 
 public abstract class ActivityResultNavigator extends LeakActivity
@@ -21,14 +24,23 @@ public abstract class ActivityResultNavigator extends LeakActivity
 
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
+  private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
+  private HashMap<Integer, Result> fragmentResultMap;
+
+  public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
+    return fragmentResultRelay;
+  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    fragmentResultRelay = BehaviorRelay.create();
+    fragmentResultMap = new HashMap<>();
     fragmentNavigator =
-        new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
+        new FragmentResultNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
             android.R.anim.fade_in, android.R.anim.fade_out,
             ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
             ((AptoideApplication) getApplicationContext()).getDefaultStore(),
-            ((AptoideApplication) getApplicationContext()).getDefaultTheme());
+            ((AptoideApplication) getApplicationContext()).getDefaultTheme(), fragmentResultMap,
+            fragmentResultRelay);
     // super.onCreate handles fragment creation using FragmentManager.
     // Make sure navigator instances are already created when fragments are created,
     // else getFragmentNavigator and getActivityNavigator will return null.
@@ -117,5 +129,9 @@ public abstract class ActivityResultNavigator extends LeakActivity
 
   @Override public FragmentNavigator getFragmentNavigator() {
     return fragmentNavigator;
+  }
+
+  public Map<Integer, Result> getFragmentResultMap() {
+    return fragmentResultMap;
   }
 }
