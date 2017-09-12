@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.spotandshareapp.ShareApkSandbox;
 import cm.aptoide.pt.spotandshareapp.presenter.ShareAptoidePresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -70,7 +71,8 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
     setupBackClick();
 
     attachPresenter(new ShareAptoidePresenter(this,
-            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare()),
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            new ShareApkSandbox(getActivity().getApplicationContext(), getActivity().getAssets())),
         savedInstanceState);
   }
 
