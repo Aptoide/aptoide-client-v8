@@ -7,6 +7,8 @@ package cm.aptoide.pt;
 
 import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.view.configuration.FragmentProvider;
+import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 public class VanillaApplication extends AptoideApplication {
@@ -58,5 +60,9 @@ public class VanillaApplication extends AptoideApplication {
 
   @Override public boolean isCreateStoreUserPrivacyEnabled() {
     return true;
+  }
+
+  @Override public FragmentProvider createFragmentProvider() {
+    return new VanillaFragmentProvider();
   }
 }

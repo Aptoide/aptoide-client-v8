@@ -260,6 +260,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
+  public static AppViewFragment newInstance(MinimalAd minimalAd, String storeTheme) {
+    Bundle bundle = new Bundle();
+    bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
+    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
+    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+
+    return fragment;
+  }
+
   public static Fragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
   }
@@ -759,9 +772,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getName();
     storeId = app.getStore()
         .getId();
-    storeTheme = app.getStore()
-        .getAppearance()
-        .getTheme();
+    if(storeTheme == null) {
+      storeTheme = app.getStore()
+          .getAppearance()
+          .getTheme();
+    }
     md5 = app.getMd5();
     appName = app.getName();
   }
