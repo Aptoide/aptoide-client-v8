@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -45,8 +46,8 @@ public class AdsOptimizer {
         }
         List<GetAdsResponse.Ad> newAdsList = new ArrayList<>();
         for(GetAdsResponse.Ad ad : ads) {
-            if (AptoideUtils.SystemU.isAppInstalled(ad.getData().getPackageName())) {
-                excludedPackages.add(ad.getData().getPackageName());
+            if (AptoideUtils.SystemU.isAppInstalled(ad.getData().getApp().getPackageName())) {
+                excludedPackages.add(ad.getData().getApp().getPackageName());
             } else {
                 newAdsList.add(ad);
             }
@@ -70,6 +71,7 @@ public class AdsOptimizer {
      * This methods is used to diminish the amount of already installed aps showed in the ads
      * The requested ads are doubled to allow greater chances of success with one single request
      * The returned ads are always limited by the variable "adsLimit" anyways.
+     * @param accessToken access token
      * @param location - location
      * @param refresh - refresh
      * @param adsLimit - number of ads to be shown
@@ -85,13 +87,14 @@ public class AdsOptimizer {
      * @param keywords - list of keywords to add to the request. Null if it's not required
      * @return Observable response
      */
-    public static Observable<GetAdsResponse> optimizeAds(GetAdsRequest.Location location,
+    public static Observable<GetAdsResponse> optimizeAds(String accessToken,
+                                                         GetAdsRequest.Location location,
                                                          boolean refresh, Integer adsLimit,
                                                          String aptoideClientUUID,
                                                          boolean googlePlayServicesAvailable,
                                                          String oemid, boolean mature,
                                                          List<String> excludedPackages,
-                                                         String query, String packageName,
+                                                         List<String> query, String packageName,
                                                          String repo, List<String> keywords) {
 
         getFromSharedPreferencesInto(excludedPackages);
@@ -104,35 +107,33 @@ public class AdsOptimizer {
             throw new IllegalArgumentException("Excluded Packages list cannot be null");
         }
         GetAdsRequest request;
-        if(query == null){
-            request = GetAdsRequest.of(location, requestAds, aptoideClientUUID,
-                    googlePlayServicesAvailable, oemid, mature);
 
-        }else {
-            request = GetAdsRequest.of(location, query, requestAds, aptoideClientUUID,
-                    googlePlayServicesAvailable, oemid, mature);
-        }
-
-        String excludedPackagesString =
-                AptoideUtils.StringU.commaSeparatedValues(excludedPackages);
-        request.setExcludedPackage(excludedPackagesString);
+        //if(query == null){
+        //    request = GetAdsRequest.of(accessToken, location, requestAds, aptoideClientUUID,
+        //            googlePlayServicesAvailable, oemid, mature);
+//
+        //}else {
+        request = GetAdsRequest.of(accessToken, query, location, requestAds, aptoideClientUUID,
+                    googlePlayServicesAvailable, oemid,
+                    AptoideUtils.StringU.commaSeparatedValues(excludedPackages), mature);
+        //}
 
         if(!TextUtils.isEmpty(packageName)){
-            request.setPackageName(packageName);
+            request.getBody().setPackageName(new ArrayList<>(Arrays.asList(packageName.split(","))));
         }
         if(!TextUtils.isEmpty(repo)){
-            request.setRepo(repo);
+            request.getBody().setRepo(repo);
         }
 
         if(keywords != null){
-            request.setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
+            request.getBody().setKeywords(keywords);
         }
 
         Observable<GetAdsResponse> response = request.observe(refresh);
 
         return response.flatMap(ads -> {
-            if(!checkIfAdsListIsValid(ads.getAds(), excludedPackages, adsLimit)){
-                 return optimizeAds(location, refresh, adsLimit, aptoideClientUUID,
+            if(!checkIfAdsListIsValid(ads.getDataList().getList(), excludedPackages, adsLimit)){
+                 return optimizeAds(accessToken, location, refresh, adsLimit, aptoideClientUUID,
                             googlePlayServicesAvailable, oemid, mature, excludedPackages, query,
                             packageName, repo, keywords);
             }

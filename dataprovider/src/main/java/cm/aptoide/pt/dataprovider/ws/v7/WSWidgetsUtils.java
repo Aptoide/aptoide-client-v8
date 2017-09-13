@@ -73,11 +73,11 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case ADS:
-          return AdsOptimizer.optimizeAds(GetAdsRequest.Location.homepage, true,
+          return AdsOptimizer.optimizeAds(accessToken, GetAdsRequest.Location.homepage, true,
                   Type.ADS.getPerLineCount() *
                           Application.getConfiguration().numberOfAdsRowOnHomepage(),
                   aptoideClientUuid, googlePlayServicesAvailable, oemid, mature, new ArrayList<>(),
-                  "__NULL__", null, null, null)
+                  null, null, null, null)
                   .observeOn(Schedulers.io())
                   .doOnNext(wsWidget::setViewObject)
                   .onErrorResumeNext(throwable -> Observable.empty())
