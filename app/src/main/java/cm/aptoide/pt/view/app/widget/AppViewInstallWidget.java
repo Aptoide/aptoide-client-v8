@@ -546,7 +546,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                             .getId(), "install", context, sharePreviewDialog, alertDialog,
                         socialRepository);
                   } else if (!accountManager.isLoggedIn()
-                      && ManagerPreferences.isShowNotLoggedAndShareDialog(sharedPreferences)
                       && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
                       || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
                     NotLoggedInShareFragment fragment = NotLoggedInShareFragment.newInstance(app);

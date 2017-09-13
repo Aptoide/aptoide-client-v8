@@ -1,5 +1,8 @@
 package cm.aptoide.pt.view.share;
 
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -37,8 +40,7 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
   private RatingBar appRating;
   private TextView appTitle;
   private ImageView appIcon;
-  private TextView closeText;
-  private TextView dontShowAgain;
+  private View closeButton;
 
   public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
@@ -82,15 +84,31 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
     googleButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
     appIcon = (ImageView) view.findViewById(R.id.not_logged_in_app_icon);
     appTitle = (TextView) view.findViewById(R.id.not_logged_int_app_title);
-    closeText = (TextView) view.findViewById(R.id.not_logged_in_close);
-    dontShowAgain = (TextView) view.findViewById(R.id.not_logged_in_dont_show_again);
+    closeButton = view.findViewById(R.id.not_logged_in_close);
     appRating = (RatingBar) view.findViewById(R.id.not_logged_in_app_rating);
     facebookLoginSubject = PublishRelay.create();
+    ImageView loginProgressIndicator = (ImageView) view.findViewById(R.id.login_progress_indicator);
+    ImageView fakeToolbar = (ImageView) view.findViewById(R.id.fake_toolbar);
+    ImageView likesView = (ImageView) view.findViewById(R.id.not_logged_in_preview_social_content);
 
     appTitle.setText(getArguments().getString(APP_NAME));
     appRating.setRating(getArguments().getFloat(APP_RATING));
     ImageLoader.with(getContext())
         .load(getArguments().getString(APP_ICON), appIcon);
+    Drawable progressDrawable = appRating.getProgressDrawable();
+
+    ColorMatrix matrix = new ColorMatrix();
+    matrix.setSaturation(0);
+    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+
+    appIcon.setColorFilter(filter);
+    likesView.setColorFilter(filter);
+    fakeToolbar.setColorFilter(filter);
+    progressDrawable.setColorFilter(filter);
+
+    matrix = new ColorMatrix();
+    matrix.setSaturation(0.3f);
+    loginProgressIndicator.setColorFilter(new ColorMatrixColorFilter(matrix));
     super.bindViews(view);
   }
 
@@ -111,15 +129,11 @@ public class NotLoggedInShareFragment extends SocialLoginFragment implements Not
   }
 
   @Override public Observable<Void> closeClick() {
-    return RxView.clicks(closeText);
+    return RxView.clicks(closeButton);
   }
 
   @Override public void closeFragment() {
     finishWithResult(RESULT_CANCELED);
-  }
-
-  @Override public Observable<Void> dontShowAgainClick() {
-    return RxView.clicks(dontShowAgain);
   }
 
   @Override public void navigateToMainView() {
