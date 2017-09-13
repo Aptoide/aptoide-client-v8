@@ -14,6 +14,7 @@ import cm.aptoide.pt.timeline.view.follow.FollowUserWidget;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginWidget;
 import cm.aptoide.pt.view.account.user.CreateStoreDisplayable;
+import cm.aptoide.pt.view.account.user.LoginDisplayable;
 import cm.aptoide.pt.view.app.GridAppDisplayable;
 import cm.aptoide.pt.view.app.GridAppListDisplayable;
 import cm.aptoide.pt.view.app.GridAppListWidget;
@@ -91,6 +92,7 @@ import cm.aptoide.pt.view.store.CreateStoreWidget;
 import cm.aptoide.pt.view.store.GridDisplayDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaWidget;
+import cm.aptoide.pt.view.store.LoginWidget;
 import cm.aptoide.pt.view.store.StoreAddCommentDisplayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderWidget;
@@ -319,6 +321,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((ReviewsRatingWidget.class), ReviewsRatingDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((LoginWidget.class), LoginDisplayable.class));
 
     return displayableWidgetMappings;
   }

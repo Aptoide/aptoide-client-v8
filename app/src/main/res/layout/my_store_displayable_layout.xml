@@ -45,11 +45,12 @@
           tools:text="Sameveda store"
           />
       <TextView
-          android:id="@+id/textView2"
+          android:id="@+id/create_store_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/my_store_created_displayable_message"
-          android:textSize="@dimen/text_size_small"
+          android:text="@string/create_store_displayable_explore_message"
+          android:textColor="@color/white"
+          android:textSize="@dimen/text_size_medium"
           />
 
     </LinearLayout>
@@ -82,41 +83,20 @@
           style="@style/StoreWhiteButton"
           />
       <TextView
-          android:id="@+id/created_store_text"
+          android:id="@+id/followers"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_alignParentLeft="true"
-          android:layout_alignParentStart="true"
-          android:layout_marginEnd="10dp"
-          android:layout_marginLeft="10dp"
-          android:layout_marginRight="10dp"
-          android:layout_marginStart="10dp"
-          android:layout_marginTop="10dp"
-          android:layout_toLeftOf="@id/explore_button"
-          android:layout_toStartOf="@+id/explore_button"
-          android:text="@string/create_store_displayable_created_store_short_term_message"
-          android:textColor="@color/white"
-          android:textSize="@dimen/text_size_medium"
-          android:textStyle="bold"
+          tools:text="@string/store_meta_followers"
           />
       <TextView
-          android:id="@+id/create_store_text"
+          android:id="@+id/following"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_alignParentLeft="true"
-          android:layout_alignParentStart="true"
-          android:layout_below="@id/created_store_text"
-          android:layout_marginBottom="10dp"
-          android:layout_marginEnd="10dp"
           android:layout_marginLeft="10dp"
-          android:layout_marginRight="10dp"
-          android:layout_marginStart="10dp"
-          android:layout_toLeftOf="@id/explore_button"
-          android:layout_toStartOf="@+id/explore_button"
-          android:text="@string/create_store_displayable_explore_message"
-          android:textColor="@color/white"
-          android:textSize="@dimen/text_size_medium"
+          android:layout_toRightOf="@id/followers"
+          tools:text="@string/store_meta_followers"
           />
+
     </RelativeLayout>
 
     <LinearLayout

@@ -34,8 +34,9 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   private TextView storeName;
   private Button exploreButton;
   private TextView suggestionMessage;
-  private TextView createStoreText;
   private StoreAnalytics storeAnalytics;
+  private TextView followers;
+  private TextView following;
 
   public MyStoreWidget(View itemView) {
     super(itemView);
@@ -49,7 +50,8 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
     storeName = (TextView) itemView.findViewById(R.id.store_name);
     suggestionMessage = (TextView) itemView.findViewById(R.id.create_store_text);
-    createStoreText = (TextView) itemView.findViewById(R.id.created_store_text);
+    followers = (TextView) itemView.findViewById(R.id.followers);
+    following = (TextView) itemView.findViewById(R.id.following);
     exploreButton = (Button) itemView.findViewById(R.id.explore_button);
   }
 
@@ -60,8 +62,6 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
         .getData()
         .getStore();
     suggestionMessage.setText(displayable.getSuggestionMessage(context));
-    createStoreText.setText(displayable.getCreateStoreText());
-    createStoreText.setVisibility(displayable.getCreateStoreTextViewVisibility());
     exploreButton.setText(displayable.getExploreButtonText());
     String storeTheme = store.getAppearance()
         .getTheme();
@@ -90,6 +90,12 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
         }));
     setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
+    followers.setText(String.valueOf(displayable.getTimelineStats()
+        .getData()
+        .getFollowers()));
+    following.setText(String.valueOf(displayable.getTimelineStats()
+        .getData()
+        .getFollowing()));
   }
 
   private int getColorOrDefault(StoreTheme theme, Context context) {
