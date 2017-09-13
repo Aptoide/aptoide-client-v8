@@ -12,6 +12,7 @@ import cm.aptoide.pt.spotandshareandroid.transfermanager.TransferManager;
 import cm.aptoide.pt.spotandshareandroid.util.service.ServiceProvider;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -32,7 +33,7 @@ class SpotAndShareV2 {
   private final TransferManager transferManager;
   private final String DUMMY_UUID = "dummy_uuid";
   private final Context applicationContext;
-  private final int TIMEOUT = 60 * 1000;
+  private final int TIMEOUT = 15 * 1000;
   private final Friend friend;
   private boolean enabled;
   private boolean isHotspot;
@@ -113,6 +114,11 @@ class SpotAndShareV2 {
             onError.onError(new Throwable("Failed to join hotspot"));
           }
         }, TIMEOUT))
+        .doOnError(error -> {
+          if (error instanceof TimeoutException) {
+            onError.onError(new Throwable("Failed to join hotspot"));// or retry
+          }
+        })
         .subscribe(() -> {
         }, Throwable::printStackTrace);
   }
