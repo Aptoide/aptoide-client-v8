@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.AdsOptimizer;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -74,11 +75,11 @@ public class AdsRepository {
 
   private Observable<MinimalAd> mapToMinimalAd(
       Observable<GetAdsResponse> getAdsResponseObservable) {
-    return getAdsResponseObservable.map(GetAdsResponse::getAds).flatMap(ads -> {
-      if (!validAds(ads)) {
+    return getAdsResponseObservable.map(GetAdsResponse::getDataList).flatMap(ads -> {
+      if (!validAds(ads.getList())) {
         return Observable.error(new IllegalStateException("Invalid ads returned from server"));
       }
-      return Observable.just(ads.get(0));
+      return Observable.just(ads.getList().get(0));
     }).map(MinimalAd::from);
   }
 
@@ -86,8 +87,7 @@ public class AdsRepository {
     return ads != null
         && !ads.isEmpty()
         && ads.get(0) != null
-        && ads.get(0).getPartner() != null
-        && ads.get(0).getPartner().getData() != null;
+            && ads.get(0).getNetwork() != null;
   }
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore() {
@@ -108,9 +108,9 @@ public class AdsRepository {
         return Observable.error(new IllegalStateException("Invalid ads returned from server"));
       }
       return Observable.just(ads);
-    }).map(GetAdsResponse::getAds).map(ads -> {
+    }).map(GetAdsResponse::getDataList).map(ads -> {
       List<MinimalAd> minimalAds = new LinkedList<>();
-      for (GetAdsResponse.Ad ad : ads) {
+      for (GetAdsResponse.Ad ad : ads.getList()) {
         minimalAds.add(MinimalAd.from(ad));
       }
       return minimalAds;
@@ -118,7 +118,7 @@ public class AdsRepository {
   }
 
   public static boolean validAds(GetAdsResponse getAdsResponse) {
-    return getAdsResponse != null && validAds(getAdsResponse.getAds());
+    return getAdsResponse != null && validAds(getAdsResponse.getDataList().getList());
   }
 
   public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,

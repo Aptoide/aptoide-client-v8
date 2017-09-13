@@ -101,15 +101,20 @@ public class DataproviderUtils {
     // FIXME: 29-07-2016 neuro so wrong...
     public static void knockImpression(GetAdsResponse.Ad ad) {
       if (isImpressionUrlPresent(ad)) {
-        knock(ad.getPartner().getData().getImpressionUrl());
+        knock(ad.getUrls().getImpressions().get(0));
+        //knock(ad.getPartner().getData().getImpressionUrl());
       }
     }
 
     private static boolean isImpressionUrlPresent(GetAdsResponse.Ad ad) {
       return ad != null
-          && ad.getPartner() != null
-          && ad.getPartner().getData() != null
-          && ad.getPartner().getData().getImpressionUrl() != null;
+              && ad.getUrls() != null
+              && ad.getUrls().getImpressions() != null;
+
+      //return ad != null
+      //    && ad.getPartner() != null
+      //    && ad.getPartner().getData() != null
+      //    && ad.getPartner().getData().getImpressionUrl() != null;
     }
   }
 }
