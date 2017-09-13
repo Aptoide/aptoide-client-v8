@@ -3,6 +3,7 @@ package cm.aptoide.pt.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -131,13 +132,24 @@ public class PartnersLaunchView extends ActivityView {
         .addConverterFactory(GsonConverterFactory.create())
         .client(((AptoideApplication) context.getApplicationContext()).getDefaultClient())
         .build();
+
+    String versionCode = "0";
+    try {
+      versionCode = String.valueOf(this.getPackageManager()
+          .getPackageInfo(getPackageName(), 0).versionCode);
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+
     Call<RemoteBootConfig> call = retrofit.create(BootConfigServices.class)
-        .getRemoteBootConfig(BuildConfig.APPLICATION_ID, bootConfig.getPartner()
-            .getType(), partnerId, String.valueOf(BuildConfig.VERSION_CODE));
+        .getRemoteBootConfig(getPackageName(), bootConfig.getPartner()
+            .getType(), partnerId, versionCode);
     call.enqueue(new Callback<RemoteBootConfig>() {
       @Override
       public void onResponse(Call<RemoteBootConfig> call, Response<RemoteBootConfig> response) {
-        if (response.body() != null) {
+        if (response.body() != null
+            && response.body()
+            .getData() != null) {
           ((PartnerApplication) getApplicationContext()).setRemoteBootConfig(response.body());
         }
         handleSplashScreenTimer();
