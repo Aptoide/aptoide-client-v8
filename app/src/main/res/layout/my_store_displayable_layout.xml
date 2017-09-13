@@ -67,14 +67,13 @@
     <Button
         android:id="@+id/explore_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="@string/create_store_displayable_explore_button"
         style="@style/Aptoide.Button.S"
         />
     <TextView
-        android:id="@+id/followers"
+        android:id="@+id/following"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -85,14 +84,14 @@
         android:text="@string/my_store_create_store_followers"
         />
     <TextView
-        android:id="@+id/following"
+        android:id="@+id/followers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_toEndOf="@id/followers"
-        android:layout_toRightOf="@id/followers"
+        android:layout_toEndOf="@id/following"
+        android:layout_toRightOf="@id/following"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"
         android:text="@string/my_store_create_store_followers"
