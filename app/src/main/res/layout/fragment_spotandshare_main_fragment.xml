@@ -25,6 +25,7 @@
         android:id="@+id/share_aptoide_apk_button"
         android:layout_width="180dp"
         android:layout_height="50dp"
+        android:layout_alignParentRight="true"
         android:layout_gravity="right"
         android:layout_marginTop="20dp"
         android:drawableLeft="@drawable/spot_and_share_invite_friends_icon"
@@ -34,7 +35,6 @@
         android:paddingLeft="16dp"
         android:text="@string/spotandshare_button_invite_friends"
         android:textColor="@color/white"
-        android:layout_alignParentRight="true"
         style="@style/Aptoide.Spot.Button.Ghost.Spotandshare"
         />
 
