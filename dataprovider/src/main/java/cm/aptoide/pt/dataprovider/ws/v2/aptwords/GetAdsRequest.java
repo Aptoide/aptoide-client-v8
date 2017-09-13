@@ -19,6 +19,9 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.Data;
@@ -192,14 +195,13 @@ import rx.Observable;
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody{
 
     @JsonProperty("gms") @Getter private boolean googlePlayServicesAvailable;
-    @Getter private String excludedPackage;
+    @JsonProperty("not_package_names") @Getter private List<String> excludedPackage;
     @Getter private String location;
-    @Getter private String keyword;
+    @Getter private List<String> keywords;
     @Getter private Integer limit;
-    @Getter private String packageName;
+    @JsonProperty("package_names") @Getter private List<String> packageName;
     @Getter private String repo;
-    @Getter private String categories;
-    @Getter private String excludedNetworks;
+    @JsonProperty("not_network_names") @Getter private List<String> excludedNetworks;
 
     public Body(boolean googlePlayServicesAvailable, String oemid, boolean mature) {
       super();
@@ -225,12 +227,13 @@ import rx.Observable;
       this.setMature(mature);
       this.limit = limit;
       this.location = location.toString();
-      this.packageName = packageName;
+      this.packageName = new ArrayList<>(Arrays.asList(packageName.split(",")));
       this.repo = repo;
 
       if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
-        this.excludedNetworks = AptoideUtils.StringU.commaSeparatedValues(
-                ReferrerUtils.excludedNetworks.get(packageName));
+        List<String> networks = new ArrayList<>();
+        networks.add(String.valueOf(ReferrerUtils.excludedNetworks.get(packageName)));
+        this.excludedNetworks = networks;
       }
     }
 
@@ -242,11 +245,12 @@ import rx.Observable;
       this.setMature(mature);
       this.limit = limit;
       this.location = location.toString();
-      this.packageName = packageName;
+      this.packageName = new ArrayList<>(Arrays.asList(packageName.split(",")));
 
       if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
-        this.excludedNetworks = AptoideUtils.StringU.commaSeparatedValues(
-                ReferrerUtils.excludedNetworks.get(packageName));
+        List<String> networks = new ArrayList<>();
+        networks.add(String.valueOf(ReferrerUtils.excludedNetworks.get(packageName)));
+        this.excludedNetworks = networks;
       }
     }
 
@@ -258,7 +262,7 @@ import rx.Observable;
       this.setMature(mature);
       this.limit = limit;
       this.location = location.toString();
-      this.keyword = keyword;
+      this.keywords = new ArrayList<>(Arrays.asList(keyword.split(",")));
     }
 
     public Body(boolean googlePlayServicesAvailable, String oemid, boolean mature,
@@ -269,8 +273,8 @@ import rx.Observable;
       this.setMature(mature);
       this.limit = limit;
       this.location = location.toString();
-      this.excludedPackage = excludedPackage;
-      this.keyword = AptoideUtils.StringU.join(keywords, ",") + "," + "__null__";
+      this.excludedPackage = new ArrayList<>(Arrays.asList(excludedPackage.split(",")));
+      this.keywords = keywords;
     }
 
     public Body(String excludedPackage, boolean googlePlayServicesAvailable, String oem_id,
@@ -281,7 +285,7 @@ import rx.Observable;
       this.setMature(mature);
       this.limit = limit;
       this.location = location.toString();
-      this.excludedPackage = excludedPackage;
+      this.excludedPackage = new ArrayList<>(Arrays.asList(excludedPackage.split(",")));
     }
   }
 
