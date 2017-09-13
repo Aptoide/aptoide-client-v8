@@ -56,19 +56,6 @@ public class ShareAptoidePresenter implements Presenter {
         }, error -> error.printStackTrace());
 
     view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> {
-          try {
-            shareApkSandbox.start();
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.DESTROY))
         .doOnNext(__ -> shareApkSandbox.stop())
         .subscribe(__ -> {
@@ -76,8 +63,13 @@ public class ShareAptoidePresenter implements Presenter {
   }
 
   private Completable createGroup() {
-    return spotAndShare.createGroup(success -> {
-    }, view::onCreateGroupError, null);
+    return spotAndShare.createOpenGroup(success -> {
+      try {
+        shareApkSandbox.start();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   private void leaveGroup() {

@@ -123,6 +123,15 @@ class SpotAndShareV2 {
         }, Throwable::printStackTrace);
   }
 
+  public Completable enableOpenHotspot(Action1<Void> onSuccess, String Ssid) {
+    return hotspotManager.enableOpenHotspot(Ssid)
+        .doOnCompleted(() -> {
+          isHotspot = true;
+          enabled = true;
+          onSuccess.call(null);
+        });
+  }
+
   private HostsChangedCallback createHostsChangedCallback(OnError onError) {
     return hostList -> {
       // TODO: 10-07-2017 neuro
