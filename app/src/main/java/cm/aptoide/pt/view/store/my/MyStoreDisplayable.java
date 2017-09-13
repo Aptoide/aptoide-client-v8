@@ -5,13 +5,10 @@ import android.text.TextUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.MyStore;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import lombok.Getter;
 
@@ -80,14 +77,6 @@ public class MyStoreDisplayable extends Displayable {
     } else {
       return R.string.create_store_displayable_explore_button;
     }
-  }
-
-  public List<Store.SocialChannel> getSocialChannels() {
-    return meta.getData()
-        .getStore()
-        .getSocialChannels() == null ? Collections.EMPTY_LIST : meta.getData()
-        .getStore()
-        .getSocialChannels();
   }
 
   public long getFollowers() {

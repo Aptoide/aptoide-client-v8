@@ -17,6 +17,9 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.view.store.MetaStoresBaseWidget;
 import com.facebook.appevents.AppEventsLogger;
@@ -97,6 +100,20 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
             String.valueOf(displayable.getFollowings()));
     following.setText(new SpannableFactory().createColorSpan(followingText, color,
         String.valueOf(displayable.getFollowings())));
+
+    compositeSubscription.add(RxView.clicks(followers)
+        .subscribe(click -> getFragmentNavigator().navigateTo(
+            TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
+                AptoideUtils.StringU.getFormattedString(
+                    R.string.social_timeline_followers_fragment_title, getContext().getResources(),
+                    displayable.getFollowers())))));
+
+    compositeSubscription.add(RxView.clicks(following)
+        .subscribe(click -> getFragmentNavigator().navigateTo(
+            TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
+                AptoideUtils.StringU.getFormattedString(
+                    R.string.social_timeline_following_fragment_title, getContext().getResources(),
+                    displayable.getFollowings())))));
   }
 
   private int getColorOrDefault(StoreTheme theme, Context context) {

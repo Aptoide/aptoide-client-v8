@@ -80,6 +80,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"
         android:text="@string/my_store_create_store_followers"
         />
@@ -92,6 +93,7 @@
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@id/followers"
         android:layout_toRightOf="@id/followers"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"
         android:text="@string/my_store_create_store_followers"
         />
