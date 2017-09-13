@@ -250,7 +250,6 @@
         <Button
             android:id="@+id/not_logged_in_share_facebook_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_weight="0.50"
             android:text="@string/facebook"
             android:theme="@style/Aptoide.Button.Facebook"
@@ -261,7 +260,6 @@
         <Button
             android:id="@+id/not_logged_in_share_google_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_weight="0.50"
             android:text="@string/google"
             android:theme="@style/Aptoide.Button.Google"
