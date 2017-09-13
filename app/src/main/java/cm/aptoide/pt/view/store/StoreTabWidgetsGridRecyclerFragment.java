@@ -90,33 +90,13 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
             Analytics.getInstance());
   }
 
-  protected Observable<List<Displayable>> loadGetStoreWidgetsAsDisplayables(
-      GetStoreWidgets getStoreWidgets,
-      boolean refresh, String url) {
+  protected Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
-        .flatMap(wsWidget -> {
-          return WSWidgetsUtils.loadWidgetNode(wsWidget,
-              StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
-              idsRepository.getUniqueIdentifier(),
-              AdNetworkUtils.isGooglePlayServicesAvailable(getContext().getApplicationContext()),
-              partnerId, accountManager.isAccountMature(), bodyInterceptor, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
-                  ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
-              tokenInvalidator, sharedPreferences, getContext().getResources(),
-              ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)),
-              (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-              ((AptoideApplication) getContext().getApplicationContext()).getVersionCodeProvider());
-        })
-        .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
-            .getList())
-        .concatMap(wsWidget -> {
-          return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
-              getContext(), accountManager, storeUtilsProxy,
-              (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-              getContext().getResources(), installedRepository, storeAnalytics);
-        })
+        .flatMap(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository,
+            storeContext, getContext(), accountManager, storeUtilsProxy,
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+            getContext().getResources(), installedRepository, storeAnalytics))
         .toList()
         .first();
   }
