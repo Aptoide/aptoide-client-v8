@@ -15,6 +15,7 @@ public class GetStoreWidgetsFragment extends StoreTabWidgetsGridRecyclerFragment
     return requestFactoryCdnPool.newStoreWidgets(url)
         .observe(refresh)
         .observeOn(Schedulers.io())
-        .flatMap(getStoreWidgets -> loadGetStoreWidgets(getStoreWidgets, refresh, url));
+        .flatMap(
+            getStoreWidgets -> loadGetStoreWidgetsAsDisplayables(getStoreWidgets, refresh, url));
   }
 }

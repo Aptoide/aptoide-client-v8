@@ -79,7 +79,7 @@ import rx.schedulers.Schedulers;
 public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
   protected final B body;
-  private final BodyInterceptor bodyInterceptor;
+  protected final BodyInterceptor bodyInterceptor;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private final int MAX_RETRY_COUNT = 3;
   private final TokenInvalidator tokenInvalidator;

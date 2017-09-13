@@ -33,10 +33,6 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
     super.load(create, refresh, savedInstanceState);
 
     if (!create) {
-      // Not all requests are endless so..
-      if (endlessRecyclerOnScrollListener != null) {
-        getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-      }
       setupEndless(v7request, buildAction(), refresh);
     }
   }

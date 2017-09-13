@@ -48,16 +48,16 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
 
   private SharedPreferences sharedPreferences;
   private IdsRepository idsRepository;
-  private AptoideAccountManager accountManager;
-  private StoreUtilsProxy storeUtilsProxy;
+  protected AptoideAccountManager accountManager;
+  protected StoreUtilsProxy storeUtilsProxy;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private InstalledRepository installedRepository;
+  protected InstalledRepository installedRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
   private TokenInvalidator tokenInvalidator;
-  private StoreAnalytics storeAnalytics;
+  protected StoreAnalytics storeAnalytics;
   private String partnerId;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +90,8 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
             Analytics.getInstance());
   }
 
-  protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
+  protected Observable<List<Displayable>> loadGetStoreWidgetsAsDisplayables(
+      GetStoreWidgets getStoreWidgets,
       boolean refresh, String url) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
@@ -119,4 +120,30 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         .toList()
         .first();
   }
+
+  protected Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
+      GetStoreWidgets getStoreWidgets, boolean refresh, String url) {
+    return Observable.from(getStoreWidgets.getDataList()
+        .getList())
+        .flatMap(wsWidget -> {
+          return WSWidgetsUtils.loadWidgetNode(wsWidget,
+              StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
+              idsRepository.getUniqueIdentifier(),
+              AdNetworkUtils.isGooglePlayServicesAvailable(getContext().getApplicationContext()),
+              partnerId, accountManager.isAccountMature(), bodyInterceptor, httpClient,
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter(
+                  ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+              tokenInvalidator, sharedPreferences, getContext().getResources(),
+              ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)),
+              (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
+              ((AptoideApplication) getContext().getApplicationContext()).getVersionCodeProvider());
+        })
+        .toList()
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
+            .getList())
+        .toList()
+        .first();
+  }
+
+
 }

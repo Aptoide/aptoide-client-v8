@@ -25,7 +25,7 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
           .observe(refresh);
     }
     return getStoreObservable.observeOn(Schedulers.io())
-        .flatMap(getStore -> loadGetStoreWidgets(getStore.getNodes()
+        .flatMap(getStore -> loadGetStoreWidgetsAsDisplayables(getStore.getNodes()
             .getWidgets(), refresh, url))
         .doOnNext(displayables -> {
           // We only want Adult Switch in Home Fragment.
