@@ -37,7 +37,7 @@
   <string name="spotandshare_message_first_share_instruction">Ask your friends to connect via Wi-Fi to %1$s hotspot</string>
   <string name="spotandshare_message_second_share_instruction">Ask them to scan this QR code</string>
   <string name="spotandshare_message_second_share_instruction_alternative">or open this link \n%1$s</string>
-  <string name="spotandshare_message_third_share_instruction">Finally ask then to start the transfer on their phones</string>
+  <string name="spotandshare_message_third_share_instruction">Finally ask them to start the transfer on their phones</string>
 
   <!-- Share Apk HTML -->
   <string name="spotandshare_title_share_apk_welcome_page">Install Aptoide on your device</string>
