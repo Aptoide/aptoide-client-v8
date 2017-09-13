@@ -5,6 +5,8 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
+import cm.aptoide.pt.view.configuration.FragmentProvider;
+import cm.aptoide.pt.view.configuration.implementation.PartnerFragmentProvider;
 
 public class PartnerApplication extends AptoideApplication {
 
@@ -81,5 +83,9 @@ public class PartnerApplication extends AptoideApplication {
 
   @Override public boolean isCreateStoreUserPrivacyEnabled() {
     return false;
+  }
+
+  @Override public FragmentProvider createFragmentProvider() {
+    return new PartnerFragmentProvider(this);
   }
 }

@@ -14,6 +14,4 @@ public interface NotLoggedInShareView extends SocialLoginView {
   Observable<Void> closeClick();
 
   void closeFragment();
-
-  Observable<Void> dontShowAgainClick();
 }

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/semi_transparent_black"
+    android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp"
     >
 
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:padding="24dp"
       >
 
     <LinearLayout
@@ -84,65 +85,12 @@
       </android.support.constraint.ConstraintLayout>
 
       <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:src="@drawable/ic_no_login_share_progress_bar"
-          />
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="24dp"
-          android:gravity="start"
-          android:text="@string/not_logged_in_share_title_connect_with"
-          style="@style/Aptoide.TextView.Medium.S.Black"
-          />
-
-      <LinearLayout
+          android:id="@+id/login_progress_indicator"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:gravity="center_horizontal"
-          android:orientation="horizontal"
-          android:weightSum="1"
-          >
-
-        <Button
-            android:id="@+id/not_logged_in_share_facebook_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_weight="0.50"
-            android:text="@string/facebook"
-            android:theme="@style/Aptoide.Button.Facebook"
-            style="@style/Aptoide.Button.Facebook"
-            />
-
-        <View
-            android:layout_width="8dp"
-            android:layout_height="match_parent"
-            />
-
-        <Button
-            android:id="@+id/not_logged_in_share_google_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_weight="0.50"
-            android:text="@string/google"
-            android:theme="@style/Aptoide.Button.Google"
-            style="@style/Aptoide.Button.Google"
-            />
-
-      </LinearLayout>
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="end"
           android:layout_marginTop="8dp"
-          android:text="@string/not_logged_in_share_message_posts_warning"
+          android:scaleType='fitXY'
+          android:src="@drawable/ic_no_login_share_progress_bar"
           />
 
       <TextView
@@ -154,22 +102,34 @@
           style="@style/Aptoide.TextView.Medium.S.Black"
           />
 
-      <ImageView
-          android:layout_width="wrap_content"
+      <android.support.constraint.ConstraintLayout
+          android:layout_width="250dp"
           android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:src="@drawable/not_logged_in_preview_toolbar"
-          />
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@color/transparent_black"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="10dp"
           >
+        <ImageView
+            android:id="@+id/fake_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/not_logged_in_preview_toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
 
         <FrameLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/background_window"
+            app:layout_constraintLeft_toLeftOf="@id/fake_toolbar"
+            app:layout_constraintRight_toRightOf="@id/fake_toolbar"
+            app:layout_constraintTop_toBottomOf="@id/fake_toolbar"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1"
             >
 
           <RelativeLayout
@@ -188,10 +148,9 @@
                 android:id="@+id/not_logged_in_app_icon"
                 android:layout_width="54dp"
                 android:layout_height="54dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="9.3dp"
+                android:layout_alignLeft="@+id/not_logged_in_separator"
+                android:layout_alignStart="@+id/not_logged_in_separator"
+                android:layout_below="@+id/not_logged_in_separator"
                 android:paddingTop="3dp"
                 android:scaleType="fitCenter"
                 tools:ignore="contentDescription"
@@ -271,40 +230,65 @@
 
         </FrameLayout>
 
-      </LinearLayout>
+      </android.support.constraint.ConstraintLayout>
 
-      <RelativeLayout
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="24dp"
+          android:text="@string/not_logged_in_share_title_connect_with"
+          style="@style/Aptoide.TextView.Medium.S.Black"
+          />
+
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
           android:orientation="horizontal"
+          android:weightSum="1"
           >
-        <TextView
-            android:id="@+id/not_logged_in_close"
+
+        <Button
+            android:id="@+id/not_logged_in_share_facebook_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:text="@string/not_logged_in_share_button_close_text"
-            android:textAllCaps="true"
-            android:textSize="14sp"
-            style="@style/Aptoide.TextView.Regular.M.Black"
+            android:layout_weight="0.50"
+            android:text="@string/facebook"
+            android:theme="@style/Aptoide.Button.Facebook"
+            style="@style/Aptoide.Button.Facebook"
             />
 
-        <TextView
-            android:id="@+id/not_logged_in_dont_show_again"
+
+        <Button
+            android:id="@+id/not_logged_in_share_google_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:clickable="true"
-            android:text="@string/dont_show_this_again"
-            style="@style/Aptoide.TextView.Regular.M.Black"
+            android:layout_weight="0.50"
+            android:text="@string/google"
+            android:theme="@style/Aptoide.Button.Google"
+            style="@style/Aptoide.Button.Google"
             />
-      </RelativeLayout>
+
+      </LinearLayout>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:layout_marginTop="8dp"
+          android:text="@string/not_logged_in_share_message_posts_warning"
+          />
 
     </LinearLayout>
   </ScrollView>
-</LinearLayout>
+  <ImageView
+      android:id="@+id/not_logged_in_close"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:background="@drawable/circle"
+      android:padding="8dp"
+      android:src="@drawable/ic_close_black_24dp"
+      />
+</RelativeLayout>

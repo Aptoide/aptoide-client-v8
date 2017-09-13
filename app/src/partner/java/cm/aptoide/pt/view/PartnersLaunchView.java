@@ -2,9 +2,13 @@ package cm.aptoide.pt.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
@@ -12,6 +16,8 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.remotebootconfig.BootConfigServices;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
@@ -45,6 +51,7 @@ public class PartnersLaunchView extends ActivityView {
     loadSplashScreen();
 
     if (savedInstanceState == null) {
+      disableWizard();
       getBootConfigRequest(this);
     }
   }
@@ -54,6 +61,30 @@ public class PartnersLaunchView extends ActivityView {
    */
   @Override public void onBackPressed() {
     //nothing
+  }
+
+  /**
+   * disable vanilla wizard
+   */
+  private void disableWizard() {
+    final SharedPreferences sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    final SharedPreferences securePreferences =
+        SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
+    SecurePreferences.setWizardAvailable(false, securePreferences);
+  }
+
+  /**
+   * setup partner theme
+   */
+  @Override public View onCreateView(View parent, String name, Context context,
+      AttributeSet attrs) {
+    String storeTheme = ((AptoideApplication) getApplicationContext()).getDefaultTheme();
+    if (storeTheme != null) {
+      ThemeUtils.setStoreTheme(this, storeTheme);
+      ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(storeTheme));
+    }
+    return super.onCreateView(parent, name, context, attrs);
   }
 
   /**
@@ -101,13 +132,24 @@ public class PartnersLaunchView extends ActivityView {
         .addConverterFactory(GsonConverterFactory.create())
         .client(((AptoideApplication) context.getApplicationContext()).getDefaultClient())
         .build();
+
+    String versionCode = "0";
+    try {
+      versionCode = String.valueOf(this.getPackageManager()
+          .getPackageInfo(getPackageName(), 0).versionCode);
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+
     Call<RemoteBootConfig> call = retrofit.create(BootConfigServices.class)
-        .getRemoteBootConfig(BuildConfig.APPLICATION_ID, bootConfig.getPartner()
-            .getType(), partnerId, String.valueOf(BuildConfig.VERSION_CODE));
+        .getRemoteBootConfig(getPackageName(), bootConfig.getPartner()
+            .getType(), partnerId, versionCode);
     call.enqueue(new Callback<RemoteBootConfig>() {
       @Override
       public void onResponse(Call<RemoteBootConfig> call, Response<RemoteBootConfig> response) {
-        if (response.body() != null) {
+        if (response.body() != null
+            && response.body()
+            .getData() != null) {
           ((PartnerApplication) getApplicationContext()).setRemoteBootConfig(response.body());
         }
         handleSplashScreenTimer();

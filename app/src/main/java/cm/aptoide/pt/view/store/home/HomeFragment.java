@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareActivity;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.SearchUtils;
@@ -122,6 +124,10 @@ public class HomeFragment extends StoreFragment {
     userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
+
+    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(), StoreTheme.get(
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme())
+        .getPrimaryColor()));
 
     accountManager.accountStatus()
         .observeOn(AndroidSchedulers.mainThread())

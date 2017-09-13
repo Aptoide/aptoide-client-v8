@@ -3,6 +3,7 @@ package cm.aptoide.pt.social.data;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedRecommendationViewHolder;
@@ -39,15 +40,17 @@ public class CardViewHolderFactory {
   private final SpannableFactory spannableFactory;
   private final MinimalCardViewFactory minimalCardViewFactory;
   private final String marketName;
+  private StoreContext storeContext;
 
   public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      MinimalCardViewFactory minimalCardViewFactory, String marketName) {
+      MinimalCardViewFactory minimalCardViewFactory, String marketName, StoreContext storeContext) {
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
+    this.storeContext = storeContext;
   }
 
   public PostViewHolder createViewHolder(int cardViewType, ViewGroup parent) {
@@ -123,7 +126,7 @@ public class CardViewHolderFactory {
       case TIMELINE_STATS:
         return new TimelineStatsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_stats_item, parent, false), spannableFactory,
-            cardTouchEventPublishSubject);
+            cardTouchEventPublishSubject, storeContext);
       case LOGIN:
         return new TimelineLoginPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
