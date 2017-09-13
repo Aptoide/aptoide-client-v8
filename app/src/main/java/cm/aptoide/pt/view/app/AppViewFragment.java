@@ -772,7 +772,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getName();
     storeId = app.getStore()
         .getId();
-    if(storeTheme == null) {
+    if (storeTheme == null) {
       storeTheme = app.getStore()
           .getAppearance()
           .getTheme();

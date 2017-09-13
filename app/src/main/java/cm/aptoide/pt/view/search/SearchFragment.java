@@ -70,7 +70,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return newInstance(query, false);
   }
 
-  public static SearchFragment newInstance(String query, boolean onlyTrustedApps, String storeName) {
+  public static SearchFragment newInstance(String query, boolean onlyTrustedApps,
+      String storeName) {
     Bundle args = new Bundle();
 
     args.putString(BundleCons.QUERY, query);
