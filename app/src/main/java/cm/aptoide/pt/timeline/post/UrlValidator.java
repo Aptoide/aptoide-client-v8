@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 public class UrlValidator {
   private final Pattern urlPattern;
 
-  public UrlValidator(Pattern url_pattern) {
-    urlPattern = url_pattern;
+  public UrlValidator(Pattern urlPattern) {
+    this.urlPattern = urlPattern;
   }
 
   public boolean containsUrl(String text) {
@@ -18,12 +18,10 @@ public class UrlValidator {
   }
 
   public String getUrl(String text) {
-    if (text.contains(" ") || text.contains("\n")) {
-      for (String textPart : text.split("[ \n]")) {
-        if (urlPattern.matcher(textPart)
-            .matches()) {
-          return textPart;
-        }
+    for (String textPart : text.split("[ \n]")) {
+      if (urlPattern.matcher(textPart)
+          .matches()) {
+        return textPart;
       }
     }
     return "";
