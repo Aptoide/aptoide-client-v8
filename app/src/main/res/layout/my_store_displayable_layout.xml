@@ -4,33 +4,34 @@
     android:id="@+id/widgetLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_bg_2"
+    android:background="@drawable/white_card"
     android:orientation="vertical"
-    tools:backgroundTint="@color/red_700"
     >
   <RelativeLayout
+      android:id="@+id/store_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="10dp"
-      android:layout_marginLeft="10dp"
-      android:layout_marginRight="10dp"
-      android:layout_marginStart="10dp"
-      android:layout_marginTop="10dp"
+      android:padding="8dp"
+      tools:background="@drawable/my_store_background"
+      tools:backgroundTint="@color/red"
       >
 
     <ImageView
         android:id="@+id/store_icon"
         android:layout_width="63dp"
         android:layout_height="63dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         tools:src="@drawable/ic_avatar_apps"
         />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_toEndOf="@id/store_icon"
         android:layout_toRightOf="@+id/store_icon"
         android:orientation="vertical"
@@ -56,54 +57,51 @@
     </LinearLayout>
 
   </RelativeLayout>
-  <LinearLayout
+  <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="10dp"
-      android:background="@drawable/background_card_overlay"
-      android:orientation="vertical"
+      android:gravity="center_vertical"
+      android:padding="8dp"
       >
-    <RelativeLayout
-        android:layout_width="match_parent"
+
+    <Button
+        android:id="@+id/explore_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        >
-
-      <Button
-          android:id="@+id/explore_button"
-          android:layout_alignParentEnd="true"
-          android:layout_alignParentRight="true"
-          android:layout_centerHorizontal="true"
-          android:layout_centerVertical="true"
-          android:layout_marginEnd="13dp"
-          android:layout_marginRight="13dp"
-          android:text="@string/create_store_displayable_explore_button"
-          android:textColor="@color/black"
-          style="@style/StoreWhiteButton"
-          />
-      <TextView
-          android:id="@+id/followers"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          tools:text="@string/store_meta_followers"
-          />
-      <TextView
-          android:id="@+id/following"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="10dp"
-          android:layout_toRightOf="@id/followers"
-          tools:text="@string/store_meta_followers"
-          />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/social_channels"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/create_store_displayable_explore_button"
+        style="@style/Aptoide.Button.S"
         />
-  </LinearLayout>
+    <TextView
+        android:id="@+id/followers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:text="@string/my_store_create_store_followers"
+        />
+    <TextView
+        android:id="@+id/following"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/followers"
+        android:layout_toRightOf="@id/followers"
+        android:gravity="center"
+        android:text="@string/my_store_create_store_followers"
+        />
+
+  </RelativeLayout>
+
+  <LinearLayout
+      android:id="@+id/social_channels"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      />
 </LinearLayout>

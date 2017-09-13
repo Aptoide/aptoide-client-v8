@@ -89,4 +89,14 @@ public class MyStoreDisplayable extends Displayable {
         .getStore()
         .getSocialChannels();
   }
+
+  public long getFollowers() {
+    return timelineStats.getData()
+        .getFollowers();
+  }
+
+  public long getFollowings() {
+    return timelineStats.getData()
+        .getFollowing();
+  }
 }

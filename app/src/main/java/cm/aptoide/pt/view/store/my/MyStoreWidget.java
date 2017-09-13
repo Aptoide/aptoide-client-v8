@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -18,6 +17,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.view.store.MetaStoresBaseWidget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
@@ -28,8 +28,7 @@ import com.jakewharton.rxbinding.view.RxView;
 
 public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
-  private LinearLayout widgetLayout;
-  private LinearLayout socialChannelsLayout;
+  private View storeLayout;
   private ImageView storeIcon;
   private TextView storeName;
   private Button exploreButton;
@@ -45,8 +44,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    widgetLayout = (LinearLayout) itemView.findViewById(R.id.widgetLayout);
-    socialChannelsLayout = (LinearLayout) itemView.findViewById(R.id.social_channels);
+    storeLayout = itemView.findViewById(R.id.store_layout);
     storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
     storeName = (TextView) itemView.findViewById(R.id.store_name);
     suggestionMessage = (TextView) itemView.findViewById(R.id.create_store_text);
@@ -67,17 +65,15 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
         .getTheme();
     @ColorInt int color = getColorOrDefault(StoreTheme.get(storeTheme), context);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
+      Drawable d = context.getDrawable(R.drawable.my_store_background);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      widgetLayout.setBackground(d);
+      storeLayout.setBackground(d);
     } else {
       Drawable d = context.getResources()
           .getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      widgetLayout.setBackgroundDrawable(d);
+      storeLayout.setBackgroundDrawable(d);
     }
-    exploreButton.setTextColor(color);
-
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
 
@@ -89,13 +85,18 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
           storeAnalytics.sendStoreTabInteractEvent("View Store");
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
         }));
-    setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
-    followers.setText(String.valueOf(displayable.getTimelineStats()
-        .getData()
-        .getFollowers()));
-    following.setText(String.valueOf(displayable.getTimelineStats()
-        .getData()
-        .getFollowing()));
+
+    String followersText =
+        String.format(getContext().getString(R.string.my_store_create_store_followers),
+            String.valueOf(displayable.getFollowers()));
+    followers.setText(new SpannableFactory().createColorSpan(followersText, color,
+        String.valueOf(displayable.getFollowers())));
+
+    String followingText =
+        String.format(getContext().getString(R.string.my_store_create_store_followings),
+            String.valueOf(displayable.getFollowings()));
+    following.setText(new SpannableFactory().createColorSpan(followingText, color,
+        String.valueOf(displayable.getFollowings())));
   }
 
   private int getColorOrDefault(StoreTheme theme, Context context) {
