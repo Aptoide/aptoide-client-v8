@@ -62,9 +62,9 @@
           android:id="@+id/transfer_record_recycler_view"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          android:clipToPadding="false"
           android:paddingBottom="68dp"
           android:scrollbars="vertical"
-          android:clipToPadding="false"
           >
       </android.support.v7.widget.RecyclerView>
 
@@ -73,6 +73,8 @@
           android:id="@+id/bottom_sheet"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:background="@drawable/spotandshare_bottom_sheet_background"
+          android:paddingTop="2dp"
           app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
           >
 
