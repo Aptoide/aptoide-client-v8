@@ -43,6 +43,10 @@ public class SpotAndShare {
     return spotAndShareV2.send(onSuccess, onError::onError);
   }
 
+  public Completable createOpenGroup(Action1<Void> onSuccess) {
+    return spotAndShareV2.enableOpenHotspot(onSuccess, DUMMY_HOTSPOT);
+  }
+
   public void isGroupCreated(GroupCreated groupCreated) {
     // TODO: 19-06-2017 neuro
     groupCreated.isCreated(false);//added this in order to test the hotspot creation

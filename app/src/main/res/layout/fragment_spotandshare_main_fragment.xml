@@ -111,6 +111,7 @@
       android:layout_marginRight="32dp"
       android:text="@string/spotandshare_button_receive"
       android:textAllCaps="true"
+      style="@style/Aptoide.Button"
       />
 
   <android.support.v7.widget.AppCompatButton
@@ -122,6 +123,7 @@
       android:layout_marginRight="32dp"
       android:text="@string/spotandshare_button_send"
       android:textAllCaps="true"
+      style="@style/Aptoide.Button"
       />
 
 </LinearLayout>
