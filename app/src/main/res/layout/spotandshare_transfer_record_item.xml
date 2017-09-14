@@ -64,6 +64,7 @@
       android:layout_gravity="center"
       android:layout_marginLeft="40dp"
       android:layout_marginRight="16dp"
+      android:layout_centerVertical="true"
       android:background="@drawable/round_circle_orange"
       android:src="@drawable/ic_download_icon"
       style="@style/Base.Widget.AppCompat.Button.Borderless"

@@ -152,14 +152,14 @@ public class SpotAndShareTransferRecordAdapter
         transferProgressBar.setIndeterminate(true);
       } else {
         acceptButton.setVisibility(View.GONE);
-        transferProgressBar.setVisibility(View.GONE);
+        transferProgressBar.setVisibility(View.INVISIBLE);
         installButton.setVisibility(View.GONE);
       }
     }
 
     private void resetState() {
       acceptButton.setVisibility(View.GONE);
-      transferProgressBar.setVisibility(View.GONE);
+      transferProgressBar.setVisibility(View.INVISIBLE);
       installButton.setVisibility(View.GONE);
     }
   }
