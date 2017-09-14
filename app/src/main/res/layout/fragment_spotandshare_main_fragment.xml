@@ -87,6 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="14dp"
+        android:maxLines="1"
         android:text="@string/spotandshare_button_username"
         style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         />
