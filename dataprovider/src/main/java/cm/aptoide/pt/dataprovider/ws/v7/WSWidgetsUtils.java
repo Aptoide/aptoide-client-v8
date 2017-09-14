@@ -142,28 +142,35 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case MY_STORE_META:
-          return GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences)
-              .observe(refresh)
-              .observeOn(Schedulers.io())
-              .map(getStoreMeta -> {
-                GetHomeMeta.Data data = new GetHomeMeta.Data();
-                data.setStore(getStoreMeta.getData());
-                GetHomeMeta homeMeta = new GetHomeMeta();
-                homeMeta.setData(data);
-                return homeMeta;
-              })
+          return Observable.zip(
+              GetTimelineStatsRequest.of(bodyInterceptor, null, httpClient, converterFactory,
+                  tokenInvalidator, sharedPreferences)
+                  .observe(refresh)
+                  .onErrorReturn(throwable -> null),
+              GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory,
+                  tokenInvalidator, sharedPreferences)
+                  .observe(refresh)
+                  .observeOn(Schedulers.io())
+                  .map(getStoreMeta -> {
+                    GetHomeMeta.Data data = new GetHomeMeta.Data();
+                    data.setStore(getStoreMeta.getData());
+                    GetHomeMeta homeMeta = new GetHomeMeta();
+                    homeMeta.setData(data);
+                    return homeMeta;
+                  })
+                  .onErrorResumeNext(throwable -> {
+                    LinkedList<String> errorsList = new LinkedList<>();
+                    errorsList.add(USER_NOT_LOGGED_ERROR);
+                    errorsList.add(USER_DONT_HAVE_STORE_ERROR);
+                    if (shouldAddObjectView(errorsList, throwable)) {
+                      return Observable.just(null);
+                    } else {
+                      return Observable.error(throwable);
+                    }
+                  }), (timelineStats, getHomeMeta) -> new MyStore(timelineStats, getHomeMeta))
               .doOnNext(obj -> wsWidget.setViewObject(obj))
-              .doOnError(throwable -> {
-                LinkedList<String> errorsList = new LinkedList<>();
-                errorsList.add(USER_NOT_LOGGED_ERROR);
-                errorsList.add(USER_DONT_HAVE_STORE_ERROR);
-                if (shouldAddObjectView(errorsList, throwable)) {
-                  wsWidget.setViewObject(((AptoideWsV7Exception) throwable).getBaseResponse());
-                }
-              })
               .onErrorResumeNext(throwable -> Observable.empty())
-              .map(listApps -> wsWidget);
+              .map(myStore -> wsWidget);
 
         case APP_META:
           return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,

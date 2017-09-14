@@ -16,6 +16,9 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.preferences.AdultContent;
+import cm.aptoide.pt.preferences.Preferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.remotebootconfig.BootConfigServices;
@@ -167,6 +170,7 @@ public class PartnersLaunchView extends ActivityView {
    * case there's not splash screen, automatically starts the main activity
    */
   private void handleSplashScreenTimer() {
+    setAdultContentValue();
     if (usesSplashScreen) {
       new java.util.Timer().schedule(new java.util.TimerTask() {
         @Override public void run() {
@@ -179,6 +183,37 @@ public class PartnersLaunchView extends ActivityView {
           .getTimeout() * 1000);
     } else {
       startActivity();
+    }
+  }
+
+  /**
+   * set adult content value on first app launch or when the mature switch is disabled.
+   */
+  private void setAdultContentValue() {
+    final SharedPreferences sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+
+    if (!((PartnerApplication) getApplicationContext()).getBootConfig()
+        .getPartner()
+        .getSwitches()
+        .getMature()
+        .isEnable() || SecurePreferences.isFirstRun(sharedPreferences)) {
+      AdultContent adultContent =
+          new AdultContent(((AptoideApplication) this.getApplicationContext()).getAccountManager(),
+              new Preferences(sharedPreferences),
+              new cm.aptoide.pt.preferences.SecurePreferences(sharedPreferences,
+                  new SecureCoderDecoder.Builder(this, sharedPreferences).create()));
+      if (((PartnerApplication) getApplicationContext()).getBootConfig()
+          .getPartner()
+          .getSwitches()
+          .getMature()
+          .isValue()) {
+        adultContent.enable()
+            .subscribe();
+      } else {
+        adultContent.disable()
+            .subscribe();
+      }
     }
   }
 

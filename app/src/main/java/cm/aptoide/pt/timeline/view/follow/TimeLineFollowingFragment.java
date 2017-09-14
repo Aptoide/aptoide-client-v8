@@ -45,6 +45,13 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
     return fragment;
   }
 
+  public static TimeLineFollowFragment newInstanceUsingUser(String storeTheme, String title) {
+    Bundle args = buildBundle(storeTheme, title);
+    TimeLineFollowingFragment fragment = new TimeLineFollowingFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
   @NonNull private static Bundle buildBundle(String storeTheme, String title) {
     Bundle args = new Bundle();
     args.putString(TITLE_KEY, title);
