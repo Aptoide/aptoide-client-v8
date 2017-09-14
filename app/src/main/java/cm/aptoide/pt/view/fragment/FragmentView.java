@@ -49,7 +49,7 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
     return new FragmentResultNavigator(getChildFragmentManager(), containerId,
-        android.R.anim.fade_in, android.R.anim.fade_out, defaultStore, defaultTheme,
+        android.R.anim.fade_in, android.R.anim.fade_out,
         activityResultNavigator.getFragmentResultMap(),
         activityResultNavigator.getFragmentResultRelay());
   }

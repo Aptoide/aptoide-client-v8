@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import java.util.Map;
 import rx.Observable;
@@ -14,32 +15,28 @@ public class FragmentResultNavigator implements FragmentNavigator {
   private final int containerId;
   private final int exitAnimation;
   private final int enterAnimation;
-  private final String defaultStore;
-  private final String defaultTheme;
   private final Map<Integer, Result> results;
   private final BehaviorRelay<Map<Integer, Result>> resultRelay;
 
   public FragmentResultNavigator(FragmentManager fragmentManager, @IdRes int containerId,
-      int enterAnimation, int exitAnimation, String defaultStore, String defaultTheme,
-      Map<Integer, Result> resultMap, BehaviorRelay<Map<Integer, Result>> resultRelay) {
+      int enterAnimation, int exitAnimation, Map<Integer, Result> resultMap,
+      BehaviorRelay<Map<Integer, Result>> resultRelay) {
     this.fragmentManager = fragmentManager;
     this.containerId = containerId;
     this.enterAnimation = enterAnimation;
     this.exitAnimation = exitAnimation;
-    this.defaultStore = defaultStore;
-    this.defaultTheme = defaultTheme;
     this.results = resultMap;
     this.resultRelay = resultRelay;
   }
 
-  @Override public void navigateForResult(Fragment fragment, int requestCode) {
+  @Override public void navigateForResult(Fragment fragment, int requestCode, boolean replace) {
     Bundle extras = fragment.getArguments();
     if (extras == null) {
       extras = new Bundle();
     }
     extras.putInt(FragmentNavigator.REQUEST_CODE_EXTRA, requestCode);
     fragment.setArguments(extras);
-    navigateTo(fragment);
+    navigateTo(fragment, replace);
   }
 
   @Override public Observable<Result> results(int requestCode) {
@@ -54,29 +51,42 @@ public class FragmentResultNavigator implements FragmentNavigator {
     popBackStack();
   }
 
-  @Override public String navigateTo(Fragment fragment) {
+  @Override public String navigateTo(Fragment fragment, boolean replace) {
     final String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
-    fragmentManager.beginTransaction()
+
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
         .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
-        .addToBackStack(tag)
-        .replace(containerId, fragment, tag)
-        .commit();
+        .addToBackStack(tag);
+
+    if (replace) {
+      fragmentTransaction = fragmentTransaction.replace(containerId, fragment, tag);
+    } else {
+      fragmentTransaction = fragmentTransaction.add(containerId, fragment, tag);
+    }
+
+    fragmentTransaction.commit();
     return tag;
   }
 
   /**
    * Only use this method when it is navigating to the first fragment in the activity.
    */
-  @Override public void navigateToWithoutBackSave(Fragment fragment) {
-    fragmentManager.beginTransaction()
-        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
-        .replace(containerId, fragment)
-        .commit();
+  @Override public void navigateToWithoutBackSave(Fragment fragment, boolean replace) {
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation);
+
+    if (replace) {
+      fragmentTransaction = fragmentTransaction.replace(containerId, fragment);
+    } else {
+      fragmentTransaction = fragmentTransaction.add(containerId, fragment);
+    }
+
+    fragmentTransaction.commit();
   }
 
-  @Override public void navigateToCleaningBackStack(Fragment fragment) {
+  @Override public void navigateToCleaningBackStack(Fragment fragment, boolean replace) {
     cleanBackStack();
-    navigateToWithoutBackSave(fragment);
+    navigateToWithoutBackSave(fragment, replace);
   }
 
   @Override public boolean popBackStack() {

@@ -59,7 +59,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
@@ -193,7 +193,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       Fragment fragment = AptoideApplication.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
-      getFragmentNavigator().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment, true);
     });
 
     //setup the ui
@@ -584,7 +584,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         fragment = AptoideApplication.getFragmentProvider()
             .newSearchFragment(app.getName(), true);
       }
-      getFragmentNavigator().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment, true);
     };
 
     return v -> {

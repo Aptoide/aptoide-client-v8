@@ -1,6 +1,6 @@
 package cm.aptoide.pt.view.share;
 
-import cm.aptoide.pt.view.account.GooglePlayServicesView;
+import cm.aptoide.pt.account.view.GooglePlayServicesView;
 import rx.Observable;
 
 public interface NotLoggedInShareView extends GooglePlayServicesView {

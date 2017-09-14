@@ -57,7 +57,7 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(gridStoreDisplayable.getPojo()
               .getName(), store.getAppearance()
-              .getTheme()));
+              .getTheme()), true);
     };
     compositeSubscription.add(RxView.clicks(storeLayout)
         .subscribe(handleStoreClick));

@@ -11,7 +11,7 @@ import cm.aptoide.pt.billing.view.boacompra.BoaCompraFragment;
 import cm.aptoide.pt.billing.view.braintree.BraintreeCreditCardFragment;
 import cm.aptoide.pt.billing.view.mol.MolFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalFragment;
-import cm.aptoide.pt.view.account.LoginActivity;
+import cm.aptoide.pt.account.view.LoginActivity;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.Result;
@@ -60,17 +60,17 @@ public class BillingNavigator {
         getProductBundle(sellerId, productId, developerPayload, paymentMethod.getName());
     switch (paymentMethod.getId()) {
       case PaymentMethodMapper.PAYPAL:
-        fragmentNavigator.navigateTo(PayPalFragment.create(bundle));
+        fragmentNavigator.navigateTo(PayPalFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.MOL_POINTS:
-        fragmentNavigator.navigateTo(MolFragment.create(bundle));
+        fragmentNavigator.navigateTo(MolFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
-        fragmentNavigator.navigateTo(BoaCompraFragment.create(bundle));
+        fragmentNavigator.navigateTo(BoaCompraFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
-        fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(bundle));
+        fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.SANDBOX:
       default:

@@ -295,7 +295,7 @@ public class AddStoreDialog extends BaseDialog {
 
   private void topStoresAction() {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newFragmentTopStores());
+        .newFragmentTopStores(), true);
     if (isAdded()) {
       dismiss();
     }

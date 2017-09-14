@@ -30,7 +30,7 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.account.store.ManageStoreFragment;
+import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.List;
@@ -309,7 +309,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     ManageStoreFragment.ViewModel viewModel =
         new ManageStoreFragment.ViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
             storeDescription, storeImagePath);
-    getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
+    getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false), true);
   }
 
   private void setSecondaryInfoVisibility(boolean userVisibility) {

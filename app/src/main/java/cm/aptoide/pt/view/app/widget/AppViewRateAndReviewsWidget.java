@@ -179,7 +179,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
               .getName(), app.getPackageName(), app.getStore()
               .getAppearance()
               .getTheme());
-      getFragmentNavigator().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment, true);
     };
 
     compositeSubscription.add(RxView.clicks(readAllButton)

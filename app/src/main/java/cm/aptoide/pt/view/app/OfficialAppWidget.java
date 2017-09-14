@@ -145,7 +145,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
             Fragment appView = AptoideApplication.getFragmentProvider()
                 .newAppViewFragment(appData.getPackageName(),
                     AppViewFragment.OpenType.OPEN_AND_INSTALL);
-            getFragmentNavigator().navigateTo(appView);
+            getFragmentNavigator().navigateTo(appView, true);
           }
         }, err -> {
           CrashReport.getInstance()

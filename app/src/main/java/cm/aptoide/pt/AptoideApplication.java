@@ -169,7 +169,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.view.account.store.StoreManager;
+import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.view.configuration.ActivityProvider;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.ActivityProviderImpl;

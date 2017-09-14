@@ -53,7 +53,7 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.util.CommentOperations;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;

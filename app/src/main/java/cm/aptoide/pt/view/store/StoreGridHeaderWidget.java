@@ -67,7 +67,7 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
                   .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);
             }
 
-            getFragmentNavigator().navigateTo(fragment);
+            getFragmentNavigator().navigateTo(fragment, true);
             Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
           }));
     }

@@ -36,7 +36,7 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.custom.BadgeView;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
@@ -322,19 +322,19 @@ public class HomeFragment extends StoreFragment {
           } else if (itemId == R.id.navigation_item_rollback) {
             drawerAnalytics.drawerInteract("Rollback");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newRollbackFragment());
+                .newRollbackFragment(), true);
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
             drawerAnalytics.drawerInteract("Scheduled Downloads");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newScheduledDownloadsFragment());
+                .newScheduledDownloadsFragment(), true);
           } else if (itemId == R.id.navigation_item_excluded_updates) {
             drawerAnalytics.drawerInteract("Excluded Updates");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newExcludedUpdatesFragment());
+                .newExcludedUpdatesFragment(), true);
           } else if (itemId == R.id.navigation_item_settings) {
             drawerAnalytics.drawerInteract("Settings");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newSettingsFragment());
+                .newSettingsFragment(), true);
           } else if (itemId == R.id.navigation_item_facebook) {
             drawerAnalytics.drawerInteract("Facebook");
             openFacebook();
@@ -390,7 +390,8 @@ public class HomeFragment extends StoreFragment {
         .subscribe(installed -> {
           if (installed == null) {
             getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY));
+                .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY),
+                true);
           } else {
             Intent i = getContext().getPackageManager()
                 .getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
@@ -410,7 +411,7 @@ public class HomeFragment extends StoreFragment {
         .getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
+        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName), true);
   }
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,
@@ -423,7 +424,7 @@ public class HomeFragment extends StoreFragment {
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
             getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newSocialFragment(socialUrl, pageTitle));
+                .newSocialFragment(socialUrl, pageTitle), true);
           } else {
             Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
             getContext().startActivity(sharingIntent);

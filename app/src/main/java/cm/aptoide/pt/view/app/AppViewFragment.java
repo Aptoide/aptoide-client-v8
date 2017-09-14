@@ -95,7 +95,7 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewFlagThisDisplayable;

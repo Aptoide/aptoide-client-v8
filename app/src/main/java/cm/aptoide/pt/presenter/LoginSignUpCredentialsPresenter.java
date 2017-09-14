@@ -13,7 +13,7 @@ import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import java.util.Collection;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

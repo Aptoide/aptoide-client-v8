@@ -78,7 +78,7 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
           }
           navigator.navigateTo(AptoideApplication.getFragmentProvider()
               .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore()
-                  .getName(), app.getPackageName(), review.getId()));
+                  .getName(), app.getPackageName(), review.getId()), true);
         }));
   }
 }

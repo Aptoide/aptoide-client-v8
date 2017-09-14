@@ -168,7 +168,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
         if (s.length() > 1) {
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newSearchFragment(s, storeName));
+              .newSearchFragment(s, storeName), true);
         }
       });
     }

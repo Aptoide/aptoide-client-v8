@@ -7,7 +7,7 @@ package cm.aptoide.pt.presenter;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideCredentials;
-import cm.aptoide.pt.view.account.GooglePlayServicesView;
+import cm.aptoide.pt.account.view.GooglePlayServicesView;
 import rx.Observable;
 
 public interface LoginSignUpCredentialsView extends GooglePlayServicesView {

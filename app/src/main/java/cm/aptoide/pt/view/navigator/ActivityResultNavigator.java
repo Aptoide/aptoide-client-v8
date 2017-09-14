@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
 import com.facebook.CallbackManager;
@@ -40,9 +40,7 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     fragmentResultMap = new HashMap<>();
     fragmentNavigator =
         new FragmentResultNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
-            android.R.anim.fade_in, android.R.anim.fade_out,
-            ((AptoideApplication) getApplicationContext()).getDefaultStore(),
-            ((AptoideApplication) getApplicationContext()).getDefaultTheme(), fragmentResultMap,
+            android.R.anim.fade_in, android.R.anim.fade_out, fragmentResultMap,
             fragmentResultRelay);
     // super.onCreate handles fragment creation using FragmentManager.
     // Make sure navigator instances are already created when fragments are created,

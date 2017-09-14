@@ -106,30 +106,30 @@ public class DeepLinkManager {
   }
 
   private void appViewDeepLinkUname(String uname) {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(uname));
+    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(uname), true);
   }
 
   private void appViewDeepLink(String md5) {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstance(md5));
+    fragmentNavigator.navigateTo(AppViewFragment.newInstance(md5), true);
   }
 
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(appId, packageName, openType));
+        .newAppViewFragment(appId, packageName, openType), true);
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(packageName, storeName, openType));
+        .newAppViewFragment(packageName, storeName, openType), true);
   }
 
   private void searchDeepLink(String query) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newSearchFragment(query));
+        .newSearchFragment(query), true);
   }
 
   private void newrepoDeepLink(Intent intent, ArrayList<String> repos,
@@ -179,7 +179,7 @@ public class DeepLinkManager {
   @NonNull private Completable openStore(Store store) {
     return Completable.fromAction(() -> fragmentNavigator.navigateTo(
         AptoideApplication.getFragmentProvider()
-            .newStoreFragment(store.getStoreName(), store.getTheme())));
+            .newStoreFragment(store.getStoreName(), store.getTheme()), true));
   }
 
   private void downloadNotificationDeepLink() {
@@ -218,7 +218,7 @@ public class DeepLinkManager {
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                defaultTheme, StoreContext.home));
+                defaultTheme, StoreContext.home), true);
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }
@@ -230,7 +230,8 @@ public class DeepLinkManager {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
         fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-            .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
+            .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)),
+            true);
       }
     }
   }

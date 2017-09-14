@@ -109,7 +109,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-            .newStoreFragment(storeName, storeTheme));
+            .newStoreFragment(storeName, storeTheme), true);
       };
 
       Action1<Void> subscribeStore = __ -> {

@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.BackButtonActivity;
-import cm.aptoide.pt.view.account.LoginBottomSheet;
+import cm.aptoide.pt.account.view.LoginBottomSheet;
 import cm.aptoide.pt.view.navigator.TabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigator;
 import rx.Observable;
@@ -20,7 +20,7 @@ public class PostActivity extends BackButtonActivity
     setContentView(getLayoutId());
     if (savedInstanceState == null) {
       final Fragment fragment = PostFragment.newInstanceFromExternalSource();
-      getFragmentNavigator().navigateToWithoutBackSave(fragment);
+      getFragmentNavigator().navigateToWithoutBackSave(fragment, true);
     }
   }
 
