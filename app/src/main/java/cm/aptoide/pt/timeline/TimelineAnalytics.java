@@ -567,7 +567,8 @@ public class TimelineAnalytics {
               .getPrimaryName());
       sendOpenAppEvent(card.getType()
           .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
-    } else if (postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+    } else if (postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL) || postType.equals(
+        CardType.AGGREGATED_SOCIAL_APP)) {
       AggregatedRecommendation card = (AggregatedRecommendation) post;
       Analytics.AppsTimeline.clickOnCard(postType.name(), card.getPackageName(),
           Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
