@@ -30,7 +30,7 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
   }
 
   public void openSpotAndShareStart() {
-    getFragmentNavigator().navigateTo(SpotAndShareMainFragment.newInstance());
+    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance());
   }
 
   public void joinGroup() {
