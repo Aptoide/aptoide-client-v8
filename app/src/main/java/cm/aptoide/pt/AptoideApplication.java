@@ -50,6 +50,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.billing.AccountPayer;
 import cm.aptoide.pt.billing.Billing;
@@ -283,6 +284,7 @@ public abstract class AptoideApplication extends Application {
   private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private BillingIdResolver billingiIdResolver;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -1279,6 +1281,13 @@ public abstract class AptoideApplication extends Application {
               () -> new TimelineAdsRepository(context, BehaviorRelay.create()), getMarketName()));
     }
     return timelineRepositoryFactory.create(action);
+  }
+
+  public AptoideNavigationTracker getAptoideNavigationTracker() {
+    if (aptoideNavigationTracker == null) {
+      aptoideNavigationTracker = new AptoideNavigationTracker(new ArrayList<>());
+    }
+    return aptoideNavigationTracker;
   }
 
   public abstract LoginPreferences getLoginPreferences();
