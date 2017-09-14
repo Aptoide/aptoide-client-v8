@@ -1,6 +1,4 @@
 <resources>
-  <string name="app_name">Aptoide</string>
-
   <!-- NavDrawer List items -->
   <string name="drawer_title_my_account">My Account</string>
   <string name="drawer_title_spot_share">Spot&amp;Share</string>
@@ -681,6 +679,8 @@
   <string name="not_logged_in_share_title_connect_with">Connect with</string>
   <string name="not_logged_in_share_message_posts_warning">No posts on your behalf will be done</string>
   <string name="not_logged_in_share_short_start_interacting">Start interacting:</string>
-
+  <string name="not_logged_in_share_button_close_text">close</string>
+  <string name="my_store_create_store_followings">Following\n%s</string>
+  <string name="my_store_create_store_followers">Followers\n%s</string>
 </resources>
 

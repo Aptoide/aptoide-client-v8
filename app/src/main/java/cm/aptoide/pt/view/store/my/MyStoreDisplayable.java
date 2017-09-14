@@ -1,19 +1,14 @@
 package cm.aptoide.pt.view.store.my;
 
 import android.content.Context;
-import android.support.annotation.IntDef;
 import android.text.TextUtils;
-import android.view.View;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.ws.v7.MyStore;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import lombok.Getter;
 
@@ -24,18 +19,24 @@ import lombok.Getter;
 public class MyStoreDisplayable extends Displayable {
   @Getter private GetHomeMeta meta;
   private boolean isLongTime;
+  private TimelineStats timelineStats;
 
   public MyStoreDisplayable() {
   }
 
-  public MyStoreDisplayable(GetHomeMeta meta) {
-    this.meta = meta;
+  public MyStoreDisplayable(MyStore myStore) {
+    this.meta = myStore.getGetHomeMeta();
+    timelineStats = myStore.getTimelineStats();
     Calendar aWeekBefore = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     aWeekBefore.add(Calendar.DAY_OF_MONTH, -Calendar.DAY_OF_WEEK);
     Date added = meta.getData()
         .getStore()
         .getAdded();
     isLongTime = added.before(aWeekBefore.getTime());
+  }
+
+  public TimelineStats getTimelineStats() {
+    return timelineStats;
   }
 
   @Override protected Configs getConfig() {
@@ -70,14 +71,6 @@ public class MyStoreDisplayable extends Displayable {
     return message;
   }
 
-  public int getCreateStoreText() {
-    if (isLongTime) {
-      return R.string.create_store_displayable_created_store_long_term_message;
-    } else {
-      return R.string.create_store_displayable_created_store_short_term_message;
-    }
-  }
-
   public int getExploreButtonText() {
     if (isLongTime) {
       return R.string.create_store_displayable_explore_long_term_button;
@@ -86,19 +79,13 @@ public class MyStoreDisplayable extends Displayable {
     }
   }
 
-  public @Visibility int getCreateStoreTextViewVisibility() {
-    return isLongTime ? View.GONE : View.VISIBLE;
+  public long getFollowers() {
+    return timelineStats.getData()
+        .getFollowers();
   }
 
-  public List<Store.SocialChannel> getSocialChannels() {
-    return meta.getData()
-        .getStore()
-        .getSocialChannels() == null ? Collections.EMPTY_LIST : meta.getData()
-        .getStore()
-        .getSocialChannels();
-  }
-
-  @IntDef({ View.VISIBLE, View.INVISIBLE, View.GONE }) @Retention(RetentionPolicy.SOURCE)
-  @interface Visibility {
+  public long getFollowings() {
+    return timelineStats.getData()
+        .getFollowing();
   }
 }

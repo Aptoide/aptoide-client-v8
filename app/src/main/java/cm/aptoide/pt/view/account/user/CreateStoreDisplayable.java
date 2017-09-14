@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.account.user;
 
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 
@@ -11,12 +12,14 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 public class CreateStoreDisplayable extends Displayable {
 
   private StoreAnalytics storeAnalytics;
+  private TimelineStats timelineStats;
 
   public CreateStoreDisplayable() {
   }
 
-  public CreateStoreDisplayable(StoreAnalytics storeAnalytics) {
+  public CreateStoreDisplayable(StoreAnalytics storeAnalytics, TimelineStats timelineStats) {
     this.storeAnalytics = storeAnalytics;
+    this.timelineStats = timelineStats;
   }
 
   @Override protected Configs getConfig() {
@@ -29,5 +32,15 @@ public class CreateStoreDisplayable extends Displayable {
 
   public StoreAnalytics getStoreAnalytics() {
     return storeAnalytics;
+  }
+
+  public long getFollowers() {
+    return timelineStats.getData()
+        .getFollowers();
+  }
+
+  public long getFollowings() {
+    return timelineStats.getData()
+        .getFollowing();
   }
 }
