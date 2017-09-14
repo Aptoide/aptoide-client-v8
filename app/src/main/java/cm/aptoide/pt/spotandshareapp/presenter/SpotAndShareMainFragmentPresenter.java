@@ -21,8 +21,10 @@ import rx.android.schedulers.AndroidSchedulers;
 public class SpotAndShareMainFragmentPresenter implements Presenter {
   public static final int EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND = 0;
   public static final int EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE = 1;
-  public static final int WRITE_SETTINGS_REQUEST_CODE_SEND = 2;
-  public static final int WRITE_SETTINGS_REQUEST_CODE_RECEIVE = 3;
+  public static final int EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE = 2;
+  public static final int WRITE_SETTINGS_REQUEST_CODE_SEND = 3;
+  public static final int WRITE_SETTINGS_REQUEST_CODE_RECEIVE = 4;
+  public static final int WRITE_SETTINGS_REQUEST_CODE_SHARE_APTOIDE = 5;
 
   private SpotAndShareLocalUserManager spotAndShareUserManager;
   private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
@@ -53,7 +55,14 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareAptoideApk())
-        .doOnNext(__ -> view.openShareAptoideFragment())
+        .doOnNext(__ -> {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE);
+          } else {
+            view.openShareAptoideFragment();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> err.printStackTrace());
@@ -169,6 +178,27 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(
+            __ -> spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE)
+                .filter(permissions -> {
+                  for (PermissionProvider.Permission permission : permissions) {
+                    if (!permission.isGranted()) {
+                      return false;
+                    }
+                  }
+                  return true;
+                })
+                .doOnNext(permissions -> {
+                  spotAndSharePermissionProvider.requestWriteSettingsPermission(
+                      WRITE_SETTINGS_REQUEST_CODE_SHARE_APTOIDE);
+                }))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
   }
 
   private void handleWriteSettingsPermissionResult() {
@@ -190,6 +220,16 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .doOnNext(requestCode -> {
           Log.i(getClass().getName(), "GOING TO START RECEIVING");
           view.openWaitingToReceiveFragment();
+        })
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> spotAndSharePermissionProvider.writeSettingsPermissionResult())
+        .filter(requestCode -> requestCode == WRITE_SETTINGS_REQUEST_CODE_SHARE_APTOIDE)
+        .doOnNext(requestCode -> {
+          view.openShareAptoideFragment();
         })
         .subscribe(created -> {
         }, error -> error.printStackTrace());

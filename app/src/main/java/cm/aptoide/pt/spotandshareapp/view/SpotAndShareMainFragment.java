@@ -182,6 +182,7 @@ public class SpotAndShareMainFragment extends FragmentView
     switch (requestCode) {
       case SpotAndShareMainFragmentPresenter.WRITE_SETTINGS_REQUEST_CODE_RECEIVE:
       case SpotAndShareMainFragmentPresenter.WRITE_SETTINGS_REQUEST_CODE_SEND:
+      case SpotAndShareMainFragmentPresenter.WRITE_SETTINGS_REQUEST_CODE_SHARE_APTOIDE:
         if (isWriteSettingsPermissionGranted()) {
           writeSettingsPermissionRelay.call(requestCode);
         }

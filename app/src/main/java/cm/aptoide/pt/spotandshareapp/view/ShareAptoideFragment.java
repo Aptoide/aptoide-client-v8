@@ -91,8 +91,8 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
 
   private void setupShareTextViews() {//// TODO: 12-09-2017 filipe create the ssid
     Spannable spannable = createColorSpan(
-        getResources().getString(R.string.spotandshare_message_first_share_instruction, "todo"),
-        getResources().getColor(R.color.orange_700), "todo");
+        getResources().getString(R.string.spotandshare_message_first_share_instruction,
+            "DummyHotspot"), getResources().getColor(R.color.orange_700), "DummyHotspot");
     shareAptoideFirstInstruction.setText(spannable);
 
     spannable = createColorSpan(
