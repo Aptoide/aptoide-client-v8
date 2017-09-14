@@ -13,6 +13,8 @@ public class Notification extends RealmObject {
   public final static String OWNER_ID_KEY = "ownerId";
   public final static String EXPIRE_KEY = "expire";
   public final static String KEY = "key";
+  public static final int NOT_DISMISSED = -1;
+
   private Long expire;
   @PrimaryKey private String key;
   private String abTestingGroup;
@@ -71,10 +73,6 @@ public class Notification extends RealmObject {
     return dismissed;
   }
 
-  public void setDismissed(long dismissed) {
-    this.dismissed = dismissed;
-  }
-
   public int getType() {
     return type;
   }
@@ -121,6 +119,14 @@ public class Notification extends RealmObject {
 
   public String getKey() {
     return key;
+  }
+
+  public boolean isDismissed() {
+    return dismissed != NOT_DISMISSED;
+  }
+
+  public void setDismissed(long dismissed) {
+    this.dismissed = dismissed;
   }
 
   public boolean isExpired() {

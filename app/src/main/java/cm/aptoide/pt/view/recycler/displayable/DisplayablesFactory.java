@@ -11,8 +11,8 @@ import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -30,14 +30,16 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.MyStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.view.account.user.CreateStoreDisplayable;
+import cm.aptoide.pt.view.account.user.LoginDisplayable;
 import cm.aptoide.pt.view.app.GridAppDisplayable;
 import cm.aptoide.pt.view.app.GridAppListDisplayable;
 import cm.aptoide.pt.view.app.OfficialAppDisplayable;
@@ -124,8 +126,7 @@ public class DisplayablesFactory {
           return Observable.from(createReviewsGroupDisplayables(widget, windowManager, resources));
 
         case MY_STORE_META:
-          return Observable.from(
-              createMyStoreDisplayables(widget.getViewObject(), context, storeAnalytics));
+          return Observable.from(createMyStoreDisplayables(widget.getViewObject(), storeAnalytics));
 
         case STORES_RECOMMENDED:
           return Observable.just(
@@ -340,13 +341,19 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  private static List<Displayable> createMyStoreDisplayables(Object viewObject, Context context,
+  private static List<Displayable> createMyStoreDisplayables(Object viewObject,
       StoreAnalytics storeAnalytics) {
     LinkedList<Displayable> displayables = new LinkedList<>();
-    if (viewObject instanceof GetHomeMeta && ((GetHomeMeta) viewObject).getData() != null) {
-      displayables.add(new MyStoreDisplayable(((GetHomeMeta) viewObject)));
-    } else {
-      displayables.add(new CreateStoreDisplayable(storeAnalytics));
+
+    if (viewObject instanceof MyStore) {
+      MyStore store = (MyStore) viewObject;
+      if (!store.isCreateStore()) {
+        displayables.add(new MyStoreDisplayable(store));
+      } else if (store.isLogged()) {
+        displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
+      } else {
+        displayables.add(new LoginDisplayable());
+      }
     }
     return displayables;
   }

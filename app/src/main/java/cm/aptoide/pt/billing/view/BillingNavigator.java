@@ -14,6 +14,7 @@ import cm.aptoide.pt.billing.view.paypal.PayPalFragment;
 import cm.aptoide.pt.view.account.LoginActivity;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.navigator.Result;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -31,7 +32,8 @@ public class BillingNavigator {
   private final String marketName;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager, String marketName) {
+      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
+      String marketName) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
@@ -130,7 +132,7 @@ public class BillingNavigator {
     throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
   }
 
-  private PayPalResult map(ActivityNavigator.Result result) {
+  private PayPalResult map(Result result) {
     switch (result.getResultCode()) {
       case Activity.RESULT_OK:
         final PaymentConfirmation confirmation = result.getData()

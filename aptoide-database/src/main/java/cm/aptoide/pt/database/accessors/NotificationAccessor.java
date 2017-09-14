@@ -33,6 +33,18 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
         .observeOn(Schedulers.io());
   }
 
+  public Observable<List<Notification>> getUnread() {
+    return Observable.fromCallable(() -> database.get())
+        .flatMap(realm -> realm.where(Notification.class)
+            .equalTo("dismissed", Notification.NOT_DISMISSED)
+            .findAllSorted("timeStamp", Sort.DESCENDING)
+            .asObservable())
+        .unsubscribeOn(RealmSchedulers.getScheduler())
+        .flatMap((data) -> database.copyFromRealm(data))
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
+
   public Observable<List<Notification>> getAllSorted(Sort sortOrder, Integer[] notificationType) {
     return Observable.fromCallable(() -> database.get())
         .flatMap(realm -> realm.where(Notification.class)
@@ -48,11 +60,12 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
   public Single<Notification> getLastShowed(Integer[] notificationType) {
     return getAllSorted(Sort.DESCENDING, notificationType).first()
         .map(notifications -> {
-          if (notifications.isEmpty()) {
-            return null;
-          } else {
-            return notifications.get(0);
+          for (Notification notification : notifications) {
+            if (!notification.isDismissed()) {
+              return notification;
+            }
           }
+          return null;
         })
         .toSingle();
   }
@@ -76,5 +89,9 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
   public Completable delete(String[] keys) {
     return Completable.fromAction(
         () -> database.deleteAllIn(Notification.class, Notification.KEY, keys));
+  }
+
+  public Observable<List<Notification>> getAll() {
+    return database.getAll(Notification.class);
   }
 }

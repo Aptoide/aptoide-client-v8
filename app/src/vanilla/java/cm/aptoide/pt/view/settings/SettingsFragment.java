@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -28,19 +29,19 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.filemanager.FileManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -49,11 +50,13 @@ import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.SettingsConstants;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxPreference;
@@ -81,7 +84,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
-  private PermissionManager permissionManager;
   private AdultContent adultContent;
 
   private RxAlertDialog adultContentConfirmationDialog;
@@ -95,10 +97,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private CheckBoxPreference adultContentWithPinPreferenceView;
   private CheckBoxPreference socialCampaignNotifications;
   private boolean trackAnalytics;
-  private NotificationCenter notificationCenter;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
   private String marketName;
+  private Database database;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -110,9 +112,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     trackAnalytics = true;
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
     fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
-    permissionManager = new PermissionManager();
     adultContentConfirmationDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
             .setPositiveButton(R.string.yes)
@@ -138,8 +140,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .setEditText(R.id.pininput)
         .build();
 
-    notificationCenter =
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
@@ -153,6 +153,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
         new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
         new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
+  }
+
+  @CallSuper @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    String storeTheme =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+    if (storeTheme != null) {
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+    }
+
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -192,18 +205,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-          ((AptoideApplication) getContext().getApplicationContext()).getDatabase(), Update.class);
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(database, Update.class);
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
           ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
-          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
-            CrashReport.getInstance()
-                .log(throwable);
-          });
+          .subscribe(updates -> Logger.d(TAG, "updates refreshed"),
+              throwable -> CrashReport.getInstance()
+                  .log(throwable));
     }
   }
 

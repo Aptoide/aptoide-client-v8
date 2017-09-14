@@ -39,4 +39,11 @@ public class AuthorizationRepository {
         .flatMapObservable(
             payerId -> authorizationPersistence.getAuthorization(payerId, paymentMethodId));
   }
+
+  public Single<Authorization> createAuthorization(int paymentMethodId,
+      Authorization.Status status) {
+    return payer.getId()
+        .flatMap(payerId -> authorizationPersistence.createAuthorization(payerId, paymentMethodId,
+            status));
+  }
 }

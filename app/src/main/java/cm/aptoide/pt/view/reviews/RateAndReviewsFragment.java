@@ -238,7 +238,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     endlessRecyclerOnScrollListener.setOnEndlessFinish(endlessRecyclerOnScrollListener1 -> {
       if (languageFilter.hasMoreCountryCodes()) {
         endlessRecyclerOnScrollListener.reset(createListReviewsRequest(languageFilter.inc()
-                .getValue()));
+            .getValue()));
       }
     });
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

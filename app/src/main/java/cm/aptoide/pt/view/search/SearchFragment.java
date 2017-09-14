@@ -70,6 +70,18 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return newInstance(query, false);
   }
 
+  public static SearchFragment newInstance(String query, boolean onlyTrustedApps, String storeName) {
+    Bundle args = new Bundle();
+
+    args.putString(BundleCons.QUERY, query);
+    args.putBoolean(BundleCons.ONLY_TRUSTED, onlyTrustedApps);
+    args.putString(BundleCons.STORE_NAME, storeName);
+
+    SearchFragment fragment = new SearchFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
   public static SearchFragment newInstance(String query, boolean onlyTrustedApps) {
     Bundle args = new Bundle();
 
@@ -328,7 +340,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
+    inflater.inflate(R.menu.menu_search_results, menu);
 
     if (storeName != null) {
       SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(),

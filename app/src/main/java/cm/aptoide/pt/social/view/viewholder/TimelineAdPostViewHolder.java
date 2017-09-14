@@ -36,20 +36,25 @@ public class TimelineAdPostViewHolder extends PostViewHolder<AdPost> {
         .subscribe(adResponse -> {
           if (adResponse.getStatus()
               .equals(AdResponse.Status.ok)) {
-            cardLayout.addView(adResponse.getView());
-            adLoading.setVisibility(View.GONE);
+            if (adResponse.getView()
+                .getParent() == null) {
+              cardLayout.addView(adResponse.getView());
+              adLoading.setVisibility(View.GONE);
+            } else {
+              handleNativeAdError(post, position);
+            }
           } else {
-            cardLayout.setVisibility(View.GONE);
-            NativeAdErrorEvent nativeAdErrorEvent =
-                new NativeAdErrorEvent(post, CardTouchEvent.Type.ERROR, position);
-            cardTouchEventPublishSubject.onNext(nativeAdErrorEvent);
+            handleNativeAdError(post, position);
           }
         }, throwable -> {
-          cardLayout.setVisibility(View.GONE);
-          NativeAdErrorEvent nativeAdErrorEvent =
-              new NativeAdErrorEvent(post, CardTouchEvent.Type.ERROR, position);
-          cardTouchEventPublishSubject.onNext(nativeAdErrorEvent);
+          handleNativeAdError(post, position);
           Logger.e(this, throwable);
         });
+  }
+
+  private void handleNativeAdError(AdPost post, int position) {
+    NativeAdErrorEvent nativeAdErrorEvent =
+        new NativeAdErrorEvent(post, CardTouchEvent.Type.ERROR, position);
+    cardTouchEventPublishSubject.onNext(nativeAdErrorEvent);
   }
 }

@@ -54,7 +54,7 @@ import java.util.List;
 /**
  * Created by neuro on 10-10-2016.
  */
-public class FragmentProviderImpl implements FragmentProvider {
+public class VanillaFragmentProvider implements FragmentProvider {
 
   @Override public Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem) {
     return ScreenshotsViewerFragment.newInstance(uris, currentItem);
@@ -220,6 +220,12 @@ public class FragmentProviderImpl implements FragmentProvider {
   @Override
   public Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage) {
     return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage);
+  }
+
+  @Override
+  public Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage,
+      String storeName) {
+    return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage, storeName);
   }
 
   @Override public Fragment newRollbackFragment() {

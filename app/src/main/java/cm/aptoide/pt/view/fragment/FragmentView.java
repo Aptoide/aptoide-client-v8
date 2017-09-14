@@ -20,16 +20,17 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ScreenTrackingUtils;
 import cm.aptoide.pt.view.MainActivity;
-import cm.aptoide.pt.view.leak.LeakFragment;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
+import cm.aptoide.pt.view.navigator.NavigateFragment;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import lombok.Getter;
 import rx.Observable;
 
-public abstract class FragmentView extends LeakFragment implements View {
+public abstract class FragmentView extends NavigateFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
@@ -51,8 +52,9 @@ public abstract class FragmentView extends LeakFragment implements View {
   }
 
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
-    return new FragmentNavigator(getChildFragmentManager(), containerId, android.R.anim.fade_in,
-        android.R.anim.fade_out, sharedPreferences, defaultStore, defaultTheme);
+    return new FragmentResultNavigator(getChildFragmentManager(), containerId,
+        android.R.anim.fade_in, android.R.anim.fade_out, sharedPreferences, defaultStore,
+        defaultTheme, getFragmentResultMap(), getFragmentResultRelay());
   }
 
   @Override public void onAttach(Activity activity) {

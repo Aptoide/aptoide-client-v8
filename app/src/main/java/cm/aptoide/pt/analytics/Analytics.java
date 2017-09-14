@@ -515,7 +515,8 @@ public class Analytics {
     }
 
     public enum StartupClickOrigin {
-      MAIN("Main"), JOIN_UP("Join Aptoide Slide Up"), LOGIN_UP("Login Slide Up");
+      MAIN("Main"), JOIN_UP("Join Aptoide Slide Up"), LOGIN_UP(
+          "Login Slide Up"), NOT_LOGGED_IN_DIALOG("Not logged in Dialog");
 
       private String clickOrigin;
 
@@ -909,7 +910,8 @@ public class Analytics {
 
   public static class HomePageEditorsChoice {
 
-    public static final String HOME_PAGE_EDITORS_CHOICE = "Home_Page_Editors_Choice";
+    public static final String HOME_PAGE_EDITORS_CHOICE_FLURRY = "Home_Page_Editors_Choice";
+    public static final String HOME_PAGE_EDITORS_CHOICE_FACEBOOK = "Editors_Choice_Clicks";
 
     public static void clickOnEditorsChoiceItem(int position, String packageName, boolean isHome) {
       HashMap<String, String> map = new HashMap<>();
@@ -921,8 +923,8 @@ public class Analytics {
         map.put("Search Position", "More_" + Integer.valueOf(position)
             .toString());
       }
-
-      track(HOME_PAGE_EDITORS_CHOICE, map, FLURRY);
+      logFacebookEvents(HOME_PAGE_EDITORS_CHOICE_FACEBOOK, map);
+      track(HOME_PAGE_EDITORS_CHOICE_FLURRY, map, FLURRY);
     }
   }
 

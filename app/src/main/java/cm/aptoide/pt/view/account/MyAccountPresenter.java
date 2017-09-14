@@ -47,6 +47,7 @@ public class MyAccountPresenter implements Presenter {
     handleUserLayoutClick();
     handleStoreLayoutClick();
     checkIfStoreIsInvalidAndRefresh();
+    markNotificationsRead();
   }
 
   @Override public void saveState(Bundle state) {
@@ -55,6 +56,16 @@ public class MyAccountPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void markNotificationsRead() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .first()
+        .flatMapCompletable(create -> notificationCenter.setAllNotificationsRead())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(notificationUrl -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void showAndPopulateAccountViews() {

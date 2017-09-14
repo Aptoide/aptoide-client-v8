@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +32,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -46,6 +48,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -63,6 +66,7 @@ public class HomeFragment extends StoreFragment {
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
+  private BadgeView notificationsBadge;
   private UpdateRepository updateRepository;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
@@ -86,9 +90,10 @@ public class HomeFragment extends StoreFragment {
   }
 
   /**
-   * @return {@link HomeFragment} instance with default store, store context and theme
    * @param defaultStore
    * @param defaultTheme
+   *
+   * @return {@link HomeFragment} instance with default store, store context and theme
    */
   public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
     return newInstance(defaultStore, StoreContext.home, defaultTheme);
@@ -119,6 +124,10 @@ public class HomeFragment extends StoreFragment {
     userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
+
+    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(), StoreTheme.get(
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme())
+        .getPrimaryColor()));
 
     accountManager.accountStatus()
         .observeOn(AndroidSchedulers.mainThread())
@@ -186,20 +195,32 @@ public class HomeFragment extends StoreFragment {
     super.setupViewPager();
 
     StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
-    int count = adapter.getCount();
-    for (int i = 0; i < count; i++) {
-      if (Event.Name.myUpdates.equals(adapter.getEventName(i))) {
-        updatesBadge = new BadgeView(getContext(),
-            ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(i));
-        break;
-      }
+
+    View layout = getTabLayout(adapter, Event.Name.myUpdates);
+    if (layout != null) {
+      updatesBadge = new BadgeView(getContext(), layout);
     }
+
+    layout = getTabLayout(adapter, Event.Name.getUserTimeline);
+    if (layout != null) {
+      notificationsBadge = new BadgeView(getContext(), layout);
+    }
+
+    ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter()
+        .getUnreadNotifications()
+        .observeOn(Schedulers.computation())
+        .map(aptoideNotifications -> aptoideNotifications.size())
+        .distinctUntilChanged()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(numberOfNotificationsUnread -> refreshBadge(numberOfNotificationsUnread,
+            notificationsBadge), throwable -> CrashReport.getInstance()
+            .log(throwable));
 
     updateRepository.getNonExcludedUpdates()
         .map(updates -> updates.size())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
+        .subscribe(size -> refreshBadge(size, updatesBadge), throwable -> {
           CrashReport.getInstance()
               .log(throwable);
         });
@@ -247,6 +268,15 @@ public class HomeFragment extends StoreFragment {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
     });
+  }
+
+  private View getTabLayout(StorePagerAdapter adapter, Event.Name tab) {
+    for (int i = 0; i < adapter.getCount(); i++) {
+      if (tab.equals(adapter.getEventName(i))) {
+        return ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(i);
+      }
+    }
+    return null;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -403,23 +433,23 @@ public class HomeFragment extends StoreFragment {
         });
   }
 
-  public void refreshUpdatesBadge(int num) {
+  public void refreshBadge(int num, BadgeView badgeToUpdate) {
     // No updates present
-    if (updatesBadge == null) {
+    if (badgeToUpdate == null) {
       return;
     }
 
-    updatesBadge.setTextSize(11);
+    badgeToUpdate.setTextSize(11);
 
     if (num > 0) {
-      updatesBadge.setText(NumberFormat.getIntegerInstance()
+      badgeToUpdate.setText(NumberFormat.getIntegerInstance()
           .format(num));
-      if (!updatesBadge.isShown()) {
-        updatesBadge.show(true);
+      if (!badgeToUpdate.isShown()) {
+        badgeToUpdate.show(true);
       }
     } else {
-      if (updatesBadge.isShown()) {
-        updatesBadge.hide(true);
+      if (badgeToUpdate.isShown()) {
+        badgeToUpdate.hide(true);
       }
     }
   }

@@ -2,6 +2,7 @@ package cm.aptoide.pt.social.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.view.viewholder.PostViewHolder;
@@ -33,8 +34,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   }
 
   @Override public int getItemViewType(int position) {
-    return posts.get(position)
-        .getType()
+    Post post = posts.get(position);
+    if (post instanceof TimelineUser) {
+      TimelineUser user = (TimelineUser) post;
+      if (user.hasUserStats()) {
+        user.setCardType(CardType.TIMELINE_STATS);
+      } else if (!user.isLoggedIn()) {
+        user.setCardType(CardType.LOGIN);
+      } else if (user.hasNotification()) {
+        user.setCardType(CardType.NOTIFICATIONS);
+      } else {
+        user.setCardType(CardType.NO_NOTIFICATIONS);
+      }
+    }
+    return post.getType()
         .ordinal();
   }
 
@@ -43,7 +56,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   }
 
   public void updatePosts(List<Post> cards) {
-    this.posts = cards;
+    if (hasUser()) {
+      if (posts.size() > 1) {
+        posts.subList(1, posts.size() - 1)
+            .clear();
+      }
+      posts.addAll(cards);
+    } else {
+      this.posts = cards;
+    }
     notifyDataSetChanged();
   }
 
@@ -85,5 +106,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
   public Post getPost(int position) {
     return posts.get(position);
+  }
+
+  public void showUser(Post post) {
+    if (hasUser()) {
+      posts.set(0, post);
+      notifyItemChanged(0);
+    } else {
+      posts.add(0, post);
+      notifyItemInserted(0);
+    }
+  }
+
+  public void hideUser() {
+    if (hasUser()) {
+      posts.remove(0);
+      notifyItemRemoved(0);
+    }
+  }
+
+  private boolean hasUser() {
+    return !posts.isEmpty() && (posts.get(0) instanceof TimelineUser || posts.get(
+        0) instanceof ProgressCard);
   }
 }

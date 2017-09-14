@@ -173,7 +173,6 @@ import cm.aptoide.pt.view.account.store.StoreManager;
 import cm.aptoide.pt.view.configuration.ActivityProvider;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.ActivityProviderImpl;
-import cm.aptoide.pt.view.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
@@ -994,10 +993,6 @@ public abstract class AptoideApplication extends Application {
     });
   }
 
-  protected FragmentProvider createFragmentProvider() {
-    return new FragmentProviderImpl();
-  }
-
   protected ActivityProvider createActivityProvider() {
     return new ActivityProviderImpl();
   }
@@ -1222,7 +1217,7 @@ public abstract class AptoideApplication extends Application {
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Aptoide");
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.app_name));
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
         Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
     intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
@@ -1312,5 +1307,7 @@ public abstract class AptoideApplication extends Application {
   public abstract String getDefaultTheme();
 
   public abstract boolean isCreateStoreUserPrivacyEnabled();
+
+  public abstract FragmentProvider createFragmentProvider();
 }
 

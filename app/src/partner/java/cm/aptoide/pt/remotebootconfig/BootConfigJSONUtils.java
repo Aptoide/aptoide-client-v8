@@ -108,23 +108,47 @@ public class BootConfigJSONUtils {
    *
    * if email is null or empty, will be replaced by the default value
    * @param feedbackEmail
+   *
    * @return true if boot config is valid
    */
   private static boolean isRemoteBootConfigValid(RemoteBootConfig newRemoteBootConfig,
       RemoteBootConfig oldRemoteBootConfig, String feedbackEmail) {
-    if (newRemoteBootConfig.getData().getPartner().getUid() == null
-        || newRemoteBootConfig.getData().getPartner().getStore().getName() == null
-        || newRemoteBootConfig.getData().getPartner().getStore().getLabel() == null
-        || newRemoteBootConfig.getData().getPartner().getAppearance().getTheme() == null) {
+    if (newRemoteBootConfig.getData()
+        .getPartner()
+        .getUid() == null
+        || newRemoteBootConfig.getData()
+        .getPartner()
+        .getStore()
+        .getName() == null
+        || newRemoteBootConfig.getData()
+        .getPartner()
+        .getStore()
+        .getLabel() == null
+        || newRemoteBootConfig.getData()
+        .getPartner()
+        .getAppearance()
+        .getTheme() == null) {
       CrashReport.getInstance()
           .log(new JSONException(
               "Remote boot config response returning null: Uid/storeName/Label/Theme"));
       return false;
     }
-    if (newRemoteBootConfig.getData().getPartner().getUid().isEmpty()
-        || newRemoteBootConfig.getData().getPartner().getStore().getName().isEmpty()
-        || newRemoteBootConfig.getData().getPartner().getStore().getLabel().isEmpty()
-        || newRemoteBootConfig.getData().getPartner().getAppearance().getTheme().isEmpty()) {
+    if (newRemoteBootConfig.getData()
+        .getPartner()
+        .getUid()
+        .isEmpty() || newRemoteBootConfig.getData()
+        .getPartner()
+        .getStore()
+        .getName()
+        .isEmpty() || newRemoteBootConfig.getData()
+        .getPartner()
+        .getStore()
+        .getLabel()
+        .isEmpty() || newRemoteBootConfig.getData()
+        .getPartner()
+        .getAppearance()
+        .getTheme()
+        .isEmpty()) {
       CrashReport.getInstance()
           .log(new JSONException(
               "Remote boot config response returning empty Uid/storeName/Label/Theme"));
@@ -133,7 +157,9 @@ public class BootConfigJSONUtils {
     if (!newRemoteBootConfig.getData()
         .getPartner()
         .getUid()
-        .equals(oldRemoteBootConfig.getData().getPartner().getUid())) {
+        .equals(oldRemoteBootConfig.getData()
+            .getPartner()
+            .getUid())) {
       CrashReport.getInstance()
           .log(new JSONException(
               "Careful the new boot config tried to change the UID! For security reasons,"
@@ -145,16 +171,28 @@ public class BootConfigJSONUtils {
         .getPartner()
         .getStore()
         .getName()
-        .equals(oldRemoteBootConfig.getData().getPartner().getStore().getName())) {
+        .equals(oldRemoteBootConfig.getData()
+            .getPartner()
+            .getStore()
+            .getName())) {
       CrashReport.getInstance()
           .log(new JSONException(
               "Careful the new boot config tried to change the store name! For security reasons,"
                   + " the new boot config will not be saved on the device"));
       return false;
     }
-    if (newRemoteBootConfig.getData().getPartner().getFeedback().getEmail() == null
-        || newRemoteBootConfig.getData().getPartner().getFeedback().getEmail().isEmpty()) {
-      newRemoteBootConfig.getData().getPartner().getFeedback().setEmail(feedbackEmail);
+    if (newRemoteBootConfig.getData()
+        .getPartner()
+        .getFeedback()
+        .getEmail() == null || newRemoteBootConfig.getData()
+        .getPartner()
+        .getFeedback()
+        .getEmail()
+        .isEmpty()) {
+      newRemoteBootConfig.getData()
+          .getPartner()
+          .getFeedback()
+          .setEmail(feedbackEmail);
     }
     return true;
   }
@@ -169,7 +207,8 @@ public class BootConfigJSONUtils {
     JSONObject jsonObject = null;
 
     try {
-      InputStream inputStream = context.getResources().openRawResource(R.raw.boot_config);
+      InputStream inputStream = context.getResources()
+          .openRawResource(R.raw.boot_config);
 
       if (inputStream != null) {
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -186,13 +225,16 @@ public class BootConfigJSONUtils {
       }
     } catch (FileNotFoundException e) {
       Logger.e(TAG, "boot_config.json file not found: " + e.toString());
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     } catch (IOException e) {
       Logger.e(TAG, "Can not read boot_config.json file: " + e.toString());
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     } catch (JSONException e) {
       Logger.e(TAG, "Failed to create JSONObject from boot_config.json String: " + e.toString());
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
     return jsonObject;
   }
@@ -201,6 +243,7 @@ public class BootConfigJSONUtils {
    * get shared preferences
    *
    * @param context given context
+   *
    * @return secure shared preferences implementation
    */
   private static SharedPreferences getSharedPreferences(Context context) {

@@ -1,6 +1,4 @@
 <resources>
-  <string name="app_name">Aptoide</string>
-
   <!-- NavDrawer List items -->
   <string name="drawer_title_my_account">My Account</string>
   <string name="drawer_title_spot_share">Spot&amp;Share</string>
@@ -181,6 +179,16 @@
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
   <string name="rate_this_app">Rate this app</string>
   <string name="reviewappview_button_open">Open</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
+  <string name="reviewappview_highlighted_reviews_explanation_3">Write about an app you have installed</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">Be an Aptoide user for over 3 months</string>
+
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_short_comments_by_language_all">All languages</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">Current language first</string>
+  <string name="reviewappview_short_comments_by_language_english">English</string>
+
 
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
@@ -666,11 +674,13 @@
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
   <string name="hello_follow_me_on_aptoide">Hello! Follow me on %s</string>
 
-  <!--comments-->
-
-  <string name="comments_filter_comments_by_language_all">All</string>
-  <string name="comments_filter_comments_by_language_current_language_first">Current language first</string>
-  <string name="comments_filter_comments_by_language_english">English</string>
-
+  <!-- Not Logged in Fragment -->
+  <string name="not_logged_in_share_title_fragment">You are one step away from sharing this App in Aptoide timeline with your friends:</string>
+  <string name="not_logged_in_share_title_connect_with">Connect with</string>
+  <string name="not_logged_in_share_message_posts_warning">No posts on your behalf will be done</string>
+  <string name="not_logged_in_share_short_start_interacting">Start interacting:</string>
+  <string name="not_logged_in_share_button_close_text">close</string>
+  <string name="my_store_create_store_followings">Following\n%s</string>
+  <string name="my_store_create_store_followers">Followers\n%s</string>
 </resources>
 

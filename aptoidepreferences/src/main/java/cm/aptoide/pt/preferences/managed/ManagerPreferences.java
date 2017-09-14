@@ -213,4 +213,14 @@ public class ManagerPreferences {
         .putBoolean(ManagedKeys.FACEBOOK_SYNC, value)
         .apply();
   }
+
+  public static int getNotLoggedInInstallClicks(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getInt(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, 0);
+  }
+
+  public static void setNotLoggedInInstallClicks(int value, SharedPreferences sharedPreferences) {
+    sharedPreferences.edit()
+        .putInt(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, value)
+        .apply();
+  }
 }

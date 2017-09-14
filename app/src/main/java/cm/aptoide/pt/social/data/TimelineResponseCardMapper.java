@@ -6,7 +6,6 @@ import cm.aptoide.pt.Install;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
-import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AdTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
@@ -512,12 +511,6 @@ public class TimelineResponseCardMapper {
   @Nullable private String getMarkAsReadUrl(TimelineCard card) {
     return card.getUrls() == null ? null : card.getUrls()
         .getRead();
-  }
-
-  public Post map(TimelineStats timelineStats) {
-    return new TimelineStatsPost(timelineStats.getData()
-        .getFollowers(), timelineStats.getData()
-        .getFollowing(), CardType.TIMELINE_STATS);
   }
 
   public interface AdsRepositoryProvider {

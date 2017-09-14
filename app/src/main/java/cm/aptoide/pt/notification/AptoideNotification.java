@@ -1,6 +1,7 @@
 package cm.aptoide.pt.notification;
 
 import android.support.annotation.IntDef;
+import cm.aptoide.pt.database.realm.Notification;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import lombok.ToString;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
   public static final int POPULAR = 3;
+  public static final int NOT_DISMISSED = Notification.NOT_DISMISSED;
   private final Long expire;
   private String appName;
   private String graphic;
@@ -56,7 +58,8 @@ import lombok.ToString;
       String lang, String title, String url, String urlTrack, String appName, String graphic,
       String ownerId, Long expireSecsUtc) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN, -1, appName, graphic, ownerId, expireSecsUtc);
+        System.currentTimeMillis(), CAMPAIGN, NOT_DISMISSED, appName, graphic, ownerId,
+        expireSecsUtc);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,

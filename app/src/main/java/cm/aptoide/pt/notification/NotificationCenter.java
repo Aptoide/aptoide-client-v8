@@ -84,6 +84,10 @@ public class NotificationCenter {
     return notificationProvider.getNotifications(entries);
   }
 
+  public Observable<List<AptoideNotification>> getUnreadNotifications() {
+    return notificationProvider.getUnreadNotifications();
+  }
+
   public Observable<Boolean> haveNotifications() {
     return notificationProvider.getNotifications(1)
         .map(list -> !list.isEmpty());
@@ -96,5 +100,19 @@ public class NotificationCenter {
           notification.setDismissed(System.currentTimeMillis());
           return notificationProvider.save(notification);
         });
+  }
+
+  public Completable setAllNotificationsRead() {
+    return notificationProvider.getNotifications()
+        .first()
+        .flatMapIterable(notifications -> notifications)
+        .flatMapCompletable(notification -> {
+          if (notification.getDismissed() == AptoideNotification.NOT_DISMISSED) {
+            notification.setDismissed(System.currentTimeMillis());
+            return notificationProvider.save(notification);
+          }
+          return Completable.complete();
+        })
+        .toCompletable();
   }
 }

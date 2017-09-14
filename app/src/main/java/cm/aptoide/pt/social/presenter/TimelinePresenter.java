@@ -14,7 +14,9 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -39,8 +41,9 @@ import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreLatestApps;
 import cm.aptoide.pt.social.data.Timeline;
-import cm.aptoide.pt.social.data.TimelineStatsPost;
 import cm.aptoide.pt.social.data.TimelineStatsTouchEvent;
+import cm.aptoide.pt.social.data.User;
+import cm.aptoide.pt.social.view.TimelineUser;
 import cm.aptoide.pt.social.view.TimelineView;
 import cm.aptoide.pt.social.view.viewholder.NativeAdErrorEvent;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -51,11 +54,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.store.StoreFragment;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
-import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -82,6 +83,8 @@ public class TimelinePresenter implements Presenter {
   private final StoreContext storeContext;
   private final Resources resources;
   private final FragmentNavigator fragmentNavigator;
+  private final LinksHandlerFactory linksNavigator;
+  private final NotificationCenter notificationCenter;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
@@ -90,7 +93,8 @@ public class TimelinePresenter implements Presenter {
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
       Long storeId, StoreContext storeContext, Resources resources,
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, LinksHandlerFactory linksNavigator,
+      NotificationCenter notificationCenter) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -108,6 +112,8 @@ public class TimelinePresenter implements Presenter {
     this.storeContext = storeContext;
     this.resources = resources;
     this.fragmentNavigator = fragmentNavigator;
+    this.linksNavigator = linksNavigator;
+    this.notificationCenter = notificationCenter;
   }
 
   @Override public void present() {
@@ -161,6 +167,14 @@ public class TimelinePresenter implements Presenter {
 
     onViewCreatedHandleVisibleItems();
 
+    onViewCreatedClickOnNotification();
+
+    onViewCreatedClickOnNotificationCenter();
+
+    onViewCreatedClickOnAddressBook();
+
+    onViewCreatedShowUser();
+
     clickOnPost();
   }
 
@@ -169,6 +183,68 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void onViewCreatedShowUser() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> timeline.getUser(false)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe(() -> view.showUserLoading())
+            .doOnNext(user -> view.showUser(convertUser(user))))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
+          crashReport.log(throwable);
+          view.hideUser();
+        });
+  }
+
+  @NonNull private TimelineUser convertUser(User user) {
+    return new TimelineUser(user.isLogged(), user.hasNotification(), user.getBodyMessage(),
+        user.getImage(), user.getUrlAction(), user.getNotificationId(), user.hasStats(),
+        user.getFollowers(), user.getFollowing());
+  }
+
+  private void onViewCreatedClickOnAddressBook() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.ADD_FRIEND))
+            .doOnNext(cardTouchEvent -> timelineNavigation.navigateToAddressBook()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void onViewCreatedClickOnNotificationCenter() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.NOTIFICATION_CENTER))
+            .doOnNext(cardTouchEvent -> timelineNavigation.navigateToNotificationCenter()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void onViewCreatedClickOnNotification() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.NOTIFICATION))
+            .doOnNext(cardTouchEvent -> linksNavigator.get(LinksHandlerFactory.NOTIFICATION_LINK,
+                ((TimelineUser) cardTouchEvent.getCard()).getNotificationUrlAction())
+                .launch())
+            .flatMapCompletable(cardTouchEvent -> timeline.notificationDismissed(
+                ((TimelineUser) cardTouchEvent.getCard()).getNotificationId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleNativeAdError() {
@@ -226,10 +302,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> timelineNavigation.postNavigation()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(__ -> view.showPostProgressIndicator())
-            .flatMapSingle(cardId -> Single.zip(
-                accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineLoginPost(), timeline.getFreshCards(cardId),
-                (post, posts) -> mergeStatsPostWithPosts(post, posts)))
+            .flatMapSingle(cardId -> timeline.getFreshCards(cardId))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cards -> showCardsAndHidePostProgress(cards))
             .retry())
@@ -285,10 +358,7 @@ public class TimelinePresenter implements Presenter {
             .first()
             .toSingle())
         .observeOn(Schedulers.io())
-        .flatMapSingle(account -> Single.zip(
-            account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                : timeline.getTimelineLoginPost(), timeline.getCards(),
-            (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
+        .flatMapSingle(account -> timeline.getCards())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(cards -> {
           if (cards != null && cards.size() > 0) {
@@ -313,12 +383,12 @@ public class TimelinePresenter implements Presenter {
                 .first()
                 .toSingle())
             .observeOn(Schedulers.io())
-            .flatMapSingle(account -> Single.zip(
-                account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineLoginPost(), timeline.getFreshCards(),
-                (post, posts) -> mergeStatsPostWithPosts(post, posts)))
+            .flatMapSingle(account -> timeline.getFreshCards())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cards -> showCardsAndHideRefresh(cards))
+            .flatMap(posts -> timeline.getUser(true))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(user -> view.showUser(convertUser(user)))
             .doOnError(throwable -> {
               crashReport.log(throwable);
               view.showGenericViewError();
@@ -360,10 +430,7 @@ public class TimelinePresenter implements Presenter {
                 .first()
                 .toSingle())
             .observeOn(Schedulers.io())
-            .flatMapSingle(account -> Single.zip(
-                account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
-                    : timeline.getTimelineLoginPost(), timeline.getCards(),
-                (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
+            .flatMapSingle(account -> timeline.getCards())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(posts -> {
               if (posts != null && posts.size() > 0) {
@@ -819,8 +886,7 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> {
           TimelineStatsTouchEvent timelineStatsTouchEvent =
               (TimelineStatsTouchEvent) cardTouchEvent;
-          TimelineStatsPost timelineStatsPost =
-              (TimelineStatsPost) timelineStatsTouchEvent.getCard();
+          TimelineUser timelineStatsPost = (TimelineUser) timelineStatsTouchEvent.getCard();
           if (timelineStatsTouchEvent.getButtonClicked()
               .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWFRIENDS)) {
             timelineAnalytics.sendFollowFriendsEvent();
@@ -905,13 +971,6 @@ public class TimelinePresenter implements Presenter {
           crashReport.log(throwable);
           view.showGenericError();
         });
-  }
-
-  @NonNull private List<Post> mergeStatsPostWithPosts(Post post, List<Post> posts) {
-    List<Post> postsWithStatsPost = new ArrayList<>();
-    postsWithStatsPost.add(post);
-    postsWithStatsPost.addAll(posts);
-    return postsWithStatsPost;
   }
 
   private void showCardsAndHideProgress(List<Post> cards) {

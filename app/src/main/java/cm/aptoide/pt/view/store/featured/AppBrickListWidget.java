@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -50,7 +50,8 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
         .subscribe(v -> {
           Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newAppViewFragment(app.getId(), app.getPackageName()));
+              .newAppViewFragment(app.getId(), app.getPackageName(),
+                  app.getStore().getAppearance().getTheme(), app.getStore().getName()));
           Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
               app.getPackageName(), false);
         }, throwable -> CrashReport.getInstance()
