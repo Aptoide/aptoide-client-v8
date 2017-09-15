@@ -751,7 +751,9 @@ public class TimelinePresenter implements Presenter {
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
                   .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
-            }))
+            })
+            .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent.getPosition(),
+                false)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
@@ -785,7 +787,9 @@ public class TimelinePresenter implements Presenter {
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
                   .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
-            }))
+            })
+            .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent.getPosition(),
+                false)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
@@ -836,26 +840,37 @@ public class TimelinePresenter implements Presenter {
               if (account.isLoggedIn()) {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
-                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE))
+                      .andThen(sendShareEvent(cardTouchEvent.getPosition(), false));
                 } else if (showSetUserOrStoreToPublic(account)) {
-                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
+                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
+                      .andThen(sendShareEvent(cardTouchEvent.getPosition(), false));
                 }
                 if (cardTouchEvent instanceof MinimalPostTouchEvent) {
                   return Completable.fromAction(() -> view.showSharePreview(
                       ((MinimalPostTouchEvent) cardTouchEvent).getOriginalPost(),
-                      (cardTouchEvent).getCard(), account));
+                      (cardTouchEvent).getCard(), account))
+                      .andThen(sendShareEvent(cardTouchEvent.getPosition(), true));
                 }
                 return Completable.fromAction(
-                    () -> view.showSharePreview(cardTouchEvent.getCard(), account));
+                    () -> view.showSharePreview(cardTouchEvent.getCard(), account))
+                    .andThen(sendShareEvent(cardTouchEvent.getPosition(), true));
               }
-              return Completable.fromAction(() -> view.showLoginPromptWithAction());
-            }))
+              return Completable.fromAction(() -> view.showLoginPromptWithAction())
+                  .andThen(sendShareEvent(cardTouchEvent.getPosition(), false));
+            })
+            .doOnError(
+                throwable -> timelineAnalytics.sendShareEvent(cardTouchEvent.getPosition(), false)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
         });
+  }
+
+  private Completable sendShareEvent(int position, boolean success) {
+    return Completable.fromAction(() -> timelineAnalytics.sendShareEvent(position, success));
   }
 
   private void commentPostResponse() {
