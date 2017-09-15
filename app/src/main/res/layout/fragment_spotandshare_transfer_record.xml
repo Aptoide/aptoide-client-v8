@@ -31,6 +31,7 @@
           android:layout_marginRight="8dp"
           android:layout_marginTop="8dp"
           android:orientation="horizontal"
+          android:visibility="gone"
           >
 
         <ImageView

@@ -33,7 +33,7 @@ public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView
 
   Observable<Void> clickedFriendsInformationButton();
 
-  void updateFriendsNumber(int friendsList);
+  void showFriendsNumber(int friendsList);
 
   void showFriendsOnMenu(List<SpotAndShareUser> friendsList);
 
@@ -44,4 +44,6 @@ public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView
   Observable<Void> listenBottomSheetHeaderClicks();
 
   void pressedBottomSheetHeader();
+
+  void hideFriendsNumber();
 }

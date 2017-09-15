@@ -102,7 +102,13 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> spotAndShare.observeAmountOfFriends())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(friendsNumber -> view.updateFriendsNumber(friendsNumber))
+        .doOnNext(friendsNumber -> {
+          if (friendsNumber > 1) {
+            view.showFriendsNumber(friendsNumber);
+          } else {
+            view.hideFriendsNumber();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());

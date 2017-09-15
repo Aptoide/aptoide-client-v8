@@ -361,8 +361,13 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     return RxView.clicks(connectedFriendsLayout);
   }
 
-  @Override public void updateFriendsNumber(int numberOfFriends) {
-    connectedFriendsNumber.setText("" + numberOfFriends);
+  @Override public void showFriendsNumber(int numberOfFriends) {
+    connectedFriendsNumber.setText(String.valueOf(numberOfFriends));
+    connectedFriendsLayout.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideFriendsNumber() {
+    connectedFriendsLayout.setVisibility(View.GONE);
   }
 
   @Override public void showFriendsOnMenu(List<SpotAndShareUser> friendsList) {
