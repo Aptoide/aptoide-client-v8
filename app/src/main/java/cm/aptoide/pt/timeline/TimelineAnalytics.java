@@ -602,9 +602,10 @@ public class TimelineAnalytics {
     return eventMap;
   }
 
-  public void sendCommentEvent(int position) {
+  public void sendCommentEvent(int position, boolean success) {
     HashMap<String, Object> data = new HashMap<>();
     data.put("position", position);
+    data.put("status", success ? "success" : "fail");
     analytics.sendEvent(createEvent(COMMENT, data));
   }
 }

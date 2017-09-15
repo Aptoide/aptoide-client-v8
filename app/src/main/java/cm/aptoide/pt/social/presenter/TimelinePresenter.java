@@ -737,16 +737,20 @@ public class TimelinePresenter implements Presenter {
               if (account.isLoggedIn()) {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
-                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE))
+                      .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
                 } else if (showSetUserOrStoreToPublic(account)) {
-                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
+                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
+                      .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
                 }
                 return Completable.fromAction(
                     () -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
                         cardTouchEvent.getCard()
-                            .getCardId()));
+                            .getCardId()))
+                    .andThen(sendCommentEvent(cardTouchEvent.getPosition(), true));
               }
-              return Completable.fromAction(() -> view.showLoginPromptWithAction());
+              return Completable.fromAction(() -> view.showLoginPromptWithAction())
+                  .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
@@ -769,21 +773,27 @@ public class TimelinePresenter implements Presenter {
               if (account.isLoggedIn()) {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
-                      () -> view.showCreateStoreMessage(SocialAction.LIKE));
+                      () -> view.showCreateStoreMessage(SocialAction.LIKE))
+                      .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
                 } else if (showSetUserOrStoreToPublic(account)) {
-                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
+                  return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
+                      .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
                 }
                 return Completable.fromAction(
                     () -> view.showCommentDialog((SocialCardTouchEvent) cardTouchEvent))
-                    .andThen(Completable.fromAction(
-                        () -> timelineAnalytics.sendCommentEvent(cardTouchEvent.getPosition())));
+                    .andThen(sendCommentEvent(cardTouchEvent.getPosition(), true));
               }
-              return Completable.fromAction(() -> view.showLoginPromptWithAction());
+              return Completable.fromAction(() -> view.showLoginPromptWithAction())
+                  .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
         });
+  }
+
+  @NonNull private Completable sendCommentEvent(int position, boolean success) {
+    return Completable.fromAction(() -> timelineAnalytics.sendCommentEvent(position, success));
   }
 
   private void clickOnCommentsNumberLabel() {
