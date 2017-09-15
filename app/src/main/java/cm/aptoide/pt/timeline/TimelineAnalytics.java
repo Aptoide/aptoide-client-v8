@@ -371,9 +371,10 @@ public class TimelineAnalytics {
     return createTimelineCardData(cardType, source, specific);
   }
 
-  public void sendLikeEvent(int position) {
+  public void sendLikeEvent(int position, boolean success) {
     HashMap<String, Object> data = new HashMap<>();
     data.put("position", position);
+    data.put("status", success ? "success" : "fail");
     analytics.sendEvent(createEvent(LIKE, data));
   }
 

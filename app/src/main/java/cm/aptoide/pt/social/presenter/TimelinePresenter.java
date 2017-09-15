@@ -630,10 +630,14 @@ public class TimelinePresenter implements Presenter {
                     final Post post = cardTouchEvent.getCard();
                     return timeline.like(post, post.getCardId())
                         .andThen(Completable.fromAction(
-                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition())));
+                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
+                                true)));
                   }
                   return Completable.complete();
-                })))
+                })
+                .doOnError(
+                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
+                        false))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
@@ -700,11 +704,15 @@ public class TimelinePresenter implements Presenter {
                     return timeline.sharePost(post)
                         .flatMapCompletable(cardId -> timeline.like(post, cardId))
                         .andThen(Completable.fromAction(
-                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition())));
+                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
+                                true)));
                   } else {
                     return Completable.complete();
                   }
-                }))
+                })
+                .doOnError(
+                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
+                        true)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
