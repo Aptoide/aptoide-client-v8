@@ -12,6 +12,9 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.billing.view.BillingNavigator;
+import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
+import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
 import com.facebook.CallbackManager;
@@ -29,6 +32,7 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResultMap;
   private AccountNavigator accountNavigator;
+  private BillingNavigator billingNavigator;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
@@ -158,5 +162,15 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
           ((AptoideApplication) getApplicationContext()).getDefaultTheme());
     }
     return accountNavigator;
+  }
+
+  public BillingNavigator getBillingNavigator() {
+    if (billingNavigator == null) {
+      billingNavigator =
+          new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+              getActivityNavigator(), getFragmentNavigator(),
+              ((AptoideApplication) getApplicationContext()).getMarketName());
+    }
+    return billingNavigator;
   }
 }

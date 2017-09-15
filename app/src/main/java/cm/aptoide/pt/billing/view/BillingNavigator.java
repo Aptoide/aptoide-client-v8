@@ -2,8 +2,8 @@ package cm.aptoide.pt.billing.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.account.view.PaymentLoginFragment;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.Purchase;
@@ -11,7 +11,6 @@ import cm.aptoide.pt.billing.view.boacompra.BoaCompraFragment;
 import cm.aptoide.pt.billing.view.braintree.BraintreeCreditCardFragment;
 import cm.aptoide.pt.billing.view.mol.MolFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalFragment;
-import cm.aptoide.pt.account.view.LoginActivity;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.Result;
@@ -28,29 +27,28 @@ public class BillingNavigator {
   private final PurchaseBundleMapper bundleMapper;
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
-  private final AptoideAccountManager accountManager;
   private final String marketName;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
-      String marketName) {
+      FragmentNavigator fragmentNavigator, String marketName) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
-    this.accountManager = accountManager;
     this.marketName = marketName;
   }
 
   public void navigateToPayerAuthenticationForResult(int requestCode) {
-    activityNavigator.navigateForResult(LoginActivity.class, requestCode);
+    fragmentNavigator.navigateForResult(PaymentLoginFragment.newInstance(), requestCode, true);
   }
 
   public Observable<Boolean> payerAuthenticationResults(int requestCode) {
-    return activityNavigator.results(requestCode)
-        .flatMapSingle(result -> accountManager.accountStatus()
-            .first()
-            .toSingle())
-        .map(account -> account.isLoggedIn());
+    return fragmentNavigator.results(requestCode)
+        .map(result -> result.getResultCode() == Activity.RESULT_OK);
+  }
+
+  public void popPayerAuthenticationViewWithResult(int requestCode, boolean success) {
+    fragmentNavigator.popWithResult(
+        new Result(requestCode, (success ? Activity.RESULT_OK : Activity.RESULT_CANCELED), null));
   }
 
   public void navigateToTransactionAuthorizationView(String sellerId, String productId,
