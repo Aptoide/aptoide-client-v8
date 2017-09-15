@@ -77,6 +77,7 @@ public class HomeFragment extends StoreFragment {
   private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
+  private SearchUtils searchUtils;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -167,6 +168,7 @@ public class HomeFragment extends StoreFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    searchUtils = new SearchUtils();
   }
 
   @Nullable @Override
@@ -246,7 +248,7 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+    searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
   }
 
   @Override public void setupViews() {

@@ -206,6 +206,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String marketName;
   private String defaultTheme;
   private long storeId;
+  private SearchUtils searchUtils;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -354,6 +355,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
+
+    searchUtils = new SearchUtils();
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -535,7 +538,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+    searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 

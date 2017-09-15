@@ -95,6 +95,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String iconPath;
   private String marketName;
   private String defaultTheme;
+  private SearchUtils searchUtils;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -159,6 +160,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+    searchUtils = new SearchUtils();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -326,7 +328,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName);
+    searchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName);
   }
 
   /**

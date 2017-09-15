@@ -65,6 +65,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private Converter.Factory converterFactory;
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
+  private SearchUtils searchUtils;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -116,6 +117,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    searchUtils = new SearchUtils();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -343,10 +345,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search_results, menu);
 
     if (storeName != null) {
-      SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(),
+      searchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(),
           storeName);
     } else {
-      SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+      searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
     }
   }
 

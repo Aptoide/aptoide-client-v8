@@ -27,23 +27,23 @@ import cm.aptoide.pt.view.search.SearchActivity;
 // FIXME: this call could leak the calling fragment
 public class SearchUtils {
 
-  private static String SEARCH_WEBSOCKET = "9000";
+  private final static String SEARCH_WEBSOCKET = "9000";
 
-  public static void setupGlobalSearchView(Menu menu, Context context,
+  public void setupGlobalSearchView(Menu menu, Context context,
       FragmentNavigator fragmentNavigator) {
     setupSearchView(menu.findItem(R.id.action_search), context, fragmentNavigator,
         s -> AptoideApplication.getFragmentProvider()
             .newSearchFragment(s));
   }
 
-  public static void setupInsideStoreSearchView(Menu menu, Context context,
+  public void setupInsideStoreSearchView(Menu menu, Context context,
       FragmentNavigator fragmentNavigator, String storeName) {
     setupSearchView(menu.findItem(R.id.action_search), context, fragmentNavigator,
         s -> AptoideApplication.getFragmentProvider()
             .newSearchFragment(s, storeName));
   }
 
-  private static void setupSearchView(MenuItem searchItem, Context context,
+  private void setupSearchView(MenuItem searchItem, Context context,
       FragmentNavigator fragmentNavigator,
       CreateQueryFragmentInterface createSearchFragmentInterface) {
 
