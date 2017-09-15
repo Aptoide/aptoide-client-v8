@@ -344,7 +344,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             timelineAnalytics, installAppRelay,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
+            ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled(),
+            getFragmentNavigator());
     downloadFactory = new DownloadFactory(marketName);
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));

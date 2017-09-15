@@ -20,6 +20,7 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
+import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
@@ -39,11 +40,13 @@ public class ShareAppHelper {
   private final SharedPreferences sharedPreferences;
   private final PublishRelay installAppRelay;
   private final boolean createStoreUserPrivacyEnabled;
+  private final FragmentNavigator fragmentNavigator;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
       TimelineAnalytics timelineAnalytics, PublishRelay installAppRelay,
-      SharedPreferences sharedPreferences, boolean createStoreUserPrivacyEnabled) {
+      SharedPreferences sharedPreferences, boolean createStoreUserPrivacyEnabled,
+      FragmentNavigator fragmentNavigator) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
@@ -52,6 +55,7 @@ public class ShareAppHelper {
     this.sharedPreferences = sharedPreferences;
     this.installAppRelay = installAppRelay;
     this.createStoreUserPrivacyEnabled = createStoreUserPrivacyEnabled;
+    this.fragmentNavigator = fragmentNavigator;
   }
 
   private boolean isInstalled(String packageName) {
@@ -140,6 +144,7 @@ public class ShareAppHelper {
     String filepath = getFilepath(packageName);
     String appNameToShare = filterAppName(appName);
 
+    //fragmentNavigator.navigateToWithoutBackSave(SpotAndShareWaitingToSendFragment.newInstance());
     //Intent intent = RadarActivity.buildIntent(activity, filepath, appNameToShare);
     // FIXME: 10-08-2017 implement this way to spotandshare v2
     //activity.startActivity(intent);
