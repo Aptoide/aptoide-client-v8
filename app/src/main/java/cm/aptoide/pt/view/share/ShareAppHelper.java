@@ -29,6 +29,8 @@ import rx.Observable;
 
 public class ShareAppHelper {
 
+  public static final String SPOTANDSHARE_ORIGIN_UPDATES = "UPDATES";
+  public static final String SPOTANDSHARE_ORIGIN_APPVIEW = "APPVIEW";
   private final InstalledRepository installedRepository;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;

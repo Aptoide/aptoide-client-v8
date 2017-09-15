@@ -96,9 +96,8 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
     shareButtonLayout.setVisibility(View.VISIBLE);
     compositeSubscription.add(RxView.clicks(shareButtonLayout)
-        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, pojo.getIcon(), ""),
-            //// FIXME: 10-08-2017 pass origin atribute/string from udpates tab
-            err -> CrashReport.getInstance()
-                .log(err)));
+        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, pojo.getIcon(),
+            ShareAppHelper.SPOTANDSHARE_ORIGIN_UPDATES), err -> CrashReport.getInstance()
+            .log(err)));
   }
 }

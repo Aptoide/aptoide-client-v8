@@ -554,11 +554,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       final Long storeId = appHasStore ? app.getStore()
           .getId() : null;
 
-      //shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-      //    averageRating, SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
-
       shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-          averageRating, "", storeId);//// FIXME: 10-08-2017 pass spotandshare string
+          averageRating, ShareAppHelper.SPOTANDSHARE_ORIGIN_APPVIEW, storeId);
 
       appViewAnalytics.sendAppShareEvent();
       return true;
