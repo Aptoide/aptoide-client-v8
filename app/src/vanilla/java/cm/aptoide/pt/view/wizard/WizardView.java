@@ -12,6 +12,8 @@ interface WizardView extends View {
 
   Observable<Void> skipWizardClick();
 
+  WizardPagerAdapter getWizardViewPager();
+
   void goToNextPage();
 
   void skipWizard();

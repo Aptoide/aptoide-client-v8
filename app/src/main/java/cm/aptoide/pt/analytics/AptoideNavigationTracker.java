@@ -9,6 +9,7 @@ import java.util.List;
 
 public class AptoideNavigationTracker implements NavigationTracker {
 
+  public static final String REGISTER_VIEW = "register_view";
   private List<String> viewList;
 
   public AptoideNavigationTracker(List<String> viewList) {

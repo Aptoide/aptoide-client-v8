@@ -4,9 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import cm.aptoide.accountmanager.Account;
+import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
 import cm.aptoide.pt.view.account.LoginSignUpFragment;
 
-public class WizardPagerAdapter extends FragmentPagerAdapter {
+public class WizardPagerAdapter extends FragmentPagerAdapter
+    implements NavigationTrackerPagerAdapterHelper {
 
   private static final int WIZARD_STEP_ONE_POSITION = 0;
   private static final int WIZARD_STEP_TWO_POSITION = 1;
@@ -36,5 +38,10 @@ public class WizardPagerAdapter extends FragmentPagerAdapter {
       return 2;
     }
     return 3;
+  }
+
+  @Override public String getItemName(int position) {
+    return getItem(position).getClass()
+        .getSimpleName();
   }
 }

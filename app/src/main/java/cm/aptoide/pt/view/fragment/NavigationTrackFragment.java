@@ -11,7 +11,7 @@ import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 
 public class NavigationTrackFragment extends FragmentView {
 
-  private AptoideNavigationTracker navigationTracker;
+  protected AptoideNavigationTracker navigationTracker;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
