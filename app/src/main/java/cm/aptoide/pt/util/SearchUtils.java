@@ -136,7 +136,7 @@ public class SearchUtils {
         searchAppsWebSocket.disconnect();
       }
     });
-    
+
     searchView.setOnSearchClickListener(v -> {
       searchAppsWebSocket.connect(SEARCH_WEB_SOCKET);
     });
