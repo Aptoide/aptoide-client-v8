@@ -31,21 +31,36 @@ public class SearchUtils {
 
   public void setupGlobalSearchView(Menu menu, Context context,
       FragmentNavigator fragmentNavigator) {
-    setupSearchView(menu.findItem(R.id.action_search), context, fragmentNavigator,
-        query -> AptoideApplication.getFragmentProvider()
-            .newSearchFragment(query));
+    setupGlobalSearchView(menu, context, fragmentNavigator, "");
   }
 
   public void setupInsideStoreSearchView(Menu menu, Context context,
       FragmentNavigator fragmentNavigator, String storeName) {
-    setupSearchView(menu.findItem(R.id.action_search), context, fragmentNavigator,
-        query -> AptoideApplication.getFragmentProvider()
-            .newSearchFragment(query, storeName));
+    setupInsideStoreSearchView(menu, context, fragmentNavigator, storeName, "");
   }
 
-  private void setupSearchView(MenuItem searchItem, Context context,
-      FragmentNavigator fragmentNavigator,
-      CreateQueryFragmentInterface createSearchFragmentInterface) {
+  public void setupGlobalSearchView(Menu menu, Context context, FragmentNavigator fragmentNavigator,
+      String currentQuery) {
+
+    final CreateQueryFragmentInterface createQueryFragmentInterface =
+        query -> AptoideApplication.getFragmentProvider()
+            .newSearchFragment(query);
+    setupSearchView(menu, context, fragmentNavigator, currentQuery, createQueryFragmentInterface);
+  }
+
+  public void setupInsideStoreSearchView(Menu menu, Context context,
+      FragmentNavigator fragmentNavigator, String storeName, String currentQuery) {
+
+    final CreateQueryFragmentInterface createQueryFragmentInterface =
+        query -> AptoideApplication.getFragmentProvider()
+            .newSearchFragment(query, storeName);
+    setupSearchView(menu, context, fragmentNavigator, currentQuery, createQueryFragmentInterface);
+  }
+
+  private void setupSearchView(Menu menu, Context context, FragmentNavigator fragmentNavigator,
+      String currentQuery, CreateQueryFragmentInterface createSearchFragmentInterface) {
+
+    MenuItem searchItem = menu.findItem(R.id.action_search);
 
     if (searchItem == null) {
       CrashReport.getInstance()
@@ -121,6 +136,9 @@ public class SearchUtils {
         searchAppsWebSocket.disconnect();
       }
     });
-    searchView.setOnSearchClickListener(v -> searchAppsWebSocket.connect(SEARCH_WEB_SOCKET));
+    
+    searchView.setOnSearchClickListener(v -> {
+      searchAppsWebSocket.connect(SEARCH_WEB_SOCKET);
+    });
   }
 }
