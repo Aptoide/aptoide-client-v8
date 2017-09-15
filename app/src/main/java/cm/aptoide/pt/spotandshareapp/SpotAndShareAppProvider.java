@@ -13,12 +13,12 @@ import java.util.List;
  * Created by filipe on 19-06-2017.
  */
 
-public class InstalledRepositoryDummy {
+public class SpotAndShareAppProvider {
   public static final String NO_OBBS = "no_obbs";
   private Context context;
   private PackageManager packageManager;
 
-  public InstalledRepositoryDummy(Context context, PackageManager packageManager) {
+  public SpotAndShareAppProvider(Context context, PackageManager packageManager) {
     this.context = context;
     this.packageManager = packageManager;
   }

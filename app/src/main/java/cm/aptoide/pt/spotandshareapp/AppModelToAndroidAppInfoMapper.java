@@ -24,7 +24,7 @@ public class AppModelToAndroidAppInfoMapper {
 
     AndroidAppInfo androidAppInfo;
     if (!appModel.getObbsFilePath()
-        .equals(InstalledRepositoryDummy.NO_OBBS)) {
+        .equals(SpotAndShareAppProvider.NO_OBBS)) {
 
       File[] obbsList = obbsProvider.getObbsList(appModel.getObbsFilePath());
 

@@ -8,8 +8,8 @@ import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
-import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndSharePickAppsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collections;
@@ -30,14 +30,14 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   private final SpotAndSharePickAppsView view;
   private final SpotAndShare spotAndShare;
   private boolean shouldCreateGroup;
-  private InstalledRepositoryDummy installedRepositoryDummy;
+  private SpotAndShareAppProvider installedRepositoryDummy;
   private List<AppModel> selectedApps;
   private DrawableBitmapMapper drawableBitmapMapper;
   private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
   private ObbsProvider obbsProvider;
 
   public SpotAndSharePickAppsPresenter(SpotAndSharePickAppsView view, boolean shouldCreateGroup,
-      InstalledRepositoryDummy installedRepositoryDummy, SpotAndShare spotAndShare,
+      SpotAndShareAppProvider installedRepositoryDummy, SpotAndShare spotAndShare,
       DrawableBitmapMapper drawableBitmapMapper,
       AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper) {
     this.view = view;

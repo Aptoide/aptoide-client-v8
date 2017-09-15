@@ -20,8 +20,8 @@ import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.Header;
-import cm.aptoide.pt.spotandshareapp.InstalledRepositoryDummy;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndSharePickAppsPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -103,7 +103,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
 
     SpotAndSharePickAppsPresenter spotAndSharePickAppsPresenter =
         new SpotAndSharePickAppsPresenter(this, shouldCreateGroup,
-            new InstalledRepositoryDummy(getActivity().getApplicationContext(),
+            new SpotAndShareAppProvider(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
             ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
             new DrawableBitmapMapper(getActivity().getApplicationContext()),
