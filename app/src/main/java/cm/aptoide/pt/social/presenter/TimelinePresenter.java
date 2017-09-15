@@ -698,7 +698,9 @@ public class TimelinePresenter implements Presenter {
                     }
                     final Post post = cardTouchEvent.getCard();
                     return timeline.sharePost(post)
-                        .flatMapCompletable(cardId -> timeline.like(post, cardId));
+                        .flatMapCompletable(cardId -> timeline.like(post, cardId))
+                        .andThen(Completable.fromAction(
+                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition())));
                   } else {
                     return Completable.complete();
                   }
