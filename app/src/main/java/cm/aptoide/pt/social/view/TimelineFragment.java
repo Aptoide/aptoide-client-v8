@@ -141,6 +141,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TimelineAnalytics timelineAnalytics;
   private OkHttpClient defaultClient;
   private String marketName;
+  private CrashReport crashReport;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -212,6 +213,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new TimelineResponseCardMapper(
             () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
         tokenInvalidator, sharedPreferences);
+    crashReport = CrashReport.getInstance();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -566,14 +568,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   private void handleSharePreviewAnswer() {
     shareDialog.cancels()
-        .doOnNext(__ -> shareDialog.dismiss())
+        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(false))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe();
 
     shareDialog.shares()
         .doOnNext(event -> sharePostPublishSubject.onNext(event))
+        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(true))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe();
+        .subscribe(shareEvent -> {
+        }, throwable -> {
+          crashReport.log(throwable);
+          timelineAnalytics.sendShareCompleted(false);
+        });
     shareDialog.show();
   }
 

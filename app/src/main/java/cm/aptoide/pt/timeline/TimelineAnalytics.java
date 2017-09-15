@@ -56,6 +56,7 @@ public class TimelineAnalytics {
   private static final String LIKE = "LIKE";
   private static final String COMMENT = "COMMENT";
   private static final String SHARE = "SHARE";
+  private static final String SHARE_SEND = "SHARE_SEND";
   private static final String TIMELINE_OPENED = "Apps_Timeline_Open";
   private static final String SOCIAL_CARD_PREVIEW = "Apps_Timeline_Social_Card_Preview";
   private static final String CARD_ACTION = "Apps_Timeline_Card_Action";
@@ -615,5 +616,11 @@ public class TimelineAnalytics {
     data.put("position", position);
     data.put("status", success ? "success" : "fail");
     analytics.sendEvent(createEvent(SHARE, data));
+  }
+
+  public void sendShareCompleted(boolean success) {
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("status", success ? "success" : "fail");
+    analytics.sendEvent(createEvent(SHARE_SEND, data));
   }
 }
