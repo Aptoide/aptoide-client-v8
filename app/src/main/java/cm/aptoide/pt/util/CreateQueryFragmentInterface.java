@@ -12,5 +12,5 @@ import android.support.v4.app.Fragment;
  */
 public interface CreateQueryFragmentInterface {
 
-  Fragment create(String s);
+  Fragment create(String query);
 }
