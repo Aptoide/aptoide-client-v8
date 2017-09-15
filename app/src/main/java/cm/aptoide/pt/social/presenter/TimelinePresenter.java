@@ -766,7 +766,9 @@ public class TimelinePresenter implements Presenter {
                   return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage());
                 }
                 return Completable.fromAction(
-                    () -> view.showCommentDialog((SocialCardTouchEvent) cardTouchEvent));
+                    () -> view.showCommentDialog((SocialCardTouchEvent) cardTouchEvent))
+                    .andThen(Completable.fromAction(
+                        () -> timelineAnalytics.sendCommentEvent(cardTouchEvent.getPosition())));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction());
             }))

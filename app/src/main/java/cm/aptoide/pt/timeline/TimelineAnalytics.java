@@ -54,6 +54,7 @@ public class TimelineAnalytics {
   private static final String UPDATE_APP = "UPDATE_APP";
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
   private static final String LIKE = "LIKE";
+  private static final String COMMENT = "COMMENT";
   private static final String TIMELINE_OPENED = "Apps_Timeline_Open";
   private static final String SOCIAL_CARD_PREVIEW = "Apps_Timeline_Social_Card_Preview";
   private static final String CARD_ACTION = "Apps_Timeline_Card_Action";
@@ -598,5 +599,11 @@ public class TimelineAnalytics {
     final Map<String, Object> eventMap = new HashMap<>();
     eventMap.put("position", position);
     return eventMap;
+  }
+
+  public void sendCommentEvent(int position) {
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("position", position);
+    analytics.sendEvent(createEvent(COMMENT, data));
   }
 }
