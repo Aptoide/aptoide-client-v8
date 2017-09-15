@@ -16,7 +16,7 @@ android {
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 15
+    minSdkVersion MIN_SDK_VERSION
     // This should be a property set in Java code by the user of this lib
     buildConfigField 'boolean', 'DELETE_DB', 'false'
   }
