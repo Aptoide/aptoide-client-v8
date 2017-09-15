@@ -549,7 +549,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                       && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
                       || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
                     NotLoggedInShareFragment fragment = NotLoggedInShareFragment.newInstance(app);
-                    getFragmentNavigator().navigateForResult(fragment,
+                    getFragmentNavigator().navigateForResultWithoutReplace(fragment,
                         AppViewFragment.LOGIN_REQUEST_CODE);
                   }
                   ShowMessage.asSnack(v, installOrUpgradeMsg);
