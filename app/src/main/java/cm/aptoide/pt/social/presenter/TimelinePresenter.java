@@ -560,7 +560,8 @@ public class TimelinePresenter implements Presenter {
                   RatedRecommendation card = (RatedRecommendation) post;
                   timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                       AppViewFragment.OpenType.OPEN_ONLY);
-                } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+                } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL) || type.equals(
+                    CardType.AGGREGATED_SOCIAL_APP)) {
                   AggregatedRecommendation card = (AggregatedRecommendation) post;
                   timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                       AppViewFragment.OpenType.OPEN_ONLY);
