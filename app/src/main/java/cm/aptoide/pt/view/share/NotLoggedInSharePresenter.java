@@ -6,11 +6,12 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -25,11 +26,13 @@ public class NotLoggedInSharePresenter implements Presenter {
   private final Collection<String> permissions;
   private final Collection<String> requiredPermissions;
   private final int requestCode;
+  private final ThrowableToStringMapper errorMapper;
 
   public NotLoggedInSharePresenter(NotLoggedInShareView view, SharedPreferences sharedPreferences,
       CrashReport crashReport, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions, int requestCode) {
+      Collection<String> requiredPermissions, int requestCode,
+      ThrowableToStringMapper errorMapper) {
     this.view = view;
     this.sharedPreferences = sharedPreferences;
     this.crashReport = crashReport;
@@ -38,6 +41,7 @@ public class NotLoggedInSharePresenter implements Presenter {
     this.permissions = permissions;
     this.requiredPermissions = requiredPermissions;
     this.requestCode = requestCode;
+    this.errorMapper = errorMapper;
   }
 
   @Override public void present() {
@@ -65,7 +69,7 @@ public class NotLoggedInSharePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.closeEvent())
-        .doOnNext(__ -> accountNavigator.popNotLoggedInViewWithResult(requestCode, false))
+        .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -91,7 +95,7 @@ public class NotLoggedInSharePresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
@@ -106,11 +110,11 @@ public class NotLoggedInSharePresenter implements Presenter {
                   Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
                       Analytics.Account.SignUpLoginStatus.SUCCESS,
                       Analytics.Account.LoginStatusDetail.SUCCESS);
-                  accountNavigator.popNotLoggedInViewWithResult(requestCode, true);
+                  accountNavigator.popViewWithResult(requestCode, true);
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
-                  view.showError(throwable);
+                  view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
 
                   Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
@@ -135,7 +139,7 @@ public class NotLoggedInSharePresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
@@ -150,7 +154,7 @@ public class NotLoggedInSharePresenter implements Presenter {
                   Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
                       Analytics.Account.SignUpLoginStatus.SUCCESS,
                       Analytics.Account.LoginStatusDetail.SUCCESS);
-                  accountNavigator.popNotLoggedInViewWithResult(requestCode, true);
+                  accountNavigator.popViewWithResult(requestCode, true);
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
@@ -162,7 +166,7 @@ public class NotLoggedInSharePresenter implements Presenter {
                     view.showFacebookPermissionsRequiredError(throwable);
                   } else {
                     crashReport.log(throwable);
-                    view.showError(throwable);
+                    view.showError(errorMapper.map(throwable));
                   }
                 }))
             .retry())
@@ -204,7 +208,7 @@ public class NotLoggedInSharePresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }

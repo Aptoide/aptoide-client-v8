@@ -3,13 +3,13 @@ package cm.aptoide.pt.billing.view;
 import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.account.view.PaymentLoginFragment;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.Purchase;
 import cm.aptoide.pt.billing.view.boacompra.BoaCompraFragment;
 import cm.aptoide.pt.billing.view.braintree.BraintreeCreditCardFragment;
 import cm.aptoide.pt.billing.view.mol.MolFragment;
+import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalFragment;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
@@ -46,11 +46,6 @@ public class BillingNavigator {
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
-  public void popPayerAuthenticationViewWithResult(int requestCode, boolean success) {
-    fragmentNavigator.popWithResult(
-        new Result(requestCode, (success ? Activity.RESULT_OK : Activity.RESULT_CANCELED), null));
-  }
-
   public void navigateToTransactionAuthorizationView(String sellerId, String productId,
       String developerPayload, PaymentMethod paymentMethod) {
 
@@ -78,7 +73,7 @@ public class BillingNavigator {
     }
   }
 
-  public void popTransactionAuthorizationView() {
+  public void popView() {
     fragmentNavigator.popBackStack();
   }
 
@@ -103,15 +98,15 @@ public class BillingNavigator {
         .map(result -> map(result));
   }
 
-  public void popPaymentViewWithResult(Purchase purchase) {
+  public void popViewWithResult(Purchase purchase) {
     activityNavigator.navigateBackWithResult(Activity.RESULT_OK, bundleMapper.map(purchase));
   }
 
-  public void popPaymentViewWithResult(Throwable throwable) {
+  public void popViewWithResult(Throwable throwable) {
     activityNavigator.navigateBackWithResult(Activity.RESULT_CANCELED, bundleMapper.map(throwable));
   }
 
-  public void popPaymentViewWithResult() {
+  public void popViewWithResult() {
     activityNavigator.navigateBackWithResult(Activity.RESULT_CANCELED,
         bundleMapper.mapCancellation());
   }

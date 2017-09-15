@@ -13,7 +13,7 @@ public interface NotLoggedInShareView extends GooglePlayServicesView {
 
   Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
 
-  void showError(Throwable throwable);
+  void showError(String message);
 
   void showFacebookPermissionsRequiredError(Throwable throwable);
 

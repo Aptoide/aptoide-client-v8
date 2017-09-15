@@ -30,7 +30,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
@@ -67,8 +66,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private ThrowableToStringMapper errorMapper;
-  private LoginSignUpCredentialsPresenter presenter;
   private String marketName;
+  private AptoideAccountManager accountManager;
+  private LoginSignUpCredentialsPresenter presenter;
+  private boolean dismissToNavigateToMainView;
+  private boolean navigateToHome;
+  private View rootView;
+  private CrashReport crashReport;
+  private AccountNavigator accountNavigator;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -86,13 +91,12 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     super.onCreate(savedInstanceState);
     marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
     errorMapper = new AccountErrorMapper(getContext());
-    final AptoideAccountManager accountManager =
+    accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    presenter = new LoginSignUpCredentialsPresenter(this, accountManager, CrashReport.getInstance(),
-        getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
-        getArguments().getBoolean(CLEAN_BACK_STACK),
-        ((ActivityResultNavigator) getContext()).getAccountNavigator(),
-        Arrays.asList("email", "user_friends"), Arrays.asList("email"));
+    crashReport = CrashReport.getInstance();
+    dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
+    navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -161,8 +165,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     progressDialog.dismiss();
   }
 
-  @Override public void showError(Throwable throwable) {
-    Snackbar.make(getRootView(), errorMapper.map(throwable), Snackbar.LENGTH_LONG)
+  @Override public void showError(String message) {
+    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
         .show();
   }
 
@@ -324,16 +328,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    attachPresenter(presenter, null);
-    registerClickHandler(presenter);
-  }
 
-  private View getRootView() {
-    return getActivity().findViewById(android.R.id.content);
-  }
-
-  private void bindViews(View view) {
+    rootView = getActivity().findViewById(android.R.id.content);
     forgotPasswordButton = (TextView) view.findViewById(R.id.forgot_password);
 
     googleLoginButton = (Button) view.findViewById(R.id.google_login_button);
@@ -373,5 +369,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       // this happens because in landscape the R.id.login_signup_layout is not
       // a child of CoordinatorLayout
     }
+
+    presenter = new LoginSignUpCredentialsPresenter(this, accountManager, crashReport,
+        dismissToNavigateToMainView, navigateToHome, accountNavigator,
+        Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper);
+    attachPresenter(presenter, null);
+    registerClickHandler(presenter);
   }
 }

@@ -18,14 +18,14 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountErrorMapper;
+import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.account.view.AccountErrorMapper;
-import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -114,10 +114,11 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
         .load(getArguments().getString(APP_ICON), appIcon);
 
     attachPresenter(new NotLoggedInSharePresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        CrashReport.getInstance(), accountManager,
-        ((ActivityResultNavigator) getContext()).getAccountNavigator(),
-        Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode), null);
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            CrashReport.getInstance(), accountManager,
+            ((ActivityResultNavigator) getContext()).getAccountNavigator(),
+            Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper),
+        null);
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
@@ -171,8 +172,8 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     progressDialog.dismiss();
   }
 
-  @Override public void showError(Throwable throwable) {
-    Snackbar.make(getRootView(), errorMapper.map(throwable), Snackbar.LENGTH_LONG)
+  @Override public void showError(String message) {
+    Snackbar.make(getRootView(), message, Snackbar.LENGTH_LONG)
         .show();
   }
 

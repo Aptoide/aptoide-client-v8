@@ -38,7 +38,7 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   void hideLoading();
 
-  void showError(Throwable throwable);
+  void showError(String message);
 
   void showFacebookLogin();
 

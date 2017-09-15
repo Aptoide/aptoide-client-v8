@@ -106,7 +106,7 @@ public class BoaCompraPresenter implements Presenter {
 
   private void popAuthorizationView() {
     view.hideLoading();
-    navigator.popTransactionAuthorizationView();
+    navigator.popView();
   }
 
   private void onViewCreatedAuthorizeBoaCompra() {

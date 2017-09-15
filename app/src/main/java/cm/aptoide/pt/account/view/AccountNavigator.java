@@ -115,7 +115,7 @@ public class AccountNavigator {
         (result, loginResult) -> loginResult);
   }
 
-  public void popNotLoggedInViewWithResult(int requestCode, boolean success) {
+  public void popViewWithResult(int requestCode, boolean success) {
     fragmentNavigator.popWithResult(
         new Result(requestCode, (success ? Activity.RESULT_OK : Activity.RESULT_CANCELED), null));
   }

@@ -10,10 +10,13 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
+import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
-import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.view.ThrowableToStringMapper;
+import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import java.util.Collection;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,14 +31,15 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private final AccountNavigator accountNavigator;
   private final Collection<String> permissions;
   private final Collection<String> requiredPermissions;
+  private final ThrowableToStringMapper errorMapper;
 
   private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
-      AptoideAccountManager accountManager, CrashReport crashReport,
-      boolean dismissToNavigateToMainView, boolean navigateToHome,
+      AptoideAccountManager accountManager,
+      CrashReport crashReport, boolean dismissToNavigateToMainView, boolean navigateToHome,
       AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions) {
+      Collection<String> requiredPermissions, ThrowableToStringMapper errorMapper) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -44,6 +48,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     this.accountNavigator = accountNavigator;
     this.permissions = permissions;
     this.requiredPermissions = requiredPermissions;
+    this.errorMapper = errorMapper;
   }
 
   @Override public void present() {
@@ -110,7 +115,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                   view.hideLoading();
                 })
                 .doOnError(throwable -> {
-                  view.showError(throwable);
+                  view.showError(errorMapper.map(throwable));
                   view.hideLoading();
                   crashReport.log(throwable);
                   unlockScreenRotation();
@@ -145,7 +150,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                     .doOnError(throwable -> {
                       Analytics.Account.signInSuccessAptoide(
                           Analytics.Account.SignUpLoginStatus.FAILED);
-                      view.showError(throwable);
+                      view.showError(errorMapper.map(throwable));
                       crashReport.log(throwable);
                       unlockScreenRotation();
                       view.hideLoading();
@@ -163,7 +168,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
@@ -176,7 +181,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
@@ -218,7 +223,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
@@ -237,7 +242,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
-                  view.showError(throwable);
+                  view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
 
                   Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
@@ -262,7 +267,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
@@ -279,7 +284,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
@@ -306,7 +311,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                     view.showFacebookPermissionsRequiredError(throwable);
                   } else {
                     crashReport.log(throwable);
-                    view.showError(throwable);
+                    view.showError(errorMapper.map(throwable));
                   }
                 }))
             .retry())
