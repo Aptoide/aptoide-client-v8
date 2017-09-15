@@ -23,8 +23,7 @@ public class WizardPageOneFragment extends BackButtonFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    navigationTracker.registerView(this.getClass()
-        .getSimpleName());
+    navigationTracker.registerView(getClass().getSimpleName());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

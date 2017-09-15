@@ -144,10 +144,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     return RxView.clicks(skipText);
   }
 
-  @Override public WizardPagerAdapter getWizardViewPager() {
-    return viewPagerAdapter;
-  }
-
   @Override public void goToNextPage() {
     if (viewPager.getCurrentItem() < viewPagerAdapter.getCount() - 1) {
       viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);

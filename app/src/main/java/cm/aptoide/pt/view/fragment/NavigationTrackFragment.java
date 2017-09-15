@@ -12,10 +12,24 @@ import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 public class NavigationTrackFragment extends FragmentView {
 
   protected AptoideNavigationTracker navigationTracker;
+  private boolean registerFragment = false;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    navigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    if (navigationTracker == null) {
+      navigationTracker =
+          ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    }
+    getFragmentExtras();
+    if (!registerFragment) {
+      navigationTracker.registerView(this.getClass()
+          .getSimpleName());
+    }
+  }
+
+  private void getFragmentExtras() {
+    if (getArguments() != null) {
+      registerFragment = getArguments().getBoolean(AptoideNavigationTracker.DO_NOT_REGISTER_VIEW);
+    }
   }
 }

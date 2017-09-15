@@ -202,7 +202,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
     if (bundle == null) {
       bundle = new Bundle();
     }
-    bundle.putBoolean(AptoideNavigationTracker.REGISTER_VIEW, false);
+    bundle.putBoolean(AptoideNavigationTracker.DO_NOT_REGISTER_VIEW, true);
     fragment.setArguments(bundle);
     return fragment;
   }

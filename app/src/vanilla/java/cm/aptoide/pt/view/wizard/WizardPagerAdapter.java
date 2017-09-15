@@ -1,10 +1,12 @@
 package cm.aptoide.pt.view.wizard;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.view.account.LoginSignUpFragment;
 
 public class WizardPagerAdapter extends FragmentPagerAdapter
@@ -21,16 +23,22 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
   }
 
   @Override public Fragment getItem(int position) {
+    Fragment fragment;
     switch (position) {
       case WIZARD_STEP_ONE_POSITION:
-        return WizardPageOneFragment.newInstance();
+        fragment = WizardPageOneFragment.newInstance();
+        break;
       case WIZARD_STEP_TWO_POSITION:
-        return WizardPageTwoFragment.newInstance();
+        fragment = WizardPageTwoFragment.newInstance();
+        break;
       case WIZARD_LOGIN_POSITION:
-        return LoginSignUpFragment.newInstance(true, false, true);
+        fragment = LoginSignUpFragment.newInstance(true, false, true);
+        break;
       default:
         throw new IllegalArgumentException("Invalid wizard fragment position: " + position);
     }
+    fragment = setFragmentLogFlag(fragment);
+    return fragment;
   }
 
   @Override public int getCount() {
@@ -43,5 +51,15 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
   @Override public String getItemName(int position) {
     return getItem(position).getClass()
         .getSimpleName();
+  }
+
+  private Fragment setFragmentLogFlag(Fragment fragment) {
+    Bundle bundle = fragment.getArguments();
+    if (bundle == null) {
+      bundle = new Bundle();
+    }
+    bundle.putBoolean(AptoideNavigationTracker.DO_NOT_REGISTER_VIEW, true);
+    fragment.setArguments(bundle);
+    return fragment;
   }
 }
