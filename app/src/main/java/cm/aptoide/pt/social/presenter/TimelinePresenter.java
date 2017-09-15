@@ -628,7 +628,9 @@ public class TimelinePresenter implements Presenter {
                     }
 
                     final Post post = cardTouchEvent.getCard();
-                    return timeline.like(post, post.getCardId());
+                    return timeline.like(post, post.getCardId())
+                        .andThen(Completable.fromAction(
+                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition())));
                   }
                   return Completable.complete();
                 })))
