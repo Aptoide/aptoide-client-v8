@@ -21,6 +21,14 @@ public class NavigationTrackFragment extends FragmentView {
           ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
     }
     getFragmentExtras();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
     if (!registerFragment) {
       navigationTracker.registerView(this.getClass()
           .getSimpleName());
