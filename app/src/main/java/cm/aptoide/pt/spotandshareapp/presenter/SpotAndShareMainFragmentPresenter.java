@@ -3,6 +3,9 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
@@ -29,13 +32,18 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   private SpotAndShareLocalUserManager spotAndShareUserManager;
   private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
   private SpotAndShareMainFragmentView view;
+  private final PermissionManager permissionManager;
+  private final PermissionService permissionService;
 
   public SpotAndShareMainFragmentPresenter(SpotAndShareMainFragmentView view,
       SpotAndShareLocalUserManager spotAndShareUserManager,
-      SpotAndSharePermissionProvider spotAndSharePermissionProvider) {
+      SpotAndSharePermissionProvider spotAndSharePermissionProvider,
+      PermissionManager permissionManager, PermissionService permissionService) {
     this.view = view;
     this.spotAndShareUserManager = spotAndShareUserManager;
     this.spotAndSharePermissionProvider = spotAndSharePermissionProvider;
+    this.permissionManager = permissionManager;
+    this.permissionService = permissionService;
   }
 
   @Override public void present() {
@@ -90,8 +98,11 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND);
+
+            permissionManager.requestLocationAndExternalStoragePermission(permissionService)
+                .subscribe(success -> {
+                }, throwable -> Logger.d(this.getClass()
+                    .getName(), "error in PERMISSIONS "));
           } else {
             Log.i(getClass().getName(), "GOING TO START SENDING");
             view.openAppSelectionFragment(true);

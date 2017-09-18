@@ -28,6 +28,8 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import com.facebook.FacebookSdk;
+import java.util.ArrayList;
+import java.util.List;
 import rx.functions.Action0;
 
 @Deprecated public abstract class PermissionServiceActivity extends ActivityResultNavigator
@@ -40,12 +42,17 @@ import rx.functions.Action0;
   private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
   private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 101;
 
+  private static final int PERMISSIONS_REQUEST_LOCATION_AND_EXTERNAL_STORAGE = 102;
+
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
   @Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
   @Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
   @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
   @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
+
+  @Nullable private Action0 toRunWhenAccessToLocationAndExternalStorageIsGranted;
+  @Nullable private Action0 toRunWhenAccessToLocationAndExternalStorageIsDenied;
 
   private SharedPreferences sharedPreferences;
   private ConnectivityManager connectivityManager;
@@ -298,6 +305,34 @@ import rx.functions.Action0;
     }
   }
 
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToLocationAndExternalStorage(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+
+    List<String> notGrantedPermissions = new ArrayList<>();
+    String[] permissions = new String[] {
+        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    for (String permission : permissions) {
+      if (ContextCompat.checkSelfPermission(this, permission)
+          != PackageManager.PERMISSION_GRANTED) {
+        notGrantedPermissions.add(permission);
+      }
+    }
+    if (notGrantedPermissions.isEmpty()) {
+      if (toRunWhenAccessIsGranted != null) {
+        toRunWhenAccessIsGranted.call();
+      }
+    } else {
+      this.toRunWhenAccessToLocationAndExternalStorageIsGranted = toRunWhenAccessIsGranted;
+      this.toRunWhenAccessToLocationAndExternalStorageIsDenied = toRunWhenAccessIsDenied;
+
+      ActivityCompat.requestPermissions(this, notGrantedPermissions.toArray(new String[0]),
+          PERMISSIONS_REQUEST_LOCATION_AND_EXTERNAL_STORAGE);
+    }
+  }
+
   private void showMessageOKCancel(@StringRes int messageId,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
     showMessageOKCancel(getString(messageId), subscriber);
@@ -341,6 +376,20 @@ import rx.functions.Action0;
         } else {
           if (toRunWhenAccessToContactsIsDenied != null) {
             toRunWhenAccessToContactsIsDenied.call();
+          }
+        }
+        break;
+
+      case PERMISSIONS_REQUEST_LOCATION_AND_EXTERNAL_STORAGE:
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED
+            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+          Logger.v(TAG, "access to location and external storage was granted");
+          if (toRunWhenAccessToLocationAndExternalStorageIsGranted != null) {
+            toRunWhenAccessToLocationAndExternalStorageIsGranted.call();
+          }
+        } else {
+          if (toRunWhenAccessToLocationAndExternalStorageIsDenied != null) {
+            toRunWhenAccessToLocationAndExternalStorageIsDenied.call();
           }
         }
         break;

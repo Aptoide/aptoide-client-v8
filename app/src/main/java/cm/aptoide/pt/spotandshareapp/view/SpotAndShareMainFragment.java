@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
@@ -136,7 +138,7 @@ public class SpotAndShareMainFragment extends FragmentView
     shareAptoideTextView = (TextView) view.findViewById(R.id.share_aptoide_apk_button);
     presenter = new SpotAndShareMainFragmentPresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
-        spotAndSharePermissionProvider);
+        spotAndSharePermissionProvider, new PermissionManager(), (PermissionService) getContext());
     attachPresenter(presenter, savedInstanceState);
   }
 

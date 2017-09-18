@@ -23,4 +23,13 @@ public class PermissionManager {
   public Observable<Boolean> requestContactsAccess(PermissionService permissionService) {
     return Observable.create(new RequestContactsAccessOnSubscribe(permissionService));
   }
+
+  public Observable<Void> requestLocationAndExternalStoragePermission(
+      PermissionService permissionService) {
+    return Observable.create(new RequestLocationAndExternalStorageOnSubscribe(permissionService));
+  }
+
+  public Observable<Void> requestWriteSettingsPermission(PermissionService permissionService) {
+    return Observable.create(new RequestWriteSettingsOnSubscribe(permissionService));
+  }
 }
