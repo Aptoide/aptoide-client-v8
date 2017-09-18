@@ -34,6 +34,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private PublishRelay<Void> backButtonRelay;
   private PublishRelay<Void> upNavigationRelay;
   private Button facebookButton;
+  private Button googleButton;
   private ProgressDialog progressDialog;
   private AccountNavigator accountNavigator;
   private AptoideAccountManager accountManager;
@@ -83,6 +84,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .build();
 
     facebookButton = (Button) view.findViewById(R.id.fragment_payment_login_facebook_button);
+    googleButton = (Button) view.findViewById(R.id.fragment_payment_login_google_button);
     progressDialog = new ProgressDialog(getContext());
     progressDialog.setMessage(getString(cm.aptoide.pt.utils.R.string.please_wait));
     progressDialog.setCancelable(false);
@@ -112,6 +114,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
 
   @Override public Observable<Void> facebookSignUpEvent() {
     return RxView.clicks(facebookButton);
+  }
+
+  @Override public Observable<Void> googleSignUpEvent() {
+    return RxView.clicks(googleButton);
   }
 
   @Override public void showLoading() {

@@ -213,6 +213,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         })
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
             RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(connectionResult -> {
           if (!connectionResult.isSuccess()) {
             view.showConnectionError(connectionResult);

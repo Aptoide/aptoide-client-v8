@@ -11,6 +11,8 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   Observable<Void> facebookSignUpEvent();
 
+  Observable<Void> googleSignUpEvent();
+
   void showLoading();
 
   void hideLoading();
@@ -18,4 +20,5 @@ public interface PaymentLoginView extends GooglePlayServicesView {
   void showError(String message);
 
   void showFacebookPermissionsRequiredError(Throwable throwable);
+
 }
