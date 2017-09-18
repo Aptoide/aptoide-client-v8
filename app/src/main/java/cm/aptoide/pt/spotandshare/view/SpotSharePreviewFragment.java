@@ -12,8 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.presenter.SpotSharePreviewView;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
@@ -31,6 +33,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   private Toolbar toolbar;
   private boolean showToolbar;
   private SpotAndShareAnalytics spotAndShareAnalytics;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public static Fragment newInstance(boolean showToolbar) {
     Bundle args = new Bundle();
@@ -49,6 +52,10 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     super.onCreate(savedInstanceState);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    aptoideNavigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    aptoideNavigationTracker.registerView(this.getClass()
+        .getSimpleName());
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
