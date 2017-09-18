@@ -43,6 +43,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -168,10 +169,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+    Analytics analytics = Analytics.getInstance();
+    timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, analytics));
     super.onCreate(savedInstanceState);
   }
 

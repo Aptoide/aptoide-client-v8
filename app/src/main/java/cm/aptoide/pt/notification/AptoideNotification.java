@@ -31,10 +31,11 @@ import lombok.ToString;
   private String ownerId;
   private @NotificationType int type;
   private long timeStamp;
+  private String notificationCenterUrlTrack;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
       long timeStamp, String appName, String graphic, long dismissed, String ownerId,
-      long expireSecsUtc) {
+      long expireSecsUtc, String notificationCenterUrlTrack) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -46,27 +47,30 @@ import lombok.ToString;
     this.dismissed = dismissed;
     this.ownerId = ownerId;
     this.expire = expireSecsUtc * 1000;
+    this.notificationCenterUrlTrack = notificationCenterUrlTrack;
   }
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      String appName, String graphic, long dismissed, String ownerId, Long expireSecsUtc) {
+      String appName, String graphic, long dismissed, String ownerId, Long expireSecsUtc,
+      String notificationCenterUrlTrack) {
     this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed,
-        ownerId, expireSecsUtc);
+        ownerId, expireSecsUtc, notificationCenterUrlTrack);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, String appName, String graphic,
-      String ownerId, Long expireSecsUtc) {
+      String ownerId, Long expireSecsUtc, String notificationCenterUrlTrack) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
         System.currentTimeMillis(), CAMPAIGN, NOT_DISMISSED, appName, graphic, ownerId,
-        expireSecsUtc);
+        expireSecsUtc, notificationCenterUrlTrack);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, long timeStamp, int type,
-      long dismissed, String appName, String graphic, String ownerId, Long expireSecsUtc) {
+      long dismissed, String appName, String graphic, String ownerId, Long expireSecsUtc,
+      String notificationCenterUrlTrack) {
     this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId,
-        expireSecsUtc);
+        expireSecsUtc, notificationCenterUrlTrack);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
@@ -131,6 +135,10 @@ import lombok.ToString;
 
   public Long getExpire() {
     return expire;
+  }
+
+  public String getNotificationCenterUrlTrack() {
+    return notificationCenterUrlTrack;
   }
 
   @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR })

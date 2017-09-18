@@ -43,6 +43,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -151,12 +152,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+    Analytics analytics = Analytics.getInstance();
+    timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
         tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, analytics));
+    storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
   }

@@ -25,6 +25,7 @@ public class Notification extends RealmObject {
   private String title;
   private String url;
   private String urlTrack;
+  private String notificationCenterUrlTrack;
   private int type;
   private long timeStamp;
   private long dismissed;
@@ -33,13 +34,14 @@ public class Notification extends RealmObject {
   private String ownerId;
 
   public Notification(Long expire, String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack, long timeStamp, int type,
-      long dismissed, String appName, String graphic, String ownerId) {
+      String lang, String title, String url, String urlTrack, String notificationCenterUrlTrack,
+      long timeStamp, int type, long dismissed, String appName, String graphic, String ownerId) {
     this.expire = expire;
     this.body = body;
     this.img = img;
     this.title = title;
     this.url = url;
+    this.notificationCenterUrlTrack = notificationCenterUrlTrack;
     this.type = type;
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
@@ -136,5 +138,9 @@ public class Notification extends RealmObject {
       return now > expire;
     }
     return false;
+  }
+
+  public String getNotificationCenterUrlTrack() {
+    return notificationCenterUrlTrack;
   }
 }
