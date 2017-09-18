@@ -18,10 +18,6 @@ public class NotificationAnalytics {
     this.analytics = analytics;
   }
 
-  public void systemNotificationShowed(AptoideNotification notification) {
-    analytics.sendEvent(new knockEvent(notification.getUrlTrack(), client));
-  }
-
   public void notificationShown(String url) {
     analytics.sendEvent(new knockEvent(url, client));
   }
