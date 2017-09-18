@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       "cm.aptoide.pt.billing.view.login.extra.USERNAME_PASSWORD_CONTAINER_VISIBLE";
   private static final String EXTRA_LOGIN_VISIBLE =
       "cm.aptoide.pt.billing.view.login.extra.LOGIN_VISIBLE ";
+  private static final String EXTRA_PASSWORD_VISIBLE =
+      "cm.aptoide.pt.billing.view.login.extra.PASSWORD_VISIBLE";
   private int requestCode;
   private ClickHandler handler;
   private PublishRelay<Void> backButtonRelay;
@@ -64,6 +67,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private Button aptoideSignUpButton;
   private EditText usernameEditText;
   private EditText passwordEditText;
+  private Button passwordShowHideToggle;
+  private boolean passwordVisible;
 
   public static Fragment newInstance() {
     return new PaymentLoginFragment();
@@ -117,6 +122,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideSignUpButton = (Button) view.findViewById(R.id.fragment_payment_login_sign_up_button);
     usernameEditText = (EditText) view.findViewById(R.id.fragment_payment_login_username);
     passwordEditText = (EditText) view.findViewById(R.id.fragment_payment_login_password);
+    passwordShowHideToggle =
+        (Button) view.findViewById(R.id.fragment_payment_login_show_hide_pasword_button);
 
     usernamePasswordContainer =
         view.findViewById(R.id.fragment_payment_login_username_password_container);
@@ -127,6 +134,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       } else {
         hideUsernamePasswordContainer();
       }
+      togglePasswordVisibility(savedInstanceState.getBoolean(EXTRA_PASSWORD_VISIBLE));
     }
 
     RxView.clicks(aptoideJoinToggle)
@@ -136,6 +144,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
 
     RxView.clicks(aptoideLoginToggle)
         .doOnNext(__ -> showUsernamePasswordContainer(true))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
+
+    RxView.clicks(passwordShowHideToggle)
+        .doOnNext(__ -> togglePasswordVisibility(!passwordVisible))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe();
 
@@ -166,6 +179,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     outState.putBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE,
         usernamePasswordContainerVisible);
     outState.putBoolean(EXTRA_LOGIN_VISIBLE, loginVisible);
+    outState.putBoolean(EXTRA_PASSWORD_VISIBLE, passwordVisible);
     super.onSaveInstanceState(outState);
   }
 
@@ -259,6 +273,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideSignUpButton = null;
     usernameEditText = null;
     passwordEditText = null;
+    passwordShowHideToggle = null;
     super.onDestroyView();
   }
 
@@ -286,5 +301,17 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideLoginContainer.setVisibility(View.GONE);
     aptoideSignUpContainer.setVisibility(View.GONE);
     usernamePasswordContainerVisible = false;
+  }
+
+  private void togglePasswordVisibility(boolean showPassword) {
+    if (showPassword) {
+      passwordEditText.setTransformationMethod(null);
+      passwordShowHideToggle.setBackgroundResource(R.drawable.icon_open_eye);
+      passwordVisible = true;
+    } else {
+      passwordEditText.setTransformationMethod(new PasswordTransformationMethod());
+      passwordShowHideToggle.setBackgroundResource(R.drawable.icon_closed_eye);
+      passwordVisible = false;
+    }
   }
 }
