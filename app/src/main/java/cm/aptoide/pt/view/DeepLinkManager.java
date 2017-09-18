@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -48,11 +49,13 @@ public class DeepLinkManager {
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
   private final String defaultTheme;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
-      StoreAccessor storeAccessor, String defaultTheme) {
+      StoreAccessor storeAccessor, String defaultTheme,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -61,6 +64,7 @@ public class DeepLinkManager {
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
     this.defaultTheme = defaultTheme;
+    this.aptoideNavigationTracker = aptoideNavigationTracker;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -101,7 +105,7 @@ public class DeepLinkManager {
       Analytics.ApplicationLaunch.launcher();
       return false;
     }
-
+    aptoideNavigationTracker.registerView("DeepLink");
     return true;
   }
 
