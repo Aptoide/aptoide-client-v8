@@ -12,7 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -58,6 +60,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private boolean usernamePasswordContainerVisible;
   private boolean loginVisible;
   private View recoverPasswordButton;
+  private Button aptoideLoginButton;
+  private Button aptoideSignUpButton;
+  private EditText usernameEditText;
+  private EditText passwordEditText;
 
   public static Fragment newInstance() {
     return new PaymentLoginFragment();
@@ -107,6 +113,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         ((AptoideApplication) getContext().getApplicationContext()).getMarketName()));
     aptoideLoginToggle = (Button) view.findViewById(R.id.fragment_payment_login_small_button);
     recoverPasswordButton = view.findViewById(R.id.fragment_payment_login_recover_password_button);
+    aptoideLoginButton = (Button) view.findViewById(R.id.fragment_payment_login_large_login_button);
+    aptoideSignUpButton = (Button) view.findViewById(R.id.fragment_payment_login_sign_up_button);
+    usernameEditText = (EditText) view.findViewById(R.id.fragment_payment_login_username);
+    passwordEditText = (EditText) view.findViewById(R.id.fragment_payment_login_password);
 
     usernamePasswordContainer =
         view.findViewById(R.id.fragment_payment_login_username_password_container);
@@ -204,6 +214,20 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     return RxView.clicks(recoverPasswordButton);
   }
 
+  @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
+    return RxView.clicks(aptoideLoginButton)
+        .map(__ -> new AptoideCredentials(usernameEditText.getText()
+            .toString(), passwordEditText.getText()
+            .toString()));
+  }
+
+  @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
+    return RxView.clicks(aptoideSignUpButton)
+        .map(__ -> new AptoideCredentials(usernameEditText.getText()
+            .toString(), passwordEditText.getText()
+            .toString()));
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
 
     if (item.getItemId() == android.R.id.home) {
@@ -231,6 +255,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideLoginToggle = null;
     usernamePasswordContainer = null;
     recoverPasswordButton = null;
+    aptoideLoginButton = null;
+    aptoideSignUpButton = null;
+    usernameEditText = null;
+    passwordEditText = null;
     super.onDestroyView();
   }
 

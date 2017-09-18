@@ -52,6 +52,30 @@ public class PaymentLoginPresenter implements Presenter {
     handleGoogleSignUpResult();
 
     handleRecoverPasswordEvent();
+
+    handleAptoideLoginEvent();
+  }
+
+  private void handleAptoideLoginEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(event -> view.aptoideLoginEvent()
+            .doOnNext(__ -> view.showLoading())
+            .flatMapCompletable(result -> accountManager.login(result)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  sendAptoideLoginSuccessEvent();
+                  accountNavigator.popViewWithResult(requestCode, true);
+                })
+                .doOnTerminate(() -> view.hideLoading())
+                .doOnError(throwable -> {
+                  sendAptoideLoginFailEvent();
+                  view.showError(errorMapper.map(throwable));
+                  crashReport.log(throwable);
+                }))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   private void handleFacebookSignUpResult() {
@@ -176,6 +200,11 @@ public class PaymentLoginPresenter implements Presenter {
     }
   }
 
+  private void sendAptoideLoginSuccessEvent() {
+    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+        Analytics.Account.SignUpLoginStatus.SUCCESS, Analytics.Account.LoginStatusDetail.SUCCESS);
+  }
+
   private void sendFacebookSignUpSuccessEvent() {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
         Analytics.Account.SignUpLoginStatus.SUCCESS, Analytics.Account.LoginStatusDetail.SUCCESS);
@@ -189,6 +218,12 @@ public class PaymentLoginPresenter implements Presenter {
   private void sendGoogleSignUpFailEvent() {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
         Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.SDK_ERROR);
+  }
+
+  private void sendAptoideLoginFailEvent() {
+    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+        Analytics.Account.SignUpLoginStatus.FAILED,
+        Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
   }
 
   @Override public void saveState(Bundle state) {

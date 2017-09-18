@@ -1,5 +1,6 @@
 package cm.aptoide.pt.billing.view.login;
 
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.view.GooglePlayServicesView;
 import rx.Observable;
 
@@ -15,6 +16,8 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   Observable<Void> recoverPasswordEvent();
 
+  Observable<AptoideCredentials> aptoideLoginEvent();
+
   void showLoading();
 
   void hideLoading();
@@ -23,4 +26,5 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   void showFacebookPermissionsRequiredError(Throwable throwable);
 
+  Observable<AptoideCredentials> aptoideSignUpEvent();
 }
