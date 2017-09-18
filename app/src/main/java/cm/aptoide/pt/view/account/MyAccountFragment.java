@@ -159,7 +159,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
             new MyAccountNavigator(getFragmentNavigator()),
             ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
             new LinksHandlerFactory(getContext()),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()),
         savedInstanceState);
   }
 

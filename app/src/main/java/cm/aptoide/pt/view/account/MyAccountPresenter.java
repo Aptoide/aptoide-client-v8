@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.account;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.NotificationCenter;
@@ -22,10 +23,12 @@ public class MyAccountPresenter implements Presenter {
   private final LinksHandlerFactory linkFactory;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
   private final SharedPreferences sharedPreferences;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences) {
+      LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -33,6 +36,7 @@ public class MyAccountPresenter implements Presenter {
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
     this.sharedPreferences = sharedPreferences;
+    this.aptoideNavigationTracker = aptoideNavigationTracker;
   }
 
   @Override public void present() {
@@ -147,6 +151,7 @@ public class MyAccountPresenter implements Presenter {
         .map(notification -> linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK,
             notification.getUrl()))
         .doOnNext(link -> link.launch())
+        .doOnNext(__ -> aptoideNavigationTracker.registerView("Notification"))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));

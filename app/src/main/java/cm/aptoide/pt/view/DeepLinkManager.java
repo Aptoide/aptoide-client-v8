@@ -68,6 +68,7 @@ public class DeepLinkManager {
   }
 
   public boolean showDeepLink(Intent intent) {
+    String deeplinkOrNotification = "Deeplink";
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
 
       if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
@@ -94,6 +95,7 @@ public class DeepLinkManager {
       downloadNotificationDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
       fromTimelineDeepLink(intent);
+      deeplinkOrNotification = "Notification";
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
@@ -105,7 +107,7 @@ public class DeepLinkManager {
       Analytics.ApplicationLaunch.launcher();
       return false;
     }
-    aptoideNavigationTracker.registerView("DeepLink");
+    aptoideNavigationTracker.registerView(deeplinkOrNotification);
     return true;
   }
 
