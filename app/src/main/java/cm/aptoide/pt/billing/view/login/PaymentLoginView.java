@@ -18,6 +18,8 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   Observable<AptoideCredentials> aptoideLoginEvent();
 
+  Observable<AptoideCredentials> aptoideSignUpEvent();
+
   void showLoading();
 
   void hideLoading();
@@ -26,5 +28,4 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   void showFacebookPermissionsRequiredError(Throwable throwable);
 
-  Observable<AptoideCredentials> aptoideSignUpEvent();
 }

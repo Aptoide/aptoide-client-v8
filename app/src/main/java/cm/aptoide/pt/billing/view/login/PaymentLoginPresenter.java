@@ -54,6 +54,31 @@ public class PaymentLoginPresenter implements Presenter {
     handleRecoverPasswordEvent();
 
     handleAptoideLoginEvent();
+
+    handleAptoideSignUpEvent();
+  }
+
+  private void handleAptoideSignUpEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(event -> view.aptoideSignUpEvent()
+            .doOnNext(__ -> view.showLoading())
+            .flatMapCompletable(
+                result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnCompleted(() -> {
+                      sendAptoideSignUpSuccessEvent();
+                      accountNavigator.popViewWithResult(requestCode, true);
+                    })
+                    .doOnTerminate(() -> view.hideLoading())
+                    .doOnError(throwable -> {
+                      sendAptoideSignUpFailEvent();
+                      view.showError(errorMapper.map(throwable));
+                      crashReport.log(throwable);
+                    }))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   private void handleAptoideLoginEvent() {
@@ -224,6 +249,14 @@ public class PaymentLoginPresenter implements Presenter {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
         Analytics.Account.SignUpLoginStatus.FAILED,
         Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
+  }
+
+  private void sendAptoideSignUpSuccessEvent() {
+    Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
+  }
+
+  private void sendAptoideSignUpFailEvent() {
+    Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
   }
 
   @Override public void saveState(Bundle state) {
