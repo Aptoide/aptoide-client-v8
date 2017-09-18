@@ -24,11 +24,16 @@ import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
 import rx.Observable;
 
 public class PaymentLoginFragment extends GooglePlayServicesFragment implements PaymentLoginView {
 
+  private static final String EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE =
+      "cm.aptoide.pt.billing.view.login.extra.USERNAME_PASSWORD_CONTAINER_VISIBLE";
+  private static final String EXTRA_LOGIN_VISIBLE =
+      "cm.aptoide.pt.billing.view.login.extra.LOGIN_VISIBLE ";
   private int requestCode;
   private ClickHandler handler;
   private PublishRelay<Void> backButtonRelay;
@@ -42,6 +47,16 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private RxAlertDialog facebookEmailRequiredDialog;
   private View rootView;
   private AccountErrorMapper errorMapper;
+
+  private View aptoideLoginSignUpSeparator;
+  private View aptoideLoginSignUpButtonContainer;
+  private Button aptoideJoinToggle;
+  private Button aptoideLoginToggle;
+  private View usernamePasswordContainer;
+  private View aptoideSignUpContainer;
+  private View aptoideLoginContainer;
+  private boolean usernamePasswordContainerVisible;
+  private boolean loginVisible;
 
   public static Fragment newInstance() {
     return new PaymentLoginFragment();
@@ -77,6 +92,41 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     ((AppCompatActivity) getContext()).getSupportActionBar()
         .setDisplayHomeAsUpEnabled(true);
 
+    aptoideLoginSignUpSeparator =
+        view.findViewById(R.id.fragment_payment_login_aptoide_buttons_separator_container);
+
+    aptoideLoginSignUpButtonContainer =
+        view.findViewById(R.id.fragment_payment_login_aptoide_buttons_container);
+
+    aptoideSignUpContainer = view.findViewById(R.id.fragment_payment_sign_up_container);
+    aptoideLoginContainer = view.findViewById(R.id.fragment_payment_login_container);
+
+    aptoideJoinToggle = (Button) view.findViewById(R.id.fragment_payment_login_join_button);
+    aptoideJoinToggle.setText(getString(R.string.join_company,
+        ((AptoideApplication) getContext().getApplicationContext()).getMarketName()));
+    aptoideLoginToggle = (Button) view.findViewById(R.id.fragment_payment_login_small_button);
+
+    usernamePasswordContainer =
+        view.findViewById(R.id.fragment_payment_login_username_password_container);
+
+    if (savedInstanceState != null) {
+      if (savedInstanceState.getBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE)) {
+        showUsernamePasswordContainer(savedInstanceState.getBoolean(EXTRA_LOGIN_VISIBLE));
+      } else {
+        hideUsernamePasswordContainer();
+      }
+    }
+
+    RxView.clicks(aptoideJoinToggle)
+        .doOnNext(__ -> showUsernamePasswordContainer(false))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
+
+    RxView.clicks(aptoideLoginToggle)
+        .doOnNext(__ -> showUsernamePasswordContainer(true))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
+
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.facebook_email_permission_regected_message)
         .setPositiveButton(R.string.facebook_grant_permission_button)
@@ -89,10 +139,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     progressDialog.setMessage(getString(cm.aptoide.pt.utils.R.string.please_wait));
     progressDialog.setCancelable(false);
 
-    final Button button = (Button) view.findViewById(R.id.fragment_payment_login_join_button);
-    button.setText(getString(R.string.join_company,
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName()));
-
     handler = () -> {
       backButtonRelay.call(null);
       return true;
@@ -104,8 +150,21 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
             accountNavigator, accountManager, crashReport, errorMapper), savedInstanceState);
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    outState.putBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE,
+        usernamePasswordContainerVisible);
+    outState.putBoolean(EXTRA_LOGIN_VISIBLE, loginVisible);
+    super.onSaveInstanceState(outState);
+  }
+
   @Override public Observable<Void> backButtonEvent() {
-    return backButtonRelay;
+    return backButtonRelay.filter(__ -> {
+      if (usernamePasswordContainer.getVisibility() == View.VISIBLE) {
+        hideUsernamePasswordContainer();
+        return false;
+      }
+      return true;
+    });
   }
 
   @Override public Observable<Void> upNavigationEvent() {
@@ -154,9 +213,43 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     facebookEmailRequiredDialog.dismiss();
     facebookEmailRequiredDialog = null;
     facebookButton = null;
+    googleButton = null;
     progressDialog.dismiss();
     progressDialog = null;
     rootView = null;
+    aptoideLoginSignUpSeparator = null;
+    aptoideLoginSignUpButtonContainer = null;
+    aptoideSignUpContainer = null;
+    aptoideLoginContainer = null;
+    aptoideJoinToggle = null;
+    aptoideLoginToggle = null;
+    usernamePasswordContainer = null;
     super.onDestroyView();
+  }
+
+  private void showUsernamePasswordContainer(boolean showLogin) {
+    aptoideLoginSignUpSeparator.setVisibility(View.GONE);
+    aptoideLoginSignUpButtonContainer.setVisibility(View.GONE);
+    usernamePasswordContainer.setVisibility(View.VISIBLE);
+    usernamePasswordContainerVisible = true;
+
+    if (showLogin) {
+      loginVisible = true;
+      aptoideLoginContainer.setVisibility(View.VISIBLE);
+      aptoideSignUpContainer.setVisibility(View.GONE);
+    } else {
+      loginVisible = false;
+      aptoideLoginContainer.setVisibility(View.GONE);
+      aptoideSignUpContainer.setVisibility(View.VISIBLE);
+    }
+  }
+
+  private void hideUsernamePasswordContainer() {
+    aptoideLoginSignUpSeparator.setVisibility(View.VISIBLE);
+    aptoideLoginSignUpButtonContainer.setVisibility(View.VISIBLE);
+    usernamePasswordContainer.setVisibility(View.GONE);
+    aptoideLoginContainer.setVisibility(View.GONE);
+    aptoideSignUpContainer.setVisibility(View.GONE);
+    usernamePasswordContainerVisible = false;
   }
 }

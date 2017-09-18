@@ -17,16 +17,17 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/fragment_payment_login_toolbar"
         android:layout_width="match_parent"
-        app:logo="@drawable/logo_toolbar"
-        app:title="@string/my_account_title_my_account"
         android:layout_height="wrap_content"
         android:theme="?attr/toolbarTheme"
+        app:logo="@drawable/logo_toolbar"
+        app:title="@string/my_account_title_my_account"
         app:titleMarginStart="32dp"
         />
   </android.support.design.widget.AppBarLayout>
 
 
   <LinearLayout
+      android:id="@+id/fragment_payment_login_logo_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/fragment_payment_login_app_bar"
@@ -68,52 +69,47 @@
       android:id="@+id/fragment_payment_login_social_buttons_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_above="@+id/fragment_payment_login_aptoide_options_container"
-      android:background="@android:color/transparent"
+      android:layout_alignParentBottom="true"
+      android:animateLayoutChanges="true"
+      android:background="@color/white"
       android:orientation="vertical"
-      android:paddingEnd="20dp"
-      android:paddingLeft="20dp"
-      android:paddingRight="20dp"
-      android:paddingStart="20dp"
       >
 
     <Button
         android:id="@+id/fragment_payment_login_facebook_button"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
         android:text="@string/facebook"
         android:theme="@style/Aptoide.Button.Facebook"
         style="@style/Widget.AppCompat.Button"
         />
 
-
     <Button
         android:id="@+id/fragment_payment_login_google_button"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
         android:text="@string/google"
         android:theme="@style/Aptoide.Button.Google"
         style="@style/Widget.AppCompat.Button"
         />
-  </LinearLayout>
-
-  <LinearLayout
-      android:id="@+id/fragment_payment_login_aptoide_options_container"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:background="@android:color/transparent"
-      android:orientation="vertical"
-      android:paddingEnd="20dp"
-      android:paddingLeft="20dp"
-      android:paddingRight="20dp"
-      android:paddingStart="20dp"
-      >
 
     <RelativeLayout
+        android:id="@+id/fragment_payment_login_aptoide_buttons_separator_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
         >
@@ -123,7 +119,6 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerInParent="true"
-
           android:text="@string/fragment_payment_login_separator_description"
           android:textColor="@color/grey_fog_dark"
           style="@style/Aptoide.TextView.Regular.XS"
@@ -162,6 +157,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
         android:orientation="horizontal"
         android:weightSum="2"
         >
@@ -174,7 +173,7 @@
           style="@style/Aptoide.Button.Ghost"
           />
       <Button
-          android:id="@+id/fragment_payment_login_login_button"
+          android:id="@+id/fragment_payment_login_small_button"
           android:layout_width="0dp"
           android:layout_weight="1"
           android:text="@string/login"
@@ -182,9 +181,162 @@
           />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/fragment_payment_login_username_password_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
 
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/grey_fog_dark"
+          />
 
+      <AutoCompleteTextView
+          android:id="@+id/fragment_payment_login_username"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/login_field_height"
+          android:background="@android:color/transparent"
+          android:focusable="true"
+          android:focusableInTouchMode="true"
+          android:hint="@string/username"
+          android:imeOptions="actionNext"
+          android:inputType="textEmailAddress"
+          android:maxLength="@integer/max_username_char_length"
+          android:maxLines="1"
+          android:nextFocusDown="@+id/fragment_payment_login_password"
+          android:nextFocusRight="@+id/fragment_payment_login_password"
+          android:paddingLeft="20dp"
+          android:paddingStart="20dp"
+          android:textColorHint="@color/grey_fog_dark"
+          style="@style/Aptoide.TextView.Regular.S"
+          />
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/grey_fog_dark"
+          />
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/transparent"
+          >
+
+        <EditText
+            android:id="@+id/fragment_payment_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_field_height"
+            android:layout_toLeftOf="@+id/fragment_payment_login_show_hide_pasword_button"
+            android:layout_toStartOf="@+id/fragment_payment_login_show_hide_pasword_button"
+            android:background="@null"
+            android:hint="@string/password"
+            android:inputType="textPassword|textNoSuggestions"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingStart="20dp"
+            android:textColorHint="@color/grey_fog_dark"
+            style="@style/Aptoide.TextView.Regular.S"
+            />
+
+        <Button
+            android:id="@+id/fragment_payment_login_show_hide_pasword_button"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/icon_closed_eye"
+            android:backgroundTint="@color/grey_fog_dark"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/grey_fog_dark"
+          android:visibility="visible"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_payment_sign_up_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+
+        >
+      <TextView
+          android:id="@+id/fragment_payment_login_terms_and_conditions_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:gravity="center"
+          android:paddingBottom="8dp"
+          android:paddingTop="16dp"
+          android:text="@string/accept_terms_signup"
+          android:textAlignment="center"
+          android:textColor="@color/grey_fog_dark"
+          style="@style/Aptoide.TextView.Regular.XS"
+          />
+
+      <Button
+          android:id="@+id/fragment_payment_login_sign_up_button"
+          android:layout_width="match_parent"
+          android:text="@string/register"
+          style="@style/Aptoide.Button.Ghost"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_payment_login_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+
+        >
+
+      <TextView
+          android:id="@+id/fragment_payment_login_forgot_password_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:gravity="center"
+          android:paddingBottom="8dp"
+          android:paddingTop="16dp"
+          android:text="@string/recover_password"
+          android:textAlignment="center"
+          android:textColor="@color/grey_fog_dark"
+          style="@style/Aptoide.TextView.Regular.XS"
+          />
+
+      <Button
+          android:id="@+id/fragment_payment_login_large_login_button"
+          android:layout_width="match_parent"
+          android:text="@string/login"
+          style="@style/Aptoide.Button.Ghost"
+          />
+
+    </LinearLayout>
   </LinearLayout>
-
-
 </RelativeLayout>

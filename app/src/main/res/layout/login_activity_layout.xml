@@ -99,7 +99,7 @@
 
       <!--style="@style/focusableRowBackground"-->
       <TextView
-          android:id="@+id/forgot_password"
+          android:id="@+id/fragment_payment_login_forgot_password_text"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_gravity="center_horizontal"
