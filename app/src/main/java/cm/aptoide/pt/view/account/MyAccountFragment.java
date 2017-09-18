@@ -26,6 +26,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -38,6 +39,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -156,11 +158,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .findViewById(R.id.more);
 
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-            new MyAccountNavigator(getFragmentNavigator()),
-            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-            new LinksHandlerFactory(getContext()),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-        savedInstanceState);
+        new MyAccountNavigator(getFragmentNavigator()),
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+        new LinksHandlerFactory(getContext()),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, Analytics.getInstance())), savedInstanceState);
   }
 
   @Override public int getContentViewId() {
