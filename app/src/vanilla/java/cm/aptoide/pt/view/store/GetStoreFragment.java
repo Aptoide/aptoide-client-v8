@@ -19,8 +19,6 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    navigationTracker.registerView(this.getClass()
-        .getSimpleName());
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
