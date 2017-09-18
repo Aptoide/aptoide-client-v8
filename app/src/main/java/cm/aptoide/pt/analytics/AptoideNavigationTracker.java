@@ -2,6 +2,7 @@ package cm.aptoide.pt.analytics;
 
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.account.LoginSignUpCredentialsFragment;
+import cm.aptoide.pt.view.search.SearchPagerTabFragment;
 import cm.aptoide.pt.view.store.GetStoreFragment;
 import cm.aptoide.pt.view.store.home.HomeFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
@@ -49,6 +50,8 @@ public class AptoideNavigationTracker implements NavigationTracker {
     if (viewName.equals(WizardFragment.class.getSimpleName())) {
       insert = false;
     } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
+      insert = false;
+    } else if (viewName.equals(SearchPagerTabFragment.class.getSimpleName())) {
       insert = false;
     } else {
       insert = true;
