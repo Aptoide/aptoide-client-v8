@@ -24,20 +24,9 @@ import cm.aptoide.pt.view.search.SearchActivity;
 /**
  * Created by neuro on 01-06-2016.
  */
-// FIXME: this call could leak the calling fragment
 public class SearchUtils {
 
   private final static String SEARCH_WEB_SOCKET = "9000";
-
-  public void setupGlobalSearchView(Menu menu, Context context,
-      FragmentNavigator fragmentNavigator) {
-    setupGlobalSearchView(menu, context, fragmentNavigator, "");
-  }
-
-  public void setupInsideStoreSearchView(Menu menu, Context context,
-      FragmentNavigator fragmentNavigator, String storeName) {
-    setupInsideStoreSearchView(menu, context, fragmentNavigator, storeName, "");
-  }
 
   public void setupGlobalSearchView(Menu menu, Context context, FragmentNavigator fragmentNavigator,
       String currentQuery) {

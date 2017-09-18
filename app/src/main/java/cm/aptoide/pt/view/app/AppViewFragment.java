@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified on 02/09/2016.
- */
-
 package cm.aptoide.pt.view.app;
 
 import android.content.Context;
@@ -119,7 +114,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -132,34 +126,23 @@ import rx.functions.Action0;
  */
 public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     implements Scrollable, AppMenuOptions {
-
   public static final int VIEW_ID = R.layout.fragment_app_view;
   public static final int LOGIN_REQUEST_CODE = 13;
-  //
-  // constants
-  //
   private static final String TAG = AppViewFragment.class.getSimpleName();
-  private static final String BAR_EXPANDED = "BAR_EXPANDED";
   private static final int PAY_APP_REQUEST_CODE = 12;
+
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
-  private final String key_md5sum = "md5sum";
-  //private static final String TAG = AppViewFragment.class.getName();
-  //
-  // vars
-  //
+
+  private String packageName;
+  private String appName;
+  private String wUrl;
   private AppViewHeader header;
   private long appId;
-  @Getter private String packageName;
   private OpenType openType;
-  private Scheduled scheduled;
   private String storeTheme;
-  //
-  // static fragment default new instance method
-  //
   private MinimalAd minimalAd;
-  // Stored to postpone ads logic
   private InstallManager installManager;
   private Action0 unInstallAction;
   private MenuItem uninstallMenuItem;
@@ -167,29 +150,20 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private Subscription subscription;
   private AdsRepository adsRepository;
   private boolean sponsored;
-  // buy app vars
   private String storeName;
   private AppViewInstallDisplayable installDisplayable;
   private String md5;
   private String uname;
-  private PermissionManager permissionManager;
   private Menu menu;
-  @Getter private String appName;
-  @Getter private String wUrl;
   private GetAppMeta.App app;
-  private Group group;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
-  private AptoideAccountManager accountManager;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
   private SocialRepository socialRepository;
-  private AccountNavigator accountNavigator;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
   private BillingAnalytics billingAnalytics;
-  private SpotAndShareAnalytics spotAndShareAnalytics;
   private PurchaseBundleMapper purchaseBundleMapper;
   private ShareAppHelper shareAppHelper;
   private QManager qManager;
@@ -200,7 +174,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
-  @Getter private boolean suggestedShowing;
+  private boolean suggestedShowing;
   private List<String> keywords;
   private BillingIdResolver billingIdResolver;
   private String marketName;
@@ -291,6 +265,22 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
+  public boolean isSuggestedShowing() {
+    return suggestedShowing;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public String getwUrl() {
+    return wUrl;
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -304,13 +294,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     qManager = ((AptoideApplication) getContext().getApplicationContext()).getQManager();
     purchaseBundleMapper =
         ((AptoideApplication) getContext().getApplicationContext()).getPurchaseBundleMapper();
-    accountManager =
+    final AptoideAccountManager accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
-    permissionManager = new PermissionManager();
+    final AccountNavigator accountNavigator =
+        new AccountNavigator(getFragmentNavigator(), accountManager);
+
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
-    bodyInterceptor =
+    final BodyInterceptor<BaseBody> bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
@@ -337,7 +328,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    final SpotAndShareAnalytics spotAndShareAnalytics =
+        new SpotAndShareAnalytics(Analytics.getInstance());
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(Analytics.getInstance(),
@@ -538,7 +530,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+    searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator(), query);
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
@@ -567,7 +559,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       return true;
     } else if (i == R.id.menu_schedule) {
       appViewAnalytics.sendScheduleDownloadEvent();
-      scheduled = createScheduled(app, appAction);
+      final Scheduled scheduled = createScheduled(app, appAction);
 
       ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
           ((AptoideApplication) getContext().getApplicationContext()
@@ -689,7 +681,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getList();
 
     if (groupsList.size() > 0) {
-      group = groupsList.get(0);
+      final Group group = groupsList.get(0);
     }
 
     updateLocalVars(app);
@@ -775,7 +767,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getName();
     storeId = app.getStore()
         .getId();
-    if(storeTheme == null) {
+    if (storeTheme == null) {
       storeTheme = app.getStore()
           .getAppearance()
           .getTheme();
@@ -1030,28 +1022,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     private static final String BADGE_DIALOG_TAG = "badgeDialog";
 
     private final boolean animationsEnabled;
+    private final AppBarLayout appBarLayout;
+    private final CollapsingToolbarLayout collapsingToolbar;
+    private final ImageView featuredGraphic;
+    private final ImageView badge;
+    private final TextView badgeText;
+    private final ImageView appIcon;
+    private final TextView fileSize;
+    private final TextView downloadsCountInStore;
+    private final TextView downloadsCount;
 
-    // views
-    @Getter private final AppBarLayout appBarLayout;
-
-    @Getter private final CollapsingToolbarLayout collapsingToolbar;
-
-    @Getter private final ImageView featuredGraphic;
-
-    @Getter private final ImageView badge;
-
-    @Getter private final TextView badgeText;
-
-    @Getter private final ImageView appIcon;
-
-    @Getter private final TextView fileSize;
-
-    @Getter private final TextView downloadsCountInStore;
-
-    @Getter private final TextView downloadsCount;
-
-    // ctor
-    public AppViewHeader(@NonNull View view) {
+    AppViewHeader(@NonNull View view) {
       animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus(
           ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
@@ -1064,6 +1045,42 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       fileSize = (TextView) view.findViewById(R.id.file_size);
       downloadsCountInStore = (TextView) view.findViewById(R.id.downloads_count_in_store);
       downloadsCount = (TextView) view.findViewById(R.id.downloads_count);
+    }
+
+    public AppBarLayout getAppBarLayout() {
+      return appBarLayout;
+    }
+
+    public CollapsingToolbarLayout getCollapsingToolbar() {
+      return collapsingToolbar;
+    }
+
+    public ImageView getFeaturedGraphic() {
+      return featuredGraphic;
+    }
+
+    public ImageView getBadge() {
+      return badge;
+    }
+
+    public TextView getBadgeText() {
+      return badgeText;
+    }
+
+    public ImageView getAppIcon() {
+      return appIcon;
+    }
+
+    public TextView getFileSize() {
+      return fileSize;
+    }
+
+    public TextView getDownloadsCountInStore() {
+      return downloadsCountInStore;
+    }
+
+    public TextView getDownloadsCount() {
+      return downloadsCount;
     }
 
     // setup methods

@@ -71,7 +71,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return newInstance(query, false);
   }
 
-  public static SearchFragment newInstance(String query, boolean onlyTrustedApps, String storeName) {
+  public static SearchFragment newInstance(String query, boolean onlyTrustedApps,
+      String storeName) {
     Bundle args = new Bundle();
 
     args.putString(BundleCons.QUERY, query);
@@ -345,10 +346,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search_results, menu);
 
     if (storeName != null) {
-      searchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(),
-          storeName);
+      searchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName,
+          query);
     } else {
-      searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+      searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator(), query);
     }
   }
 
