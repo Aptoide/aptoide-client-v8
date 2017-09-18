@@ -6,6 +6,7 @@
 package cm.aptoide.pt.account.view;
 
 import android.app.Activity;
+import android.net.Uri;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
@@ -42,6 +43,7 @@ public class AccountNavigator {
   private final CallbackManager callbackManager;
   private final GoogleApiClient client;
   private final PublishRelay<FacebookLoginResult> facebookLoginSubject;
+  private final String recoverPasswordUrl;
   private final String defaultStore;
   private final String defaultTheme;
 
@@ -49,7 +51,7 @@ public class AccountNavigator {
       ActivityNavigator activityNavigator, LoginManager facebookLoginManager,
       CallbackManager callbackManager, GoogleApiClient client,
       PublishRelay<FacebookLoginResult> facebookLoginSubject, String defaultStore,
-      String defaultTheme) {
+      String defaultTheme, String recoverPasswordUrl) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
     this.activityNavigator = activityNavigator;
@@ -59,6 +61,11 @@ public class AccountNavigator {
     this.facebookLoginSubject = facebookLoginSubject;
     this.defaultStore = defaultStore;
     this.defaultTheme = defaultTheme;
+    this.recoverPasswordUrl = recoverPasswordUrl;
+  }
+
+  public void navigateToRecoverPasswordView() {
+    activityNavigator.navigateTo(Uri.parse(recoverPasswordUrl));
   }
 
   public void navigateToAccountView(Analytics.Account.AccountOrigins accountOrigins) {

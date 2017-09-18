@@ -203,12 +203,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     facebookLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public void showForgotPasswordView() {
-    // FIXME remove hardcoded links
-    Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
-    startActivity(new Intent(Intent.ACTION_VIEW, mobilePageUri));
-  }
-
   @Override public void showPassword() {
     isPasswordVisible = true;
     aptoidePasswordEditText.setTransformationMethod(null);

@@ -354,7 +354,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private Observable<Void> forgotPasswordSelection() {
     return view.forgotPasswordClick()
-        .doOnNext(selection -> view.showForgotPasswordView());
+        .doOnNext(selection -> accountNavigator.navigateToRecoverPasswordView());
   }
 
   private Observable<Void> togglePasswordVisibility() {

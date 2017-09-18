@@ -57,6 +57,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private View aptoideLoginContainer;
   private boolean usernamePasswordContainerVisible;
   private boolean loginVisible;
+  private View recoverPasswordButton;
 
   public static Fragment newInstance() {
     return new PaymentLoginFragment();
@@ -105,6 +106,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideJoinToggle.setText(getString(R.string.join_company,
         ((AptoideApplication) getContext().getApplicationContext()).getMarketName()));
     aptoideLoginToggle = (Button) view.findViewById(R.id.fragment_payment_login_small_button);
+    recoverPasswordButton = view.findViewById(R.id.fragment_payment_login_recover_password_button);
 
     usernamePasswordContainer =
         view.findViewById(R.id.fragment_payment_login_username_password_container);
@@ -198,6 +200,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     }
   }
 
+  @Override public Observable<Void> recoverPasswordEvent() {
+    return RxView.clicks(recoverPasswordButton);
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
 
     if (item.getItemId() == android.R.id.home) {
@@ -224,6 +230,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideJoinToggle = null;
     aptoideLoginToggle = null;
     usernamePasswordContainer = null;
+    recoverPasswordButton = null;
     super.onDestroyView();
   }
 

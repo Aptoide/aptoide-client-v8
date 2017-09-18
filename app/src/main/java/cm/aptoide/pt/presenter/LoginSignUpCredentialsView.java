@@ -46,8 +46,6 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   void hideFacebookLogin();
 
-  void showForgotPasswordView();
-
   void showPassword();
 
   void hidePassword();

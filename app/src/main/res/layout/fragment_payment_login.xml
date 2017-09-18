@@ -317,7 +317,7 @@
         >
 
       <TextView
-          android:id="@+id/fragment_payment_login_forgot_password_text"
+          android:id="@+id/fragment_payment_login_recover_password_button"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center"

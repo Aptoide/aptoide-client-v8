@@ -50,6 +50,8 @@ public class PaymentLoginPresenter implements Presenter {
     handleGoogleSignUpEvent();
 
     handleGoogleSignUpResult();
+
+    handleRecoverPasswordEvent();
   }
 
   private void handleFacebookSignUpResult() {
@@ -139,6 +141,15 @@ public class PaymentLoginPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.backButtonEvent(), view.upNavigationEvent()))
         .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, false))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
+  private void handleRecoverPasswordEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.recoverPasswordEvent())
+        .doOnNext(__ -> accountNavigator.navigateToRecoverPasswordView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

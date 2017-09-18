@@ -155,10 +155,12 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
   public AccountNavigator getAccountNavigator() {
     if (accountNavigator == null) {
       accountNavigator = new AccountNavigator(getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getAccountManager(), getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(),
+          ((AptoideApplication) getApplicationContext()).getAccountManager(),
+          getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(),
           ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
           PublishRelay.create(), ((AptoideApplication) getApplicationContext()).getDefaultStore(),
-          ((AptoideApplication) getApplicationContext()).getDefaultTheme());
+          ((AptoideApplication) getApplicationContext()).getDefaultTheme(),
+          "http://m.aptoide.com/account/password-recovery");
     }
     return accountNavigator;
   }

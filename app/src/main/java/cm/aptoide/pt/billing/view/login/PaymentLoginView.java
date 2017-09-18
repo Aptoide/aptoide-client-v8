@@ -13,6 +13,8 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   Observable<Void> googleSignUpEvent();
 
+  Observable<Void> recoverPasswordEvent();
+
   void showLoading();
 
   void hideLoading();
