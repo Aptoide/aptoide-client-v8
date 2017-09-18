@@ -48,14 +48,15 @@ public class FragmentResultNavigator implements FragmentNavigator {
     prepareFragmentAdd(fragment, tag).commit();
   }
 
-  @Override public void navigateForResult(NavigateFragment fragment, int requestCode) {
+  @Override
+  public void navigateForResultWithoutReplace(NavigateFragment fragment, int requestCode) {
     Bundle extras = fragment.getArguments();
     if (extras == null) {
       extras = new Bundle();
     }
     extras.putInt(NavigateFragment.REQUEST_CODE_KEY, requestCode);
     fragment.setArguments(extras);
-    navigateTo(fragment);
+    navigateWithoutReplace(fragment);
   }
 
   @Override public Observable<Result> results(int requestCode) {

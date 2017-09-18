@@ -67,15 +67,19 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     String storeTheme = store.getAppearance()
         .getTheme();
     @ColorInt int color = getColorOrDefault(StoreTheme.get(storeTheme), context);
+    Drawable exploreButtonBackground = exploreButton.getBackground();
+    exploreButtonBackground.setColorFilter(color, PorterDuff.Mode.SRC_IN);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.my_store_background);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       storeLayout.setBackground(d);
+      exploreButton.setBackground(exploreButtonBackground);
     } else {
       Drawable d = context.getResources()
           .getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       storeLayout.setBackgroundDrawable(d);
+      exploreButton.setBackgroundDrawable(exploreButtonBackground);
     }
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(store.getAvatar(), storeIcon);

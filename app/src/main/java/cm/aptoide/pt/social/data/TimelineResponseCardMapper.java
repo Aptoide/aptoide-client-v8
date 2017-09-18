@@ -452,6 +452,10 @@ public class TimelineResponseCardMapper {
                   .getLikes(), minimalCard.getUsersLikes(), minimalCard.getComments(),
                   CardType.MINIMAL_CARD));
         }
+        CardType cardType = CardType.AGGREGATED_SOCIAL_INSTALL;
+        if (item instanceof AggregatedSocialInstallTimelineItem) {
+          cardType = CardType.AGGREGATED_SOCIAL_APP;
+        }
         cards.add(new AggregatedRecommendation("n/a", posters, subposts,
             aggregatedSocialInstall.getApp()
                 .getIcon(), aggregatedSocialInstall.getApp()
@@ -462,8 +466,8 @@ public class TimelineResponseCardMapper {
             .getAvg(), aggregatedSocialInstall.getApp()
             .getStore()
             .getId(), aggregatedSocialInstall.getApp()
-            .getPackageName(), aggregatedSocialInstall.getDate(), abUrl,
-            CardType.AGGREGATED_SOCIAL_INSTALL, getMarkAsReadUrl(aggregatedSocialInstall)));
+            .getPackageName(), aggregatedSocialInstall.getDate(), abUrl, cardType,
+            getMarkAsReadUrl(aggregatedSocialInstall)));
       } else if (item instanceof AggregatedSocialStoreLatestAppsTimelineItem) {
         final AggregatedSocialStoreLatestApps aggregatedSocialStoreLatestApps =
             ((AggregatedSocialStoreLatestAppsTimelineItem) item).getData();
