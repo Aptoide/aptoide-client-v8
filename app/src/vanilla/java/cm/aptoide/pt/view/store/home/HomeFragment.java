@@ -90,9 +90,6 @@ public class HomeFragment extends StoreFragment {
   }
 
   /**
-   * @param defaultStore
-   * @param defaultTheme
-   *
    * @return {@link HomeFragment} instance with default store, store context and theme
    */
   public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
