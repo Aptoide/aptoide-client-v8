@@ -202,7 +202,7 @@ public class TimelinePresenter implements Presenter {
   @NonNull private TimelineUser convertUser(User user) {
     return new TimelineUser(user.isLogged(), user.hasNotification(), user.getBodyMessage(),
         user.getImage(), user.getUrlAction(), user.getNotificationId(), user.hasStats(),
-        user.getFollowers(), user.getFollowing());
+        user.getFollowers(), user.getFollowing(), user.getAnalyticsUrl());
   }
 
   private void onViewCreatedClickOnAddressBook() {
@@ -239,7 +239,9 @@ public class TimelinePresenter implements Presenter {
                 ((TimelineUser) cardTouchEvent.getCard()).getNotificationUrlAction())
                 .launch())
             .flatMapCompletable(cardTouchEvent -> timeline.notificationDismissed(
-                ((TimelineUser) cardTouchEvent.getCard()).getNotificationId())))
+                ((TimelineUser) cardTouchEvent.getCard()).getNotificationId())
+                .andThen(Completable.fromAction(() -> timelineAnalytics.notificationShown(
+                    ((TimelineUser) cardTouchEvent.getCard()).getAnalyticsUrl())))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> crashReport.log(throwable));

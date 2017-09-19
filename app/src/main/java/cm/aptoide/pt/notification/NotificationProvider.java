@@ -30,7 +30,8 @@ public class NotificationProvider {
         aptoideNotification.getAbTestingGroup(), aptoideNotification.getBody(),
         aptoideNotification.getCampaignId(), aptoideNotification.getImg(),
         aptoideNotification.getLang(), aptoideNotification.getTitle(), aptoideNotification.getUrl(),
-        aptoideNotification.getUrlTrack(), aptoideNotification.getTimeStamp(),
+        aptoideNotification.getUrlTrack(), aptoideNotification.getNotificationCenterUrlTrack(),
+        aptoideNotification.getTimeStamp(),
         aptoideNotification.getType(), aptoideNotification.getDismissed(),
         aptoideNotification.getAppName(), aptoideNotification.getGraphic(),
         aptoideNotification.getOwnerId());
@@ -53,7 +54,7 @@ public class NotificationProvider {
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
         notification.getTimeStamp(), notification.getType(), notification.getDismissed(),
         notification.getAppName(), notification.getGraphic(), notification.getOwnerId(),
-        notification.getExpire());
+        notification.getExpire(), notification.getNotificationCenterUrlTrack());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {
