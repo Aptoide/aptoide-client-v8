@@ -30,6 +30,7 @@ import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class PaymentLoginFragment extends GooglePlayServicesFragment implements PaymentLoginView {
 
@@ -172,7 +173,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
-            accountNavigator, accountManager, crashReport, errorMapper), savedInstanceState);
+            accountNavigator, accountManager, crashReport, errorMapper,
+            AndroidSchedulers.mainThread()), savedInstanceState);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -278,8 +280,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   }
 
   private void showUsernamePasswordContainer(boolean showLogin) {
-    aptoideLoginSignUpSeparator.setVisibility(View.GONE);
-    aptoideLoginSignUpButtonContainer.setVisibility(View.GONE);
     usernamePasswordContainer.setVisibility(View.VISIBLE);
     usernamePasswordContainerVisible = true;
 
@@ -292,6 +292,9 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       aptoideLoginContainer.setVisibility(View.GONE);
       aptoideSignUpContainer.setVisibility(View.VISIBLE);
     }
+
+    aptoideLoginSignUpSeparator.setVisibility(View.GONE);
+    aptoideLoginSignUpButtonContainer.setVisibility(View.GONE);
   }
 
   private void hideUsernamePasswordContainer() {

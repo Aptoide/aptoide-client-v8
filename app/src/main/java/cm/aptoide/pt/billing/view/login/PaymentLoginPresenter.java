@@ -13,7 +13,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.Scheduler;
 
 public class PaymentLoginPresenter implements Presenter {
 
@@ -25,11 +25,12 @@ public class PaymentLoginPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
   private final ThrowableToStringMapper errorMapper;
+  private final Scheduler viewScheduler;
 
   public PaymentLoginPresenter(PaymentLoginView view, int requestCode,
       Collection<String> permissions, AccountNavigator accountNavigator,
       AptoideAccountManager accountManager, CrashReport crashReport,
-      ThrowableToStringMapper errorMapper) {
+      ThrowableToStringMapper errorMapper, Scheduler viewScheduler) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.requestCode = requestCode;
@@ -37,9 +38,12 @@ public class PaymentLoginPresenter implements Presenter {
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.errorMapper = errorMapper;
+    this.viewScheduler = viewScheduler;
   }
 
   @Override public void present() {
+
+    onViewCreatedCheckLoginStatus();
 
     handleBackButtonAndUpNavigationEvent();
 
@@ -58,6 +62,17 @@ public class PaymentLoginPresenter implements Presenter {
     handleAptoideSignUpEvent();
   }
 
+  private void onViewCreatedCheckLoginStatus() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> accountManager.accountStatus())
+        .filter(account -> account.isLoggedIn())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, true))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
   private void handleAptoideSignUpEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -65,11 +80,8 @@ public class PaymentLoginPresenter implements Presenter {
             .doOnNext(__ -> view.showLoading())
             .flatMapCompletable(
                 result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnCompleted(() -> {
-                      sendAptoideSignUpSuccessEvent();
-                      accountNavigator.popViewWithResult(requestCode, true);
-                    })
+                    .observeOn(viewScheduler)
+                    .doOnCompleted(() -> sendAptoideSignUpSuccessEvent())
                     .doOnTerminate(() -> view.hideLoading())
                     .doOnError(throwable -> {
                       sendAptoideSignUpFailEvent();
@@ -87,11 +99,8 @@ public class PaymentLoginPresenter implements Presenter {
         .flatMap(event -> view.aptoideLoginEvent()
             .doOnNext(__ -> view.showLoading())
             .flatMapCompletable(result -> accountManager.login(result)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  sendAptoideLoginSuccessEvent();
-                  accountNavigator.popViewWithResult(requestCode, true);
-                })
+                .observeOn(viewScheduler)
+                .doOnCompleted(() -> sendAptoideLoginSuccessEvent())
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   sendAptoideLoginFailEvent();
@@ -108,11 +117,8 @@ public class PaymentLoginPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountNavigator.facebookSignUpResults()
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  sendFacebookSignUpSuccessEvent();
-                  accountNavigator.popViewWithResult(requestCode, true);
-                })
+                .observeOn(viewScheduler)
+                .doOnCompleted(() -> sendFacebookSignUpSuccessEvent())
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   sendFacebookSignUpErrorEvent(throwable);
@@ -148,7 +154,7 @@ public class PaymentLoginPresenter implements Presenter {
         .doOnNext(event -> view.showLoading())
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
             RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(connectionResult -> {
           if (!connectionResult.isSuccess()) {
             view.showConnectionError(connectionResult);
@@ -169,11 +175,8 @@ public class PaymentLoginPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountNavigator.googleSignUpResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  sendGoogleSignUpSuccessEvent();
-                  accountNavigator.popViewWithResult(requestCode, true);
-                })
+                .observeOn(viewScheduler)
+                .doOnCompleted(() -> sendGoogleSignUpSuccessEvent())
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
