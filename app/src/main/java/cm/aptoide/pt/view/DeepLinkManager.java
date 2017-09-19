@@ -6,8 +6,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -47,11 +47,12 @@ public class DeepLinkManager {
   private final DeepLinkMessages deepLinkMessages;
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
+  private final String defaultTheme;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
-      StoreAccessor storeAccessor) {
+      StoreAccessor storeAccessor, String defaultTheme) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -59,6 +60,7 @@ public class DeepLinkManager {
     this.deepLinkMessages = deepLinkMessages;
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
+    this.defaultTheme = defaultTheme;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -114,19 +116,19 @@ public class DeepLinkManager {
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newAppViewFragment(appId, packageName, openType));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newAppViewFragment(packageName, storeName, openType));
   }
 
   private void searchDeepLink(String query) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newSearchFragment(query));
   }
 
@@ -175,8 +177,9 @@ public class DeepLinkManager {
   }
 
   @NonNull private Completable openStore(Store store) {
-    return Completable.fromAction(() -> fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
-        .newStoreFragment(store.getStoreName(), store.getTheme())));
+    return Completable.fromAction(() -> fragmentNavigator.navigateTo(
+        AptoideApplication.getFragmentProvider()
+            .newStoreFragment(store.getStoreName(), store.getTheme())));
   }
 
   private void downloadNotificationDeepLink() {
@@ -211,12 +214,11 @@ public class DeepLinkManager {
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                V8Engine.getConfiguration()
-                    .getDefaultTheme(), StoreContext.home));
+                defaultTheme, StoreContext.home));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }
@@ -227,7 +229,7 @@ public class DeepLinkManager {
     if (uri != null) {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
-        fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
       }
     }

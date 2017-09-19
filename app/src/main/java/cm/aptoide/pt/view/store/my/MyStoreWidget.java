@@ -9,15 +9,18 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreTheme;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.view.store.MetaStoresBaseWidget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
@@ -28,14 +31,14 @@ import com.jakewharton.rxbinding.view.RxView;
 
 public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
-  private LinearLayout widgetLayout;
-  private LinearLayout socialChannelsLayout;
+  private View storeLayout;
   private ImageView storeIcon;
   private TextView storeName;
   private Button exploreButton;
   private TextView suggestionMessage;
-  private TextView createStoreText;
   private StoreAnalytics storeAnalytics;
+  private TextView followers;
+  private TextView following;
 
   public MyStoreWidget(View itemView) {
     super(itemView);
@@ -44,12 +47,12 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    widgetLayout = (LinearLayout) itemView.findViewById(R.id.widgetLayout);
-    socialChannelsLayout = (LinearLayout) itemView.findViewById(R.id.social_channels);
+    storeLayout = itemView.findViewById(R.id.store_layout);
     storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
     storeName = (TextView) itemView.findViewById(R.id.store_name);
     suggestionMessage = (TextView) itemView.findViewById(R.id.create_store_text);
-    createStoreText = (TextView) itemView.findViewById(R.id.created_store_text);
+    followers = (TextView) itemView.findViewById(R.id.followers);
+    following = (TextView) itemView.findViewById(R.id.following);
     exploreButton = (Button) itemView.findViewById(R.id.explore_button);
   }
 
@@ -60,36 +63,61 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
         .getData()
         .getStore();
     suggestionMessage.setText(displayable.getSuggestionMessage(context));
-    createStoreText.setText(displayable.getCreateStoreText());
-    createStoreText.setVisibility(displayable.getCreateStoreTextViewVisibility());
     exploreButton.setText(displayable.getExploreButtonText());
     String storeTheme = store.getAppearance()
         .getTheme();
     @ColorInt int color = getColorOrDefault(StoreTheme.get(storeTheme), context);
+    Drawable exploreButtonBackground = exploreButton.getBackground();
+    exploreButtonBackground.setColorFilter(color, PorterDuff.Mode.SRC_IN);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
+      Drawable d = context.getDrawable(R.drawable.my_store_background);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      widgetLayout.setBackground(d);
+      storeLayout.setBackground(d);
+      exploreButton.setBackground(exploreButtonBackground);
     } else {
       Drawable d = context.getResources()
           .getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      widgetLayout.setBackgroundDrawable(d);
+      storeLayout.setBackgroundDrawable(d);
+      exploreButton.setBackgroundDrawable(exploreButtonBackground);
     }
-    exploreButton.setTextColor(color);
-
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
         .subscribe(click -> {
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newStoreFragment(store.getName(), storeTheme));
           storeAnalytics.sendStoreTabInteractEvent("View Store");
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
         }));
-    setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
+
+    String followersText =
+        String.format(getContext().getString(R.string.my_store_create_store_followers),
+            String.valueOf(displayable.getFollowers()));
+    followers.setText(new SpannableFactory().createColorSpan(followersText, color,
+        String.valueOf(displayable.getFollowers())));
+
+    String followingText =
+        String.format(getContext().getString(R.string.my_store_create_store_followings),
+            String.valueOf(displayable.getFollowings()));
+    following.setText(new SpannableFactory().createColorSpan(followingText, color,
+        String.valueOf(displayable.getFollowings())));
+
+    compositeSubscription.add(RxView.clicks(followers)
+        .subscribe(click -> getFragmentNavigator().navigateTo(
+            TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
+                AptoideUtils.StringU.getFormattedString(
+                    R.string.social_timeline_followers_fragment_title, getContext().getResources(),
+                    displayable.getFollowers())))));
+
+    compositeSubscription.add(RxView.clicks(following)
+        .subscribe(click -> getFragmentNavigator().navigateTo(
+            TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
+                AptoideUtils.StringU.getFormattedString(
+                    R.string.social_timeline_following_fragment_title, getContext().getResources(),
+                    displayable.getFollowings())))));
   }
 
   private int getColorOrDefault(StoreTheme theme, Context context) {

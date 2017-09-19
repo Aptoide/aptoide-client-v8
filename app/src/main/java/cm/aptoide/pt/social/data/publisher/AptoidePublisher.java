@@ -1,19 +1,22 @@
 package cm.aptoide.pt.social.data.publisher;
 
-import cm.aptoide.pt.preferences.Application;
-
-/**
- * Created by jdandrade on 26/06/2017.
- */
+import android.support.annotation.DrawableRes;
 
 public class AptoidePublisher implements Publisher {
+
+  private final int drawableId;
+  private final String publisherName;
+
+  public AptoidePublisher(@DrawableRes int drawableId, String publisherName) {
+    this.drawableId = drawableId;
+    this.publisherName = publisherName;
+  }
+
   @Override public String getPublisherName() {
-    return Application.getConfiguration()
-        .getMarketName();
+    return publisherName;
   }
 
   @Override public PublisherAvatar getPublisherAvatar() {
-    return new PublisherAvatar(Application.getConfiguration()
-        .getIcon());
+    return new PublisherAvatar(drawableId);
   }
 }

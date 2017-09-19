@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.annotation.Partners;
 
 /**
  * Created by neuro on 06-05-2016.
@@ -20,7 +19,7 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
 
   private Toolbar toolbar;
 
-  @Partners protected Toolbar getToolbar() {
+  protected Toolbar getToolbar() {
     return toolbar;
   }
 
@@ -31,7 +30,7 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
   /**
    * Setup the toolbar, if present.
    */
-  @Partners @CallSuper @Override public void setupToolbar() {
+  @CallSuper @Override public void setupToolbar() {
     if (hasToolbar()) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
       boolean showUp = displayHomeUpAsEnabled();
@@ -43,7 +42,7 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
     }
   }
 
-  @Partners protected boolean hasToolbar() {
+  protected boolean hasToolbar() {
     return toolbar != null;
   }
 

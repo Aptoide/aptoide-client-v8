@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.store.StoreTheme;
 
 /**
@@ -30,10 +30,10 @@ public class ThemeUtils {
   /**
    * Used to set Default themes
    */
-  public static void setAptoideTheme(Activity activity) {
+  public static void setAptoideTheme(Activity activity, String defaultTheme) {
 
     SharedPreferences sPref =
-        ((V8Engine) activity.getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences();
 
     if (sPref.getString("theme", "light")
         .equals("dark")) {
@@ -43,8 +43,7 @@ public class ThemeUtils {
       activity.setTheme(R.style.AptoideThemeDefaultDark);
     } else {
       sPref.edit()
-          .putString("theme", V8Engine.getConfiguration()
-              .getDefaultTheme())
+          .putString("theme", defaultTheme)
           .commit();
       activity.setTheme(R.style.AptoideThemeDefault);
     }

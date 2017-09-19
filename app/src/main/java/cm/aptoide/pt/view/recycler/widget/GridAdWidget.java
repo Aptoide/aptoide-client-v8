@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -47,7 +47,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
           Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(pojo));
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));

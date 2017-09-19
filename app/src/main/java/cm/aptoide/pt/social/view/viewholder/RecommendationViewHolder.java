@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
@@ -42,10 +41,11 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final String marketName;
 
   public RecommendationViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory) {
+      SpannableFactory spannableFactory, String marketName) {
     super(view, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -70,6 +70,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) view.findViewById(R.id.social_comment);
     this.shareButton = (TextView) view.findViewById(R.id.social_share);
+    this.marketName = marketName;
   }
 
   @Override public void setPost(Recommendation card, int position) {
@@ -124,8 +125,6 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
 
   public String getTitle(Resources resources) {
     return AptoideUtils.StringU.getFormattedString(
-        R.string.timeline_title_card_title_recommend_present_singular, resources,
-        Application.getConfiguration()
-            .getMarketName());
+        R.string.timeline_title_card_title_recommend_present_singular, resources, marketName);
   }
 }

@@ -7,8 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.AptoideNotification;
@@ -43,7 +43,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
-        ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
         new LinksHandlerFactory(getContext()), CrashReport.getInstance()), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);

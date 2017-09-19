@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -22,10 +22,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.store.StoreAnalytics;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.view.store.GetStoreEndlessFragment;
@@ -56,14 +56,16 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
@@ -73,7 +75,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     GetMyStoreListRequest request =
         GetMyStoreListRequest.of(url, true, bodyInterceptor, httpClient, converterFactory,
             tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE));
 
@@ -117,11 +119,11 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
                   new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
                       AccessorFactory.getAccessorFor(
-                          ((V8Engine) getContext().getApplicationContext()
+                          ((AptoideApplication) getContext().getApplicationContext()
                               .getApplicationContext()).getDatabase(),
                           cm.aptoide.pt.database.realm.Store.class), httpClient,
                       WebService.getDefaultConverter(), tokenInvalidator,
-                      ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+                      ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
                   storeCredentialsProvider));
         } else {
           storesDisplayables.add(

@@ -10,7 +10,6 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.view.WindowManager;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
@@ -201,7 +200,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
         sharedPreferences, connectivityManager, resources, versionCodeProvider);
   }
 
-  @Partners public static GetAdsRequest ofFirstInstall(String clientUniqueId,
+  public static GetAdsRequest ofFirstInstall(String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature,
       OkHttpClient httpClient, Converter.Factory converterFactory, String q,
       SharedPreferences sharedPreferences, ConnectivityManager connectivityManager,

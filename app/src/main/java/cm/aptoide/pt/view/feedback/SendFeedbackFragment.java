@@ -19,11 +19,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -128,8 +128,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
       emailIntent.setType("message/rfc822");
 
-      emailIntent.putExtra(Intent.EXTRA_EMAIL,
-          new String[] { V8Engine.getConfiguration().getFeedbackEmail() });
+      emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {
+          ((AptoideApplication) getContext().getApplicationContext()).getFeedbackEmail()
+      });
 
       //String versionName = "";
       //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
@@ -188,8 +189,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
                 File ss = new File(screenShotPath);
                 uris.add(getUriFromFile(ss));
               }
-              File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration()
-                  .getCachePath(), LOGS_FILE_NAME);
+              File logs = AptoideUtils.SystemU.readLogs(
+                  ((AptoideApplication) getContext().getApplicationContext()).getCachePath(),
+                  LOGS_FILE_NAME);
               if (logs != null) {
                 uris.add(getUriFromFile(logs));
               }
@@ -218,8 +220,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
-      photoURI = FileProvider.getUriForFile(getContext(), V8Engine.getConfiguration()
-          .getAppId() + ".provider", file);
+      photoURI =
+          FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
     } else {
       //file://....apk for < nougat
       photoURI = Uri.fromFile(file);

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.social.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import rx.Single;
 
@@ -19,10 +20,11 @@ public class TimelinePostsRepository {
 
   public Single<List<Post>> getCards() {
     if (cachedPosts != null) {
-      return Single.just(cachedPosts);
+      return Single.just(new ArrayList<>(cachedPosts));
     }
     return postsRemoteDataSource.getCards()
-        .doOnSuccess(posts -> cachedPosts = posts);
+        .doOnSuccess(posts -> cachedPosts = posts)
+        .map(posts -> new ArrayList<>(posts));
   }
 
   public Single<List<Post>> getFreshCards() {

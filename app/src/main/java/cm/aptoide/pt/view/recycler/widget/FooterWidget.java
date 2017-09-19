@@ -7,8 +7,8 @@ package cm.aptoide.pt.view.recycler.widget;
 
 import android.view.View;
 import android.widget.Button;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.displayable.FooterDisplayable;
@@ -28,10 +28,12 @@ public class FooterWidget extends Widget<FooterDisplayable> {
   }
 
   @Override public void bindView(FooterDisplayable displayable) {
+    final String marketName =
+        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     final String buttonText = Translator.translate(displayable.getPojo()
         .getActions()
         .get(0)
-        .getLabel(), getContext().getApplicationContext());
+        .getLabel(), getContext().getApplicationContext(), marketName);
     button.setText(buttonText);
 
     final Action1<Void> handleButtonClick = __ -> {
@@ -39,10 +41,10 @@ public class FooterWidget extends Widget<FooterDisplayable> {
           .getActions()
           .get(0)
           .getEvent();
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, Translator.translate(displayable.getPojo()
-                  .getTitle(), getContext().getApplicationContext()), null, displayable.getTag(),
-              displayable.getStoreContext()));
+                  .getTitle(), getContext().getApplicationContext(), marketName), null,
+              displayable.getTag(), displayable.getStoreContext()));
     };
     compositeSubscription.add(RxView.clicks(button)
         .subscribe(handleButtonClick));

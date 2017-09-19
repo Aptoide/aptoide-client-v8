@@ -10,8 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -62,7 +62,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
           // FIXME
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(app.getId(), app.getPackageName()));
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));

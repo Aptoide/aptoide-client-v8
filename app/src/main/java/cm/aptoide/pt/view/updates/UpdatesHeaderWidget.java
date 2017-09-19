@@ -8,8 +8,8 @@ package cm.aptoide.pt.view.updates;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -57,6 +57,8 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   }
 
   @Override public void bindView(UpdatesHeaderDisplayable displayable) {
+    final String marketName =
+        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     title.setText(displayable.getLabel());
     more.setText(R.string.updatetab_button_update_all);
     more.setVisibility(View.VISIBLE);
@@ -65,7 +67,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       updatesAnalytics.updates("Update All");
       ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-            ((V8Engine) getContext().getApplicationContext()
+            ((AptoideApplication) getContext().getApplicationContext()
                 .getApplicationContext()).getDatabase(), Update.class);
         compositeSubscription.add(updateAccessor.getAll(false)
             .first()
@@ -74,7 +76,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 
               ArrayList<Download> downloadList = new ArrayList<>(updates.size());
               for (Update update : updates) {
-                Download download = new DownloadFactory().create(update);
+                Download download = new DownloadFactory(marketName).create(update);
                 displayable.setupDownloadEvent(download);
                 downloadList.add(download);
               }

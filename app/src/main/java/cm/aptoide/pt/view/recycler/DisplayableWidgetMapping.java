@@ -3,7 +3,6 @@ package cm.aptoide.pt.view.recycler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
@@ -15,6 +14,7 @@ import cm.aptoide.pt.timeline.view.follow.FollowUserWidget;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginWidget;
 import cm.aptoide.pt.view.account.user.CreateStoreDisplayable;
+import cm.aptoide.pt.view.account.user.LoginDisplayable;
 import cm.aptoide.pt.view.app.GridAppDisplayable;
 import cm.aptoide.pt.view.app.GridAppListDisplayable;
 import cm.aptoide.pt.view.app.GridAppListWidget;
@@ -79,6 +79,10 @@ import cm.aptoide.pt.view.recycler.widget.MessageWhiteBgWidget;
 import cm.aptoide.pt.view.recycler.widget.ProgressBarWidget;
 import cm.aptoide.pt.view.recycler.widget.RowReviewWidget;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import cm.aptoide.pt.view.reviews.ReviewsLanguageFilterDisplayable;
+import cm.aptoide.pt.view.reviews.ReviewsLanguageFilterWidget;
+import cm.aptoide.pt.view.reviews.ReviewsRatingDisplayable;
+import cm.aptoide.pt.view.reviews.ReviewsRatingWidget;
 import cm.aptoide.pt.view.reviews.RowReviewDisplayable;
 import cm.aptoide.pt.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.view.search.SearchAdWidget;
@@ -88,6 +92,7 @@ import cm.aptoide.pt.view.store.CreateStoreWidget;
 import cm.aptoide.pt.view.store.GridDisplayDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaWidget;
+import cm.aptoide.pt.view.store.LoginWidget;
 import cm.aptoide.pt.view.store.StoreAddCommentDisplayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderWidget;
@@ -131,11 +136,11 @@ public class DisplayableWidgetMapping {
   private Class<? extends Widget> widgetClass;
   private Map<Integer, DisplayableWidgetMapping> viewTypeMapping = new HashMap<>();
 
-  @Partners protected DisplayableWidgetMapping() {
+  protected DisplayableWidgetMapping() {
     parseMappings(createMapping());
   }
 
-  @Partners public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
+  public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
       Class<? extends Displayable> displayableClass) {
     this.displayableClass = displayableClass;
     this.widgetClass = widgetClass;
@@ -145,14 +150,14 @@ public class DisplayableWidgetMapping {
     return instance;
   }
 
-  @Partners protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
+  protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
       viewTypeMapping.put(displayableWidgetMapping.newDisplayable()
           .getViewLayout(), displayableWidgetMapping);
     }
   }
 
-  @Partners protected List<DisplayableWidgetMapping> createMapping() {
+  protected List<DisplayableWidgetMapping> createMapping() {
 
     LinkedList<DisplayableWidgetMapping> displayableWidgetMappings = new LinkedList<>();
 
@@ -310,10 +315,20 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((FollowStoreWidget.class), FollowStoreDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((ReviewsLanguageFilterWidget.class),
+        ReviewsLanguageFilterDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((ReviewsRatingWidget.class), ReviewsRatingDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((LoginWidget.class), LoginDisplayable.class));
+
     return displayableWidgetMappings;
   }
 
-  @Partners @Nullable public Displayable newDisplayable() {
+  @Nullable public Displayable newDisplayable() {
     try {
       return displayableClass.newInstance();
     } catch (Exception e) {
@@ -368,7 +383,7 @@ public class DisplayableWidgetMapping {
    *
    * @return displayableClass
    */
-  @Partners public Class<? extends Displayable> getDisplayableClass() {
+  public Class<? extends Displayable> getDisplayableClass() {
     return displayableClass;
   }
 
@@ -377,7 +392,7 @@ public class DisplayableWidgetMapping {
    *
    * @return widgetClass
    */
-  @Partners public Class<? extends Widget> getWidgetClass() {
+  public Class<? extends Widget> getWidgetClass() {
     return widgetClass;
   }
 
@@ -386,7 +401,7 @@ public class DisplayableWidgetMapping {
    *
    * @return Map of widgets and displayables
    */
-  @Partners protected Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
+  protected Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
     return viewTypeMapping;
   }
 }

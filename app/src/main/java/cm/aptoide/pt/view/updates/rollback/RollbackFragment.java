@@ -10,8 +10,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -20,7 +20,6 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerFactory;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
@@ -44,6 +43,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   private TextView emptyData;
   private Installer installManager;
   private Analytics analytics;
+  private String marketName;
 
   public RollbackFragment() {
   }
@@ -73,7 +73,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       return true;
     } else if (itemId == R.id.menu_clear) {
       //DeprecatedDatabase.RollbackQ.deleteAll(realm);
-      AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+      AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
           .getApplicationContext()).getDatabase(), Rollback.class)
           .removeAll();
       clearDisplayables();
@@ -87,6 +87,13 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     analytics = Analytics.getInstance();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()
+        .getApplicationContext()).getMarketName();
+    installManager = new InstallerFactory(new MinimalAdMapper(),
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
+        ((AptoideApplication) getContext().getApplicationContext()
+            .getApplicationContext()).getImageCachePath()).create(getContext(),
+        InstallerFactory.ROLLBACK);
   }
 
   @Override public int getContentViewId() {
@@ -97,10 +104,6 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
-
-    installManager = new InstallerFactory(new MinimalAdMapper(),
-        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance())).create(
-        getContext(), InstallerFactory.ROLLBACK);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -110,7 +113,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @UiThread private void fetchRollbacks() {
     RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Rollback.class);
     rollbackAccessor.getConfirmedRollbacks()
         .observeOn(Schedulers.computation())
@@ -120,8 +123,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
         .subscribe(rollbacks -> {
           if (rollbacks == null || rollbacks.isEmpty()) {
             emptyData.setText(AptoideUtils.StringU.getFormattedString(R.string.no_rollbacks_msg,
-                getContext().getResources(), Application.getConfiguration()
-                    .getMarketName()));
+                getContext().getResources(), marketName));
             emptyData.setVisibility(View.VISIBLE);
           } else {
             emptyData.setVisibility(View.GONE);
@@ -141,7 +143,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
         lastDay = daysAgo;
         displayables.add(new FooterRowDisplayable(dateFormat.format(rollback.getTimestamp())));
       }
-      displayables.add(new RollbackDisplayable(installManager, rollback));
+      displayables.add(new RollbackDisplayable(installManager, rollback, marketName));
     }
 
     Calendar.getInstance(Locale.getDefault());

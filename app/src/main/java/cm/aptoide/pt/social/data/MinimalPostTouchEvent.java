@@ -1,9 +1,5 @@
 package cm.aptoide.pt.social.data;
 
-import cm.aptoide.pt.social.data.CardTouchEvent;
-import cm.aptoide.pt.social.data.MinimalPost;
-import cm.aptoide.pt.social.data.Post;
-
 /**
  * Created by jdandrade on 11/08/2017.
  */

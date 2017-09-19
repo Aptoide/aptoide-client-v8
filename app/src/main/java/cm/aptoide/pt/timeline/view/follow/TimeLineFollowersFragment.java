@@ -3,8 +3,8 @@ package cm.aptoide.pt.timeline.view.follow;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
@@ -32,6 +32,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private String defaultTheme;
 
   public static TimeLineFollowFragment newInstanceUsingUser(Long id, String storeTheme,
       String title) {
@@ -67,11 +68,13 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -87,11 +90,11 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   @Override protected V7 buildRequest() {
     return GetFollowersRequest.of(baseBodyInterceptor, userId, storeId, httpClient,
         converterFactory, tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
-    return new FollowUserDisplayable(user, false);
+    return new FollowUserDisplayable(user, false, defaultTheme);
   }
 
   @Override

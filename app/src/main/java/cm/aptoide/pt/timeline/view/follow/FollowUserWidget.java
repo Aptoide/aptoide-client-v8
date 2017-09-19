@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -72,11 +72,12 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   @Override public void bindView(FollowUserDisplayable displayable) {
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
 
     if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);
@@ -93,21 +94,21 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       }
 
       final String storeName = displayable.getStoreName();
-      final String storeTheme = V8Engine.getConfiguration()
-          .getDefaultTheme();
+      final String storeTheme =
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
           new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-              ((V8Engine) getContext().getApplicationContext()
+              ((AptoideApplication) getContext().getApplicationContext()
                   .getApplicationContext()).getDatabase(), Store.class)),
-          AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+          AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
               .getApplicationContext()).getDatabase(), Store.class), httpClient,
           WebService.getDefaultConverter(),
-          ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+          ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
       Action1<Void> openStore = __ -> {
-        getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
             .newStoreFragment(storeName, storeTheme));
       };
 

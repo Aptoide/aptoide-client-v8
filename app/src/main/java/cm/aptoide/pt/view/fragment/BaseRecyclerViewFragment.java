@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.view.LifecycleSchim;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,8 +72,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     addDisplayable(displayable, true);
   }
 
-  @Partners @CallSuper @Deprecated
-  public void addDisplayables(List<? extends Displayable> displayables) {
+  @CallSuper @Deprecated public void addDisplayables(List<? extends Displayable> displayables) {
     addDisplayables(displayables, true);
   }
 
@@ -159,6 +158,26 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return displayables != null && displayables.size() > 0;
   }
 
+  @Override public int getDisplayablesSize() {
+    return displayables.size();
+  }
+
+  @Override public void removeDisplayables(int fromIndex, int toIndex) {
+    Iterator<Displayable> iterator = displayables.iterator();
+    while (fromIndex-- > 0 && iterator.hasNext()) {
+      toIndex--;
+      iterator.next();
+    }
+
+    while (toIndex-- >= 0 && iterator.hasNext()) {
+      iterator.next();
+      iterator.remove();
+    }
+
+    adapter.clearDisplayables();
+    adapter.addDisplayables(displayables);
+  }
+
   @CallSuper public BaseRecyclerViewFragment addDisplayableWithAnimation(int position,
       Displayable displayable) {
     adapter.addDisplayableWithAnimation(position, displayable);
@@ -167,8 +186,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return this;
   }
 
-  @Partners @CallSuper @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     if (adapter == null) {
       adapter = createAdapter();
     }
@@ -178,7 +196,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     this.onViewCreated();
   }
 
-  @Partners @CallSuper @Override
+  @CallSuper @Override
   public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || refresh) {
       clearDisplayables();
@@ -258,7 +276,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return layoutManager;
   }
 
-  @Partners public RecyclerView getRecyclerView() {
+  public RecyclerView getRecyclerView() {
     return recyclerView;
   }
 }

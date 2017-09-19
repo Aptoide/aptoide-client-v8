@@ -55,10 +55,10 @@ public class TimelineService {
         .toCompletable();
   }
 
-  public Single<Post> getTimelineStats() {
+  public Single<User> getTimelineStats(boolean refresh) {
     return GetTimelineStatsRequest.of(bodyInterceptor, userId, okhttp, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe()
+        .observe(refresh)
         .toSingle()
         .flatMap(timelineResponse -> {
           if (timelineResponse.isOk()) {
@@ -67,7 +67,9 @@ public class TimelineService {
           return Single.error(
               new IllegalStateException("Could not obtain timeline stats from server."));
         })
-        .map(timelineStats -> mapper.map(timelineStats));
+        .map(timelineStats -> new User(timelineStats.getData()
+            .getFollowers(), timelineStats.getData()
+            .getFollowing()));
   }
 
   public Single<String> share(String cardId) {
@@ -117,5 +119,24 @@ public class TimelineService {
         tokenInvalidator)
         .observe()
         .toCompletable();
+  }
+
+  public static class User {
+    private long followers;
+    private long followings;
+
+    public User(long followers, long followings) {
+
+      this.followers = followers;
+      this.followings = followings;
+    }
+
+    public long getFollowers() {
+      return followers;
+    }
+
+    public long getFollowings() {
+      return followings;
+    }
   }
 }

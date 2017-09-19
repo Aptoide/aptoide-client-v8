@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -46,7 +45,7 @@ public class ImageLoader {
     this.windowManager = ((WindowManager) context.getSystemService(Service.WINDOW_SERVICE));
   }
 
-  @Partners public static ImageLoader with(Context context) {
+  public static ImageLoader with(Context context) {
     return new ImageLoader(context);
   }
 

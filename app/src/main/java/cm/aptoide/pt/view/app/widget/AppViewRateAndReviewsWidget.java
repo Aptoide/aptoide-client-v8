@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -42,6 +42,7 @@ import cm.aptoide.pt.view.app.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import cm.aptoide.pt.view.reviews.LanguageFilterHelper;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding.view.RxView;
@@ -119,16 +120,18 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
         .getData();
     GetAppMeta.Stats stats = app.getStats();
 
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager), bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(), tokenInvalidator,
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
     appName = app.getName();
     packageName = app.getPackageName();
@@ -171,7 +174,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
         }, handleError));
 
     Action1<Void> commentsOnClickListener = __ -> {
-      Fragment fragment = V8Engine.getFragmentProvider()
+      Fragment fragment = AptoideApplication.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore()
               .getName(), app.getPackageName(), app.getStore()
               .getAppearance()
@@ -203,11 +206,22 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
   private void loadTopReviews(String storeName, String packageName,
       BaseRequestWithStore.StoreCredentials storeCredentials) {
+    List<String> countryCodes =
+        new LanguageFilterHelper(getContext().getResources()).getCurrentLanguageFirst()
+            .getCountryCodes();
     Subscription subscription =
-        ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
-            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences())
-            .observe(true)
+        createReviewsRequest(storeName, packageName, storeCredentials, countryCodes.get(0)).observe(
+            true)
+            .flatMap(listReviews -> {
+              if (listReviews.getDataList()
+                  .getList()
+                  .size() == 0 && countryCodes.size() > 0) {
+                return createReviewsRequest(storeName, packageName, storeCredentials,
+                    countryCodes.get(1)).observe();
+              } else {
+                return Observable.just(listReviews);
+              }
+            })
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {
               List<Review> reviews = listReviews.getDataList()
@@ -233,6 +247,14 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
                   .log(err);
             });
     compositeSubscription.add(subscription);
+  }
+
+  private ListReviewsRequest createReviewsRequest(String storeName, String packageName,
+      BaseRequestWithStore.StoreCredentials storeCredentials, String languagesFilterSort) {
+    return ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        languagesFilterSort);
   }
 
   private void loadedData(boolean hasReviews) {

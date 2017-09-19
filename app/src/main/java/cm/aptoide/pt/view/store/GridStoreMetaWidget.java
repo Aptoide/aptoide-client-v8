@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -84,20 +84,21 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((V8Engine) getContext().getApplicationContext()
+            ((AptoideApplication) getContext().getApplicationContext()
                 .getApplicationContext()).getDatabase(), Store.class)),
-        AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), httpClient,
         WebService.getDefaultConverter(),
-        ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final GetHomeMeta getHomeMeta = displayable.getPojo();
     final cm.aptoide.pt.dataprovider.model.v7.store.Store store = getHomeMeta.getData()
         .getStore();
@@ -110,7 +111,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
               .getTheme());
       final Context context = itemView.getContext();
       StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
-          ((V8Engine) getContext().getApplicationContext()
+          ((AptoideApplication) getContext().getApplicationContext()
               .getApplicationContext()).getDatabase(), Store.class);
       boolean isStoreSubscribed = storeAccessor.get(store.getId())
           .toBlocking()
@@ -172,15 +173,15 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                     .getName())) {
               description.setVisibility(View.VISIBLE);
               backgroundView.setVisibility(View.VISIBLE);
-              if (TextUtils.isEmpty(store.getAppearance()
-                  .getDescription())) {
-                description.setText("Add a description to your store by editing it.");
+              final String storeDescription = store.getAppearance()
+                  .getDescription();
+              if (!TextUtils.isEmpty(storeDescription)) {
+                description.setText(storeDescription);
               }
               editStoreButton.setVisibility(View.VISIBLE);
               compositeSubscription.add(RxView.clicks(editStoreButton)
                   .subscribe(click -> editStore(store.getId(), store.getAppearance()
-                      .getTheme(), store.getAppearance()
-                      .getDescription(), store.getName(), store.getAvatar())));
+                      .getTheme(), storeDescription, store.getName(), store.getAvatar())));
             } else {
               editStoreButton.setVisibility(View.GONE);
             }
@@ -275,7 +276,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
               displayable.getStoreUserName(), displayable.getStorePassword());
         }
         StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
-            ((V8Engine) getContext().getApplicationContext()
+            ((AptoideApplication) getContext().getApplicationContext()
                 .getApplicationContext()).getDatabase(), Store.class);
         storeAccessor.remove(storeWrapper.getStore()
             .getId());

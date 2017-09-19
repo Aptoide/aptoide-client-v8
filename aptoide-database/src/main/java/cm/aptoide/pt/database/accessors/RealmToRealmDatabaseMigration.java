@@ -316,5 +316,13 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+
+    if (oldVersion == 8087) {
+      schema.get("Notification")
+          .addField(Notification.EXPIRE_KEY, Long.class)
+          .transform(notification -> notification.set(Notification.EXPIRE_KEY, null));
+
+      oldVersion++;
+    }
   }
 }

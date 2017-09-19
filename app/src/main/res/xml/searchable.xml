@@ -9,8 +9,7 @@
     android:includeInGlobalSearch="true"
     android:label="@string/srch_hint"
     android:queryAfterZeroResults="false"
-
-    android:searchSuggestAuthority="@string/suggested_searchable_authority"
+    android:searchSuggestAuthority="@string/search_suggestion_provider_authority"
     android:searchSuggestIntentAction="android.intent.action.SEARCH"
     android:searchSuggestSelection=" ?"
     android:searchSuggestThreshold="3">

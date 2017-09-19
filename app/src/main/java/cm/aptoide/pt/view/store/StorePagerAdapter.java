@@ -9,7 +9,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -26,12 +26,14 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private final List<GetStoreTabs.Tab> tabs;
   private final StoreContext storeContext;
   private final EnumMap<Event.Name, Integer> availableEventsMap = new EnumMap<>(Event.Name.class);
+  private final String marketName;
   private String storeTheme;
   private Long storeId;
   private Context context;
 
   public StorePagerAdapter(FragmentManager fm, List<GetStoreTabs.Tab> tabs,
-      StoreContext storeContext, Long storeId, String storeTheme, Context context) {
+      StoreContext storeContext, Long storeId, String storeTheme, Context context,
+      String marketName) {
     super(fm);
     this.storeId = storeId;
     if (storeId != null && storeId != 15) {
@@ -40,6 +42,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     this.tabs = tabs;
     this.storeContext = storeContext;
     this.context = context;
+    this.marketName = marketName;
     translateTabs(this.tabs);
     validateGetStore();
 
@@ -48,7 +51,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
   private void translateTabs(List<GetStoreTabs.Tab> tabs) {
     for (GetStoreTabs.Tab t : tabs) {
-      t.setLabel(Translator.translate(t.getLabel(), context));
+      t.setLabel(Translator.translate(t.getLabel(), context, marketName));
     }
   }
 
@@ -119,10 +122,10 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
               .getUser()
               .getId();
         }
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newAppsTimelineFragment(event.getAction(), userId, storeId, storeContext);
       default:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext);
     }
   }
@@ -130,16 +133,16 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private Fragment caseClient(Event event, GetStoreTabs.Tab tab) {
     switch (event.getName()) {
       case myUpdates:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newUpdatesFragment();
       case myDownloads:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newDownloadsFragment();
       case mySpotShare:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newSpotShareFragment(false);
       case myStores:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newSubscribedStoresFragment(event, storeTheme, tab.getTag());
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
@@ -150,7 +153,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private Fragment caseV3(Event event) {
     switch (event.getName()) {
       case getReviews:
-        return V8Engine.getFragmentProvider()
+        return AptoideApplication.getFragmentProvider()
             .newLatestReviewsFragment(storeId);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.

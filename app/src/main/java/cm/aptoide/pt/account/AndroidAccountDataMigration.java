@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
@@ -38,13 +37,14 @@ public class AndroidAccountDataMigration {
   private final int currentVersion;
   private final String accountType;
   private final String databasePath;
+  private final String applicationVersionName;
 
   private int oldVersion;
 
   public AndroidAccountDataMigration(SharedPreferences secureSharedPreferences,
       SharedPreferences defaultSharedPreferences, AccountManager accountManager,
       SecureCoderDecoder secureCoderDecoder, int currentVersion, String databasePath,
-      String accountType) {
+      String accountType, String applicationVersionName) {
     this.secureSharedPreferences = secureSharedPreferences;
     this.defaultSharedPreferences = defaultSharedPreferences;
     this.accountManager = accountManager;
@@ -53,6 +53,7 @@ public class AndroidAccountDataMigration {
     this.databasePath = databasePath;
     this.accountType = accountType;
     this.oldVersion = -1;
+    this.applicationVersionName = applicationVersionName;
   }
 
   public Completable migrate() {
@@ -87,17 +88,16 @@ public class AndroidAccountDataMigration {
    * @return
    */
   private Completable cleanShareDialogShowPref() {
-    String versionName = V8Engine.getConfiguration()
-        .getVersionName();
     String oldVersionName =
         ManagerPreferences.getPreviewDialogPrefVersionCleaned(defaultSharedPreferences);
-    if (!oldVersionName.equals(versionName)) {
+    if (!oldVersionName.equals(applicationVersionName)) {
 
-      if (getMajorIntFromVersionName(oldVersionName) < getMajorIntFromVersionName(versionName)) {
+      if (getMajorIntFromVersionName(oldVersionName) < getMajorIntFromVersionName(
+          applicationVersionName)) {
 
         return Completable.defer(() -> Completable.fromCallable(() -> {
           ManagerPreferences.setShowPreviewDialog(true, defaultSharedPreferences);
-          ManagerPreferences.setPreviewDialogPrefVersionCleaned(versionName,
+          ManagerPreferences.setPreviewDialogPrefVersionCleaned(applicationVersionName,
               defaultSharedPreferences);
           return Completable.complete();
         }));

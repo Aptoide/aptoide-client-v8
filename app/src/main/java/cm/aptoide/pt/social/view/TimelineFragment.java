@@ -19,9 +19,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
@@ -36,8 +37,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.social.AccountNotificationManagerUserProvider;
+import cm.aptoide.pt.social.StatsUserProvider;
+import cm.aptoide.pt.social.TimelineUserProvider;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
@@ -74,7 +80,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -134,6 +140,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private LinearLayoutManager layoutManager;
   private TimelineAnalytics timelineAnalytics;
   private OkHttpClient defaultClient;
+  private String marketName;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -164,17 +171,20 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
     baseBodyInterceptorV7 =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     defaultConverter = WebService.getDefaultConverter();
-    defaultClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
-    tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    defaultClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    accountManager =
+        ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
     sharePostPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
@@ -183,23 +193,24 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getResources());
     shareDialogFactory =
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
-    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
 
     timelinePostsRepository =
-        ((V8Engine) getContext().getApplicationContext()).getTimelineRepository(
+        ((AptoideApplication) getContext().getApplicationContext()).getTimelineRepository(
             getArguments().getString(ACTION_KEY), getContext());
 
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
-        defaultClient, defaultConverter, tokenInvalidator, V8Engine.getConfiguration()
-        .getAppId(), sharedPreferences);
+        defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
+        sharedPreferences);
 
-    OkHttpClient okhttp = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    OkHttpClient okhttp =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
 
     timelineService = new TimelineService(userId, baseBodyInterceptorV7, okhttp, defaultConverter,
         new TimelineResponseCardMapper(
-            () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create())),
+            () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
         tokenInvalidator, sharedPreferences);
   }
 
@@ -242,36 +253,47 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
     SpannableFactory spannableFactory = new SpannableFactory();
-    adapter = new PostAdapter(Collections.emptyList(),
+    adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject)), new ProgressCard());
+                postTouchEventPublishSubject), marketName, storeContext), new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class);
     StoreCredentialsProviderImpl storeCredentialsProvider =
         new StoreCredentialsProviderImpl(storeAccessor);
 
+    NotificationCenter notificationCenter =
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter();
+    TimelineUserProvider timelineUserProvider;
+    if (userId == null) {
+      timelineUserProvider =
+          new AccountNotificationManagerUserProvider(notificationCenter, accountManager);
+    } else {
+      timelineUserProvider = new StatsUserProvider(accountManager, timelineService);
+    }
+
     Timeline timeline =
-        new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics,
-            timelinePostsRepository);
+        new Timeline(timelineService, installManager, new DownloadFactory(marketName),
+            timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
 
-    StoreUtilsProxy storeUtilsProxy =
-        new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            baseBodyInterceptorV7, storeCredentialsProvider, storeAccessor, defaultClient,
-            defaultConverter, tokenInvalidator, sharedPreferences);
+    StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
+        baseBodyInterceptorV7, storeCredentialsProvider, storeAccessor, defaultClient,
+        defaultConverter, tokenInvalidator, sharedPreferences);
 
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
             new PermissionManager(), (PermissionService) getContext(), installManager,
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
-            storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
+            storeContext, getContext().getResources(), getFragmentNavigator(),
+            new LinksHandlerFactory(getContext()), notificationCenter), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -528,6 +550,18 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .filter(position -> position != RecyclerView.NO_POSITION)
         .distinctUntilChanged()
         .map(visibleItem -> adapter.getPost(visibleItem));
+  }
+
+  @Override public void showUser(TimelineUser user) {
+    adapter.showUser(user);
+  }
+
+  @Override public void showUserLoading() {
+    adapter.showUser(new ProgressCard());
+  }
+
+  @Override public void hideUser() {
+    adapter.hideUser();
   }
 
   private void handleSharePreviewAnswer() {

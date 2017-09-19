@@ -3,11 +3,14 @@ package cm.aptoide.pt.social.data;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AppUpdateViewHolder;
 import cm.aptoide.pt.social.view.viewholder.MediaViewHolder;
+import cm.aptoide.pt.social.view.viewholder.Notifications;
 import cm.aptoide.pt.social.view.viewholder.PopularAppViewHolder;
 import cm.aptoide.pt.social.view.viewholder.PostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.ProgressViewHolder;
@@ -20,6 +23,7 @@ import cm.aptoide.pt.social.view.viewholder.SocialStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.StoreLatestAppsViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineAdPostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineLoginPostViewHolder;
+import cm.aptoide.pt.social.view.viewholder.TimelineNoNotificationHeaderViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineStatsViewHolder;
 import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
@@ -35,14 +39,18 @@ public class CardViewHolderFactory {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final MinimalCardViewFactory minimalCardViewFactory;
+  private final String marketName;
+  private StoreContext storeContext;
 
   public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      MinimalCardViewFactory minimalCardViewFactory) {
+      MinimalCardViewFactory minimalCardViewFactory, String marketName, StoreContext storeContext) {
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
+    this.marketName = marketName;
+    this.storeContext = storeContext;
   }
 
   public PostViewHolder createViewHolder(int cardViewType, ViewGroup parent) {
@@ -60,7 +68,7 @@ public class CardViewHolderFactory {
       case RECOMMENDATION:
         return new RecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_recommendation_item, parent, false),
-            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory, marketName);
       case STORE:
         return new StoreLatestAppsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_store_item, parent, false), cardTouchEventPublishSubject,
@@ -95,6 +103,7 @@ public class CardViewHolderFactory {
         return new AggregatedMediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_media_item, parent, false),
             cardTouchEventPublishSubject, dateCalculator, spannableFactory, minimalCardViewFactory);
+      case AGGREGATED_SOCIAL_APP:
       case AGGREGATED_SOCIAL_INSTALL:
         return new AggregatedRecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_recommendation_item, parent, false),
@@ -118,13 +127,21 @@ public class CardViewHolderFactory {
       case TIMELINE_STATS:
         return new TimelineStatsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_stats_item, parent, false), spannableFactory,
-            cardTouchEventPublishSubject);
+            cardTouchEventPublishSubject, storeContext);
       case LOGIN:
         return new TimelineLoginPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
       case AD:
         return new TimelineAdPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_native_ad_item, parent, false),
+            cardTouchEventPublishSubject);
+      case NOTIFICATIONS:
+        return new Notifications(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_notification, parent, false), cardTouchEventPublishSubject,
+            ImageLoader.with(parent.getContext()));
+      case NO_NOTIFICATIONS:
+        return new TimelineNoNotificationHeaderViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_no_notification, parent, false),
             cardTouchEventPublishSubject);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());

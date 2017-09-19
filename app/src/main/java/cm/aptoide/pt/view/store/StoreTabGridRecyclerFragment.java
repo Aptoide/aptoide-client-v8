@@ -16,9 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
@@ -48,6 +47,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
   protected StoreContext storeContext;
+  private String marketName;
 
   public static Fragment newInstance(Event event, String storeTheme, String tag,
       StoreContext storeContext) {
@@ -66,7 +66,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     return fragment;
   }
 
-  @Partners @NonNull
+  @NonNull
   protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,
       StoreContext storeContext) {
     Bundle args = new Bundle();
@@ -101,12 +101,13 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);
   }
 
-  @Partners @Override public void loadExtras(Bundle args) {
+  @Override public void loadExtras(Bundle args) {
     if (args.containsKey(BundleCons.TYPE)) {
       type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
     }
@@ -123,7 +124,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       storeContext = ((StoreContext) args.getSerializable(BundleCons.STORE_CONTEXT));
     }
     title = args.getString(
-        Translator.translate(BundleCons.TITLE, getContext().getApplicationContext()));
+        Translator.translate(BundleCons.TITLE, getContext().getApplicationContext(), marketName));
     action = args.getString(BundleCons.ACTION);
     storeTheme = args.getString(BundleCons.STORE_THEME);
   }
@@ -132,8 +133,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     super.load(create, refresh, savedInstanceState);
     if (create || refresh || !hasDisplayables()) {
       String url = action != null ? action.replace(V7.getHost(
-          ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()), "")
-          : null;
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+          "") : null;
 
       if (!StoreTabFragmentChooser.validateAcceptedName(name)) {
         throw new RuntimeException(
@@ -180,7 +181,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext()));
+    toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext(), marketName));
     toolbar.setLogo(R.drawable.logo_toolbar);
   }
 

@@ -12,23 +12,24 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.NavigationProvider;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ScreenTrackingUtils;
 import cm.aptoide.pt.view.MainActivity;
-import cm.aptoide.pt.view.leak.LeakFragment;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
+import cm.aptoide.pt.view.navigator.NavigateFragment;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import lombok.Getter;
 import rx.Observable;
 
-public abstract class FragmentView extends LeakFragment implements View {
+public abstract class FragmentView extends NavigateFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
@@ -37,6 +38,8 @@ public abstract class FragmentView extends LeakFragment implements View {
   private Presenter presenter;
   private NavigationProvider navigationProvider;
   private SharedPreferences sharedPreferences;
+  private String defaultStore;
+  private String defaultTheme;
 
   public FragmentNavigator getFragmentNavigator() {
     return navigationProvider.getFragmentNavigator();
@@ -47,8 +50,9 @@ public abstract class FragmentView extends LeakFragment implements View {
   }
 
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
-    return new FragmentNavigator(getChildFragmentManager(), containerId, android.R.anim.fade_in,
-        android.R.anim.fade_out, sharedPreferences);
+    return new FragmentResultNavigator(getChildFragmentManager(), containerId,
+        android.R.anim.fade_in, android.R.anim.fade_out, sharedPreferences, defaultStore,
+        defaultTheme, getFragmentResultMap(), getFragmentResultRelay());
   }
 
   @Override public void onAttach(Activity activity) {
@@ -63,8 +67,10 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    defaultStore = ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
   }

@@ -7,8 +7,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
@@ -54,7 +54,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private void fetchExcludedUpdates() {
     UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) getContext().getApplicationContext()
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Update.class);
     updateAccessor.getAll(true)
         .observeOn(AndroidSchedulers.mainThread())
@@ -131,7 +131,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
       //realm.commitTransaction();
 
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-          ((V8Engine) getContext().getApplicationContext()
+          ((AptoideApplication) getContext().getApplicationContext()
               .getApplicationContext()).getDatabase(), Update.class);
       Observable.from(excludedUpdatesToRestore)
           .doOnNext(update -> update.setExcluded(false))

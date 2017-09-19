@@ -39,9 +39,9 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       BaseRequestWithStore.StoreCredentials storecredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, String languagesFilterSort) {
     return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials, bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, languagesFilterSort);
   }
 
   /**
@@ -52,8 +52,18 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
+    return of(storeName, packageName, maxReviews, maxComments, storecredentials, bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, null);
+  }
+
+  public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
+      int maxComments, BaseRequestWithStore.StoreCredentials storecredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, String languagesFilterSort) {
     final Body body = new Body(storeName, packageName, maxReviews, maxComments,
-        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences), storecredentials);
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences), storecredentials,
+        languagesFilterSort);
     return new ListReviewsRequest(body, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
@@ -65,9 +75,9 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       int maxReviews, BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, String languagesFilterSort) {
     return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences);
+        converterFactory, tokenInvalidator, sharedPreferences, languagesFilterSort);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,
@@ -89,6 +99,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     private String packageName;
     private String storeName;
     private Integer subLimit;
+    private String languagesFilterSort;
 
     public Body(long storeId, int limit, int subLimit, boolean refresh,
         BaseRequestWithStore.StoreCredentials storeCredentials) {
@@ -100,13 +111,14 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     }
 
     public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh,
-        BaseRequestWithStore.StoreCredentials storeCredentials) {
+        BaseRequestWithStore.StoreCredentials storeCredentials, String languagesFilterSort) {
       super(storeCredentials);
       this.packageName = packageName;
       this.storeName = storeName;
       this.limit = limit;
       this.subLimit = subLimit;
       this.refresh = refresh;
+      this.languagesFilterSort = languagesFilterSort;
     }
 
     @Override public String getLang() {
@@ -203,6 +215,14 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
 
     public void setLimit(Integer limit) {
       this.limit = limit;
+    }
+
+    public String getLanguagesFilterSort() {
+      return languagesFilterSort;
+    }
+
+    public void setLanguagesFilterSort(String languagesFilterSort) {
+      this.languagesFilterSort = languagesFilterSort;
     }
 
     public enum Sort {

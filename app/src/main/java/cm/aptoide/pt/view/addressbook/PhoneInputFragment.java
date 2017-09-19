@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.ContactsRepository;
 import cm.aptoide.pt.addressbook.utils.ContactUtils;
@@ -24,7 +24,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.presenter.PhoneInputContract;
 import cm.aptoide.pt.presenter.PhoneInputPresenter;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -50,6 +49,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   private ProgressDialog mGenericPleaseWaitDialog;
   private ContactUtils contactUtils;
   private String entranceTag;
+  private String marketName;
 
   public static PhoneInputFragment newInstance(String tag) {
     PhoneInputFragment phoneInputFragment = new PhoneInputFragment();
@@ -62,23 +62,24 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
     final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     this.mActionsListener = new PhoneInputPresenter(this,
         new ContactsRepository(baseBodyInterceptor, httpClient, converterFactory,
-            ((V8Engine) getContext().getApplicationContext()).getIdsRepository(), new ContactUtils(
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            getContext().getContentResolver()),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository(),
+            new ContactUtils(
+                (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+                getContext().getContentResolver()),
+            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
-            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration()
-                .getMarketName())));
+            getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about, marketName)));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
@@ -92,8 +93,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
   @Override public void setupViews() {
     mNotNowV.setPaintFlags(mNotNowV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    mSharePhoneV.setText(getString(R.string.addressbook_share_phone, Application.getConfiguration()
-        .getMarketName()));
+    mSharePhoneV.setText(getString(R.string.addressbook_share_phone, marketName));
 
     String countryCodeE164 = contactUtils.getCountryCodeForRegion();
     if (!countryCodeE164.isEmpty()) {

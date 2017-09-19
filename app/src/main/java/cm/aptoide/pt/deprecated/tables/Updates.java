@@ -10,7 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
@@ -58,9 +58,8 @@ public class Updates extends BaseTable {
 
     String path = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_URL));
     String packageName = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_PACKAGE));
-    if (!TextUtils.isEmpty(path) && !isExcluded(packageName,
-        AccessorFactory.getAccessorFor(((V8Engine) context.getApplicationContext()).getDatabase(),
-            Update.class))) {
+    if (!TextUtils.isEmpty(path) && !isExcluded(packageName, AccessorFactory.getAccessorFor(
+        ((AptoideApplication) context.getApplicationContext()).getDatabase(), Update.class))) {
       try {
         PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
         cm.aptoide.pt.database.realm.Update realmObject = new cm.aptoide.pt.database.realm.Update();

@@ -8,8 +8,8 @@ package cm.aptoide.pt.iab;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.billing.external.ExternalBillingBinder;
 import cm.aptoide.pt.crashreports.CrashReport;
 
@@ -20,12 +20,12 @@ public class InAppBillingService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     billingBinder = new ExternalBillingBinder(this,
-        ((V8Engine) getApplicationContext()).getInAppBillingSerializer(),
-        ((V8Engine) getApplicationContext()).getPaymentThrowableCodeMapper(),
-        ((V8Engine) getApplicationContext()).getBilling(), CrashReport.getInstance(),
-        ((V8Engine) getApplicationContext()).getBillingIdResolver(),
+        ((AptoideApplication) getApplicationContext()).getInAppBillingSerializer(),
+        ((AptoideApplication) getApplicationContext()).getPaymentThrowableCodeMapper(),
+        ((AptoideApplication) getApplicationContext()).getBilling(), CrashReport.getInstance(),
+        ((AptoideApplication) getApplicationContext()).getBillingIdResolver(),
         BuildConfig.IN_BILLING_SUPPORTED_API_VERSION,
-        ((V8Engine) getApplicationContext()).getBillingAnalytics());
+        ((AptoideApplication) getApplicationContext()).getBillingAnalytics());
   }
 
   @Override public IBinder onBind(Intent intent) {

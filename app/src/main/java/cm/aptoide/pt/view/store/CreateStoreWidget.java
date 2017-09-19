@@ -2,12 +2,9 @@ package cm.aptoide.pt.view.store;
 
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.account.store.ManageStoreFragment;
 import cm.aptoide.pt.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -22,8 +19,8 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
   private final CrashReport crashReport;
   private Button button;
-  private AptoideAccountManager accountManager;
-  private AccountNavigator accountNavigator;
+  private TextView followers;
+  private TextView followings;
 
   public CreateStoreWidget(View itemView) {
     super(itemView);
@@ -32,27 +29,23 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
   @Override protected void assignViews(View itemView) {
     button = (Button) itemView.findViewById(R.id.create_store_action);
+    followers = (TextView) itemView.findViewById(R.id.followers);
+    followings = (TextView) itemView.findViewById(R.id.following);
   }
 
   @Override public void bindView(CreateStoreDisplayable displayable) {
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    followers.setText(String.format(itemView.getContext()
+            .getString(R.string.my_store_create_store_followers),
+        String.valueOf(displayable.getFollowers())));
+
+    followings.setText(String.format(itemView.getContext()
+            .getString(R.string.my_store_create_store_followings),
+        String.valueOf(displayable.getFollowings())));
 
     compositeSubscription.add(RxView.clicks(button)
-        .flatMapSingle(__ -> accountManager.accountStatus()
-            .first()
-            .toSingle())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(account -> {
-          if (account.isLoggedIn()) {
-            button.setText(R.string.create_store_displayable_button);
-            getFragmentNavigator().navigateTo(
-                ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
-          } else {
-            button.setText(R.string.login);
-            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
-          }
-        })
+        .doOnNext(click -> getFragmentNavigator().navigateTo(
+            ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false)))
         .doOnNext(__ -> displayable.getStoreAnalytics()
             .sendStoreTabInteractEvent("Login"))
         .subscribe(__ -> {

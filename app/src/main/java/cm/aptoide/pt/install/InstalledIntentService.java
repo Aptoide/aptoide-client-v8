@@ -7,8 +7,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.InstallManager;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
@@ -65,21 +65,23 @@ public class InstalledIntentService extends IntentService {
   @Override public void onCreate() {
     super.onCreate();
     adMapper = new MinimalAdMapper();
-    sharedPreferences = ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
-    qManager = ((V8Engine) getApplicationContext()).getQManager();
-    httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+    sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    qManager = ((AptoideApplication) getApplicationContext()).getQManager();
+    httpClient = ((AptoideApplication) getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     final SharedPreferences sharedPreferences =
-        ((V8Engine) getApplicationContext()).getDefaultSharedPreferences();
-    adsRepository = ((V8Engine) getApplicationContext()).getAdsRepository();
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    adsRepository = ((AptoideApplication) getApplicationContext()).getAdsRepository();
     repository = RepositoryFactory.getRollbackRepository(getApplicationContext());
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
     installManager =
-        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
-    rootAvailabilityManager = ((V8Engine) getApplicationContext()).getRootAvailabilityManager();
+        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    rootAvailabilityManager =
+        ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
     installAnalytics =
         new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()));
     packageManager = getPackageManager();
@@ -170,7 +172,7 @@ public class InstalledIntentService extends IntentService {
 
   private void checkAndBroadcastReferrer(String packageName) {
     StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
         StoredMinimalAd.class);
     Subscription unManagedSubscription = storedMinimalAdAccessor.get(packageName)
         .flatMapCompletable(storeMinimalAd -> {

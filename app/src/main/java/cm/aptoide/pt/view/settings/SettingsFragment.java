@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -28,10 +29,11 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -42,18 +44,19 @@ import cm.aptoide.pt.filemanager.FileManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.SettingsConstants;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxPreference;
@@ -96,8 +99,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
+  private String marketName;
   private Database database;
-  private UpdateRepository repository;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -105,12 +108,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     trackAnalytics = true;
     sharedPreferences =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    database = ((V8Engine) getContext().getApplicationContext()).getDatabase();
-    repository = RepositoryFactory.getUpdateRepository(getContext(), sharedPreferences);
-    fileManager = ((V8Engine) getContext().getApplicationContext()).getFileManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
+    fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     adultContentConfirmationDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
@@ -138,7 +141,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .build();
 
     notificationSyncScheduler =
-        ((V8Engine) getContext().getApplicationContext()).getNotificationSyncScheduler();
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -146,10 +149,23 @@ public class SettingsFragment extends PreferenceFragmentCompat
     SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(getActivity());
     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    adultContent =
-        new AdultContent(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-            new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
+    adultContent = new AdultContent(
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
+        new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
+        new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
+  }
+
+  @CallSuper @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    String storeTheme =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+    if (storeTheme != null) {
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+    }
+
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -191,6 +207,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(database, Update.class);
       updateAccessor.removeAll();
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
@@ -209,18 +227,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
     //set AppStore name
     findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
 
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
     autoUpdatepreference.setSummary(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
-            getContext().getResources(), Application.getConfiguration()
-                .getMarketName()));
+            getContext().getResources(), marketName));
 
     subscriptions.add(RxPreference.checks(socialCampaignNotifications)
         .subscribe(isChecked -> handleSocialNotifications(isChecked)));

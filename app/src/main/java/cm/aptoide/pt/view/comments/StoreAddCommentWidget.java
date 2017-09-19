@@ -10,8 +10,8 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.store.StoreTheme;
@@ -44,7 +44,8 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
     final Context context = getContext();
 
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
     @ColorInt int color = getColorOrDefault(displayable.getStoreTheme(), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {

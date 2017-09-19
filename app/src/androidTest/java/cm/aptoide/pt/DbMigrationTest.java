@@ -112,7 +112,7 @@ import static org.junit.Assert.fail;
     final ContentValues[] insertedValues = new ContentValues[nr_values];
     final String[] md5s = new String[nr_values];
     final ScheduledAccessor accessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) InstrumentationRegistry.getTargetContext()
+        ((AptoideApplication) InstrumentationRegistry.getTargetContext()
             .getApplicationContext()).getDatabase(), Scheduled.class);
 
     db.beginTransaction();
@@ -137,7 +137,7 @@ import static org.junit.Assert.fail;
 
     // trigger migration
     ManagerPreferences.setNeedsSqliteDbMigration(true,
-        ((V8Engine) InstrumentationRegistry.getTargetContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) InstrumentationRegistry.getTargetContext()).getDefaultSharedPreferences());
     int newVersion = dbVersion.incrementAndGet();
     dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 
@@ -206,7 +206,7 @@ import static org.junit.Assert.fail;
     final ContentValues[] insertedValues = new ContentValues[nr_values];
     final String[] packageNames = new String[nr_values];
     final UpdateAccessor accessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) InstrumentationRegistry.getTargetContext()
+        ((AptoideApplication) InstrumentationRegistry.getTargetContext()
             .getApplicationContext()).getDatabase(), Update.class);
 
     PackageManager pm = InstrumentationRegistry.getTargetContext()
@@ -239,7 +239,7 @@ import static org.junit.Assert.fail;
 
     // trigger migration
     ManagerPreferences.setNeedsSqliteDbMigration(true,
-        ((V8Engine) InstrumentationRegistry.getTargetContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) InstrumentationRegistry.getTargetContext()).getDefaultSharedPreferences());
     int newVersion = dbVersion.incrementAndGet();
     dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 

@@ -6,8 +6,8 @@ import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -152,7 +152,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
 
   @Override public void onClick(View v) {
     Logger.d(TAG, "showing other version for app with id = " + appId);
-    getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+    getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
         .newAppViewFragment(appId, packageName, null, storeName));
   }
 }

@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.view.BillingNavigator;
@@ -30,6 +30,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
   private Billing billing;
   private BillingAnalytics billingAnalytics;
   private AptoideAccountManager accountManager;
+  private String marketName;
 
   public static Fragment create(Bundle bundle) {
     final PayPalFragment fragment = new PayPalFragment();
@@ -39,9 +40,12 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
-    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
+    billingAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
   }
 
   @Nullable @Override
@@ -65,7 +69,7 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
 
     attachPresenter(new PayPalPresenter(this, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager),
+            getActivityNavigator(), getFragmentNavigator(), accountManager, marketName),
         AndroidSchedulers.mainThread(),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),

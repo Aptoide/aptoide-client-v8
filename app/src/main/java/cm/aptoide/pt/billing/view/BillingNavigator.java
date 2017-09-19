@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.Purchase;
@@ -15,6 +14,7 @@ import cm.aptoide.pt.billing.view.paypal.PayPalFragment;
 import cm.aptoide.pt.view.account.LoginActivity;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.navigator.Result;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -29,13 +29,16 @@ public class BillingNavigator {
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
   private final AptoideAccountManager accountManager;
+  private final String marketName;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager) {
+      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
+      String marketName) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
+    this.marketName = marketName;
   }
 
   public void navigateToPayerAuthenticationForResult(int requestCode) {
@@ -88,8 +91,7 @@ public class BillingNavigator {
     bundle.putParcelable(PayPalService.EXTRA_PAYPAL_CONFIGURATION,
         new PayPalConfiguration().environment(BuildConfig.PAYPAL_ENVIRONMENT)
             .clientId(BuildConfig.PAYPAL_KEY)
-            .merchantName(V8Engine.getConfiguration()
-                .getMarketName()));
+            .merchantName(marketName));
     bundle.putParcelable(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT,
         new PayPalPayment(new BigDecimal(amount), currency, description,
             PayPalPayment.PAYMENT_INTENT_SALE));
@@ -130,7 +132,7 @@ public class BillingNavigator {
     throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
   }
 
-  private PayPalResult map(ActivityNavigator.Result result) {
+  private PayPalResult map(Result result) {
     switch (result.getResultCode()) {
       case Activity.RESULT_OK:
         final PaymentConfirmation confirmation = result.getData()

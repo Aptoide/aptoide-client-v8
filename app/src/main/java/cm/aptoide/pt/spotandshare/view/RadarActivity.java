@@ -22,8 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.spotandshare.DataHolder;
 import cm.aptoide.pt.spotandshare.PermissionListener;
 import cm.aptoide.pt.spotandshare.PermissionManager;
@@ -81,7 +81,8 @@ public class RadarActivity extends SpotAndShareActivityView
 
     ApplicationSender.reset();
     DataHolder.reset();
-    GroupNameProvider groupNameProvider = ((V8Engine) getApplication()).getGroupNameProvider();
+    GroupNameProvider groupNameProvider =
+        ((AptoideApplication) getApplication()).getGroupNameProvider();
     ConnectionManager connectionManager =
         ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();

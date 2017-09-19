@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.Product;
@@ -53,6 +53,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private TextView productPrice;
   private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
+  private String marketName;
 
   public static Fragment create(Bundle bundle) {
     final BraintreeCreditCardFragment fragment = new BraintreeCreditCardFragment();
@@ -72,9 +73,12 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     cardBuilderRelay = PublishRelay.create();
-    billing = ((V8Engine) getContext().getApplicationContext()).getBilling();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    billingAnalytics = ((V8Engine) getContext().getApplicationContext()).getBillingAnalytics();
+    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    billingAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
   }
 
   @Nullable @Override
@@ -122,7 +126,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     });
     attachPresenter(new BraintreePresenter(this, braintree, billing, billingAnalytics,
         new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager),
+            getActivityNavigator(), getFragmentNavigator(), accountManager, marketName),
         AndroidSchedulers.mainThread(),
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),

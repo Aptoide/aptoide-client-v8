@@ -46,3 +46,5 @@ projectFilesBackup/.idea/
 
 .idea/instapk.xml
 instapk.log*
+.hgignore
+instapk.properties

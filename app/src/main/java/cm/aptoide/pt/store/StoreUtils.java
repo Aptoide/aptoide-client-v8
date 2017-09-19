@@ -2,7 +2,6 @@ package cm.aptoide.pt.store;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -35,7 +34,7 @@ public class StoreUtils {
     return storeCredentialsProvider.get(storeId);
   }
 
-  @Partners @Deprecated public static @Nullable
+  @Deprecated public static @Nullable
   BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url,
       StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.fromUrl(url);

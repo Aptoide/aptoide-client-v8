@@ -31,7 +31,6 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import com.crashlytics.android.answers.Answers;
 import java.util.HashMap;
@@ -73,18 +72,21 @@ public class InstallService extends Service {
   private Map<String, Integer> installerTypeMap;
   private Analytics analytics;
   private InstalledRepository installedRepository;
+  private String marketName;
 
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
-    downloadManager = ((V8Engine) getApplicationContext()).getDownloadManager();
+    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
+    downloadManager = ((AptoideApplication) getApplicationContext()).getDownloadManager();
     final MinimalAdMapper adMapper = new MinimalAdMapper();
     InstallerFactory installerFactory = new InstallerFactory(adMapper,
-        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()));
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
+        ((AptoideApplication) getApplicationContext()).getImageCachePath());
     defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);
     installManager =
-        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap();
@@ -218,7 +220,7 @@ public class InstallService extends Service {
 
   private void removeFromScheduled(String md5) {
     ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
-        ((V8Engine) getApplicationContext().getApplicationContext()).getDatabase(),
+        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
         Scheduled.class);
     scheduledAccessor.delete(md5);
     Logger.d(TAG, "Removing schedulled download with appId " + md5);
@@ -307,8 +309,7 @@ public class InstallService extends Service {
     builder.setSmallIcon(android.R.drawable.stat_sys_download)
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
-            Application.getConfiguration()
-                .getMarketName()))
+            marketName))
         .setContentText(new StringBuilder().append(installation.getAppName())
             .append(" - ")
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
@@ -351,7 +352,7 @@ public class InstallService extends Service {
 
   @NonNull private Intent createDeeplinkingIntent() {
     Intent intent = new Intent();
-    intent.setClass(getApplicationContext(), V8Engine.getActivityProvider()
+    intent.setClass(getApplicationContext(), AptoideApplication.getActivityProvider()
         .getMainActivityFragmentClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;

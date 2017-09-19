@@ -16,7 +16,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
-import cm.aptoide.pt.V8Engine;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -268,8 +268,8 @@ public class DefaultInstaller implements Installer {
     //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
-      photoURI = FileProvider.getUriForFile(context, V8Engine.getConfiguration()
-          .getAppId() + ".provider", file);
+      photoURI =
+          FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
     } else {
       //file://....apk for < nougat
       photoURI = Uri.fromFile(file);

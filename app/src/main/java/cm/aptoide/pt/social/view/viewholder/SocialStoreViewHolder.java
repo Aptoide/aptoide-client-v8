@@ -26,7 +26,6 @@ import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.v8engine.social.view.viewholder.SocialPostViewHolder;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import java.util.HashMap;
 import java.util.Map;

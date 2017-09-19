@@ -2,7 +2,6 @@ package cm.aptoide.pt.view.recycler.displayable;
 
 import android.content.res.Resources;
 import android.view.WindowManager;
-import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.view.recycler.widget.WidgetFactory;
 import java.util.List;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
-@Ignore public class DisplayableGroup extends Displayable {
+public class DisplayableGroup extends Displayable {
 
   @Getter private final List<Displayable> children;
   private final WindowManager windowManager;

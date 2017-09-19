@@ -111,6 +111,9 @@ public interface FragmentProvider {
 
   Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage);
 
+  Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage,
+      String storeName);
+
   Fragment newRollbackFragment();
 
   Fragment newExcludedUpdatesFragment();
