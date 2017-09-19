@@ -5,10 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import rx.Completable;
 
 /**
@@ -25,9 +24,13 @@ public class NotificationReceiver extends BroadcastReceiver {
   private CrashReport crashReport;
   private NotificationIdsMapper notificationIdsMapper;
   private NotificationCenter notificationCenter;
+  private NotificationAnalytics analytics;
 
   @Override public void onReceive(Context context, Intent intent) {
     crashReport = CrashReport.getInstance();
+    analytics = new NotificationAnalytics(
+        ((AptoideApplication) context.getApplicationContext()).getDefaultClient(),
+        Analytics.getInstance());
     notificationIdsMapper = new NotificationIdsMapper();
     notificationCenter =
         ((AptoideApplication) context.getApplicationContext()).getNotificationCenter();
@@ -67,9 +70,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
   private void callDeepLink(Context context, Intent intent) {
     String trackUrl = intent.getStringExtra(NOTIFICATION_TRACK_URL);
-    if (!TextUtils.isEmpty(trackUrl)) {
-      AdNetworkUtils.knock(trackUrl);
-    }
+    analytics.notificationShown(trackUrl);
     String targetUrl = intent.getStringExtra(NOTIFICATION_TARGET_URL);
     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

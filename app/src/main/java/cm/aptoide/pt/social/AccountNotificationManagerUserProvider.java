@@ -34,7 +34,8 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
           }
           AptoideNotification notification = aptoideNotifications.get(0);
           return new TimelineNotification(notification.getBody(), notification.getImg(),
-              notification.getUrl(), notification.getType());
+              notification.getUrl(), notification.getType(),
+              notification.getNotificationCenterUrlTrack());
         });
   }
 
@@ -51,7 +52,7 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
             } else {
               return new User(timelineNotification.getBody(), timelineNotification.getImg(),
                   timelineNotification.getUrl(), timelineNotification.getNotificationId(),
-                  isLoggedIn);
+                  isLoggedIn, timelineNotification.getAnalyticsUrl());
             }
           }
           return new User(isLoggedIn);

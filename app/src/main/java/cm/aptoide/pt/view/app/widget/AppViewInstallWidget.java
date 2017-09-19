@@ -51,6 +51,7 @@ import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -173,7 +174,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
-                BuildConfig.APPLICATION_ID, sharedPreferences), tokenInvalidator,
+                BuildConfig.APPLICATION_ID, sharedPreferences,
+                new NotificationAnalytics(httpClient, analytics)), tokenInvalidator,
             sharedPreferences);
 
     GetApp getApp = this.displayable.getPojo();
