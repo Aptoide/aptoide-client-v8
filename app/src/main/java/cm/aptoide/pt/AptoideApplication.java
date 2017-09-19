@@ -686,7 +686,9 @@ public abstract class AptoideApplication extends Application {
               accountDataMigration, getAndroidAccountProvider(), Schedulers.io());
 
       accountManager = new AptoideAccountManager.Builder().setAccountDataPersist(accountDataPersist)
-          .setAccountAnalytics(new LogAccountAnalytics())
+          .setAccountAnalytics(
+              new LogAccountAnalytics(Analytics.getInstance(), bodyInterceptor, httpClient,
+                  converterFactory, tokenInvalidator, appId, sharedPreferences))
           .setAccountManagerService(accountManagerService)
           .build();
     }
