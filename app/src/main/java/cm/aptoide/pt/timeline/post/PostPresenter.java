@@ -279,7 +279,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
                     analytics.sendPostCompleteEvent(postManager.remoteRelatedAppsAvailable(),
                         view.getCurrentSelected()
                             .getPackageName(), hasComment, hasUrl, url == null ? "" : url,
-                        android.view.View.VISIBLE == view.getPreviewVisibility());
+                        android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
                   })
                   .doOnSuccess(
                       postId -> tabNavigator.navigate(new AppsTimelineTabNavigation(postId)))
@@ -317,32 +317,32 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
           view.showInvalidTextError();
           analytics.sendPostCompleteNoTextEvent(postManager.remoteRelatedAppsAvailable(),
               isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
           break;
         case INVALID_PACKAGE:
           view.showInvalidPackageError();
           analytics.sendPostCompleteNoSelectedAppEvent(postManager.remoteRelatedAppsAvailable(),
               hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
           break;
         case NO_LOGIN:
           view.showNoLoginError();
           analytics.sendPostCompleteNoLoginEvent(postManager.remoteRelatedAppsAvailable(),
               isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
           break;
         case NO_APP_FOUND:
           view.showAppNotFoundError();
           analytics.sendPostCompleteNoAppFoundEvent(postManager.remoteRelatedAppsAvailable(),
               isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
           break;
       }
     } else {
       view.showGenericError();
       analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),
           isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-          android.view.View.VISIBLE == view.getPreviewVisibility());
+          android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
     }
   }
 
