@@ -38,15 +38,14 @@ import retrofit2.Converter;
  * Created by neuro on 01-06-2016.
  */
 public class SearchFragment extends BasePagerToolbarFragment {
-  private static final String TAG = SearchFragment.class.getSimpleName();
 
   private SharedPreferences sharedPreferences;
-  private String query;
+  private String currentQuery;
 
   transient private boolean hasSubscribedResults;
   transient private boolean hasEverywhereResults;
   transient private boolean shouldFinishLoading = false;
-  
+
   private Button subscribedButton;
   private Button everywhereButton;
   private LinearLayout buttonsLayout;
@@ -62,15 +61,15 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
 
-  public static SearchFragment newInstance(String query) {
-    return newInstance(query, false);
+  public static SearchFragment newInstance(String currentQuery) {
+    return newInstance(currentQuery, false);
   }
 
-  public static SearchFragment newInstance(String query, boolean onlyTrustedApps,
+  public static SearchFragment newInstance(String currentQuery, boolean onlyTrustedApps,
       String storeName) {
     Bundle args = new Bundle();
 
-    args.putString(BundleCons.QUERY, query);
+    args.putString(BundleCons.QUERY, currentQuery);
     args.putBoolean(BundleCons.ONLY_TRUSTED, onlyTrustedApps);
     args.putString(BundleCons.STORE_NAME, storeName);
 
@@ -79,10 +78,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return fragment;
   }
 
-  public static SearchFragment newInstance(String query, boolean onlyTrustedApps) {
+  public static SearchFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
     Bundle args = new Bundle();
 
-    args.putString(BundleCons.QUERY, query);
+    args.putString(BundleCons.QUERY, currentQuery);
     args.putBoolean(BundleCons.ONLY_TRUSTED, onlyTrustedApps);
 
     SearchFragment fragment = new SearchFragment();
@@ -90,10 +89,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return fragment;
   }
 
-  public static SearchFragment newInstance(String query, String storeName) {
+  public static SearchFragment newInstance(String currentQuery, String storeName) {
     Bundle args = new Bundle();
 
-    args.putString(BundleCons.QUERY, query);
+    args.putString(BundleCons.QUERY, currentQuery);
     args.putString(BundleCons.STORE_NAME, storeName);
 
     SearchFragment fragment = new SearchFragment();
@@ -118,7 +117,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
 
-    query = args.getString(BundleCons.QUERY);
+    currentQuery = args.getString(BundleCons.QUERY);
     storeName = args.getString(BundleCons.STORE_NAME);
     onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
   }
@@ -155,7 +154,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();
     } else {
-      searchAnalytics.searchNoResults(query);
+      searchAnalytics.searchNoResults(currentQuery);
 
       noSearchLayout.setVisibility(View.VISIBLE);
       buttonsLayout.setVisibility(View.INVISIBLE);
@@ -173,9 +172,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override protected PagerAdapter createPagerAdapter() {
     if (storeName != null) {
-      return new SearchPagerAdapter(getChildFragmentManager(), query, storeName);
+      return new SearchPagerAdapter(getChildFragmentManager(), currentQuery, storeName);
     } else {
-      return new SearchPagerAdapter(getChildFragmentManager(), query, hasSubscribedResults,
+      return new SearchPagerAdapter(getChildFragmentManager(), currentQuery, hasSubscribedResults,
           hasEverywhereResults);
     }
   }
@@ -240,62 +239,72 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   protected void executeSearchRequests(String storeName, boolean create) {
     //TODO (pedro): Don't have search source (which tab)
-    searchAnalytics.search(query);
+    searchAnalytics.search(currentQuery);
     if (storeName != null) {
-      shouldFinishLoading = true;
-      ListSearchAppsRequest of = ListSearchAppsRequest.of(query, storeName,
-          StoreUtils.getSubscribedStoresAuthMap(AccessorFactory.getAccessorFor(
-              ((AptoideApplication) getContext().getApplicationContext()
-                  .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor,
-          httpClient, converterFactory, tokenInvalidator, sharedPreferences);
-      of.execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
-            .getList();
-
-        if (list != null && hasMoreResults(listSearchApps)) {
-          hasSubscribedResults = true;
-          handleFinishLoading(create);
-        } else {
-          hasSubscribedResults = false;
-          handleFinishLoading(create);
-        }
-      }, e -> finishLoading());
+      searchInStore(storeName, create);
     } else {
-      ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
-          AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-              .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
-          converterFactory, tokenInvalidator, sharedPreferences)
-          .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
-                .getList();
-
-            if (list != null && hasMoreResults(listSearchApps)) {
-              hasSubscribedResults = true;
-              handleFinishLoading(create);
-            } else {
-              hasSubscribedResults = false;
-              handleFinishLoading(create);
-            }
-          }, e -> finishLoading());
-
-      // Other stores
-      ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
-          AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-              .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
-          converterFactory, tokenInvalidator, sharedPreferences)
-          .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
-                .getList();
-
-            if (list != null && hasMoreResults(listSearchApps)) {
-              hasEverywhereResults = true;
-              handleFinishLoading(create);
-            } else {
-              hasEverywhereResults = false;
-              handleFinishLoading(create);
-            }
-          }, e -> finishLoading());
+      searchInSubscribedStores(create);
+      searchInNonSubscribedStores(create);
     }
+  }
+
+  private void searchInNonSubscribedStores(boolean create) {
+    ListSearchAppsRequest.of(currentQuery, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .execute(listSearchApps -> {
+          List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
+              .getList();
+
+          if (list != null && hasMoreResults(listSearchApps)) {
+            hasEverywhereResults = true;
+            handleFinishLoading(create);
+          } else {
+            hasEverywhereResults = false;
+            handleFinishLoading(create);
+          }
+        }, e -> finishLoading());
+  }
+
+  private void searchInSubscribedStores(boolean create) {
+    ListSearchAppsRequest.of(currentQuery, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .execute(listSearchApps -> {
+          List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
+              .getList();
+
+          if (list != null && hasMoreResults(listSearchApps)) {
+            hasSubscribedResults = true;
+            handleFinishLoading(create);
+          } else {
+            hasSubscribedResults = false;
+            handleFinishLoading(create);
+          }
+        }, e -> finishLoading());
+  }
+
+  private void searchInStore(String storeName, boolean create) {
+    shouldFinishLoading = true;
+    ListSearchAppsRequest of = ListSearchAppsRequest.of(currentQuery, storeName,
+        StoreUtils.getSubscribedStoresAuthMap(AccessorFactory.getAccessorFor(
+            ((AptoideApplication) getContext().getApplicationContext()
+                .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+    of.execute(listSearchApps -> {
+      List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
+          .getList();
+
+      if (list != null && hasMoreResults(listSearchApps)) {
+        hasSubscribedResults = true;
+        handleFinishLoading(create);
+      } else {
+        hasSubscribedResults = false;
+        handleFinishLoading(create);
+      }
+    }, e -> finishLoading());
   }
 
   private boolean hasMoreResults(ListSearchApps listSearchApps) {
@@ -310,7 +319,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(query);
+    toolbar.setTitle(currentQuery);
   }
 
   private void setupButtonsListeners() {
@@ -330,7 +339,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
-    outState.putString(BundleCons.QUERY, query);
+    outState.putString(BundleCons.QUERY, currentQuery);
     outState.putString(BundleCons.STORE_NAME, storeName);
     outState.putInt(BundleCons.SELECTED_BUTTON, selectedButton);
   }
@@ -354,7 +363,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (savedInstanceState != null) {
-      query = savedInstanceState.getString(BundleCons.QUERY);
+      currentQuery = savedInstanceState.getString(BundleCons.QUERY);
       storeName = savedInstanceState.getString(BundleCons.STORE_NAME);
       setButtonBackgrounds(savedInstanceState.getInt(BundleCons.SELECTED_BUTTON));
     }
@@ -376,11 +385,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  protected static class BundleCons {
-
-    public static final String QUERY = "query";
-    public static final String STORE_NAME = "storeName";
-    public static final String ONLY_TRUSTED = "onlyTrustedApps";
-    public static final String SELECTED_BUTTON = "selectedbutton";
+  private static final class BundleCons {
+    private static final String QUERY = "query";
+    private static final String STORE_NAME = "storeName";
+    private static final String ONLY_TRUSTED = "onlyTrustedApps";
+    private static final String SELECTED_BUTTON = "selectedButton";
   }
 }
