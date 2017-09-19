@@ -12,11 +12,11 @@ import okhttp3.Response;
  * Created by trinkes on 18/09/2017.
  */
 
-public class knockEvent implements Event {
+public class KnockEvent implements Event {
   private final String url;
   private final OkHttpClient client;
 
-  public knockEvent(String url, OkHttpClient client) {
+  public KnockEvent(String url, OkHttpClient client) {
     this.url = url;
     this.client = client;
   }

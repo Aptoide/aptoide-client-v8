@@ -1,7 +1,7 @@
 package cm.aptoide.pt.notification;
 
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.knockEvent;
+import cm.aptoide.pt.analytics.events.KnockEvent;
 import okhttp3.OkHttpClient;
 
 /**
@@ -19,6 +19,6 @@ public class NotificationAnalytics {
   }
 
   public void notificationShown(String url) {
-    analytics.sendEvent(new knockEvent(url, client));
+    analytics.sendEvent(new KnockEvent(url, client));
   }
 }
