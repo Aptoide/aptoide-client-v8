@@ -10,4 +10,8 @@ public interface InstallerAnalytics {
   void rootInstallTimeout();
 
   void rootInstallFail(Exception e);
+
+  void rootInstallCancelled();
+
+  void rootInstallStart();
 }
