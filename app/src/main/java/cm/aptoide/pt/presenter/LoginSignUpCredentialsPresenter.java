@@ -58,8 +58,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
 
-    handleFacebookSignUpEvent();
     handleFacebookSignUpResult();
+    handleFacebookSignUpEvent();
     handleFacebookSignUpWithRequiredPermissionsEvent();
 
     handleAptoideShowLoginEvent();

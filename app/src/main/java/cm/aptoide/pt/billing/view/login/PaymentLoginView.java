@@ -26,6 +26,6 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   void showError(String message);
 
-  void showFacebookPermissionsRequiredError(Throwable throwable);
+  void showFacebookPermissionsRequiredError();
 
 }

@@ -47,13 +47,13 @@ public class PaymentLoginPresenter implements Presenter {
 
     handleBackButtonAndUpNavigationEvent();
 
-    handleFacebookSignUpEvent();
-
     handleFacebookSignUpResult();
 
-    handleGoogleSignUpEvent();
+    handleFacebookSignUpEvent();
 
     handleGoogleSignUpResult();
+
+    handleGoogleSignUpEvent();
 
     handleRecoverPasswordEvent();
 
@@ -126,7 +126,7 @@ public class PaymentLoginPresenter implements Presenter {
                   if (throwable instanceof FacebookSignUpException
                       && ((FacebookSignUpException) throwable).getCode()
                       == FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS) {
-                    view.showFacebookPermissionsRequiredError(throwable);
+                    view.showFacebookPermissionsRequiredError();
                   } else {
                     view.showError(errorMapper.map(throwable));
                     crashReport.log(throwable);

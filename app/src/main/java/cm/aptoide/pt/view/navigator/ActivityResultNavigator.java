@@ -17,11 +17,9 @@ import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
-import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.HashMap;
 import java.util.Map;
 import rx.Observable;
 
@@ -40,8 +38,8 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
 
   @SuppressLint("UseSparseArrays") @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
-    fragmentResultRelay = BehaviorRelay.create();
-    fragmentResultMap = new HashMap<>();
+    fragmentResultRelay = ((AptoideApplication) getApplicationContext()).getFragmentResultRelay();
+    fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResulMap();
     fragmentNavigator =
         new FragmentResultNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
             android.R.anim.fade_in, android.R.anim.fade_out, fragmentResultMap,
@@ -70,13 +68,6 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     final Intent intent = new Intent();
     intent.setComponent(new ComponentName(this, activityClass));
     intent.putExtras(bundle);
-    startActivityForResult(intent, requestCode);
-  }
-
-  @Override
-  public void navigateForResult(Class<? extends Activity> activityClass, int requestCode) {
-    final Intent intent = new Intent();
-    intent.setComponent(new ComponentName(this, activityClass));
     startActivityForResult(intent, requestCode);
   }
 
@@ -156,9 +147,11 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     if (accountNavigator == null) {
       accountNavigator = new AccountNavigator(getFragmentNavigator(),
           ((AptoideApplication) getApplicationContext()).getAccountManager(),
-          getActivityNavigator(), LoginManager.getInstance(), CallbackManager.Factory.create(),
+          getActivityNavigator(), LoginManager.getInstance(),
+          ((AptoideApplication) getApplicationContext()).getFacebookCallbackManager(),
           ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
-          PublishRelay.create(), ((AptoideApplication) getApplicationContext()).getDefaultStore(),
+          ((AptoideApplication) getApplicationContext()).getFacebookLoginResultRelay(),
+          ((AptoideApplication) getApplicationContext()).getDefaultStore(),
           ((AptoideApplication) getApplicationContext()).getDefaultTheme(),
           "http://m.aptoide.com/account/password-recovery");
     }

@@ -49,8 +49,8 @@ public class NotLoggedInSharePresenter implements Presenter {
     handleGoogleSignInEvent();
     handleGoogleSignInResult();
 
-    handleFacebookSignInEvent();
     handleFacebookSignInResult();
+    handleFacebookSignInEvent();
     handleFacebookSignInWithRequiredPermissionsEvent();
 
     handleCloseEvent();

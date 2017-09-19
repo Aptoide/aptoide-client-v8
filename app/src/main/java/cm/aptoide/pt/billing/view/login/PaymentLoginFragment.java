@@ -40,6 +40,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       "cm.aptoide.pt.billing.view.login.extra.LOGIN_VISIBLE ";
   private static final String EXTRA_PASSWORD_VISIBLE =
       "cm.aptoide.pt.billing.view.login.extra.PASSWORD_VISIBLE";
+  private static final String EXTRA_FACEBOOK_DIALOG_VISIBLE =
+      "cm.aptoide.pt.billing.view.login.extra.FACEBOOK_DIALOG_VISIBLE";
+  private static final String EXTRA_PROGRESS_VISIBLE =
+      "cm.aptoide.pt.billing.view.login.extra.PROGRESS_VISIBLE";
   private int requestCode;
   private ClickHandler handler;
   private PublishRelay<Void> backButtonRelay;
@@ -70,6 +74,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private EditText passwordEditText;
   private Button passwordShowHideToggle;
   private boolean passwordVisible;
+  private boolean progressVisible;
+  private boolean facebookEmailRequiredDialogVisible;
 
   public static Fragment newInstance() {
     return new PaymentLoginFragment();
@@ -129,14 +135,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     usernamePasswordContainer =
         view.findViewById(R.id.fragment_payment_login_username_password_container);
 
-    if (savedInstanceState != null) {
-      if (savedInstanceState.getBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE)) {
-        showUsernamePasswordContainer(savedInstanceState.getBoolean(EXTRA_LOGIN_VISIBLE));
-      } else {
-        hideUsernamePasswordContainer();
-      }
-      togglePasswordVisibility(savedInstanceState.getBoolean(EXTRA_PASSWORD_VISIBLE));
-    }
+    facebookButton = (Button) view.findViewById(R.id.fragment_payment_login_facebook_button);
+    googleButton = (Button) view.findViewById(R.id.fragment_payment_login_google_button);
+    progressDialog = new ProgressDialog(getContext());
+    progressDialog.setMessage(getString(cm.aptoide.pt.utils.R.string.please_wait));
+    progressDialog.setCancelable(false);
 
     RxView.clicks(aptoideJoinToggle)
         .doOnNext(__ -> showUsernamePasswordContainer(false))
@@ -159,17 +162,34 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .setNegativeButton(android.R.string.cancel)
         .build();
 
-    facebookButton = (Button) view.findViewById(R.id.fragment_payment_login_facebook_button);
-    googleButton = (Button) view.findViewById(R.id.fragment_payment_login_google_button);
-    progressDialog = new ProgressDialog(getContext());
-    progressDialog.setMessage(getString(cm.aptoide.pt.utils.R.string.please_wait));
-    progressDialog.setCancelable(false);
+    facebookEmailRequiredDialog.dismisses()
+        .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
 
     handler = () -> {
       backButtonRelay.call(null);
       return true;
     };
     registerClickHandler(handler);
+
+    if (savedInstanceState != null) {
+
+      if (savedInstanceState.getBoolean(EXTRA_FACEBOOK_DIALOG_VISIBLE)) {
+        showFacebookPermissionsRequiredError();
+      }
+
+      if (savedInstanceState.getBoolean(EXTRA_PROGRESS_VISIBLE)) {
+        showLoading();
+      }
+
+      if (savedInstanceState.getBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE)) {
+        showUsernamePasswordContainer(savedInstanceState.getBoolean(EXTRA_LOGIN_VISIBLE));
+      } else {
+        hideUsernamePasswordContainer();
+      }
+      togglePasswordVisibility(savedInstanceState.getBoolean(EXTRA_PASSWORD_VISIBLE));
+    }
 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
@@ -182,6 +202,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         usernamePasswordContainerVisible);
     outState.putBoolean(EXTRA_LOGIN_VISIBLE, loginVisible);
     outState.putBoolean(EXTRA_PASSWORD_VISIBLE, passwordVisible);
+    outState.putBoolean(EXTRA_FACEBOOK_DIALOG_VISIBLE, facebookEmailRequiredDialogVisible);
+    outState.putBoolean(EXTRA_PROGRESS_VISIBLE, progressVisible);
     super.onSaveInstanceState(outState);
   }
 
@@ -208,10 +230,12 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   }
 
   @Override public void showLoading() {
+    progressVisible = true;
     progressDialog.show();
   }
 
   @Override public void hideLoading() {
+    progressVisible = false;
     progressDialog.dismiss();
   }
 
@@ -220,8 +244,9 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .show();
   }
 
-  @Override public void showFacebookPermissionsRequiredError(Throwable throwable) {
+  @Override public void showFacebookPermissionsRequiredError() {
     if (!facebookEmailRequiredDialog.isShowing()) {
+      facebookEmailRequiredDialogVisible = true;
       facebookEmailRequiredDialog.show();
     }
   }

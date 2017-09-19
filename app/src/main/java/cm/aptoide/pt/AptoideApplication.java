@@ -6,6 +6,7 @@
 package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Application;
@@ -39,11 +40,13 @@ import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
+import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LogAccountAnalytics;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.V3AccountService;
+import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
@@ -169,15 +172,16 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.view.configuration.ActivityProvider;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
+import cm.aptoide.pt.view.navigator.Result;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.answers.Answers;
+import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
@@ -202,6 +206,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
@@ -289,6 +294,10 @@ public abstract class AptoideApplication extends Application {
   private AuthenticationPersistence authenticationPersistence;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       noAuthorizationBodyInterceptorV3;
+  private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
+  private CallbackManager facebookCallbackManager;
+  private Map<Integer, Result> fragmentResulMap;
+  private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -1316,6 +1325,34 @@ public abstract class AptoideApplication extends Application {
               () -> new TimelineAdsRepository(context, BehaviorRelay.create()), getMarketName()));
     }
     return timelineRepositoryFactory.create(action);
+  }
+
+  public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
+    if (fragmentResultRelay == null) {
+      fragmentResultRelay = BehaviorRelay.create();
+    }
+    return fragmentResultRelay;
+  }
+
+  public CallbackManager getFacebookCallbackManager() {
+    if (facebookCallbackManager == null) {
+      facebookCallbackManager = CallbackManager.Factory.create();
+    }
+    return facebookCallbackManager;
+  }
+
+  @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResulMap() {
+    if (fragmentResulMap == null) {
+      fragmentResulMap = new HashMap<>();
+    }
+    return fragmentResulMap;
+  }
+
+  public PublishRelay<FacebookLoginResult> getFacebookLoginResultRelay() {
+    if (facebookLoginResultRelay == null) {
+      facebookLoginResultRelay = PublishRelay.create();
+    }
+    return facebookLoginResultRelay;
   }
 
   public abstract LoginPreferences getLoginPreferences();
