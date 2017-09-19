@@ -100,7 +100,6 @@ import cm.aptoide.pt.view.app.displayable.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewScreenshotsDisplayable;
-import cm.aptoide.pt.view.app.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
@@ -803,7 +802,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())));
     displayables.add(installDisplayable);
-    displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
             installedRepository));
