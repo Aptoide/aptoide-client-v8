@@ -34,7 +34,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.util.SearchUtils;
+import cm.aptoide.pt.search.SearchBuilder;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
@@ -77,7 +77,7 @@ public class HomeFragment extends StoreFragment {
   private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
-  private SearchUtils searchUtils;
+  private SearchBuilder searchBuilder;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -168,7 +168,7 @@ public class HomeFragment extends StoreFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
-    searchUtils = new SearchUtils();
+    searchBuilder = new SearchBuilder();
   }
 
   @Nullable @Override
@@ -243,12 +243,11 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-
     menu.removeItem(R.id.menu_share);
   }
 
   @Override protected void setupSearch(Menu menu) {
-    searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+    searchBuilder.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
   }
 
   @Override public void setupViews() {

@@ -74,6 +74,8 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.search.SearchBuilder;
+import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -81,7 +83,6 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -180,7 +181,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String marketName;
   private String defaultTheme;
   private long storeId;
-  private SearchUtils searchUtils;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -347,8 +347,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
-
-    searchUtils = new SearchUtils();
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -530,7 +528,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator(), query);
+    SearchBuilder searchBuilder =
+        new SearchBuilder(menu.getItem(R.id.ic_search_button), getActivity(),
+            new SearchNavigator(getFragmentNavigator()));
+    searchBuilder.validateAndAttachSearch();
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 

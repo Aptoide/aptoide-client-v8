@@ -31,7 +31,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.store.StoreUtils;
-import cm.aptoide.pt.util.SearchUtils;
+import cm.aptoide.pt.search.SearchBuilder;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.List;
@@ -65,7 +65,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private Converter.Factory converterFactory;
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
-  private SearchUtils searchUtils;
+  private SearchBuilder searchBuilder;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -118,7 +118,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    searchUtils = new SearchUtils();
+    searchBuilder = new SearchBuilder();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -346,10 +346,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search_results, menu);
 
     if (storeName != null) {
-      searchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName,
+      searchBuilder.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName,
           query);
     } else {
-      searchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator(), query);
+      searchBuilder.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator(), query);
     }
   }
 
