@@ -43,6 +43,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -95,7 +96,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String iconPath;
   private String marketName;
   private String defaultTheme;
-  private SearchBuilder searchBuilder;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -160,7 +160,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
-    searchBuilder = new SearchBuilder();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -328,7 +327,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   protected void setupSearch(Menu menu) {
-    searchBuilder.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName);
+    SearchBuilder searchBuilder =
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
+            new SearchNavigator(getFragmentNavigator(), storeName));
+    searchBuilder.validateAndAttachSearch();
   }
 
   /**

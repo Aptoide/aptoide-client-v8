@@ -31,6 +31,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
@@ -77,7 +78,6 @@ public class HomeFragment extends StoreFragment {
   private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
-  private SearchBuilder searchBuilder;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -168,7 +168,6 @@ public class HomeFragment extends StoreFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
-    searchBuilder = new SearchBuilder();
   }
 
   @Nullable @Override
@@ -247,7 +246,10 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    searchBuilder.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+    SearchBuilder searchBuilder =
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
+            new SearchNavigator(getFragmentNavigator()));
+    searchBuilder.validateAndAttachSearch();
   }
 
   @Override public void setupViews() {

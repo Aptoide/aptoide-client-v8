@@ -529,7 +529,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
     SearchBuilder searchBuilder =
-        new SearchBuilder(menu.getItem(R.id.ic_search_button), getActivity(),
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
             new SearchNavigator(getFragmentNavigator()));
     searchBuilder.validateAndAttachSearch();
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);

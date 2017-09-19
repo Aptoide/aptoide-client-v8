@@ -45,6 +45,8 @@ public class SearchBuilder {
     searchView.setOnSuggestionListener(actionsHandler);
     searchView.setOnQueryTextFocusChangeListener(actionsHandler);
     searchView.setOnSearchClickListener(actionsHandler);
+
+    searchView.setQueryRefinementEnabled(true);
   }
 
   @NonNull private SearchActionsHandler getSearchActionsHandler(SearchView searchView) {

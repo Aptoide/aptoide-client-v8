@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified on 05/08/2016.
- */
-
 package cm.aptoide.pt.view.search;
 
 import android.content.SharedPreferences;
@@ -30,8 +25,9 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.search.SearchAnalytics;
-import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.search.SearchBuilder;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.List;
@@ -50,7 +46,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   transient private boolean hasSubscribedResults;
   transient private boolean hasEverywhereResults;
   transient private boolean shouldFinishLoading = false;
-  // Views
+  
   private Button subscribedButton;
   private Button everywhereButton;
   private LinearLayout buttonsLayout;
@@ -65,7 +61,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private Converter.Factory converterFactory;
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
-  private SearchBuilder searchBuilder;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -118,7 +113,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    searchBuilder = new SearchBuilder();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -345,12 +339,16 @@ public class SearchFragment extends BasePagerToolbarFragment {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
 
-    if (storeName != null) {
-      searchBuilder.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName,
-          query);
+    final SearchNavigator searchNavigator;
+    if (storeName != null && storeName.length() > 0) {
+      searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName);
     } else {
-      searchBuilder.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator(), query);
+      searchNavigator = new SearchNavigator(getFragmentNavigator());
     }
+
+    SearchBuilder searchBuilder =
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(), searchNavigator);
+    searchBuilder.validateAndAttachSearch();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
