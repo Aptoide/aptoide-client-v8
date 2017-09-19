@@ -897,6 +897,7 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
+          timelineAnalytics.sendCommentCompleted(false);
         });
   }
 

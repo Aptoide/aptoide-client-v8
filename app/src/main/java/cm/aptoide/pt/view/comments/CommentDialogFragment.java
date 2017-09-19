@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentBeforeSubmissionCallback;
@@ -28,6 +29,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreAnalytics;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.facebook.appevents.AppEventsLogger;
@@ -65,6 +67,7 @@ public class CommentDialogFragment
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private StoreAnalytics storeAnalytics;
+  private TimelineAnalytics timelineAnalytics;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -144,6 +147,11 @@ public class CommentDialogFragment
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
         AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()),
+        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool(),
+        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -171,7 +179,10 @@ public class CommentDialogFragment
     }
 
     Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
-    cancelButton.setOnClickListener(a -> CommentDialogFragment.this.dismiss());
+    cancelButton.setOnClickListener(a -> {
+      logAnalytics(false);
+      CommentDialogFragment.this.dismiss();
+    });
 
     textInputLayout = (TextInputLayout) view.findViewById(R.id.input_layout_title);
     commentButton = (Button) view.findViewById(R.id.comment_button);
@@ -225,6 +236,7 @@ public class CommentDialogFragment
         .filter(inputText -> {
           if (TextUtils.isEmpty(inputText)) {
             enableError(onEmptyTextError);
+            logAnalytics(false);
             return false;
           }
           disableError();
@@ -241,6 +253,7 @@ public class CommentDialogFragment
               .doOnError(e -> {
                 CrashReport.getInstance()
                     .log(e);
+                logAnalytics(false);
                 ShowMessage.asSnack(this, R.string.error_occured);
               })
               .retry()
@@ -249,15 +262,26 @@ public class CommentDialogFragment
         .subscribe(resp -> {
           if (resp.isOk()) {
             this.dismiss();
+            logAnalytics(true);
             if (commentDialogCallbackContract != null) {
               commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId,
                   idAsString);
             }
           } else {
             ShowMessage.asSnack(this, R.string.error_occured);
+            logAnalytics(false);
           }
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+        }, throwable -> {
+          logAnalytics(false);
+          CrashReport.getInstance()
+              .log(throwable);
+        });
+  }
+
+  private void logAnalytics(boolean success) {
+    if (commentType.equals(CommentType.TIMELINE)) {
+      timelineAnalytics.sendCommentCompleted(success);
+    }
   }
 
   private void disableError() {
