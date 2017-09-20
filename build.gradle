@@ -58,6 +58,7 @@ ext {
   //
   TARGET_SDK_VERSION = 25
   COMPILE_SDK_VERSION = 25
+  MIN_SDK_VERSION = 15
   USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
   BUILD_TOOLS_VERSION = '25.0.0'
 
@@ -124,5 +125,5 @@ ext {
 
   CRASHLYTICS_VERSION = '2.6.5'
 
-  AVOCARROT_MEDIATION_VERSION = '4.5.0'
+  AVOCARROT_MEDIATION_VERSION = '4.6.0'
 }
