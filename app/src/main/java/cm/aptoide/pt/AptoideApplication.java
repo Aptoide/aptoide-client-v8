@@ -626,9 +626,9 @@ public abstract class AptoideApplication extends Application {
     if (installManager == null) {
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
-              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
-              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
-          getDefaultSharedPreferences(),
+              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
+                  AppEventsLogger.newLogger(this)), getImageCachePath()).create(this,
+              installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
@@ -1215,7 +1215,7 @@ public abstract class AptoideApplication extends Application {
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Aptoide");
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.app_name));
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
         Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
     intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");

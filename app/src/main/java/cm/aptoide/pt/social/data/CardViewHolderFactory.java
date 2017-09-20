@@ -103,6 +103,7 @@ public class CardViewHolderFactory {
         return new AggregatedMediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_media_item, parent, false),
             cardTouchEventPublishSubject, dateCalculator, spannableFactory, minimalCardViewFactory);
+      case AGGREGATED_SOCIAL_APP:
       case AGGREGATED_SOCIAL_INSTALL:
         return new AggregatedRecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_recommendation_item, parent, false),

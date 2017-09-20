@@ -5,6 +5,7 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.presenter.Presenter;
@@ -22,10 +23,12 @@ public class MyAccountPresenter implements Presenter {
   private final LinksHandlerFactory linkFactory;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
   private final SharedPreferences sharedPreferences;
+  private final NotificationAnalytics analytics;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences) {
+      LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences,
+      NotificationAnalytics analytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -33,6 +36,7 @@ public class MyAccountPresenter implements Presenter {
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
     this.sharedPreferences = sharedPreferences;
+    this.analytics = analytics;
   }
 
   @Override public void present() {
@@ -144,9 +148,11 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.notificationSelection())
-        .map(notification -> linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK,
-            notification.getUrl()))
-        .doOnNext(link -> link.launch())
+        .flatMap(notification -> Observable.just(
+            linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
+            .doOnNext(link -> link.launch())
+            .doOnNext(
+                link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));

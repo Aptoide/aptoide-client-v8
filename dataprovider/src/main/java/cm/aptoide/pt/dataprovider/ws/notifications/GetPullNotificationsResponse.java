@@ -14,8 +14,17 @@ public class GetPullNotificationsResponse {
   private String title;
   private String url;
   private String urlTrack;
+  private String urlTrackNc;
   private Attr attr;
   private Long expire;
+
+  public String getUrlTrackNc() {
+    return urlTrackNc;
+  }
+
+  public void setUrlTrackNc(String urlTrackNc) {
+    this.urlTrackNc = urlTrackNc;
+  }
 
   public Long getExpire() {
     return expire;
