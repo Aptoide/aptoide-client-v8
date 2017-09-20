@@ -6,45 +6,63 @@
 package cm.aptoide.pt.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.account.FacebookSignUpAdapter;
+import cm.aptoide.pt.account.FacebookSignUpException;
+import cm.aptoide.pt.account.GoogleSignUpAdapter;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.BackButton;
+import cm.aptoide.pt.view.ThrowableToStringMapper;
+import java.util.Collection;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-/**
- * Created by marcelobenites on 06/02/17.
- */
-
 public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.ClickHandler {
 
-  private static final String TAG = LoginSignUpCredentialsPresenter.class.getName();
-
+  private static final int RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE = 2;
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
-  private final LoginPreferences loginAvailability;
   private final CrashReport crashReport;
+  private final boolean navigateToHome;
+  private final AccountNavigator accountNavigator;
+  private final Collection<String> permissions;
+  private final Collection<String> requiredPermissions;
+  private final ThrowableToStringMapper errorMapper;
+
+  private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
-      AptoideAccountManager accountManager, LoginPreferences loginAvailability,
-      CrashReport crashReport) {
+      AptoideAccountManager accountManager, CrashReport crashReport,
+      boolean dismissToNavigateToMainView, boolean navigateToHome,
+      AccountNavigator accountNavigator, Collection<String> permissions,
+      Collection<String> requiredPermissions, ThrowableToStringMapper errorMapper) {
     this.view = view;
     this.accountManager = accountManager;
-    this.loginAvailability = loginAvailability;
     this.crashReport = crashReport;
+    this.dismissToNavigateToMainView = dismissToNavigateToMainView;
+    this.navigateToHome = navigateToHome;
+    this.accountNavigator = accountNavigator;
+    this.permissions = permissions;
+    this.requiredPermissions = requiredPermissions;
+    this.errorMapper = errorMapper;
   }
 
   @Override public void present() {
-    handleClickOnFacebookLogin();
-    handleClickOnGoogleLogin();
-    handleAptoideShowLoginClick();
-    handleAptoideLoginClick();
-    handleAptoideShowSignUpClick();
-    handleAptoideSignUpClick();
+
+    handleAptoideLoginEvent();
+
+    handleGoogleSignUpEvent();
+    handleGoogleSignUpResult();
+
+    handleFacebookSignUpResult();
+    handleFacebookSignUpEvent();
+    handleFacebookSignUpWithRequiredPermissionsEvent();
+
+    handleAptoideShowLoginEvent();
+    handleAptoideShowSignUpEvent();
+    handleAptoideSignUpEvent();
     handleAccountStatusChangeWhileShowingView();
     handleForgotPasswordClick();
     handleTogglePasswordVisibility();
@@ -76,23 +94,71 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         }, err -> crashReport.log(err));
   }
 
-  private void handleAptoideLoginClick() {
+  private void handleAptoideLoginEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> aptoideLoginClick())
+        .flatMap(__ -> view.aptoideLoginEvent()
+            .doOnNext(click -> {
+              view.hideKeyboard();
+              view.showLoading();
+              lockScreenRotation();
+            }).<Void>flatMapCompletable(credentials -> accountManager.login(credentials)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  unlockScreenRotation();
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                      Analytics.Account.SignUpLoginStatus.SUCCESS,
+                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  navigateToMainView();
+                  view.hideLoading();
+                })
+                .doOnError(throwable -> {
+                  view.showError(errorMapper.map(throwable));
+                  view.hideLoading();
+                  crashReport.log(throwable);
+                  unlockScreenRotation();
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                      Analytics.Account.SignUpLoginStatus.FAILED,
+                      Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
+                })).retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
-  private void handleAptoideSignUpClick() {
+  private void handleAptoideSignUpEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> aptoideSignUpClick())
+        .flatMap(__ -> view.aptoideSignUpEvent()
+            .doOnNext(click -> {
+              view.hideKeyboard();
+              view.showLoading();
+              lockScreenRotation();
+            })
+            .flatMapCompletable(
+                credentials -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE,
+                    credentials)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnCompleted(() -> {
+                      Analytics.Account.signInSuccessAptoide(
+                          Analytics.Account.SignUpLoginStatus.SUCCESS);
+                      navigateToCreateProfile();
+                      unlockScreenRotation();
+                      view.hideLoading();
+                    })
+                    .doOnError(throwable -> {
+                      Analytics.Account.signInSuccessAptoide(
+                          Analytics.Account.SignUpLoginStatus.FAILED);
+                      view.showError(errorMapper.map(throwable));
+                      crashReport.log(throwable);
+                      unlockScreenRotation();
+                      view.hideLoading();
+                    }))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
-  private void handleAptoideShowLoginClick() {
+  private void handleAptoideShowLoginEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> aptoideShowLoginClick())
@@ -100,48 +166,20 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
 
-  private void handleAptoideShowSignUpClick() {
+  private void handleAptoideShowSignUpEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> aptoideShowSignUpClick())
+        .flatMap(__ -> showAptoideSignUpEvent())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
           view.hideLoading();
-          view.showError(err);
-          crashReport.log(err);
-        });
-  }
-
-  private void handleClickOnGoogleLogin() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> showOrHideGoogleLogin())
-        .flatMap(__ -> view.googleLoginClick())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          view.hideLoading();
-          view.showError(err);
-          crashReport.log(err);
-        });
-  }
-
-  private void handleClickOnFacebookLogin() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> showOrHideFacebookLogin())
-        .flatMap(__ -> view.facebookLoginClick())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          view.hideLoading();
-          view.showError(err);
+          view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
   }
@@ -154,7 +192,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
             .toSingle())
         .doOnNext(account -> {
           if (account.isLoggedIn()) {
-            view.navigateBack();
+            navigateBack();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
@@ -163,62 +201,143 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
             .log(err));
   }
 
-  private Observable<Void> aptoideLoginClick() {
-    return view.aptoideLoginClick()
-        .doOnNext(__ -> {
-          view.hideKeyboard();
+  private void handleGoogleSignUpEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> showOrHideGoogleSignUp())
+        .flatMap(__ -> view.googleSignUpEvent())
+        .doOnNext(event -> {
           view.showLoading();
-          lockScreenRotation();
-        }).<Void>flatMapCompletable(
-            credentials -> accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
-                credentials.getPassword(), null)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  Logger.d(TAG, "aptoide login successful");
-                  unlockScreenRotation();
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
-                  view.navigateToMainView();
-                  view.hideLoading();
-                })
-                .doOnError(throwable -> {
-                  view.showError(throwable);
-                  view.hideLoading();
-                  crashReport.log(throwable);
-                  unlockScreenRotation();
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-                      Analytics.Account.SignUpLoginStatus.FAILED,
-                      Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
-                })).retry()
-        .map(__ -> null);
+        })
+        .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
+            RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(connectionResult -> {
+          if (!connectionResult.isSuccess()) {
+            view.showConnectionError(connectionResult);
+            view.hideLoading();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.hideLoading();
+          view.showError(errorMapper.map(err));
+          crashReport.log(err);
+        });
   }
 
-  private Observable<Void> aptoideSignUpClick() {
-    return view.aptoideSignUpClick()
-        .doOnNext(__ -> {
-          view.hideKeyboard();
+  private void handleGoogleSignUpResult() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> accountNavigator.googleSignUpResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
+            .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                      Analytics.Account.SignUpLoginStatus.SUCCESS,
+                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  navigateToMainView();
+                })
+                .doOnTerminate(() -> view.hideLoading())
+                .doOnError(throwable -> {
+                  view.showError(errorMapper.map(throwable));
+                  crashReport.log(throwable);
+
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                      Analytics.Account.SignUpLoginStatus.FAILED,
+                      Analytics.Account.LoginStatusDetail.SDK_ERROR);
+                }))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
+  private void handleFacebookSignUpEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> showOrHideFacebookSignUp())
+        .flatMap(__ -> view.facebookSignUpEvent())
+        .doOnNext(event -> {
           view.showLoading();
-          lockScreenRotation();
+          accountNavigator.navigateToFacebookSignUpForResult(permissions);
         })
-        .flatMapCompletable(credentials -> accountManager.signUp(credentials.getUsername(),
-            credentials.getPassword())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> {
-              Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
-              view.navigateToCreateProfile();
-              unlockScreenRotation();
-              view.hideLoading();
-            })
-            .doOnError(throwable -> {
-              Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
-              view.showError(throwable);
-              crashReport.log(throwable);
-              unlockScreenRotation();
-              view.hideLoading();
-            }))
-        .retry()
-        .map(__ -> null);
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.hideLoading();
+          view.showError(errorMapper.map(err));
+          crashReport.log(err);
+        });
+  }
+
+  private void handleFacebookSignUpWithRequiredPermissionsEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.facebookSignUpWithRequiredPermissionsInEvent())
+        .doOnNext(event -> {
+          view.showLoading();
+          accountNavigator.navigateToFacebookSignUpForResult(requiredPermissions);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.hideLoading();
+          view.showError(errorMapper.map(err));
+          crashReport.log(err);
+        });
+  }
+
+  private void handleFacebookSignUpResult() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> accountNavigator.facebookSignUpResults()
+            .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+                      Analytics.Account.SignUpLoginStatus.SUCCESS,
+                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  navigateToMainView();
+                })
+                .doOnTerminate(() -> view.hideLoading())
+                .doOnError(throwable -> {
+                  sendFacebookErrorAnalyics(throwable);
+
+                  if (throwable instanceof FacebookSignUpException
+                      && ((FacebookSignUpException) throwable).getCode()
+                      == FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS) {
+                    view.showFacebookPermissionsRequiredError(throwable);
+                  } else {
+                    crashReport.log(throwable);
+                    view.showError(errorMapper.map(throwable));
+                  }
+                }))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
+  private void sendFacebookErrorAnalyics(Throwable throwable) {
+    if (throwable instanceof FacebookSignUpException) {
+      switch (((FacebookSignUpException) throwable).getCode()) {
+        case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
+          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+              Analytics.Account.SignUpLoginStatus.FAILED,
+              Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
+          break;
+        case FacebookSignUpException.USER_CANCELLED:
+          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+              Analytics.Account.SignUpLoginStatus.FAILED,
+              Analytics.Account.LoginStatusDetail.CANCEL);
+          break;
+        case FacebookSignUpException.ERROR:
+          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+              Analytics.Account.SignUpLoginStatus.FAILED,
+              Analytics.Account.LoginStatusDetail.SDK_ERROR);
+          break;
+      }
+    }
   }
 
   private Observable<Void> aptoideShowLoginClick() {
@@ -226,14 +345,14 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .doOnNext(__ -> view.showAptoideLoginArea());
   }
 
-  private Observable<Void> aptoideShowSignUpClick() {
+  private Observable<Void> showAptoideSignUpEvent() {
     return view.showAptoideSignUpAreaClick()
         .doOnNext(__ -> view.showAptoideSignUpArea());
   }
 
   private Observable<Void> forgotPasswordSelection() {
     return view.forgotPasswordClick()
-        .doOnNext(selection -> view.showForgotPasswordView());
+        .doOnNext(selection -> accountNavigator.navigateToRecoverPasswordView());
   }
 
   private Observable<Void> togglePasswordVisibility() {
@@ -247,19 +366,29 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         });
   }
 
-  private void showOrHideFacebookLogin() {
-    if (loginAvailability.isFacebookLoginEnabled()) {
+  private void showOrHideFacebookSignUp() {
+    if (accountManager.isSignUpEnabled(FacebookSignUpAdapter.TYPE)) {
       view.showFacebookLogin();
     } else {
       view.hideFacebookLogin();
     }
   }
 
-  private void showOrHideGoogleLogin() {
-    if (loginAvailability.isGoogleLoginEnabled()) {
+  private void showOrHideGoogleSignUp() {
+    if (accountManager.isSignUpEnabled(GoogleSignUpAdapter.TYPE)) {
       view.showGoogleLogin();
     } else {
       view.hideGoogleLogin();
+    }
+  }
+
+  private void navigateToMainView() {
+    if (dismissToNavigateToMainView) {
+      view.dismiss();
+    } else if (navigateToHome) {
+      navigateToMainViewCleaningBackStack();
+    } else {
+      navigateBack();
     }
   }
 
@@ -273,5 +402,17 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private void unlockScreenRotation() {
     view.unlockScreenRotation();
+  }
+
+  private void navigateToCreateProfile() {
+    accountNavigator.navigateToCreateProfileView();
+  }
+
+  private void navigateToMainViewCleaningBackStack() {
+    accountNavigator.navigateToHomeView();
+  }
+
+  private void navigateBack() {
+    accountNavigator.popView();
   }
 }

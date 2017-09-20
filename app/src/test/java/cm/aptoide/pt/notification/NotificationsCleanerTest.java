@@ -178,8 +178,7 @@ public class NotificationsCleanerTest {
 
   @NonNull private Notification createNotification(Long expire, long timeStamp, String ownerId) {
     return new Notification(expire, null, null, 0, null, null, null, null, null, null, timeStamp, 0,
-        0,
-        null, null, ownerId);
+        0, null, null, ownerId);
   }
 
   private class NotAccessor extends NotificationAccessor {

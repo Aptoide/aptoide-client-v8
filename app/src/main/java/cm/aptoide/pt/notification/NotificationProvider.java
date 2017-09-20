@@ -31,10 +31,9 @@ public class NotificationProvider {
         aptoideNotification.getCampaignId(), aptoideNotification.getImg(),
         aptoideNotification.getLang(), aptoideNotification.getTitle(), aptoideNotification.getUrl(),
         aptoideNotification.getUrlTrack(), aptoideNotification.getNotificationCenterUrlTrack(),
-        aptoideNotification.getTimeStamp(),
-        aptoideNotification.getType(), aptoideNotification.getDismissed(),
-        aptoideNotification.getAppName(), aptoideNotification.getGraphic(),
-        aptoideNotification.getOwnerId());
+        aptoideNotification.getTimeStamp(), aptoideNotification.getType(),
+        aptoideNotification.getDismissed(), aptoideNotification.getAppName(),
+        aptoideNotification.getGraphic(), aptoideNotification.getOwnerId());
   }
 
   public Single<List<AptoideNotification>> getDismissedNotifications(

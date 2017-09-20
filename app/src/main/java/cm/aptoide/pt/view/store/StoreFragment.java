@@ -35,6 +35,7 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -149,7 +150,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
@@ -372,9 +373,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe(refresh)
             .map(getStore -> {
-              setupVariables(getStore.getNodes()
-                  .getTabs()
-                  .getList(), getStore.getNodes()
+              setupVariables(parseTabs(getStore), getStore.getNodes()
                   .getMeta()
                   .getData()
                   .getId(), getStore.getNodes()
@@ -394,6 +393,28 @@ public class StoreFragment extends BasePagerToolbarFragment {
                   .getName();
             });
     }
+  }
+
+  private List<GetStoreTabs.Tab> parseTabs(GetStore getStore) {
+    GetStoreTabs.Tab tab = getStore.getNodes()
+        .getTabs()
+        .getList()
+        .get(0);
+    if (tab.getEvent()
+        .getAction()
+        .contains("/getStore/")) {
+      tab.getEvent()
+          .setName(Event.Name.getStoreWidgets);
+      String parsedEventAction = tab.getEvent()
+          .getAction()
+          .replace("/getStore/", "/getStoreWidgets/");
+      tab.getEvent()
+          .setAction(parsedEventAction);
+    }
+
+    return getStore.getNodes()
+        .getTabs()
+        .getList();
   }
 
   private void handleError(Throwable throwable) {

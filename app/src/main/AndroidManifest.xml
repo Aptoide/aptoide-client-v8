@@ -166,7 +166,7 @@
         android:screenOrientation="sensor"
         android:theme="@style/AppBaseTheme.NoTitle.Transparent"/>
 
-    <activity android:name=".view.account.LoginActivity"/>
+    <activity android:name=".account.view.LoginActivity"/>
     <activity android:name=".spotandshare.view.SpotSharePreviewActivity"/>
 
     <activity

@@ -165,7 +165,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
             String packageName = searchAppsApp.getPackageName();
 
             getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newOtherVersionsFragment(name, icon, packageName));
+                .newOtherVersionsFragment(name, icon, packageName), true);
           }));
     }
 
@@ -180,7 +180,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
               .newStoreFragment(searchAppsApp.getStore()
                   .getName(), searchAppsApp.getStore()
                   .getAppearance()
-                  .getTheme()));
+                  .getTheme()), true);
         }));
 
     popup.show();
@@ -198,6 +198,6 @@ public class SearchWidget extends Widget<SearchDisplayable> {
             searchAppsApp.getStore()
                 .getAppearance()
                 .getTheme(), searchAppsApp.getStore()
-                .getName()));
+                .getName()), true);
   }
 }

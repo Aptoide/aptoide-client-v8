@@ -7,14 +7,19 @@ package cm.aptoide.pt.presenter;
 
 import android.os.Bundle;
 
-/**
- * Created by marcelobenites on 8/22/16.
- */
 public interface Presenter {
 
   void present();
 
-  void saveState(Bundle state);
+  /**
+   * @deprecated View state should be managed in the View implementation. Presenter should not now
+   * about Android specific details.
+   */
+  @Deprecated void saveState(Bundle state);
 
-  void restoreState(Bundle state);
+  /**
+   * @deprecated View state should be managed in the View implementation. Presenter should not now
+   * about Android specific details.
+   */
+  @Deprecated void restoreState(Bundle state);
 }

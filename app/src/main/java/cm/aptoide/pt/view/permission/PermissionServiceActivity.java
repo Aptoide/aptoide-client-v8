@@ -180,7 +180,7 @@ import rx.functions.Action0;
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
             getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newSettingsFragment());
+                .newSettingsFragment(), true);
           } else {
             if (toRunWhenAccessIsDenied != null) {
               toRunWhenAccessIsDenied.call();

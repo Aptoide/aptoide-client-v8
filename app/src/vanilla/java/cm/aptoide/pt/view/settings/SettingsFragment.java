@@ -23,7 +23,6 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -45,11 +44,8 @@ import cm.aptoide.pt.filemanager.FileManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
@@ -112,9 +108,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onCreate(savedInstanceState);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     trackAnalytics = true;
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
+    adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
     fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     adultContentConfirmationDialog =
@@ -152,13 +147,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
     addPreferencesFromResource(R.xml.settings);
-    SharedPreferences sharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(getActivity());
+    sharedPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    adultContent = new AdultContent(
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
-        new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-        new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
   }
 
   @CallSuper @Nullable @Override

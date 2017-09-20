@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.LoginBottomSheet;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.account.LoginBottomSheet;

@@ -20,7 +20,7 @@ public class AppViewNavigator {
 
   public void navigateToScreenshots(ArrayList<String> imagesUris, int currentPosition) {
     Fragment fragment = ScreenshotsViewerFragment.newInstance(imagesUris, currentPosition);
-    fragmentNavigator.navigateTo(fragment);
+    fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateToUri(Uri uri) {

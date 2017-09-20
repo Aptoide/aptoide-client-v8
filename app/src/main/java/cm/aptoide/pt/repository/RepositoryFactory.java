@@ -95,18 +95,18 @@ public final class RepositoryFactory {
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
-    return ((AptoideApplication) context.getApplicationContext()).getBaseBodyInterceptorV7Pool();
+    return ((AptoideApplication) context.getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
   }
 
   private static BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3(
       Context context) {
-    return ((AptoideApplication) context.getApplicationContext()).getBaseBodyInterceptorV3();
+    return ((AptoideApplication) context.getApplicationContext()).getBodyInterceptorV3();
   }
 
   public static SocialRepository getSocialRepository(Context context,
       TimelineAnalytics timelineAnalytics, SharedPreferences sharedPreferences) {
     return new SocialRepository(getAccountManager(context),
-        ((AptoideApplication) context.getApplicationContext()).getBaseBodyInterceptorV7Pool(),
+        ((AptoideApplication) context.getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
         WebService.getDefaultConverter(), getHttpClient(context), timelineAnalytics,
         getTokenInvalidator(context), sharedPreferences);
   }

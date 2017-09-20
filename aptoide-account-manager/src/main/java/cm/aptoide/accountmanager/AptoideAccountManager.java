@@ -8,33 +8,36 @@ package cm.aptoide.accountmanager;
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.net.SocketTimeoutException;
+import java.util.HashMap;
+import java.util.Map;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public class AptoideAccountManager {
 
-  public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
-
+  public static final String APTOIDE_SIGN_UP_TYPE = "APTOIDE";
   private final AccountAnalytics accountAnalytics;
   private final CredentialsValidator credentialsValidator;
   private final PublishRelay<Account> accountRelay;
-  private final AccountDataPersist dataPersist;
-  private final AccountManagerService accountManagerService;
+  private final SignUpAdapterRegistry adapterRegistry;
+  private final AccountPersistence accountPersistence;
+  private final AccountService accountService;
 
   private AptoideAccountManager(AccountAnalytics accountAnalytics,
-      CredentialsValidator credentialsValidator, AccountDataPersist dataPersist,
-      AccountManagerService accountManagerService, PublishRelay<Account> accountRelay) {
+      CredentialsValidator credentialsValidator, AccountPersistence accountPersistence,
+      AccountService accountService, PublishRelay<Account> accountRelay,
+      SignUpAdapterRegistry adapterRegistry) {
     this.credentialsValidator = credentialsValidator;
     this.accountAnalytics = accountAnalytics;
-    this.dataPersist = dataPersist;
-    this.accountManagerService = accountManagerService;
+    this.accountPersistence = accountPersistence;
+    this.accountService = accountService;
     this.accountRelay = accountRelay;
+    this.adapterRegistry = adapterRegistry;
   }
 
   public Observable<Account> accountStatus() {
-    return Observable.merge(accountRelay, dataPersist.getAccount()
+    return Observable.merge(accountRelay, accountPersistence.getAccount()
         .onErrorReturn(throwable -> createLocalAccount())
         .toObservable());
   }
@@ -70,72 +73,48 @@ public class AptoideAccountManager {
   }
 
   public Completable logout() {
-    return singleAccountStatus().flatMapCompletable(account -> account.logout()
-        .andThen(removeAccount()));
+    return adapterRegistry.logoutAll()
+        .andThen(singleAccountStatus().flatMapCompletable(account -> accountService.removeAccount())
+            .andThen(accountPersistence.removeAccount())
+            .doOnCompleted(() -> accountRelay.call(createLocalAccount())));
   }
 
-  public Completable removeAccount() {
-    return dataPersist.removeAccount()
-        .doOnCompleted(() -> accountRelay.call(createLocalAccount()));
+  public Completable login(AptoideCredentials credentials) {
+    return credentialsValidator.validate(credentials, false)
+        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getPassword()))
+        .flatMapCompletable(account -> saveAccount(account))
+        .doOnCompleted(() -> accountAnalytics.login(credentials.getEmail()));
   }
 
-  public Completable refreshToken() {
-    return singleAccountStatus().flatMapCompletable(account -> account.refreshToken()
-        .andThen(saveAccount(account)));
+  public <T> Completable signUp(String type, T data) {
+    return adapterRegistry.signUp(type, data)
+        .flatMapCompletable(account -> saveAccount(account).doOnCompleted(
+            () -> accountAnalytics.login(account.getEmail())));
   }
 
-  private Completable saveAccount(Account account) {
-    return dataPersist.saveAccount(account)
-        .doOnCompleted(() -> accountRelay.call(account));
+  public boolean isSignUpEnabled(String type) {
+    return adapterRegistry.isEnabled(type);
   }
 
-  public Completable signUp(String email, String password) {
-    return credentialsValidator.validate(email, password, true)
-        .andThen(accountManagerService.createAccount(email, password, this))
-        .andThen(login(Account.Type.APTOIDE, email, password, null))
-        .doOnCompleted(() -> accountAnalytics.signUp())
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof SocketTimeoutException) {
-            return login(Account.Type.APTOIDE, email, password, null);
-          }
-          return Completable.error(throwable);
-        });
-  }
-
-  public Completable login(Account.Type type, final String email, final String password,
-      final String name) {
-    return credentialsValidator.validate(email, password, false)
-        .andThen(accountManagerService.login(type.name(), email, password, name, this))
-        .flatMapCompletable(
-            oAuth -> syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type))
-        .doOnCompleted(() -> accountAnalytics.login(email));
-  }
-
-  private Completable syncAccount(String accessToken, String refreshToken, String password,
-      Account.Type type) {
-    return accountManagerService.getAccount(accessToken, refreshToken, password, type.name(), this)
+  private Completable syncAccount() {
+    return accountService.getAccount()
         .flatMapCompletable(account -> saveAccount(account));
   }
 
+  private Completable saveAccount(Account account) {
+    return accountPersistence.saveAccount(account)
+        .doOnCompleted(() -> accountRelay.call(account));
+  }
+
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
-    accountManagerService.unsubscribeStore(storeName, storeUserName, storePassword, this)
+    accountService.unsubscribeStore(storeName, storeUserName, storePassword)
         .subscribe(() -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
   }
 
   public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
-    return accountManagerService.subscribeStore(storeName, storeUserName, storePassword, this);
-  }
-
-  /**
-   * Use {@link Account#getEmail()} instead.
-   *
-   * @return user e-mail.
-   */
-  @Deprecated public String getAccountEmail() {
-    final Account account = getAccount();
-    return account == null ? null : account.getEmail();
+    return accountService.subscribeStore(storeName, storeUserName, storePassword);
   }
 
   /**
@@ -158,41 +137,29 @@ public class AptoideAccountManager {
     return account != null && account.isAccessConfirmed();
   }
 
-  /**
-   * Use {@link Account#getAccess()} instead.
-   *
-   * @return user {@link Account.Access} level.
-   */
-  @Deprecated public Account.Access getAccountAccess() {
-    return getAccount().getAccess();
-  }
-
-  public Completable syncCurrentAccount(boolean adultContentEnabled) {
+  public Completable updateAccount(boolean adultContentEnabled) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountManagerService.updateAccount(adultContentEnabled, this)
-            .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
-                account.getPassword(), account.getType())));
+        account -> accountService.updateAccount(adultContentEnabled)
+            .andThen(syncAccount()));
   }
 
-  public Completable syncCurrentAccount(String username) {
+  public Completable updateAccount(String username) {
     if (TextUtils.isEmpty(username)) {
       return Completable.error(
           new AccountValidationException(AccountValidationException.EMPTY_NAME));
     }
     return singleAccountStatus().flatMapCompletable(
-        account -> accountManagerService.updateAccountUsername(username, this)
-            .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
-                account.getPassword(), account.getType())));
+        account -> accountService.updateAccountUsername(username)
+            .andThen(syncAccount()));
   }
 
-  public Completable syncCurrentAccount(Account.Access access) {
+  public Completable updateAccount(Account.Access access) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountManagerService.updateAccount(access.name(), this)
-            .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
-                account.getPassword(), account.getType())));
+        account -> accountService.updateAccount(access.name())
+            .andThen(syncAccount()));
   }
 
-  public Completable syncCurrentAccount(String username, String avatarPath) {
+  public Completable updateAccount(String username, String avatarPath) {
     return singleAccountStatus().flatMapCompletable(account -> {
       if (TextUtils.isEmpty(username) && TextUtils.isEmpty(avatarPath)) {
         return Completable.error(
@@ -201,34 +168,35 @@ public class AptoideAccountManager {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
-      return accountManagerService.updateAccount(username,
-          TextUtils.isEmpty(avatarPath) ? "" : avatarPath, this)
-          .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
-              account.getPassword(), account.getType()));
+      return accountService.updateAccount(username, TextUtils.isEmpty(avatarPath) ? "" : avatarPath)
+          .andThen(syncAccount());
     });
   }
 
-  @Deprecated public Completable syncCurrentAccount() {
-    return singleAccountStatus().flatMapCompletable(
-        account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
-            account.getPassword(), account.getType()));
+  @Deprecated public Completable updateAccount() {
+    return singleAccountStatus().flatMapCompletable(account -> syncAccount());
   }
 
   public static class Builder {
 
+    private final Map<String, SignUpAdapter> adapters;
     private CredentialsValidator credentialsValidator;
-    private AccountManagerService accountManagerService;
+    private AccountService accountService;
     private PublishRelay<Account> accountRelay;
     private AccountAnalytics accountAnalytics;
-    private AccountDataPersist accountDataPersist;
+    private AccountPersistence accountPersistence;
+
+    public Builder() {
+      this.adapters = new HashMap<>();
+    }
 
     public Builder setCredentialsValidator(CredentialsValidator credentialsValidator) {
       this.credentialsValidator = credentialsValidator;
       return this;
     }
 
-    public Builder setAccountManagerService(AccountManagerService accountManagerService) {
-      this.accountManagerService = accountManagerService;
+    public Builder setAccountService(AccountService accountService) {
+      this.accountService = accountService;
       return this;
     }
 
@@ -242,8 +210,13 @@ public class AptoideAccountManager {
       return this;
     }
 
-    public Builder setAccountDataPersist(AccountDataPersist accountDataPersist) {
-      this.accountDataPersist = accountDataPersist;
+    public Builder setAccountPersistence(AccountPersistence accountPersistence) {
+      this.accountPersistence = accountPersistence;
+      return this;
+    }
+
+    public Builder registerSignUpAdapter(String type, SignUpAdapter signUpAdapter) {
+      adapters.put(type, signUpAdapter);
       return this;
     }
 
@@ -253,11 +226,11 @@ public class AptoideAccountManager {
         throw new IllegalArgumentException("AccountAnalytics is mandatory.");
       }
 
-      if (accountDataPersist == null) {
+      if (accountPersistence == null) {
         throw new IllegalArgumentException("AccountDataPersist is mandatory.");
       }
 
-      if (accountManagerService == null) {
+      if (accountService == null) {
         throw new IllegalArgumentException("AccountManagerService is mandatory.");
       }
 
@@ -269,8 +242,14 @@ public class AptoideAccountManager {
         accountRelay = PublishRelay.create();
       }
 
-      return new AptoideAccountManager(accountAnalytics, credentialsValidator, accountDataPersist,
-          accountManagerService, accountRelay);
+      final SignUpAdapterRegistry adapterRegistry =
+          new SignUpAdapterRegistry(adapters, accountService);
+
+      adapterRegistry.register(APTOIDE_SIGN_UP_TYPE,
+          new AptoideSignUpAdapter(credentialsValidator, accountAnalytics));
+
+      return new AptoideAccountManager(accountAnalytics, credentialsValidator, accountPersistence,
+          accountService, accountRelay, adapterRegistry);
     }
   }
 }

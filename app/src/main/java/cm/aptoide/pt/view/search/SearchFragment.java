@@ -70,7 +70,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return newInstance(query, false);
   }
 
-  public static SearchFragment newInstance(String query, boolean onlyTrustedApps, String storeName) {
+  public static SearchFragment newInstance(String query, boolean onlyTrustedApps,
+      String storeName) {
     Bundle args = new Bundle();
 
     args.putString(BundleCons.QUERY, query);
@@ -111,7 +112,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
@@ -169,7 +170,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
         if (s.length() > 1) {
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newSearchFragment(s, storeName));
+              .newSearchFragment(s, storeName), true);
         }
       });
     }

@@ -99,7 +99,7 @@ public class MolPresenter implements Presenter {
             .doOnNext(transaction -> {
               view.hideLoading();
               analytics.sendAuthorizationSuccessEvent(paymentMethodName);
-              navigator.popTransactionAuthorizationView();
+              navigator.popView();
             }))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -138,7 +138,7 @@ public class MolPresenter implements Presenter {
         .flatMap(created -> view.errorDismissedEvent())
         .doOnNext(dismiss -> {
           analytics.sendAuthorizationErrorEvent(paymentMethodName);
-          navigator.popTransactionAuthorizationView();
+          navigator.popView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();

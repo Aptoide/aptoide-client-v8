@@ -48,7 +48,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
               .newStoreFragment(displayable.getPojo()
                   .getStoreName(), displayable.getPojo()
                   .getTheme());
-          getFragmentNavigator().navigateTo(fragment);
+          getFragmentNavigator().navigateTo(fragment, true);
         }));
 
     final Context context = getContext();
