@@ -16,7 +16,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.account.LoginBottomSheet;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;

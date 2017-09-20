@@ -1,7 +1,7 @@
 package cm.aptoide.pt.analytics;
 
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.view.account.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.view.search.SearchPagerTabFragment;
 import cm.aptoide.pt.view.store.GetStoreFragment;
 import cm.aptoide.pt.view.store.home.HomeFragment;
