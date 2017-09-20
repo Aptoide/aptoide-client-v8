@@ -67,10 +67,14 @@ public class SearchWidget extends Widget<SearchDisplayable> {
     ListSearchApps.SearchAppsApp searchAppsApp = displayable.getPojo();
 
     final Action0 clickCallback = displayable.getClickCallback();
-    final Action1<Void> clickToOpenStore =
-        __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchAppsApp);
-    compositeSubscription.add(RxView.clicks(overflowImageView)
-        .subscribe(clickToOpenStore));
+    if (searchAppsApp.isHasVersions()) {
+      final Action1<Void> clickToOpenStore =
+          __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchAppsApp);
+      compositeSubscription.add(RxView.clicks(overflowImageView)
+          .subscribe(clickToOpenStore));
+    } else {
+      overflowImageView.setVisibility(View.INVISIBLE);
+    }
 
     nameTextView.setText(searchAppsApp.getName());
     String downloadNumber = AptoideUtils.StringU.withSuffix(searchAppsApp.getStats()
