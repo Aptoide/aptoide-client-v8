@@ -31,6 +31,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -93,7 +94,6 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewFlagThisDisplayable;
@@ -103,7 +103,7 @@ import cm.aptoide.pt.view.app.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
-import cm.aptoide.pt.view.navigator.NavigateFragment;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.ShareAppHelper;
@@ -302,12 +302,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getPurchaseBundleMapper();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     permissionManager = new PermissionManager();
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     final TokenInvalidator tokenInvalidator =
@@ -402,8 +402,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     getLifecycle().filter(lifecycleEvent -> lifecycleEvent.equals(LifecycleEvent.CREATE))
-        .flatMap(viewCreated -> getFragmentNavigator().results(LOGIN_REQUEST_CODE)
-            .filter(result -> result.getResultCode() == NavigateFragment.RESULT_OK)
+        .flatMap(viewCreated -> accountNavigator.notLoggedInViewResults(LOGIN_REQUEST_CODE)
+            .filter(success -> success)
             .doOnNext(result -> socialRepository.share(packageName, storeId, "app")))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(result -> {

@@ -13,7 +13,6 @@ import cm.aptoide.pt.timeline.view.follow.FollowStoreWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowUserWidget;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginWidget;
-import cm.aptoide.pt.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.view.account.user.LoginDisplayable;
 import cm.aptoide.pt.view.app.GridAppDisplayable;
 import cm.aptoide.pt.view.app.GridAppListDisplayable;
@@ -283,9 +282,6 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((StoreAddCommentWidget.class),
         StoreAddCommentDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping((CreateStoreWidget.class), CreateStoreDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((MyStoreWidget.class), MyStoreDisplayable.class));
