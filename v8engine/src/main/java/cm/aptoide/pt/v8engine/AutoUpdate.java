@@ -56,7 +56,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
 
     try {
       SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-      AutoUpdateHandler autoUpdateHandler = new AutoUpdateHandler();
+      AutoUpdateHandler autoUpdateHandler = new AutoUpdateHandler(activity);
 
       Logger.d(TAG, "Requesting auto-update from " + url);
       connection = (HttpURLConnection) new URL(url).openConnection();
@@ -184,45 +184,5 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     public String path;
     public int minsdk = 0;
     public int minAptoideVercode = 0;
-  }
-
-  private class AutoUpdateHandler extends DefaultHandler2 {
-
-    AutoUpdateInfo info = new AutoUpdateInfo();
-    private StringBuilder sb = new StringBuilder();
-
-    private AutoUpdateInfo getAutoUpdateInfo() {
-      return info;
-    }
-
-    @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes)
-        throws SAXException {
-      super.startElement(uri, localName, qName, attributes);
-      sb.setLength(0);
-    }
-
-    @Override public void endElement(String uri, String localName, String qName)
-        throws SAXException {
-      super.endElement(uri, localName, qName);
-
-      if (localName.equals("versionCode")) {
-        info.vercode = Integer.parseInt(sb.toString());
-      } else if (localName.equals("uri")) {
-        info.path = sb.toString();
-      } else if (localName.equals("md5")) {
-        info.md5 = sb.toString();
-      } else if (localName.equals("minSdk")) {
-        info.minsdk = Integer.parseInt(sb.toString());
-      } else if (localName.equals("minAptVercode")) {
-        info.minAptoideVercode = Integer.parseInt(sb.toString());
-      }
-      info.packageName = activity.getPackageName();
-    }
-
-    @Override public void characters(char[] ch, int start, int length) throws SAXException {
-      super.characters(ch, start, length);
-      sb.append(ch, start, length);
-    }
   }
 }
