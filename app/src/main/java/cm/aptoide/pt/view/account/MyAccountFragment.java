@@ -162,7 +162,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
             ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
             new LinksHandlerFactory(getContext()),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()), new NotificationAnalytics(httpClient, Analytics.getInstance())), savedInstanceState);
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
+        new NotificationAnalytics(httpClient, Analytics.getInstance())), savedInstanceState);
   }
 
   @Override public int getContentViewId() {

@@ -24,7 +24,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
 
   @Override public void registerView(String viewName) {
     insert = filter(viewName);
-    if (!getCurrentViewName().equals(viewName) && insert) {
+    if (insert) {
       viewList.add(viewName.equals(GetStoreFragment.class.getSimpleName())
           ? HomeFragment.class.getSimpleName() : viewName);
       Logger.d(this.getClass()

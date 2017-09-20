@@ -53,7 +53,7 @@ public class InboxPresenter implements Presenter {
                 .doOnNext(link -> link.launch())
                 .doOnNext(link -> analytics.notificationShown(
                     notification.getNotificationCenterUrlTrack()))
-                .doOnNext(__ -> aptoideNavigationTracker.registerView("Notification"))
+                .doOnNext(link -> aptoideNavigationTracker.registerView("Notification"))
             ))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
