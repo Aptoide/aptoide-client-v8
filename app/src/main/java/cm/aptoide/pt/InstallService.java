@@ -33,6 +33,7 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import com.crashlytics.android.answers.Answers;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -81,7 +82,8 @@ public class InstallService extends Service {
     downloadManager = ((AptoideApplication) getApplicationContext()).getDownloadManager();
     final MinimalAdMapper adMapper = new MinimalAdMapper();
     InstallerFactory installerFactory = new InstallerFactory(adMapper,
-        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
+            AppEventsLogger.newLogger(getApplicationContext())),
         ((AptoideApplication) getApplicationContext()).getImageCachePath());
     defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);

@@ -77,6 +77,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
@@ -317,10 +318,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+    Analytics analytics = Analytics.getInstance();
+    timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, analytics));
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator,
@@ -336,10 +339,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+    spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
+    appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(Analytics.getInstance(),
+    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
@@ -349,11 +352,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(marketName);
-    appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+    appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+            analytics);
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -772,7 +775,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getName();
     storeId = app.getStore()
         .getId();
-    if(storeTheme == null) {
+    if (storeTheme == null) {
       storeTheme = app.getStore()
           .getAppearance()
           .getTheme();

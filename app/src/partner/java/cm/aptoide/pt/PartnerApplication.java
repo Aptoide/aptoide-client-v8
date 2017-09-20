@@ -7,6 +7,7 @@ import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.PartnerFragmentProvider;
+import rx.Completable;
 
 public class PartnerApplication extends AptoideApplication {
 
@@ -87,5 +88,16 @@ public class PartnerApplication extends AptoideApplication {
 
   @Override public FragmentProvider createFragmentProvider() {
     return new PartnerFragmentProvider(this);
+  }
+
+  @Override public Completable createShortcut() {
+    if (bootConfig.getPartner()
+        .getSwitches()
+        .getOptions()
+        .isShortcut()) {
+      return super.createShortcut();
+    } else {
+      return null;
+    }
   }
 }

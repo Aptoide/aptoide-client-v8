@@ -39,6 +39,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.social.AccountNotificationManagerUserProvider;
@@ -203,12 +204,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences);
+        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()));
 
-    OkHttpClient okhttp =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
-
-    timelineService = new TimelineService(userId, baseBodyInterceptorV7, okhttp, defaultConverter,
+    timelineService =
+        new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
         new TimelineResponseCardMapper(
             () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
         tokenInvalidator, sharedPreferences);

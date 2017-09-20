@@ -15,6 +15,11 @@ public class FabricEvent implements Event {
   private Map<String, String> data;
   private Answers fabric;
 
+  public FabricEvent(Answers fabric, String name) {
+    this.name = name;
+    this.fabric = fabric;
+  }
+
   public FabricEvent(Answers fabric, String name, Map<String, String> data) {
     this.name = name;
     this.data = data;
@@ -23,10 +28,12 @@ public class FabricEvent implements Event {
 
   @Override public void send() {
     CustomEvent customEvent = new CustomEvent(name);
-    Set<Map.Entry<String, String>> dataEntry = data.entrySet();
+    if (data != null && !data.isEmpty()) {
+      Set<Map.Entry<String, String>> dataEntry = data.entrySet();
 
-    for (Map.Entry<String, String> attribute : dataEntry) {
-      customEvent.putCustomAttribute(attribute.getKey(), attribute.getValue());
+      for (Map.Entry<String, String> attribute : dataEntry) {
+        customEvent.putCustomAttribute(attribute.getKey(), attribute.getValue());
+      }
     }
 
     fabric.logCustom(customEvent);

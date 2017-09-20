@@ -1,5 +1,6 @@
 package cm.aptoide.pt.social.view;
 
+import android.support.annotation.Nullable;
 import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.DummyPost;
 
@@ -17,11 +18,11 @@ public class TimelineUser extends DummyPost {
   private final boolean hasStats;
   private final boolean isLogged;
   private final boolean hasNotification;
+  @Nullable private final String analyticsUrl;
   private CardType cardType;
-
   public TimelineUser(boolean isLogged, boolean hasNotification, String notificationBody,
       String notificationImage, String notificationUrlAction, int notificationId, boolean hasStats,
-      long followers, long following) {
+      long followers, long following, @Nullable String analyticsUrl) {
     this.isLogged = isLogged;
     this.notificationBody = notificationBody;
     this.notificationImage = notificationImage;
@@ -31,6 +32,11 @@ public class TimelineUser extends DummyPost {
     this.following = following;
     this.hasStats = hasStats;
     this.hasNotification = hasNotification;
+    this.analyticsUrl = analyticsUrl;
+  }
+
+  @Nullable public String getAnalyticsUrl() {
+    return analyticsUrl;
   }
 
   public int getNotificationId() {

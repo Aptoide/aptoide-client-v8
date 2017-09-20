@@ -12,7 +12,7 @@ import rx.Observable;
 public interface FragmentNavigator {
   void navigateWithoutReplace(Fragment fragment);
 
-  void navigateForResult(NavigateFragment fragment, int requestCode);
+  void navigateForResultWithoutReplace(NavigateFragment fragment, int requestCode);
 
   Observable<Result> results(int requestCode);
 
