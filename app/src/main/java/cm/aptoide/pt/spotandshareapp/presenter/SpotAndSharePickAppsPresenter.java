@@ -13,7 +13,6 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndSharePickAppsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -31,7 +30,6 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   private final SpotAndShare spotAndShare;
   private boolean shouldCreateGroup;
   private SpotAndShareAppProvider installedRepositoryDummy;
-  private List<AppModel> selectedApps;
   private DrawableBitmapMapper drawableBitmapMapper;
   private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
   private ObbsProvider obbsProvider;
@@ -46,16 +44,26 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
     this.spotAndShare = spotAndShare;
     this.drawableBitmapMapper = drawableBitmapMapper;
     this.appModelToAndroidAppInfoMapper = appModelToAndroidAppInfoMapper;
-    selectedApps = new LinkedList<>();
   }
 
   @Override public void present() {
 
-    Observable.zip(getInstaledAppsObservable(), getCreateGroupObservable(),
-        (appModels, s) -> appModels)
+    //Observable.zip(getInstaledAppsObservable(), getCreateGroupObservable(),
+    //    (appModels, s) -> appModels)
+    //    .observeOn(AndroidSchedulers.mainThread())
+    //    .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
+    //    .subscribe(o -> view.hideLoading(), throwable -> throwable.printStackTrace());
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(lifecycleEvent -> view.showLoading())
+        .observeOn(Schedulers.io())
+        .map(lifecycleEvent -> installedRepositoryDummy.getInstalledApps())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
-        .subscribe(o -> view.hideLoading(), throwable -> throwable.printStackTrace());
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> error.printStackTrace());
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -115,11 +123,6 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
 
   private void selectedApp(AppModel appModel) {
     System.out.println("selected app " + appModel.getAppName());
-    if (selectedApps.contains(appModel)) {
-      selectedApps.remove(appModel);
-    } else {
-      selectedApps.add(appModel);
-    }
 
     if (canSend()) {
       AndroidAppInfo androidAppInfo =
@@ -134,6 +137,9 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   }
 
   private boolean canSend() {
+    if (shouldCreateGroup) {
+      return false;
+    }
     return spotAndShare.canSend();
   }
 

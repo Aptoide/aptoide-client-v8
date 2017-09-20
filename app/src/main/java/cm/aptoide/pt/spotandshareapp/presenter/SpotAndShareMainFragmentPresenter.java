@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
@@ -48,32 +47,61 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
 
   @Override public void present() {
 
+    //view.getLifecycle()
+    //    .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+    //    .flatMap(created -> view.startSend())
+    //    .observeOn(AndroidSchedulers.mainThread())
+    //    .flatMap(__ -> {
+    //      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    //
+    //        return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
+    //            .flatMap(
+    //                __1 -> permissionManager.requestWriteSettingsPermission(permissionService));
+    //      } else {
+    //        Log.i(getClass().getName(), "GOING TO START SENDING");
+    //        return Observable.empty();
+    //      }
+    //    })
+    //    .doOnNext(__2 -> view.openAppSelectionFragment(true))
+    //    .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+    //    .subscribe(__ -> {
+    //    }, err -> err.printStackTrace());
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .flatMap(created -> view.startSend())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(__2 -> view.openAppSelectionFragment(true))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> err.printStackTrace());
+
     loadProfileInformationOnView();
 
     subscribe(clickedReceive());
 
-    subscribe(clickedSend());
+    //subscribe(clickedSend());
 
     subscribe(editProfile());
 
-    handleLocationAndExternalStoragePermissionsResult();
+    //handleLocationAndExternalStoragePermissionsResult();
 
-    handleWriteSettingsPermissionResult();
+    //handleWriteSettingsPermissionResult();
 
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.shareAptoideApk())
-        .doOnNext(__ -> {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE);
-          } else {
-            view.openShareAptoideFragment();
-          }
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> err.printStackTrace());
+    //view.getLifecycle()
+    //    .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+    //    .flatMap(created -> view.shareAptoideApk())
+    //    .doOnNext(__ -> {
+    //      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    //        spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
+    //            EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE);
+    //      } else {
+    //        view.openShareAptoideFragment();
+    //      }
+    //    })
+    //    .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+    //    .subscribe(__ -> {
+    //    }, err -> err.printStackTrace());
   }
 
   @Override public void saveState(Bundle state) {
@@ -87,7 +115,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   private Subscription subscribe(Observable<Void> voidObservable) {
     return view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(created -> voidObservable.compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
+        .flatMap(created -> voidObservable)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> err.printStackTrace());
@@ -96,16 +124,16 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   private Observable<Void> clickedSend() {
     return view.startSend()
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> {
+        .flatMap(__ -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            permissionManager.requestLocationAndExternalStoragePermission(permissionService)
-                .subscribe(success -> {
-                }, throwable -> Logger.d(this.getClass()
-                    .getName(), "error in PERMISSIONS "));
+            return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
+                .flatMap(__1 -> permissionManager.requestWriteSettingsPermission(permissionService))
+                .doOnNext(writeSettingsResult -> view.openAppSelectionFragment(true));
           } else {
             Log.i(getClass().getName(), "GOING TO START SENDING");
             view.openAppSelectionFragment(true);
+            return Observable.empty();
           }
         });
   }

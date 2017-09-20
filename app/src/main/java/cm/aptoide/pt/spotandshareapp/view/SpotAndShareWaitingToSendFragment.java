@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
@@ -94,7 +96,8 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
 
     attachPresenter(new SpotAndShareWaitingToSendPresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-        new AppModelToAndroidAppInfoMapper(new ObbsProvider())), savedInstanceState);
+        new AppModelToAndroidAppInfoMapper(new ObbsProvider()), new PermissionManager(),
+        (PermissionService) getContext()), savedInstanceState);
   }
 
   private void setupSendingAppInfo() {
