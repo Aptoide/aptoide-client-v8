@@ -21,9 +21,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.util.CommentOperations;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -66,8 +67,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 

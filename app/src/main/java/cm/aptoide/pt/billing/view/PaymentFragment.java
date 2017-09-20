@@ -22,6 +22,7 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -54,7 +55,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private boolean buyLoading;
 
   private Billing billing;
-  private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
   private BillingNavigator billingNavigator;
   private ScrollView scroll;
@@ -68,14 +68,9 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
-    billingNavigator =
-        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager,
-            ((AptoideApplication) getContext().getApplicationContext()).getMarketName());
+    billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
   }
 
   @Nullable @Override

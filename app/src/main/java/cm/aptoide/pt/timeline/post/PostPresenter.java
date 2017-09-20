@@ -11,7 +11,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.timeline.post.exceptions.PostException;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.view.BackButton;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.TabNavigator;
@@ -82,7 +82,8 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.getAppNotFoundErrorAction())
         .doOnNext(click -> fragmentNavigator.navigateTo(
-            AppViewFragment.newInstance(UPLOADER_PACKAGENAME, AppViewFragment.OpenType.OPEN_ONLY)))
+            AppViewFragment.newInstance(UPLOADER_PACKAGENAME, AppViewFragment.OpenType.OPEN_ONLY),
+            true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(aVoid -> {
         }, throwable -> crashReport.log(throwable));

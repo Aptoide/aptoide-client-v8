@@ -2,7 +2,6 @@ package cm.aptoide.pt.billing.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
@@ -10,8 +9,8 @@ import cm.aptoide.pt.billing.Purchase;
 import cm.aptoide.pt.billing.view.boacompra.BoaCompraFragment;
 import cm.aptoide.pt.billing.view.braintree.BraintreeCreditCardFragment;
 import cm.aptoide.pt.billing.view.mol.MolFragment;
+import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalFragment;
-import cm.aptoide.pt.view.account.LoginActivity;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.Result;
@@ -28,29 +27,23 @@ public class BillingNavigator {
   private final PurchaseBundleMapper bundleMapper;
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
-  private final AptoideAccountManager accountManager;
   private final String marketName;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
-      String marketName) {
+      FragmentNavigator fragmentNavigator, String marketName) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
-    this.accountManager = accountManager;
     this.marketName = marketName;
   }
 
   public void navigateToPayerAuthenticationForResult(int requestCode) {
-    activityNavigator.navigateForResult(LoginActivity.class, requestCode);
+    fragmentNavigator.navigateForResult(PaymentLoginFragment.newInstance(), requestCode, true);
   }
 
   public Observable<Boolean> payerAuthenticationResults(int requestCode) {
-    return activityNavigator.results(requestCode)
-        .flatMapSingle(result -> accountManager.accountStatus()
-            .first()
-            .toSingle())
-        .map(account -> account.isLoggedIn());
+    return fragmentNavigator.results(requestCode)
+        .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
   public void navigateToTransactionAuthorizationView(String sellerId, String productId,
@@ -60,17 +53,17 @@ public class BillingNavigator {
         getProductBundle(sellerId, productId, developerPayload, paymentMethod.getName());
     switch (paymentMethod.getId()) {
       case PaymentMethodMapper.PAYPAL:
-        fragmentNavigator.navigateTo(PayPalFragment.create(bundle));
+        fragmentNavigator.navigateTo(PayPalFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.MOL_POINTS:
-        fragmentNavigator.navigateTo(MolFragment.create(bundle));
+        fragmentNavigator.navigateTo(MolFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
-        fragmentNavigator.navigateTo(BoaCompraFragment.create(bundle));
+        fragmentNavigator.navigateTo(BoaCompraFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
-        fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(bundle));
+        fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.SANDBOX:
       default:
@@ -80,7 +73,7 @@ public class BillingNavigator {
     }
   }
 
-  public void popTransactionAuthorizationView() {
+  public void popView() {
     fragmentNavigator.popBackStack();
   }
 
@@ -105,15 +98,15 @@ public class BillingNavigator {
         .map(result -> map(result));
   }
 
-  public void popPaymentViewWithResult(Purchase purchase) {
+  public void popViewWithResult(Purchase purchase) {
     activityNavigator.navigateBackWithResult(Activity.RESULT_OK, bundleMapper.map(purchase));
   }
 
-  public void popPaymentViewWithResult(Throwable throwable) {
+  public void popViewWithResult(Throwable throwable) {
     activityNavigator.navigateBackWithResult(Activity.RESULT_CANCELED, bundleMapper.map(throwable));
   }
 
-  public void popPaymentViewWithResult() {
+  public void popViewWithResult() {
     activityNavigator.navigateBackWithResult(Activity.RESULT_CANCELED,
         bundleMapper.mapCancellation());
   }

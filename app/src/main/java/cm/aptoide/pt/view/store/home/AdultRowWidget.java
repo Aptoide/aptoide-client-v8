@@ -1,16 +1,11 @@
 package cm.aptoide.pt.view.store.home;
 
-import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ReloadInterface;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
@@ -21,9 +16,6 @@ import cm.aptoide.pt.view.settings.PinDialog;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-/**
- * Created by neuro on 11-07-2016.
- */
 public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 
   private SwitchCompat adultSwitch;
@@ -59,12 +51,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 
   @Override public void bindView(final AdultRowDisplayable displayable) {
     final ReloadInterface reloader = displayable;
-    final SharedPreferences sharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(getContext());
-    adultContent = new AdultContent(
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
-        new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-        new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
+    adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
 
     compositeSubscription.add(adultContent.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())

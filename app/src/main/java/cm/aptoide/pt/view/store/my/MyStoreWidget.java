@@ -88,7 +88,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     compositeSubscription.add(RxView.clicks(exploreButton)
         .subscribe(click -> {
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newStoreFragment(store.getName(), storeTheme));
+              .newStoreFragment(store.getName(), storeTheme), true);
           storeAnalytics.sendStoreTabInteractEvent("View Store");
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
         }));
@@ -110,14 +110,14 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
             TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
                 AptoideUtils.StringU.getFormattedString(
                     R.string.social_timeline_followers_fragment_title, getContext().getResources(),
-                    displayable.getFollowers())))));
+                    displayable.getFollowers())), true)));
 
     compositeSubscription.add(RxView.clicks(following)
         .subscribe(click -> getFragmentNavigator().navigateTo(
             TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
                 AptoideUtils.StringU.getFormattedString(
                     R.string.social_timeline_following_fragment_title, getContext().getResources(),
-                    displayable.getFollowings())))));
+                    displayable.getFollowings())), true)));
   }
 
   private int getColorOrDefault(StoreTheme theme, Context context) {

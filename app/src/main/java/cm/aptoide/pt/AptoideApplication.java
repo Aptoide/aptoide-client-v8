@@ -6,6 +6,7 @@
 package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Application;
@@ -30,22 +31,22 @@ import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.WindowManager;
-import cm.aptoide.accountmanager.AccountDataPersist;
 import cm.aptoide.accountmanager.AccountFactory;
-import cm.aptoide.accountmanager.AccountManagerService;
+import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
-import cm.aptoide.pt.account.AndroidAccountManagerDataPersist;
+import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
-import cm.aptoide.pt.account.BaseBodyAccountManagerInterceptorFactory;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
+import cm.aptoide.pt.account.FacebookLoginResult;
+import cm.aptoide.pt.account.FacebookSignUpAdapter;
+import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LogAccountAnalytics;
 import cm.aptoide.pt.account.LoginPreferences;
-import cm.aptoide.pt.account.NoOpTokenInvalidator;
-import cm.aptoide.pt.account.NoTokenBodyInterceptor;
-import cm.aptoide.pt.account.RefreshTokenInvalidatorFactory;
-import cm.aptoide.pt.account.SocialAccountFactory;
+import cm.aptoide.pt.account.V3AccountService;
+import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
@@ -122,11 +123,14 @@ import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networking.BaseBodyInterceptorV3;
-import cm.aptoide.pt.networking.BaseBodyInterceptorV7;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
+import cm.aptoide.pt.networking.BodyInterceptorV3;
+import cm.aptoide.pt.networking.BodyInterceptorV7;
 import cm.aptoide.pt.networking.Cdn;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.MultipartBodyInterceptor;
+import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
+import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.notification.NotificationCenter;
@@ -168,16 +172,19 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.view.account.store.StoreManager;
 import cm.aptoide.pt.view.configuration.ActivityProvider;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
+import cm.aptoide.pt.view.navigator.Result;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.answers.Answers;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
@@ -193,11 +200,13 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
@@ -227,9 +236,9 @@ public abstract class AptoideApplication extends Application {
 
   @Getter @Setter private static ShareApps shareApps;
   private AptoideAccountManager accountManager;
-  private BodyInterceptor<BaseBody> baseBodyInterceptorV7Pool;
-  private BodyInterceptor<BaseBody> baseBodyInterceptorV7Web;
-  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> baseBodyInterceptorV3;
+  private BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
+  private BodyInterceptor<BaseBody> bodyInterceptorWebV7;
+  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private Preferences preferences;
   private cm.aptoide.pt.preferences.SecurePreferences securePreferences;
   private SecureCoderDecoder secureCodeDecoder;
@@ -244,7 +253,6 @@ public abstract class AptoideApplication extends Application {
   private OkHttpClient longTimeoutClient;
   private L2Cache httpClientCache;
   private UserAgentInterceptor userAgentInterceptor;
-  private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
   private BillingAnalytics billingAnalytics;
   private ObjectMapper nonNullObjectMapper;
@@ -283,6 +291,13 @@ public abstract class AptoideApplication extends Application {
   private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private BillingIdResolver billingiIdResolver;
+  private AuthenticationPersistence authenticationPersistence;
+  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
+      noAuthorizationBodyInterceptorV3;
+  private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
+  private CallbackManager facebookCallbackManager;
+  private Map<Integer, Result> fragmentResulMap;
+  private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -396,9 +411,21 @@ public abstract class AptoideApplication extends Application {
 
   public TokenInvalidator getTokenInvalidator() {
     if (tokenInvalidator == null) {
-      tokenInvalidator = new RefreshTokenInvalidator(getAccountManager());
+      tokenInvalidator =
+          new RefreshTokenInvalidator(getNoAuthenticationBodyInterceptorV3(), getDefaultClient(),
+              WebService.getDefaultConverter(), getDefaultSharedPreferences(), getExtraId(),
+              new NoOpTokenInvalidator(), getAuthenticationPersistence());
     }
     return tokenInvalidator;
+  }
+
+  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getNoAuthenticationBodyInterceptorV3() {
+    if (noAuthorizationBodyInterceptorV3 == null) {
+      noAuthorizationBodyInterceptorV3 =
+          new NoAuthenticationBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(),
+              getAptoidePackage());
+    }
+    return noAuthorizationBodyInterceptorV3;
   }
 
   private void startNotificationCenter() {
@@ -479,9 +506,9 @@ public abstract class AptoideApplication extends Application {
     if (storeManager == null) {
       storeManager =
           new StoreManager(accountManager, getDefaultClient(), WebService.getDefaultConverter(),
-              getMultipartBodyInterceptor(), getBaseBodyInterceptorV3(),
-              getBaseBodyInterceptorV7Pool(), getDefaultSharedPreferences(), getTokenInvalidator(),
-              getRequestBodyFactory(), getNonNullObjectMapper());
+              getMultipartBodyInterceptor(), getBodyInterceptorV3(),
+              getAccountSettingsBodyInterceptorPoolV7(), getDefaultSharedPreferences(),
+              getTokenInvalidator(), getRequestBodyFactory(), getNonNullObjectMapper());
     }
     return storeManager;
   }
@@ -517,8 +544,8 @@ public abstract class AptoideApplication extends Application {
     if (notificationHandler == null) {
       notificationHandler = new NotificationHandler(BuildConfig.APPLICATION_ID, getDefaultClient(),
           WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-          getAccountManager(), getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(),
-          getResources());
+          getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(), getResources(),
+          getAuthenticationPersistence(), getAccountManager());
     }
     return notificationHandler;
   }
@@ -592,7 +619,7 @@ public abstract class AptoideApplication extends Application {
       final String obbPath = getCachePath() + "obb/";
       final OkHttpClient.Builder httpClientBuilder =
           new OkHttpClient.Builder().addInterceptor(getUserAgentInterceptor())
-              .addInterceptor(new PaidAppsDownloadInterceptor(getAccountManager()))
+              .addInterceptor(new PaidAppsDownloadInterceptor(getAuthenticationPersistence()))
               .addInterceptor(new DownloadMirrorEventInterceptor(Analytics.getInstance()))
               .connectTimeout(20, TimeUnit.SECONDS)
               .writeTimeout(20, TimeUnit.SECONDS)
@@ -659,14 +686,16 @@ public abstract class AptoideApplication extends Application {
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
 
-      final AccountManagerService accountManagerService = new AccountManagerService(
-          new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
-              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager(),
-              getDefaultSharedPreferences(), getResources(), getPackageName(),
-              Build.VERSION.SDK_INT, getPackageRepository(), getNetworkOperatorManager()),
-          getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter(), getNonNullObjectMapper(),
-          new RefreshTokenInvalidatorFactory(), getDefaultSharedPreferences(), getExtraId());
+      FacebookSdk.sdkInitialize(this);
+
+      final AccountFactory accountFactory = new AccountFactory();
+
+      final AccountService accountService =
+          new V3AccountService(accountFactory, getDefaultClient(), getLongTimeoutClient(),
+              WebService.getDefaultConverter(), getNonNullObjectMapper(),
+              getDefaultSharedPreferences(), getExtraId(), getTokenInvalidator(),
+              getAuthenticationPersistence(), getNoAuthenticationBodyInterceptorV3(),
+              getMultipartBodyInterceptor(), getBodyInterceptorWebV7(), getBodyInterceptorPoolV7());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
           SecurePreferencesImplementation.getInstance(this, getDefaultSharedPreferences()),
@@ -676,29 +705,33 @@ public abstract class AptoideApplication extends Application {
           getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), getAccountType(),
           BuildConfig.VERSION_NAME);
 
-      final AccountDataPersist accountDataPersist =
-          new AndroidAccountManagerDataPersist(AccountManager.get(this),
+      final AccountPersistence accountPersistence =
+          new AndroidAccountManagerPersistence(AccountManager.get(this),
               new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(
                   ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class),
-                  new DatabaseStoreDataPersist.DatabaseStoreMapper()), getAccountFactory(),
-              accountDataMigration, getAndroidAccountProvider(), Schedulers.io());
+                  new DatabaseStoreDataPersist.DatabaseStoreMapper()), accountFactory,
+              accountDataMigration, getAndroidAccountProvider(), getAuthenticationPersistence(),
+              Schedulers.io());
 
-      accountManager = new AptoideAccountManager.Builder().setAccountDataPersist(accountDataPersist)
+      accountManager = new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
           .setAccountAnalytics(new LogAccountAnalytics())
-          .setAccountManagerService(accountManagerService)
+          .setAccountService(accountService)
+          .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
+              new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
+          .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
+              new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
+                  getLoginPreferences()))
           .build();
     }
     return accountManager;
   }
 
-  public AccountFactory getAccountFactory() {
-    if (accountFactory == null) {
-      accountFactory = new AccountFactory(new SocialAccountFactory(this, getGoogleSignInClient()),
-          new AccountService(new NoTokenBodyInterceptor(getIdsRepository(), getAptoideMd5sum(),
-              getAptoidePackage()), getDefaultClient(), WebService.getDefaultConverter(),
-              new NoOpTokenInvalidator(), getDefaultSharedPreferences(), getExtraId()));
+  public AuthenticationPersistence getAuthenticationPersistence() {
+    if (authenticationPersistence == null) {
+      authenticationPersistence = new AuthenticationPersistence(getAndroidAccountProvider(),
+          ((AccountManager) getSystemService(ACCOUNT_SERVICE)));
     }
-    return accountFactory;
+    return authenticationPersistence;
   }
 
   public AndroidAccountProvider getAndroidAccountProvider() {
@@ -778,7 +811,7 @@ public abstract class AptoideApplication extends Application {
               getAuthorizationService(), getAuthorizationPersistence());
 
       final BillingService billingService =
-          new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
+          new V3BillingService(getBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences(),
               new PurchaseMapper(getInAppBillingSerializer(), getBillingIdResolver()),
@@ -834,7 +867,7 @@ public abstract class AptoideApplication extends Application {
   public AuthorizationService getAuthorizationService() {
     if (authorizationService == null) {
       authorizationService =
-          new V3AuthorizationService(getAuthorizationFactory(), getBaseBodyInterceptorV3(),
+          new V3AuthorizationService(getAuthorizationFactory(), getBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences());
     }
@@ -857,10 +890,9 @@ public abstract class AptoideApplication extends Application {
 
   public TransactionService getTransactionService() {
     if (transactionService == null) {
-      transactionService =
-          new V3TransactionService(getTransactionMapper(), getBaseBodyInterceptorV3(),
-              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
+      transactionService = new V3TransactionService(getTransactionMapper(), getBodyInterceptorV3(),
+          WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
+          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
     }
     return transactionService;
   }
@@ -970,7 +1002,7 @@ public abstract class AptoideApplication extends Application {
 
   private Completable sendAppStartToAnalytics() {
     return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
-        getDefaultClient(), getBaseBodyInterceptorV7Pool(),
+        getDefaultClient(), getAccountSettingsBodyInterceptorPoolV7(),
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
             getDefaultSharedPreferences()), getTokenInvalidator());
   }
@@ -1015,9 +1047,8 @@ public abstract class AptoideApplication extends Application {
 
             PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
-            return setupFirstRun(accountManager).andThen(
-                getRootAvailabilityManager().updateRootAvailability())
-                .andThen(Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
+            return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
+                .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
           }
 
           return Completable.complete();
@@ -1025,7 +1056,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   // todo re-factor all this code to proper Rx
-  private Completable setupFirstRun(final AptoideAccountManager accountManager) {
+  private Completable setupFirstRun() {
     return Completable.defer(() -> {
 
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl(
@@ -1033,9 +1064,9 @@ public abstract class AptoideApplication extends Application {
               ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class));
 
       StoreUtilsProxy proxy =
-          new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7Pool(), storeCredentials,
-              AccessorFactory.getAccessorFor(
-                  ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class),
+          new StoreUtilsProxy(getAccountManager(), getAccountSettingsBodyInterceptorPoolV7(),
+              storeCredentials, AccessorFactory.getAccessorFor(
+              ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences());
 
@@ -1043,7 +1074,7 @@ public abstract class AptoideApplication extends Application {
           storeCredentials.get(getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
-          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7Pool(),
+          GetStoreMetaRequest.of(defaultStoreCredentials, getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences()), getAccountManager(), defaultStoreCredentials)
           .andThen(refreshUpdates()))
@@ -1059,45 +1090,60 @@ public abstract class AptoideApplication extends Application {
   /**
    * BaseBodyInterceptor for v7 ws calls with CDN = pool configuration
    */
-  public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7Pool() {
-    if (baseBodyInterceptorV7Pool == null) {
-      baseBodyInterceptorV7Pool = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
-          getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
-          getQManager(), Cdn.POOL, getDefaultSharedPreferences(), getResources(), getPackageName(),
-          getPackageRepository());
+  public BodyInterceptor<BaseBody> getBodyInterceptorPoolV7() {
+    if (bodyInterceptorPoolV7 == null) {
+      bodyInterceptorPoolV7 =
+          new BodyInterceptorV7(getIdsRepository(), getAuthenticationPersistence(),
+              getAptoideMd5sum(), getAptoidePackage(), getQManager(), Cdn.POOL,
+              getDefaultSharedPreferences(), getResources(), BuildConfig.VERSION_CODE);
     }
-    return baseBodyInterceptorV7Pool;
+    return bodyInterceptorPoolV7;
   }
 
   /**
    * BaseBodyInterceptor for v7 ws calls with CDN = web configuration
    */
-  public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7Web() {
-    if (baseBodyInterceptorV7Web == null) {
-      baseBodyInterceptorV7Web = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
-          getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
-          getQManager(), Cdn.WEB, getDefaultSharedPreferences(), getResources(), getPackageName(),
-          getPackageRepository());
+  public BodyInterceptor<BaseBody> getBodyInterceptorWebV7() {
+    if (bodyInterceptorWebV7 == null) {
+      bodyInterceptorWebV7 =
+          new BodyInterceptorV7(getIdsRepository(), getAuthenticationPersistence(),
+              getAptoideMd5sum(), getAptoidePackage(), getQManager(), Cdn.WEB,
+              getDefaultSharedPreferences(), getResources(), BuildConfig.VERSION_CODE);
     }
-    return baseBodyInterceptorV7Web;
+    return bodyInterceptorWebV7;
   }
 
-  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
-    if (baseBodyInterceptorV3 == null) {
-      baseBodyInterceptorV3 =
-          new BaseBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager(), getQManager(), getDefaultSharedPreferences(),
-              BaseBodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT,
-              getNetworkOperatorManager());
+  public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorPoolV7() {
+    if (bodyInterceptorPoolV7 == null) {
+      bodyInterceptorPoolV7 =
+          new AccountSettingsBodyInterceptorV7(getBodyInterceptorPoolV7(), getAdultContent());
     }
-    return baseBodyInterceptorV3;
+    return bodyInterceptorPoolV7;
+  }
+
+  public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorWebV7() {
+    if (bodyInterceptorWebV7 == null) {
+      bodyInterceptorWebV7 =
+          new AccountSettingsBodyInterceptorV7(getBodyInterceptorWebV7(), getAdultContent());
+    }
+    return bodyInterceptorWebV7;
+  }
+
+  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
+    if (bodyInterceptorV3 == null) {
+      bodyInterceptorV3 =
+          new BodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
+              getQManager(), getDefaultSharedPreferences(), BodyInterceptorV3.RESPONSE_MODE_JSON,
+              Build.VERSION.SDK_INT, getNetworkOperatorManager(), getAuthenticationPersistence());
+    }
+    return bodyInterceptorV3;
   }
 
   public BodyInterceptor<HashMapNotNull<String, RequestBody>> getMultipartBodyInterceptor() {
     if (multipartBodyInterceptor == null) {
       multipartBodyInterceptor =
-          new MultipartBodyInterceptor(getIdsRepository(), getAccountManager(),
-              getRequestBodyFactory());
+          new MultipartBodyInterceptor(getIdsRepository(), getRequestBodyFactory(),
+              getAuthenticationPersistence());
     }
     return multipartBodyInterceptor;
   }
@@ -1142,10 +1188,10 @@ public abstract class AptoideApplication extends Application {
     return BuildConfig.APPLICATION_ID;
   }
 
-  public AdultContent getAdultContent(
-      cm.aptoide.pt.preferences.SecurePreferences securePreferences) {
+  public AdultContent getAdultContent() {
     if (adultContent == null) {
-      adultContent = new AdultContent(getAccountManager(), getPreferences(), securePreferences);
+      adultContent =
+          new AdultContent(getAccountManager(), getPreferences(), getSecurePreferences());
     }
     return adultContent;
   }
@@ -1272,13 +1318,41 @@ public abstract class AptoideApplication extends Application {
   public TimelinePostsRepository getTimelineRepository(String action, Context context) {
     if (timelineRepositoryFactory == null) {
       timelineRepositoryFactory =
-          new TimelineRepositoryFactory(new HashMap<>(), getBaseBodyInterceptorV7Pool(),
+          new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
               WebService.getDefaultConverter(), new TimelineResponseCardMapper(
               () -> new TimelineAdsRepository(context, BehaviorRelay.create()), getMarketName()));
     }
     return timelineRepositoryFactory.create(action);
+  }
+
+  public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
+    if (fragmentResultRelay == null) {
+      fragmentResultRelay = BehaviorRelay.create();
+    }
+    return fragmentResultRelay;
+  }
+
+  public CallbackManager getFacebookCallbackManager() {
+    if (facebookCallbackManager == null) {
+      facebookCallbackManager = CallbackManager.Factory.create();
+    }
+    return facebookCallbackManager;
+  }
+
+  @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResulMap() {
+    if (fragmentResulMap == null) {
+      fragmentResulMap = new HashMap<>();
+    }
+    return fragmentResulMap;
+  }
+
+  public PublishRelay<FacebookLoginResult> getFacebookLoginResultRelay() {
+    if (facebookLoginResultRelay == null) {
+      facebookLoginResultRelay = PublishRelay.create();
+    }
+    return facebookLoginResultRelay;
   }
 
   public abstract LoginPreferences getLoginPreferences();

@@ -10,10 +10,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by pedroribeiro on 01/06/17.
- */
-
 public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body> {
 
   protected GetUserInfoRequest(Body body, String baseHost, OkHttpClient httpClient,
@@ -29,14 +25,12 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
         + "/api/7/";
   }
 
-  public static GetUserInfoRequest of(String accessToken, OkHttpClient httpClient,
-      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
+  public static GetUserInfoRequest of(OkHttpClient httpClient, Converter.Factory converterFactory,
+      BodyInterceptor bodyInterceptor, TokenInvalidator tokenInvalidator) {
     final List<String> nodes = new ArrayList<>();
     nodes.add("meta");
     nodes.add("settings");
     final Body body = new Body(nodes);
-    body.setAccessToken(accessToken);
     return new GetUserInfoRequest(body, getHost(), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
   }

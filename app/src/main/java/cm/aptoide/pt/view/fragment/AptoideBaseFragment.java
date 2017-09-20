@@ -30,9 +30,9 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7Pool =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7Web =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Web();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorWebV7();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();

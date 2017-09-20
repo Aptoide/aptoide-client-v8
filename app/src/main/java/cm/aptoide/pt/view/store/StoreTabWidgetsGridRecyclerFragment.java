@@ -75,7 +75,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,

@@ -20,7 +20,7 @@ import cm.aptoide.pt.spotandshare.view.RadarActivity;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;

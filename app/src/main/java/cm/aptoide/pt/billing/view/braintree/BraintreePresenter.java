@@ -68,11 +68,11 @@ public class BraintreePresenter implements Presenter {
         .flatMap(product -> view.cancelEvent())
         .doOnNext(__ -> {
           analytics.sendAuthorizationCancelEvent(paymentMethodName);
-          navigator.popTransactionAuthorizationView();
+          navigator.popView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> navigator.popTransactionAuthorizationView());
+        }, throwable -> navigator.popView());
   }
 
   private void handleErrorDismissEvent() {
@@ -81,7 +81,7 @@ public class BraintreePresenter implements Presenter {
         .flatMap(created -> view.errorDismissedEvent())
         .doOnNext(dismiss -> {
           analytics.sendAuthorizationErrorEvent(paymentMethodName);
-          navigator.popTransactionAuthorizationView();
+          navigator.popView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
@@ -101,7 +101,7 @@ public class BraintreePresenter implements Presenter {
                   .doOnCompleted(() -> {
                     analytics.sendAuthorizationSuccessEvent(paymentMethodName);
                     view.hideLoading();
-                    navigator.popTransactionAuthorizationView();
+                    navigator.popView();
                   });
             case Braintree.NonceResult.ERROR:
               view.showError();

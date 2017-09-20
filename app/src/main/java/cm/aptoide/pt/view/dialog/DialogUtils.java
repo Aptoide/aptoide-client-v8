@@ -39,7 +39,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.account.AccountNavigator;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import java.util.Locale;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

@@ -51,7 +51,7 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     final TokenInvalidator tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
