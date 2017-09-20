@@ -626,9 +626,9 @@ public abstract class AptoideApplication extends Application {
     if (installManager == null) {
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
-              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
-              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
-          getDefaultSharedPreferences(),
+              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
+                  AppEventsLogger.newLogger(this)), getImageCachePath()).create(this,
+              installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),

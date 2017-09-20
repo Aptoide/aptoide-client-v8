@@ -26,6 +26,7 @@ import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.FooterRowDisplayable;
 import com.crashlytics.android.answers.Answers;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -90,7 +91,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     marketName = ((AptoideApplication) getContext().getApplicationContext()
         .getApplicationContext()).getMarketName();
     installManager = new InstallerFactory(new MinimalAdMapper(),
-        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance()),
+        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
+            AppEventsLogger.newLogger(getContext().getApplicationContext())),
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getImageCachePath()).create(getContext(),
         InstallerFactory.ROLLBACK);
