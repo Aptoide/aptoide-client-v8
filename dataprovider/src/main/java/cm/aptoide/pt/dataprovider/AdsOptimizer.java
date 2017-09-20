@@ -107,27 +107,20 @@ public class AdsOptimizer {
             throw new IllegalArgumentException("Excluded Packages list cannot be null");
         }
         GetAdsRequest request;
-
-        //if(query == null){
-        //    request = GetAdsRequest.of(accessToken, location, requestAds, aptoideClientUUID,
-        //            googlePlayServicesAvailable, oemid, mature);
-//
-        //}else {
         request = GetAdsRequest.of(accessToken, query, location, requestAds, aptoideClientUUID,
                     googlePlayServicesAvailable, oemid,
                     AptoideUtils.StringU.commaSeparatedValues(excludedPackages), mature);
+
+        //if(!TextUtils.isEmpty(packageName)){
+        //    request.getBody().setPackageName(new ArrayList<>(Arrays.asList(packageName.split(","))));
         //}
-
-        if(!TextUtils.isEmpty(packageName)){
-            request.getBody().setPackageName(new ArrayList<>(Arrays.asList(packageName.split(","))));
-        }
-        if(!TextUtils.isEmpty(repo)){
-            request.getBody().setRepo(repo);
-        }
-
-        if(keywords != null){
-            request.getBody().setKeywords(keywords);
-        }
+        //if(!TextUtils.isEmpty(repo)){
+        //    request.getBody().setRepo(repo);
+        //}
+//
+        //if(keywords != null){
+        //    request.getBody().setKeywords(keywords);
+        //}
 
         Observable<GetAdsResponse> response = request.observe(refresh);
 

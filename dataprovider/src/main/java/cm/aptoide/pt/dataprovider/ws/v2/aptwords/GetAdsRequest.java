@@ -65,16 +65,6 @@ import rx.Observable;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static GetAdsRequest of(String accessToken, Location location, int requestAds,
-                                 String aptoideClientUUID, boolean googlePlayServicesAvailable,
-                                 String oemid, String excludedPackages, boolean mature){
-
-      BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-      return new GetAdsRequest(BASE_HOST, (GetAdsRequest.Body)decorator.decorate(
-              new Body(googlePlayServicesAvailable, oemid, mature,
-                      requestAds, location), accessToken));
-  }
-
     public static GetAdsRequest of(String accessToken, List<String> query, Location location,
                                    int requestAds, String aptoideClientUUID,
                                    boolean googlePlayServicesAvailable, String oemid,

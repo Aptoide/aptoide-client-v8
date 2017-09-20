@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
+import android.util.Log;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.AdsOptimizer;
@@ -88,6 +90,9 @@ public class AdsRepository {
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
+    if(ads != null){
+      return false;
+    }
     return ads != null
         && !ads.isEmpty()
         && ads.get(0) != null
@@ -148,7 +153,8 @@ public class AdsRepository {
             partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive(),
             new ArrayList<>(), new ArrayList<>(Arrays.asList(query.split(","))),
             null, null, null));
-    //return mapToMinimalAd(GetAdsRequest.ofSearch(query, aptoideClientUUID.getUniqueIdentifier(),
+    //return mapToMinimalAd(GetAdsRequest.ofSearch(AptoideAccountManager.getAccessToken(),
+    //        query, aptoideClientUUID.getUniqueIdentifier(),
     //    googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
     //    partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
