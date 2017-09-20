@@ -208,9 +208,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-        new TimelineResponseCardMapper(
-            () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
-        tokenInvalidator, sharedPreferences);
+            new TimelineResponseCardMapper(
+                () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
+            tokenInvalidator, sharedPreferences);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

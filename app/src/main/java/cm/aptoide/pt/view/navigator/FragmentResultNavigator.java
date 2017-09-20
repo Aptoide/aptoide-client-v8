@@ -39,35 +39,6 @@ public class FragmentResultNavigator implements FragmentNavigator {
     navigateTo(fragment, replace);
   }
 
-  @Override public Observable<Result> results(int requestCode) {
-    return resultRelay.filter(integerResultMap -> integerResultMap.containsKey(requestCode))
-        .map(integerResultMap -> integerResultMap.get(requestCode))
-        .doOnNext(result -> results.remove(requestCode));
-  }
-
-  @Override public void popWithResult(Result result) {
-    results.put(result.getRequestCode(), result);
-    resultRelay.call(results);
-    popBackStack();
-  }
-
-  @Override public String navigateTo(Fragment fragment, boolean replace) {
-    final String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
-
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
-        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
-        .addToBackStack(tag);
-
-    if (replace) {
-      fragmentTransaction = fragmentTransaction.replace(containerId, fragment, tag);
-    } else {
-      fragmentTransaction = fragmentTransaction.add(containerId, fragment, tag);
-    }
-
-    fragmentTransaction.commit();
-    return tag;
-  }
-
   /**
    * Only use this method when it is navigating to the first fragment in the activity.
    */
@@ -87,6 +58,35 @@ public class FragmentResultNavigator implements FragmentNavigator {
   @Override public void navigateToCleaningBackStack(Fragment fragment, boolean replace) {
     cleanBackStack();
     navigateToWithoutBackSave(fragment, replace);
+  }
+
+  @Override public String navigateTo(Fragment fragment, boolean replace) {
+    final String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
+
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
+        .addToBackStack(tag);
+
+    if (replace) {
+      fragmentTransaction = fragmentTransaction.replace(containerId, fragment, tag);
+    } else {
+      fragmentTransaction = fragmentTransaction.add(containerId, fragment, tag);
+    }
+
+    fragmentTransaction.commit();
+    return tag;
+  }
+
+  @Override public Observable<Result> results(int requestCode) {
+    return resultRelay.filter(integerResultMap -> integerResultMap.containsKey(requestCode))
+        .map(integerResultMap -> integerResultMap.get(requestCode))
+        .doOnNext(result -> results.remove(requestCode));
+  }
+
+  @Override public void popWithResult(Result result) {
+    results.put(result.getRequestCode(), result);
+    resultRelay.call(results);
+    popBackStack();
   }
 
   @Override public boolean popBackStack() {

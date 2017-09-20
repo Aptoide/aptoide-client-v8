@@ -67,7 +67,7 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
 
   @Override public void showAboutFragment() {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newDescriptionFragment(aboutFragmentActionBarTitle, aboutFragmentBodyMessage, "default"),
+            .newDescriptionFragment(aboutFragmentActionBarTitle, aboutFragmentBodyMessage, "default"),
         true);
   }
 

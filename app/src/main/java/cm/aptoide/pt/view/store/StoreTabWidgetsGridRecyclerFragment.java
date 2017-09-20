@@ -46,18 +46,18 @@ import rx.Observable;
  */
 public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
-  private SharedPreferences sharedPreferences;
-  private IdsRepository idsRepository;
   protected AptoideAccountManager accountManager;
   protected StoreUtilsProxy storeUtilsProxy;
+  protected InstalledRepository installedRepository;
+  protected StoreAnalytics storeAnalytics;
+  private SharedPreferences sharedPreferences;
+  private IdsRepository idsRepository;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
-  protected InstalledRepository installedRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
   private TokenInvalidator tokenInvalidator;
-  protected StoreAnalytics storeAnalytics;
   private String partnerId;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,6 +124,4 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         .toList()
         .first();
   }
-
-
 }

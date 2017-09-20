@@ -26,7 +26,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.PhoneInputContract;
 import cm.aptoide.pt.presenter.PhoneInputPresenter;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.facebook.appevents.AppEventsLogger;

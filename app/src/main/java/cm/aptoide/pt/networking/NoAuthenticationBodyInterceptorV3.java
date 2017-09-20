@@ -2,7 +2,6 @@ package cm.aptoide.pt.networking;
 
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.networking.IdsRepository;
 import rx.Single;
 import rx.schedulers.Schedulers;
 

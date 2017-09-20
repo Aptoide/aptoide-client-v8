@@ -43,7 +43,6 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;

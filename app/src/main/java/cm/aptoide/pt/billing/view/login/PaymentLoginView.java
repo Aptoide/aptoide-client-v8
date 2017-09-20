@@ -29,5 +29,4 @@ public interface PaymentLoginView extends GooglePlayServicesView {
   void showError(String message);
 
   void showFacebookPermissionsRequiredError();
-
 }

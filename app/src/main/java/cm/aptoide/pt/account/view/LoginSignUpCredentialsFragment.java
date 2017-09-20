@@ -21,7 +21,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
@@ -109,12 +108,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     super.hideKeyboard();
   }
 
-  @Override public void onDestroyView() {
-    unregisterClickHandler(presenter);
-    unlockScreenRotation();
-    super.onDestroyView();
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -137,6 +130,45 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public Observable<Void> showAptoideSignUpAreaClick() {
     return RxView.clicks(signUpSelectionButton);
+  }
+
+  @Override public Observable<Void> googleSignUpEvent() {
+    return RxView.clicks(googleLoginButton)
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
+            getStartupClickOrigin()));
+  }
+
+  @Override public Observable<Void> showHidePasswordClick() {
+    return RxView.clicks(hideShowAptoidePasswordButton);
+  }
+
+  @Override public Observable<Void> forgotPasswordClick() {
+    return RxView.clicks(forgotPasswordButton);
+  }
+
+  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
+    return facebookEmailRequiredDialog.positiveClicks()
+        .map(dialog -> null);
+  }
+
+  @Override public Observable<Void> facebookSignUpEvent() {
+    return RxView.clicks(facebookLoginButton)
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
+            getStartupClickOrigin()));
+  }
+
+  @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
+    return RxView.clicks(buttonLogin)
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
+            getStartupClickOrigin()))
+        .map(click -> getCredentials());
+  }
+
+  @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
+    return RxView.clicks(buttonSignUp)
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
+            getStartupClickOrigin()))
+        .map(click -> getCredentials());
   }
 
   @Override public void showAptoideSignUpArea() {
@@ -172,29 +204,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     facebookLoginButton.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<Void> googleSignUpEvent() {
-    return RxView.clicks(googleLoginButton)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
-            getStartupClickOrigin()));
-  }
-
-  @Override public void showGoogleLogin() {
-    googleLoginButton.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hideGoogleLogin() {
-    googleLoginButton.setVisibility(View.GONE);
-  }
-
   @Override public void showFacebookPermissionsRequiredError(Throwable throwable) {
     if (!facebookEmailRequiredDialog.isShowing()) {
       facebookEmailRequiredDialog.show();
     }
-  }
-
-  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
-    return facebookEmailRequiredDialog.positiveClicks()
-        .map(dialog -> null);
   }
 
   @Override public void hideFacebookLogin() {
@@ -213,36 +226,16 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.icon_closed_eye);
   }
 
-  @Override public Observable<Void> showHidePasswordClick() {
-    return RxView.clicks(hideShowAptoidePasswordButton);
-  }
-
-  @Override public Observable<Void> forgotPasswordClick() {
-    return RxView.clicks(forgotPasswordButton);
-  }
-
   @Override public void dismiss() {
     getActivity().finish();
   }
 
-  @Override public Observable<Void> facebookSignUpEvent() {
-    return RxView.clicks(facebookLoginButton)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
-            getStartupClickOrigin()));
+  @Override public void showGoogleLogin() {
+    googleLoginButton.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
-    return RxView.clicks(buttonLogin)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
-            getStartupClickOrigin()))
-        .map(click -> getCredentials());
-  }
-
-  @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
-    return RxView.clicks(buttonSignUp)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
-            getStartupClickOrigin()))
-        .map(click -> getCredentials());
+  @Override public void hideGoogleLogin() {
+    googleLoginButton.setVisibility(View.GONE);
   }
 
   @Override public boolean tryCloseLoginBottomSheet() {
@@ -256,12 +249,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       return true;
     }
     return false;
-  }
-
-  private AptoideCredentials getCredentials() {
-    return new AptoideCredentials(aptoideEmailEditText.getText()
-        .toString(), aptoidePasswordEditText.getText()
-        .toString());
   }
 
   @Override public boolean isPasswordVisible() {
@@ -278,6 +265,12 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void unlockScreenRotation() {
     orientationManager.unlock();
+  }
+
+  private AptoideCredentials getCredentials() {
+    return new AptoideCredentials(aptoideEmailEditText.getText()
+        .toString(), aptoidePasswordEditText.getText()
+        .toString());
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
@@ -347,5 +340,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper);
     attachPresenter(presenter, null);
     registerClickHandler(presenter);
+  }
+
+  @Override public void onDestroyView() {
+    unregisterClickHandler(presenter);
+    unlockScreenRotation();
+    super.onDestroyView();
   }
 }

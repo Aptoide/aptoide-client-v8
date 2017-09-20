@@ -50,8 +50,10 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
         .subscribe(v -> {
           Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newAppViewFragment(app.getId(), app.getPackageName(),
-                  app.getStore().getAppearance().getTheme(), app.getStore().getName()), true);
+              .newAppViewFragment(app.getId(), app.getPackageName(), app.getStore()
+                  .getAppearance()
+                  .getTheme(), app.getStore()
+                  .getName()), true);
           Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
               app.getPackageName(), false);
         }, throwable -> CrashReport.getInstance()

@@ -1,7 +1,6 @@
 package cm.aptoide.accountmanager;
 
 import java.util.List;
-import rx.Completable;
 
 /**
  * User account information such as subscribed stores, credentials, preferences.

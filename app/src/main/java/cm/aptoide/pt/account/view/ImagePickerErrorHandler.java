@@ -3,8 +3,8 @@ package cm.aptoide.pt.account.view;
 import android.content.Context;
 import android.content.res.Resources;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.utils.GenericDialogs;
 import rx.Observable;
 
 public class ImagePickerErrorHandler {

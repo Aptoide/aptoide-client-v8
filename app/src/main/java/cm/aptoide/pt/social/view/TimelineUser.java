@@ -20,6 +20,7 @@ public class TimelineUser extends DummyPost {
   private final boolean hasNotification;
   @Nullable private final String analyticsUrl;
   private CardType cardType;
+
   public TimelineUser(boolean isLogged, boolean hasNotification, String notificationBody,
       String notificationImage, String notificationUrlAction, int notificationId, boolean hasStats,
       long followers, long following, @Nullable String analyticsUrl) {

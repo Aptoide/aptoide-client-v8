@@ -78,15 +78,6 @@ public class V3AccountService implements AccountService {
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
   }
 
-  @Override public Completable removeAccount() {
-    return authenticationPersistence.removeAuthentication();
-  }
-
-  @Override public Single<Account> getAccount() {
-    return Single.zip(getServerAccount(), getSubscribedStores(),
-        (response, stores) -> mapServerAccountToAccount(response, stores));
-  }
-
   @Override public Single<Account> getAccount(String email, String password) {
     return createAccount(email, password, null, AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
   }
@@ -136,6 +127,11 @@ public class V3AccountService implements AccountService {
           }
           return Single.error(throwable);
         });
+  }
+
+  @Override public Single<Account> getAccount() {
+    return Single.zip(getServerAccount(), getSubscribedStores(),
+        (response, stores) -> mapServerAccountToAccount(response, stores));
   }
 
   @Override public Completable updateAccount(String nickname, String avatarPath) {
@@ -204,6 +200,10 @@ public class V3AccountService implements AccountService {
             return Completable.error(new Exception(V7.getErrorMessage(response)));
           }
         });
+  }
+
+  @Override public Completable removeAccount() {
+    return authenticationPersistence.removeAuthentication();
   }
 
   /**

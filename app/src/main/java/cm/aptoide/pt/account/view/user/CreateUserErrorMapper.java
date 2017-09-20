@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.account.view.AccountErrorMapper;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeoutException;
 

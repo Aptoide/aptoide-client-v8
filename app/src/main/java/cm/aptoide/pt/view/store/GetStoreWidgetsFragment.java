@@ -24,6 +24,5 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
           .first();
       addDisplayables(first);
     };
-
   }
 }
