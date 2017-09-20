@@ -89,7 +89,7 @@
   <string name="title">العنوان</string>
   <string name="tap_a_star">انقر على النجمة للتقييم</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
-  <string name="other_versions_on_different_stores">إصدارات أخرى في متاخر أخرى</string>
+  <string name="other_versions_on_different_stores">إصدارات أخرى في متاجر اخرى</string>
   <string name="review_optional">تعليق (اختياري)</string>
   <string name="feedback_not_valid">من فضلك ادخل موضوع صالح!</string>
   <string name="thank_you_for_your_opinion">شكراً لك على إبداء رأيك!</string>

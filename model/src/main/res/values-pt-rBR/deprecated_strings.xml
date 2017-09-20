@@ -85,14 +85,9 @@
   <string name="yes">Sim</string>
   <string name="no">Não</string>
   <string name="feedback_subject">Assunto</string>
-  <string name="feedback_to_write2">Escreva aqui para enviar o seu feedback…
-
-
- Por favor, inclua o máximo de detalhes que possa dar:
- 
- Passos que deu
- 
- Erros que está vendo</string>
+  <string name="feedback_to_write2">Escreva aqui para nos enviar o seu feedback…\n\n Por favor, inclua o máximo de detalhes que puder:
+\n\• Passos que deu
+\n\• Erros que está vendo</string>
   <string name="feedback_include_logs">Incluir capturas de tela e logs</string>
   <string name="feedback_no_email">Nenhum sistema de e-mail instalado!</string>
   <string name="store_already_added">Loja adicionada!</string>
@@ -156,7 +151,7 @@
   <!-- Tab names -->
   <string name="installed_tab">Instalado</string>
   <string name="updates_tab">Atualizações</string>
-  <string name="feedback_send_button">Enviar Avaliação</string>
+  <string name="feedback_send_button">Enviar feedback</string>
   <!-- NavDrawer List items -->
   <string name="my_account">Minha Conta</string>
   <string name="setting_schdwntitle">Downloads agendados</string>
