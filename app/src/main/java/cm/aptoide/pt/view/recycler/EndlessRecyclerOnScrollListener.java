@@ -113,10 +113,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
           .observeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
-            if (adapter.getItemCount() > 0 && (adapter.getDisplayable(
-                adapter.getItemCount() - 1) instanceof ProgressBarDisplayable)) {
-              adapter.popDisplayable();
-            }
+            popProgressBarDisplayable();
             multiLangPatch.updateTotal(response);
             if (response.hasData()) {
 
@@ -164,13 +161,17 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
           }, error -> {
             error.printStackTrace();
             //remove spinner if webservice respond with error
-            if (adapter.getItemCount() > 0 && (adapter.getDisplayable(
-                adapter.getItemCount() - 1) instanceof ProgressBarDisplayable)) {
-              adapter.popDisplayable();
-            }
+            popProgressBarDisplayable();
             errorRequestListener.onError(error);
             loading = false;
           });
+    }
+  }
+
+  private void popProgressBarDisplayable() {
+    if (adapter.getItemCount() > 0 && (adapter.getDisplayable(
+        adapter.getItemCount() - 1) instanceof ProgressBarDisplayable)) {
+      adapter.popDisplayable();
     }
   }
 
@@ -187,6 +188,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     if (subscription != null && !subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
+
+    popProgressBarDisplayable();
   }
 
   public void reset(V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request) {
