@@ -13,7 +13,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.account.LoginBottomSheet;
@@ -49,7 +48,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   private boolean isInPortraitMode;
   private int currentPosition;
-  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -63,12 +61,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
       throw new IllegalStateException(
           "Context should implement " + LoginBottomSheet.class.getSimpleName());
     }
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -223,7 +215,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   @Override public void bindViews(@Nullable View view) {
     viewPager = (AptoideViewPager) view.findViewById(R.id.view_pager);
-    viewPager.setAptoideNavigationTracker(aptoideNavigationTracker);
+    viewPager.setAptoideNavigationTracker(navigationTracker);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);
