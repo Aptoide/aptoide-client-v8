@@ -7,6 +7,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AdTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialAppTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstall;
@@ -453,7 +454,7 @@ public class TimelineResponseCardMapper {
                   CardType.MINIMAL_CARD));
         }
         CardType cardType = CardType.AGGREGATED_SOCIAL_INSTALL;
-        if (item instanceof AggregatedSocialInstallTimelineItem) {
+        if (item instanceof AggregatedSocialAppTimelineItem) {
           cardType = CardType.AGGREGATED_SOCIAL_APP;
         }
         cards.add(new AggregatedRecommendation("n/a", posters, subposts,

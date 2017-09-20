@@ -1,12 +1,12 @@
 package cm.aptoide.pt.social.presenter;
 
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.account.view.LoginSignUpFragment;
+import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
-import cm.aptoide.pt.view.account.LoginSignUpFragment;
-import cm.aptoide.pt.view.account.MyAccountFragment;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.TabNavigation;
@@ -34,88 +34,88 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override
   public void navigateToAppView(long appId, String packageName, AppViewFragment.OpenType openType) {
     fragmentNavigator.navigateTo(
-        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY));
+        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY), true);
   }
 
   @Override public void navigateToAppView(String packageName, AppViewFragment.OpenType openType) {
     fragmentNavigator.navigateTo(
-        AppViewFragment.newInstance(packageName, AppViewFragment.OpenType.OPEN_ONLY));
+        AppViewFragment.newInstance(packageName, AppViewFragment.OpenType.OPEN_ONLY), true);
   }
 
   @Override public void navigateToStoreHome(String storeName, String storeTheme) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newStoreFragment(storeName, storeTheme));
+        .newStoreFragment(storeName, storeTheme), true);
   }
 
   @Override public void navigateToStoreTimeline(long userId, String storeTheme) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline,
-            StoreFragment.OpenType.GetHome));
+            StoreFragment.OpenType.GetHome), true);
   }
 
   @Override public void navigateToStoreTimeline(String storeName, String storeTheme) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline,
-            StoreFragment.OpenType.GetHome));
+            StoreFragment.OpenType.GetHome), true);
   }
 
   @Override public void navigateToAddressBook() {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAddressBookFragment());
+        .newAddressBookFragment(), true);
   }
 
   @Override public void navigateToLoginView() {
-    fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false));
+    fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false), true);
   }
 
   @Override public void navigateToMyAccountView() {
-    fragmentNavigator.navigateTo(MyAccountFragment.newInstance());
+    fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
 
   @Override public void navigateToCommentsWithCommentDialogOpen(String cardId) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId));
+        .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId), true);
   }
 
   // FIXME what should happen if storeId <= 0 ?
   @Override public void navigateToFollowersViewStore(Long storeId, String title) {
     if (storeId > 0) {
       fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-          .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title));
+          .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title), true);
     }
   }
 
   @Override public void navigateToFollowersViewStore(String title) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowersFragment("DEFAULT", title));
+        .newTimeLineFollowersFragment("DEFAULT", title), true);
   }
 
   @Override public void navigateToFollowersViewUser(Long userId, String title) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowersUsingUserIdFragment(userId, "DEFAULT", title));
+        .newTimeLineFollowersUsingUserIdFragment(userId, "DEFAULT", title), true);
   }
 
   // FIXME what should happen if storeId <= 0 ?
   @Override public void navigateToFollowingViewStore(Long storeId, String title) {
     if (storeId > 0) {
       fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-          .newTimeLineFollowingFragmentUsingStoreId(storeId, "DEFAULT", title));
+          .newTimeLineFollowingFragmentUsingStoreId(storeId, "DEFAULT", title), true);
     }
   }
 
   @Override public void navigateToFollowingViewUser(Long userId, String title) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowingFragmentUsingUserId(userId, "DEFAULT", title));
+        .newTimeLineFollowingFragmentUsingUserId(userId, "DEFAULT", title), true);
   }
 
   @Override public void navigateToLikesView(String cardId, long numberOfLikes) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineLikesFragment(cardId, numberOfLikes, "default", likesTitle));
+        .newTimeLineLikesFragment(cardId, numberOfLikes, "default", likesTitle), true);
   }
 
   @Override public void navigateToComments(String cardId) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId));
+        .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId), true);
   }
 
   @Override public Observable<String> postNavigation() {
@@ -127,6 +127,6 @@ public class TimelineNavigator implements TimelineNavigation {
   }
 
   @Override public void navigateToNotificationCenter() {
-    fragmentNavigator.navigateTo(new InboxFragment());
+    fragmentNavigator.navigateTo(new InboxFragment(), true);
   }
 }

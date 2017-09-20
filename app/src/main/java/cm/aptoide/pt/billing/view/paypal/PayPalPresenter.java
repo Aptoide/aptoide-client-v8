@@ -82,7 +82,7 @@ public class PayPalPresenter implements Presenter {
             .flatMapCompletable(result -> processPayPalPayment(result).observeOn(viewScheduler)
                 .doOnCompleted(() -> {
                   view.hideLoading();
-                  billingNavigator.popTransactionAuthorizationView();
+                  billingNavigator.popView();
                 })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -95,7 +95,7 @@ public class PayPalPresenter implements Presenter {
         .flatMap(created -> view.errorDismisses())
         .doOnNext(product -> {
           analytics.sendAuthorizationErrorEvent(paymentMethodName);
-          billingNavigator.popTransactionAuthorizationView();
+          billingNavigator.popView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

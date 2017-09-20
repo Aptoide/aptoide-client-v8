@@ -46,9 +46,9 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonActivity;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.TabNavigator;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -123,7 +123,7 @@ public class PostFragment extends FragmentView implements PostView {
     TokenInvalidator tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     OkHttpClient okHttpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     Converter.Factory converterFactory = WebService.getDefaultConverter();
@@ -225,7 +225,7 @@ public class PostFragment extends FragmentView implements PostView {
 
     final PostRemoteAccessor postRemoteAccessor =
         new PostRemoteAccessor(aptoideApplication.getDefaultSharedPreferences(),
-            aptoideApplication.getBaseBodyInterceptorV7Pool(),
+            aptoideApplication.getAccountSettingsBodyInterceptorPoolV7(),
             aptoideApplication.getDefaultClient(), WebService.getDefaultConverter(),
             aptoideApplication.getTokenInvalidator());
 
@@ -246,7 +246,7 @@ public class PostFragment extends FragmentView implements PostView {
     presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
-        new AccountNavigator(getFragmentNavigator(), accountManager), urlProvider, tabNavigator,
+        ((ActivityResultNavigator) getContext()).getAccountNavigator(), urlProvider, tabNavigator,
         analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
     attachPresenter(presenter, null);

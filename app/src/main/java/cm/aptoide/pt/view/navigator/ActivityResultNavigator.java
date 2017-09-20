@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.navigator;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -8,38 +9,43 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.NavigationProvider;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.billing.view.BillingNavigator;
+import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
+import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
+import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
+import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.HashMap;
 import java.util.Map;
 import rx.Observable;
 
-public abstract class ActivityResultNavigator extends LeakActivity
-    implements ActivityNavigator, NavigationProvider {
+public abstract class ActivityResultNavigator extends LeakActivity implements ActivityNavigator {
 
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
-  private HashMap<Integer, Result> fragmentResultMap;
+  private Map<Integer, Result> fragmentResultMap;
+  private AccountNavigator accountNavigator;
+  private BillingNavigator billingNavigator;
+  private ScreenOrientationManager screenOrientationManager;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
   }
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-    fragmentResultRelay = BehaviorRelay.create();
-    fragmentResultMap = new HashMap<>();
+  @SuppressLint("UseSparseArrays") @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    fragmentResultRelay = ((AptoideApplication) getApplicationContext()).getFragmentResultRelay();
+    fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResulMap();
     fragmentNavigator =
         new FragmentResultNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
-            android.R.anim.fade_in, android.R.anim.fade_out,
-            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
-            ((AptoideApplication) getApplicationContext()).getDefaultStore(),
-            ((AptoideApplication) getApplicationContext()).getDefaultTheme(), fragmentResultMap,
+            android.R.anim.fade_in, android.R.anim.fade_out, fragmentResultMap,
             fragmentResultRelay);
     // super.onCreate handles fragment creation using FragmentManager.
     // Make sure navigator instances are already created when fragments are created,
@@ -68,10 +74,7 @@ public abstract class ActivityResultNavigator extends LeakActivity
     startActivityForResult(intent, requestCode);
   }
 
-  @Override
-  public void navigateForResult(Class<? extends Activity> activityClass, int requestCode) {
-    final Intent intent = new Intent();
-    intent.setComponent(new ComponentName(this, activityClass));
+  @Override public void navigateForResult(Intent intent, int requestCode) {
     startActivityForResult(intent, requestCode);
   }
 
@@ -123,15 +126,56 @@ public abstract class ActivityResultNavigator extends LeakActivity
     startActivity(intent);
   }
 
-  @Override public ActivityNavigator getActivityNavigator() {
+  @Override public Observable<Result> results() {
+    return resultRelay;
+  }
+
+  @Override public Activity getActivity() {
     return this;
   }
 
-  @Override public FragmentNavigator getFragmentNavigator() {
+  public ActivityNavigator getActivityNavigator() {
+    return this;
+  }
+
+  public FragmentNavigator getFragmentNavigator() {
     return fragmentNavigator;
   }
 
   public Map<Integer, Result> getFragmentResultMap() {
     return fragmentResultMap;
+  }
+
+  public AccountNavigator getAccountNavigator() {
+    if (accountNavigator == null) {
+      accountNavigator = new AccountNavigator(getFragmentNavigator(),
+          ((AptoideApplication) getApplicationContext()).getAccountManager(),
+          getActivityNavigator(), LoginManager.getInstance(),
+          ((AptoideApplication) getApplicationContext()).getFacebookCallbackManager(),
+          ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
+          ((AptoideApplication) getApplicationContext()).getFacebookLoginResultRelay(),
+          ((AptoideApplication) getApplicationContext()).getDefaultStore(),
+          ((AptoideApplication) getApplicationContext()).getDefaultTheme(),
+          "http://m.aptoide.com/account/password-recovery");
+    }
+    return accountNavigator;
+  }
+
+  public BillingNavigator getBillingNavigator() {
+    if (billingNavigator == null) {
+      billingNavigator =
+          new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
+              getActivityNavigator(), getFragmentNavigator(),
+              ((AptoideApplication) getApplicationContext()).getMarketName());
+    }
+    return billingNavigator;
+  }
+
+  public ScreenOrientationManager getScreenOrientationManager() {
+    if (screenOrientationManager == null) {
+      screenOrientationManager =
+          new ScreenOrientationManager(this, (WindowManager) this.getSystemService(WINDOW_SERVICE));
+    }
+    return screenOrientationManager;
   }
 }

@@ -37,7 +37,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
 
   @Override public void bindView(CommentsReadMoreDisplayable displayable) {
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();

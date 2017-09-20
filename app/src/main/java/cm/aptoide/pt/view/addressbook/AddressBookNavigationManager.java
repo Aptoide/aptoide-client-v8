@@ -37,7 +37,7 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
 
   @Override public void navigateToPhoneInputView() {
     this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newPhoneInputFragment(exitNavigationFragmentTag));
+        .newPhoneInputFragment(exitNavigationFragmentTag), true);
   }
 
   @Override
@@ -46,18 +46,18 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
       case ERROR:
         this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newInviteFriendsFragment(InviteFriendsContract.View.OpenMode.ERROR,
-                exitNavigationFragmentTag));
+                exitNavigationFragmentTag), true);
         break;
       case NO_FRIENDS:
         this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newInviteFriendsFragment(InviteFriendsContract.View.OpenMode.NO_FRIENDS,
-                exitNavigationFragmentTag));
+                exitNavigationFragmentTag), true);
         break;
       case CONTACTS_PERMISSION_DENIAL:
         this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newInviteFriendsFragment(
                 InviteFriendsContract.View.OpenMode.CONTACTS_PERMISSION_DENIAL,
-                exitNavigationFragmentTag));
+                exitNavigationFragmentTag), true);
         break;
       default:
         Logger.d(this.getClass()
@@ -67,16 +67,17 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
 
   @Override public void showAboutFragment() {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newDescriptionFragment(aboutFragmentActionBarTitle, aboutFragmentBodyMessage, "default"));
+            .newDescriptionFragment(aboutFragmentActionBarTitle, aboutFragmentBodyMessage, "default"),
+        true);
   }
 
   @Override public void showSuccessFragment(List<Contact> contacts) {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newSyncSuccessFragment(contacts, exitNavigationFragmentTag));
+        .newSyncSuccessFragment(contacts, exitNavigationFragmentTag), true);
   }
 
   @Override public void navigateToThankYouConnectingFragment() {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newThankYouConnectingFragment(exitNavigationFragmentTag));
+        .newThankYouConnectingFragment(exitNavigationFragmentTag), true);
   }
 }

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
@@ -17,8 +18,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.share.ShareAppHelper;
 import com.jakewharton.rxbinding.view.RxView;
@@ -71,10 +72,10 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     converterFactory = WebService.getDefaultConverter();
 
     this.bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
 
     final AccountNavigator accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager);
+        ((ActivityResultNavigator) getContext()).getAccountNavigator();
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(),

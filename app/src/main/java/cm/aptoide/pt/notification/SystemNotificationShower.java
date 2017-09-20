@@ -6,9 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.RemoteViews;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotification;
@@ -94,29 +96,38 @@ public class SystemNotificationShower {
         .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
         .map(notification -> setExpandedView(context, title, body, notificationId, notification,
-            appName, graphic));
+            appName, graphic, iconUrl));
   }
 
   private android.app.Notification setExpandedView(Context context, String title, String body,
-      int notificationId, Notification notification, String appName, String graphic) {
+      int notificationId, Notification notification, String appName, String graphic,
+      String iconUrl) {
 
-    if (Build.VERSION.SDK_INT >= 16 && !TextUtils.isEmpty(graphic)) {
+    if (Build.VERSION.SDK_INT >= 16) {
       RemoteViews expandedView =
           new RemoteViews(context.getPackageName(), R.layout.pushnotificationlayout);
       //in this case, large icon is loaded already, so instead of reloading it, we just reuse it
-      expandedView.setImageViewBitmap(R.id.icon, notification.largeIcon);
+      loadImage(context, notificationId, notification, iconUrl, expandedView, R.id.icon);
       expandedView.setTextViewText(R.id.title, title);
       expandedView.setTextViewText(R.id.app_name, appName);
       expandedView.setTextViewText(R.id.description, body);
+      if (!TextUtils.isEmpty(graphic)) {
+        loadImage(context, notificationId, notification, graphic, expandedView,
+            R.id.push_notification_graphic);
+      } else {
+        expandedView.setViewVisibility(R.id.push_notification_graphic, View.GONE);
+      }
       notification.bigContentView = expandedView;
-
-      NotificationTarget notificationTarget =
-          new NotificationTarget(context, expandedView, R.id.push_notification_graphic,
-              notification, notificationId);
-      ImageLoader.with(context)
-          .loadImageToNotification(notificationTarget, graphic);
     }
     return notification;
+  }
+
+  private void loadImage(Context context, int notificationId, Notification notification, String url,
+      RemoteViews expandedView, @IdRes int viewId) {
+    NotificationTarget notificationTarget =
+        new NotificationTarget(context, expandedView, viewId, notification, notificationId);
+    ImageLoader.with(context)
+        .loadImageToNotification(notificationTarget, url);
   }
 
   public PendingIntent getOnDismissAction(int notificationId) {

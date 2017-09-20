@@ -42,7 +42,7 @@ public class PaymentActivity extends BraintreeActivity {
 
     if (savedInstanceState == null) {
       getFragmentNavigator().navigateToWithoutBackSave(
-          PaymentFragment.create(getIntent().getExtras()));
+          PaymentFragment.create(getIntent().getExtras()), true);
     }
 
     syncManager = ((AptoideApplication) getApplication()).getBillingSyncManager();

@@ -127,10 +127,10 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
     if (store != null) {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
-          .newStoreFragment(store.getName(), theme, StoreFragment.OpenType.GetHome));
+          .newStoreFragment(store.getName(), theme, StoreFragment.OpenType.GetHome), true);
     } else {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
-          .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome));
+          .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome), true);
     }
   }
 

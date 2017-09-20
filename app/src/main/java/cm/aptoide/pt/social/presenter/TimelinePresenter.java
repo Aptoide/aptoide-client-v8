@@ -276,7 +276,7 @@ public class TimelinePresenter implements Presenter {
                         .getComments()
                         .size() - 1)
                     .getUserId(), "DEFAULT", Event.Name.getUserTimeline,
-                StoreFragment.OpenType.GetHome))))
+                StoreFragment.OpenType.GetHome), true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
@@ -347,7 +347,7 @@ public class TimelinePresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.floatingActionButtonClicked()
             .doOnNext(click -> timelineAnalytics.sendFabClicked())
-            .doOnNext(__2 -> fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline())))
+            .doOnNext(__2 -> fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline(),true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());

@@ -46,18 +46,18 @@ import rx.Observable;
  */
 public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
+  protected AptoideAccountManager accountManager;
+  protected StoreUtilsProxy storeUtilsProxy;
+  protected InstalledRepository installedRepository;
+  protected StoreAnalytics storeAnalytics;
   private SharedPreferences sharedPreferences;
   private IdsRepository idsRepository;
-  private AptoideAccountManager accountManager;
-  private StoreUtilsProxy storeUtilsProxy;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private InstalledRepository installedRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
   private TokenInvalidator tokenInvalidator;
-  private StoreAnalytics storeAnalytics;
   private String partnerId;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
@@ -90,8 +90,19 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
             Analytics.getInstance());
   }
 
-  protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
-      boolean refresh, String url) {
+  protected Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
+    return Observable.from(getStoreWidgets.getDataList()
+        .getList())
+        .flatMap(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository,
+            storeContext, getContext(), accountManager, storeUtilsProxy,
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+            getContext().getResources(), installedRepository, storeAnalytics))
+        .toList()
+        .first();
+  }
+
+  protected Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
+      GetStoreWidgets getStoreWidgets, boolean refresh, String url) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .flatMap(wsWidget -> {
@@ -110,12 +121,6 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())
-        .concatMap(wsWidget -> {
-          return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
-              getContext(), accountManager, storeUtilsProxy,
-              (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-              getContext().getResources(), installedRepository, storeAnalytics);
-        })
         .toList()
         .first();
   }

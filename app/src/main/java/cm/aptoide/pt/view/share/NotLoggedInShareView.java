@@ -1,17 +1,31 @@
 package cm.aptoide.pt.view.share;
 
-import cm.aptoide.pt.presenter.SocialLoginView;
+import cm.aptoide.pt.account.view.GooglePlayServicesView;
 import rx.Observable;
 
-/**
- * Created by pedroribeiro on 30/08/17.
- */
+public interface NotLoggedInShareView extends GooglePlayServicesView {
 
-public interface NotLoggedInShareView extends SocialLoginView {
+  Observable<Void> closeEvent();
 
-  void initializeFacebookCallback();
+  Observable<Void> facebookSignUpEvent();
 
-  Observable<Void> closeClick();
+  Observable<Void> googleSignUpEvent();
 
-  void closeFragment();
+  Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
+
+  void showError(String message);
+
+  void showFacebookPermissionsRequiredError(Throwable throwable);
+
+  void showLoading();
+
+  void hideLoading();
+
+  void showFacebookLogin();
+
+  void hideFacebookLogin();
+
+  void showGoogleLogin();
+
+  void hideGoogleLogin();
 }

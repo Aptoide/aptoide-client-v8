@@ -1,8 +1,8 @@
 package cm.aptoide.pt.download;
 
-import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.networking.Authentication;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -12,10 +12,10 @@ import okhttp3.Response;
 
 public class PaidAppsDownloadInterceptor implements Interceptor {
 
-  private final AptoideAccountManager accountManager;
+  private final AuthenticationPersistence authenticationPersistence;
 
-  public PaidAppsDownloadInterceptor(AptoideAccountManager accountManager) {
-    this.accountManager = accountManager;
+  public PaidAppsDownloadInterceptor(AuthenticationPersistence authenticationPersistence) {
+    this.authenticationPersistence = authenticationPersistence;
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
@@ -26,12 +26,10 @@ public class PaidAppsDownloadInterceptor implements Interceptor {
     if (request.url()
         .host()
         .contains(BuildConfig.APTOIDE_WEB_SERVICES_HOST)) {
-      final Account account = accountManager.accountStatus()
-          .first()
-          .toSingle()
+      final Authentication account = authenticationPersistence.getAuthentication()
           .toBlocking()
           .value();
-      if (account.isLoggedIn()) {
+      if (account.isAuthenticated()) {
         request = request.newBuilder()
             .post(RequestBody.create(MediaType.parse("application/json"),
                 "{\"access_token\" : \"" + account.getAccessToken() + "\"}"))

@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -142,16 +143,18 @@ public class CommentDialogFragment
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
         AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+    Analytics analytics = Analytics.getInstance();
+    timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool(),
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, analytics));
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

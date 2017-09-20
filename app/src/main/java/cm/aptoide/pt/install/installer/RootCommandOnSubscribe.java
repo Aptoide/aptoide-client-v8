@@ -41,10 +41,10 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
 
       if (!RootShell.isRootAvailable()) {
         subscriber.onError(new InstallationException("No root permissions"));
-        Logger.d(TAG, "call: root available");
+        Logger.d(TAG, "call: root not available");
         return;
       }
-
+      analytics.rootInstallStart();
       Command installCommand = new Command(installId, command) {
         @Override public void commandOutput(int id, String line) {
           Logger.d(TAG, "commandOutput: " + line);
@@ -97,7 +97,7 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
       shell.add(installCommand);
     } catch (IOException | TimeoutException | RootDeniedException e) {
       if (e instanceof RootDeniedException) {
-        analytics.rootInstallFail(e);
+        analytics.rootInstallCancelled();
         subscriber.onError(new InstallationException("User didn't accept root permissions"));
       } else if (e instanceof TimeoutException) {
         subscriber.onError(new RootCommandTimeoutException());
