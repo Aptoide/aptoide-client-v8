@@ -8,7 +8,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import java.util.List;
-import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Completable;
@@ -36,16 +35,17 @@ public class FacebookSignUpAdapter implements SignUpAdapter<FacebookLoginResult>
     }
 
     if (result.getState() == FacebookLoginResult.STATE_CANCELLED) {
-      return Single.error(
-          new FacebookSignUpException(FacebookSignUpException.USER_CANCELLED));
+      return Single.error(new FacebookSignUpException(FacebookSignUpException.USER_CANCELLED));
     }
 
     if (result.getState() == FacebookLoginResult.STATE_ERROR) {
       return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR));
     }
 
-    if (declinedRequiredPermissions(result.getResult()
-        .getRecentlyDeniedPermissions())) {
+    if (!result.getResult()
+        .getAccessToken()
+        .getPermissions()
+        .containsAll(facebookRequiredPermissions)) {
       return Single.error(new FacebookSignUpException(FacebookSignUpException.
           MISSING_REQUIRED_PERMISSIONS));
     }
@@ -66,10 +66,6 @@ public class FacebookSignUpAdapter implements SignUpAdapter<FacebookLoginResult>
     return loginPreferences.isFacebookLoginEnabled();
   }
 
-  private boolean declinedRequiredPermissions(Set<String> declinedPermissions) {
-    return declinedPermissions.containsAll(facebookRequiredPermissions);
-  }
-
   private Single<String> getFacebookEmail(AccessToken accessToken) {
     return Single.defer(() -> {
       final GraphResponse response = GraphRequest.newMeRequest(accessToken, null)
@@ -80,8 +76,7 @@ public class FacebookSignUpAdapter implements SignUpAdapter<FacebookLoginResult>
           return Single.just(
               object.has("email") ? object.getString("email") : object.getString("id"));
         } catch (JSONException ignored) {
-          return Single.error(
-              new FacebookSignUpException(FacebookSignUpException.ERROR));
+          return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR));
         }
       } else {
         return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR));

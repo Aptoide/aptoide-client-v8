@@ -175,11 +175,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe();
 
-    facebookEmailRequiredDialog.dismisses()
-        .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe();
-
     handler = () -> {
       backButtonRelay.call(null);
       return true;
@@ -208,6 +203,14 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
             accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
             AndroidSchedulers.mainThread(), orientationManager), savedInstanceState);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    facebookEmailRequiredDialog.dismisses()
+        .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
+        .compose(bindUntilEvent(FragmentEvent.PAUSE))
+        .subscribe();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
