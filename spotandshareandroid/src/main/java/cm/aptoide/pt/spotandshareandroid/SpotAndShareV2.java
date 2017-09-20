@@ -198,7 +198,6 @@ class SpotAndShareV2 {
 
   public boolean canSend() {
     if (!isHotspot) {
-      //// TODO: 17-07-2017 filipe if it is suposed to check the list, then it should receive the full list
       return true;
     }
     return observeFriends().map(friends -> friends.size() > 0)
