@@ -54,7 +54,6 @@ public class NotLoggedInSharePresenter implements Presenter {
     handleFacebookSignInWithRequiredPermissionsEvent();
 
     handleCloseEvent();
-
   }
 
   @Override public void saveState(Bundle state) {

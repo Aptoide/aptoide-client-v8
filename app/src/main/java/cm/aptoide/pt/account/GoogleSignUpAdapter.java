@@ -37,10 +37,6 @@ public class GoogleSignUpAdapter implements SignUpAdapter<GoogleSignInResult> {
     }
   }
 
-  @Override public boolean isEnabled() {
-    return preferences.isGoogleLoginEnabled();
-  }
-
   @Override public Completable logout() {
     return Completable.defer(() -> {
       if (client.blockingConnect()
@@ -53,5 +49,9 @@ public class GoogleSignUpAdapter implements SignUpAdapter<GoogleSignInResult> {
       }
     })
         .subscribeOn(Schedulers.io());
+  }
+
+  @Override public boolean isEnabled() {
+    return preferences.isGoogleLoginEnabled();
   }
 }

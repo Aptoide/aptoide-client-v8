@@ -18,8 +18,8 @@ public class GetMySubscribedStoresRequest
   public GetMySubscribedStoresRequest(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(new Body(), getHost(sharedPreferences), httpClient, converterFactory,
-        bodyInterceptor, tokenInvalidator);
+    super(new Body(), getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   @Override

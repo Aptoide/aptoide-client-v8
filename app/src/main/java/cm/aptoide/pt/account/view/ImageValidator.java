@@ -1,8 +1,8 @@
 package cm.aptoide.pt.account.view;
 
 import android.graphics.Bitmap;
-import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

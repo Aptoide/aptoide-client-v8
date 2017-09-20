@@ -24,12 +24,12 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.networking.Authentication;
-import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networking.Authentication;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.notification.PullingContentService;
 import cm.aptoide.pt.preferences.toolbox.ToolboxKeys;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -106,8 +106,8 @@ public class ToolboxContentProvider extends ContentProvider {
           if (AptoideAccountManager.APTOIDE_SIGN_UP_TYPE.equals(authentication.getType())) {
             return create("userPass",
                 AptoideUtils.AlgorithmU.computeSha1(authentication.getPassword()));
-          } else if (FacebookSignUpAdapter.TYPE.equals(authentication.getType()) || GoogleSignUpAdapter.TYPE.equals(
-              authentication.getType())) {
+          } else if (FacebookSignUpAdapter.TYPE.equals(authentication.getType())
+              || GoogleSignUpAdapter.TYPE.equals(authentication.getType())) {
             return create("userPass", authentication.getPassword());
           }
         case LOGIN_TYPE:

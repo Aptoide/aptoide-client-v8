@@ -100,6 +100,26 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    outState.putBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE,
+        usernamePasswordContainerVisible);
+    outState.putBoolean(EXTRA_LOGIN_VISIBLE, loginVisible);
+    outState.putBoolean(EXTRA_PASSWORD_VISIBLE, passwordVisible);
+    outState.putBoolean(EXTRA_FACEBOOK_DIALOG_VISIBLE, facebookEmailRequiredDialogVisible);
+    outState.putBoolean(EXTRA_PROGRESS_VISIBLE, progressVisible);
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+
+    if (item.getItemId() == android.R.id.home) {
+      upNavigationRelay.call(null);
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -205,22 +225,37 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
             AndroidSchedulers.mainThread(), orientationManager), savedInstanceState);
   }
 
+  @Override public void onDestroyView() {
+    unregisterClickHandler(handler);
+    facebookEmailRequiredDialog.dismiss();
+    facebookEmailRequiredDialog = null;
+    facebookButton = null;
+    googleButton = null;
+    progressDialog.dismiss();
+    progressDialog = null;
+    rootView = null;
+    aptoideLoginSignUpSeparator = null;
+    aptoideLoginSignUpButtonContainer = null;
+    aptoideSignUpContainer = null;
+    aptoideLoginContainer = null;
+    aptoideJoinToggle = null;
+    aptoideLoginToggle = null;
+    usernamePasswordContainer = null;
+    recoverPasswordButton = null;
+    aptoideLoginButton = null;
+    aptoideSignUpButton = null;
+    usernameEditText = null;
+    passwordEditText = null;
+    passwordShowHideToggle = null;
+    super.onDestroyView();
+  }
+
   @Override public void onResume() {
     super.onResume();
     facebookEmailRequiredDialog.dismisses()
         .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
         .compose(bindUntilEvent(FragmentEvent.PAUSE))
         .subscribe();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    outState.putBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE,
-        usernamePasswordContainerVisible);
-    outState.putBoolean(EXTRA_LOGIN_VISIBLE, loginVisible);
-    outState.putBoolean(EXTRA_PASSWORD_VISIBLE, passwordVisible);
-    outState.putBoolean(EXTRA_FACEBOOK_DIALOG_VISIBLE, facebookEmailRequiredDialogVisible);
-    outState.putBoolean(EXTRA_PROGRESS_VISIBLE, progressVisible);
-    super.onSaveInstanceState(outState);
   }
 
   @Override public Observable<Void> backButtonEvent() {
@@ -243,28 +278,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
 
   @Override public Observable<Void> googleSignUpEvent() {
     return RxView.clicks(googleButton);
-  }
-
-  @Override public void showLoading() {
-    progressVisible = true;
-    progressDialog.show();
-  }
-
-  @Override public void hideLoading() {
-    progressVisible = false;
-    progressDialog.dismiss();
-  }
-
-  @Override public void showError(String message) {
-    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
-        .show();
-  }
-
-  @Override public void showFacebookPermissionsRequiredError() {
-    if (!facebookEmailRequiredDialog.isShowing()) {
-      facebookEmailRequiredDialogVisible = true;
-      facebookEmailRequiredDialog.show();
-    }
   }
 
   @Override public Observable<Void> recoverPasswordEvent() {
@@ -294,39 +307,26 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .map(dialogInterface -> null);
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-
-    if (item.getItemId() == android.R.id.home) {
-      upNavigationRelay.call(null);
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
+  @Override public void showLoading() {
+    progressVisible = true;
+    progressDialog.show();
   }
 
-  @Override public void onDestroyView() {
-    unregisterClickHandler(handler);
-    facebookEmailRequiredDialog.dismiss();
-    facebookEmailRequiredDialog = null;
-    facebookButton = null;
-    googleButton = null;
+  @Override public void hideLoading() {
+    progressVisible = false;
     progressDialog.dismiss();
-    progressDialog = null;
-    rootView = null;
-    aptoideLoginSignUpSeparator = null;
-    aptoideLoginSignUpButtonContainer = null;
-    aptoideSignUpContainer = null;
-    aptoideLoginContainer = null;
-    aptoideJoinToggle = null;
-    aptoideLoginToggle = null;
-    usernamePasswordContainer = null;
-    recoverPasswordButton = null;
-    aptoideLoginButton = null;
-    aptoideSignUpButton = null;
-    usernameEditText = null;
-    passwordEditText = null;
-    passwordShowHideToggle = null;
-    super.onDestroyView();
+  }
+
+  @Override public void showError(String message) {
+    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showFacebookPermissionsRequiredError() {
+    if (!facebookEmailRequiredDialog.isShowing()) {
+      facebookEmailRequiredDialogVisible = true;
+      facebookEmailRequiredDialog.show();
+    }
   }
 
   private void showUsernamePasswordContainer(boolean showLogin) {

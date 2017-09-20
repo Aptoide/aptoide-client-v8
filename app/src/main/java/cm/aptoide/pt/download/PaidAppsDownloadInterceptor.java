@@ -1,8 +1,8 @@
 package cm.aptoide.pt.download;
 
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.networking.Authentication;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
-import cm.aptoide.pt.dataprovider.BuildConfig;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;

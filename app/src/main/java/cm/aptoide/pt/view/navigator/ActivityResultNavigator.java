@@ -82,10 +82,6 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     return resultRelay.filter(result -> result.getRequestCode() == requestCode);
   }
 
-  @Override public Observable<Result> results() {
-    return resultRelay;
-  }
-
   @Override public Observable<Result> navigateForResult(String action, Uri uri, int requestCode) {
     startActivityForResult(new Intent(action, uri), requestCode);
     return resultRelay.filter(result -> result.getRequestCode() == requestCode);
@@ -128,6 +124,10 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
+  }
+
+  @Override public Observable<Result> results() {
+    return resultRelay;
   }
 
   @Override public Activity getActivity() {
@@ -173,8 +173,8 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
 
   public ScreenOrientationManager getScreenOrientationManager() {
     if (screenOrientationManager == null) {
-      screenOrientationManager = new ScreenOrientationManager(this,
-          (WindowManager) this.getSystemService(WINDOW_SERVICE));
+      screenOrientationManager =
+          new ScreenOrientationManager(this, (WindowManager) this.getSystemService(WINDOW_SERVICE));
     }
     return screenOrientationManager;
   }

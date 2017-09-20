@@ -24,6 +24,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -36,7 +37,6 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.custom.BadgeView;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
@@ -387,7 +387,7 @@ public class HomeFragment extends StoreFragment {
         .subscribe(installed -> {
           if (installed == null) {
             getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY),
+                    .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY),
                 true);
           } else {
             Intent i = getContext().getPackageManager()

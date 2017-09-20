@@ -230,7 +230,7 @@ public class DeepLinkManager {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
         fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-            .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)),
+                .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)),
             true);
       }
     }

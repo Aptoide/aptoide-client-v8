@@ -70,6 +70,14 @@ public class PaymentLoginPresenter implements Presenter {
     handleAptoideSignUpEvent();
   }
 
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
+  }
+
   private void handleGrantFacebookRequiredPermissionsEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -290,13 +298,5 @@ public class PaymentLoginPresenter implements Presenter {
 
   private void sendAptoideSignUpFailEvent() {
     Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

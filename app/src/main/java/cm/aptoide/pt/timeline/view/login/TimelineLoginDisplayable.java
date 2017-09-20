@@ -1,8 +1,8 @@
 package cm.aptoide.pt.timeline.view.login;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 
 /**

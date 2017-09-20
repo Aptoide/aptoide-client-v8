@@ -11,12 +11,10 @@ import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import java.util.Collection;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -36,8 +34,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
-      AptoideAccountManager accountManager,
-      CrashReport crashReport, boolean dismissToNavigateToMainView, boolean navigateToHome,
+      AptoideAccountManager accountManager, CrashReport crashReport,
+      boolean dismissToNavigateToMainView, boolean navigateToHome,
       AccountNavigator accountNavigator, Collection<String> permissions,
       Collection<String> requiredPermissions, ThrowableToStringMapper errorMapper) {
     this.view = view;

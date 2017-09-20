@@ -1,8 +1,6 @@
 package cm.aptoide.pt.view.share;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
@@ -125,20 +123,12 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     return Analytics.Account.StartupClickOrigin.NOT_LOGGED_IN_DIALOG;
   }
 
-  @Override public void showFacebookLogin() {
-    facebookLoginButton.setVisibility(View.VISIBLE);
+  private View getRootView() {
+    return getActivity().findViewById(android.R.id.content);
   }
 
-  @Override public void hideFacebookLogin() {
-    facebookLoginButton.setVisibility(View.GONE);
-  }
-
-  @Override public void showGoogleLogin() {
-    googleLoginButton.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hideGoogleLogin() {
-    googleLoginButton.setVisibility(View.GONE);
+  @Override public Observable<Void> closeEvent() {
+    return RxView.clicks(closeButton);
   }
 
   @Override public Observable<Void> facebookSignUpEvent() {
@@ -153,15 +143,20 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
             getStartupClickOrigin()));
   }
 
+  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
+    return facebookEmailRequiredDialog.positiveClicks()
+        .map(dialog -> null);
+  }
+
+  @Override public void showError(String message) {
+    Snackbar.make(getRootView(), message, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
   @Override public void showFacebookPermissionsRequiredError(Throwable throwable) {
     if (!facebookEmailRequiredDialog.isShowing()) {
       facebookEmailRequiredDialog.show();
     }
-  }
-
-  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
-    return facebookEmailRequiredDialog.positiveClicks()
-        .map(dialog -> null);
   }
 
   @Override public void showLoading() {
@@ -172,17 +167,20 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     progressDialog.dismiss();
   }
 
-  @Override public void showError(String message) {
-    Snackbar.make(getRootView(), message, Snackbar.LENGTH_LONG)
-        .show();
+  @Override public void showFacebookLogin() {
+    facebookLoginButton.setVisibility(View.VISIBLE);
   }
 
-  private View getRootView() {
-    return getActivity().findViewById(android.R.id.content);
+  @Override public void hideFacebookLogin() {
+    facebookLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Void> closeEvent() {
-    return RxView.clicks(closeButton);
+  @Override public void showGoogleLogin() {
+    googleLoginButton.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideGoogleLogin() {
+    googleLoginButton.setVisibility(View.GONE);
   }
 
   private ColorMatrixColorFilter getColorMatrixColorFilter(float saturation) {
