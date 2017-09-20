@@ -11,6 +11,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
+import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
 import java.util.Collection;
 import rx.Observable;
 import rx.Scheduler;
@@ -22,23 +23,28 @@ public class PaymentLoginPresenter implements Presenter {
   private final AccountNavigator accountNavigator;
   private final int requestCode;
   private final Collection<String> permissions;
+  private final Collection<String> requiredPermissions;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
   private final ThrowableToStringMapper errorMapper;
   private final Scheduler viewScheduler;
+  private final ScreenOrientationManager orientationManager;
 
   public PaymentLoginPresenter(PaymentLoginView view, int requestCode,
       Collection<String> permissions, AccountNavigator accountNavigator,
-      AptoideAccountManager accountManager, CrashReport crashReport,
-      ThrowableToStringMapper errorMapper, Scheduler viewScheduler) {
+      Collection<String> requiredPermissions, AptoideAccountManager accountManager,
+      CrashReport crashReport, ThrowableToStringMapper errorMapper, Scheduler viewScheduler,
+      ScreenOrientationManager orientationManager) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.requestCode = requestCode;
     this.permissions = permissions;
+    this.requiredPermissions = requiredPermissions;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.errorMapper = errorMapper;
     this.viewScheduler = viewScheduler;
+    this.orientationManager = orientationManager;
   }
 
   @Override public void present() {
@@ -51,6 +57,8 @@ public class PaymentLoginPresenter implements Presenter {
 
     handleFacebookSignUpEvent();
 
+    handleGrantFacebookRequiredPermissionsEvent();
+
     handleGoogleSignUpResult();
 
     handleGoogleSignUpEvent();
@@ -60,6 +68,16 @@ public class PaymentLoginPresenter implements Presenter {
     handleAptoideLoginEvent();
 
     handleAptoideSignUpEvent();
+  }
+
+  private void handleGrantFacebookRequiredPermissionsEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.grantFacebookRequiredPermissionsEvent())
+        .doOnNext(__ -> view.showLoading())
+        .doOnNext(__ -> accountNavigator.navigateToFacebookSignUpForResult(requiredPermissions))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   private void onViewCreatedCheckLoginStatus() {
@@ -77,12 +95,18 @@ public class PaymentLoginPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(event -> view.aptoideSignUpEvent()
-            .doOnNext(__ -> view.showLoading())
+            .doOnNext(__ -> {
+              view.showLoading();
+              orientationManager.lock();
+            })
             .flatMapCompletable(
                 result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
                     .observeOn(viewScheduler)
                     .doOnCompleted(() -> sendAptoideSignUpSuccessEvent())
-                    .doOnTerminate(() -> view.hideLoading())
+                    .doOnTerminate(() -> {
+                      view.hideLoading();
+                      orientationManager.unlock();
+                    })
                     .doOnError(throwable -> {
                       sendAptoideSignUpFailEvent();
                       view.showError(errorMapper.map(throwable));
@@ -97,11 +121,17 @@ public class PaymentLoginPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(event -> view.aptoideLoginEvent()
-            .doOnNext(__ -> view.showLoading())
+            .doOnNext(__ -> {
+              view.showLoading();
+              orientationManager.lock();
+            })
             .flatMapCompletable(result -> accountManager.login(result)
                 .observeOn(viewScheduler)
                 .doOnCompleted(() -> sendAptoideLoginSuccessEvent())
-                .doOnTerminate(() -> view.hideLoading())
+                .doOnTerminate(() -> {
+                  view.hideLoading();
+                  orientationManager.unlock();
+                })
                 .doOnError(throwable -> {
                   sendAptoideLoginFailEvent();
                   view.showError(errorMapper.map(throwable));

@@ -2,19 +2,14 @@ package cm.aptoide.pt.account.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,6 +25,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
@@ -74,6 +70,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View rootView;
   private CrashReport crashReport;
   private AccountNavigator accountNavigator;
+  private ScreenOrientationManager orientationManager;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -97,6 +94,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
     navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
+    orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -108,7 +106,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void hideKeyboard() {
-    AptoideUtils.SystemU.hideKeyboard(getActivity());
+    super.hideKeyboard();
   }
 
   @Override public void onDestroyView() {
@@ -275,31 +273,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void lockScreenRotation() {
-    int orientation;
-    int rotation =
-        ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
-            .getRotation();
-    switch (rotation) {
-      default:
-      case Surface.ROTATION_0:
-        orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        break;
-      case Surface.ROTATION_90:
-        orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        break;
-      case Surface.ROTATION_180:
-        orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-        break;
-      case Surface.ROTATION_270:
-        orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-        break;
-    }
-
-    getActivity().setRequestedOrientation(orientation);
+    orientationManager.lock();
   }
 
   @Override public void unlockScreenRotation() {
-    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    orientationManager.unlock();
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {

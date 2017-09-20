@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
+import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
 import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -31,6 +33,7 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
   private Map<Integer, Result> fragmentResultMap;
   private AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
+  private ScreenOrientationManager screenOrientationManager;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
@@ -166,5 +169,13 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
               ((AptoideApplication) getApplicationContext()).getMarketName());
     }
     return billingNavigator;
+  }
+
+  public ScreenOrientationManager getScreenOrientationManager() {
+    if (screenOrientationManager == null) {
+      screenOrientationManager = new ScreenOrientationManager(this,
+          (WindowManager) this.getSystemService(WINDOW_SERVICE));
+    }
+    return screenOrientationManager;
   }
 }

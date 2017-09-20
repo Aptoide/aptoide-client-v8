@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -24,8 +25,10 @@ import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
@@ -48,6 +51,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private ClickHandler handler;
   private PublishRelay<Void> backButtonRelay;
   private PublishRelay<Void> upNavigationRelay;
+  private PublishRelay<Void> passwordKeyboardGoRelay;
   private Button facebookButton;
   private Button googleButton;
   private ProgressDialog progressDialog;
@@ -76,6 +80,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private boolean passwordVisible;
   private boolean progressVisible;
   private boolean facebookEmailRequiredDialogVisible;
+  private ScreenOrientationManager orientationManager;
 
   public static Fragment newInstance() {
     return new PaymentLoginFragment();
@@ -86,11 +91,13 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
     backButtonRelay = PublishRelay.create();
     upNavigationRelay = PublishRelay.create();
+    passwordKeyboardGoRelay = PublishRelay.create();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     crashReport = CrashReport.getInstance();
     errorMapper = new AccountErrorMapper(getContext());
+    orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
   }
 
   @Nullable @Override
@@ -141,6 +148,12 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     progressDialog.setMessage(getString(cm.aptoide.pt.utils.R.string.please_wait));
     progressDialog.setCancelable(false);
 
+    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+        R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(R.string.facebook_grant_permission_button)
+        .setNegativeButton(android.R.string.cancel)
+        .build();
+
     RxView.clicks(aptoideJoinToggle)
         .doOnNext(__ -> showUsernamePasswordContainer(false))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -156,11 +169,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe();
 
-    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
-        R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(R.string.facebook_grant_permission_button)
-        .setNegativeButton(android.R.string.cancel)
-        .build();
+    RxTextView.editorActionEvents(passwordEditText)
+        .filter(event -> event.actionId() == EditorInfo.IME_ACTION_GO)
+        .doOnNext(__ -> passwordKeyboardGoRelay.call(null))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
 
     facebookEmailRequiredDialog.dismisses()
         .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
@@ -193,8 +206,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
-            accountNavigator, accountManager, crashReport, errorMapper,
-            AndroidSchedulers.mainThread()), savedInstanceState);
+            accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
+            AndroidSchedulers.mainThread(), orientationManager), savedInstanceState);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -256,17 +269,26 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
-    return RxView.clicks(aptoideLoginButton)
+    return Observable.merge(RxView.clicks(aptoideLoginButton),
+        passwordKeyboardGoRelay.filter(__ -> loginVisible))
+        .doOnNext(__ -> hideKeyboard())
         .map(__ -> new AptoideCredentials(usernameEditText.getText()
             .toString(), passwordEditText.getText()
             .toString()));
   }
 
   @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
-    return RxView.clicks(aptoideSignUpButton)
+    return Observable.merge(RxView.clicks(aptoideSignUpButton),
+        passwordKeyboardGoRelay.filter(__ -> !loginVisible))
+        .doOnNext(__ -> hideKeyboard())
         .map(__ -> new AptoideCredentials(usernameEditText.getText()
             .toString(), passwordEditText.getText()
             .toString()));
+  }
+
+  @Override public Observable<Void> grantFacebookRequiredPermissionsEvent() {
+    return facebookEmailRequiredDialog.positiveClicks()
+        .map(dialogInterface -> null);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

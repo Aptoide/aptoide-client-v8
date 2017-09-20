@@ -177,6 +177,6 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   }
 
   @Override public void hideVirtualKeyboard() {
-    AptoideUtils.SystemU.hideKeyboard(getActivity());
+    super.hideKeyboard();
   }
 }

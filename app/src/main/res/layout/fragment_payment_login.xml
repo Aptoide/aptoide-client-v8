@@ -240,6 +240,7 @@
             android:maxLines="1"
             android:paddingLeft="20dp"
             android:paddingStart="20dp"
+            android:imeOptions="actionGo"
             android:textColorHint="@color/grey_fog_dark"
             style="@style/Aptoide.TextView.Regular.S"
             />
