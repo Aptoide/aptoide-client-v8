@@ -8,16 +8,10 @@ import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
-import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndSharePickAppsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import rx.Completable;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -32,7 +26,6 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   private SpotAndShareAppProvider installedRepositoryDummy;
   private DrawableBitmapMapper drawableBitmapMapper;
   private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
-  private ObbsProvider obbsProvider;
 
   public SpotAndSharePickAppsPresenter(SpotAndSharePickAppsView view, boolean shouldCreateGroup,
       SpotAndShareAppProvider installedRepositoryDummy, SpotAndShare spotAndShare,
@@ -47,13 +40,6 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   }
 
   @Override public void present() {
-
-    //Observable.zip(getInstaledAppsObservable(), getCreateGroupObservable(),
-    //    (appModels, s) -> appModels)
-    //    .observeOn(AndroidSchedulers.mainThread())
-    //    .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
-    //    .subscribe(o -> view.hideLoading(), throwable -> throwable.printStackTrace());
-
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(lifecycleEvent -> view.showLoading())
@@ -72,45 +58,6 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
-  }
-
-  private Observable<Integer> getCreateGroupObservable() {
-    return view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(lifecycleEvent -> {
-          if (shouldCreateGroup) {
-            view.showLoading();
-            return createGroup().timeout(10, TimeUnit.SECONDS)
-                .toSingleDefault(2);
-            //// FIXME: 12-07-2017 should not pass this integer
-          }
-          return Completable.complete()
-              .toSingleDefault(2);
-        })
-        .doOnError(throwable -> handleCreateGroupError(throwable))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
-  }
-
-  private void handleCreateGroupError(Throwable throwable) {
-    if (throwable instanceof TimeoutException) {
-      spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
-      view.onCreateGroupError(throwable);
-      view.navigateBack();
-    }
-  }
-
-  private Observable<List<AppModel>> getInstaledAppsObservable() {
-    return view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(lifecycleEvent -> view.showLoading())
-        .observeOn(Schedulers.io())
-        .map(lifecycleEvent -> installedRepositoryDummy.getInstalledApps())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY));
-  }
-
-  private Completable createGroup() {
-    return spotAndShare.createGroup(uuid -> {
-    }, view::onCreateGroupError, null);
   }
 
   @Override public void saveState(Bundle state) {
@@ -141,9 +88,5 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
       return false;
     }
     return spotAndShare.canSend();
-  }
-
-  private void leaveGroup() {
-    spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
   }
 }

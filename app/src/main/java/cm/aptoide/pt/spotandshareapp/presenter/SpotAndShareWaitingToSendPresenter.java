@@ -12,6 +12,9 @@ import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareWaitingToSendView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -20,15 +23,18 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class SpotAndShareWaitingToSendPresenter implements Presenter {
+  private boolean shouldCreateGroup;
   private SpotAndShareWaitingToSendView view;
   private SpotAndShare spotAndShare;
   private final AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
 
-  public SpotAndShareWaitingToSendPresenter(SpotAndShareWaitingToSendView view,
-      SpotAndShare spotAndShare, AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper,
+  public SpotAndShareWaitingToSendPresenter(boolean shouldCreateGroup,
+      SpotAndShareWaitingToSendView view, SpotAndShare spotAndShare,
+      AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper,
       PermissionManager permissionManager, PermissionService permissionService) {
+    this.shouldCreateGroup = shouldCreateGroup;
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.appModelToAndroidAppInfoMapper = appModelToAndroidAppInfoMapper;
@@ -50,6 +56,16 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
             return Observable.empty();
           }
         })
+        .flatMapSingle(lifecycleEvent -> {
+          if (shouldCreateGroup) {
+            return createGroup().timeout(10, TimeUnit.SECONDS)
+                .toSingleDefault(2);
+            //// FIXME: 12-07-2017 should not pass this integer
+          }
+          return Completable.complete()
+              .toSingleDefault(2);
+        })
+        .doOnError(throwable -> handleCreateGroupError(throwable))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> err.printStackTrace());
@@ -79,6 +95,19 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
+  }
+
+  private void handleCreateGroupError(Throwable throwable) {
+    if (throwable instanceof TimeoutException) {
+      spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
+      view.onCreateGroupError(throwable);
+      view.navigateBack();
+    }
+  }
+
+  private Completable createGroup() {
+    return spotAndShare.createGroup(uuid -> {
+    }, view::onCreateGroupError, null);
   }
 
   private void sendApp() {

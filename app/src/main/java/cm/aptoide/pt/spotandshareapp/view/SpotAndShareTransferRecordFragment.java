@@ -326,7 +326,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   @Override public void openWaitingToSendScreen(AppModel selectedApp) {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(SpotAndShareWaitingToSendFragment.newInstance(selectedApp));
+    getFragmentNavigator().navigateTo(
+        SpotAndShareWaitingToSendFragment.newInstance(selectedApp, false));
   }
 
   @Override public void onCreateGroupError(Throwable throwable) {

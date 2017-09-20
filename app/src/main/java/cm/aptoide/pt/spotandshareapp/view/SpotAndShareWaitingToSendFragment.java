@@ -39,6 +39,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   private final static String FILE_PATH = "filePath";
   private final static String OBBS_FILEPATH = "obbsFilePath";
   private final static String APP_ICON = "appIcon";
+  private final static String SHOULD_CREATE_GROUP = "shouldCreateGroup";
   private Toolbar toolbar;
   private PublishRelay<Void> backRelay;
   private BackButton.ClickHandler clickHandler;
@@ -46,14 +47,16 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   private ImageView appIcon;
   private TextView appName;
   private AppModel selectedApp;
+  private boolean shouldCreateGroup;
 
-  public static Fragment newInstance(AppModel appModel) {
+  public static Fragment newInstance(AppModel appModel, boolean shouldCreateGroup) {
     Bundle args = new Bundle();
     args.putString(APP_NAME, appModel.getAppName());
     args.putString(PACKAGE_NAME, appModel.getPackageName());
     args.putString(FILE_PATH, appModel.getFilePath());
     args.putString(OBBS_FILEPATH, appModel.getObbsFilePath());
     args.putByteArray(APP_ICON, appModel.getAppIconAsByteArray());
+    args.putBoolean(SHOULD_CREATE_GROUP, shouldCreateGroup);
     Fragment fragment = new SpotAndShareWaitingToSendFragment();
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
@@ -70,6 +73,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     String filePath = getArguments().getString(FILE_PATH);
     String obbsFilePath = getArguments().getString(OBBS_FILEPATH);
     byte[] appIcon = getArguments().getByteArray(APP_ICON);
+    shouldCreateGroup = getArguments().getBoolean(SHOULD_CREATE_GROUP);
 
     selectedApp = new AppModel(appName, packageName, filePath, obbsFilePath, appIcon,
         new DrawableBitmapMapper(getActivity().getApplicationContext()));
@@ -94,7 +98,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     };
     registerClickHandler(clickHandler);
 
-    attachPresenter(new SpotAndShareWaitingToSendPresenter(this,
+    attachPresenter(new SpotAndShareWaitingToSendPresenter(shouldCreateGroup, this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
         new AppModelToAndroidAppInfoMapper(new ObbsProvider()), new PermissionManager(),
         (PermissionService) getContext()), savedInstanceState);
@@ -175,5 +179,15 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
 
   @Override public AppModel getSelectedApp() {
     return selectedApp;
+  }
+
+  @Override public void onCreateGroupError(Throwable throwable) {
+    getActivity().runOnUiThread(new Runnable() {
+      @Override public void run() {
+        Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
+            Toast.LENGTH_SHORT)
+            .show();
+      }
+    });
   }
 }
