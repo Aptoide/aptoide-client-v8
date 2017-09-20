@@ -36,4 +36,7 @@ public interface PermissionService {
 
   @TargetApi(Build.VERSION_CODES.M) void requestAccessToLocationAndExternalStorage(
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied);
+
+  @TargetApi(Build.VERSION_CODES.M) void requestAccessToWriteSettings(
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied);
 }

@@ -7,11 +7,14 @@ package cm.aptoide.pt.view.permission;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -41,8 +44,8 @@ import rx.functions.Action0;
 
   private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
   private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 101;
-
   private static final int PERMISSIONS_REQUEST_LOCATION_AND_EXTERNAL_STORAGE = 102;
+  private static final int PERMISSIONS_REQUEST_WRITE_SETTINGS = 103;
 
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
@@ -53,6 +56,8 @@ import rx.functions.Action0;
 
   @Nullable private Action0 toRunWhenAccessToLocationAndExternalStorageIsGranted;
   @Nullable private Action0 toRunWhenAccessToLocationAndExternalStorageIsDenied;
+  @Nullable private Action0 toRunWhenAccessToWriteSettingsIsDenied;
+  @Nullable private Action0 toRunWhenAccessToWriteSettingsIsGranted;
 
   private SharedPreferences sharedPreferences;
   private ConnectivityManager connectivityManager;
@@ -333,6 +338,22 @@ import rx.functions.Action0;
     }
   }
 
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToWriteSettings(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    if (Settings.System.canWrite(this)) {
+      if (toRunWhenAccessIsGranted != null) {
+        toRunWhenAccessIsGranted.call();
+      }
+    } else {
+      this.toRunWhenAccessToWriteSettingsIsGranted = toRunWhenAccessIsGranted;
+      this.toRunWhenAccessToWriteSettingsIsDenied = toRunWhenAccessIsDenied;
+      Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+      intent.setData(Uri.parse("package:" + this.getPackageName()));
+      startActivityForResult(intent, PERMISSIONS_REQUEST_WRITE_SETTINGS);
+    }
+  }
+
   private void showMessageOKCancel(@StringRes int messageId,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
     showMessageOKCancel(getString(messageId), subscriber);
@@ -381,8 +402,14 @@ import rx.functions.Action0;
         break;
 
       case PERMISSIONS_REQUEST_LOCATION_AND_EXTERNAL_STORAGE:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED
-            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+        boolean allPermissionsGranted = true;
+        for (int perm : grantResults) {
+          if (perm != PackageManager.PERMISSION_GRANTED) {
+            allPermissionsGranted = false;
+          }
+        }
+
+        if (allPermissionsGranted) {
           Logger.v(TAG, "access to location and external storage was granted");
           if (toRunWhenAccessToLocationAndExternalStorageIsGranted != null) {
             toRunWhenAccessToLocationAndExternalStorageIsGranted.call();
@@ -426,6 +453,29 @@ import rx.functions.Action0;
 
       default:
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        break;
+    }
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    switch (requestCode) {
+      case PERMISSIONS_REQUEST_WRITE_SETTINGS:
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+          if (Settings.System.canWrite(this)) {
+            Logger.v(TAG, "access to write settings was granted");
+            if (toRunWhenAccessToWriteSettingsIsGranted != null) {
+              toRunWhenAccessToWriteSettingsIsGranted.call();
+            }
+          } else {
+            if (toRunWhenAccessToWriteSettingsIsDenied != null) {
+              toRunWhenAccessToWriteSettingsIsDenied.call();
+            }
+          }
+        }
+        break;
+
+      default:
+        super.onActivityResult(requestCode, resultCode, data);
         break;
     }
   }
