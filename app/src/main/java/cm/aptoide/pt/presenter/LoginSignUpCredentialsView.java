@@ -6,49 +6,59 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import cm.aptoide.pt.view.account.AptoideAccountViewModel;
+import cm.aptoide.accountmanager.AptoideCredentials;
+import cm.aptoide.pt.account.view.GooglePlayServicesView;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 07/02/17.
- */
-
-public interface LoginSignUpCredentialsView extends SocialLoginView {
+public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   Observable<Void> showAptoideLoginAreaClick();
 
   Observable<Void> showAptoideSignUpAreaClick();
 
-  void showAptoideSignUpArea();
-
-  void showAptoideLoginArea();
-
-  void showFacebookLogin();
-
-  void hideFacebookLogin();
-
-  void showForgotPasswordView();
-
-  void showPassword();
-
-  void hidePassword();
+  Observable<Void> googleSignUpEvent();
 
   Observable<Void> showHidePasswordClick();
 
   Observable<Void> forgotPasswordClick();
 
+  Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
+
+  Observable<Void> facebookSignUpEvent();
+
+  Observable<AptoideCredentials> aptoideLoginEvent();
+
+  Observable<AptoideCredentials> aptoideSignUpEvent();
+
+  void showAptoideSignUpArea();
+
+  void showAptoideLoginArea();
+
+  void showLoading();
+
+  void hideLoading();
+
+  void showError(String message);
+
+  void showFacebookLogin();
+
+  void showFacebookPermissionsRequiredError(Throwable throwable);
+
+  void hideFacebookLogin();
+
+  void showPassword();
+
+  void hidePassword();
+
   void dismiss();
 
   void hideKeyboard();
 
-  Observable<AptoideAccountViewModel> aptoideLoginClick();
+  void showGoogleLogin();
 
-  Observable<AptoideAccountViewModel> aptoideSignUpClick();
+  void hideGoogleLogin();
 
   boolean tryCloseLoginBottomSheet();
-
-  @NonNull AptoideAccountViewModel getCredentials();
 
   boolean isPasswordVisible();
 

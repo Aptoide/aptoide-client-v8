@@ -41,13 +41,13 @@ public class AdultContent {
   }
 
   public Completable enable() {
-    return accountManager.syncCurrentAccount(true)
+    return accountManager.updateAccount(true)
         .andThen(preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true))
         .onErrorResumeNext(throwable -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true));
   }
 
   public Completable disable() {
-    return accountManager.syncCurrentAccount(false)
+    return accountManager.updateAccount(false)
         .andThen(preferences.save(ADULT_CONTENT_PREFERENCES_KEY, false))
         .onErrorResumeNext(throwable -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, false));
   }

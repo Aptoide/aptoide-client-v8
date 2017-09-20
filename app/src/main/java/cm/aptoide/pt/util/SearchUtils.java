@@ -87,7 +87,7 @@ public class SearchUtils {
         boolean validQueryLength = s.length() > 1;
 
         if (validQueryLength) {
-          fragmentNavigator.navigateTo(createSearchFragmentInterface.create(s));
+          fragmentNavigator.navigateTo(createSearchFragmentInterface.create(s), true);
         } else {
           ShowMessage.asToast(context.getApplicationContext(), R.string.search_minimum_chars);
         }
@@ -109,7 +109,7 @@ public class SearchUtils {
         Cursor item = (Cursor) searchView.getSuggestionsAdapter()
             .getItem(position);
 
-        fragmentNavigator.navigateTo(createSearchFragmentInterface.create(item.getString(1)));
+        fragmentNavigator.navigateTo(createSearchFragmentInterface.create(item.getString(1)), true);
 
         return true;
       }

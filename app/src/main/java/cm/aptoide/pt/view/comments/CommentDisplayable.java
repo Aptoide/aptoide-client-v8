@@ -45,7 +45,7 @@ public class CommentDisplayable extends Displayable {
     if (comment.getUser()
         .getAccess() == Comment.Access.PUBLIC) {
       fragmentNavigator.navigateTo(fragmentProvider.newStoreFragment(comment.getUser()
-          .getId(), "DEFAULT", StoreFragment.OpenType.GetHome));
+          .getId(), "DEFAULT", StoreFragment.OpenType.GetHome), true);
     } else {
       Snackbar.make(view, R.string.stores_message_private_user, Snackbar.LENGTH_SHORT)
           .show();

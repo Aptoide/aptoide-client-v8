@@ -177,7 +177,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
     baseBodyInterceptorV7 =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     defaultConverter = WebService.getDefaultConverter();
     defaultClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     accountManager =

@@ -6,7 +6,7 @@
     >
 
   <TextView
-      android:id="@+id/separator_text"
+      android:id="@+id/fragment_payment_login_aptoide_buttons_separator_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
@@ -23,7 +23,7 @@
       android:layout_marginLeft="15dp"
       android:layout_marginRight="15dp"
       android:layout_marginStart="15dp"
-      android:layout_toLeftOf="@id/separator_text"
+      android:layout_toLeftOf="@id/fragment_payment_login_aptoide_buttons_separator_text"
       android:background="@color/grey_fog_dark"
       />
 
@@ -35,8 +35,8 @@
       android:layout_marginLeft="15dp"
       android:layout_marginRight="15dp"
       android:layout_marginStart="15dp"
-      android:layout_toEndOf="@id/separator_text"
-      android:layout_toRightOf="@id/separator_text"
+      android:layout_toEndOf="@id/fragment_payment_login_aptoide_buttons_separator_text"
+      android:layout_toRightOf="@id/fragment_payment_login_aptoide_buttons_separator_text"
       android:background="@color/grey_fog_dark"
       />
 

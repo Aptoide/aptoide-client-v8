@@ -320,7 +320,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   public void startFromPackageName(String packageName) {
     GetAppRequest.of(packageName,
-        ((AptoideApplication) getApplicationContext()).getBaseBodyInterceptorV7Pool(),
+        ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
         ((AptoideApplication) getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(),
         ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),

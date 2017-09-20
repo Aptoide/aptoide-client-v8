@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.navigator;
 
 import android.os.Bundle;
-import cm.aptoide.pt.view.account.LoginBottomSheetActivity;
+import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 

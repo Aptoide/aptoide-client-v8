@@ -7,22 +7,22 @@ public class CredentialsValidator {
    * Returns true if email and password are not empty. If validate password content is enable
    * returns true if password is at least 8 characters long and has at least 1 number and 1 letter.
    *
-   * @param email to be validated.
-   * @param password to be validated.
+   * @param credentials
    * @param validatePassword whether password content should be validated.
    */
-  public Completable validate(String email, String password, boolean validatePassword) {
+  public Completable validate(AptoideCredentials credentials, boolean validatePassword) {
     return Completable.defer(() -> {
-      if (isEmpty(email) && isEmpty(password)) {
+      if (isEmpty(credentials.getEmail()) && isEmpty(credentials.getPassword())) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_EMAIL_AND_PASSWORD));
-      } else if (isEmpty(password)) {
+      } else if (isEmpty(credentials.getPassword())) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_PASSWORD));
-      } else if (isEmpty(email)) {
+      } else if (isEmpty(credentials.getEmail())) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
-      } else if (validatePassword && (password.length() < 8 || !has1number1letter(password))) {
+      } else if (validatePassword && (credentials.getPassword()
+          .length() < 8 || !has1number1letter(credentials.getPassword()))) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.INVALID_PASSWORD));
       }

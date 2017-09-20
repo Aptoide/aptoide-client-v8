@@ -109,7 +109,7 @@ public class AddStoreDialog extends BaseDialog {
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
     baseBodyBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
 
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
@@ -295,7 +295,7 @@ public class AddStoreDialog extends BaseDialog {
 
   private void topStoresAction() {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newFragmentTopStores());
+        .newFragmentTopStores(), true);
     if (isAdded()) {
       dismiss();
     }
