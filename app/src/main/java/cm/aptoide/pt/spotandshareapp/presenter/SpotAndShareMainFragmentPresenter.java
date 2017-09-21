@@ -47,61 +47,63 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
 
   @Override public void present() {
 
-    //view.getLifecycle()
-    //    .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-    //    .flatMap(created -> view.startSend())
-    //    .observeOn(AndroidSchedulers.mainThread())
-    //    .flatMap(__ -> {
-    //      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-    //
-    //        return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
-    //            .flatMap(
-    //                __1 -> permissionManager.requestWriteSettingsPermission(permissionService));
-    //      } else {
-    //        Log.i(getClass().getName(), "GOING TO START SENDING");
-    //        return Observable.empty();
-    //      }
-    //    })
-    //    .doOnNext(__2 -> view.openAppSelectionFragment(true))
-    //    .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-    //    .subscribe(__ -> {
-    //    }, err -> err.printStackTrace());
-
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(created -> view.startSend())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__2 -> view.openAppSelectionFragment(true))
+        .doOnNext(__ -> view.openAppSelectionFragment(true))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> err.printStackTrace());
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .flatMap(created -> view.startReceive())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(selection -> {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE);
+          } else {
+            Log.i(getClass().getName(), "GOING TO START RECEIVING");
+            view.openWaitingToReceiveFragment();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> err.printStackTrace());
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .flatMap(created -> view.editProfile())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(selection -> {
+          view.openEditProfile();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> err.printStackTrace());
 
     loadProfileInformationOnView();
 
-    subscribe(clickedReceive());
+    handleLocationAndExternalStoragePermissionsResult();
 
-    //subscribe(clickedSend());
+    handleWriteSettingsPermissionResult();
 
-    subscribe(editProfile());
-
-    //handleLocationAndExternalStoragePermissionsResult();
-
-    //handleWriteSettingsPermissionResult();
-
-    //view.getLifecycle()
-    //    .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-    //    .flatMap(created -> view.shareAptoideApk())
-    //    .doOnNext(__ -> {
-    //      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-    //        spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
-    //            EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE);
-    //      } else {
-    //        view.openShareAptoideFragment();
-    //      }
-    //    })
-    //    .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-    //    .subscribe(__ -> {
-    //    }, err -> err.printStackTrace());
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.shareAptoideApk())
+        .doOnNext(__ -> {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
+                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE);
+          } else {
+            view.openShareAptoideFragment();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> err.printStackTrace());
   }
 
   @Override public void saveState(Bundle state) {
@@ -121,44 +123,6 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         }, err -> err.printStackTrace());
   }
 
-  private Observable<Void> clickedSend() {
-    return view.startSend()
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(__ -> {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
-                .flatMap(__1 -> permissionManager.requestWriteSettingsPermission(permissionService))
-                .doOnNext(writeSettingsResult -> view.openAppSelectionFragment(true));
-          } else {
-            Log.i(getClass().getName(), "GOING TO START SENDING");
-            view.openAppSelectionFragment(true);
-            return Observable.empty();
-          }
-        });
-  }
-
-  private Observable<Void> clickedReceive() {
-    return view.startReceive()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(selection -> {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE);
-          } else {
-            Log.i(getClass().getName(), "GOING TO START RECEIVING");
-            view.openWaitingToReceiveFragment();
-          }
-        });
-  }
-
-  private Observable<Void> editProfile() {
-    return view.editProfile()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(selection -> {
-          view.openEditProfile();
-        });
-  }
 
   private SpotAndShareLocalUser getSpotAndShareProfileInformation() {
     return spotAndShareUserManager.getUser();
