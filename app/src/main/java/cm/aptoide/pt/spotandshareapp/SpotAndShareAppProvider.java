@@ -68,4 +68,15 @@ public class SpotAndShareAppProvider {
     }
     return obbsFilePath;
   }
+
+  public AppModel getApp(String packageName) throws PackageManager.NameNotFoundException {
+
+    ApplicationInfo applicationInfo =
+        packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+
+    return new AppModel(applicationInfo.loadLabel(packageManager)
+        .toString(), applicationInfo.packageName, applicationInfo.sourceDir,
+        getObbFilePath(applicationInfo.packageName), applicationInfo.loadIcon(packageManager),
+        new DrawableBitmapMapper(context));
+  }
 }
