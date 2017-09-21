@@ -12,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -61,6 +60,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.app.AppViewFragment;
+import cm.aptoide.pt.view.app.AppViewNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.view.install.InstallWarningDialog;
@@ -110,6 +110,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private boolean createStoreUserPrivacyEnabled;
   private SharedPreferences sharedPreferences;
   private AccountNavigator accountNavigator;
+  private AppViewNavigator appViewNavigator;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -181,19 +182,20 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 new NotificationAnalytics(httpClient, analytics)), tokenInvalidator,
             sharedPreferences);
 
+    appViewNavigator = getAppViewNavigator();
+
     GetApp getApp = this.displayable.getPojo();
     GetAppMeta.App currentApp = getApp.getNodes()
         .getMeta()
         .getData();
     versionName.setText(currentApp.getFile()
         .getVername());
+
     otherVersions.setOnClickListener(v -> {
       displayable.getAppViewAnalytics()
           .sendOtherVersionsEvent();
-      Fragment fragment = AptoideApplication.getFragmentProvider()
-          .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
-              currentApp.getPackageName());
-      getFragmentNavigator().navigateTo(fragment, true);
+      appViewNavigator.navigateToOtherVersions(currentApp.getName(), currentApp.getIcon(),
+          currentApp.getPackageName());
     });
 
     //setup the ui
@@ -410,10 +412,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private void buyApp(GetAppMeta.App app) {
-    Fragment fragment = getFragmentNavigator().peekLast();
-    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
-      ((AppViewFragment) fragment).buyApp(app);
-    }
+    appViewNavigator.buyApp(app);
   }
 
   private View.OnClickListener downgradeListener(final GetAppMeta.App app) {
@@ -574,17 +573,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     final boolean hasTrustedVersion = trustedVersion != null;
 
     final View.OnClickListener onSearchHandler = v -> {
-      Fragment fragment;
       if (hasTrustedVersion) {
-        // go to app view of the trusted version
-        fragment = AptoideApplication.getFragmentProvider()
-            .newAppViewFragment(trustedVersion.getId(), trustedVersion.getPackageName());
-      } else {
-        // search for a trusted version
-        fragment = AptoideApplication.getFragmentProvider()
-            .newSearchFragment(app.getName(), true);
+        appViewNavigator.navigateToAppView(trustedVersion.getId(), trustedVersion.getPackageName());
+        return;
       }
-      getFragmentNavigator().navigateTo(fragment, true);
+      appViewNavigator.navigateToSearch(app.getName(), true);
     };
 
     return v -> {
@@ -727,6 +720,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
               .getMd5sum());
     }
     return false;
+  }
+
+  private AppViewNavigator getAppViewNavigator() {
+    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator());
   }
 
   private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {
