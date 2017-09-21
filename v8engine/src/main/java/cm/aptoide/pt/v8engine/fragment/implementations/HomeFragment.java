@@ -102,7 +102,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     setUserDataOnHeader();
   }
 
-  private void setUserDataOnHeader() {
+  protected void setUserDataOnHeader() {
     View baseHeaderView = mNavigationView.getHeaderView(0);
     TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
     TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
