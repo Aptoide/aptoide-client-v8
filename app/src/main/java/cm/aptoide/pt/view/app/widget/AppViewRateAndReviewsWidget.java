@@ -37,9 +37,9 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogUtils;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.reviews.LanguageFilterHelper;
@@ -127,9 +127,9 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getFragmentNavigator(), accountManager), bodyInterceptor, httpClient,
+        ((ActivityResultNavigator) getContext()).getAccountNavigator(), bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(), tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
@@ -179,7 +179,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
               .getName(), app.getPackageName(), app.getStore()
               .getAppearance()
               .getTheme());
-      getFragmentNavigator().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment, true);
     };
 
     compositeSubscription.add(RxView.clicks(readAllButton)

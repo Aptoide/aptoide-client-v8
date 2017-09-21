@@ -1,6 +1,5 @@
 package cm.aptoide.accountmanager;
 
-import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import rx.observers.TestSubscriber;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,48 +18,43 @@ public class AptoideAccountManagerTest {
 
   private AccountAnalytics accountAnalyticsMock;
   private CredentialsValidator credentialsValidatorMock;
-  private AccountFactory accountFactoryMock;
-  private AccountDataPersist dataPersistMock;
-  private AccountManagerService serviceMock;
+  private AccountPersistence dataPersistMock;
+  private AccountService serviceMock;
   private AptoideAccountManager accountManager;
   private PublishRelay accountRelayMock;
 
   @Before public void before() {
     accountAnalyticsMock = mock(AccountAnalytics.class);
     credentialsValidatorMock = mock(CredentialsValidator.class);
-    accountFactoryMock = mock(AccountFactory.class);
-    dataPersistMock = mock(AccountDataPersist.class);
-    serviceMock = mock(AccountManagerService.class);
+    dataPersistMock = mock(AccountPersistence.class);
+    serviceMock = mock(AccountService.class);
     accountRelayMock = mock(PublishRelay.class);
     accountManager = new AptoideAccountManager.Builder().setAccountAnalytics(accountAnalyticsMock)
         .setCredentialsValidator(credentialsValidatorMock)
-        .setAccountDataPersist(dataPersistMock)
-        .setAccountManagerService(serviceMock)
+        .setAccountPersistence(dataPersistMock)
+        .setAccountService(serviceMock)
         .setAccountRelay(accountRelayMock)
         .build();
   }
 
   @Test public void shouldLogin() throws Exception {
 
-    final OAuth oAuthMock = mock(OAuth.class);
     final Account accountMock = mock(Account.class);
 
-    when(credentialsValidatorMock.validate(eq("marcelo.benites@aptoide.com"), eq("1234"),
-        anyBoolean())).thenReturn(Completable.complete());
-    when(serviceMock.login("APTOIDE", "marcelo.benites@aptoide.com", "1234", null,
-        accountManager)).thenReturn(Single.just(oAuthMock));
+    final AptoideCredentials credentials =
+        new AptoideCredentials("marcelo.benites@aptoide.com", "1234");
 
-    when(oAuthMock.getAccessToken()).thenReturn("ABCD");
-    when(oAuthMock.getRefreshToken()).thenReturn("EFG");
+    when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
+        Completable.complete());
 
-    when(serviceMock.getAccount("ABCD", "EFG", "1234", "APTOIDE", accountManager)).thenReturn(
+    when(serviceMock.getAccount("marcelo.benites@aptoide.com", "1234")).thenReturn(
         Single.just(accountMock));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    accountManager.login(Account.Type.APTOIDE, "marcelo.benites@aptoide.com", "1234", null)
+    accountManager.login(credentials)
         .subscribe(testSubscriber);
 
     testSubscriber.awaitTerminalEvent();
@@ -74,71 +67,60 @@ public class AptoideAccountManagerTest {
 
   @Test public void shouldSignUp() throws Exception {
 
-    when(credentialsValidatorMock.validate(eq("john.lennon@aptoide.com"), eq("imagine"),
-        anyBoolean())).thenReturn(Completable.complete());
-
-    when(
-        serviceMock.createAccount("john.lennon@aptoide.com", "imagine", accountManager)).thenReturn(
-        Completable.complete());
-
-    final OAuth oAuthMock = mock(OAuth.class);
     final Account accountMock = mock(Account.class);
 
-    when(serviceMock.login("APTOIDE", "john.lennon@aptoide.com", "imagine", null,
-        accountManager)).thenReturn(Single.just(oAuthMock));
+    final AptoideCredentials credentials =
+        new AptoideCredentials("john.lennon@aptoide.com", "imagine");
 
-    when(oAuthMock.getAccessToken()).thenReturn("ABCD");
-    when(oAuthMock.getRefreshToken()).thenReturn("EFG");
+    when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
+        Completable.complete());
 
-    when(serviceMock.getAccount("ABCD", "EFG", "imagine", "APTOIDE", accountManager)).thenReturn(
+    when(serviceMock.createAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
         Single.just(accountMock));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    accountManager.signUp("john.lennon@aptoide.com", "imagine")
+    accountManager.signUp("APTOIDE", credentials)
         .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(accountAnalyticsMock).login("john.lennon@aptoide.com");
     verify(accountAnalyticsMock).signUp();
     verify(accountRelayMock).call(accountMock);
   }
 
   @Test public void shouldLoginOnSignUpTimeout() throws Exception {
 
-    when(credentialsValidatorMock.validate(eq("john.lennon@aptoide.com"), eq("imagine"),
-        anyBoolean())).thenReturn(Completable.complete());
+    final AptoideCredentials credentials =
+        new AptoideCredentials("john.lennon@aptoide.com", "imagine");
 
-    when(
-        serviceMock.createAccount("john.lennon@aptoide.com", "imagine", accountManager)).thenReturn(
-        Completable.error(new SocketTimeoutException()));
+    when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
+        Completable.complete());
 
-    final OAuth oAuthMock = mock(OAuth.class);
+    when(serviceMock.createAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
+        Single.error(new SocketTimeoutException()));
+
     final Account accountMock = mock(Account.class);
 
-    when(serviceMock.login("APTOIDE", "john.lennon@aptoide.com", "imagine", null,
-        accountManager)).thenReturn(Single.just(oAuthMock));
+    when(accountMock.getEmail()).thenReturn("john.lennon@aptoide.com");
 
-    when(oAuthMock.getAccessToken()).thenReturn("ABCD");
-    when(oAuthMock.getRefreshToken()).thenReturn("EFG");
-
-    when(serviceMock.getAccount("ABCD", "EFG", "imagine", "APTOIDE", accountManager)).thenReturn(
+    when(serviceMock.getAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
         Single.just(accountMock));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    accountManager.signUp("john.lennon@aptoide.com", "imagine")
+    accountManager.signUp("APTOIDE", credentials)
         .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(accountAnalyticsMock, never()).signUp();
+    verify(accountAnalyticsMock).login("john.lennon@aptoide.com");
+    verify(accountRelayMock).call(accountMock);
   }
 }

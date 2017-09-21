@@ -79,18 +79,18 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
           .newTimeLineFollowersUsingStoreIdFragment(storeId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
-                      .getFollowers())));
+                      .getFollowers())), true);
     } else if (userId != null && userId > 0) {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowersUsingUserIdFragment(userId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
-                      .getFollowers())));
+                      .getFollowers())), true);
     } else {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowersFragment(storeTheme, AptoideUtils.StringU.getFormattedString(
               R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
-                  .getFollowers())));
+                  .getFollowers())), true);
     }
     return null;
   }
@@ -101,13 +101,13 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
           .newTimeLineFollowingFragmentUsingStoreId(storeId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_following_fragment_title, resources, getPojo().getData()
-                      .getFollowing())));
+                      .getFollowing())), true);
     } else {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowingFragmentUsingUserId(userId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_following_fragment_title, resources, getPojo().getData()
-                      .getFollowing())));
+                      .getFollowing())), true);
     }
     return null;
   }
@@ -115,6 +115,6 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   void followFriendsClick(FragmentNavigator navigator) {
     timelineAnalytics.sendFollowFriendsEvent();
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAddressBookFragment());
+        .newAddressBookFragment(), true);
   }
 }

@@ -26,7 +26,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.PhoneInputContract;
 import cm.aptoide.pt.presenter.PhoneInputPresenter;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.facebook.appevents.AppEventsLogger;
@@ -62,7 +61,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
@@ -177,6 +176,6 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   }
 
   @Override public void hideVirtualKeyboard() {
-    AptoideUtils.SystemU.hideKeyboard(getActivity());
+    super.hideKeyboard();
   }
 }

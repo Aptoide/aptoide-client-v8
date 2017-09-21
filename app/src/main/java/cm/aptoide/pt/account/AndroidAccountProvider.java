@@ -32,10 +32,10 @@ public class AndroidAccountProvider {
         .observeOn(scheduler);
   }
 
-  public Single<Account> createAndroidAccount(String email, String password) {
+  public Single<Account> createAndroidAccount(String email) {
     final Account androidAccount = new Account(email, accountType);
     try {
-      androidAccountManager.addAccountExplicitly(androidAccount, password, null);
+      androidAccountManager.addAccountExplicitly(androidAccount, null, null);
     } catch (SecurityException e) {
       return Single.error(e);
     }
@@ -50,6 +50,7 @@ public class AndroidAccountProvider {
         androidAccountManager.removeAccount(androidAccount, null, null);
       }
     })
-        .toCompletable();
+        .toCompletable()
+        .onErrorComplete();
   }
 }

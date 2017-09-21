@@ -7,6 +7,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.LinkedList;
@@ -16,10 +17,6 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
 
-/**
- * Created by trinkes on 09/05/2017.
- */
-
 public class NotificationHandler implements NotificationNetworkService {
   private final PublishRelay<AptoideNotification> handler;
   private final String applicationId;
@@ -27,6 +24,7 @@ public class NotificationHandler implements NotificationNetworkService {
   private final Converter.Factory converterFactory;
   private final IdsRepository idsRepository;
   private final String versionName;
+  private final AuthenticationPersistence authenticationPersistence;
   private final AptoideAccountManager accountManager;
   private final String extraId;
   private final SharedPreferences sharedPreferences;
@@ -34,44 +32,45 @@ public class NotificationHandler implements NotificationNetworkService {
 
   public NotificationHandler(String applicationId, OkHttpClient httpClient,
       Converter.Factory converterFactory, IdsRepository idsRepository, String versionName,
-      AptoideAccountManager accountManager, String extraId, PublishRelay<AptoideNotification> relay,
-      SharedPreferences sharedPreferences, Resources resources) {
+      String extraId, PublishRelay<AptoideNotification> relay, SharedPreferences sharedPreferences,
+      Resources resources, AuthenticationPersistence authenticationPersistence,
+      AptoideAccountManager accountManager) {
     this.applicationId = applicationId;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.idsRepository = idsRepository;
     this.versionName = versionName;
-    this.accountManager = accountManager;
+    this.authenticationPersistence = authenticationPersistence;
     this.handler = relay;
     this.extraId = extraId;
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
+    this.accountManager = accountManager;
   }
 
   @Override public Single<List<AptoideNotification>> getSocialNotifications() {
-    return accountManager.accountStatus()
-        .first()
-        .flatMap(account -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
-            versionName, applicationId, httpClient, converterFactory, extraId,
-            account.getAccessToken(), sharedPreferences, resources)
-            .observe()
-            .map(response -> convertSocialNotifications(response, account.getId())))
+    return authenticationPersistence.getAuthentication()
+        .flatMapObservable(
+            authentication -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
+                versionName, applicationId, httpClient, converterFactory, extraId,
+                authentication.getAccessToken(), sharedPreferences, resources)
+                .observe())
+        .flatMap(response -> accountManager.accountStatus()
+            .first()
+            .map(account -> convertSocialNotifications(response, account.getId())))
         .flatMap(notifications -> handle(notifications))
         .toSingle();
   }
 
   @Override public Single<List<AptoideNotification>> getCampaignNotifications() {
-    return accountManager.accountStatus()
+    return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(), versionName,
+        applicationId, httpClient, converterFactory, extraId, sharedPreferences, resources)
+        .observe()
+        .flatMap(response -> accountManager.accountStatus()
+            .first()
+            .map(account -> convertCampaignNotifications(response, account.getId())))
         .first()
-        .flatMap(account -> {
-          return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(),
-              versionName, applicationId, httpClient, converterFactory, extraId, sharedPreferences,
-              resources)
-              .observe()
-              .map(response -> convertCampaignNotifications(response, account.getId()))
-              .first()
-              .flatMap(notifications -> handle(notifications));
-        })
+        .flatMap(notifications -> handle(notifications))
         .toSingle();
   }
 
@@ -102,7 +101,8 @@ public class NotificationHandler implements NotificationNetworkService {
       aptoideNotifications.add(
           new AptoideNotification(notification.getBody(), notification.getImg(),
               notification.getTitle(), notification.getUrl(), notification.getType(), appName,
-              graphic, AptoideNotification.NOT_DISMISSED, id, notification.getExpire()));
+              graphic, AptoideNotification.NOT_DISMISSED, id, notification.getExpire(),
+              notification.getUrlTrack(), notification.getUrlTrackNc()));
     }
     return aptoideNotifications;
   }
@@ -124,7 +124,7 @@ public class NotificationHandler implements NotificationNetworkService {
           new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
               notification.getCampaignId(), notification.getImg(), notification.getLang(),
               notification.getTitle(), notification.getUrl(), notification.getUrlTrack(), appName,
-              graphic, id, notification.getExpire()));
+              graphic, id, notification.getExpire(), notification.getUrlTrackNc()));
     }
     return aptoideNotifications;
   }

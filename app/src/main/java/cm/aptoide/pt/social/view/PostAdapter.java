@@ -58,7 +58,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   public void updatePosts(List<Post> cards) {
     if (hasUser()) {
       if (posts.size() > 1) {
-        posts.subList(1, posts.size() - 1)
+        posts.subList(1, posts.size())
             .clear();
       }
       posts.addAll(cards);

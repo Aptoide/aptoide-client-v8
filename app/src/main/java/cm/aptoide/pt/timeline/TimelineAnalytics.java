@@ -9,6 +9,7 @@ import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.social.data.AggregatedRecommendation;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.social.data.AppUpdateCardTouchEvent;
@@ -65,11 +66,12 @@ public class TimelineAnalytics {
   private final TokenInvalidator tokenInvalidator;
   private final String appId;
   private final SharedPreferences sharedPreferences;
+  private final NotificationAnalytics notificationAnalytics;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, NotificationAnalytics notificationAnalytics) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
@@ -78,6 +80,7 @@ public class TimelineAnalytics {
     this.tokenInvalidator = tokenInvalidator;
     this.appId = appId;
     this.sharedPreferences = sharedPreferences;
+    this.notificationAnalytics = notificationAnalytics;
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -88,6 +91,10 @@ public class TimelineAnalytics {
   public void sendSocialActionEvent(TimelineSocialActionData timelineSocialActionData) {
     analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
         createSocialActionEventData(timelineSocialActionData)));
+  }
+
+  public void notificationShown(String url) {
+    notificationAnalytics.notificationShown(url);
   }
 
   private Bundle createSocialActionEventData(TimelineSocialActionData timelineSocialActionData) {

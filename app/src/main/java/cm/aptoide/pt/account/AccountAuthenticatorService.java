@@ -10,8 +10,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.account.view.LoginActivity;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.view.account.LoginActivity;
 
 public class AccountAuthenticatorService extends Service {
 

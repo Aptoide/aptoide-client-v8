@@ -3,9 +3,9 @@ package cm.aptoide.pt.view.configuration;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by neuro on 17-10-2016.
+ * @deprecated use specific navigator for each presenter/lifecycle manager instead. Inside those
+ * navigators instantiate the proper fragment or activity.
  */
-
-public interface ActivityProvider {
+@Deprecated public interface ActivityProvider {
   Class<? extends AppCompatActivity> getMainActivityFragmentClass();
 }

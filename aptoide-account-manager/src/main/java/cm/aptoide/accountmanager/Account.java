@@ -1,30 +1,11 @@
 package cm.aptoide.accountmanager;
 
 import java.util.List;
-import rx.Completable;
 
 /**
  * User account information such as subscribed stores, credentials, preferences.
  */
 public interface Account {
-
-  /**
-   * Changes state of the account to logged out. This method should not be called directly use
-   * {@link AptoideAccountManager#logout()} instead.
-   *
-   * @return Completable to perform logout.
-   *
-   * @see AptoideAccountManager#login(Type, String, String, String)
-   */
-  Completable logout();
-
-  /**
-   * Refreshes the account token. This method should not be called directly use
-   * {@link AptoideAccountManager#refreshToken()} instead.
-   *
-   * @return Completable to perform logout.
-   */
-  Completable refreshToken();
 
   /**
    * Returns the stores which this account has subscribed to.
@@ -79,33 +60,6 @@ public interface Account {
   String getEmail();
 
   /**
-   * Returns access token for server side interaction. The token may expire according to server
-   * rules.
-   *
-   * @see #refreshToken()
-   */
-  String getAccessToken();
-
-  /**
-   * Returns refresh token used to refresh access token when it expires.
-   *
-   * @see #refreshToken()
-   */
-  String getRefreshToken();
-
-  /**
-   * Returns account's password.
-   */
-  String getPassword();
-
-  /**
-   * Returns account's type.
-   *
-   * @see Type
-   */
-  Account.Type getType();
-
-  /**
    * Returns the Store of the user.
    * Attention: If the user does not have a store, store is not null.
    *
@@ -154,27 +108,5 @@ public interface Account {
      * {@link #PRIVATE}.
      */
     UNLISTED
-  }
-
-  /**
-   * Account type.
-   */
-  enum Type {
-    /**
-     * Default account when user did not login yet.
-     */
-    LOCAL, /**
-     * Account created when user has logged in using Aptoide services.
-     */
-    APTOIDE, /**
-     * Account created when user has logged in using Google services.
-     */
-    GOOGLE, /**
-     * Account created when user has logged in using Facebook services.
-     */
-    FACEBOOK, /**
-     * Account created when user has logged in using ABAN services.
-     */
-    ABAN
   }
 }

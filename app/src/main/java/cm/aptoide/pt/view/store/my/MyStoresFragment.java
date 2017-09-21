@@ -13,18 +13,19 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
-import cm.aptoide.pt.view.store.GetStoreWidgetsFragment;
 import cm.aptoide.pt.view.store.GridStoreDisplayable;
+import cm.aptoide.pt.view.store.StoreTabWidgetsGridRecyclerFragment;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 13/12/2016.
  */
 
-public class MyStoresFragment extends GetStoreWidgetsFragment {
+public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
 
   private static final String TAG = MyStoresFragment.class.getSimpleName();
 
@@ -37,7 +38,10 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    return super.buildDisplayables(refresh, url)
+    return requestFactoryCdnPool.newStoreWidgets(url)
+        .observe(refresh)
+        .observeOn(Schedulers.io())
+        .flatMap(getStoreWidgets -> parseDisplayables(getStoreWidgets))
         .map(list -> addFollowStoreDisplayable(list));
   }
 

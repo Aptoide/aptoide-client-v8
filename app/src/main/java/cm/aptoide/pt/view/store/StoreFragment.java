@@ -38,11 +38,13 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.StoreUserAbstraction;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -148,15 +150,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+    Analytics analytics = Analytics.getInstance();
+    timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
         tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, analytics));
+    storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
   }
@@ -350,9 +353,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
               String storeName = store != null ? store.getName() : null;
               Long storeId = store != null ? store.getId() : null;
               String avatar = store != null ? store.getAvatar() : null;
-              setupVariables(getHome.getNodes()
-                  .getTabs()
-                  .getList(), storeId, storeName, storeUrl, avatar);
+              setupVariables(parseTabs(getHome), storeId, storeName, storeUrl, avatar);
               HomeUser user = getHome.getNodes()
                   .getMeta()
                   .getData()
@@ -369,9 +370,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe(refresh)
             .map(getStore -> {
-              setupVariables(getStore.getNodes()
-                  .getTabs()
-                  .getList(), getStore.getNodes()
+              setupVariables(parseTabs(getStore), getStore.getNodes()
                   .getMeta()
                   .getData()
                   .getId(), getStore.getNodes()
@@ -391,6 +390,28 @@ public class StoreFragment extends BasePagerToolbarFragment {
                   .getName();
             });
     }
+  }
+
+  private List<GetStoreTabs.Tab> parseTabs(StoreUserAbstraction<?> storeUserAbstraction) {
+    GetStoreTabs.Tab tab = storeUserAbstraction.getNodes()
+        .getTabs()
+        .getList()
+        .get(0);
+    if (tab.getEvent()
+        .getAction()
+        .contains("/getStore/")) {
+      tab.getEvent()
+          .setName(Event.Name.getStoreWidgets);
+      String parsedEventAction = tab.getEvent()
+          .getAction()
+          .replace("/getStore/", "/getStoreWidgets/");
+      tab.getEvent()
+          .setAction(parsedEventAction);
+    }
+
+    return storeUserAbstraction.getNodes()
+        .getTabs()
+        .getList();
   }
 
   private void handleError(Throwable throwable) {

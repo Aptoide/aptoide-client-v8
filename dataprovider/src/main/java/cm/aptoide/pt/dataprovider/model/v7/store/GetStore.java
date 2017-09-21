@@ -5,21 +5,12 @@
 
 package cm.aptoide.pt.dataprovider.model.v7.store;
 
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
-import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * TODO
  */
-@Data @EqualsAndHashCode(callSuper = true) public class GetStore extends BaseV7Response {
-
-  private Nodes nodes;
-
-  @Data public static class Nodes {
-    private GetStoreMeta meta;
-    private GetStoreTabs tabs;
-    private GetStoreWidgets widgets;
-  }
+@Data @EqualsAndHashCode(callSuper = true) public class GetStore
+    extends StoreUserAbstraction<GetStoreMeta> {
 }

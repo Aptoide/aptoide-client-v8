@@ -75,7 +75,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
 
@@ -109,7 +109,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-            .newStoreFragment(storeName, storeTheme));
+            .newStoreFragment(storeName, storeTheme), true);
       };
 
       Action1<Void> subscribeStore = __ -> {

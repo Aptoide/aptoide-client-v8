@@ -9,9 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.AptoideNotification;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +46,9 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()), CrashReport.getInstance()), savedInstanceState);
+        new LinksHandlerFactory(getContext()), CrashReport.getInstance(), new NotificationAnalytics(
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
+        Analytics.getInstance())), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
   }

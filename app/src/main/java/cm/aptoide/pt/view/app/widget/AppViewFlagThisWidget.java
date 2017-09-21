@@ -10,6 +10,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -21,8 +22,8 @@ import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewFlagThisDisplayable;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -85,8 +86,8 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     baseBodyInterceptorV3 =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV3();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager);
+        ((AptoideApplication) getContext().getApplicationContext()).getBodyInterceptorV3();
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes()
         .getMeta()

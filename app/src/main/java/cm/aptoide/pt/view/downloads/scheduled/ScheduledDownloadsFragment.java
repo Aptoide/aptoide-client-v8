@@ -90,7 +90,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     final TokenInvalidator tokenInvalidator =
