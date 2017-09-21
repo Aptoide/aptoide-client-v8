@@ -138,6 +138,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
+
     repository = RepositoryFactory.getUpdateRepository(getContext(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
