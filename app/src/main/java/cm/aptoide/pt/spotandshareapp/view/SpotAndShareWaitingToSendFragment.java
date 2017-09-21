@@ -159,7 +159,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
 
   @Override public void navigateBack() {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance());
+    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance(), true);
   }
 
   @Override public void onLeaveGroupError() {
@@ -172,7 +172,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     getActivity().runOnUiThread(new Runnable() {
       @Override public void run() {
         getFragmentNavigator().cleanBackStack();
-        getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance());
+        getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance(), true);
       }
     });
   }

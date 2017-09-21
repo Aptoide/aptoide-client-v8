@@ -114,7 +114,7 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
 
   @Override public void openSpotandShareTransferRecordFragment() {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance());
+    getFragmentNavigator().navigateTo(SpotAndShareTransferRecordFragment.newInstance(), true);
   }
 
   @Override public Observable<Void> backButtonEvent() {
@@ -132,7 +132,7 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
 
   @Override public void navigateBack() {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance());
+    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance(), true);
   }
 
   @Override public void onLeaveGroupError() {

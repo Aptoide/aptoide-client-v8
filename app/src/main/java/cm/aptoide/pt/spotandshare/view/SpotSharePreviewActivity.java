@@ -13,6 +13,6 @@ public class SpotSharePreviewActivity extends ActivityView {
     setContentView(R.layout.frame_layout);
 
     getFragmentNavigator().navigateToWithoutBackSave(AptoideApplication.getFragmentProvider()
-        .newSpotShareFragment(true), true);
+        .newSpotShareFragment(), true);
   }
 }

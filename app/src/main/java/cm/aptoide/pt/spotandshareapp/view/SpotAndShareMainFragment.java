@@ -80,12 +80,12 @@ public class SpotAndShareMainFragment extends FragmentView
   }
 
   @Override public void openWaitingToReceiveFragment() {
-    getFragmentNavigator().navigateTo(SpotAndShareWaitingToReceiveFragment.newInstance());
+    getFragmentNavigator().navigateTo(SpotAndShareWaitingToReceiveFragment.newInstance(), true);
   }
 
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
     getFragmentNavigator().navigateTo(
-        SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup));
+        SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup), true);
   }
 
   @Override
@@ -102,7 +102,7 @@ public class SpotAndShareMainFragment extends FragmentView
   }
 
   @Override public void openEditProfile() {
-    getFragmentNavigator().navigateTo(SpotAndShareEditProfileFragment.newInstance());
+    getFragmentNavigator().navigateTo(SpotAndShareEditProfileFragment.newInstance(), true);
   }
 
   @Override public void loadProfileInformation(SpotAndShareLocalUser user) {
@@ -115,7 +115,7 @@ public class SpotAndShareMainFragment extends FragmentView
   }
 
   @Override public void openShareAptoideFragment() {
-    getFragmentNavigator().navigateTo(ShareAptoideFragment.newInstance());
+    getFragmentNavigator().navigateTo(ShareAptoideFragment.newInstance(), true);
   }
 
   private void setAvatar(SpotAndShareAvatar avatar) {

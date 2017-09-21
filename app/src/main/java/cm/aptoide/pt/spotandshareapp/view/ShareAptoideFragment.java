@@ -169,7 +169,7 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
 
   @Override public void navigateBack() {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance());
+    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance(), true);
   }
 
   @Override public void onLeaveGroupError() {

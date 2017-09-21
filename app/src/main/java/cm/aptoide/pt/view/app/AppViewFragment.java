@@ -337,7 +337,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-    spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analytics,
