@@ -97,6 +97,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private SharedPreferences sharedPreferences;
   private String marketName;
   private Database database;
+  private UpdateRepository repository;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -137,6 +138,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
+    repository = RepositoryFactory.getUpdateRepository(getContext(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -198,8 +201,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(database, Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
