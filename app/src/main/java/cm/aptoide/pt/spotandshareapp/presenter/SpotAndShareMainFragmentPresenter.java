@@ -1,8 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.presenter.Presenter;
@@ -12,8 +10,6 @@ import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUserManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareMainFragmentView;
 import cm.aptoide.pt.view.permission.PermissionProvider;
-import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -21,8 +17,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class SpotAndShareMainFragmentPresenter implements Presenter {
-  public static final int EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND = 0;
-  public static final int EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE = 1;
   public static final int EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE = 2;
   public static final int WRITE_SETTINGS_REQUEST_CODE_SEND = 3;
   public static final int WRITE_SETTINGS_REQUEST_CODE_RECEIVE = 4;
@@ -61,13 +55,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .flatMap(created -> view.startReceive())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(selection -> {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE);
-          } else {
-            Log.i(getClass().getName(), "GOING TO START RECEIVING");
-            view.openWaitingToReceiveFragment();
-          }
+          view.openWaitingToReceiveFragment();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -86,20 +74,11 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
 
     loadProfileInformationOnView();
 
-    handleLocationAndExternalStoragePermissionsResult();
-
-    handleWriteSettingsPermissionResult();
-
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareAptoideApk())
         .doOnNext(__ -> {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            spotAndSharePermissionProvider.requestLocationAndExternalStorageSpotAndSharePermissions(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SHARE_APTOIDE);
-          } else {
-            view.openShareAptoideFragment();
-          }
+          view.openShareAptoideFragment();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -113,16 +92,6 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   @Override public void restoreState(Bundle state) {
 
   }
-
-  private Subscription subscribe(Observable<Void> voidObservable) {
-    return view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(created -> voidObservable)
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> err.printStackTrace());
-  }
-
 
   private SpotAndShareLocalUser getSpotAndShareProfileInformation() {
     return spotAndShareUserManager.getUser();
@@ -139,49 +108,6 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   }
 
   private void handleLocationAndExternalStoragePermissionsResult() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(
-            __ -> spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_SEND)
-
-                .filter(permissions -> {
-                  for (PermissionProvider.Permission permission : permissions) {
-                    if (!permission.isGranted()) {
-                      return false;
-                    }
-                  }
-                  return true;
-                })
-                .doOnNext(permissions -> {
-                  spotAndSharePermissionProvider.requestWriteSettingsPermission(
-                      WRITE_SETTINGS_REQUEST_CODE_SEND);
-                }))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(
-            __ -> spotAndSharePermissionProvider.locationAndExternalStoragePermissionsResultSpotAndShare(
-                EXTERNAL_STORAGE_LOCATION_REQUEST_CODE_RECEIVE)
-                .filter(permissions -> {
-                  for (PermissionProvider.Permission permission : permissions) {
-                    if (!permission.isGranted()) {
-                      return false;
-                    }
-                  }
-                  return true;
-                })
-                .doOnNext(permissions -> {
-                  spotAndSharePermissionProvider.requestWriteSettingsPermission(
-                      WRITE_SETTINGS_REQUEST_CODE_RECEIVE);
-                }))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(
@@ -205,27 +131,6 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   }
 
   private void handleWriteSettingsPermissionResult() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> spotAndSharePermissionProvider.writeSettingsPermissionResult())
-        .filter(requestCode -> requestCode == WRITE_SETTINGS_REQUEST_CODE_SEND)
-        .doOnNext(requestCode -> {
-          Log.i(getClass().getName(), "GOING TO START SENDING");
-          view.openAppSelectionFragment(true);
-        })
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> spotAndSharePermissionProvider.writeSettingsPermissionResult())
-        .filter(requestCode -> requestCode == WRITE_SETTINGS_REQUEST_CODE_RECEIVE)
-        .doOnNext(requestCode -> {
-          Log.i(getClass().getName(), "GOING TO START RECEIVING");
-          view.openWaitingToReceiveFragment();
-        })
-        .subscribe(created -> {
-        }, error -> error.printStackTrace());
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
