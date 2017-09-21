@@ -26,6 +26,10 @@ import cm.aptoide.pt.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.FollowStoreCardTouchEvent;
+import cm.aptoide.pt.social.data.Game;
+import cm.aptoide.pt.social.data.Game2;
+import cm.aptoide.pt.social.data.GameAnswer;
+import cm.aptoide.pt.social.data.GameCardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.social.data.Media;
 import cm.aptoide.pt.social.data.MinimalPostTouchEvent;
@@ -569,6 +573,15 @@ public class TimelinePresenter implements Presenter {
                   timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                       AppViewFragment.OpenType.OPEN_ONLY);
                 }
+                else if (type.isGame()) {
+                  GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
+                  GameAnswer gameAnswer = mapToGameAnswer(event);
+                  timeline.swapGameAnswer(gameAnswer, (Game) event.getCard());
+                  view.swapPost(gameAnswer, event.getCardPosition());
+                  //PROBLEMS HERE!!! updateAnswer(gameAnswer, event.getCardPosition());
+                  Logger.d(this.getClass()
+                      .getCanonicalName(), "Clicked on: " + event.getAnswerText());
+                }
               }
             })
             .retry())
@@ -1013,4 +1026,48 @@ public class TimelinePresenter implements Presenter {
           }
         }, (throwable) -> throwable.printStackTrace());
   }
+
+  private GameAnswer mapToGameAnswer(GameCardTouchEvent event) {
+
+    String status;
+    Game card = (Game) event.getCard();
+    int points = 1;
+    final GameAnswer answer;
+
+    if (card instanceof Game2) {
+      if (card.getRightAnswer()
+          .getIcon() == event.getAnswerText()) {
+        status = "Correct";
+        answer =
+            new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
+                card.getScore()+points, -1, -1, -1, status, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,
+                card.getCardsLeft()-1);
+      } else {
+        status = "Wrong";
+        answer =
+            new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
+                card.getScore(), -1, -1, -1, status, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, 0,
+                card.getCardsLeft()-1);
+      }
+    } else {
+      if (card.getRightAnswer()
+          .getName() == event.getAnswerText()) {
+        status = "Correct";
+        answer =
+            new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
+                card.getScore()+points, -1, -1, -1, status, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,
+                card.getCardsLeft()-1);
+      } else {
+        status = "Wrong";
+        answer =
+            new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
+                card.getScore(), -1, -1, -1, status, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, 0,
+                card.getCardsLeft()-1);
+      }
+    }
+
+    return answer;
+  }
+
+
 }

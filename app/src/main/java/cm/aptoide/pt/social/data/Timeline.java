@@ -166,5 +166,36 @@ public class Timeline {
   public Completable notificationDismissed(int notificationType) {
     return timelineUserProvider.notificationRead(notificationType);
   }
+
+  public void swapGameAnswer(GameAnswer gameAnswer, Game card){
+    List<Post> posts = timelinePostsRepository.getSavedCards();
+
+    for(int i=0;i< posts.size();i++){
+      if(posts.get(i).equals(card)){
+        posts.set(i, gameAnswer);
+      }
+    }
+  }
+
+  public void updateGameScores(int score, int played, int position){
+    List<Post> posts = timelinePostsRepository.getSavedCards();
+
+    for(int i=0;i< posts.size();i++){
+      if(posts.get(i).getType().isGame()){
+        Game post = (Game) posts.get(i);
+        post.setScore(score);
+        post.setCardsLeft(played);
+        post.setgRanking(position);
+      }
+      if(posts.get(i).getType()==(CardType.GAMEANSWER)){
+        GameAnswer post = (GameAnswer) posts.get(i);
+        post.setScore(score);
+        post.setCardsLeft(played);
+        post.setgRanking(position);
+      }
+    }
+  }
+
+
 }
 

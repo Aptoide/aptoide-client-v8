@@ -45,4 +45,7 @@ public class TimelinePostsRepository {
   public void clearLoading() {
     postsRemoteDataSource.clearLoading();
   }
+
+  public List<Post> getSavedCards(){return cachedPosts;}
+
 }
