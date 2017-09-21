@@ -526,7 +526,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   .showSuggestedApps();
             }
             return installManager.install(download)
-                .doOnSubscribe(subcription -> setupEvents(download))
+                .doOnSubscribe(subscription -> setupEvents(download))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
