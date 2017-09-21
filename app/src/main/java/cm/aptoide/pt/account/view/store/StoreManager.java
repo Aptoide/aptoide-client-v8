@@ -60,14 +60,14 @@ public class StoreManager {
     this.objectMapper = objectMapper;
   }
 
-  public Completable createOrUpdate(long storeId, String storeName, String storeDescription,
+  public Completable createOrUpdate(String storeName, String storeDescription,
       String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
     return Completable.defer(() -> {
       if (storeExists) {
         return updateStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
             storeThemeName);
       }
-      return createStore(storeId, storeName, storeDescription, storeImagePath, hasNewAvatar,
+      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
           storeThemeName);
     })
         .onErrorResumeNext(err -> {
@@ -94,8 +94,8 @@ public class StoreManager {
         });
   }
 
-  private Completable createStore(long storeId, String storeName, String storeDescription,
-      String storeImage, boolean hasNewAvatar, String storeThemeName) {
+  private Completable createStore(String storeName, String storeDescription, String storeImage,
+      boolean hasNewAvatar, String storeThemeName) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
