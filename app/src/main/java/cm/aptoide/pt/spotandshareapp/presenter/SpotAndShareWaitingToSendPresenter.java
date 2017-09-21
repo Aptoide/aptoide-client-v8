@@ -66,6 +66,7 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
               .toSingleDefault(2);
         })
         .doOnError(throwable -> handleCreateGroupError(throwable))
+        .doOnNext(__ -> startListeningToFriends())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> err.printStackTrace());
@@ -86,16 +87,53 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
+  }
 
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> spotAndShare.observeFriends())
+  private void startListeningToFriends() {
+    spotAndShare.observeFriends()
         .filter(friendsList -> friendsList.size() > 0)
         .doOnNext(friendsList -> sendApp())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
   }
+
+  //private Completable createGroupObservable() {
+  //  return view.getLifecycle()
+  //      .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+  //      .flatMapSingle(lifecycleEvent -> {
+  //        if (shouldCreateGroup) {
+  //          return createGroup().timeout(10, TimeUnit.SECONDS)
+  //              .toSingleDefault(2);
+  //          //// FIXME: 12-07-2017 should not pass this integer
+  //        }
+  //        return Completable.complete()
+  //            .toSingleDefault(2);
+  //      });
+  //}
+
+  private Observable<Void> requestPermissions() {
+    return view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
+                .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
+                    permissionService));
+          } else {
+            return Observable.empty();
+          }
+        });
+  }
+
+  //private Action0 listenToFriends() {
+  //  return spotAndShare.observeFriends()
+  //      .filter(friendsList -> friendsList.size() > 0)
+  //      .doOnNext(friendsList -> sendApp())
+  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+  //      .subscribe(created -> {
+  //      }, error -> error.printStackTrace());
+  //}
 
   private void handleCreateGroupError(Throwable throwable) {
     if (throwable instanceof TimeoutException) {
