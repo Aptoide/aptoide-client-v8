@@ -35,10 +35,10 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.StoreUserAbstraction;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
@@ -353,9 +353,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
               String storeName = store != null ? store.getName() : null;
               Long storeId = store != null ? store.getId() : null;
               String avatar = store != null ? store.getAvatar() : null;
-              setupVariables(getHome.getNodes()
-                  .getTabs()
-                  .getList(), storeId, storeName, storeUrl, avatar);
+              setupVariables(parseTabs(getHome), storeId, storeName, storeUrl, avatar);
               HomeUser user = getHome.getNodes()
                   .getMeta()
                   .getData()
@@ -394,8 +392,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private List<GetStoreTabs.Tab> parseTabs(GetStore getStore) {
-    GetStoreTabs.Tab tab = getStore.getNodes()
+  private List<GetStoreTabs.Tab> parseTabs(StoreUserAbstraction<?> storeUserAbstraction) {
+    GetStoreTabs.Tab tab = storeUserAbstraction.getNodes()
         .getTabs()
         .getList()
         .get(0);
@@ -411,7 +409,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
           .setAction(parsedEventAction);
     }
 
-    return getStore.getNodes()
+    return storeUserAbstraction.getNodes()
         .getTabs()
         .getList();
   }
