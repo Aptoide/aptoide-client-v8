@@ -67,6 +67,7 @@ import cm.aptoide.pt.view.install.InstallWarningDialog;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.view.RxView;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -111,6 +112,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private SharedPreferences sharedPreferences;
   private AccountNavigator accountNavigator;
   private AppViewNavigator appViewNavigator;
+  private CrashReport crashReport;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -143,7 +145,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
-
+    crashReport = CrashReport.getInstance();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     createStoreUserPrivacyEnabled =
         ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled();
@@ -191,12 +193,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     versionName.setText(currentApp.getFile()
         .getVername());
 
-    otherVersions.setOnClickListener(v -> {
-      displayable.getAppViewAnalytics()
-          .sendOtherVersionsEvent();
-      appViewNavigator.navigateToOtherVersions(currentApp.getName(), currentApp.getIcon(),
-          currentApp.getPackageName());
-    });
+    compositeSubscription.add(RxView.clicks(otherVersions)
+        .subscribe(__ -> {
+          displayable.getAppViewAnalytics()
+              .sendOtherVersionsEvent();
+          appViewNavigator.navigateToOtherVersions(currentApp.getName(), currentApp.getIcon(),
+              currentApp.getPackageName());
+        }, err -> crashReport.log(err)));
 
     //setup the ui
     compositeSubscription.add(displayable.getInstallState()
@@ -204,8 +207,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(installationProgress -> updateUi(displayable, installationProgress, true, getApp))
         .subscribe(viewUpdated -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable)));
+        }, throwable -> crashReport.log(throwable)));
 
     //listen ui events
     compositeSubscription.add(displayable.getInstallState()
@@ -214,8 +216,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         .doOnNext(
             installationProgress -> updateUi(displayable, installationProgress, false, getApp))
         .subscribe(viewUpdated -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable)));
+        }, throwable -> crashReport.log(throwable)));
 
     if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes()
         .getVersions())) {
@@ -444,8 +445,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                           .subscribe(progress -> {
                             // TODO: 12/07/2017 this code doesnt run
                             Logger.d(TAG, "Installing");
-                          }, throwable -> CrashReport.getInstance()
-                              .log(throwable)));
+                          }, throwable -> crashReport.log(throwable)));
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -564,15 +564,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
             }
-            CrashReport.getInstance()
-                .log(err);
+            crashReport.log(err);
           }));
     };
 
     findTrustedVersion(app, appVersions);
     final boolean hasTrustedVersion = trustedVersion != null;
 
-    final View.OnClickListener onSearchHandler = v -> {
+    final View.OnClickListener onSearchTrustedAppHandler = v -> {
       if (hasTrustedVersion) {
         appViewNavigator.navigateToAppView(trustedVersion.getId(), trustedVersion.getPackageName());
         return;
@@ -589,8 +588,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         View alertView = LayoutInflater.from(context)
             .inflate(R.layout.dialog_install_warning, null);
         builder.setView(alertView);
-        new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler, onSearchHandler,
-            marketName).getDialog()
+        new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler,
+            onSearchTrustedAppHandler, marketName).getDialog()
             .show();
       } else {
         installHandler.onClick(v);
@@ -602,8 +601,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     GenericDialogs.createGenericOkMessage(getContext(), title, message)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void setupDownloadControls(GetAppMeta.App app, boolean isSetup,
@@ -645,8 +643,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .toObservable()
                 .doOnSubscribe(() -> setupEvents(download)))
             .subscribe(downloadProgress -> Logger.d(TAG, "Installing"),
-                err -> CrashReport.getInstance()
-                    .log(err)));
+                err -> crashReport.log(err)));
       });
     }
   }
