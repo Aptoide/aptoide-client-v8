@@ -16,6 +16,9 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.spotandshareapp.AppModel;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
+import cm.aptoide.pt.spotandshareapp.view.SpotAndShareWaitingToSendFragment;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -41,12 +44,13 @@ public class ShareAppHelper {
   private final PublishRelay installAppRelay;
   private final boolean createStoreUserPrivacyEnabled;
   private final FragmentNavigator fragmentNavigator;
+  private final SpotAndShareAppProvider spotAndShareAppProvider;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
       TimelineAnalytics timelineAnalytics, PublishRelay installAppRelay,
       SharedPreferences sharedPreferences, boolean createStoreUserPrivacyEnabled,
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, SpotAndShareAppProvider spotAndShareAppProvider) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
@@ -56,6 +60,7 @@ public class ShareAppHelper {
     this.installAppRelay = installAppRelay;
     this.createStoreUserPrivacyEnabled = createStoreUserPrivacyEnabled;
     this.fragmentNavigator = fragmentNavigator;
+    this.spotAndShareAppProvider = spotAndShareAppProvider;
   }
 
   private boolean isInstalled(String packageName) {
@@ -77,7 +82,7 @@ public class ShareAppHelper {
         caseAppsTimelineShare(appName, packageName, iconPath, averageRating, storeId);
       } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
         if (isInstalled(packageName)) {
-          caseSpotAndShareShare(appName, packageName, origin);
+          caseSpotAndShareShare(packageName);
         } else {
           showInstallSnackbar(installAppRelay);
         }
@@ -101,7 +106,7 @@ public class ShareAppHelper {
           if (ShareDialogs.ShareResponse.SHARE_TIMELINE == shareResponse) {
             caseAppsTimelineShare(appName, packageName, iconPath, 0, null);
           } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == shareResponse) {
-            caseSpotAndShareShare(appName, packageName, origin);
+            caseSpotAndShareShare(packageName);
           }
         }, CrashReport.getInstance()::log);
   }
@@ -140,14 +145,14 @@ public class ShareAppHelper {
     }
   }
 
-  private void caseSpotAndShareShare(String appName, String packageName, String origin) {
-    String filepath = getFilepath(packageName);
-    String appNameToShare = filterAppName(appName);
-
-    //fragmentNavigator.navigateToWithoutBackSave(SpotAndShareWaitingToSendFragment.newInstance());
-    //Intent intent = RadarActivity.buildIntent(activity, filepath, appNameToShare);
-    // FIXME: 10-08-2017 implement this way to spotandshare v2
-    //activity.startActivity(intent);
+  private void caseSpotAndShareShare(String packageName) {
+    try {
+      AppModel appModel = spotAndShareAppProvider.getApp(packageName);
+      fragmentNavigator.navigateToWithoutBackSave(
+          SpotAndShareWaitingToSendFragment.newInstance(appModel, true), true);
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   private String getFilepath(String packageName) {

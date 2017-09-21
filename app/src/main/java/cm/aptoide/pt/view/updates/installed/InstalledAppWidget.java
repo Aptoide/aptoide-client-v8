@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -86,7 +87,9 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
         PublishRelay.create(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled(),
-        getFragmentNavigator());
+        getFragmentNavigator(), new SpotAndShareAppProvider(getContext().getApplicationContext(),
+        getContext().getApplicationContext()
+            .getPackageManager()));
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

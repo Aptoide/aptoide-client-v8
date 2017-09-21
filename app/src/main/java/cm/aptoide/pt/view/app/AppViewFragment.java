@@ -81,6 +81,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -348,7 +349,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             timelineAnalytics, installAppRelay,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled(),
-            getFragmentNavigator());
+            getFragmentNavigator(),
+            new SpotAndShareAppProvider(getContext().getApplicationContext(),
+                getContext().getApplicationContext()
+                    .getPackageManager()));
     downloadFactory = new DownloadFactory(marketName);
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
